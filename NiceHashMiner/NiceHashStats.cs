@@ -43,6 +43,11 @@ namespace NiceHashMiner
             public string error;
             public string method;
         }
+
+        class nicehashminer_version
+        {
+            public string version;
+        }
 #pragma warning restore 649
 
 
@@ -118,6 +123,25 @@ namespace NiceHashMiner
             }
 
             return balance;
+        }
+
+
+        public static string GetVersion()
+        {
+            //string r1 = GetNiceHashAPIData("https://www.nicehash.com/nicehashminer?method=version");
+            string r1 = GetNiceHashAPIData("http://localhost:8080/web/nicehashminer?method=version");
+            if (r1 == null) return null;
+
+            nicehashminer_version nhjson;
+            try
+            {
+                nhjson = JsonConvert.DeserializeObject<nicehashminer_version>(r1);
+                return nhjson.version;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
 

@@ -14,6 +14,7 @@ namespace NiceHashMiner
         public string ccminerName;
         public string sgminerName;
 
+
         public Algorithm(int id, string nhname, string ccname, string sgname)
         {
             NiceHashID = id;
@@ -22,15 +23,16 @@ namespace NiceHashMiner
             sgminerName = sgname;
         }
 
-        public static int GetIDFromccminer(string aname)
+
+        public static Algorithm GetFromccminer(string aname)
         {
             for (int i = 0; i < AlgorithmNames.Length; i++)
             {
                 if (AlgorithmNames[i].ccminerName == aname)
-                    return AlgorithmNames[i].NiceHashID;
+                    return AlgorithmNames[i];
             }
 
-            return 0;
+            return AlgorithmNames[0];
         }
     }
 }

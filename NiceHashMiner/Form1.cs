@@ -20,6 +20,9 @@ namespace NiceHashMiner
         private static Timer T;
         private static Boolean FirstTime;
 
+        private static Timer UpdateCheck;
+        private static string VisitURL = "http://www.nicehash.com";
+
 
         public Form1()
         {
@@ -40,6 +43,26 @@ namespace NiceHashMiner
             // for debugging
             T_Tick(null, null);
             //
+
+            UpdateCheck = new Timer();
+            UpdateCheck.Tick += UpdateCheck_Tick;
+            UpdateCheck.Interval = 1000 * 3600; // every 1 hour
+            UpdateCheck.Start();
+            UpdateCheck_Tick(null, null);
+        }
+
+
+        void UpdateCheck_Tick(object sender, EventArgs e)
+        {
+            string ver = NiceHashStats.GetVersion();
+            if (ver == null) return;
+
+            if (ver != Application.ProductVersion)
+            {
+                linkLabel2.Text = "IMPORTANT! New version v" + ver + " has\r\nbeen released. Click here to download it.";
+                VisitURL = "https://github.com/nicehash/NiceHashMiner/releases/tag/" + ver;
+                UpdateCheck.Stop();
+            }
         }
 
 
@@ -50,13 +73,15 @@ namespace NiceHashMiner
             APIData AD = APIAccess.GetSummaryccminer(APIPorts[0]);
             if (AD == null) return;
 
-            int AlgoID = Algorithm.GetIDFromccminer(AD.AlgorithmName);
+            Algorithm Algo = Algorithm.GetFromccminer(AD.AlgorithmName);
 
-            double Rate = NiceHashStats.GetAlgorithmRate(AlgoID);
+            double Rate = NiceHashStats.GetAlgorithmRate(Algo.NiceHashID);
             double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
 
-            double Paying = Rate * AD.Speed * SpeedMulti[AlgoID] * 0.000001;
+            double Paying = Rate * AD.Speed * SpeedMulti[Algo.NiceHashID] * 0.000001;
 
+            toolStripStatusLabel8.Text = Algo.NiceHashName;
+            toolStripStatusLabel2.Text = (AD.Speed * 0.001).ToString("F4");
             toolStripStatusLabel4.Text = Paying.ToString("F8");
             toolStripStatusLabel6.Text = Balance.ToString("F8");
         }
@@ -160,7 +185,7 @@ namespace NiceHashMiner
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.nicehash.com");
+            System.Diagnostics.Process.Start(VisitURL);
         }
     }
 }
