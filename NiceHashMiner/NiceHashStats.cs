@@ -45,6 +45,7 @@ namespace NiceHashMiner
         }
 #pragma warning restore 649
 
+
         public static double GetAlgorithmRate(int algo)
         {
             string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.global.current");
@@ -67,6 +68,7 @@ namespace NiceHashMiner
                 return 0;
             }
         }
+
 
         public static nicehash_stats GetStats(string btc, int location, int algo)
         {
@@ -92,6 +94,33 @@ namespace NiceHashMiner
             }
         }
 
+
+        public static double GetBalance(string btc)
+        {
+            double balance = 0;
+
+            for (int l = 0; l < 2; l++)
+            {
+                string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&location=" + l.ToString() + "&addr=" + btc);
+                if (r1 == null) break;
+
+                nicehash_json<nicehash_stats> nhjson_current;
+                try
+                {
+                    nhjson_current = JsonConvert.DeserializeObject<nicehash_json<nicehash_stats>>(r1);
+                    for (int i = 0; i < nhjson_current.result.stats.Length; i++)
+                        balance += nhjson_current.result.stats[i].balance;
+                }
+                catch
+                {
+                    break;
+                }
+            }
+
+            return balance;
+        }
+
+
         private static string GetNiceHashAPIData(string URL)
         {
             string ResponseFromServer;
@@ -109,9 +138,8 @@ namespace NiceHashMiner
                 Reader.Close();
                 Response.Close();
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine("[" + DateTime.Now.ToString() + "] JSONStats - " + ex.Message);
                 return null;
             }
 

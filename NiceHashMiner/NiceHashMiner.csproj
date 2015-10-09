@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm.cs" />
+    <Compile Include="APIAccess.cs" />
     <Compile Include="BitcoinAddress.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Form1.cs">
@@ -96,9 +98,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />

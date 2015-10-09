@@ -10,16 +10,15 @@ using System.Diagnostics;
 namespace NiceHashMiner
 {
     public partial class Form1 : Form
-    {
+    {   
         private static string[] Executables = { "ccminer.exe", "sgminer.exe" };
+        private static int[] APIPorts = { 4048, 0 };
         private static string[] MiningURL = { "eu", "usa", "hk", "jp" };
         private static double[] SpeedMulti = { 1, 0.001, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1000000, 1 };
 
         private static Process CPUMiner;
         private static Timer T;
         private static Boolean FirstTime;
-
-        private static int CurrentAlgorithm = 0; // update this value periodically over API access to miner
 
 
         public Form1()
@@ -37,6 +36,10 @@ namespace NiceHashMiner
             comboBox1.SelectedIndex = Config.ConfigData.Location;
             textBox1.Text = Config.ConfigData.BitcoinAddress;
             textBox2.Text = Config.ConfigData.WorkerName;
+
+            // for debugging
+            T_Tick(null, null);
+            //
         }
 
 
@@ -44,15 +47,18 @@ namespace NiceHashMiner
         {
             if (!VerifyMiningAddress()) return;
 
-            double Rate = NiceHashStats.GetAlgorithmRate(CurrentAlgorithm);
-            NiceHashStats.nicehash_stats NHS = NiceHashStats.GetStats(textBox1.Text.Trim(), comboBox1.SelectedIndex, CurrentAlgorithm);
+            APIData AD = APIAccess.GetSummaryccminer(APIPorts[0]);
+            if (AD == null) return;
 
-            if (Rate > 0 && NHS != null)
-            {
-                NHS.accepted_speed *= SpeedMulti[CurrentAlgorithm];
-                toolStripStatusLabel4.Text = (Rate * NHS.accepted_speed).ToString("F8");
-                toolStripStatusLabel6.Text = NHS.balance.ToString("F8");
-            }
+            int AlgoID = Algorithm.GetIDFromccminer(AD.AlgorithmName);
+
+            double Rate = NiceHashStats.GetAlgorithmRate(AlgoID);
+            double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
+
+            double Paying = Rate * AD.Speed * SpeedMulti[AlgoID] * 0.000001;
+
+            toolStripStatusLabel4.Text = Paying.ToString("F8");
+            toolStripStatusLabel6.Text = Balance.ToString("F8");
         }
 
 
@@ -106,7 +112,7 @@ namespace NiceHashMiner
 
             string FileName = "bin\\" + Executables[0];
 
-            string CommandLine = "--simplemultialgo --url=" + MiningURL[comboBox1.SelectedIndex] + " --userpass=" + Worker;
+            string CommandLine = "--url=sumplemultialgo+NiceHash+" + MiningURL[comboBox1.SelectedIndex] + " --userpass=" + Worker;
 
             CPUMiner = Process.Start(FileName, CommandLine);
             CPUMiner.EnableRaisingEvents = true;
