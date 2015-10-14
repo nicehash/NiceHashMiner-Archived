@@ -6,33 +6,30 @@ namespace NiceHashMiner
 {
     class Algorithm
     {
-        private static Algorithm[] AlgorithmNames = { new Algorithm(0, "scrypt", "scrypt", "scrypt"),
-                                                      new Algorithm(13, "axiom", "axiom", "axiom")};
+        //private static Algorithm[] AlgorithmNames = { new Algorithm(0, "scrypt", "scrypt"),
+        //                                              new Algorithm(13, "axiom", "axiom")};
 
         public int NiceHashID;
         public string NiceHashName;
-        public string ccminerName;
-        public string sgminerName;
+        public string MinerName;
 
 
-        public Algorithm(int id, string nhname, string ccname, string sgname)
+        public Algorithm(int id, string nhname, string mname)
         {
             NiceHashID = id;
             NiceHashName = nhname;
-            ccminerName = ccname;
-            sgminerName = sgname;
+            MinerName = mname;
         }
 
+        //public static Algorithm GetFromMiner(string aname)
+        //{
+        //    for (int i = 0; i < AlgorithmNames.Length; i++)
+        //    {
+        //        if (AlgorithmNames[i].MinerName == aname)
+        //            return AlgorithmNames[i];
+        //    }
 
-        public static Algorithm GetFromccminer(string aname)
-        {
-            for (int i = 0; i < AlgorithmNames.Length; i++)
-            {
-                if (AlgorithmNames[i].ccminerName == aname)
-                    return AlgorithmNames[i];
-            }
-
-            return AlgorithmNames[0];
-        }
+        //    return AlgorithmNames[0];
+        //}
     }
 }

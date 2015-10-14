@@ -27,6 +27,25 @@ namespace NiceHashMiner
             public int algo;
         }
 
+        public class nicehash_sma_stats
+        {
+            public int port;
+            public string name;
+            public int algo;
+            public double paying;
+        }
+
+        public class nicehash_result_2
+        {
+            public nicehash_sma_stats[] simplemultialgo;
+        }
+
+        public class nicehash_json_2
+        {
+            public nicehash_result_2 result;
+            public string method;
+        }
+
         class nicehash_result<T>
         {
             public T[] stats;
@@ -51,26 +70,26 @@ namespace NiceHashMiner
 #pragma warning restore 649
 
 
-        public static double GetAlgorithmRate(int algo)
+        public static double[] GetAlgorithmRates()
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.global.current");
-            if (r1 == null) return 0;
+            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=simplemultialgo.info");
+            if (r1 == null) return null;
 
-            nicehash_json<nicehash_global_stats> nhjson_current;
+            nicehash_json_2 nhjson_current;
             try
             {
-                nhjson_current = JsonConvert.DeserializeObject<nicehash_json<nicehash_global_stats>>(r1);
-                for (int i = 0; i < nhjson_current.result.stats.Length; i++)
+                nhjson_current = JsonConvert.DeserializeObject<nicehash_json_2>(r1);
+                double[] outval = new double[nhjson_current.result.simplemultialgo.Length];
+                for (int i = 0; i < nhjson_current.result.simplemultialgo.Length; i++)
                 {
-                    if (nhjson_current.result.stats[i].algo == algo)
-                        return nhjson_current.result.stats[i].price;
+                    outval[i] = nhjson_current.result.simplemultialgo[i].paying;
                 }
 
-                return 0;
+                return outval;
             }
             catch
             {
-                return 0;
+                return null;
             }
         }
 
@@ -128,8 +147,7 @@ namespace NiceHashMiner
 
         public static string GetVersion()
         {
-            //string r1 = GetNiceHashAPIData("https://www.nicehash.com/nicehashminer?method=version");
-            string r1 = GetNiceHashAPIData("http://localhost:8080/web/nicehashminer?method=version");
+            string r1 = GetNiceHashAPIData("https://www.nicehash.com/nicehashminer?method=version");
             if (r1 == null) return null;
 
             nicehashminer_version nhjson;

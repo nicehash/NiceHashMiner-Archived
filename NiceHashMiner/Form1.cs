@@ -10,38 +10,47 @@ using System.Diagnostics;
 namespace NiceHashMiner
 {
     public partial class Form1 : Form
-    {   
-        private static string[] Executables = { "ccminer.exe", "sgminer.exe" };
-        private static int[] APIPorts = { 4048, 0 };
+    {
+        private static Miner[] Miners = new Miner[1];
         private static string[] MiningURL = { "eu", "usa", "hk", "jp" };
-        private static double[] SpeedMulti = { 1, 0.001, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1000000, 1 };
-
-        private static Process CPUMiner;
-        private static Timer T;
-        private static Boolean FirstTime;
-
-        private static Timer UpdateCheck;
         private static string VisitURL = "http://www.nicehash.com";
 
+        private Timer T;
+        private int Tcheck;
+
+        private Timer UpdateCheck;
+
+        private double[] PayRates = null;
 
         public Form1()
         {
             InitializeComponent();
 
+            Miners[0] = new ccminer();
+
             Text += " v" + Application.ProductVersion;
 
             T = new Timer();
             T.Tick += T_Tick;
-            T.Interval = 60000;
-
-            FirstTime = false;
+            T.Interval = 5000;
 
             comboBox1.SelectedIndex = Config.ConfigData.Location;
             textBox1.Text = Config.ConfigData.BitcoinAddress;
             textBox2.Text = Config.ConfigData.WorkerName;
 
+            foreach (GPUData G in Miners[0].GPUs)
+            {
+                ListViewItem lvi = new ListViewItem();
+                lvi.SubItems.Add(G.ID.ToString());
+                lvi.SubItems.Add("NVIDIA");
+                lvi.SubItems.Add(G.Name);
+                lvi.Checked = G.Enabled;
+                lvi.Tag = G;
+                listView1.Items.Add(lvi);
+            }
+
             // for debugging
-            T_Tick(null, null);
+            //T_Tick(null, null);
             //
 
             UpdateCheck = new Timer();
@@ -68,22 +77,32 @@ namespace NiceHashMiner
 
         private void T_Tick(object sender, EventArgs e)
         {
+            Tcheck++;
             if (!VerifyMiningAddress()) return;
 
-            APIData AD = APIAccess.GetSummaryccminer(APIPorts[0]);
+            APIData AD = Miners[0].GetSummary();
             if (AD == null) return;
 
-            Algorithm Algo = Algorithm.GetFromccminer(AD.AlgorithmName);
+            if (Tcheck % 12 == 0)
+            {
+                PayRates = NiceHashStats.GetAlgorithmRates();
+                double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
+                toolStripStatusLabel6.Text = Balance.ToString("F8");
+            }
 
-            double Rate = NiceHashStats.GetAlgorithmRate(Algo.NiceHashID);
-            double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
+            if (PayRates != null)
+            {
+                double Paying = PayRates[AD.AlgorithmID] * AD.Speed * 0.000000001;
+                SetStats(AD.AlgorithmName, AD.Speed * 0.000001, Paying);
+            }
+        }
 
-            double Paying = Rate * AD.Speed * SpeedMulti[Algo.NiceHashID] * 0.000001;
 
-            toolStripStatusLabel8.Text = Algo.NiceHashName;
-            toolStripStatusLabel2.Text = (AD.Speed * 0.001).ToString("F4");
-            toolStripStatusLabel4.Text = Paying.ToString("F8");
-            toolStripStatusLabel6.Text = Balance.ToString("F8");
+        private void SetStats(string aname, double speed, double paying)
+        {
+            toolStripStatusLabel8.Text = aname;
+            toolStripStatusLabel2.Text = speed.ToString("F4");
+            toolStripStatusLabel4.Text = paying.ToString("F8");
         }
 
 
@@ -113,14 +132,14 @@ namespace NiceHashMiner
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (CPUMiner != null)
+            if (button1.Text == "Stop")
             {
-                // stop miner
-                CPUMiner.Kill();
-                CPUMiner.Close();
-                CPUMiner = null;
+                Miners[0].Stop();
+                T.Stop();
+                button1.Text = "Start";
 
-                ResetButtonText();
+                SetStats("-", 0, 0);
+
                 return;
             }
 
@@ -135,20 +154,7 @@ namespace NiceHashMiner
             else
                 Worker = textBox1.Text.Trim();
 
-            string FileName = "bin\\" + Executables[0];
-
-            string CommandLine = "--url=sumplemultialgo+NiceHash+" + MiningURL[comboBox1.SelectedIndex] + " --userpass=" + Worker;
-
-            CPUMiner = Process.Start(FileName, CommandLine);
-            CPUMiner.EnableRaisingEvents = true;
-            CPUMiner.Exited += CPUMiner_Exited;
-
-            if (!FirstTime)
-            {
-                T.Start();
-                FirstTime = true;
-                T_Tick(null, null);
-            }
+            Miners[0].Start(MiningURL[comboBox1.SelectedIndex], Worker);
 
             Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();
             Config.ConfigData.WorkerName = textBox2.Text.Trim();
@@ -156,36 +162,42 @@ namespace NiceHashMiner
             Config.Commit();
 
             button1.Text = "Stop";
+
+            Tcheck = 11;
+            T.Start();
         }
 
 
-        private void CPUMiner_Exited(object sender, EventArgs e)
-        {
-            CPUMiner.Close();
-            CPUMiner = null;
+        //delegate void ResetButtonTextCallback();
 
-            ResetButtonText();
-        }
-
-
-        delegate void ResetButtonTextCallback();
-
-        private void ResetButtonText()
-        {
-            if (this.button1.InvokeRequired)
-            {
-                ResetButtonTextCallback d = new ResetButtonTextCallback(ResetButtonText);
-                this.Invoke(d, new object[] { });
-            }
-            else
-            {
-                this.button1.Text = "Start";
-            }
-        }
+        //private void ResetButtonText()
+        //{
+        //    if (this.button1.InvokeRequired)
+        //    {
+        //        ResetButtonTextCallback d = new ResetButtonTextCallback(ResetButtonText);
+        //        this.Invoke(d, new object[] { });
+        //    }
+        //    else
+        //    {
+        //        this.button1.Text = "Start";
+        //    }
+        //}
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(VisitURL);
+        }
+
+        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            GPUData G = e.Item.Tag as GPUData;
+            G.Enabled = e.Item.Checked;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Miners[0].Stop();
+            T.Stop();
         }
     }
 }
