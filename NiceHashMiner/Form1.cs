@@ -20,13 +20,21 @@ namespace NiceHashMiner
 
         private Timer UpdateCheck;
 
-        private double[] PayRates = null;
+        private double[] NiceHashPayRates = null;
+        private double CPURate = 0;
+        private double NVIDIARate = 0;
+        private double AMDRate = 0;
 
         public Form1()
         {
             InitializeComponent();
 
-            Miners[0] = new ccminer();
+            if (!Helpers.InternalCheckIsWow64())
+            {
+                MessageBox.Show("NiceHash Miner works only on 64 bit version of OS!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            Miners[0] = new cpuminer();
 
             Text += " v" + Application.ProductVersion;
 
@@ -38,14 +46,14 @@ namespace NiceHashMiner
             textBox1.Text = Config.ConfigData.BitcoinAddress;
             textBox2.Text = Config.ConfigData.WorkerName;
 
-            foreach (GPUData G in Miners[0].GPUs)
+            foreach (ComputeDevice D in Miners[0].CDevs)
             {
                 ListViewItem lvi = new ListViewItem();
-                lvi.SubItems.Add(G.ID.ToString());
-                lvi.SubItems.Add("NVIDIA");
-                lvi.SubItems.Add(G.Name);
-                lvi.Checked = G.Enabled;
-                lvi.Tag = G;
+                lvi.SubItems.Add(D.ID.ToString());
+                lvi.SubItems.Add(D.Vendor);
+                lvi.SubItems.Add(D.Name);
+                lvi.Checked = D.Enabled;
+                lvi.Tag = D;
                 listView1.Items.Add(lvi);
             }
 
@@ -57,7 +65,7 @@ namespace NiceHashMiner
             UpdateCheck.Tick += UpdateCheck_Tick;
             UpdateCheck.Interval = 1000 * 3600; // every 1 hour
             UpdateCheck.Start();
-            UpdateCheck_Tick(null, null);
+            //UpdateCheck_Tick(null, null);
         }
 
 
@@ -85,24 +93,31 @@ namespace NiceHashMiner
 
             if (Tcheck % 12 == 0)
             {
-                PayRates = NiceHashStats.GetAlgorithmRates();
+                NiceHashPayRates = NiceHashStats.GetAlgorithmRates();
                 double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
                 toolStripStatusLabel6.Text = Balance.ToString("F8");
             }
 
-            if (PayRates != null)
+            if (NiceHashPayRates != null)
             {
-                double Paying = PayRates[AD.AlgorithmID] * AD.Speed * 0.000000001;
-                SetStats(AD.AlgorithmName, AD.Speed * 0.000001, Paying);
+                double Paying = NiceHashPayRates[AD.AlgorithmID] * AD.Speed * 0.000000001;
+                SetCPUStats(AD.AlgorithmName, AD.Speed, Paying);
             }
         }
 
 
-        private void SetStats(string aname, double speed, double paying)
+        private void SetCPUStats(string aname, double speed, double paying)
         {
-            toolStripStatusLabel8.Text = aname;
-            toolStripStatusLabel2.Text = speed.ToString("F4");
-            toolStripStatusLabel4.Text = paying.ToString("F8");
+            label5.Text = (speed * 0.001).ToString("F2") + " kH/s " + aname;
+            label11.Text = paying.ToString("F8") + " BTC/Day";
+            CPURate = paying;
+            UpdateGlobalRate();
+        }
+
+
+        private void UpdateGlobalRate()
+        {
+            toolStripStatusLabel4.Text = (CPURate + NVIDIARate + AMDRate).ToString("F8");
         }
 
 
@@ -132,21 +147,7 @@ namespace NiceHashMiner
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (button1.Text == "Stop")
-            {
-                Miners[0].Stop();
-                T.Stop();
-                button1.Text = "Start";
-
-                SetStats("-", 0, 0);
-
-                return;
-            }
-
             if (!VerifyMiningAddress()) return;
-
-            button1.Text = "Please wait...";
-            button1.Update();
 
             string Worker = textBox2.Text.Trim();
             if (Worker.Length > 0)
@@ -154,17 +155,25 @@ namespace NiceHashMiner
             else
                 Worker = textBox1.Text.Trim();
 
-            Miners[0].Start(MiningURL[comboBox1.SelectedIndex], Worker);
+            //Miners[0].Start(13, "stratum+tcp://axiom." + MiningURL[comboBox1.SelectedIndex] + ".nicehash.com:3346", Worker);
+            Miners[0].Start(15, "stratum+tcp://scryptjaneleo." + MiningURL[comboBox1.SelectedIndex] + ".nicehash.com:3348", Worker);
 
             Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();
             Config.ConfigData.WorkerName = textBox2.Text.Trim();
             Config.ConfigData.Location = comboBox1.SelectedIndex;
             Config.Commit();
 
-            button1.Text = "Stop";
-
             Tcheck = 11;
             T.Start();
+        }
+
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Miners[0].Stop();
+            T.Stop();
+
+            SetCPUStats("", 0, 0);
         }
 
 
@@ -190,7 +199,7 @@ namespace NiceHashMiner
 
         private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            GPUData G = e.Item.Tag as GPUData;
+            ComputeDevice G = e.Item.Tag as ComputeDevice;
             G.Enabled = e.Item.Checked;
         }
 

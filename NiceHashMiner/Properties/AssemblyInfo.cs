@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NiceHashMiner")]
-[assembly: AssemblyDescription("NiceHashMiner is simple to use GPU mining tool")]
+[assembly: AssemblyDescription("NiceHashMiner is simple to use mining tool")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("NiceHash")]
 [assembly: AssemblyProduct("NiceHashMiner")]

@@ -21,18 +21,18 @@ namespace NiceHashMiner
                 new Algorithm(12, "quark", "quark")
             };
 
-            QueryGPUs();
+            QueryCDevs();
         }
 
 
-        public override void Start(string suburl, string username)
+        public override void Start(int nhalgo, string url, string username)
         {
             if (ProcessHandle != null) return; // ignore, already running 
 
             //string CommandLine = "--url=sumplemultialgo+NiceHash+" + suburl + " --userpass=" + username + ":x --api-bind=" + APIPort.ToString() + " --devices ";
-            string CommandLine = "--algo=quark --url=stratum+tcp://quark." + suburl + ".nicehash.com:3345 --userpass=" + username + ":x --api-bind=" + APIPort.ToString() + " --devices ";
+            string CommandLine = "--algo=" + "test" + " --url=" + url + " --userpass=" + username + ":x --api-bind=" + APIPort.ToString() + " --devices ";
 
-            foreach (GPUData G in GPUs)
+            foreach (ComputeDevice G in CDevs)
                 if (G.Enabled)
                     CommandLine += G.ID.ToString() + ",";
 
@@ -55,10 +55,8 @@ namespace NiceHashMiner
         }
 
 
-        protected override void QueryGPUs()
+        private void QueryCDevs()
         {
-            GPUs = new List<GPUData>();
-
             Process P = new Process();
             P.StartInfo.FileName = Path;
             P.StartInfo.Arguments = "--ndevs";
@@ -73,7 +71,7 @@ namespace NiceHashMiner
             {
                 outdata = P.StandardError.ReadLine();
                 if (outdata != null)
-                    GPUs.Add(new GPUData(GPUs.Count, outdata.Split(':')[1]));
+                    CDevs.Add(new ComputeDevice(CDevs.Count, "NVIDIA", outdata.Split(':')[1]));
             } while (outdata != null);
 
             P.WaitForExit();
@@ -82,7 +80,7 @@ namespace NiceHashMiner
 
         public override APIData GetSummary()
         {
-            string resp = GetAPIDataccminer(APIPort, "summary");
+            string resp = GetAPIData(APIPort, "summary");
             if (resp == null) return null;
 
             string aname = null;
@@ -109,52 +107,6 @@ namespace NiceHashMiner
             FillAlgorithm(aname, ref ad);
 
             return ad;
-        }
-
-
-        private string GetAPIDataccminer(int port, string cmd)
-        {
-            string ResponseFromServer = null;
-            try
-            {
-                TcpClient tcpc = new TcpClient("127.0.0.1", port);
-                string DataToSend = "GET /" + cmd + " HTTP/1.1\r\n" +
-                                    "Host: 127.0.0.1\r\n" +
-                                    "User-Agent: NiceHashMiner/" + Application.ProductVersion + "\r\n" +
-                                    "\r\n";
-
-                byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
-                tcpc.Client.Send(BytesToSend);
-
-                byte[] IncomingBuffer = new byte[1000];
-                int offset = 0;
-                bool fin = false;
-
-                while (!fin && tcpc.Client.Connected)
-                {
-                    int r = tcpc.Client.Receive(IncomingBuffer, offset, 1000 - offset, SocketFlags.None);
-                    for (int i = offset; i < offset + r; i++)
-                    {
-                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00)
-                        {
-                            fin = true;
-                            break;
-                        }
-                    }
-                    offset += r;
-                }
-
-                tcpc.Close();
-
-                if (offset > 0)
-                    ResponseFromServer = ASCIIEncoding.ASCII.GetString(IncomingBuffer);
-            }
-            catch
-            {
-                return null;
-            }
-
-            return ResponseFromServer;
         }
     }
 }
