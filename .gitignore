@@ -65,3 +65,4 @@ cpuid/cpuid.vcxproj.user
 *.obj
 *.pdb
 *.idb
+NiceHashMiner.sdf

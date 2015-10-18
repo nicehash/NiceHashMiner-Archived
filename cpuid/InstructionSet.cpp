@@ -264,31 +264,40 @@ const InstructionSet::InstructionSet_Internal InstructionSet::CPU_Rep;
 
 extern "C"
 {
-	__declspec(dllexport) char* GetCPUName()
+	__declspec(dllexport) char* __cdecl _GetCPUName()
 	{
 		static std::string brand = InstructionSet::Brand();
 		return (char*)brand.c_str();
 	}
 
-	__declspec(dllexport) char* GetCPUVendor()
+	__declspec(dllexport) char* __cdecl _GetCPUVendor()
 	{
 		static std::string vendor = InstructionSet::Vendor();
 		return (char*)vendor.c_str();
 	}
 
-	__declspec(dllexport) int SupportsSSE2()
+	__declspec(dllexport) int __cdecl SupportsSSE2()
 	{
 		return InstructionSet::SSE2();
 	}
 
-	__declspec(dllexport) int SupportsAVX()
+	__declspec(dllexport) int __cdecl SupportsAVX()
 	{
 		return InstructionSet::AVX();
 	}
 
-	__declspec(dllexport) int SupportsAVX2()
+	__declspec(dllexport) int __cdecl SupportsAVX2()
 	{
 		return InstructionSet::AVX2();
+	}
+
+	__declspec(dllexport) int __cdecl GetPhysicalProcessorCount()
+	{
+		ULONG p;
+		if (GetNumaHighestNodeNumber(&p))
+			return (int)p + 1;
+		else
+			return 1;
 	}
 }
 

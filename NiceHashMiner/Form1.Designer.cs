@@ -46,7 +46,6 @@
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader0 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button2 = new System.Windows.Forms.Button();
@@ -62,6 +61,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -203,7 +203,6 @@
             this.listView1.CheckBoxes = true;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader0,
-            this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
             this.listView1.FullRowSelect = true;
@@ -221,11 +220,6 @@
             this.columnHeader0.Text = "Enabled";
             this.columnHeader0.Width = 53;
             // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "ID";
-            this.columnHeader1.Width = 27;
-            // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Vendor";
@@ -234,7 +228,7 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "Device";
-            this.columnHeader3.Width = 236;
+            this.columnHeader3.Width = 252;
             // 
             // button2
             // 
@@ -360,11 +354,22 @@
             this.label15.TabIndex = 24;
             this.label15.Text = "Rate:";
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(444, 91);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 26;
+            this.button3.Text = "Benchmark";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(531, 265);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label12);
@@ -421,7 +426,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel9;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader0;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.Button button2;
@@ -437,6 +441,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Button button3;
     }
 }
 

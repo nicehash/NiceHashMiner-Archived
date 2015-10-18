@@ -7,6 +7,16 @@ using Newtonsoft.Json;
 
 namespace NiceHashMiner
 {
+#pragma warning disable 649
+    class NiceHashSMA
+    {
+        public int port;
+        public string name;
+        public int algo;
+        public double paying;
+    }
+#pragma warning restore 649
+
     class NiceHashStats
     {
 #pragma warning disable 649
@@ -27,17 +37,9 @@ namespace NiceHashMiner
             public int algo;
         }
 
-        public class nicehash_sma_stats
-        {
-            public int port;
-            public string name;
-            public int algo;
-            public double paying;
-        }
-
         public class nicehash_result_2
         {
-            public nicehash_sma_stats[] simplemultialgo;
+            public NiceHashSMA[] simplemultialgo;
         }
 
         public class nicehash_json_2
@@ -70,7 +72,7 @@ namespace NiceHashMiner
 #pragma warning restore 649
 
 
-        public static double[] GetAlgorithmRates()
+        public static NiceHashSMA[] GetAlgorithmRates()
         {
             string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=simplemultialgo.info");
             if (r1 == null) return null;
@@ -79,13 +81,7 @@ namespace NiceHashMiner
             try
             {
                 nhjson_current = JsonConvert.DeserializeObject<nicehash_json_2>(r1);
-                double[] outval = new double[nhjson_current.result.simplemultialgo.Length];
-                for (int i = 0; i < nhjson_current.result.simplemultialgo.Length; i++)
-                {
-                    outval[i] = nhjson_current.result.simplemultialgo[i].paying;
-                }
-
-                return outval;
+                return nhjson_current.result.simplemultialgo;
             }
             catch
             {

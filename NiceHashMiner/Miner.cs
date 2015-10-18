@@ -8,14 +8,33 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
-    class APIData
+    public class Algorithm
+    {
+        public int NiceHashID;
+        public string NiceHashName;
+        public string MinerName;
+        public double BenchmarkSpeed;
+        public double CurrentProfit;
+
+        public Algorithm(int id, string nhname, string mname)
+        {
+            NiceHashID = id;
+            NiceHashName = nhname;
+            MinerName = mname;
+            BenchmarkSpeed = 0;
+        }
+    }
+
+
+    public class APIData
     {
         public int AlgorithmID;
         public string AlgorithmName;
         public double Speed;
     }
 
-    class ComputeDevice
+
+    public class ComputeDevice
     {
         public int ID;
         public string Vendor;
@@ -31,14 +50,21 @@ namespace NiceHashMiner
         }
     }
 
-    abstract class Miner
-    {
-        public List<ComputeDevice> CDevs;
+    public delegate void BenchmarkComplete(string text, object tag);
 
-        protected Algorithm[] SupportedAlgorithms;
+    public abstract class Miner
+    {
+        public string MinerDeviceName;
+        public List<ComputeDevice> CDevs;
+        public Algorithm[] SupportedAlgorithms;
+
         protected string Path;
         protected int APIPort;
         protected Process ProcessHandle;
+        protected Timer BenchmarkTimer;
+        protected BenchmarkComplete OnBenchmarkComplete;
+        protected object BenchmarkTag;
+        protected int BenchmarkIndex;
 
         public Miner()
         {
@@ -51,6 +77,7 @@ namespace NiceHashMiner
 
         virtual public void Stop()
         {
+            Debug.Print(MinerDeviceName + " Shutting down miner");
             if (ProcessHandle != null)
             {
                 try { ProcessHandle.Kill(); }
@@ -59,6 +86,33 @@ namespace NiceHashMiner
                 ProcessHandle = null;
             }
         }
+
+        abstract public void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag);
+
+        virtual public void BenchmarkStop()
+        {
+            if (ProcessHandle != null)
+            {
+                try { ProcessHandle.Kill(); }
+                catch { }
+                ProcessHandle.Close();
+                ProcessHandle = null;
+            }
+
+            if (BenchmarkTimer != null)
+            {
+                BenchmarkTimer.Stop();
+                BenchmarkTimer = null;
+            }
+        }
+
+
+        virtual public string PrintSpeed(double spd)
+        {
+            // print in MH/s
+            return (spd * 0.000001).ToString("F2") + " MH/s";
+        }
+        
 
         protected void FillAlgorithm(string aname, ref APIData AD)
         {
@@ -72,6 +126,7 @@ namespace NiceHashMiner
             }
         }
 
+
         protected string GetMinerAlgorithmName(int nhid)
         {
             for (int i = 0; i < SupportedAlgorithms.Length; i++)
@@ -84,6 +139,7 @@ namespace NiceHashMiner
 
             return null;
         }
+
 
         protected string GetAPIData(int port, string cmd)
         {

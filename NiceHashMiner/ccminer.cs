@@ -9,10 +9,11 @@ using System.Diagnostics;
 
 namespace NiceHashMiner
 {
-    class ccminer : Miner
+    public class ccminer : Miner
     {
         public ccminer()
         {
+            MinerDeviceName = "NVIDIA GPU(s)";
             Path = "bin\\ccminer.exe";
             APIPort = 4048;
 
@@ -24,6 +25,8 @@ namespace NiceHashMiner
             QueryCDevs();
         }
 
+
+        public override void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag) { }
 
         public override void Start(int nhalgo, string url, string username)
         {
