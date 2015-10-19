@@ -62,8 +62,6 @@ namespace NiceHashMiner
             ListViewItem lvi = tag as ListViewItem;
             lvi.SubItems[2].Text = text;
 
-            // todo: average out cpu benchmarks
-
             // initiate new benchmark
             InitiateBenchmark();
         }
@@ -84,6 +82,7 @@ namespace NiceHashMiner
             else
             {
                 startBenchmarkToolStripMenuItem.Text = "Start benchmark";
+                Config.RebuildGroups();
             }
         }
 

@@ -34,11 +34,19 @@ namespace NiceHashMiner
         private int CurrentNVIDIAAlgo = -1;
         private int CurrentAMDAlgo = -1;
 
-        private Random R = new Random((int)DateTime.Now.Ticks);
+        private Random R;
+
 
         public Form1()
         {
             InitializeComponent();
+
+            if (Config.ConfigData.DebugConsole)
+                Helpers.AllocConsole();
+
+            Helpers.ConsolePrint("Starting up");
+
+            R = new Random((int)DateTime.Now.Ticks);
 
             Text += " v" + Application.ProductVersion;
 
@@ -46,39 +54,69 @@ namespace NiceHashMiner
             textBox1.Text = Config.ConfigData.BitcoinAddress;
             textBox2.Text = Config.ConfigData.WorkerName;
 
-            if (!Helpers.InternalCheckIsWow64())
-            {
-                MessageBox.Show("NiceHash Miner works only on 64 bit version of OS!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-                return;
-            }
-
             // get all CPUs
             int CPUs = CPUID.GetPhysicalProcessorCount();
 
-            Miners = new Miner[CPUs]; // todo: add cc and sgminer
-
+            // get all cores (including virtual - HT can benefit mining)
             int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / CPUs;
+
+            if (!Helpers.InternalCheckIsWow64())
+            {
+                MessageBox.Show("NiceHash Miner works only on 64 bit version of OS for CPU mining. CPU mining will be disabled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CPUs = 0;
+            }
 
             if (ThreadsPerCPU * CPUs > 64)
             {
-                MessageBox.Show("NiceHash Miner does not support more than 64 virtual cores!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else
-            {
-                if (CPUs == 1)
-                    Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
-                else
-                {
-                    for (int i = 0; i < CPUs; i++)
-                        Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPU));
-                }
+                MessageBox.Show("NiceHash Miner does not support more than 64 virtual cores. CPU mining will be disabled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CPUs = 0;
             }
 
-            foreach (Miner m in Miners)
+            int ThreadsPerCPUMask = ThreadsPerCPU;
+            ThreadsPerCPU -= Config.ConfigData.LessThreads;
+            if (ThreadsPerCPU < 1)
             {
-                foreach (ComputeDevice D in m.CDevs)
+                MessageBox.Show("LessThreads greater than number of threads per CPU. CPU mining will be disabled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CPUs = 0;
+            }
+
+            Miners = new Miner[CPUs]; // todo: add cc and sgminer
+
+            if (CPUs == 1)
+                Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
+            else
+            {
+                for (int i = 0; i < CPUs; i++)
+                    Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
+            }
+
+            // todo: initialize ccminer
+            
+            // todo: initialize sgminer
+
+            for (int i = 0; i < Miners.Length; i++)
+            {
+                if (Config.ConfigData.Groups.Length > i)
                 {
+                    for (int z = 0; z < Config.ConfigData.Groups[i].BenchmarkSpeeds.Length && z < Miners[i].SupportedAlgorithms.Length; z++)
+                    {
+                        Miners[i].SupportedAlgorithms[z].BenchmarkSpeed = Config.ConfigData.Groups[i].BenchmarkSpeeds[z];
+                    }
+                }
+                for (int k = 0; k < Miners[i].CDevs.Count; k++)
+                {
+                    ComputeDevice D = Miners[i].CDevs[k];
+                    if (Config.ConfigData.Groups.Length > i)
+                    {
+                        for (int z = 0; z < Config.ConfigData.Groups[i].DisabledDevices.Length; z++)
+                        {
+                            if (Config.ConfigData.Groups[i].DisabledDevices[z] == k)
+                            {
+                                D.Enabled = false;
+                                break;
+                            }
+                        }
+                    }
                     ListViewItem lvi = new ListViewItem();
                     lvi.SubItems.Add(D.Vendor);
                     lvi.SubItems.Add(D.Name);
@@ -88,10 +126,11 @@ namespace NiceHashMiner
                 }
             }
 
+            Config.RebuildGroups();
+
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
             MinerStatsCheck.Interval = 5000; // every 5 seconds
-            MinerStatsCheck.Start();
 
             UpdateCheck = new Timer();
             UpdateCheck.Tick += UpdateCheck_Tick;
@@ -133,7 +172,7 @@ namespace NiceHashMiner
                 Miners[0].SupportedAlgorithms[i].CurrentProfit = Miners[0].SupportedAlgorithms[i].BenchmarkSpeed * 
                     NiceHashData[Miners[0].SupportedAlgorithms[i].NiceHashID].paying * 0.000000001;
 
-                Debug.Print("CPU " + NiceHashData[Miners[0].SupportedAlgorithms[i].NiceHashID].name + " paying " + Miners[0].SupportedAlgorithms[i].CurrentProfit.ToString("F8") + " BTC/Day");
+                Helpers.ConsolePrint("CPU " + NiceHashData[Miners[0].SupportedAlgorithms[i].NiceHashID].name + " paying " + Miners[0].SupportedAlgorithms[i].CurrentProfit.ToString("F8") + " BTC/Day");
 
                 if (Miners[0].SupportedAlgorithms[i].CurrentProfit > MaxProfit)
                 {
@@ -172,19 +211,23 @@ namespace NiceHashMiner
         void BalanceCheck_Tick(object sender, EventArgs e)
         {
             if (!VerifyMiningAddress()) return;
+            Helpers.ConsolePrint("NICEHASH: balance get");
             double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
-            toolStripStatusLabel6.Text = Balance.ToString("F8");
+            if (Balance > 0) toolStripStatusLabel6.Text = Balance.ToString("F8");
         }
 
 
         void SMACheck_Tick(object sender, EventArgs e)
         {
-            NiceHashData = NiceHashStats.GetAlgorithmRates();
+            Helpers.ConsolePrint("NICEHASH: sma get");
+            NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates();
+            if (t != null) NiceHashData = t;
         }
 
 
         void UpdateCheck_Tick(object sender, EventArgs e)
         {
+            Helpers.ConsolePrint("NICEHASH: version get");
             string ver = NiceHashStats.GetVersion();
             if (ver == null) return;
 
@@ -192,7 +235,6 @@ namespace NiceHashMiner
             {
                 linkLabel2.Text = "IMPORTANT! New version v" + ver + " has\r\nbeen released. Click here to download it.";
                 VisitURL = "https://github.com/nicehash/NiceHashMiner/releases/tag/" + ver;
-                UpdateCheck.Stop();
             }
         }
 
@@ -206,7 +248,12 @@ namespace NiceHashMiner
             foreach (Miner m in Miners)
             {
                 APIData AD = m.GetSummary();
-                if (AD == null) continue;
+                if (AD == null)
+                {
+                    // API is inaccessible, try to restart miner
+                    m.Restart();
+                    continue;
+                }
 
                 if (m is cpuminer)
                 {
@@ -246,7 +293,10 @@ namespace NiceHashMiner
             int location = comboBox1.SelectedIndex;
             if (location > 1) location = 1;
 
-            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBox1.Text.Trim());
+            int algo = 0;
+            if (CurrentCPUAlgo >= 0) algo = Miners[0].SupportedAlgorithms[CurrentCPUAlgo].NiceHashID;
+
+            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBox1.Text.Trim() + "&l=" + location + "&a=" + algo);
         }
 
 
@@ -281,11 +331,13 @@ namespace NiceHashMiner
 
             SMACPUCheck.Start();
             SMACPUCheck_Tick(null, null);
+            MinerStatsCheck.Start();
         }
 
 
         private void button2_Click(object sender, EventArgs e)
         {
+            MinerStatsCheck.Stop();
             SMACPUCheck.Stop();
 
             foreach (Miner m in Miners)
@@ -299,37 +351,26 @@ namespace NiceHashMiner
         }
 
 
-        //delegate void ResetButtonTextCallback();
-
-        //private void ResetButtonText()
-        //{
-        //    if (this.button1.InvokeRequired)
-        //    {
-        //        ResetButtonTextCallback d = new ResetButtonTextCallback(ResetButtonText);
-        //        this.Invoke(d, new object[] { });
-        //    }
-        //    else
-        //    {
-        //        this.button1.Text = "Start";
-        //    }
-        //}
-
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(VisitURL);
         }
 
+
         private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             ComputeDevice G = e.Item.Tag as ComputeDevice;
             G.Enabled = e.Item.Checked;
+            Config.RebuildGroups();
         }
+
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             foreach (Miner m in Miners)
                 m.Stop();
         }
+
 
         private void button3_Click(object sender, EventArgs e)
         {

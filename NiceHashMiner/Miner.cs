@@ -65,6 +65,7 @@ namespace NiceHashMiner
         protected BenchmarkComplete OnBenchmarkComplete;
         protected object BenchmarkTag;
         protected int BenchmarkIndex;
+        protected string LastCommandLine;
 
         public Miner()
         {
@@ -75,11 +76,13 @@ namespace NiceHashMiner
 
         abstract public void Start(int nhalgo, string url, string username);
 
+        abstract public void Restart();
+
         virtual public void Stop()
         {
-            Debug.Print(MinerDeviceName + " Shutting down miner");
             if (ProcessHandle != null)
             {
+                Helpers.ConsolePrint(MinerDeviceName + " Shutting down miner");
                 try { ProcessHandle.Kill(); }
                 catch { }
                 ProcessHandle.Close();

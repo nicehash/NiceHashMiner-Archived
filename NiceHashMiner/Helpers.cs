@@ -18,6 +18,10 @@ namespace NiceHashMiner
             [Out] out bool wow64Process
         );
 
+        [DllImportAttribute("kernel32.dll", EntryPoint = "AllocConsole")]
+        [return: MarshalAsAttribute(UnmanagedType.Bool)]
+        public static extern bool AllocConsole();
+
         public static bool InternalCheckIsWow64()
         {
             if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) ||
@@ -37,6 +41,11 @@ namespace NiceHashMiner
             {
                 return false;
             }
+        }
+
+        public static void ConsolePrint(string text)
+        {
+            Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] " + text);
         }
     }
 }

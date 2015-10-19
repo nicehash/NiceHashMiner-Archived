@@ -11,37 +11,6 @@ namespace NiceHashMiner
         private int Threads;
         private ulong AffinityMask;
 
-        //public cpuminer()
-        //{
-        //    MinerDeviceName = "CPU(s)";
-        //    APIPort = 4047;
-
-        //    SupportedAlgorithms = new Algorithm[] { 
-        //        new Algorithm(9, "lyra2re", "lyra2"),
-        //        new Algorithm(13, "axiom", "axiom"),
-        //        new Algorithm(15, "scryptjaneleo", "scryptjane:16")
-        //    };
-
-        //    // detect CPU capabilities
-        //    if (CPUID.SupportsAVX2() == 0)
-        //    {
-        //        if (CPUID.SupportsAVX() == 0)
-        //        {
-        //            if (CPUID.SupportsSSE2() == 0)
-        //                return;
-
-        //            Path = "bin\\cpuminer_x64_SSE2.exe";
-        //        }
-        //        else
-        //            Path = "bin\\cpuminer_x64_AVX.exe";
-        //    }
-        //    else
-        //    {
-        //        Path = "bin\\cpuminer_x64_AVX2.exe";
-        //    }
-
-        //    CDevs.Add(new ComputeDevice(0, CPUID.GetCPUVendor(), CPUID.GetCPUName()));
-        //}
 
         public cpuminer(int id, int threads, ulong affinity)
         {
@@ -53,7 +22,7 @@ namespace NiceHashMiner
             SupportedAlgorithms = new Algorithm[] { 
                     new Algorithm(9, "lyra2re", "lyra2"),
                     new Algorithm(13, "axiom", "axiom"),
-                    new Algorithm(15, "scryptjaneleo", "scryptjane:16")
+                    new Algorithm(15, "scryptjanenf16", "scryptjane:16")
                 };
 
             // detect CPU capabilities
@@ -116,7 +85,9 @@ namespace NiceHashMiner
             BenchmarkTag = tag;
             BenchmarkIndex = index;
 
-            string CommandLine = "--algo=" + SupportedAlgorithms[index].MinerName + " --benchmark";
+            string CommandLine = "--algo=" + SupportedAlgorithms[index].MinerName + " --benchmark --threads=" + Threads.ToString();
+
+            Helpers.ConsolePrint(MinerDeviceName + " Starting benchmark: " + CommandLine);
 
             ProcessHandle = new Process();
             ProcessHandle.StartInfo.FileName = Path;
@@ -172,7 +143,7 @@ namespace NiceHashMiner
         private void Miner_Exited_Benchmark(object sender, EventArgs e)
         {
             BenchmarkStop();
-            OnBenchmarkComplete("User exited", BenchmarkTag);
+            OnBenchmarkComplete("Terminated", BenchmarkTag);
         }
 
 
@@ -185,17 +156,32 @@ namespace NiceHashMiner
             string AlgoName = GetMinerAlgorithmName(nhalgo);
             if (AlgoName == null) return;
 
-            string CommandLine = "--algo=" + AlgoName + " --url=" + url + " --userpass=" + username + ":x --api-bind=" + APIPort.ToString() + " --threads=" + Threads.ToString();
+            LastCommandLine = "--algo=" + AlgoName + " --url=" + url + " --userpass=" + username + ":x --api-bind=" + APIPort.ToString() + " --threads=" + Threads.ToString();
 
-            Debug.Print(MinerDeviceName + " Starting miner: " + CommandLine);
+            _Start();
+        }
+
+
+        private void _Start()
+        {
+            if (CDevs.Count == 0 || !CDevs[0].Enabled) return;
+
+            Helpers.ConsolePrint(MinerDeviceName + " Starting miner: " + LastCommandLine);
 
             ProcessHandle = new Process();
             ProcessHandle.StartInfo.FileName = Path;
-            ProcessHandle.StartInfo.Arguments = CommandLine;
+            ProcessHandle.StartInfo.Arguments = LastCommandLine;
             ProcessHandle.Exited += Miner_Exited;
             ProcessHandle.Start();
             if (AffinityMask != 0)
                 CPUID.AdjustAffinity(ProcessHandle.Id, AffinityMask);
+        }
+
+
+        public override void Restart()
+        {
+            Stop(); // stop miner first
+            _Start(); // start with old command line
         }
 
 
@@ -221,10 +207,7 @@ namespace NiceHashMiner
                     string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                     if (optval.Length != 2) continue;
                     if (optval[0] == "ALGO")
-                    {
                         aname = optval[1];
-                        if (aname == "scryptjane") aname += ":16"; // temporary, fix this later
-                    }
                     else if (optval[0] == "KHS")
                         ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                 }

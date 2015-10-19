@@ -52,6 +52,11 @@ namespace NiceHashMiner
         }
 
 
+        public override void Restart()
+        {
+        }
+
+
         private void Miner_Exited(object sender, EventArgs e)
         {
             Stop();
