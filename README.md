@@ -1,5 +1,5 @@
 # NiceHashMiner
-NiceHash easy to use CPU&GPU Miner for Windows x64.
+NiceHash easy to use CPU&GPU Miner for Windows.
 
 Currently, miner is in beta testing. Only CPU mining supported for now.
 
@@ -10,7 +10,7 @@ For CPU mining our tpruvot's forked cpuminer has been used from here: https://gi
 
 # <a name="features"></a> Features
 
-- Easy one-click CPU mining for CPUs that support at least SSE2.
+- Easy one-click CPU mining for CPUs that support at least SSE2 (x64 OS).
 - Support for multiple CPUs on multiple NUMAs with affinity adjustments to maximize mining speed.
 - Integrated support for Simple Multi-Algorithm. Always mine most profitable algorithm.
 - Integrated benchmarking tool. Run it only once before you start mining and after every hardware upgrade.
