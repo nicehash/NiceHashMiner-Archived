@@ -24,6 +24,7 @@ For CPU mining our tpruvot's forked cpuminer has been used from here: https://gi
 - Download binaries from here: https://github.com/nicehash/NiceHashMiner/releases
 - Extract zip archive
 - Run NiceHashMiner.exe
+- After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly.
 - Note: .NET Framework 2.0 or higher is required. No additional installations are needed if you use Windows 7 or later.
 
 ![Alt text](/newminer.png?raw=true)
