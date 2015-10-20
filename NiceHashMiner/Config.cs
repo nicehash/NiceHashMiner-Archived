@@ -6,13 +6,31 @@ using Newtonsoft.Json;
 
 namespace NiceHashMiner
 {
+    public class Algo
+    {
+#pragma warning disable 649
+        public string Name; // only used for easier manual identification in config file
+        public string ExtraLaunchParameters;
+        public string UsePassword;
+        public double BenchmarkSpeed;
+#pragma warning restore 649
+    }
+
     public class Group
     {
 #pragma warning disable 649
         public string Name; // only used for easier manual identification in config file
+        public string ExtraLaunchParameters;
+        public string UsePassword;
         public int[] DisabledDevices;
-        public double[] BenchmarkSpeeds;
+        public Algo[] Algorithms;
 #pragma warning restore 649
+
+        public Group()
+        {
+            DisabledDevices = new int[0];
+            Algorithms = new Algo[0];
+        }
     }
 
     public class Config
@@ -23,6 +41,8 @@ namespace NiceHashMiner
         public string WorkerName;
         public int Location;
         public int LessThreads;
+        public int SwitchMinSecondsFixed;
+        public int SwitchMinSecondsDynamic;
         public Group[] Groups;
 #pragma warning restore 649
 
@@ -41,6 +61,11 @@ namespace NiceHashMiner
 
             try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
             catch { }
+
+            if (ConfigData.SwitchMinSecondsFixed <= 0)
+                ConfigData.SwitchMinSecondsFixed = 3 * 60;
+            if (ConfigData.SwitchMinSecondsDynamic <= 0)
+                ConfigData.SwitchMinSecondsDynamic = 3 * 60;
         }
 
         public static void Commit()
@@ -57,9 +82,17 @@ namespace NiceHashMiner
             {
                 CG[i] = new Group();
                 CG[i].Name = Form1.Miners[i].MinerDeviceName;
-                CG[i].BenchmarkSpeeds = new double[Form1.Miners[i].SupportedAlgorithms.Length];
+                CG[i].ExtraLaunchParameters = Form1.Miners[i].ExtraLaunchParameters;
+                CG[i].UsePassword = Form1.Miners[i].UsePassword;
+                CG[i].Algorithms = new Algo[Form1.Miners[i].SupportedAlgorithms.Length];
                 for (int k = 0; k < Form1.Miners[i].SupportedAlgorithms.Length; k++)
-                    CG[i].BenchmarkSpeeds[k] = Form1.Miners[i].SupportedAlgorithms[k].BenchmarkSpeed;
+                {
+                    CG[i].Algorithms[k] = new Algo();
+                    CG[i].Algorithms[k].Name = Form1.Miners[i].SupportedAlgorithms[k].NiceHashName;
+                    CG[i].Algorithms[k].BenchmarkSpeed = Form1.Miners[i].SupportedAlgorithms[k].BenchmarkSpeed;
+                    CG[i].Algorithms[k].ExtraLaunchParameters = Form1.Miners[i].SupportedAlgorithms[k].ExtraLaunchParameters;
+                    CG[i].Algorithms[k].UsePassword = Form1.Miners[i].SupportedAlgorithms[k].UsePassword;
+                }
                 List<int> DD = new List<int>();
                 for (int k = 0; k < Form1.Miners[i].CDevs.Count; k++)
                 {
@@ -72,5 +105,4 @@ namespace NiceHashMiner
             Config.Commit();
         }
     }
-
 }

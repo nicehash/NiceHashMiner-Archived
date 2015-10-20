@@ -84,6 +84,7 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "Speed";
+            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeader3.Width = 143;
             // 
             // Form2

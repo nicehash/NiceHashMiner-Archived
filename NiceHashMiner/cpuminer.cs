@@ -54,96 +54,45 @@ namespace NiceHashMiner
         }
 
 
+        protected override string BenchmarkCreateCommandLine(int index)
+        {
+            return "--algo=" + SupportedAlgorithms[index].MinerName + 
+                   " --benchmark" + 
+                   " --threads=" + Threads.ToString() +
+                   " " + ExtraLaunchParameters + 
+                   " " + SupportedAlgorithms[index].ExtraLaunchParameters;
+        }
+
+
         public override void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag)
         {
-            OnBenchmarkComplete = oncomplete;
-            
-            if (BenchmarkTimer != null)
-            {
-                OnBenchmarkComplete("Benchmark running", tag);
-                return;
-            }
-
-            if (ProcessHandle != null)
-            {
-                OnBenchmarkComplete("Miner running", tag);
-                return; // ignore, already running
-            }
-
-            if (index >= SupportedAlgorithms.Length)
-            {
-                OnBenchmarkComplete("Unknown algorithm", tag);
-                return;
-            }
-
-            if (CDevs.Count == 0 || !CDevs[0].Enabled)
-            {
-                OnBenchmarkComplete("Disabled", tag);
-                return; // ignore, disabled device
-            }
-
-            BenchmarkTag = tag;
-            BenchmarkIndex = index;
-
-            string CommandLine = "--algo=" + SupportedAlgorithms[index].MinerName + " --benchmark --threads=" + Threads.ToString();
-
-            Helpers.ConsolePrint(MinerDeviceName + " Starting benchmark: " + CommandLine);
-
-            ProcessHandle = new Process();
-            ProcessHandle.StartInfo.FileName = Path;
-            ProcessHandle.StartInfo.Arguments = CommandLine;
-            ProcessHandle.StartInfo.UseShellExecute = false;
-            ProcessHandle.StartInfo.RedirectStandardOutput = true;
-            ProcessHandle.StartInfo.CreateNoWindow = true;
-            ProcessHandle.Start();
-            if (AffinityMask != 0)
+            base.BenchmarkStart(index, oncomplete, tag);
+            if (AffinityMask != 0 && ProcessHandle != null)
                 CPUID.AdjustAffinity(ProcessHandle.Id, AffinityMask);
-
-            BenchmarkTimer = new System.Windows.Forms.Timer();
-            BenchmarkTimer.Interval = 100;
-            BenchmarkTimer.Tick += BenchmarkTimer_Tick;
-            BenchmarkTimer.Start();
         }
 
 
-        void BenchmarkTimer_Tick(object sender, EventArgs e)
+        protected override void BenchmarkParseLine(string outdata)
         {
-            string outdata;
-            //do
-            //{
-                outdata = ProcessHandle.StandardOutput.ReadLine();
-                if (outdata != null)
-                {
-                    // parse line
-                    if (outdata.Contains(" Total: ") && outdata.Contains("/s"))
-                    {
-                        int i = outdata.IndexOf("Total:");
-                        int k = outdata.IndexOf("/s");
-                        string hashspeed = outdata.Substring(i + 7, k - i - 5);
+            // parse line
+            if (outdata.Contains(" Total: ") && outdata.Contains("/s"))
+            {
+                int i = outdata.IndexOf("Total:");
+                int k = outdata.IndexOf("/s");
+                string hashspeed = outdata.Substring(i + 7, k - i - 5);
 
-                        // save speed
-                        int b = hashspeed.IndexOf(" ");
-                        double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
-                        if (hashspeed.Contains("kH/s"))
-                            spd *= 1000;
-                        else if (hashspeed.Contains("MH/s"))
-                            spd *= 1000000;
-                        SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
+                // save speed
+                int b = hashspeed.IndexOf(" ");
+                double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
+                if (hashspeed.Contains("kH/s"))
+                    spd *= 1000;
+                else if (hashspeed.Contains("MH/s"))
+                    spd *= 1000000;
+                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
 
-                        BenchmarkStop();
-                        OnBenchmarkComplete(PrintSpeed(spd), BenchmarkTag);
-                        return;
-                    }
-                }
-            //    break;
-            //} while (outdata != null);
-        }
-
-
-        private void Miner_Exited_Benchmark(object sender, EventArgs e)
-        {
-            BenchmarkStop();
-            OnBenchmarkComplete("Terminated", BenchmarkTag);
+                BenchmarkStop();
+                OnBenchmarkComplete(PrintSpeed(spd), BenchmarkTag);
+            }
         }
 
 
@@ -153,73 +102,26 @@ namespace NiceHashMiner
 
             if (CDevs.Count == 0 || !CDevs[0].Enabled) return;
 
-            string AlgoName = GetMinerAlgorithmName(nhalgo);
-            if (AlgoName == null) return;
+            Algorithm Algo = GetMinerAlgorithm(nhalgo);
+            if (Algo == null) return;
 
-            LastCommandLine = "--algo=" + AlgoName + " --url=" + url + " --userpass=" + username + ":x --api-bind=" + APIPort.ToString() + " --threads=" + Threads.ToString();
+            LastCommandLine = "--algo=" + Algo.MinerName + 
+                              " --url=" + url + 
+                              " --userpass=" + username + ":" + GetPassword(Algo) + 
+                              " --api-bind=" + APIPort.ToString() + 
+                              " --threads=" + Threads.ToString() + 
+                              " " + ExtraLaunchParameters + 
+                              " " + Algo.ExtraLaunchParameters;
 
             _Start();
         }
 
 
-        private void _Start()
+        protected override void _Start()
         {
-            if (CDevs.Count == 0 || !CDevs[0].Enabled) return;
-
-            Helpers.ConsolePrint(MinerDeviceName + " Starting miner: " + LastCommandLine);
-
-            ProcessHandle = new Process();
-            ProcessHandle.StartInfo.FileName = Path;
-            ProcessHandle.StartInfo.Arguments = LastCommandLine;
-            ProcessHandle.Exited += Miner_Exited;
-            ProcessHandle.Start();
-            if (AffinityMask != 0)
+            base._Start();
+            if (AffinityMask != 0 && ProcessHandle != null)
                 CPUID.AdjustAffinity(ProcessHandle.Id, AffinityMask);
-        }
-
-
-        public override void Restart()
-        {
-            Stop(); // stop miner first
-            _Start(); // start with old command line
-        }
-
-
-        private void Miner_Exited(object sender, EventArgs e)
-        {
-            Stop();
-        }
-
-
-        public override APIData GetSummary()
-        {
-            string resp = GetAPIData(APIPort, "summary");
-            if (resp == null) return null;
-
-            string aname = null;
-            APIData ad = new APIData();
-
-            try
-            {
-                string[] resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < resps.Length; i++)
-                {
-                    string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (optval.Length != 2) continue;
-                    if (optval[0] == "ALGO")
-                        aname = optval[1];
-                    else if (optval[0] == "KHS")
-                        ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
-                }
-            }
-            catch
-            {
-                return null;
-            }
-
-            FillAlgorithm(aname, ref ad);
-
-            return ad;
         }
     }
 }

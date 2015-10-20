@@ -55,15 +55,23 @@ namespace NiceHashMiner
         }
 
 
-        private void BenchmarkComplete(string text, object tag)
+        private void BenchmarkCompleted(string text, object tag)
         {
-            inBenchmark = false;
+            if (this.InvokeRequired)
+            {
+                BenchmarkComplete d = new BenchmarkComplete(BenchmarkCompleted);
+                this.Invoke(d, new object[] { text, tag });
+            }
+            else
+            {
+                inBenchmark = false;
 
-            ListViewItem lvi = tag as ListViewItem;
-            lvi.SubItems[2].Text = text;
+                ListViewItem lvi = tag as ListViewItem;
+                lvi.SubItems[2].Text = text;
 
-            // initiate new benchmark
-            InitiateBenchmark();
+                // initiate new benchmark
+                InitiateBenchmark();
+            }
         }
 
 
@@ -77,11 +85,53 @@ namespace NiceHashMiner
                 int i = (int)lvi.SubItems[1].Tag;
                 lvi.SubItems[2].Text = "Please wait...";
                 inBenchmark = true;
-                m.BenchmarkStart(i, BenchmarkComplete, lvi);
+                m.BenchmarkStart(i, BenchmarkCompleted, lvi);
             }
             else
             {
                 startBenchmarkToolStripMenuItem.Text = "Start benchmark";
+
+                // average all cpu benchmarks
+                if (Form1.Miners[0] is cpuminer)
+                {
+                    Helpers.ConsolePrint("Calculating average CPU speeds:");
+
+                    double[] Speeds = new double[Form1.Miners[0].SupportedAlgorithms.Length];
+                    int[] MTaken = new int[Form1.Miners[0].SupportedAlgorithms.Length];
+
+                    foreach (ListViewItem lvi in listView1.Items)
+                    {
+                        if (lvi.Tag is cpuminer)
+                        {
+                            Miner m = lvi.Tag as Miner;
+                            int i = (int)lvi.SubItems[1].Tag;
+                            if (m.SupportedAlgorithms[i].BenchmarkSpeed > 0)
+                            {
+                                Speeds[i] += m.SupportedAlgorithms[i].BenchmarkSpeed;
+                                MTaken[i]++;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < Speeds.Length; i++)
+                    {
+                        if (MTaken[i] > 0) Speeds[i] /= MTaken[i];
+                        Helpers.ConsolePrint(Form1.Miners[0].SupportedAlgorithms[i].NiceHashName + " average speed: " + Form1.Miners[0].PrintSpeed(Speeds[i]));
+                    }
+
+                    foreach (ListViewItem lvi in listView1.Items)
+                    {
+                        if (lvi.Tag is cpuminer)
+                        {
+                            Miner m = lvi.Tag as Miner;
+                            int i = (int)lvi.SubItems[1].Tag;
+                            m.SupportedAlgorithms[i].BenchmarkSpeed = Speeds[i];
+                            lvi.SubItems[2].Text = m.PrintSpeed(Speeds[i]);
+                        }
+                    }
+                }
+                
+
                 Config.RebuildGroups();
             }
         }

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace NiceHashMiner
 {
 #pragma warning disable 649
-    class NiceHashSMA
+    public class NiceHashSMA
     {
         public int port;
         public string name;

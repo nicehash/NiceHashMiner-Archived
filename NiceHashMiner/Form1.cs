@@ -14,8 +14,6 @@ namespace NiceHashMiner
         private static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
         private static string VisitURL = "http://www.nicehash.com";
         private static NiceHashSMA[] NiceHashData = null;
-        private static int SwitchTimeFixed = 3 * 60 * 1000;
-        private static int SwitchTimeDynamic = 3 * 60 * 1000;
 
         public static Miner[] Miners;
 
@@ -23,16 +21,7 @@ namespace NiceHashMiner
         private Timer UpdateCheck;
         private Timer SMACheck;
         private Timer BalanceCheck;
-
-        private Timer SMACPUCheck;
-
-        private double CPURate = 0;
-        private double NVIDIARate = 0;
-        private double AMDRate = 0;
-
-        private int CurrentCPUAlgo = -1;
-        private int CurrentNVIDIAAlgo = -1;
-        private int CurrentAMDAlgo = -1;
+        private Timer SMAMinerCheck;
 
         private Random R;
 
@@ -80,7 +69,7 @@ namespace NiceHashMiner
                 CPUs = 0;
             }
 
-            Miners = new Miner[CPUs]; // todo: add cc and sgminer
+            Miners = new Miner[CPUs + 2]; // todo: add sgminer
 
             if (CPUs == 1)
                 Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
@@ -90,7 +79,8 @@ namespace NiceHashMiner
                     Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
             }
 
-            // todo: initialize ccminer
+            Miners[CPUs] = new ccminer_sp();
+            Miners[CPUs + 1] = new ccminer_tpruvot();
             
             // todo: initialize sgminer
 
@@ -98,9 +88,13 @@ namespace NiceHashMiner
             {
                 if (Config.ConfigData.Groups.Length > i)
                 {
-                    for (int z = 0; z < Config.ConfigData.Groups[i].BenchmarkSpeeds.Length && z < Miners[i].SupportedAlgorithms.Length; z++)
+                    Miners[i].ExtraLaunchParameters = Config.ConfigData.Groups[i].ExtraLaunchParameters;
+                    Miners[i].UsePassword = Config.ConfigData.Groups[i].UsePassword;
+                    for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length && z < Miners[i].SupportedAlgorithms.Length; z++)
                     {
-                        Miners[i].SupportedAlgorithms[z].BenchmarkSpeed = Config.ConfigData.Groups[i].BenchmarkSpeeds[z];
+                        Miners[i].SupportedAlgorithms[z].BenchmarkSpeed = Config.ConfigData.Groups[i].Algorithms[z].BenchmarkSpeed;
+                        Miners[i].SupportedAlgorithms[z].ExtraLaunchParameters = Config.ConfigData.Groups[i].Algorithms[z].ExtraLaunchParameters;
+                        Miners[i].SupportedAlgorithms[z].UsePassword = Config.ConfigData.Groups[i].Algorithms[z].UsePassword;
                     }
                 }
                 for (int k = 0; k < Miners[i].CDevs.Count; k++)
@@ -150,61 +144,117 @@ namespace NiceHashMiner
             BalanceCheck.Start();
             BalanceCheck_Tick(null, null);
 
-            SMACPUCheck = new Timer();
-            SMACPUCheck.Tick += SMACPUCheck_Tick;
-            SMACPUCheck.Interval = SwitchTimeFixed + R.Next(SwitchTimeDynamic);
+            SMAMinerCheck = new Timer();
+            SMAMinerCheck.Tick += SMAMinerCheck_Tick;
+            SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
         }
 
 
-        void SMACPUCheck_Tick(object sender, EventArgs e)
+        void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
-            SMACPUCheck.Interval = SwitchTimeFixed + R.Next(SwitchTimeDynamic);
+            SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
 
-            if (Miners.Length == 0 || !(Miners[0] is cpuminer))
-                return;
+            string Worker = textBox2.Text.Trim();
+            if (Worker.Length > 0)
+                Worker = textBox1.Text.Trim() + "." + Worker;
+            else
+                Worker = textBox1.Text.Trim();
 
-            // determine current best CPU algorithm
-            // assuming that all CPUs have equal power
-            double MaxProfit = 0;
-            int MaxProfitIndex = 0;
-            for (int i = 0; i < Miners[0].SupportedAlgorithms.Length; i++)
+            foreach (Miner m in Miners)
             {
-                Miners[0].SupportedAlgorithms[i].CurrentProfit = Miners[0].SupportedAlgorithms[i].BenchmarkSpeed * 
-                    NiceHashData[Miners[0].SupportedAlgorithms[i].NiceHashID].paying * 0.000000001;
+                if (m.EnabledDeviceCount() == 0) continue;
 
-                Helpers.ConsolePrint("CPU " + NiceHashData[Miners[0].SupportedAlgorithms[i].NiceHashID].name + " paying " + Miners[0].SupportedAlgorithms[i].CurrentProfit.ToString("F8") + " BTC/Day");
+                int MaxProfitIndex = m.GetMaxProfitIndex(NiceHashData);
 
-                if (Miners[0].SupportedAlgorithms[i].CurrentProfit > MaxProfit)
+                if (m.CurrentAlgo != MaxProfitIndex)
                 {
-                    MaxProfit = Miners[0].SupportedAlgorithms[i].CurrentProfit;
-                    MaxProfitIndex = i;
+                    if (m.CurrentAlgo >= 0)
+                        m.Stop();
+                }
+
+                m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
+                    "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBox1.SelectedIndex] + ".nicehash.com:" +
+                    NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+
+                m.CurrentAlgo = MaxProfitIndex;
+            }
+        }
+
+
+        private void MinerStatsCheck_Tick(object sender, EventArgs e)
+        {
+            string CPUAlgoName = "";
+            double CPUTotalSpeed = 0;
+            double CPUTotalRate = 0;
+
+            foreach (Miner m in Miners)
+            {
+                if (m.EnabledDeviceCount() == 0) continue;
+
+                APIData AD = m.GetSummary();
+                if (AD == null)
+                {
+                    // API is inaccessible, try to restart miner
+                    m.Restart();
+                    continue;
+                }
+
+                if (NiceHashData != null)
+                    m.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
+
+                if (m is cpuminer)
+                {
+                    CPUAlgoName = AD.AlgorithmName;
+                    CPUTotalSpeed += AD.Speed;
+                    CPUTotalRate += m.CurrentRate;
+                }
+                else if (m is ccminer_tpruvot)
+                {
+                    SetNVIDIAtpStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+                }
+                else if (m is ccminer_sp)
+                {
+                    SetNVIDIAspStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
                 }
             }
 
-            if (CurrentCPUAlgo != MaxProfitIndex)
+            if (CPUAlgoName.Length > 0)
             {
-                if (!VerifyMiningAddress()) return;
-
-                if (CurrentCPUAlgo >= 0)
-                {
-                    foreach (Miner m in Miners)
-                        if (m is cpuminer) m.Stop();
-                }
-
-                string Worker = textBox2.Text.Trim();
-                if (Worker.Length > 0)
-                    Worker = textBox1.Text.Trim() + "." + Worker;
-                else
-                    Worker = textBox1.Text.Trim();
-
-                foreach (Miner m in Miners)
-                    if (m is cpuminer)
-                        m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
-                            "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBox1.SelectedIndex] + ".nicehash.com:" + 
-                            NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
-
-                CurrentCPUAlgo = MaxProfitIndex;
+                SetCPUStats(CPUAlgoName, CPUTotalSpeed, CPUTotalRate);
             }
+        }
+
+
+        private void SetCPUStats(string aname, double speed, double paying)
+        {
+            label5.Text = (speed * 0.001).ToString("F2") + " kH/s " + aname;
+            label11.Text = paying.ToString("F8") + " BTC/Day";
+            UpdateGlobalRate();
+        }
+
+
+        private void SetNVIDIAtpStats(string aname, double speed, double paying)
+        {
+            label8.Text = (speed * 0.000001).ToString("F2") + " MH/s " + aname;
+            label14.Text = paying.ToString("F8") + " BTC/Day";
+            UpdateGlobalRate();
+        }
+
+
+        private void SetNVIDIAspStats(string aname, double speed, double paying)
+        {
+            label6.Text = (speed * 0.000001).ToString("F2") + " MH/s " + aname;
+            label12.Text = paying.ToString("F8") + " BTC/Day";
+            UpdateGlobalRate();
+        }
+
+
+        private void UpdateGlobalRate()
+        {
+            double TotalRate = 0;
+            foreach (Miner m in Miners)
+                TotalRate += m.CurrentRate;
+            toolStripStatusLabel4.Text = (TotalRate).ToString("F8");
         }
 
 
@@ -239,53 +289,6 @@ namespace NiceHashMiner
         }
 
 
-        private void MinerStatsCheck_Tick(object sender, EventArgs e)
-        {
-            APIData CPUdata = new APIData();
-            CPUdata.AlgorithmName = null;
-            CPUdata.Speed = 0;
-
-            foreach (Miner m in Miners)
-            {
-                APIData AD = m.GetSummary();
-                if (AD == null)
-                {
-                    // API is inaccessible, try to restart miner
-                    m.Restart();
-                    continue;
-                }
-
-                if (m is cpuminer)
-                {
-                    CPUdata.AlgorithmID = AD.AlgorithmID;
-                    CPUdata.AlgorithmName = AD.AlgorithmName;
-                    CPUdata.Speed += AD.Speed;
-                }
-            }
-
-            if (CPUdata.AlgorithmName != null && NiceHashData != null)
-            {
-                double Paying = NiceHashData[CPUdata.AlgorithmID].paying * CPUdata.Speed * 0.000000001;
-                SetCPUStats(CPUdata.AlgorithmName, CPUdata.Speed, Paying);
-            }
-        }
-
-
-        private void SetCPUStats(string aname, double speed, double paying)
-        {
-            label5.Text = (speed * 0.001).ToString("F2") + " kH/s " + aname;
-            label11.Text = paying.ToString("F8") + " BTC/Day";
-            CPURate = paying;
-            UpdateGlobalRate();
-        }
-
-
-        private void UpdateGlobalRate()
-        {
-            toolStripStatusLabel4.Text = (CPURate + NVIDIARate + AMDRate).ToString("F8");
-        }
-
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (!VerifyMiningAddress()) return;
@@ -294,7 +297,15 @@ namespace NiceHashMiner
             if (location > 1) location = 1;
 
             int algo = 0;
-            if (CurrentCPUAlgo >= 0) algo = Miners[0].SupportedAlgorithms[CurrentCPUAlgo].NiceHashID;
+            // find first working algo
+            foreach (Miner m in Miners)
+            {
+                if (m.CurrentAlgo >= 0)
+                {
+                    algo = m.SupportedAlgorithms[m.CurrentAlgo].NiceHashID;
+                    break;
+                }
+            }
 
             System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBox1.Text.Trim() + "&l=" + location + "&a=" + algo);
         }
@@ -323,14 +334,22 @@ namespace NiceHashMiner
                 return;
             }
 
+            textBox1.Enabled = false;
+            textBox2.Enabled = false;
+            comboBox1.Enabled = false;
+            button3.Enabled = false;
+            button1.Enabled = false;
+            listView1.Enabled = false;
+            button2.Enabled = true;
+
             // todo: commit saving when values are changed
             Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();
             Config.ConfigData.WorkerName = textBox2.Text.Trim();
             Config.ConfigData.Location = comboBox1.SelectedIndex;
             Config.Commit();
 
-            SMACPUCheck.Start();
-            SMACPUCheck_Tick(null, null);
+            SMAMinerCheck.Start();
+            SMAMinerCheck_Tick(null, null);
             MinerStatsCheck.Start();
         }
 
@@ -338,16 +357,25 @@ namespace NiceHashMiner
         private void button2_Click(object sender, EventArgs e)
         {
             MinerStatsCheck.Stop();
-            SMACPUCheck.Stop();
+            SMAMinerCheck.Stop();
 
             foreach (Miner m in Miners)
+            {
                 m.Stop();
+                m.CurrentAlgo = -1;
+            }
 
             SetCPUStats("", 0, 0);
+            SetNVIDIAspStats("", 0, 0);
+            SetNVIDIAtpStats("", 0, 0);
 
-            CurrentCPUAlgo = -1;
-            CurrentNVIDIAAlgo = -1;
-            CurrentAMDAlgo = -1;
+            textBox1.Enabled = true;
+            textBox2.Enabled = true;
+            comboBox1.Enabled = true;
+            button3.Enabled = true;
+            button1.Enabled = true;
+            listView1.Enabled = true;
+            button2.Enabled = false;
         }
 
 

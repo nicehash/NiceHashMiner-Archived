@@ -9,61 +9,126 @@ using System.Diagnostics;
 
 namespace NiceHashMiner
 {
-    public class ccminer : Miner
+    abstract public class ccminer : Miner
     {
+        private List<int> BenchmarkedGPUs;
+
         public ccminer()
         {
-            MinerDeviceName = "NVIDIA GPU(s)";
-            Path = "bin\\ccminer.exe";
-            APIPort = 4048;
-
             SupportedAlgorithms = new Algorithm[] { 
-                new Algorithm(0, "scrypt", "scrypt"),
-                new Algorithm(12, "quark", "quark")
+                new Algorithm(3, "x11", "x11"),
+                new Algorithm(4, "x13", "x13"),
+                new Algorithm(5, "keccak", "keccak"),
+                new Algorithm(7, "nist5", "nist5"),
+                new Algorithm(8, "neoscrypt", "neoscrypt"),
+                new Algorithm(10, "whirlpoolx", "whirlpoolx"),
+                new Algorithm(11, "qubit", "qubit"),
+                new Algorithm(12, "quark", "quark"),
+                new Algorithm(14, "lyra2rev2", "lyra2v2")
             };
-
-            QueryCDevs();
         }
 
 
-        public override void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag) { }
-
-        public override void Start(int nhalgo, string url, string username)
+        protected override string BenchmarkCreateCommandLine(int index)
         {
-            if (ProcessHandle != null) return; // ignore, already running 
-
-            //string CommandLine = "--url=sumplemultialgo+NiceHash+" + suburl + " --userpass=" + username + ":x --api-bind=" + APIPort.ToString() + " --devices ";
-            string CommandLine = "--algo=" + "test" + " --url=" + url + " --userpass=" + username + ":x --api-bind=" + APIPort.ToString() + " --devices ";
+            string CommandLine = "--algo=" + SupportedAlgorithms[index].MinerName + 
+                                 " --benchmark" +
+                                 " " + ExtraLaunchParameters +
+                                 " " + SupportedAlgorithms[index].ExtraLaunchParameters + 
+                                 " --devices ";
 
             foreach (ComputeDevice G in CDevs)
                 if (G.Enabled)
                     CommandLine += G.ID.ToString() + ",";
 
-            if (CommandLine.EndsWith(","))
+            CommandLine = CommandLine.Remove(CommandLine.Length - 1);
+
+            return CommandLine;
+        }
+
+
+        public override void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag)
+        {
+            base.BenchmarkStart(index, oncomplete, tag);
+            BenchmarkedGPUs = new List<int>();
+        }
+
+
+        protected override void BenchmarkParseLine(string outdata)
+        {
+            // parse line
+            if (outdata.Contains("Total: ") && outdata.Contains("/s"))
             {
-                CommandLine = CommandLine.Remove(CommandLine.Length - 1);
+                if (EnabledDeviceCount() == BenchmarkedGPUs.Count)
+                {
+                    int i = outdata.IndexOf("Total:");
+                    int k = outdata.IndexOf("/s");
+                    string hashspeed = outdata.Substring(i + 7, k - i - 5);
+
+                    // save speed
+                    int b = hashspeed.IndexOf(" ");
+                    double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
+                    if (hashspeed.Contains("kH/s"))
+                        spd *= 1000;
+                    else if (hashspeed.Contains("MH/s"))
+                        spd *= 1000000;
+                    else if (hashspeed.Contains("GH/s"))
+                        spd *= 1000000000;
+                    SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
+
+                    BenchmarkStop();
+                    OnBenchmarkComplete(PrintSpeed(spd), BenchmarkTag);
+                    return;
+                }
+            }
+            else if (outdata.Contains("] GPU") && !outdata.Contains("Found") && !outdata.Contains("nounce"))
+            {
+                // remember this GPU
+                int i = outdata.IndexOf("GPU ");
+                int id = int.Parse(outdata.Substring(i + 5, 1));
+                if (!BenchmarkedGPUs.Contains(id))
+                    BenchmarkedGPUs.Add(id);
+            }
+        }
+
+
+        public override void Start(int nhalgo, string url, string username)
+        {
+            if (ProcessHandle != null) return; // ignore, already running 
+
+            Algorithm Algo = GetMinerAlgorithm(nhalgo);
+            if (Algo == null) return;
+
+            LastCommandLine = "--algo=" + Algo.MinerName + 
+                              " --url=" + url + 
+                              " --userpass=" + username + ":" + GetPassword(Algo) + 
+                              " --api-bind=" + APIPort.ToString() + 
+                              " " + ExtraLaunchParameters +
+                              " " + Algo.ExtraLaunchParameters + 
+                              " --devices ";
+
+            foreach (ComputeDevice G in CDevs)
+                if (G.Enabled)
+                    LastCommandLine += G.ID.ToString() + ",";
+
+            if (LastCommandLine.EndsWith(","))
+            {
+                LastCommandLine = LastCommandLine.Remove(LastCommandLine.Length - 1);
             }
             else
+            {
+                LastCommandLine = "";
                 return; // no GPUs to start mining on
+            }
 
-            ProcessHandle = Process.Start(Path, CommandLine);
-            ProcessHandle.EnableRaisingEvents = true;
-            ProcessHandle.Exited += Miner_Exited;
+            _Start();
         }
 
 
-        public override void Restart()
-        {
-        }
+        abstract protected void AddPotentialCDev(string text);
 
 
-        private void Miner_Exited(object sender, EventArgs e)
-        {
-            Stop();
-        }
-
-
-        private void QueryCDevs()
+        protected void QueryCDevs()
         {
             Process P = new Process();
             P.StartInfo.FileName = Path;
@@ -79,42 +144,10 @@ namespace NiceHashMiner
             {
                 outdata = P.StandardError.ReadLine();
                 if (outdata != null)
-                    CDevs.Add(new ComputeDevice(CDevs.Count, "NVIDIA", outdata.Split(':')[1]));
+                    AddPotentialCDev(outdata);
             } while (outdata != null);
 
             P.WaitForExit();
-        }
-
-
-        public override APIData GetSummary()
-        {
-            string resp = GetAPIData(APIPort, "summary");
-            if (resp == null) return null;
-
-            string aname = null;
-            APIData ad = new APIData();
-
-            try
-            {
-                string[] resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < resps.Length; i++)
-                {
-                    string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (optval.Length != 2) continue;
-                    if (optval[0] == "ALGO")
-                        aname = optval[1];
-                    else if (optval[0] == "KHS")
-                        ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
-                }
-            }
-            catch
-            {
-                return null;
-            }
-
-            FillAlgorithm(aname, ref ad);
-
-            return ad;
         }
     }
 }

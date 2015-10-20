@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace NiceHashMiner
 {
@@ -15,6 +16,8 @@ namespace NiceHashMiner
         public string MinerName;
         public double BenchmarkSpeed;
         public double CurrentProfit;
+        public string ExtraLaunchParameters;
+        public string UsePassword;
 
         public Algorithm(int id, string nhname, string mname)
         {
@@ -22,6 +25,8 @@ namespace NiceHashMiner
             NiceHashName = nhname;
             MinerName = mname;
             BenchmarkSpeed = 0;
+            ExtraLaunchParameters = "";
+            UsePassword = null;
         }
     }
 
@@ -57,6 +62,10 @@ namespace NiceHashMiner
         public string MinerDeviceName;
         public List<ComputeDevice> CDevs;
         public Algorithm[] SupportedAlgorithms;
+        public string ExtraLaunchParameters;
+        public string UsePassword;
+        public int CurrentAlgo;
+        public double CurrentRate;
 
         protected string Path;
         protected int APIPort;
@@ -70,13 +79,15 @@ namespace NiceHashMiner
         public Miner()
         {
             CDevs = new List<ComputeDevice>();
+
+            ExtraLaunchParameters = "";
+            UsePassword = null;
+
+            CurrentAlgo = -1;
+            CurrentRate = 0;
         }
 
-        abstract public APIData GetSummary();
-
         abstract public void Start(int nhalgo, string url, string username);
-
-        abstract public void Restart();
 
         virtual public void Stop()
         {
@@ -90,7 +101,79 @@ namespace NiceHashMiner
             }
         }
 
-        abstract public void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag);
+        abstract protected string BenchmarkCreateCommandLine(int index);
+
+
+        virtual public void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag)
+        {
+            OnBenchmarkComplete = oncomplete;
+
+            if (BenchmarkTimer != null)
+            {
+                OnBenchmarkComplete("Benchmark running", tag);
+                return;
+            }
+
+            if (ProcessHandle != null)
+            {
+                OnBenchmarkComplete("Miner running", tag);
+                return; // ignore, already running
+            }
+
+            if (index >= SupportedAlgorithms.Length)
+            {
+                OnBenchmarkComplete("Unknown algorithm", tag);
+                return;
+            }
+
+            if (EnabledDeviceCount() == 0)
+            {
+                OnBenchmarkComplete("Disabled", tag);
+                return; // ignore, disabled device
+            }
+
+            BenchmarkTag = tag;
+            BenchmarkIndex = index;
+
+            string CommandLine = BenchmarkCreateCommandLine(index);
+
+            Helpers.ConsolePrint(MinerDeviceName + " Starting benchmark: " + CommandLine);
+
+            ProcessHandle = new Process();
+            ProcessHandle.StartInfo.FileName = Path;
+            ProcessHandle.StartInfo.Arguments = CommandLine;
+            ProcessHandle.StartInfo.UseShellExecute = false;
+            ProcessHandle.StartInfo.RedirectStandardError = true;
+            ProcessHandle.StartInfo.RedirectStandardOutput = true;
+            ProcessHandle.StartInfo.CreateNoWindow = true;
+            ProcessHandle.EnableRaisingEvents = true;
+            ProcessHandle.Exited += Miner_Exited_Benchmark;
+            ProcessHandle.Start();
+
+            BenchmarkTimer = new System.Windows.Forms.Timer();
+            BenchmarkTimer.Interval = 100;
+            BenchmarkTimer.Tick += BenchmarkTimer_Tick;
+            BenchmarkTimer.Start();
+        }
+
+
+        abstract protected void BenchmarkParseLine(string outdata);
+
+
+        virtual protected void BenchmarkTimer_Tick(object sender, EventArgs e)
+        {
+            string outdata = ProcessHandle.StandardOutput.ReadLine();
+            if (outdata != null)
+                BenchmarkParseLine(outdata);
+        }
+
+
+        virtual protected void Miner_Exited_Benchmark(object sender, EventArgs e)
+        {
+            BenchmarkStop();
+            OnBenchmarkComplete("Terminated", BenchmarkTag);
+        }
+
 
         virtual public void BenchmarkStop()
         {
@@ -110,10 +193,61 @@ namespace NiceHashMiner
         }
 
 
+        virtual protected string GetPassword(Algorithm a)
+        {
+            if (a.UsePassword != null && a.UsePassword.Length > 0)
+                return a.UsePassword;
+
+            if (UsePassword != null && UsePassword.Length > 0)
+                return UsePassword;
+
+            return "x";
+        }
+
+
+        virtual protected void _Start()
+        {
+            if (LastCommandLine.Length == 0 || EnabledDeviceCount() == 0) return;
+
+            Helpers.ConsolePrint(MinerDeviceName + " Starting miner: " + LastCommandLine);
+
+            ProcessHandle = new Process();
+            ProcessHandle.StartInfo.FileName = Path;
+            ProcessHandle.StartInfo.Arguments = LastCommandLine;
+            ProcessHandle.EnableRaisingEvents = true;
+            ProcessHandle.Exited += Miner_Exited;
+            ProcessHandle.Start();
+        }
+
+
+        virtual protected void Miner_Exited(object sender, EventArgs e)
+        {
+            Stop();
+        }
+
+
+        virtual public void Restart()
+        {
+            Stop(); // stop miner first
+            _Start(); // start with old command line
+        }
+
+
         virtual public string PrintSpeed(double spd)
         {
             // print in MH/s
             return (spd * 0.000001).ToString("F2") + " MH/s";
+        }
+
+
+        public int EnabledDeviceCount()
+        {
+            int en = 0;
+
+            foreach (ComputeDevice G in CDevs)
+                if (G.Enabled) en++;
+
+            return en;
         }
         
 
@@ -130,13 +264,13 @@ namespace NiceHashMiner
         }
 
 
-        protected string GetMinerAlgorithmName(int nhid)
+        protected Algorithm GetMinerAlgorithm(int nhid)
         {
             for (int i = 0; i < SupportedAlgorithms.Length; i++)
             {
                 if (SupportedAlgorithms[i].NiceHashID == nhid)
                 {
-                    return SupportedAlgorithms[i].MinerName;
+                    return SupportedAlgorithms[i];
                 }
             }
 
@@ -187,6 +321,61 @@ namespace NiceHashMiner
             }
 
             return ResponseFromServer;
+        }
+
+
+        public APIData GetSummary()
+        {
+            string resp = GetAPIData(APIPort, "summary");
+            if (resp == null) return null;
+
+            string aname = null;
+            APIData ad = new APIData();
+
+            try
+            {
+                string[] resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < resps.Length; i++)
+                {
+                    string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (optval.Length != 2) continue;
+                    if (optval[0] == "ALGO")
+                        aname = optval[1];
+                    else if (optval[0] == "KHS")
+                        ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+            FillAlgorithm(aname, ref ad);
+
+            return ad;
+        }
+
+
+        virtual public int GetMaxProfitIndex(NiceHashSMA[] NiceHashData)
+        {
+            double MaxProfit = 0;
+            int MaxProfitIndex = 0;
+
+            for (int i = 0; i < SupportedAlgorithms.Length; i++)
+            {
+                SupportedAlgorithms[i].CurrentProfit = SupportedAlgorithms[i].BenchmarkSpeed *
+                    NiceHashData[SupportedAlgorithms[i].NiceHashID].paying * 0.000000001;
+
+                Helpers.ConsolePrint(MinerDeviceName + " " + NiceHashData[SupportedAlgorithms[i].NiceHashID].name + " paying " + SupportedAlgorithms[i].CurrentProfit.ToString("F8") + " BTC/Day");
+
+                if (SupportedAlgorithms[i].CurrentProfit > MaxProfit)
+                {
+                    MaxProfit = SupportedAlgorithms[i].CurrentProfit;
+                    MaxProfitIndex = i;
+                }
+            }
+
+            return MaxProfitIndex;
         }
     }
 }
