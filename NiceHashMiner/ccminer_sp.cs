@@ -39,10 +39,7 @@ namespace NiceHashMiner
         {
             string outdata = ProcessHandle.StandardError.ReadLine();
             if (outdata != null)
-            {
-                Helpers.ConsolePrint(outdata);
                 BenchmarkParseLine(outdata);
-            }
         }
     }
 }
