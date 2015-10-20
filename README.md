@@ -45,7 +45,7 @@ Parameter        | Range    | Description
 DebugConsole     | 0 or 1   | When set to 1, it displays debug console.
 LessThreads      | 0 .. 64  | Reduce number of threads used on each CPU by LessThreads. Example: if you have 8 cores and LessThreads = 1 then CPU miner will work with 7 threads.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
-SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have exact switching pattern.
+SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
 Groups\ExtraLaunchParameters | text | Additional launch parameters when launching miner.
 Groups\Algorithms\ExtraLaunchParameters | text | Additional launch parameters when launching miner and this algorithm.
 Groups\Algorithms\BenchmarkSpeed   | number   | Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.
