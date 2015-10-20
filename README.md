@@ -38,5 +38,5 @@ Parameter        | Range    | Description
 -----------------|----------|-------------------
 DebugConsole     | 0 or 1   | When set to 1, it displays debug console.
 LessThreads      | 0 .. 64  | Reduce number of threads used on each CPU by LessThreads. Example: if you have 8 cores and LessThreads = 1 then CPU miner will work with 7 threads.
-BenchmarkSpeeds  | double   | Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.
+BenchmarkSpeed   | double   | Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.
 ExtraLaunchParameters | string | Additional launch parameters when launching miner.
