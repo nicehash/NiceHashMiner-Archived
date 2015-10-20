@@ -2,7 +2,7 @@
 
 - [Introduction](#introduction)
 - [Features](#features)
-- [How to run?](#run)
+- [How to get it and run](#run)
 - [Additional options](#options)
 
 # <a name="introduction"></a> Introduction
@@ -11,9 +11,9 @@ NiceHash Miner is easy to use CPU&GPU Miner for Windows with Multi-Algorithm min
 
 Currently, miner is in public beta testing. Please, be patient as there may be some bugs. Reporting them to us would greatly help us. Thank you for participating in beta testing!
 
-For CPU mining our tpruvot's forked cpuminer has been used from here: https://github.com/nicehash/cpuminer-multi (compiled with MingW64).
-For NVIDIA Maxwell mining, sp's fork of ccminer has been used from here: https://github.com/sp-hash/ccminer (compiled with VS 2013 32bit, CUDA 6.5).
-For NVIDIA mining (older cards), tpruvot's fork of ccminer has been used from here: https://github.com/tpruvot/ccminer (compiled with VS 2013 32bit, CUDA 6.5).
+- For CPU mining our tpruvot's forked cpuminer has been used from here: https://github.com/nicehash/cpuminer-multi (compiled with MingW64).
+- For NVIDIA Maxwell mining, sp's fork of ccminer has been used from here: https://github.com/sp-hash/ccminer (compiled with VS 2013 32bit, CUDA 6.5).
+- For NVIDIA mining (older cards), tpruvot's fork of ccminer has been used from here: https://github.com/tpruvot/ccminer (compiled with VS 2013 32bit, CUDA 6.5).
 
 # <a name="features"></a> Features
 
@@ -28,7 +28,7 @@ For NVIDIA mining (older cards), tpruvot's fork of ccminer has been used from he
 - Auto update notifications.
 - Much more...
 
-# <a name="run"></a> Instructions on how to run
+# <a name="run"></a> How to get it and run
 
 - Download binaries from here: https://github.com/nicehash/NiceHashMiner/releases
 - Extract zip archive
