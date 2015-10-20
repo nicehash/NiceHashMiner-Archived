@@ -169,7 +169,11 @@ namespace NiceHashMiner
                 if (m.CurrentAlgo != MaxProfitIndex)
                 {
                     if (m.CurrentAlgo >= 0)
+                    {
                         m.Stop();
+                        // wait 0.5 seconds before going on
+                        System.Threading.Thread.Sleep(500);
+                    }
                 }
 
                 m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
