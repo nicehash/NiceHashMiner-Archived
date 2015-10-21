@@ -39,7 +39,7 @@ Currently, miner is in public beta testing. Please, be patient as there may be s
 
 # <a name="options"></a> Additional options
 
-After first launch, config.json file is created. Additional options are exposed if you decide to manually modify this file.
+After first launch, config.json file is created. Additional options are exposed if you decide to manually modify this file. Close NiceHash Miner before modifying this file.
 
 Parameter        | Range    | Description
 -----------------|----------|-------------------
