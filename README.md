@@ -43,7 +43,7 @@ After first launch, config.json file is created. Additional options are exposed 
 
 Parameter        | Range    | Description
 -----------------|----------|-------------------
-DebugConsole     | 0 or 1   | When set to 1, it displays debug console.
+DebugConsole     | true or false   | When set to true, it displays debug console.
 LessThreads      | 0 .. 64  | Reduce number of threads used on each CPU by LessThreads.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
