@@ -20,6 +20,7 @@ namespace NiceHashMiner
     {
 #pragma warning disable 649
         public string Name; // only used for easier manual identification in config file
+        public int APIBindPort;
         public string ExtraLaunchParameters;
         public string UsePassword;
         public int[] DisabledDevices;
@@ -43,6 +44,9 @@ namespace NiceHashMiner
         public int LessThreads;
         public int SwitchMinSecondsFixed;
         public int SwitchMinSecondsDynamic;
+        public int MinerAPIQueryInterval;
+        public int MinerRestartDelayMS;
+        public int[] BenchmarkTimeLimits;
         public Group[] Groups;
 #pragma warning restore 649
 
@@ -66,6 +70,12 @@ namespace NiceHashMiner
                 ConfigData.SwitchMinSecondsFixed = 3 * 60;
             if (ConfigData.SwitchMinSecondsDynamic <= 0)
                 ConfigData.SwitchMinSecondsDynamic = 3 * 60;
+            if (ConfigData.MinerAPIQueryInterval <= 0)
+                ConfigData.MinerAPIQueryInterval = 5;
+            if (ConfigData.MinerRestartDelayMS <= 0)
+                ConfigData.MinerRestartDelayMS = 200;
+            if (ConfigData.BenchmarkTimeLimits == null || ConfigData.BenchmarkTimeLimits.Length < 3)
+                ConfigData.BenchmarkTimeLimits = new int[] { 10, 20, 60 };
         }
 
         public static void Commit()
@@ -82,6 +92,7 @@ namespace NiceHashMiner
             {
                 CG[i] = new Group();
                 CG[i].Name = Form1.Miners[i].MinerDeviceName;
+                CG[i].APIBindPort = Form1.Miners[i].APIPort;
                 CG[i].ExtraLaunchParameters = Form1.Miners[i].ExtraLaunchParameters;
                 CG[i].UsePassword = Form1.Miners[i].UsePassword;
                 CG[i].Algorithms = new Algo[Form1.Miners[i].SupportedAlgorithms.Length];

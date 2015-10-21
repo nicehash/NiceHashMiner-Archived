@@ -66,3 +66,4 @@ cpuid/cpuid.vcxproj.user
 *.pdb
 *.idb
 NiceHashMiner.sdf
+NiceHashMiner.opensdf

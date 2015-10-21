@@ -33,7 +33,7 @@ Currently, miner is in public beta testing. Please, be patient as there may be s
 - Download binaries from here: https://github.com/nicehash/NiceHashMiner/releases
 - Extract zip archive
 - Run NiceHashMiner.exe
-- After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly. Benchmark may sometimes take longer time or cause NiceHash Miner to become unresponsive. This is normal.
+- After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly.
 
 <i>Note: .NET Framework 2.0 or higher is required. No additional installations are needed if you use Windows 7 or later.</i>
 

@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Globalization;
+using System.Threading;
 
 namespace NiceHashMiner
 {
@@ -60,17 +61,17 @@ namespace NiceHashMiner
     public abstract class Miner
     {
         public string MinerDeviceName;
+        public int APIPort;
         public List<ComputeDevice> CDevs;
         public Algorithm[] SupportedAlgorithms;
         public string ExtraLaunchParameters;
         public string UsePassword;
         public int CurrentAlgo;
         public double CurrentRate;
+        public bool BenchmarkSignalQuit;
 
         protected string Path;
-        protected int APIPort;
         protected Process ProcessHandle;
-        protected Timer BenchmarkTimer;
         protected BenchmarkComplete OnBenchmarkComplete;
         protected object BenchmarkTag;
         protected int BenchmarkIndex;
@@ -101,24 +102,12 @@ namespace NiceHashMiner
             }
         }
 
-        abstract protected string BenchmarkCreateCommandLine(int index);
+        abstract protected string BenchmarkCreateCommandLine(int index, int time);
 
 
-        virtual public void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag)
+        virtual public void BenchmarkStart(int index, int time, BenchmarkComplete oncomplete, object tag)
         {
             OnBenchmarkComplete = oncomplete;
-
-            if (BenchmarkTimer != null)
-            {
-                OnBenchmarkComplete("Benchmark running", tag);
-                return;
-            }
-
-            if (ProcessHandle != null)
-            {
-                OnBenchmarkComplete("Miner running", tag);
-                return; // ignore, already running
-            }
 
             if (index >= SupportedAlgorithms.Length)
             {
@@ -135,61 +124,102 @@ namespace NiceHashMiner
             BenchmarkTag = tag;
             BenchmarkIndex = index;
 
-            string CommandLine = BenchmarkCreateCommandLine(index);
+            string CommandLine = BenchmarkCreateCommandLine(index, time);
 
+            Thread BenchmarkThread = new Thread(BenchmarkThreadRoutine);
+            BenchmarkThread.Start(CommandLine);
+        }
+
+
+        virtual protected bool BenchmarkParseLine(string outdata)
+        {
+            // parse line
+            if (outdata.Contains("Benchmark: ") && outdata.Contains("/s"))
+            {
+                int i = outdata.IndexOf("Benchmark:");
+                int k = outdata.IndexOf("/s");
+                string hashspeed = outdata.Substring(i + 11, k - i - 9);
+
+                // save speed
+                int b = hashspeed.IndexOf(" ");
+                double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
+                if (hashspeed.Contains("kH/s"))
+                    spd *= 1000;
+                else if (hashspeed.Contains("MH/s"))
+                    spd *= 1000000;
+                else if (hashspeed.Contains("GH/s"))
+                    spd *= 1000000000;
+                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
+
+                OnBenchmarkComplete(PrintSpeed(spd), BenchmarkTag);
+                return true;
+            }
+            return false;
+        }
+
+
+        virtual protected string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)
+        {
+            return BenchmarkHandle.StandardOutput.ReadLine();
+        }
+
+
+        virtual protected Process BenchmarkStartProcess(string CommandLine)
+        {
             Helpers.ConsolePrint(MinerDeviceName + " Starting benchmark: " + CommandLine);
 
-            ProcessHandle = new Process();
-            ProcessHandle.StartInfo.FileName = Path;
-            ProcessHandle.StartInfo.Arguments = CommandLine;
-            ProcessHandle.StartInfo.UseShellExecute = false;
-            ProcessHandle.StartInfo.RedirectStandardError = true;
-            ProcessHandle.StartInfo.RedirectStandardOutput = true;
-            ProcessHandle.StartInfo.CreateNoWindow = true;
-            ProcessHandle.EnableRaisingEvents = true;
-            ProcessHandle.Exited += Miner_Exited_Benchmark;
-            ProcessHandle.Start();
+            Process BenchmarkHandle = new Process();
+            BenchmarkHandle.StartInfo.FileName = Path;
+            BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;
+            BenchmarkHandle.StartInfo.UseShellExecute = false;
+            BenchmarkHandle.StartInfo.RedirectStandardError = true;
+            BenchmarkHandle.StartInfo.RedirectStandardOutput = true;
+            BenchmarkHandle.StartInfo.CreateNoWindow = true;
+            if (!BenchmarkHandle.Start()) return null;
 
-            BenchmarkTimer = new System.Windows.Forms.Timer();
-            BenchmarkTimer.Interval = 100;
-            BenchmarkTimer.Tick += BenchmarkTimer_Tick;
-            BenchmarkTimer.Start();
+            return BenchmarkHandle;
         }
 
 
-        abstract protected void BenchmarkParseLine(string outdata);
-
-
-        virtual protected void BenchmarkTimer_Tick(object sender, EventArgs e)
+        virtual protected void BenchmarkThreadRoutine(object CommandLine)
         {
-            string outdata = ProcessHandle.StandardOutput.ReadLine();
-            if (outdata != null)
-                BenchmarkParseLine(outdata);
-        }
+            Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
 
+            BenchmarkSignalQuit = false;
 
-        virtual protected void Miner_Exited_Benchmark(object sender, EventArgs e)
-        {
-            BenchmarkStop();
-            OnBenchmarkComplete("Terminated", BenchmarkTag);
-        }
+            Process BenchmarkHandle = null;
 
-
-        virtual public void BenchmarkStop()
-        {
-            if (ProcessHandle != null)
+            try
             {
-                try { ProcessHandle.Kill(); }
+                BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
+
+                while (true)
+                {
+                    string outdata = BenchmarkGetConsoleOutputLine(BenchmarkHandle);
+                    if (outdata != null)
+                    {
+                        //Helpers.ConsolePrint(outdata);
+                        if (outdata.Contains("Cuda error"))
+                            throw new Exception();
+                        if (BenchmarkParseLine(outdata))
+                            break;
+                    }
+                    if (BenchmarkSignalQuit)
+                        throw new Exception();
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint(ex.Message);
+
+                try { if (BenchmarkHandle != null) BenchmarkHandle.Kill(); }
                 catch { }
-                ProcessHandle.Close();
-                ProcessHandle = null;
+                
+                OnBenchmarkComplete("Terminated", BenchmarkTag);
             }
 
-            if (BenchmarkTimer != null)
-            {
-                BenchmarkTimer.Stop();
-                BenchmarkTimer = null;
-            }
+            if (BenchmarkHandle != null)
+                BenchmarkHandle.Close();
         }
 
 
@@ -205,18 +235,28 @@ namespace NiceHashMiner
         }
 
 
-        virtual protected void _Start()
+        virtual protected Process _Start()
         {
-            if (LastCommandLine.Length == 0 || EnabledDeviceCount() == 0) return;
+            if (LastCommandLine.Length == 0 || EnabledDeviceCount() == 0) return null;
 
             Helpers.ConsolePrint(MinerDeviceName + " Starting miner: " + LastCommandLine);
 
-            ProcessHandle = new Process();
-            ProcessHandle.StartInfo.FileName = Path;
-            ProcessHandle.StartInfo.Arguments = LastCommandLine;
-            ProcessHandle.EnableRaisingEvents = true;
-            ProcessHandle.Exited += Miner_Exited;
-            ProcessHandle.Start();
+            Process P = new Process();
+            P.StartInfo.FileName = Path;
+            P.StartInfo.Arguments = LastCommandLine;
+            P.EnableRaisingEvents = true;
+            P.Exited += Miner_Exited;
+
+            try
+            {
+                if (P.Start()) return P;
+                else return null;
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint(ex.Message);
+                return null;
+            }
         }
 
 
@@ -229,7 +269,7 @@ namespace NiceHashMiner
         virtual public void Restart()
         {
             Stop(); // stop miner first
-            _Start(); // start with old command line
+            ProcessHandle = _Start(); // start with old command line
         }
 
 

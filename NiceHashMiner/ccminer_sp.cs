@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace NiceHashMiner
 {
@@ -35,11 +36,9 @@ namespace NiceHashMiner
         }
 
 
-        protected override void BenchmarkTimer_Tick(object sender, EventArgs e)
+        protected override string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)
         {
-            string outdata = ProcessHandle.StandardError.ReadLine();
-            if (outdata != null)
-                BenchmarkParseLine(outdata);
+            return BenchmarkHandle.StandardError.ReadLine();
         }
     }
 }

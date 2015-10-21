@@ -13,6 +13,9 @@ namespace NiceHashMiner
         private int index;
         private bool inBenchmark;
 
+        private int Time = Config.ConfigData.BenchmarkTimeLimits[1];
+        private Miner CurrentlyBenchmarking;
+
         public Form2(bool autostart)
         {
             InitializeComponent();
@@ -36,22 +39,7 @@ namespace NiceHashMiner
             inBenchmark = false;
 
             if (autostart)
-                startBenchmarkToolStripMenuItem_Click(null, null);
-        }
-
-
-        private void startBenchmarkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (startBenchmarkToolStripMenuItem.Text == "Stop benchmark")
-            {
-                index = 9999;
-                return;
-            }
-
-            startBenchmarkToolStripMenuItem.Text = "Stop benchmark";
-
-            index = 0;
-            InitiateBenchmark();
+                button1_Click(null, null);
         }
 
 
@@ -65,6 +53,7 @@ namespace NiceHashMiner
             else
             {
                 inBenchmark = false;
+                CurrentlyBenchmarking = null;
 
                 ListViewItem lvi = tag as ListViewItem;
                 lvi.SubItems[2].Text = text;
@@ -85,12 +74,11 @@ namespace NiceHashMiner
                 int i = (int)lvi.SubItems[1].Tag;
                 lvi.SubItems[2].Text = "Please wait...";
                 inBenchmark = true;
-                m.BenchmarkStart(i, BenchmarkCompleted, lvi);
+                CurrentlyBenchmarking = m;
+                m.BenchmarkStart(i, Time, BenchmarkCompleted, lvi);
             }
             else
             {
-                startBenchmarkToolStripMenuItem.Text = "Start benchmark";
-
                 // average all cpu benchmarks
                 if (Form1.Miners[0] is cpuminer)
                 {
@@ -131,14 +119,46 @@ namespace NiceHashMiner
                     }
                 }
                 
-
                 Config.RebuildGroups();
+
+                button1.Enabled = true;
+                button2.Enabled = false;
             }
         }
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (inBenchmark) e.Cancel = true;
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            Time = Config.ConfigData.BenchmarkTimeLimits[0];
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            Time = Config.ConfigData.BenchmarkTimeLimits[1];
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            Time = Config.ConfigData.BenchmarkTimeLimits[2];
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            index = 0;
+            button1.Enabled = false;
+            button2.Enabled = true;
+            InitiateBenchmark();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (CurrentlyBenchmarking != null)
+                CurrentlyBenchmarking.BenchmarkSignalQuit = true;
+            index = 9999;
         }
     }
 }

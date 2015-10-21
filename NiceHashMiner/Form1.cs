@@ -22,6 +22,9 @@ namespace NiceHashMiner
         private Timer SMACheck;
         private Timer BalanceCheck;
         private Timer SMAMinerCheck;
+        private Timer StartupTimer;
+        private Form3 LoadingScreen;
+        private int LoadCounter = 0;
 
         private Random R;
 
@@ -90,6 +93,8 @@ namespace NiceHashMiner
                 {
                     Miners[i].ExtraLaunchParameters = Config.ConfigData.Groups[i].ExtraLaunchParameters;
                     Miners[i].UsePassword = Config.ConfigData.Groups[i].UsePassword;
+                    if (Config.ConfigData.Groups[i].APIBindPort > 0)
+                        Miners[i].APIPort = Config.ConfigData.Groups[i].APIBindPort;
                     for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length && z < Miners[i].SupportedAlgorithms.Length; z++)
                     {
                         Miners[i].SupportedAlgorithms[z].BenchmarkSpeed = Config.ConfigData.Groups[i].Algorithms[z].BenchmarkSpeed;
@@ -124,7 +129,18 @@ namespace NiceHashMiner
 
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
-            MinerStatsCheck.Interval = 5000; // every 5 seconds
+            MinerStatsCheck.Interval = Config.ConfigData.MinerAPIQueryInterval * 1000;
+
+            SMAMinerCheck = new Timer();
+            SMAMinerCheck.Tick += SMAMinerCheck_Tick;
+            SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+        }
+
+
+        void StartupTimer_Tick(object sender, EventArgs e)
+        {
+            StartupTimer.Stop();
+            StartupTimer = null;
 
             UpdateCheck = new Timer();
             UpdateCheck.Tick += UpdateCheck_Tick;
@@ -143,14 +159,38 @@ namespace NiceHashMiner
             BalanceCheck.Interval = 61 * 1000; // every 61 seconds
             BalanceCheck.Start();
             BalanceCheck_Tick(null, null);
-
-            SMAMinerCheck = new Timer();
-            SMAMinerCheck.Tick += SMAMinerCheck_Tick;
-            SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
         }
 
 
-        void SMAMinerCheck_Tick(object sender, EventArgs e)
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            LoadingScreen = new Form3();
+            LoadingScreen.Location = new Point(this.Location.X + (this.Width - LoadingScreen.Width) / 2, this.Location.Y + (this.Height - LoadingScreen.Height) / 2);
+            LoadingScreen.Show();
+
+            StartupTimer = new Timer();
+            StartupTimer.Tick += StartupTimer_Tick;
+            StartupTimer.Interval = 200;
+            StartupTimer.Start();
+        }
+
+
+        private void IncreaseLoadCounter()
+        {
+            LoadCounter++;
+            if (LoadCounter >= 3)
+            {
+                if (LoadingScreen != null)
+                {
+                    LoadingScreen.Close();
+                    this.Enabled = true;
+                    LoadingScreen = null;
+                }
+            }
+        }
+
+
+        private void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
 
@@ -172,7 +212,7 @@ namespace NiceHashMiner
                     {
                         m.Stop();
                         // wait 0.5 seconds before going on
-                        System.Threading.Thread.Sleep(500);
+                        System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
                     }
                 }
 
@@ -268,6 +308,7 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("NICEHASH: balance get");
             double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
             if (Balance > 0) toolStripStatusLabel6.Text = Balance.ToString("F8");
+            IncreaseLoadCounter();
         }
 
 
@@ -276,6 +317,7 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("NICEHASH: sma get");
             NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates();
             if (t != null) NiceHashData = t;
+            IncreaseLoadCounter();
         }
 
 
@@ -283,6 +325,8 @@ namespace NiceHashMiner
         {
             Helpers.ConsolePrint("NICEHASH: version get");
             string ver = NiceHashStats.GetVersion();
+            IncreaseLoadCounter();
+
             if (ver == null) return;
 
             if (ver != Application.ProductVersion)

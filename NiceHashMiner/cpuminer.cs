@@ -54,45 +54,25 @@ namespace NiceHashMiner
         }
 
 
-        protected override string BenchmarkCreateCommandLine(int index)
+        protected override string BenchmarkCreateCommandLine(int index, int time)
         {
             return "--algo=" + SupportedAlgorithms[index].MinerName + 
                    " --benchmark" + 
+                   " --time-limit " + time.ToString() +
                    " --threads=" + Threads.ToString() +
                    " " + ExtraLaunchParameters + 
                    " " + SupportedAlgorithms[index].ExtraLaunchParameters;
         }
 
 
-        public override void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag)
+        protected override Process BenchmarkStartProcess(string CommandLine)
         {
-            base.BenchmarkStart(index, oncomplete, tag);
-            if (AffinityMask != 0 && ProcessHandle != null)
-                CPUID.AdjustAffinity(ProcessHandle.Id, AffinityMask);
-        }
+            Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
 
+            if (AffinityMask != 0 && BenchmarkHandle != null)
+                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
 
-        protected override void BenchmarkParseLine(string outdata)
-        {
-            // parse line
-            if (outdata.Contains(" Total: ") && outdata.Contains("/s"))
-            {
-                int i = outdata.IndexOf("Total:");
-                int k = outdata.IndexOf("/s");
-                string hashspeed = outdata.Substring(i + 7, k - i - 5);
-
-                // save speed
-                int b = hashspeed.IndexOf(" ");
-                double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
-                if (hashspeed.Contains("kH/s"))
-                    spd *= 1000;
-                else if (hashspeed.Contains("MH/s"))
-                    spd *= 1000000;
-                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
-
-                BenchmarkStop();
-                OnBenchmarkComplete(PrintSpeed(spd), BenchmarkTag);
-            }
+            return BenchmarkHandle;
         }
 
 
@@ -113,15 +93,18 @@ namespace NiceHashMiner
                               " " + ExtraLaunchParameters + 
                               " " + Algo.ExtraLaunchParameters;
 
-            _Start();
+            ProcessHandle = _Start();
         }
 
 
-        protected override void _Start()
+        protected override Process _Start()
         {
-            base._Start();
-            if (AffinityMask != 0 && ProcessHandle != null)
-                CPUID.AdjustAffinity(ProcessHandle.Id, AffinityMask);
+            Process P = base._Start();
+
+            if (AffinityMask != 0 && P != null)
+                CPUID.AdjustAffinity(P.Id, AffinityMask);
+
+            return P;
         }
     }
 }

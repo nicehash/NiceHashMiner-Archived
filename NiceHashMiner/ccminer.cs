@@ -11,8 +11,6 @@ namespace NiceHashMiner
 {
     abstract public class ccminer : Miner
     {
-        private List<int> BenchmarkedGPUs;
-
         public ccminer()
         {
             SupportedAlgorithms = new Algorithm[] { 
@@ -29,10 +27,11 @@ namespace NiceHashMiner
         }
 
 
-        protected override string BenchmarkCreateCommandLine(int index)
+        protected override string BenchmarkCreateCommandLine(int index, int time)
         {
             string CommandLine = "--algo=" + SupportedAlgorithms[index].MinerName + 
                                  " --benchmark" +
+                                 " --time-limit " + time.ToString() +
                                  " " + ExtraLaunchParameters +
                                  " " + SupportedAlgorithms[index].ExtraLaunchParameters + 
                                  " --devices ";
@@ -44,51 +43,6 @@ namespace NiceHashMiner
             CommandLine = CommandLine.Remove(CommandLine.Length - 1);
 
             return CommandLine;
-        }
-
-
-        public override void BenchmarkStart(int index, BenchmarkComplete oncomplete, object tag)
-        {
-            base.BenchmarkStart(index, oncomplete, tag);
-            BenchmarkedGPUs = new List<int>();
-        }
-
-
-        protected override void BenchmarkParseLine(string outdata)
-        {
-            // parse line
-            if (outdata.Contains("Total: ") && outdata.Contains("/s"))
-            {
-                if (EnabledDeviceCount() == BenchmarkedGPUs.Count)
-                {
-                    int i = outdata.IndexOf("Total:");
-                    int k = outdata.IndexOf("/s");
-                    string hashspeed = outdata.Substring(i + 7, k - i - 5);
-
-                    // save speed
-                    int b = hashspeed.IndexOf(" ");
-                    double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
-                    if (hashspeed.Contains("kH/s"))
-                        spd *= 1000;
-                    else if (hashspeed.Contains("MH/s"))
-                        spd *= 1000000;
-                    else if (hashspeed.Contains("GH/s"))
-                        spd *= 1000000000;
-                    SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
-
-                    BenchmarkStop();
-                    OnBenchmarkComplete(PrintSpeed(spd), BenchmarkTag);
-                    return;
-                }
-            }
-            else if (outdata.Contains("] GPU") && !outdata.Contains("Found") && !outdata.Contains("nounce"))
-            {
-                // remember this GPU
-                int i = outdata.IndexOf("GPU ");
-                int id = int.Parse(outdata.Substring(i + 5, 1));
-                if (!BenchmarkedGPUs.Contains(id))
-                    BenchmarkedGPUs.Add(id);
-            }
         }
 
 
@@ -121,7 +75,7 @@ namespace NiceHashMiner
                 return; // no GPUs to start mining on
             }
 
-            _Start();
+            ProcessHandle = _Start();
         }
 
 
