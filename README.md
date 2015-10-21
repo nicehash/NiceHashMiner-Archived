@@ -33,8 +33,9 @@ Currently, miner is in public beta testing. Please, be patient as there may be s
 - Download binaries from here: https://github.com/nicehash/NiceHashMiner/releases
 - Extract zip archive
 - Run NiceHashMiner.exe
-- After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly.
-- Note: .NET Framework 2.0 or higher is required. No additional installations are needed if you use Windows 7 or later.
+- After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly. Benchmark may sometimes take longer time or cause NiceHash Miner to become unresponsive. This is normal.
+
+<i>Note: .NET Framework 2.0 or higher is required. No additional installations are needed if you use Windows 7 or later.</i>
 
 # <a name="options"></a> Additional options
 
@@ -43,7 +44,7 @@ After first launch, config.json file is created. Additional options are exposed 
 Parameter        | Range    | Description
 -----------------|----------|-------------------
 DebugConsole     | 0 or 1   | When set to 1, it displays debug console.
-LessThreads      | 0 .. 64  | Reduce number of threads used on each CPU by LessThreads. Example: if you have 8 cores and LessThreads = 1 then CPU miner will work with 7 threads.
+LessThreads      | 0 .. 64  | Reduce number of threads used on each CPU by LessThreads.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
 Groups\ExtraLaunchParameters | text | Additional launch parameters when launching miner.
@@ -54,3 +55,13 @@ Groups\Algorithms\UsePassword | text or null | Use this password when launching 
 
 Do not change any 'Name' parameters - changin them will not have any effect. 'Name' parameters are there only for easier config management. Eventually, we will make all these config properties configurable over GUI.
 
+Examples:
+--------
+If your CPU has 8 virtual cores and you would like to mine only with 7:
+> Set LessThreads to 1.
+
+If you would like to set lower starting difficulty for ScryptJaneNf16 algorithm because your CPU is slow:
+> Set UsePassword to "d=0.1" under Algorithms item that has Name "scryptjanenf16" for all groups with Name "CPUx".
+
+If you would like to manually configure intensity parameters for your three video cards (Quark algorithm):
+> Set ExtraLaunchParameters to "-i 19,19,19" under Algorithms item that has Name "quark" for group with Name "NVIDIA5.x" or "NVIDIA3.x".
