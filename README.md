@@ -45,6 +45,7 @@ Parameter        | Range    | Description
 -----------------|----------|-------------------
 DebugConsole     | true or false   | When set to true, it displays debug console.
 LessThreads      | 0 .. 64  | Reduce number of threads used on each CPU by LessThreads.
+ForceCPUExtension | 0, 1, 2 or 3 | Force certain CPU extension miner. 0 is automatic, 1 for SSE2, 2 for AVX and 3 for AVX2.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
 Groups\ExtraLaunchParameters | text | Additional launch parameters when launching miner.

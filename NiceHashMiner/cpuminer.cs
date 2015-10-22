@@ -25,22 +25,40 @@ namespace NiceHashMiner
                     new Algorithm(15, "scryptjanenf16", "scryptjane:16")
                 };
 
-            // detect CPU capabilities
-            if (CPUID.SupportsAVX2() == 0)
+            if (Config.ConfigData.ForceCPUExtension > 0)
             {
-                if (CPUID.SupportsAVX() == 0)
+                if (Config.ConfigData.ForceCPUExtension == 1)
                 {
-                    if (CPUID.SupportsSSE2() == 0)
-                        return;
-
                     Path = "bin\\cpuminer_x64_SSE2.exe";
                 }
-                else
+                else if (Config.ConfigData.ForceCPUExtension == 2)
+                {
                     Path = "bin\\cpuminer_x64_AVX.exe";
+                }
+                else
+                {
+                    Path = "bin\\cpuminer_x64_AVX2.exe";
+                }
             }
             else
             {
-                Path = "bin\\cpuminer_x64_AVX2.exe";
+                // detect CPU capabilities
+                if (CPUID.SupportsAVX2() == 0)
+                {
+                    if (CPUID.SupportsAVX() == 0)
+                    {
+                        if (CPUID.SupportsSSE2() == 0)
+                            return;
+
+                        Path = "bin\\cpuminer_x64_SSE2.exe";
+                    }
+                    else
+                        Path = "bin\\cpuminer_x64_AVX.exe";
+                }
+                else
+                {
+                    Path = "bin\\cpuminer_x64_AVX2.exe";
+                }
             }
 
             CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName()));
@@ -50,7 +68,7 @@ namespace NiceHashMiner
         public override string PrintSpeed(double spd)
         {
             // print in kH/s
-            return (spd * 0.001).ToString("F2") + " kH/s";
+            return (spd * 0.001).ToString("F3", CultureInfo.InvariantCulture) + " kH/s";
         }
 
 

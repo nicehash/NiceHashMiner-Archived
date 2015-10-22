@@ -276,7 +276,7 @@ namespace NiceHashMiner
         virtual public string PrintSpeed(double spd)
         {
             // print in MH/s
-            return (spd * 0.000001).ToString("F2") + " MH/s";
+            return (spd * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s";
         }
 
 

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace NiceHashMiner
 {
@@ -22,11 +23,14 @@ namespace NiceHashMiner
         private Timer SMACheck;
         private Timer BalanceCheck;
         private Timer SMAMinerCheck;
+        private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Form3 LoadingScreen;
         private int LoadCounter = 0;
 
         private Random R;
+
+        private double BitcoinRate;
 
 
         public Form1()
@@ -159,6 +163,12 @@ namespace NiceHashMiner
             BalanceCheck.Interval = 61 * 1000; // every 61 seconds
             BalanceCheck.Start();
             BalanceCheck_Tick(null, null);
+
+            BitcoinExchangeCheck = new Timer();
+            BitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
+            BitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
+            BitcoinExchangeCheck.Start();
+            BitcoinExchangeCheck_Tick(null, null);
         }
 
 
@@ -178,7 +188,7 @@ namespace NiceHashMiner
         private void IncreaseLoadCounter()
         {
             LoadCounter++;
-            if (LoadCounter >= 3)
+            if (LoadCounter >= 4)
             {
                 if (LoadingScreen != null)
                 {
@@ -271,24 +281,27 @@ namespace NiceHashMiner
 
         private void SetCPUStats(string aname, double speed, double paying)
         {
-            label5.Text = (speed * 0.001).ToString("F2") + " kH/s " + aname;
-            label11.Text = paying.ToString("F8") + " BTC/Day";
+            label5.Text = (speed * 0.001).ToString("F2", CultureInfo.InvariantCulture) + " kH/s " + aname;
+            label11.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label16.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
 
 
         private void SetNVIDIAtpStats(string aname, double speed, double paying)
         {
-            label8.Text = (speed * 0.000001).ToString("F2") + " MH/s " + aname;
-            label14.Text = paying.ToString("F8") + " BTC/Day";
+            label8.Text = (speed * 0.000001).ToString("F2", CultureInfo.InvariantCulture) + " MH/s " + aname;
+            label14.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label18.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
 
 
         private void SetNVIDIAspStats(string aname, double speed, double paying)
         {
-            label6.Text = (speed * 0.000001).ToString("F2") + " MH/s " + aname;
-            label12.Text = paying.ToString("F8") + " BTC/Day";
+            label6.Text = (speed * 0.000001).ToString("F2", CultureInfo.InvariantCulture) + " MH/s " + aname;
+            label12.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label17.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
 
@@ -298,16 +311,27 @@ namespace NiceHashMiner
             double TotalRate = 0;
             foreach (Miner m in Miners)
                 TotalRate += m.CurrentRate;
-            toolStripStatusLabel4.Text = (TotalRate).ToString("F8");
+            toolStripStatusLabel4.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
+            toolStripStatusLabel2.Text = (TotalRate * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
         }
 
 
         void BalanceCheck_Tick(object sender, EventArgs e)
         {
-            if (!VerifyMiningAddress()) return;
-            Helpers.ConsolePrint("NICEHASH: balance get");
-            double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
-            if (Balance > 0) toolStripStatusLabel6.Text = Balance.ToString("F8");
+            if (VerifyMiningAddress())
+            {
+                Helpers.ConsolePrint("NICEHASH: balance get");
+                double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
+                if (Balance > 0) toolStripStatusLabel6.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
+            }
+            IncreaseLoadCounter();
+        }
+
+
+        void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
+        {
+            Helpers.ConsolePrint("COINBASE: bitcoin rate get");
+            BitcoinRate = Bitcoin.GetUSDExchangeRate();
             IncreaseLoadCounter();
         }
 
@@ -411,6 +435,7 @@ namespace NiceHashMiner
             {
                 m.Stop();
                 m.CurrentAlgo = -1;
+                m.CurrentRate = 0;
             }
 
             SetCPUStats("", 0, 0);
@@ -424,6 +449,8 @@ namespace NiceHashMiner
             button1.Enabled = true;
             listView1.Enabled = true;
             button2.Enabled = false;
+
+            UpdateGlobalRate();
         }
 
 

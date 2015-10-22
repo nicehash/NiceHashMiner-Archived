@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitcoinAddress.cs" />
+    <Compile Include="Bitcoin.cs" />
     <Compile Include="ccminer_sp.cs" />
     <Compile Include="ccminer.cs" />
     <Compile Include="ccminer_tpruvot.cs" />

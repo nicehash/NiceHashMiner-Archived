@@ -42,6 +42,7 @@ namespace NiceHashMiner
         public string WorkerName;
         public int Location;
         public int LessThreads;
+        public int ForceCPUExtension; // 0 - automatic, 1 - SSE2, 2 - AVX, 3 - AVX2
         public int SwitchMinSecondsFixed;
         public int SwitchMinSecondsDynamic;
         public int MinerAPIQueryInterval;
