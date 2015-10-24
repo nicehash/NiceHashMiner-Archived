@@ -25,12 +25,16 @@ namespace NiceHashMiner
         private Timer SMAMinerCheck;
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
+        private Timer IdleCheck;
         private Form3 LoadingScreen;
         private int LoadCounter = 0;
+        private int TotalLoadSteps = 8;
 
         private Random R;
 
         private double BitcoinRate;
+
+        private Form2 BenchmarkForm;
 
 
         public Form1()
@@ -49,6 +53,54 @@ namespace NiceHashMiner
             comboBox1.SelectedIndex = Config.ConfigData.Location;
             textBox1.Text = Config.ConfigData.BitcoinAddress;
             textBox2.Text = Config.ConfigData.WorkerName;
+        }
+
+
+        private void AfterLoadComplete()
+        {
+            this.Enabled = true;
+
+            if (Config.ConfigData.AutoStartMining)
+            {
+                button1_Click(null, null);
+            }
+
+            IdleCheck = new Timer();
+            IdleCheck.Tick += IdleCheck_Tick;
+            IdleCheck.Interval = 500;
+            IdleCheck.Start();
+        }
+
+
+        private void IdleCheck_Tick(object sender, EventArgs e)
+        {
+            if (!Config.ConfigData.StartMiningWhenIdle) return;
+
+            uint MSIdle = Helpers.GetIdleTime();
+
+            if (MinerStatsCheck.Enabled)
+            {
+                if (MSIdle < (Config.ConfigData.MinIdleSeconds * 1000))
+                {
+                    button2_Click(null, null);
+                    Helpers.ConsolePrint("resumed from idling");
+                }
+            }
+            else
+            {
+                if (BenchmarkForm == null && (MSIdle > (Config.ConfigData.MinIdleSeconds * 1000)))
+                {
+                    Helpers.ConsolePrint("entering idling state");
+                    button1_Click(null, null);
+                }
+            }
+        }
+
+
+        private void StartupTimer_Tick(object sender, EventArgs e)
+        {
+            StartupTimer.Stop();
+            StartupTimer = null;
 
             // get all CPUs
             int CPUs = CPUID.GetPhysicalProcessorCount();
@@ -86,11 +138,21 @@ namespace NiceHashMiner
                     Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
             }
 
+            LoadingScreen.LoadText.Text = "Querying NVIDIA5.x devices...";
+            IncreaseLoadCounter();
+
             Miners[CPUs] = new ccminer_sp();
-            Miners[CPUs + 1] = new ccminer_tpruvot();
+
+            LoadingScreen.LoadText.Text = "Querying NVIDIA3.x devices...";
+            IncreaseLoadCounter();
             
+            Miners[CPUs + 1] = new ccminer_tpruvot();
+
             // todo: initialize sgminer
 
+            LoadingScreen.LoadText.Text = "Saving config...";
+            IncreaseLoadCounter();
+            
             for (int i = 0; i < Miners.Length; i++)
             {
                 if (Config.ConfigData.Groups.Length > i)
@@ -131,6 +193,9 @@ namespace NiceHashMiner
 
             Config.RebuildGroups();
 
+            LoadingScreen.LoadText.Text = "Checking for latest version...";
+            IncreaseLoadCounter();
+
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
             MinerStatsCheck.Interval = Config.ConfigData.MinerAPIQueryInterval * 1000;
@@ -138,13 +203,6 @@ namespace NiceHashMiner
             SMAMinerCheck = new Timer();
             SMAMinerCheck.Tick += SMAMinerCheck_Tick;
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
-        }
-
-
-        void StartupTimer_Tick(object sender, EventArgs e)
-        {
-            StartupTimer.Stop();
-            StartupTimer = null;
 
             UpdateCheck = new Timer();
             UpdateCheck.Tick += UpdateCheck_Tick;
@@ -152,11 +210,26 @@ namespace NiceHashMiner
             UpdateCheck.Start();
             UpdateCheck_Tick(null, null);
 
+            LoadingScreen.LoadText.Text = "Getting NiceHash SMA information...";
+            IncreaseLoadCounter();
+
             SMACheck = new Timer();
             SMACheck.Tick += SMACheck_Tick;
             SMACheck.Interval = 60 * 1000; // every 60 seconds
             SMACheck.Start();
             SMACheck_Tick(null, null);
+
+            LoadingScreen.LoadText.Text = "Getting Bitcoin exchange rate...";
+            IncreaseLoadCounter();
+
+            BitcoinExchangeCheck = new Timer();
+            BitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
+            BitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
+            BitcoinExchangeCheck.Start();
+            BitcoinExchangeCheck_Tick(null, null);
+
+            LoadingScreen.LoadText.Text = "Getting NiceHash balance...";
+            IncreaseLoadCounter();
 
             BalanceCheck = new Timer();
             BalanceCheck.Tick += BalanceCheck_Tick;
@@ -164,11 +237,7 @@ namespace NiceHashMiner
             BalanceCheck.Start();
             BalanceCheck_Tick(null, null);
 
-            BitcoinExchangeCheck = new Timer();
-            BitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
-            BitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
-            BitcoinExchangeCheck.Start();
-            BitcoinExchangeCheck_Tick(null, null);
+            IncreaseLoadCounter();
         }
 
 
@@ -177,6 +246,9 @@ namespace NiceHashMiner
             LoadingScreen = new Form3();
             LoadingScreen.Location = new Point(this.Location.X + (this.Width - LoadingScreen.Width) / 2, this.Location.Y + (this.Height - LoadingScreen.Height) / 2);
             LoadingScreen.Show();
+            LoadingScreen.progressBar1.Maximum = TotalLoadSteps;
+            LoadingScreen.progressBar1.Value = 0;
+            LoadingScreen.LoadText.Text = "Querying CPU devices...";
 
             StartupTimer = new Timer();
             StartupTimer.Tick += StartupTimer_Tick;
@@ -188,13 +260,16 @@ namespace NiceHashMiner
         private void IncreaseLoadCounter()
         {
             LoadCounter++;
-            if (LoadCounter >= 4)
+            LoadingScreen.progressBar1.Value = LoadCounter;
+            LoadingScreen.Update();
+            if (LoadCounter >= TotalLoadSteps)
             {
                 if (LoadingScreen != null)
                 {
                     LoadingScreen.Close();
-                    this.Enabled = true;
                     LoadingScreen = null;
+
+                    AfterLoadComplete();
                 }
             }
         }
@@ -322,17 +397,21 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("NICEHASH: balance get");
                 double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
-                if (Balance > 0) toolStripStatusLabel6.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
+                if (Balance > 0)
+                {
+                    toolStripStatusLabel6.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
+                    toolStripStatusLabel3.Text = (Balance * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
+                }
             }
-            IncreaseLoadCounter();
         }
 
 
         void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
         {
             Helpers.ConsolePrint("COINBASE: bitcoin rate get");
-            BitcoinRate = Bitcoin.GetUSDExchangeRate();
-            IncreaseLoadCounter();
+            double BR = Bitcoin.GetUSDExchangeRate();
+            if (BR > 0) BitcoinRate = BR;
+            Helpers.ConsolePrint("Current Bitcoin rate: " + BitcoinRate.ToString("F2", CultureInfo.InvariantCulture));
         }
 
 
@@ -341,7 +420,6 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("NICEHASH: sma get");
             NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates();
             if (t != null) NiceHashData = t;
-            IncreaseLoadCounter();
         }
 
 
@@ -349,7 +427,6 @@ namespace NiceHashMiner
         {
             Helpers.ConsolePrint("NICEHASH: version get");
             string ver = NiceHashStats.GetVersion();
-            IncreaseLoadCounter();
 
             if (ver == null) return;
 
@@ -477,8 +554,9 @@ namespace NiceHashMiner
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2(false);
-            f2.ShowDialog();
+            BenchmarkForm = new Form2(false);
+            BenchmarkForm.ShowDialog();
+            BenchmarkForm = null;
         }
     }
 }

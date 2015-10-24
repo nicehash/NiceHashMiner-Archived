@@ -41,6 +41,8 @@ namespace NiceHashMiner
         public string BitcoinAddress;
         public string WorkerName;
         public int Location;
+        public bool AutoStartMining;
+        public bool HideMiningWindows;
         public int LessThreads;
         public int ForceCPUExtension; // 0 - automatic, 1 - SSE2, 2 - AVX, 3 - AVX2
         public int SwitchMinSecondsFixed;
@@ -48,6 +50,8 @@ namespace NiceHashMiner
         public int MinerAPIQueryInterval;
         public int MinerRestartDelayMS;
         public int[] BenchmarkTimeLimits;
+        public bool StartMiningWhenIdle;
+        public int MinIdleSeconds;
         public Group[] Groups;
 #pragma warning restore 649
 
@@ -63,6 +67,9 @@ namespace NiceHashMiner
             ConfigData.LessThreads = 0;
             ConfigData.Groups = new Group[0];
             ConfigData.DebugConsole = false;
+            ConfigData.HideMiningWindows = false;
+            ConfigData.AutoStartMining = false;
+            ConfigData.StartMiningWhenIdle = false;
 
             try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
             catch { }
@@ -77,6 +84,8 @@ namespace NiceHashMiner
                 ConfigData.MinerRestartDelayMS = 200;
             if (ConfigData.BenchmarkTimeLimits == null || ConfigData.BenchmarkTimeLimits.Length < 3)
                 ConfigData.BenchmarkTimeLimits = new int[] { 10, 20, 60 };
+            if (ConfigData.MinIdleSeconds <= 0)
+                ConfigData.MinIdleSeconds = 60;
         }
 
         public static void Commit()

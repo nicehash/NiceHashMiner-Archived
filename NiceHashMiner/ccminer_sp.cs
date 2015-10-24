@@ -22,6 +22,8 @@ namespace NiceHashMiner
         {
             if (!text.Contains("GPU")) return;
 
+            Helpers.ConsolePrint(MinerDeviceName + " detected: " + text);
+
             string[] splt = text.Split(':');
 
             int id = int.Parse(splt[0].Split('#')[1]);
@@ -32,6 +34,7 @@ namespace NiceHashMiner
             {
                 name = name.Substring(8);
                 CDevs.Add(new ComputeDevice(id, MinerDeviceName, name));
+                Helpers.ConsolePrint(MinerDeviceName + " added: " + name);
             }
         }
 

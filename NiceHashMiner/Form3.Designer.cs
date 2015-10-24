@@ -28,26 +28,51 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.LoadText = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.ForeColor = System.Drawing.Color.Blue;
+            this.progressBar1.Location = new System.Drawing.Point(12, 25);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(286, 23);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBar1.TabIndex = 1;
+            // 
+            // LoadText
+            // 
+            this.LoadText.AutoSize = true;
+            this.LoadText.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.LoadText.Location = new System.Drawing.Point(9, 51);
+            this.LoadText.Name = "LoadText";
+            this.LoadText.Size = new System.Drawing.Size(283, 13);
+            this.LoadText.TabIndex = 2;
+            this.LoadText.Text = "                                                                                 " +
+    "           ";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.ForeColor = System.Drawing.Color.Red;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(84, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(224, 13);
+            this.label1.Size = new System.Drawing.Size(136, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Loading NiceHash data, please wait...";
+            this.label1.Text = "Loading, please wait...";
             // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(253, 33);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(310, 76);
             this.ControlBox = false;
+            this.Controls.Add(this.LoadText);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
@@ -65,6 +90,8 @@
 
         #endregion
 
+        public System.Windows.Forms.ProgressBar progressBar1;
+        public System.Windows.Forms.Label LoadText;
         private System.Windows.Forms.Label label1;
     }
 }

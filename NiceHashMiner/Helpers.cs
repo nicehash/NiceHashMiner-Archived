@@ -8,6 +8,12 @@ namespace NiceHashMiner
 {
     class Helpers
     {
+        internal struct LASTINPUTINFO
+        {
+            public uint cbSize;
+            public uint dwTime;
+        }
+
         static bool is64BitProcess = (IntPtr.Size == 8);
         static bool is64BitOperatingSystem = is64BitProcess || InternalCheckIsWow64();
 
@@ -46,6 +52,19 @@ namespace NiceHashMiner
         public static void ConsolePrint(string text)
         {
             Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] " + text);
+        }
+
+
+        [DllImport("User32.dll")]
+        private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);        
+
+        public static uint GetIdleTime()
+        {
+            LASTINPUTINFO lastInPut = new LASTINPUTINFO();
+            lastInPut.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(lastInPut);
+            GetLastInputInfo(ref lastInPut);
+
+            return ((uint)Environment.TickCount - lastInPut.dwTime);
         }
     }
 }

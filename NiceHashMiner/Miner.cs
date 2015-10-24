@@ -200,12 +200,12 @@ namespace NiceHashMiner
                     {
                         //Helpers.ConsolePrint(outdata);
                         if (outdata.Contains("Cuda error"))
-                            throw new Exception();
+                            throw new Exception("CUDA error");
                         if (BenchmarkParseLine(outdata))
                             break;
                     }
                     if (BenchmarkSignalQuit)
-                        throw new Exception();
+                        throw new Exception("Termined by user request");
                 }
             }
             catch (Exception ex)
@@ -244,6 +244,8 @@ namespace NiceHashMiner
             Process P = new Process();
             P.StartInfo.FileName = Path;
             P.StartInfo.Arguments = LastCommandLine;
+            P.StartInfo.CreateNoWindow = Config.ConfigData.HideMiningWindows;
+            P.StartInfo.UseShellExecute = !Config.ConfigData.HideMiningWindows;
             P.EnableRaisingEvents = true;
             P.Exited += Miner_Exited;
 

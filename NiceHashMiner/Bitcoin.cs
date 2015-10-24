@@ -19,7 +19,14 @@ namespace NiceHashMiner
 
         public static double GetUSDExchangeRate()
         {
-            string jsondata = GetCoinbaseAPIData("https://api.coinbase.com/v1/prices/spot_rate");
+            string jsondata = null;
+
+            for (int i = 0; i < 2; i++)
+            {
+                jsondata = GetCoinbaseAPIData("https://api.coinbase.com/v1/prices/spot_rate");
+                if (jsondata != null) break;
+            }
+
             if (jsondata == null) return 0;
 
             try
@@ -39,10 +46,10 @@ namespace NiceHashMiner
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
-                WR.Timeout = 5000;
+                WR.Timeout = 10000;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 5000;
+                SS.ReadTimeout = 10000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromServer = Reader.ReadToEnd();
                 if (ResponseFromServer.Length == 0 || ResponseFromServer[0] != '{')
@@ -50,8 +57,9 @@ namespace NiceHashMiner
                 Reader.Close();
                 Response.Close();
             }
-            catch
+            catch (Exception ex)
             {
+                Helpers.ConsolePrint(ex.Message);
                 return null;
             }
 

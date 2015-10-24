@@ -4,6 +4,7 @@
 - [Features](#features)
 - [How to get it and run](#run)
 - [Additional options](#options)
+- [Troubleshooting](#troubleshooting)
 
 # <a name="introduction"></a> Introduction
 
@@ -46,6 +47,10 @@ Parameter        | Range    | Description
 DebugConsole     | true or false   | When set to true, it displays debug console.
 LessThreads      | 0 .. 64  | Reduce number of threads used on each CPU by LessThreads.
 ForceCPUExtension | 0, 1, 2 or 3 | Force certain CPU extension miner. 0 is automatic, 1 for SSE2, 2 for AVX and 3 for AVX2.
+AutoStartMining | true or false | When set to true, NiceHashMiner will automatically start mining when launched.
+HideMiningWindows | true or false | When set to true, ccminer and cpuminer console windows will be hidden.
+StartMiningWhenIdle | true or false | Automatically start mining when computer is idle and stop mining when computer is being used.
+MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many secunds computer has to be idle before mining starts.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
 Groups\ExtraLaunchParameters | text | Additional launch parameters when launching miner.
@@ -66,3 +71,8 @@ If you would like to set lower starting difficulty for ScryptJaneNf16 algorithm 
 
 If you would like to manually configure intensity parameters for your three video cards (Quark algorithm):
 > Set ExtraLaunchParameters to "-i 19,19,19" under Algorithms item that has Name "quark" for group with Name "NVIDIA5.x" or "NVIDIA3.x".
+
+# <a name="troubleshooting"></a> Troubleshooting
+
+My NVIDIA video card(s) is/are not detected.
+> Make sure to install official NVIDIA drivers from here: http://www.nvidia.com/Download/index.aspx
