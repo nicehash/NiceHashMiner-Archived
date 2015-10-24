@@ -541,7 +541,8 @@ namespace NiceHashMiner
         {
             ComputeDevice G = e.Item.Tag as ComputeDevice;
             G.Enabled = e.Item.Checked;
-            Config.RebuildGroups();
+            if (LoadingScreen == null)
+                Config.RebuildGroups();
         }
 
 
