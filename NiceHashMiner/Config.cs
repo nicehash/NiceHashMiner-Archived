@@ -6,17 +6,21 @@ using Newtonsoft.Json;
 
 namespace NiceHashMiner
 {
-    public class Algo
+    public class SubConfigClass
+    { }
+
+    public class Algo : SubConfigClass
     {
 #pragma warning disable 649
         public string Name; // only used for easier manual identification in config file
         public string ExtraLaunchParameters;
         public string UsePassword;
         public double BenchmarkSpeed;
+        public bool Skip;
 #pragma warning restore 649
     }
 
-    public class Group
+    public class Group : SubConfigClass
     {
 #pragma warning disable 649
         public string Name; // only used for easier manual identification in config file
@@ -113,6 +117,7 @@ namespace NiceHashMiner
                     CG[i].Algorithms[k].BenchmarkSpeed = Form1.Miners[i].SupportedAlgorithms[k].BenchmarkSpeed;
                     CG[i].Algorithms[k].ExtraLaunchParameters = Form1.Miners[i].SupportedAlgorithms[k].ExtraLaunchParameters;
                     CG[i].Algorithms[k].UsePassword = Form1.Miners[i].SupportedAlgorithms[k].UsePassword;
+                    CG[i].Algorithms[k].Skip = Form1.Miners[i].SupportedAlgorithms[k].Skip;
                 }
                 List<int> DD = new List<int>();
                 for (int k = 0; k < Form1.Miners[i].CDevs.Count; k++)

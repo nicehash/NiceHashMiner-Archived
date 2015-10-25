@@ -24,7 +24,14 @@ namespace NiceHashMiner
             {
                 for (int i = 0; i < m.SupportedAlgorithms.Length; i++)
                 {
-                    ListViewItem lvi = new ListViewItem(m.MinerDeviceName);
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Checked = !m.SupportedAlgorithms[i].Skip;
+                    if (m.EnabledDeviceCount() == 0)
+                    {
+                        lvi.Checked = false;
+                        lvi.BackColor = Color.LightGray;
+                    }
+                    lvi.SubItems.Add(m.MinerDeviceName);
                     ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(m.SupportedAlgorithms[i].NiceHashName);
                     sub.Tag = i;
                     if (m.SupportedAlgorithms[i].BenchmarkSpeed > 0)
@@ -43,12 +50,12 @@ namespace NiceHashMiner
         }
 
 
-        private void BenchmarkCompleted(string text, object tag)
+        private void BenchmarkCompleted(bool success, string text, object tag)
         {
             if (this.InvokeRequired)
             {
                 BenchmarkComplete d = new BenchmarkComplete(BenchmarkCompleted);
-                this.Invoke(d, new object[] { text, tag });
+                this.Invoke(d, new object[] { success, text, tag });
             }
             else
             {
@@ -56,7 +63,7 @@ namespace NiceHashMiner
                 CurrentlyBenchmarking = null;
 
                 ListViewItem lvi = tag as ListViewItem;
-                lvi.SubItems[2].Text = text;
+                lvi.SubItems[3].Text = text;
 
                 // initiate new benchmark
                 InitiateBenchmark();
@@ -70,9 +77,16 @@ namespace NiceHashMiner
             {
                 ListViewItem lvi = listView1.Items[index];
                 index++;
+
+                if (!lvi.Checked)
+                {
+                    InitiateBenchmark();
+                    return;
+                }
+
                 Miner m = lvi.Tag as Miner;
-                int i = (int)lvi.SubItems[1].Tag;
-                lvi.SubItems[2].Text = "Please wait...";
+                int i = (int)lvi.SubItems[2].Tag;
+                lvi.SubItems[3].Text = "Please wait...";
                 inBenchmark = true;
                 CurrentlyBenchmarking = m;
                 m.BenchmarkStart(i, Time, BenchmarkCompleted, lvi);
@@ -92,7 +106,7 @@ namespace NiceHashMiner
                         if (lvi.Tag is cpuminer)
                         {
                             Miner m = lvi.Tag as Miner;
-                            int i = (int)lvi.SubItems[1].Tag;
+                            int i = (int)lvi.SubItems[2].Tag;
                             if (m.SupportedAlgorithms[i].BenchmarkSpeed > 0)
                             {
                                 Speeds[i] += m.SupportedAlgorithms[i].BenchmarkSpeed;
@@ -105,24 +119,27 @@ namespace NiceHashMiner
                     {
                         if (MTaken[i] > 0) Speeds[i] /= MTaken[i];
                         Helpers.ConsolePrint(Form1.Miners[0].SupportedAlgorithms[i].NiceHashName + " average speed: " + Form1.Miners[0].PrintSpeed(Speeds[i]));
-                    }
 
-                    foreach (ListViewItem lvi in listView1.Items)
-                    {
-                        if (lvi.Tag is cpuminer)
+                        foreach (Miner m in Form1.Miners)
                         {
-                            Miner m = lvi.Tag as Miner;
-                            int i = (int)lvi.SubItems[1].Tag;
-                            m.SupportedAlgorithms[i].BenchmarkSpeed = Speeds[i];
-                            lvi.SubItems[2].Text = m.PrintSpeed(Speeds[i]);
+                            if (m is cpuminer)
+                                m.SupportedAlgorithms[i].BenchmarkSpeed = Speeds[i];
                         }
                     }
+                }
+
+                foreach (ListViewItem lvi in listView1.Items)
+                {
+                    Miner m = lvi.Tag as Miner;
+                    int i = (int)lvi.SubItems[2].Tag;
+                    lvi.SubItems[3].Text = m.PrintSpeed(m.SupportedAlgorithms[i].BenchmarkSpeed);
                 }
                 
                 Config.RebuildGroups();
 
                 button1.Enabled = true;
                 button2.Enabled = false;
+                button3.Enabled = true;
             }
         }
 
@@ -151,6 +168,7 @@ namespace NiceHashMiner
             index = 0;
             button1.Enabled = false;
             button2.Enabled = true;
+            button3.Enabled = false;
             InitiateBenchmark();
         }
 
@@ -159,6 +177,37 @@ namespace NiceHashMiner
             if (CurrentlyBenchmarking != null)
                 CurrentlyBenchmarking.BenchmarkSignalQuit = true;
             index = 9999;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            foreach (Miner m in Form1.Miners)
+            {
+                for (int i = 0; i < m.SupportedAlgorithms.Length; i++)
+                {
+                    m.SupportedAlgorithms[i].BenchmarkSpeed = 0;
+                }
+            }
+
+            Config.RebuildGroups();
+
+            foreach (ListViewItem lvi in listView1.Items)
+            {
+                lvi.SubItems[3].Text = "";
+            }
+        }
+
+        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            Miner m = e.Item.Tag as Miner;
+            if (m.EnabledDeviceCount() == 0)
+                e.Item.Checked = false;
+            else
+            {
+                int i = (int)e.Item.SubItems[2].Tag;
+                m.SupportedAlgorithms[i].Skip = !e.Item.Checked;
+                Config.RebuildGroups();
+            }
         }
     }
 }

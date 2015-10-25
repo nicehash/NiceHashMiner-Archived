@@ -37,9 +37,15 @@ namespace NiceHashMiner
         private Form2 BenchmarkForm;
 
 
-        public Form1()
+        public Form1(bool ss)
         {
             InitializeComponent();
+
+            if (ss)
+            {
+                Form4 f4 = new Form4();
+                f4.ShowDialog();
+            }
 
             if (Config.ConfigData.DebugConsole)
                 Helpers.AllocConsole();
@@ -50,7 +56,11 @@ namespace NiceHashMiner
 
             Text += " v" + Application.ProductVersion;
 
-            comboBox1.SelectedIndex = Config.ConfigData.Location;
+            if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < 3)
+                comboBox1.SelectedIndex = Config.ConfigData.Location;
+            else
+                comboBox1.SelectedIndex = 0;
+
             textBox1.Text = Config.ConfigData.BitcoinAddress;
             textBox2.Text = Config.ConfigData.WorkerName;
         }
@@ -166,6 +176,7 @@ namespace NiceHashMiner
                         Miners[i].SupportedAlgorithms[z].BenchmarkSpeed = Config.ConfigData.Groups[i].Algorithms[z].BenchmarkSpeed;
                         Miners[i].SupportedAlgorithms[z].ExtraLaunchParameters = Config.ConfigData.Groups[i].Algorithms[z].ExtraLaunchParameters;
                         Miners[i].SupportedAlgorithms[z].UsePassword = Config.ConfigData.Groups[i].Algorithms[z].UsePassword;
+                        Miners[i].SupportedAlgorithms[z].Skip = Config.ConfigData.Groups[i].Algorithms[z].Skip;
                     }
                 }
                 for (int k = 0; k < Miners[i].CDevs.Count; k++)
@@ -488,6 +499,7 @@ namespace NiceHashMiner
             comboBox1.Enabled = false;
             button3.Enabled = false;
             button1.Enabled = false;
+            button4.Enabled = false;
             listView1.Enabled = false;
             button2.Enabled = true;
 
@@ -524,6 +536,7 @@ namespace NiceHashMiner
             comboBox1.Enabled = true;
             button3.Enabled = true;
             button1.Enabled = true;
+            button4.Enabled = true;
             listView1.Enabled = true;
             button2.Enabled = false;
 
@@ -558,6 +571,22 @@ namespace NiceHashMiner
             BenchmarkForm = new Form2(false);
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
+        }
+
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Editing additional settings is for advanced users.\r\n\r\nIf " + ProductName +
+                " crashes due to bad config value you can restore it by deleting 'config.json' file.\r\n\r\nContinue with editing settings?", 
+                "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
+                return;
+
+            Process PHandle = new Process();
+            PHandle.StartInfo.FileName = Application.ExecutablePath;
+            PHandle.StartInfo.Arguments = "-config";
+            PHandle.Start();
+
+            Close();
         }
     }
 }

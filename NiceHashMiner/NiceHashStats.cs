@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.IO;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 
 namespace NiceHashMiner
@@ -165,6 +166,7 @@ namespace NiceHashMiner
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
+                WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion; 
                 WR.Timeout = 10000;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();

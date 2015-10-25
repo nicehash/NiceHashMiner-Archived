@@ -19,6 +19,7 @@ namespace NiceHashMiner
         public double CurrentProfit;
         public string ExtraLaunchParameters;
         public string UsePassword;
+        public bool Skip;
 
         public Algorithm(int id, string nhname, string mname)
         {
@@ -28,6 +29,7 @@ namespace NiceHashMiner
             BenchmarkSpeed = 0;
             ExtraLaunchParameters = "";
             UsePassword = null;
+            Skip = false;
         }
     }
 
@@ -56,7 +58,7 @@ namespace NiceHashMiner
         }
     }
 
-    public delegate void BenchmarkComplete(string text, object tag);
+    public delegate void BenchmarkComplete(bool success, string text, object tag);
 
     public abstract class Miner
     {
@@ -111,13 +113,13 @@ namespace NiceHashMiner
 
             if (index >= SupportedAlgorithms.Length)
             {
-                OnBenchmarkComplete("Unknown algorithm", tag);
+                OnBenchmarkComplete(false, "Unknown algorithm", tag);
                 return;
             }
 
             if (EnabledDeviceCount() == 0)
             {
-                OnBenchmarkComplete("Disabled", tag);
+                OnBenchmarkComplete(false, "Disabled", tag);
                 return; // ignore, disabled device
             }
 
@@ -151,7 +153,7 @@ namespace NiceHashMiner
                     spd *= 1000000000;
                 SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
 
-                OnBenchmarkComplete(PrintSpeed(spd), BenchmarkTag);
+                OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
                 return true;
             }
             return false;
@@ -201,6 +203,10 @@ namespace NiceHashMiner
                         //Helpers.ConsolePrint(outdata);
                         if (outdata.Contains("Cuda error"))
                             throw new Exception("CUDA error");
+                        if (outdata.Contains("is not supported"))
+                            throw new Exception("N/A");
+                        if (outdata.Contains("illegal memory access"))
+                            throw new Exception("CUDA error");
                         if (BenchmarkParseLine(outdata))
                             break;
                     }
@@ -210,12 +216,14 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
+                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = 0;
+
                 Helpers.ConsolePrint(ex.Message);
 
                 try { if (BenchmarkHandle != null) BenchmarkHandle.Kill(); }
                 catch { }
                 
-                OnBenchmarkComplete("Terminated", BenchmarkTag);
+                OnBenchmarkComplete(false, "Terminated", BenchmarkTag);
             }
 
             if (BenchmarkHandle != null)
