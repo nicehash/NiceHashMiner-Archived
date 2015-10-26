@@ -118,7 +118,7 @@ namespace NiceHashMiner
             // get all cores (including virtual - HT can benefit mining)
             int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / CPUs;
 
-            if (!Helpers.InternalCheckIsWow64())
+            if (!Helpers.InternalCheckIsWow64() && !Config.ConfigData.AutoStartMining)
             {
                 MessageBox.Show("NiceHash Miner works only on 64 bit version of OS for CPU mining. CPU mining will be disabled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CPUs = 0;
