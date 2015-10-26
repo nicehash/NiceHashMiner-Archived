@@ -40,7 +40,7 @@ Currently, miner is in public beta testing. Please, be patient as there may be s
 
 # <a name="options"></a> Additional options
 
-After first launch, config.json file is created. Additional options are exposed if you decide to manually modify this file. Close NiceHash Miner before modifying this file.
+Click 'Settings' button. NiceHash Miner will be relaunched with ability to modify configs. Alternatively, you can manually modify config.json file (close NiceHash Miner first).
 
 Parameter        | Range    | Description
 -----------------|----------|-------------------
@@ -59,7 +59,7 @@ Groups\Algorithms\BenchmarkSpeed   | number   | Fine tune algorithm ratios by ma
 Groups\UsePassword | text or null | Use this password when launching miner. If null, default password 'x' is used.
 Groups\Algorithms\UsePassword | text or null | Use this password when launching miner and this algorithm. If null, Groups\UsePassword is used.
 
-Do not change any 'Name' parameters - changin them will not have any effect. 'Name' parameters are there only for easier config management. Eventually, we will make all these config properties configurable over GUI.
+Do not change any 'Name' parameters - changin them will not have any effect. 'Name' parameters are there only for easier config management.
 
 Examples:
 --------
