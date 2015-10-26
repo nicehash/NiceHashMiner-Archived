@@ -73,9 +73,9 @@ namespace NiceHashMiner
 #pragma warning restore 649
 
 
-        public static NiceHashSMA[] GetAlgorithmRates()
+        public static NiceHashSMA[] GetAlgorithmRates(string worker)
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=simplemultialgo.info");
+            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=simplemultialgo.info", worker);
             if (r1 == null) return null;
 
             nicehash_json_2 nhjson_current;
@@ -91,10 +91,10 @@ namespace NiceHashMiner
         }
 
 
-        public static nicehash_stats GetStats(string btc, int location, int algo)
+        public static nicehash_stats GetStats(string btc, int location, int algo, string worker)
         {
             if (location > 1) location = 1;
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&location=" + location.ToString() + "&addr=" + btc);
+            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&location=" + location.ToString() + "&addr=" + btc, worker);
             if (r1 == null) return null;
 
             nicehash_json<nicehash_stats> nhjson_current;
@@ -116,13 +116,13 @@ namespace NiceHashMiner
         }
 
 
-        public static double GetBalance(string btc)
+        public static double GetBalance(string btc, string worker)
         {
             double balance = 0;
 
             for (int l = 0; l < 2; l++)
             {
-                string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&location=" + l.ToString() + "&addr=" + btc);
+                string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&location=" + l.ToString() + "&addr=" + btc, worker);
                 if (r1 == null) break;
 
                 nicehash_json<nicehash_stats> nhjson_current;
@@ -142,9 +142,9 @@ namespace NiceHashMiner
         }
 
 
-        public static string GetVersion()
+        public static string GetVersion(string worker)
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/nicehashminer?method=version");
+            string r1 = GetNiceHashAPIData("https://www.nicehash.com/nicehashminer?method=version", worker);
             if (r1 == null) return null;
 
             nicehashminer_version nhjson;
@@ -160,13 +160,15 @@ namespace NiceHashMiner
         }
 
 
-        private static string GetNiceHashAPIData(string URL)
+        private static string GetNiceHashAPIData(string URL, string worker)
         {
             string ResponseFromServer;
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
-                WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion; 
+                WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
+                if (worker.Length > 64) worker = worker.Substring(0, 64);
+                WR.Headers.Add("NiceHash-Worker-ID", worker);
                 WR.Timeout = 10000;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();

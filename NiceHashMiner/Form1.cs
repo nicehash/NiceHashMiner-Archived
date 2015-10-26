@@ -407,7 +407,7 @@ namespace NiceHashMiner
             if (VerifyMiningAddress())
             {
                 Helpers.ConsolePrint("NICEHASH: balance get");
-                double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim());
+                double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim(), textBox1.Text.Trim() + "." + textBox2.Text.Trim());
                 if (Balance > 0)
                 {
                     toolStripStatusLabel6.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
@@ -429,7 +429,7 @@ namespace NiceHashMiner
         void SMACheck_Tick(object sender, EventArgs e)
         {
             Helpers.ConsolePrint("NICEHASH: sma get");
-            NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates();
+            NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates(textBox1.Text.Trim() + "." + textBox2.Text.Trim());
             if (t != null) NiceHashData = t;
         }
 
@@ -437,7 +437,7 @@ namespace NiceHashMiner
         void UpdateCheck_Tick(object sender, EventArgs e)
         {
             Helpers.ConsolePrint("NICEHASH: version get");
-            string ver = NiceHashStats.GetVersion();
+            string ver = NiceHashStats.GetVersion(textBox1.Text.Trim() + "." + textBox2.Text.Trim());
 
             if (ver == null) return;
 
