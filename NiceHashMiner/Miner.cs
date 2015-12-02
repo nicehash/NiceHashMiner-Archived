@@ -118,6 +118,14 @@ namespace NiceHashMiner
                 ProcessHandle.Close();
                 ProcessHandle = null;
                 PreviousTotalMH = 0.0;
+
+                if (MinerDeviceName == "AMD_OpenCL")
+                {
+                    foreach (Process process in Process.GetProcessesByName("sgminer"))
+                    {
+                        process.Kill();
+                    }
+                }
             }
         }
 
@@ -240,7 +248,6 @@ namespace NiceHashMiner
                     string outdata = BenchmarkGetConsoleOutputLine(BenchmarkHandle);
                     if (outdata != null)
                     {
-                        //Helpers.ConsolePrint(outdata);
                         if (outdata.Contains("Cuda error"))
                             throw new Exception("CUDA error");
                         if (outdata.Contains("is not supported"))
