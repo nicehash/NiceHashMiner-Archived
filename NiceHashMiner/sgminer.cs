@@ -178,7 +178,7 @@ namespace NiceHashMiner
                     CommandLine += G.ID.ToString() + ",";
 
             CommandLine = CommandLine.Remove(CommandLine.Length - 1) +
-                          " && del " + DirName + "\\dump.txt\"";
+                          " && del \"" + DirName + "\\dump.txt\"";
 
             return CommandLine;
         }
@@ -223,13 +223,6 @@ namespace NiceHashMiner
             {
                 LastCommandLine = "";
                 return; // no GPUs to start mining on
-            }
-
-            if (Config.ConfigData.HideMiningWindows)
-            {
-                Path = "cmd";
-                LastCommandLine = " /C \"cd /d " + WorkingDirectory +
-                                  " && sgminer.exe " + LastCommandLine + "\"";
             }
 
             ProcessHandle = _Start();
