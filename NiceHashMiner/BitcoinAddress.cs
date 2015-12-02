@@ -36,7 +36,7 @@ namespace NiceHashMiner
                 var p = Alphabet.IndexOf(t);
                 if (p == -1) throw new Exception("Invalid character found.");
                 var j = Size;
-                while (--j > 0)
+                while (--j >= 0)
                 {
                     p += 58 * output[j];
                     output[j] = (byte)(p % 256);

@@ -41,6 +41,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+cpuid/Release
 NiceHashMiner.v12.suo
 NiceHashMiner/bin/Debug/Newtonsoft.Json.dll
 NiceHashMiner/bin/Debug/Newtonsoft.Json.pdb
@@ -67,3 +68,4 @@ cpuid/cpuid.vcxproj.user
 *.idb
 NiceHashMiner.sdf
 NiceHashMiner.opensdf
+Release

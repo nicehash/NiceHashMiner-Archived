@@ -31,6 +31,17 @@ namespace NiceHashMiner
             UsePassword = null;
             Skip = false;
         }
+
+        public Algorithm(int id, string nhname, string mname, string xtraparam)
+        {
+            NiceHashID = id;
+            NiceHashName = nhname;
+            MinerName = mname;
+            BenchmarkSpeed = 0;
+            ExtraLaunchParameters = xtraparam;
+            UsePassword = null;
+            Skip = false;
+        }
     }
 
 
@@ -71,23 +82,28 @@ namespace NiceHashMiner
         public int CurrentAlgo;
         public double CurrentRate;
         public bool BenchmarkSignalQuit;
+        public int NumRetries;
 
         protected string Path;
+        protected string WorkingDirectory;
         protected Process ProcessHandle;
         protected BenchmarkComplete OnBenchmarkComplete;
         protected object BenchmarkTag;
         protected int BenchmarkIndex;
         protected string LastCommandLine;
+        protected double PreviousTotalMH;
 
         public Miner()
         {
             CDevs = new List<ComputeDevice>();
 
+            WorkingDirectory = "";
             ExtraLaunchParameters = "";
             UsePassword = null;
 
             CurrentAlgo = -1;
             CurrentRate = 0;
+            PreviousTotalMH = 0.0;
         }
 
         abstract public void Start(int nhalgo, string url, string username);
@@ -101,6 +117,7 @@ namespace NiceHashMiner
                 catch { }
                 ProcessHandle.Close();
                 ProcessHandle = null;
+                PreviousTotalMH = 0.0;
             }
         }
 
@@ -156,6 +173,29 @@ namespace NiceHashMiner
                 OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
                 return true;
             }
+            else if (outdata.Contains("Average hashrate:") && outdata.Contains("/s"))
+            {
+                int i = outdata.IndexOf(": ");
+                int k = outdata.IndexOf("/s");
+
+                // save speed
+                string hashSpeed = outdata.Substring(i + 2, k - i + 2);
+                hashSpeed = hashSpeed.Substring(0, hashSpeed.IndexOf(" "));
+                double speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
+
+                //Helpers.ConsolePrint("hashSpeed: " + hashSpeed);
+
+                if (outdata.Contains("Kilohash"))
+                    speed *= 1000;
+                else if (outdata.Contains("Megahash"))
+                    speed *= 1000000;
+                
+                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = speed;
+
+                OnBenchmarkComplete(true, PrintSpeed(speed), BenchmarkTag);
+                return true;
+            }
+
             return false;
         }
 
@@ -207,6 +247,10 @@ namespace NiceHashMiner
                             throw new Exception("N/A");
                         if (outdata.Contains("illegal memory access"))
                             throw new Exception("CUDA error");
+                        if (outdata.Contains("unknown error"))
+                            throw new Exception("Unknown error");
+                        if (outdata.Contains("No servers could be used! Exiting."))
+                            throw new Exception("No pools or work can be used for benchmarking");
                         if (BenchmarkParseLine(outdata))
                             break;
                     }
@@ -245,11 +289,18 @@ namespace NiceHashMiner
 
         virtual protected Process _Start()
         {
+            PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0 || EnabledDeviceCount() == 0) return null;
 
             Helpers.ConsolePrint(MinerDeviceName + " Starting miner: " + LastCommandLine);
 
             Process P = new Process();
+
+            if (WorkingDirectory.Length > 1)
+            {
+                P.StartInfo.WorkingDirectory = WorkingDirectory;
+            }
+
             P.StartInfo.FileName = Path;
             P.StartInfo.Arguments = LastCommandLine;
             P.StartInfo.CreateNoWindow = Config.ConfigData.HideMiningWindows;
@@ -339,16 +390,19 @@ namespace NiceHashMiner
                                     "User-Agent: NiceHashMiner/" + Application.ProductVersion + "\r\n" +
                                     "\r\n";
 
+                if (MinerDeviceName == "AMD_OpenCL")
+                    DataToSend = cmd;
+
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
                 tcpc.Client.Send(BytesToSend);
 
-                byte[] IncomingBuffer = new byte[1000];
+                byte[] IncomingBuffer = new byte[5000];
                 int offset = 0;
                 bool fin = false;
 
                 while (!fin && tcpc.Client.Connected)
                 {
-                    int r = tcpc.Client.Receive(IncomingBuffer, offset, 1000 - offset, SocketFlags.None);
+                    int r = tcpc.Client.Receive(IncomingBuffer, offset, 5000 - offset, SocketFlags.None);
                     for (int i = offset; i < offset + r; i++)
                     {
                         if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00)
@@ -384,15 +438,67 @@ namespace NiceHashMiner
 
             try
             {
-                string[] resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < resps.Length; i++)
+                string[] resps;
+
+                if (MinerDeviceName != "AMD_OpenCL")
                 {
-                    string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (optval.Length != 2) continue;
-                    if (optval[0] == "ALGO")
-                        aname = optval[1];
-                    else if (optval[0] == "KHS")
-                        ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                    resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < resps.Length; i++)
+                    {
+                        string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (optval.Length != 2) continue;
+                        if (optval[0] == "ALGO")
+                            aname = optval[1];
+                        else if (optval[0] == "KHS")
+                            ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                    }
+                }
+                else
+                {
+                    // Checks if all the GPUs are Alive first
+                    string resp2 = GetAPIData(APIPort, "devs");
+                    if (resp2 == null) return null;
+
+                    string [] checkGPUStatus = resp2.Split(new char [] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 1; i < checkGPUStatus.Length - 1; i++)
+                    {
+                        if (!checkGPUStatus[i].Contains("Status=Alive"))
+                        {
+                            Helpers.ConsolePrint("GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
+                            return null;
+                        }
+                    }
+                    Helpers.ConsolePrint("AMD_OpenCL: All GPUs are alive");
+
+                    resps = resp.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (resps.Length == 3)
+                    {
+                        string[] data = resps[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        // Get miner's current total speed
+                        string[] speed = data[4].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        // Get miner's current total MH
+                        double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                        
+                        ad.Speed = Double.Parse(speed[1]) * 1000;
+
+                        aname = SupportedAlgorithms[CurrentAlgo].MinerName;
+
+                        if (total_mh <= PreviousTotalMH)
+                        {
+                            Helpers.ConsolePrint("AMD_OpenCL: sgminer might be stuck as no new hashes are being produced");
+                            Helpers.ConsolePrint("Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
+                            return null;
+                        }
+
+                        PreviousTotalMH = total_mh;
+                    }
+                    else
+                    {
+                        ad.Speed = 0;
+                    }
                 }
             }
             catch

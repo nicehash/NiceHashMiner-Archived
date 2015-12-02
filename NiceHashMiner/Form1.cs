@@ -12,9 +12,9 @@ namespace NiceHashMiner
 {
     public partial class Form1 : Form
     {
-        private static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
+        public static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
         private static string VisitURL = "http://www.nicehash.com";
-        private static NiceHashSMA[] NiceHashData = null;
+        public static NiceHashSMA[] NiceHashData = null;
 
         public static Miner[] Miners;
 
@@ -28,7 +28,7 @@ namespace NiceHashMiner
         private Timer IdleCheck;
         private Form3 LoadingScreen;
         private int LoadCounter = 0;
-        private int TotalLoadSteps = 8;
+        private int TotalLoadSteps = 10;
 
         private Random R;
 
@@ -56,7 +56,7 @@ namespace NiceHashMiner
 
             Text += " v" + Application.ProductVersion;
 
-            if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < 3)
+            if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location <= 3)
                 comboBox1.SelectedIndex = Config.ConfigData.Location;
             else
                 comboBox1.SelectedIndex = 0;
@@ -138,7 +138,7 @@ namespace NiceHashMiner
                 CPUs = 0;
             }
 
-            Miners = new Miner[CPUs + 2]; // todo: add sgminer
+            Miners = new Miner[CPUs + 4];
 
             if (CPUs == 1)
                 Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
@@ -158,7 +158,15 @@ namespace NiceHashMiner
             
             Miners[CPUs + 1] = new ccminer_tpruvot();
 
-            // todo: initialize sgminer
+            LoadingScreen.LoadText.Text = "Querying NVIDIA2.1 devices...";
+            IncreaseLoadCounter();
+
+            Miners[CPUs + 2] = new ccminer_tpruvot_sm21();
+
+            LoadingScreen.LoadText.Text = "Querying AMD OpenCL devices...";
+            IncreaseLoadCounter();
+
+            Miners[CPUs + 3] = new sgminer();
 
             LoadingScreen.LoadText.Text = "Saving config...";
             IncreaseLoadCounter();
@@ -317,6 +325,7 @@ namespace NiceHashMiner
                     NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
 
                 m.CurrentAlgo = MaxProfitIndex;
+                m.NumRetries = 7;
             }
         }
 
@@ -327,6 +336,13 @@ namespace NiceHashMiner
             double CPUTotalSpeed = 0;
             double CPUTotalRate = 0;
 
+            // Reset all stats
+            SetCPUStats("", 0, 0);
+            SetNVIDIAtp21Stats("", 0, 0);
+            SetNVIDIAspStats("", 0, 0);
+            SetNVIDIAtpStats("", 0, 0);
+            SetAMDOpenCLStats("", 0, 0);
+
             foreach (Miner m in Miners)
             {
                 if (m.EnabledDeviceCount() == 0) continue;
@@ -334,8 +350,17 @@ namespace NiceHashMiner
                 APIData AD = m.GetSummary();
                 if (AD == null)
                 {
+                    // Make sure sgminer has time to start properly on slow CPU system
+                    if (m is sgminer && m.NumRetries > 0)
+                    {
+                        m.NumRetries--;
+                        continue;
+                    }
+
                     // API is inaccessible, try to restart miner
+                    m.NumRetries = 7;
                     m.Restart();
+                    
                     continue;
                 }
 
@@ -348,6 +373,10 @@ namespace NiceHashMiner
                     CPUTotalSpeed += AD.Speed;
                     CPUTotalRate += m.CurrentRate;
                 }
+                else if (m is ccminer_tpruvot_sm21)
+                {
+                    SetNVIDIAtp21Stats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+                }
                 else if (m is ccminer_tpruvot)
                 {
                     SetNVIDIAtpStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
@@ -355,6 +384,10 @@ namespace NiceHashMiner
                 else if (m is ccminer_sp)
                 {
                     SetNVIDIAspStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+                }
+                else if (m is sgminer)
+                {
+                    SetAMDOpenCLStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
                 }
             }
 
@@ -367,16 +400,25 @@ namespace NiceHashMiner
 
         private void SetCPUStats(string aname, double speed, double paying)
         {
-            label5.Text = (speed * 0.001).ToString("F2", CultureInfo.InvariantCulture) + " kH/s " + aname;
+            label5.Text = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + " kH/s " + aname;
             label11.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
             label16.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
 
 
+        private void SetNVIDIAtp21Stats(string aname, double speed, double paying)
+        {
+            label22.Text = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s " + aname;
+            label20.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label19.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
+            UpdateGlobalRate();
+        }
+
+
         private void SetNVIDIAtpStats(string aname, double speed, double paying)
         {
-            label8.Text = (speed * 0.000001).ToString("F2", CultureInfo.InvariantCulture) + " MH/s " + aname;
+            label8.Text = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s " + aname;
             label14.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
             label18.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
@@ -385,9 +427,18 @@ namespace NiceHashMiner
 
         private void SetNVIDIAspStats(string aname, double speed, double paying)
         {
-            label6.Text = (speed * 0.000001).ToString("F2", CultureInfo.InvariantCulture) + " MH/s " + aname;
+            label6.Text = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s " + aname;
             label12.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
             label17.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
+            UpdateGlobalRate();
+        }
+
+
+        private void SetAMDOpenCLStats(string aname, double speed, double paying)
+        {
+            label_AMDOpenCL_Mining_Speed.Text = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s " + aname;
+            label_AMDOpenCL_Mining_BTC_Day_Value.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label_AMDOpenCL_Mining_USD_Day_Value.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
 
@@ -528,8 +579,10 @@ namespace NiceHashMiner
             }
 
             SetCPUStats("", 0, 0);
+            SetNVIDIAtp21Stats("", 0, 0);
             SetNVIDIAspStats("", 0, 0);
             SetNVIDIAtpStats("", 0, 0);
+            SetAMDOpenCLStats("", 0, 0);
 
             textBox1.Enabled = true;
             textBox2.Enabled = true;
@@ -568,6 +621,8 @@ namespace NiceHashMiner
 
         private void button3_Click(object sender, EventArgs e)
         {
+            Config.ConfigData.Location = comboBox1.SelectedIndex;
+
             BenchmarkForm = new Form2(false);
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
@@ -587,6 +642,32 @@ namespace NiceHashMiner
             PHandle.Start();
 
             Close();
+        }
+
+
+        private void buttonHelp_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/nicehash/NiceHashMiner");
+        }
+
+        private void linkLabel_Choose_BTC_Wallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
+        }
+
+        private void toolStripStatusLabel10_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs6");
+        }
+
+        private void toolStripStatusLabel10_MouseHover(object sender, EventArgs e)
+        {
+            statusStrip1.Cursor = Cursors.Hand;
+        }
+
+        private void toolStripStatusLabel10_MouseLeave(object sender, EventArgs e)
+        {
+            statusStrip1.Cursor = Cursors.Default;
         }
     }
 }
