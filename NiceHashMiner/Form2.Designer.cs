@@ -90,7 +90,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(102, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Start benchmark";
+            this.button1.Text = "Start &benchmark";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -101,7 +101,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(102, 23);
             this.button2.TabIndex = 1;
-            this.button2.Text = "Stop benchmark";
+            this.button2.Text = "St&op benchmark";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -112,7 +112,7 @@
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(204, 17);
             this.radioButton1.TabIndex = 3;
-            this.radioButton1.Text = "Quick benchmark (can be inaccurate)";
+            this.radioButton1.Text = "&Quick benchmark (can be inaccurate)";
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
@@ -125,7 +125,7 @@
             this.radioButton2.Size = new System.Drawing.Size(124, 17);
             this.radioButton2.TabIndex = 4;
             this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Standard benchmark";
+            this.radioButton2.Text = "&Standard benchmark";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
@@ -136,7 +136,7 @@
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(195, 17);
             this.radioButton3.TabIndex = 5;
-            this.radioButton3.Text = "Precise benchmark (will take longer)";
+            this.radioButton3.Text = "&Precise benchmark (will take longer)";
             this.radioButton3.UseVisualStyleBackColor = true;
             this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
             // 
@@ -146,7 +146,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(102, 23);
             this.button3.TabIndex = 2;
-            this.button3.Text = "Reset";
+            this.button3.Text = "&Reset";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
