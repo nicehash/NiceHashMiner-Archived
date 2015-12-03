@@ -97,6 +97,12 @@ My AMD video card(s) is/are not detected.
 http://support.amd.com/en-us/download
 > Also check weather your card supports OpenCL, check "OpenCL" column here: https://en.wikipedia.org/wiki/List_of_AMD_graphics_processing_units
 
+I'm getting "Always ask before opening this file" when running NiceHash Miner
+> Make sure you un-check the checkbox "Always ask before opening this file" when NiceHash Miner is starting cpuminer, ccminer or sgminer back-end programs. This is needed because back-end programs will be executed several times while NiceHash Miner is running (auto-switching according to profitability and in case programs hangs) and you have to make sure these programs will be to executed automatically without your intervention.
+
+My anti-virus is blocking the application
+> Some anti-virus software might block NiceHash Miner as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMiner/releases. However make sure you **never download and run any files from other unknown sources**!
+
 # <a name="references"></a> References
 
 - For CPU mining our tpruvot's forked cpuminer has been used from here: https://github.com/nicehash/cpuminer-multi (compiled with MingW64).
