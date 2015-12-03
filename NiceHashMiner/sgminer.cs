@@ -78,12 +78,9 @@ namespace NiceHashMiner
 
             Helpers.ConsolePrint(MinerDeviceName + " detected: " + name);
 
-            // add only AMD OpenCL devices
-            if (name.Contains("AMD") || name.Contains("ATI"))
-            {
-                CDevs.Add(new ComputeDevice(id, MinerDeviceName, name));
-                Helpers.ConsolePrint(MinerDeviceName + " added: " + name);
-            }
+            // add AMD OpenCL devices
+            CDevs.Add(new ComputeDevice(id, MinerDeviceName, name));
+            Helpers.ConsolePrint(MinerDeviceName + " added: " + name);
         }
 
         protected void QueryCDevs()
