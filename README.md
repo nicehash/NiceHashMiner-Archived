@@ -43,7 +43,7 @@ Detailed instructions:
 - Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/index.jsp?p=faq#faqs15.
 - You will recieve Bitcoin payments according to our payments schedule: https://www.nicehash.com/index.jsp?p=faq#faqs6
 
-<i>Note: .NET Framework 2.0 or higher is required. No additional installations are needed if you use Windows 7 or later.</i>
+<i>**Note**: .NET Framework 2.0 or higher is required. No additional installations should be needed if you use Windows 7 or later. However if you encounter any issues when starting application (application would fail to start or errors/warning about missing DLL files are displayed) you should download and install Microsoft **.NET Framework 2.0** and/or **Microsoft Visual C++ Redistributable"**.</i>
 
 # <a name="profit"></a> Where is the profit coming from?
 
@@ -59,7 +59,7 @@ DebugConsole | true or false | When set to true, it displays debug console.
 LessThreads | 0 .. 64 | Reduce number of threads used on each CPU by LessThreads.
 ForceCPUExtension | 0, 1, 2 or 3 | Force certain CPU extension miner. 0 is automatic, 1 for SSE2, 2 for AVX and 3 for AVX2.
 AutoStartMining | true or false | When set to true, NiceHashMiner will automatically start mining when launched.
-HideMiningWindows | true or false | When set to true, ccminer and cpuminer console windows will be hidden.
+HideMiningWindows | true or false | When set to true, sgminer, ccminer and cpuminer console windows will be hidden.
 StartMiningWhenIdle | true or false | Automatically start mining when computer is idle and stop mining when computer is being used.
 MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many secunds computer has to be idle before mining starts.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
