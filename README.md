@@ -45,6 +45,8 @@ Detailed instructions:
 - Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/index.jsp?p=faq#faqs15.
 - You will recieve Bitcoin payments according to our payments schedule: https://www.nicehash.com/index.jsp?p=faq#faqs6
 
+**WARNING**: Due to specific requirements of the supporting back-end program "sgminer", you can **not** run NiceHash Miner through Windows RDP (Remote Desktop Protocol) if you are using **AMD GPUs**. If you still wish to use remote access to you computer while running NiceHash Miner we suggest you to use TeamViewer: https://www.teamviewer.com.
+
 # <a name="profit"></a> Where is the profit coming from?
 
 As a back-end NiceHash Miner relies on the <a href="https://www.nicehash.com" target="_blank">NiceHash.com</a> service. By running NiceHash Miner you're essentially selling the hashing power of your CPUs & GPUs to hashing power buyers. Those are using the hashing power to mine various cryptocurrency coins and support decentralized blockchain networks - similar to cloud computing - only that by running NiceHash Miner you're actually being a provider for the cryptocurrency mining hashing power. You are being part of a global compute power network, **empowering decentralized digital currencies**.
