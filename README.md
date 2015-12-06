@@ -3,6 +3,7 @@
 - [Introduction](#introduction)
 - [What are the benefits?](#benefits)
 - [Features](#features)
+- [Requirements](#requirements)
 - [How to get&run it?](#run)
 - [Where is the profit coming from?](#profit)
 - [Additional options](#options)
@@ -30,6 +31,16 @@ NiceHash Miner is essentially the only tool a miner needs. No need to go through
 - Display current rate and your balance in real time.
 - Auto update notifications.
 - Much more...
+
+# <a name="requirements"></a> Requirements
+
+- **Windows** 7 or newer operating system (preferably 64-bit)
+- For CPU mining a modern CPU with SSE2 support
+- For AMD mining any AMD GPU with OpenCL support
+- For NVIDIA mining any NVIDIA GPU with Compute capability (SM) 2.1 or newer
+- **up-to-date drivers** for all GPUs
+- **Reliable** internet connectivity
+- Personal **Bitcoin wallet**: https://www.nicehash.com/index.jsp?p=faq#faqs15
 
 # <a name="run"></a> How to get&run it?
 
