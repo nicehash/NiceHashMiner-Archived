@@ -28,7 +28,7 @@ namespace NiceHashMiner
         private Timer IdleCheck;
         private Form3 LoadingScreen;
         private int LoadCounter = 0;
-        private int TotalLoadSteps = 10;
+        private int TotalLoadSteps = 11;
 
         private Random R;
 
@@ -56,7 +56,7 @@ namespace NiceHashMiner
 
             Text += " v" + Application.ProductVersion;
 
-            if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location <= 3)
+            if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < MiningLocation.Length)
                 comboBox1.SelectedIndex = Config.ConfigData.Location;
             else
                 comboBox1.SelectedIndex = 0;
@@ -255,6 +255,11 @@ namespace NiceHashMiner
             BalanceCheck.Interval = 61 * 1000; // every 61 seconds
             BalanceCheck.Start();
             BalanceCheck_Tick(null, null);
+
+            LoadingScreen.LoadText.Text = "Setting environment variables...";
+            IncreaseLoadCounter();
+
+            SetEnvironmentVariables();
 
             IncreaseLoadCounter();
         }
@@ -479,9 +484,37 @@ namespace NiceHashMiner
 
         void SMACheck_Tick(object sender, EventArgs e)
         {
+            string worker = textBox1.Text.Trim() + "." + textBox2.Text.Trim();
             Helpers.ConsolePrint("NICEHASH: sma get");
-            NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates(textBox1.Text.Trim() + "." + textBox2.Text.Trim());
-            if (t != null) NiceHashData = t;
+            NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates(worker);
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (t != null)
+                {
+                    NiceHashData = t;
+                    break;
+                }
+
+                Helpers.ConsolePrint("NICEHASH: sma get failed .. retrying");
+                System.Threading.Thread.Sleep(1000);
+                t = NiceHashStats.GetAlgorithmRates(worker);
+            }
+
+            if (t == null && NiceHashData == null)
+            {
+                DialogResult dialogResult = MessageBox.Show("NiceHash Miner requires internet connection to run. " +
+                                                            "Please ensure that you are connected to the " +
+                                                            "internet before running NiceHash Miner. " +
+                                                            "Would you like to continue?",
+                                                            "Check internet connection",
+                                                            MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                    return;
+                else if (dialogResult == DialogResult.No)
+                    System.Windows.Forms.Application.Exit();
+            }
         }
 
 
@@ -497,6 +530,21 @@ namespace NiceHashMiner
                 linkLabel2.Text = "IMPORTANT! New version v" + ver + " has\r\nbeen released. Click here to download it.";
                 VisitURL = "https://github.com/nicehash/NiceHashMiner/releases/tag/" + ver;
             }
+        }
+
+
+        void SetEnvironmentVariables()
+        {
+            Helpers.ConsolePrint("NICEHASH: setting environment variables");
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo runSetEnv = new System.Diagnostics.ProcessStartInfo();
+            runSetEnv.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            runSetEnv.FileName = "cmd.exe";
+            runSetEnv.Arguments = "/C setx GPU_MAX_ALLOC_PERCENT 100 && " + 
+                                  "setx GPU_USE_SYNC_OBJECTS 1 && setx GPU_MAX_HEAP_SIZE 100";
+            process.StartInfo = runSetEnv;
+            process.Start();
         }
 
 
