@@ -28,7 +28,7 @@ namespace NiceHashMiner
         private Timer IdleCheck;
         private Form3 LoadingScreen;
         private int LoadCounter = 0;
-        private int TotalLoadSteps = 10;
+        private int TotalLoadSteps = 11;
 
         private Random R;
 
@@ -255,6 +255,11 @@ namespace NiceHashMiner
             BalanceCheck.Interval = 61 * 1000; // every 61 seconds
             BalanceCheck.Start();
             BalanceCheck_Tick(null, null);
+
+            LoadingScreen.LoadText.Text = "Setting environment variables...";
+            IncreaseLoadCounter();
+
+            SetEnvironmentVariables();
 
             IncreaseLoadCounter();
         }
@@ -525,6 +530,21 @@ namespace NiceHashMiner
                 linkLabel2.Text = "IMPORTANT! New version v" + ver + " has\r\nbeen released. Click here to download it.";
                 VisitURL = "https://github.com/nicehash/NiceHashMiner/releases/tag/" + ver;
             }
+        }
+
+
+        void SetEnvironmentVariables()
+        {
+            Helpers.ConsolePrint("NICEHASH: setting environment variables");
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo runSetEnv = new System.Diagnostics.ProcessStartInfo();
+            runSetEnv.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            runSetEnv.FileName = "cmd.exe";
+            runSetEnv.Arguments = "/C setx GPU_MAX_ALLOC_PERCENT 100 && " + 
+                                  "setx GPU_USE_SYNC_OBJECTS 1 && setx GPU_MAX_HEAP_SIZE 100";
+            process.StartInfo = runSetEnv;
+            process.Start();
         }
 
 
