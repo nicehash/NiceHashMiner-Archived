@@ -3,6 +3,7 @@
 - [Introduction](#introduction)
 - [What are the benefits?](#benefits)
 - [Features](#features)
+- [Requirements](#requirements)
 - [How to get&run it?](#run)
 - [Where is the profit coming from?](#profit)
 - [Additional options](#options)
@@ -31,9 +32,21 @@ NiceHash Miner is essentially the only tool a miner needs. No need to go through
 - Auto update notifications.
 - Much more...
 
+# <a name="requirements"></a> Requirements
+
+- **Windows** 7 or newer operating system (preferably 64-bit)
+- For CPU mining a modern CPU with SSE2 support
+- For AMD mining any AMD GPU with OpenCL support
+- For NVIDIA mining any NVIDIA GPU with Compute capability (SM) 2.1 or newer
+- **up-to-date drivers** for all GPUs
+- **Reliable** internet connectivity
+- Personal **Bitcoin wallet**: https://www.nicehash.com/index.jsp?p=faq#faqs15
+
 # <a name="run"></a> How to get&run it?
 
 All you have to do is download, extract and run the miner (no installation needed), choose the server location that is the **closest to your location**, run built-in benchmark and enter your Bitcoin wallet address where you want to get your coins sent at - and you are ready to start mining and maximizing your profit.
+
+<i>**Note**: .NET Framework 2.0 or higher is required. No additional installations should be needed if you use Windows 7 or later. However if you encounter any issues when starting application (application would fail to start or errors/warnings about missing DLL files are displayed) you should download and install Microsoft **.NET Framework 2.0** and/or **Microsoft Visual C++ Redistributable**.</i>
 
 Detailed instructions:
 - Download binaries from here: https://github.com/nicehash/NiceHashMiner/releases
@@ -43,7 +56,7 @@ Detailed instructions:
 - Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/index.jsp?p=faq#faqs15.
 - You will recieve Bitcoin payments according to our payments schedule: https://www.nicehash.com/index.jsp?p=faq#faqs6
 
-<i>Note: .NET Framework 2.0 or higher is required. No additional installations are needed if you use Windows 7 or later.</i>
+**WARNING**: Due to specific requirements of the supporting back-end program "sgminer", you can **not** run NiceHash Miner through Windows RDP (Remote Desktop Protocol) if you are using **AMD GPUs**. If you still wish to use remote access to you computer while running NiceHash Miner we suggest you to use TeamViewer: https://www.teamviewer.com.
 
 # <a name="profit"></a> Where is the profit coming from?
 
@@ -59,7 +72,7 @@ DebugConsole | true or false | When set to true, it displays debug console.
 LessThreads | 0 .. 64 | Reduce number of threads used on each CPU by LessThreads.
 ForceCPUExtension | 0, 1, 2 or 3 | Force certain CPU extension miner. 0 is automatic, 1 for SSE2, 2 for AVX and 3 for AVX2.
 AutoStartMining | true or false | When set to true, NiceHashMiner will automatically start mining when launched.
-HideMiningWindows | true or false | When set to true, ccminer and cpuminer console windows will be hidden.
+HideMiningWindows | true or false | When set to true, sgminer, ccminer and cpuminer console windows will be hidden.
 StartMiningWhenIdle | true or false | Automatically start mining when computer is idle and stop mining when computer is being used.
 MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many secunds computer has to be idle before mining starts.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
@@ -96,6 +109,12 @@ My AMD video card(s) is/are not detected.
 > Make sure to install latest official AMD drivers from here:
 http://support.amd.com/en-us/download
 > Also check weather your card supports OpenCL, check "OpenCL" column here: https://en.wikipedia.org/wiki/List_of_AMD_graphics_processing_units
+
+I'm getting "Always ask before opening this file" when running NiceHash Miner
+> Make sure you un-check the checkbox "Always ask before opening this file" when NiceHash Miner is starting cpuminer, ccminer or sgminer back-end programs. This is needed because back-end programs will be executed several times while NiceHash Miner is running (auto-switching according to profitability and in case programs hangs) and you have to make sure these programs will be to executed automatically without your intervention.
+
+My anti-virus is blocking the application
+> Some anti-virus software might block NiceHash Miner as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMiner/releases. However make sure you **never download and run any files from other unknown sources**!
 
 # <a name="references"></a> References
 
