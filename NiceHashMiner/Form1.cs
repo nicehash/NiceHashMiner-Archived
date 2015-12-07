@@ -56,7 +56,7 @@ namespace NiceHashMiner
 
             Text += " v" + Application.ProductVersion;
 
-            if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location <= 3)
+            if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < MiningLocation.Length)
                 comboBox1.SelectedIndex = Config.ConfigData.Location;
             else
                 comboBox1.SelectedIndex = 0;
@@ -479,9 +479,37 @@ namespace NiceHashMiner
 
         void SMACheck_Tick(object sender, EventArgs e)
         {
+            string worker = textBox1.Text.Trim() + "." + textBox2.Text.Trim();
             Helpers.ConsolePrint("NICEHASH: sma get");
-            NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates(textBox1.Text.Trim() + "." + textBox2.Text.Trim());
-            if (t != null) NiceHashData = t;
+            NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates(worker);
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (t != null)
+                {
+                    NiceHashData = t;
+                    break;
+                }
+
+                Helpers.ConsolePrint("NICEHASH: sma get failed .. retrying");
+                System.Threading.Thread.Sleep(1000);
+                t = NiceHashStats.GetAlgorithmRates(worker);
+            }
+
+            if (t == null && NiceHashData != null)
+            {
+                DialogResult dialogResult = MessageBox.Show("NiceHash Miner requires internet connection to run. " +
+                                                            "Please ensure that you are connected to the " +
+                                                            "internet before running NiceHash Miner. " +
+                                                            "Would you like to continue?",
+                                                            "Check internet connection",
+                                                            MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                    return;
+                else if (dialogResult == DialogResult.No)
+                    System.Windows.Forms.Application.Exit();
+            }
         }
 
 
