@@ -496,7 +496,7 @@ namespace NiceHashMiner
                 t = NiceHashStats.GetAlgorithmRates(worker);
             }
 
-            if (t == null && NiceHashData != null)
+            if (t == null && NiceHashData == null)
             {
                 DialogResult dialogResult = MessageBox.Show("NiceHash Miner requires internet connection to run. " +
                                                             "Please ensure that you are connected to the " +
