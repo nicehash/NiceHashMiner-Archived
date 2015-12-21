@@ -13,7 +13,8 @@ namespace NiceHashMiner
         private int index;
         private bool inBenchmark;
 
-        private int Time = Config.ConfigData.BenchmarkTimeLimits[1];
+        private int Time;
+        private int TimeIndex = 1;
         private Miner CurrentlyBenchmarking;
 
         public Form2(bool autostart)
@@ -89,6 +90,20 @@ namespace NiceHashMiner
                 lvi.SubItems[3].Text = "Please wait...";
                 inBenchmark = true;
                 CurrentlyBenchmarking = m;
+
+                if (m is cpuminer)
+                    Time = Config.ConfigData.BenchmarkTimeLimitsCPU[TimeIndex];
+                else if (m is ccminer)
+                    Time = Config.ConfigData.BenchmarkTimeLimitsNVIDIA[TimeIndex];
+                else
+                {
+                    Time = Config.ConfigData.BenchmarkTimeLimitsAMD[TimeIndex] / 60;
+
+                    // add an aditional minute if second is not 0
+                    if (DateTime.Now.Second != 0)
+                        Time += 1;
+                }
+
                 m.BenchmarkStart(i, Time, BenchmarkCompleted, lvi);
             }
             else
@@ -96,7 +111,7 @@ namespace NiceHashMiner
                 // average all cpu benchmarks
                 if (Form1.Miners[0] is cpuminer)
                 {
-                    Helpers.ConsolePrint("Calculating average CPU speeds:");
+                    Helpers.ConsolePrint("BENCHMARK", "Calculating average CPU speeds:");
 
                     double[] Speeds = new double[Form1.Miners[0].SupportedAlgorithms.Length];
                     int[] MTaken = new int[Form1.Miners[0].SupportedAlgorithms.Length];
@@ -118,7 +133,7 @@ namespace NiceHashMiner
                     for (int i = 0; i < Speeds.Length; i++)
                     {
                         if (MTaken[i] > 0) Speeds[i] /= MTaken[i];
-                        Helpers.ConsolePrint(Form1.Miners[0].SupportedAlgorithms[i].NiceHashName + " average speed: " + Form1.Miners[0].PrintSpeed(Speeds[i]));
+                        Helpers.ConsolePrint("BENCHMARK", Form1.Miners[0].SupportedAlgorithms[i].NiceHashName + " average speed: " + Form1.Miners[0].PrintSpeed(Speeds[i]));
 
                         foreach (Miner m in Form1.Miners)
                         {
@@ -150,17 +165,17 @@ namespace NiceHashMiner
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            Time = Config.ConfigData.BenchmarkTimeLimits[0];
+            TimeIndex = 0;
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            Time = Config.ConfigData.BenchmarkTimeLimits[1];
+            TimeIndex = 1;
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
         {
-            Time = Config.ConfigData.BenchmarkTimeLimits[2];
+            TimeIndex = 2;
         }
 
         private void button1_Click(object sender, EventArgs e)

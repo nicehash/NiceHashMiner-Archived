@@ -59,7 +59,7 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint(ex.Message);
+                Helpers.ConsolePrint("COINBASE", ex.Message);
                 return null;
             }
 

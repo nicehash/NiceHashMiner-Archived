@@ -69,3 +69,11 @@ cpuid/cpuid.vcxproj.user
 NiceHashMiner.sdf
 NiceHashMiner.opensdf
 Release
+packages/log4net.2.0.5/log4net.2.0.5.nupkg
+packages/log4net.2.0.5/lib/net10-full
+packages/log4net.2.0.5/lib/net11-full
+packages/log4net.2.0.5/lib/net35-client
+packages/log4net.2.0.5/lib/net35-full
+packages/log4net.2.0.5/lib/net40-client
+packages/log4net.2.0.5/lib/net40-full
+packages/log4net.2.0.5/lib/net45-full

@@ -53,9 +53,13 @@ namespace NiceHashMiner
         public int SwitchMinSecondsDynamic;
         public int MinerAPIQueryInterval;
         public int MinerRestartDelayMS;
-        public int[] BenchmarkTimeLimits;
+        public int[] BenchmarkTimeLimitsCPU;
+        public int[] BenchmarkTimeLimitsNVIDIA;
+        public int[] BenchmarkTimeLimitsAMD;
         public bool StartMiningWhenIdle;
         public int MinIdleSeconds;
+        public int LogLevel;
+        public long LogMaxFileSize;  // in bytes
         public Group[] Groups;
 #pragma warning restore 649
 
@@ -74,22 +78,32 @@ namespace NiceHashMiner
             ConfigData.HideMiningWindows = false;
             ConfigData.AutoStartMining = false;
             ConfigData.StartMiningWhenIdle = false;
+            ConfigData.LogLevel = 1;
+            ConfigData.LogMaxFileSize = 1048576;
 
             try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
             catch { }
 
             if (ConfigData.SwitchMinSecondsFixed <= 0)
-                ConfigData.SwitchMinSecondsFixed = 3 * 60;
+                ConfigData.SwitchMinSecondsFixed = 15 * 60;
             if (ConfigData.SwitchMinSecondsDynamic <= 0)
                 ConfigData.SwitchMinSecondsDynamic = 3 * 60;
             if (ConfigData.MinerAPIQueryInterval <= 0)
                 ConfigData.MinerAPIQueryInterval = 5;
             if (ConfigData.MinerRestartDelayMS <= 0)
                 ConfigData.MinerRestartDelayMS = 200;
-            if (ConfigData.BenchmarkTimeLimits == null || ConfigData.BenchmarkTimeLimits.Length < 3)
-                ConfigData.BenchmarkTimeLimits = new int[] { 10, 20, 60 };
+            if (ConfigData.BenchmarkTimeLimitsCPU == null || ConfigData.BenchmarkTimeLimitsCPU.Length < 3)
+                ConfigData.BenchmarkTimeLimitsCPU = new int[] { 10, 20, 60 };
+            if (ConfigData.BenchmarkTimeLimitsNVIDIA == null || ConfigData.BenchmarkTimeLimitsNVIDIA.Length < 3)
+                ConfigData.BenchmarkTimeLimitsNVIDIA = new int[] { 10, 20, 60 };
+            if (ConfigData.BenchmarkTimeLimitsAMD == null || ConfigData.BenchmarkTimeLimitsAMD.Length < 3)
+                ConfigData.BenchmarkTimeLimitsAMD = new int[] { 120, 180, 240 };
             if (ConfigData.MinIdleSeconds <= 0)
                 ConfigData.MinIdleSeconds = 60;
+            if (ConfigData.LogLevel != 0 || ConfigData.LogLevel != 1)
+                ConfigData.LogLevel = 1;
+            if (ConfigData.LogMaxFileSize <= 0)
+                ConfigData.LogMaxFileSize = 1048576;
         }
 
         public static void Commit()

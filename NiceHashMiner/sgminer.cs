@@ -23,15 +23,15 @@ namespace NiceHashMiner
         public sgminer()
         {
             SupportedAlgorithms = new Algorithm[] { 
-                new Algorithm( 3, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity  64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm( 4, "x13",        "x13",        DefaultParam + "--nfactor 10 --xintensity  64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm( 5, "keccak",     "keccak",     DefaultParam + "--nfactor 10 --xintensity 300 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm( 7, "nist5",      "nist5",      DefaultParam + "--nfactor 10 --xintensity  16 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm( 8, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity   3 --thread-concurrency 8192 --worksize  64 --gpu-threads 2"),
-                new Algorithm(10, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity  64 --thread-concurrency    0 --worksize 128 --gpu-threads 2"),
+                new Algorithm( 3, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm( 4, "x13",        "x13",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
+                new Algorithm( 5, "keccak",     "keccak",     DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm( 7, "nist5",      "nist5",      DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
+                new Algorithm( 8, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity    3 --thread-concurrency 8192 --worksize  64 --gpu-threads 2"),
+                new Algorithm(10, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2"),
                 new Algorithm(11, "qubit",      "qubitcoin",  DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2"),
-                new Algorithm(12, "quark",      "quarkcoin",  DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2"),
-                new Algorithm(14, "lyra2rev2",  "lyra2rev2",  DefaultParam + "--nfactor 10 --xintensity  32 --thread-concurrency 8192 --worksize  32 --gpu-threads 4")
+                new Algorithm(12, "quark",      "quarkcoin",  DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm(14, "lyra2rev2",  "Lyra2REv2",  DefaultParam + "--nfactor 10 --xintensity  256 --thread-concurrency    0 --worksize  64 --gpu-threads 1")
             };
 
             MinerDeviceName = "AMD_OpenCL";
@@ -50,7 +50,7 @@ namespace NiceHashMiner
             {
                 PlatformDevices = (int)Char.GetNumericValue(text.Split(' ')[3][0]);
                 Devices = new string[PlatformDevices];
-                Helpers.ConsolePrint("Platform Devices: " + PlatformDevices);
+                Helpers.ConsolePrint(MinerDeviceName, "Platform Devices: " + PlatformDevices);
                 return;
             }
 
@@ -61,9 +61,13 @@ namespace NiceHashMiner
                 PlatformDevices--;
                 if (!(text.Contains("Tahiti") || text.Contains("Hawaii") || text.Contains("Pitcairn")))
                 {
+                    SupportedAlgorithms[0].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize  64 --gpu-threads 2";  // x11
+                    SupportedAlgorithms[6].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 128 --gpu-threads 4";  // qubit
+                    SupportedAlgorithms[7].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 256 --gpu-threads 1";  // quark
+                    SupportedAlgorithms[8].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 32 --thread-concurrency 8192 --worksize  32 --gpu-threads 4";  // lyra2rev2
+
                     EnableOptimizedVersion = false;
-                    Helpers.ConsolePrint("One of the GPUs detected is not Tahiti, Hawaii or Pitcaird. " +
-                        "Optimized version is disabled!");
+                    Helpers.ConsolePrint(MinerDeviceName, "One of the GPUs detected is not Tahiti, Hawaii or Pitcaird. Optimized version is disabled!");
                     return;
                 }
             }
@@ -76,11 +80,11 @@ namespace NiceHashMiner
             int id = (int)Char.GetNumericValue(splt[2][8]);
             string name = splt[splt.Length - 1];
 
-            Helpers.ConsolePrint(MinerDeviceName + " detected: " + name);
+            Helpers.ConsolePrint(MinerDeviceName, "Detected: " + name);
 
             // add AMD OpenCL devices
             CDevs.Add(new ComputeDevice(id, MinerDeviceName, name));
-            Helpers.ConsolePrint(MinerDeviceName + " added: " + name);
+            Helpers.ConsolePrint(MinerDeviceName, "Added: " + name);
         }
 
         protected void QueryCDevs()
@@ -103,33 +107,13 @@ namespace NiceHashMiner
 
             P.WaitForExit();
 
-            // check for driver version
-            if (CDevs.Count > 0 && EnableOptimizedVersion)
+            // log the driver version
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
+            ManagementObjectCollection moc = searcher.Get();
+
+            foreach (var manObj in moc)
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
-                ManagementObjectCollection moc = searcher.Get();
-
-                foreach (var manObj in moc)
-                {
-                    //Helpers.ConsolePrint("Name           : " + manObj["Name"]);
-                    //Helpers.ConsolePrint("Driver Version : " + manObj["DriverVersion"]);
-
-                    if (manObj["Name"].ToString().Contains("AMD"))
-                    {
-                        if (manObj["DriverVersion"].ToString().StartsWith("15"))
-                        {
-                            Helpers.ConsolePrint("Driver Version 15.X Detected");
-                            break;
-                        }
-                        else
-                        {
-                            EnableOptimizedVersion = false;
-                            MessageBox.Show("We highly recommend you to upgrade AMD GPU driver to version 15.x for best performance!",
-                                "Update AMD Driver Recommended");
-                            break;
-                        }
-                    }
-                }
+                Helpers.ConsolePrint(MinerDeviceName, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
             }
         }
 
@@ -138,19 +122,12 @@ namespace NiceHashMiner
             Algorithm Algo = GetMinerAlgorithm(SupportedAlgorithms[index].NiceHashID);
             if (Algo == null)
             {
-                Helpers.ConsolePrint("GetMinerAlgorithm(" + index + "): Algo equals to null");
+                Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + index + "): Algo equals to null");
                 return "";
             }
 
             Path = "cmd";
-            string DirName = new DirectoryInfo(".").FullName + "\\bin\\";
-            if (CheckIfOptimizeAlgo(Algo.NiceHashName))
-                DirName += "sgminer-5-1-1-optimized";
-            else
-            {
-                DirName += "sgminer-5-2-1-general";
-                ToCompileNeoScryptBinFile(Algo.MinerName, DirName);
-            }
+            string DirName = GetMinerDirectory(Algo.NiceHashName);
 
             string url = Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
                          Form1.MiningLocation[Config.ConfigData.Location] + ".nicehash.com:" +
@@ -164,7 +141,7 @@ namespace NiceHashMiner
                                  "-k " + SupportedAlgorithms[index].MinerName +
                                  " --url=" + url +
                                  " --userpass=" + username + ":" + GetPassword(Algo) +
-                                 " --sched-stop " + DateTime.Now.AddMinutes(2.0).ToString("HH:mm") +
+                                 " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
                                  " -T --log 30 --log-file dump.txt" +
                                  " " + ExtraLaunchParameters +
                                  " " + SupportedAlgorithms[index].ExtraLaunchParameters +
@@ -174,8 +151,7 @@ namespace NiceHashMiner
                 if (G.Enabled)
                     CommandLine += G.ID.ToString() + ",";
 
-            CommandLine = CommandLine.Remove(CommandLine.Length - 1) +
-                          " && del " + DirName + "\\dump.txt\"";
+            CommandLine = CommandLine.Remove(CommandLine.Length - 1) + " && del dump.txt\"";
 
             return CommandLine;
         }
@@ -188,19 +164,12 @@ namespace NiceHashMiner
             Algorithm Algo = GetMinerAlgorithm(nhalgo);
             if (Algo == null)
             {
-                Helpers.ConsolePrint("GetMinerAlgorithm(" + nhalgo+ "): Algo equals to null");
+                Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + nhalgo + "): Algo equals to null");
                 return;
             }
 
             Path = "sgminer.exe";
-            WorkingDirectory = new DirectoryInfo(".").FullName + "\\bin\\";
-            if (CheckIfOptimizeAlgo(Algo.NiceHashName))
-                WorkingDirectory += "sgminer-5-1-1-optimized";
-            else
-            {
-                WorkingDirectory += "sgminer-5-2-1-general";
-                ToCompileNeoScryptBinFile(Algo.MinerName, WorkingDirectory);
-            }
+            WorkingDirectory = GetMinerDirectory(Algo.NiceHashName);
 
             LastCommandLine = "-k " + Algo.MinerName +
                               " --url=" + url +
@@ -232,39 +201,28 @@ namespace NiceHashMiner
             ProcessHandle = _Start();
         }
 
-        private bool CheckIfOptimizeAlgo(string algo)
+        private string GetMinerDirectory(string algo)
         {
-            if (EnableOptimizedVersion)
-                if (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("qubit"))
-                    return true;
+            string dir = new DirectoryInfo(".").FullName + "\\bin\\";
 
-            return false;
-        }
-
-        private void ToCompileNeoScryptBinFile(string algo, string directory)
-        {
-            if (!algo.Equals("neoscrypt") && File.Exists(directory + "\\amdocl.dll"))
+            if (EnableOptimizedVersion && (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2")))
             {
-                try
-                {
-                    File.Move(directory + "\\amdocl.dll", directory + "\\__amdocl.dll");
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("Move process failed: " + e.ToString());
-                }
+                dir += "sgminer-5-1-0-optimized";
+            }
+            else if (EnableOptimizedVersion && algo.Equals("qubit"))
+            {
+                dir += "sgminer-5-1-1-optimized";
+            }
+            else if (algo.Equals("neoscrypt"))
+            {
+                dir += "sgminer-5-2-1-neoscrypt";
             }
             else
             {
-                try
-                {
-                    File.Move(directory + "\\__amdocl.dll", directory + "\\amdocl.dll");
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("Move process failed: " + e.ToString());
-                }
+                dir += "sgminer-5-2-1-general";
             }
+
+            return dir;
         }
     }
 }
