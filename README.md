@@ -14,6 +14,8 @@
 
 NiceHash Miner is an **easy to use CPU & GPU cryptocurrency miner for Windows**. With a simple an intuitive graphical user interface it allows you to quickly turn your PC, workstation or server into **money-making cryptocurrency mining machine**. Why leave you computer idle, whereas it could **earn you Bitcoins with just a few clicks**?
 
+<img src="https://nicehash.com/imgs/NHM_v1200.png" />
+
 Please follow us on Twitter <a href="https://twitter.com/NiceHashMining" target="_blank">@NiceHashMining</a> for updates on new versions and other important information.
 
 # <a name="benefits"></a> What are the benefits?
