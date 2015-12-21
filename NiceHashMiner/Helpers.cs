@@ -49,9 +49,12 @@ namespace NiceHashMiner
             }
         }
 
-        public static void ConsolePrint(string text)
+        public static void ConsolePrint(string grp, string text)
         {
-            Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] " + text);
+            Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
+
+            if (Config.ConfigData.LogLevel > 0)
+                Logger.log.Info("[" + grp + "] " + text);
         }
 
 

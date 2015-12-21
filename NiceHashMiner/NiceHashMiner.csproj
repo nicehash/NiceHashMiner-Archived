@@ -53,6 +53,10 @@
     <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net20-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\3rdparty\json\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -72,6 +76,7 @@
     <Compile Include="ccminer.cs" />
     <Compile Include="ccminer_tpruvot_sm21.cs" />
     <Compile Include="ccminer_tpruvot.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="CPUID.cs" />
     <Compile Include="cpuminer.cs" />
@@ -127,6 +132,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

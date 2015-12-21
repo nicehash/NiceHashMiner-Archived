@@ -47,10 +47,13 @@ namespace NiceHashMiner
                 f4.ShowDialog();
             }
 
+            if (Config.ConfigData.LogLevel > 0)
+                Logger.ConfigureWithFile();
+
             if (Config.ConfigData.DebugConsole)
                 Helpers.AllocConsole();
 
-            Helpers.ConsolePrint("Starting up");
+            Helpers.ConsolePrint("NICEHASH", "Starting up");
 
             R = new Random((int)DateTime.Now.Ticks);
 
@@ -93,14 +96,14 @@ namespace NiceHashMiner
                 if (MSIdle < (Config.ConfigData.MinIdleSeconds * 1000))
                 {
                     button2_Click(null, null);
-                    Helpers.ConsolePrint("resumed from idling");
+                    Helpers.ConsolePrint("NICEHASH", "Resumed from idling");
                 }
             }
             else
             {
                 if (BenchmarkForm == null && (MSIdle > (Config.ConfigData.MinIdleSeconds * 1000)))
                 {
-                    Helpers.ConsolePrint("entering idling state");
+                    Helpers.ConsolePrint("NICEHASH", "Entering idling state");
                     button1_Click(null, null);
                 }
             }
@@ -462,7 +465,7 @@ namespace NiceHashMiner
         {
             if (VerifyMiningAddress())
             {
-                Helpers.ConsolePrint("NICEHASH: balance get");
+                Helpers.ConsolePrint("NICEHASH", "Balance get");
                 double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim(), textBox1.Text.Trim() + "." + textBox2.Text.Trim());
                 if (Balance > 0)
                 {
@@ -475,17 +478,17 @@ namespace NiceHashMiner
 
         void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
         {
-            Helpers.ConsolePrint("COINBASE: bitcoin rate get");
+            Helpers.ConsolePrint("COINBASE", "Bitcoin rate get");
             double BR = Bitcoin.GetUSDExchangeRate();
             if (BR > 0) BitcoinRate = BR;
-            Helpers.ConsolePrint("Current Bitcoin rate: " + BitcoinRate.ToString("F2", CultureInfo.InvariantCulture));
+            Helpers.ConsolePrint("COINBASE", "Current Bitcoin rate: " + BitcoinRate.ToString("F2", CultureInfo.InvariantCulture));
         }
 
 
         void SMACheck_Tick(object sender, EventArgs e)
         {
             string worker = textBox1.Text.Trim() + "." + textBox2.Text.Trim();
-            Helpers.ConsolePrint("NICEHASH: sma get");
+            Helpers.ConsolePrint("NICEHASH", "SMA get");
             NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates(worker);
 
             for (int i = 0; i < 3; i++)
@@ -496,7 +499,7 @@ namespace NiceHashMiner
                     break;
                 }
 
-                Helpers.ConsolePrint("NICEHASH: sma get failed .. retrying");
+                Helpers.ConsolePrint("NICEHASH", "SMA get failed .. retrying");
                 System.Threading.Thread.Sleep(1000);
                 t = NiceHashStats.GetAlgorithmRates(worker);
             }
@@ -520,7 +523,7 @@ namespace NiceHashMiner
 
         void UpdateCheck_Tick(object sender, EventArgs e)
         {
-            Helpers.ConsolePrint("NICEHASH: version get");
+            Helpers.ConsolePrint("NICEHASH", "Version get");
             string ver = NiceHashStats.GetVersion(textBox1.Text.Trim() + "." + textBox2.Text.Trim());
 
             if (ver == null) return;
@@ -535,16 +538,27 @@ namespace NiceHashMiner
 
         void SetEnvironmentVariables()
         {
-            Helpers.ConsolePrint("NICEHASH: setting environment variables");
+            Helpers.ConsolePrint("NICEHASH", "Setting environment variables");
 
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo runSetEnv = new System.Diagnostics.ProcessStartInfo();
-            runSetEnv.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            runSetEnv.FileName = "cmd.exe";
-            runSetEnv.Arguments = "/C setx GPU_MAX_ALLOC_PERCENT 100 && " + 
-                                  "setx GPU_USE_SYNC_OBJECTS 1 && setx GPU_MAX_HEAP_SIZE 100";
-            process.StartInfo = runSetEnv;
-            process.Start();
+            string[] envName  = { "GPU_MAX_ALLOC_PERCENT", "GPU_USE_SYNC_OBJECTS", "GPU_MAX_HEAP_SIZE" };
+            string[] envValue = { "100", "1", "100" };
+
+            for (int i = 0; i < envName.Length; i++)
+            {
+                // Check if all the variables is set
+                if (Environment.GetEnvironmentVariable(envName[i]) == null)
+                {
+                    try { Environment.SetEnvironmentVariable(envName[i], envValue[i]); }
+                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+                }
+
+                // Check to make sure all the values are set correctly
+                if (!Environment.GetEnvironmentVariable(envName[i]).Equals(envValue[i]))
+                {
+                    try { Environment.SetEnvironmentVariable(envName[i], envValue[i]); }
+                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+                }
+            }
         }
 
 

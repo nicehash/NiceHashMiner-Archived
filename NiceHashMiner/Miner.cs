@@ -112,7 +112,7 @@ namespace NiceHashMiner
         {
             if (ProcessHandle != null)
             {
-                Helpers.ConsolePrint(MinerDeviceName + " Shutting down miner");
+                Helpers.ConsolePrint(MinerDeviceName, "Shutting down miner");
                 try { ProcessHandle.Kill(); }
                 catch { }
                 ProcessHandle.Close();
@@ -123,7 +123,8 @@ namespace NiceHashMiner
                 {
                     foreach (Process process in Process.GetProcessesByName("sgminer"))
                     {
-                        process.Kill();
+                        try { process.Kill(); }
+                        catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
                     }
                 }
             }
@@ -166,6 +167,7 @@ namespace NiceHashMiner
                 int i = outdata.IndexOf("Benchmark:");
                 int k = outdata.IndexOf("/s");
                 string hashspeed = outdata.Substring(i + 11, k - i - 9);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
 
                 // save speed
                 int b = hashspeed.IndexOf(" ");
@@ -188,10 +190,10 @@ namespace NiceHashMiner
 
                 // save speed
                 string hashSpeed = outdata.Substring(i + 2, k - i + 2);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashSpeed);
+
                 hashSpeed = hashSpeed.Substring(0, hashSpeed.IndexOf(" "));
                 double speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-
-                //Helpers.ConsolePrint("hashSpeed: " + hashSpeed);
 
                 if (outdata.Contains("Kilohash"))
                     speed *= 1000;
@@ -216,7 +218,7 @@ namespace NiceHashMiner
 
         virtual protected Process BenchmarkStartProcess(string CommandLine)
         {
-            Helpers.ConsolePrint(MinerDeviceName + " Starting benchmark: " + CommandLine);
+            Helpers.ConsolePrint(MinerDeviceName, "Starting benchmark: " + CommandLine);
 
             Process BenchmarkHandle = new Process();
             BenchmarkHandle.StartInfo.FileName = Path;
@@ -241,6 +243,7 @@ namespace NiceHashMiner
 
             try
             {
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
 
                 while (true)
@@ -269,13 +272,14 @@ namespace NiceHashMiner
             {
                 SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = 0;
 
-                Helpers.ConsolePrint(ex.Message);
+                Helpers.ConsolePrint(MinerDeviceName, ex.Message);
 
                 try { if (BenchmarkHandle != null) BenchmarkHandle.Kill(); }
                 catch { }
                 
                 OnBenchmarkComplete(false, "Terminated", BenchmarkTag);
             }
+            Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
 
             if (BenchmarkHandle != null)
                 BenchmarkHandle.Close();
@@ -299,7 +303,7 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0 || EnabledDeviceCount() == 0) return null;
 
-            Helpers.ConsolePrint(MinerDeviceName + " Starting miner: " + LastCommandLine);
+            Helpers.ConsolePrint(MinerDeviceName, "Starting miner: " + LastCommandLine);
 
             Process P = new Process();
 
@@ -322,7 +326,7 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint(ex.Message);
+                Helpers.ConsolePrint(MinerDeviceName, ex.Message);
                 return null;
             }
         }
@@ -363,7 +367,7 @@ namespace NiceHashMiner
         {
             for (int i = 0; i < SupportedAlgorithms.Length; i++)
             {
-                if (SupportedAlgorithms[i].MinerName == aname)
+                if (SupportedAlgorithms[i].MinerName.Equals(aname))
                 {
                     AD.AlgorithmID = SupportedAlgorithms[i].NiceHashID;
                     AD.AlgorithmName = SupportedAlgorithms[i].NiceHashName;
@@ -397,7 +401,7 @@ namespace NiceHashMiner
                                     "User-Agent: NiceHashMiner/" + Application.ProductVersion + "\r\n" +
                                     "\r\n";
 
-                if (MinerDeviceName == "AMD_OpenCL")
+                if (MinerDeviceName.Equals("AMD_OpenCL"))
                     DataToSend = cmd;
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
@@ -447,7 +451,7 @@ namespace NiceHashMiner
             {
                 string[] resps;
 
-                if (MinerDeviceName != "AMD_OpenCL")
+                if (!MinerDeviceName.Equals("AMD_OpenCL"))
                 {
                     resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < resps.Length; i++)
@@ -472,31 +476,30 @@ namespace NiceHashMiner
                     {
                         if (!checkGPUStatus[i].Contains("Status=Alive"))
                         {
-                            Helpers.ConsolePrint("GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
+                            Helpers.ConsolePrint(MinerDeviceName, "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
                             return null;
                         }
                     }
-                    Helpers.ConsolePrint("AMD_OpenCL: All GPUs are alive");
 
                     resps = resp.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    if (resps.Length == 3)
+                    if (resps[1].Contains("SUMMARY"))
                     {
                         string[] data = resps[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                         // Get miner's current total speed
                         string[] speed = data[4].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                         // Get miner's current total MH
-                        double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1]);
-                        
+                        double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1], new CultureInfo("en-US"));
+
                         ad.Speed = Double.Parse(speed[1]) * 1000;
 
                         aname = SupportedAlgorithms[CurrentAlgo].MinerName;
 
                         if (total_mh <= PreviousTotalMH)
                         {
-                            Helpers.ConsolePrint("AMD_OpenCL: sgminer might be stuck as no new hashes are being produced");
-                            Helpers.ConsolePrint("Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
+                            Helpers.ConsolePrint(MinerDeviceName, "SGMiner might be stuck as no new hashes are being produced");
+                            Helpers.ConsolePrint(MinerDeviceName, "Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
                             return null;
                         }
 
@@ -529,7 +532,8 @@ namespace NiceHashMiner
                 SupportedAlgorithms[i].CurrentProfit = SupportedAlgorithms[i].BenchmarkSpeed *
                     NiceHashData[SupportedAlgorithms[i].NiceHashID].paying * 0.000000001;
 
-                Helpers.ConsolePrint(MinerDeviceName + " " + NiceHashData[SupportedAlgorithms[i].NiceHashID].name + " paying " + SupportedAlgorithms[i].CurrentProfit.ToString("F8") + " BTC/Day");
+                Helpers.ConsolePrint(MinerDeviceName, NiceHashData[SupportedAlgorithms[i].NiceHashID].name +
+                                     " paying " + SupportedAlgorithms[i].CurrentProfit.ToString("F8") + " BTC/Day");
 
                 if (SupportedAlgorithms[i].CurrentProfit > MaxProfit)
                 {
