@@ -69,7 +69,7 @@ namespace NiceHashMiner
         {
             // Set defaults
             ConfigData = new Config();
-            ConfigData.BitcoinAddress = "1PJ5HWjAniHPMuvfu89L6D2CmnL1De1syn";
+            ConfigData.BitcoinAddress = "17FP4wt5a4vXUi7ugZko4tYvHP8kt41cog";
             ConfigData.WorkerName = "worker1";
             ConfigData.Location = 0;
             ConfigData.LessThreads = 0;

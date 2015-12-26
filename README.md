@@ -14,6 +14,8 @@
 
 NiceHash Miner is an **easy to use CPU & GPU cryptocurrency miner for Windows**. With a simple an intuitive graphical user interface it allows you to quickly turn your PC, workstation or server into **money-making cryptocurrency mining machine**. Why leave you computer idle, whereas it could **earn you Bitcoins with just a few clicks**?
 
+<img src="https://nicehash.com/imgs/NHM_v1200.png" />
+
 Please follow us on Twitter <a href="https://twitter.com/NiceHashMining" target="_blank">@NiceHashMining</a> for updates on new versions and other important information.
 
 # <a name="benefits"></a> What are the benefits?
@@ -116,7 +118,7 @@ I'm getting "Always ask before opening this file" when running NiceHash Miner
 > Make sure you un-check the checkbox "Always ask before opening this file" when NiceHash Miner is starting cpuminer, ccminer or sgminer back-end programs. This is needed because back-end programs will be executed several times while NiceHash Miner is running (auto-switching according to profitability and in case programs hangs) and you have to make sure these programs will be to executed automatically without your intervention.
 
 My anti-virus is blocking the application
-> Some anti-virus software might block NiceHash Miner as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMiner/releases. However make sure you **never download and run any files from other unknown sources**!
+> Some anti-virus software might block NiceHash Miner as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMiner/releases. However make sure you **never download and run any files from other unknown sources**! If you downloaded the software package from our GitHub repository you can simply resolve the issues with false-positives by adding the files sgminer.exe, ccminer_sp.exe, ccminer_tpruvot.exe, cpuminer_x64_AVX.exe, cpuminer_x64_AVX2.exe and cpuminer_x64_SSE2.exe to anti-virus exception list.
 
 # <a name="references"></a> References
 
