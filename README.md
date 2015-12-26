@@ -116,8 +116,8 @@ My AMD video card(s) is/are not detected.
 http://support.amd.com/en-us/download
 > Also check weather your card supports OpenCL, check "OpenCL" column here: https://en.wikipedia.org/wiki/List_of_AMD_graphics_processing_units
 
-> I am having issues with my AMD GPU drivers.
-We recommend you to use 15.7.1 version of AMD GPU display drivers. The latest Crimson drivers are also supported, but optimal speed for the majority of algorithms can be achieved by using 15.7.1 version. This version can be <a href="http://support.amd.com/en-us/download/desktop/legacy?product=legacy3&os=Windows+7+-+64" target="_blank">downloaded here</a>.
+I am having issues with my AMD GPU drivers.
+> We recommend you to use 15.7.1 version of AMD GPU display drivers. The latest Crimson drivers are also supported, but optimal speed for the majority of algorithms can be achieved by using 15.7.1 version. This version can be <a href="http://support.amd.com/en-us/download/desktop/legacy?product=legacy3&os=Windows+7+-+64" target="_blank">downloaded here</a>.
 When uninstalling or reinstalling display drivers we suggest you to use Guru 3D Display Driver Uninstaller. This utility will make sure you get a clean driver state. You can <a href="http://www.guru3d.com/files-details/display-driver-uninstaller-download.html" target="_blank">download it here</a>.
 If you are using Windows 10, the AMD installer utility is sometimes unable to install drivers, therefore you have to install them manually. Download and run diver installer, let it extract the archive and then cancel it when prompted to execute actual install. After this go to Control Panel / System / Device Manager, Right click on your GPU, choose to Update driver manually and point to c:\AMD\[driver version] folder to finish the manual driver installation.
 
@@ -127,15 +127,15 @@ I'm getting "Always ask before opening this file" when running NiceHash Miner
 My anti-virus is blocking the application
 > Some anti-virus software might block NiceHash Miner as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMiner/releases. However make sure you **never download and run any files from other unknown sources**! If you downloaded the software package from our GitHub repository you can simply resolve the issues with false-positives by adding the files sgminer.exe, ccminer_sp.exe, ccminer_tpruvot.exe, cpuminer_x64_AVX.exe, cpuminer_x64_AVX2.exe and cpuminer_x64_SSE2.exe to anti-virus exception list.
 
-> I'm getting "Enqueueing kernel" errors on AMD GPUs
-If you have very low amount of system memory (RAM), especially if lower than 4 GB, than you might encounter this kind of errors:
+I'm getting "Enqueueing kernel" errors on AMD GPUs
+> If you have very low amount of system memory (RAM), especially if lower than 4 GB, than you might encounter this kind of errors:
 
 ```
 Error -4: Enqueueing kernel onto command queue. (clEnqueueNDRangeKernel)
 GPU 0 failure, disabling!
 ```
 
-This is because the sgminer mining application, which is used for AMD GPU mining, requires a particular amount of free system memory (RAM) to be able to run successfully. We suggest you to upgrade your system with more RAM.
+> This is because the sgminer mining application, which is used for AMD GPU mining, requires a particular amount of free system memory (RAM) to be able to run successfully. We suggest you to upgrade your system with more RAM.
 
 # <a name="bugs"></a> How to report bugs and issues?
 
