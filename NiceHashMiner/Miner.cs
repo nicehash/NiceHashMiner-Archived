@@ -82,6 +82,7 @@ namespace NiceHashMiner
         public int CurrentAlgo;
         public double CurrentRate;
         public bool BenchmarkSignalQuit;
+        public bool BenchmarkSignalHanged;
         public int NumRetries;
 
         protected string Path;
@@ -90,6 +91,7 @@ namespace NiceHashMiner
         protected BenchmarkComplete OnBenchmarkComplete;
         protected object BenchmarkTag;
         protected int BenchmarkIndex;
+        protected int BenchmarkTime;
         protected string LastCommandLine;
         protected double PreviousTotalMH;
 
@@ -104,6 +106,15 @@ namespace NiceHashMiner
             CurrentAlgo = -1;
             CurrentRate = 0;
             PreviousTotalMH = 0.0;
+        }
+
+        public void KillSGMiner()
+        {
+            foreach (Process process in Process.GetProcessesByName("sgminer"))
+            {
+                try { process.Kill(); }
+                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+            }
         }
 
         abstract public void Start(int nhalgo, string url, string username);
@@ -121,11 +132,7 @@ namespace NiceHashMiner
 
                 if (MinerDeviceName == "AMD_OpenCL")
                 {
-                    foreach (Process process in Process.GetProcessesByName("sgminer"))
-                    {
-                        try { process.Kill(); }
-                        catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
-                    }
+                    KillSGMiner();
                 }
             }
         }
@@ -151,6 +158,7 @@ namespace NiceHashMiner
 
             BenchmarkTag = tag;
             BenchmarkIndex = index;
+            BenchmarkTime = time;
 
             string CommandLine = BenchmarkCreateCommandLine(index, time);
 
@@ -237,17 +245,59 @@ namespace NiceHashMiner
         {
             Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
 
+            bool once = true;
+            Stopwatch timer = new Stopwatch();
             BenchmarkSignalQuit = false;
 
             Process BenchmarkHandle = null;
 
             try
             {
+                if (MinerDeviceName.Equals("AMD_OpenCL"))
+                {
+                    int NHDataIndex = SupportedAlgorithms[BenchmarkIndex].NiceHashID;
+                    
+                    if (Form1.NiceHashData == null)
+                    {
+                        Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
+                            "connection. Sgminer needs internet connection to do benchmarking.");
+
+                        throw new Exception("No internet connection");
+                    }
+                    
+                    if (Form1.NiceHashData[NHDataIndex].paying == 0)
+                    {
+                        Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
+                            "[algo: " + SupportedAlgorithms[BenchmarkIndex].NiceHashName + "(" + NHDataIndex + ")]");
+
+                        throw new Exception("No work can be used for benchmarking");
+                    }
+
+                    timer.Reset();
+                    timer.Start();
+                }
+
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
 
                 while (true)
                 {
+                    if (MinerDeviceName.Equals("AMD_OpenCL"))
+                    {
+                        if (timer.Elapsed.Minutes >= BenchmarkTime + 1 && once == true)
+                        {
+                            once = false;
+                            string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
+                            Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
+                        }
+                        if (timer.Elapsed.Minutes >= BenchmarkTime + 2)
+                        {
+                            timer.Stop();
+                            KillSGMiner();
+                            BenchmarkSignalHanged = true;
+                        }
+                    }
+
                     string outdata = BenchmarkGetConsoleOutputLine(BenchmarkHandle);
                     if (outdata != null)
                     {
@@ -266,13 +316,15 @@ namespace NiceHashMiner
                     }
                     if (BenchmarkSignalQuit)
                         throw new Exception("Termined by user request");
+                    if (BenchmarkSignalHanged)
+                        throw new Exception("SGMiner is not responding");
                 }
             }
             catch (Exception ex)
             {
                 SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = 0;
 
-                Helpers.ConsolePrint(MinerDeviceName, ex.Message);
+                Helpers.ConsolePrint(MinerDeviceName, "Benchmark Exception: " + ex.Message);
 
                 try { if (BenchmarkHandle != null) BenchmarkHandle.Kill(); }
                 catch { }
@@ -529,6 +581,8 @@ namespace NiceHashMiner
 
             for (int i = 0; i < SupportedAlgorithms.Length; i++)
             {
+                if (SupportedAlgorithms[i].Skip) continue;
+
                 SupportedAlgorithms[i].CurrentProfit = SupportedAlgorithms[i].BenchmarkSpeed *
                     NiceHashData[SupportedAlgorithms[i].NiceHashID].paying * 0.000000001;
 

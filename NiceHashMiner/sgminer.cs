@@ -23,15 +23,15 @@ namespace NiceHashMiner
         public sgminer()
         {
             SupportedAlgorithms = new Algorithm[] { 
-                new Algorithm( 3, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm( 3, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
                 new Algorithm( 4, "x13",        "x13",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
                 new Algorithm( 5, "keccak",     "keccak",     DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
                 new Algorithm( 7, "nist5",      "nist5",      DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm( 8, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity    3 --thread-concurrency 8192 --worksize  64 --gpu-threads 2"),
+                new Algorithm( 8, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4"),
                 new Algorithm(10, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2"),
                 new Algorithm(11, "qubit",      "qubitcoin",  DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2"),
                 new Algorithm(12, "quark",      "quarkcoin",  DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm(14, "lyra2rev2",  "Lyra2REv2",  DefaultParam + "--nfactor 10 --xintensity  256 --thread-concurrency    0 --worksize  64 --gpu-threads 1")
+                new Algorithm(14, "lyra2rev2",  "Lyra2REv2",  DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1")
             };
 
             MinerDeviceName = "AMD_OpenCL";
@@ -61,11 +61,6 @@ namespace NiceHashMiner
                 PlatformDevices--;
                 if (!(text.Contains("Tahiti") || text.Contains("Hawaii") || text.Contains("Pitcairn")))
                 {
-                    SupportedAlgorithms[0].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize  64 --gpu-threads 2";  // x11
-                    SupportedAlgorithms[6].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 128 --gpu-threads 4";  // qubit
-                    SupportedAlgorithms[7].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 256 --gpu-threads 1";  // quark
-                    SupportedAlgorithms[8].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 32 --thread-concurrency 8192 --worksize  32 --gpu-threads 4";  // lyra2rev2
-
                     EnableOptimizedVersion = false;
                     Helpers.ConsolePrint(MinerDeviceName, "One of the GPUs detected is not Tahiti, Hawaii or Pitcaird. Optimized version is disabled!");
                     return;
@@ -107,13 +102,51 @@ namespace NiceHashMiner
 
             P.WaitForExit();
 
-            // log the driver version
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
-            ManagementObjectCollection moc = searcher.Get();
+            // check the driver version
+            bool ShowWarningDialog = false;
+            ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get();
 
             foreach (var manObj in moc)
             {
                 Helpers.ConsolePrint(MinerDeviceName, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
+
+                if (manObj["Name"].ToString().Contains("AMD") && ShowWarningDialog == false)
+                {
+                    Version AMDDriverVersion = new Version(manObj["DriverVersion"].ToString());
+
+                    if (AMDDriverVersion.Major < 15)
+                    {
+                        ShowWarningDialog = true;
+                        EnableOptimizedVersion = false;
+                        Helpers.ConsolePrint(MinerDeviceName, "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
+                            "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
+                    }
+                }
+            }
+
+            if (EnableOptimizedVersion == false)
+            {
+                SupportedAlgorithms[0].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize  64 --gpu-threads 2";  // x11
+                SupportedAlgorithms[6].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 128 --gpu-threads 4";  // qubit
+                SupportedAlgorithms[7].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 256 --gpu-threads 1";  // quark
+                SupportedAlgorithms[8].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 32 --thread-concurrency 8192 --worksize  32 --gpu-threads 4";  // lyra2rev2
+            }
+
+            for (int i = 0; i < Devices.Length; i++)
+            {
+                if (!Devices[i].Contains("Tahiti"))
+                {
+                    Helpers.ConsolePrint(MinerDeviceName, "One of the GPUs detected is not Tahiti (" + Devices[i] + "). Changing default gpu-threads to 2");
+                    SupportedAlgorithms[4].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";  // neoscrypt
+                    break;
+                }
+            }
+
+            if (ShowWarningDialog == true && Config.ConfigData.ShowDriverVersionWarning == true)
+            {
+                Form WarningDialog = new DriverVersionConfirmationDialog();
+                WarningDialog.ShowDialog();
+                WarningDialog = null;
             }
         }
 
@@ -142,7 +175,10 @@ namespace NiceHashMiner
                                  " --url=" + url +
                                  " --userpass=" + username + ":" + GetPassword(Algo) +
                                  " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
-                                 " -T --log 30 --log-file dump.txt" +
+                                 " -T --log 10 --log-file dump.txt" +
+                                 " --api-listen" +
+                                 " --api-port=" + APIPort.ToString() +
+                                 " --api-allow W:127.0.0.1" +
                                  " " + ExtraLaunchParameters +
                                  " " + SupportedAlgorithms[index].ExtraLaunchParameters +
                                  " --device ";
@@ -212,10 +248,6 @@ namespace NiceHashMiner
             else if (EnableOptimizedVersion && algo.Equals("qubit"))
             {
                 dir += "sgminer-5-1-1-optimized";
-            }
-            else if (algo.Equals("neoscrypt"))
-            {
-                dir += "sgminer-5-2-1-neoscrypt";
             }
             else
             {
