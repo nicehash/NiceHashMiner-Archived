@@ -60,6 +60,7 @@ namespace NiceHashMiner
         public int MinIdleSeconds;
         public int LogLevel;
         public long LogMaxFileSize;  // in bytes
+        public bool ShowDriverVersionWarning;
         public Group[] Groups;
 #pragma warning restore 649
 
@@ -80,6 +81,7 @@ namespace NiceHashMiner
             ConfigData.StartMiningWhenIdle = false;
             ConfigData.LogLevel = 1;
             ConfigData.LogMaxFileSize = 1048576;
+            ConfigData.ShowDriverVersionWarning = true;
 
             try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
             catch { }

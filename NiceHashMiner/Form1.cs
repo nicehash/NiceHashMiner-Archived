@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Globalization;
+using System.Management;
 
 namespace NiceHashMiner
 {
@@ -54,6 +55,16 @@ namespace NiceHashMiner
                 Helpers.AllocConsole();
 
             Helpers.ConsolePrint("NICEHASH", "Starting up");
+
+            // Log the computer's amount of Total RAM and Page File Size
+            ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
+            foreach (ManagementObject mo in moc)
+            {
+                long TotalRam = long.Parse(mo["TotalVisibleMemorySize"].ToString()) / 1024;
+                long PageFileSize = (long.Parse(mo["TotalVirtualMemorySize"].ToString()) / 1024) - TotalRam;
+                Helpers.ConsolePrint("NICEHASH", "Total RAM: "      + TotalRam     + "MB");
+                Helpers.ConsolePrint("NICEHASH", "Page File Size: " + PageFileSize + "MB");
+            }
 
             R = new Random((int)DateTime.Now.Ticks);
 
@@ -333,7 +344,7 @@ namespace NiceHashMiner
                     NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
 
                 m.CurrentAlgo = MaxProfitIndex;
-                m.NumRetries = 7;
+                m.NumRetries = 12;
             }
         }
 
@@ -366,7 +377,7 @@ namespace NiceHashMiner
                     }
 
                     // API is inaccessible, try to restart miner
-                    m.NumRetries = 7;
+                    m.NumRetries = 12;
                     m.Restart();
                     
                     continue;
@@ -528,7 +539,11 @@ namespace NiceHashMiner
 
             if (ver == null) return;
 
-            if (ver != Application.ProductVersion)
+            Version programVersion = new Version(Application.ProductVersion);
+            Version onlineVersion = new Version(ver);
+            int ret = programVersion.CompareTo(onlineVersion);
+
+            if (ret < 0)
             {
                 linkLabel2.Text = "IMPORTANT! New version v" + ver + " has\r\nbeen released. Click here to download it.";
                 VisitURL = "https://github.com/nicehash/NiceHashMiner/releases/tag/" + ver;
@@ -685,9 +700,11 @@ namespace NiceHashMiner
         {
             Config.ConfigData.Location = comboBox1.SelectedIndex;
 
+            SMACheck.Stop();
             BenchmarkForm = new Form2(false);
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
+            SMACheck.Start();
         }
 
 
