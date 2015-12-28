@@ -134,14 +134,13 @@ namespace NiceHashMiner
 
             for (int i = 0; i < Devices.Length; i++)
             {
-                if (!Devices[i].Contains("Tahiti"))
+                if (Devices[i] != null && !Devices[i].Contains("Tahiti"))
                 {
                     Helpers.ConsolePrint(MinerDeviceName, "One of the GPUs detected is not Tahiti (" + Devices[i] + "). Changing default gpu-threads to 2");
                     SupportedAlgorithms[4].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";  // neoscrypt
                     break;
                 }
             }
-
             if (ShowWarningDialog == true && Config.ConfigData.ShowDriverVersionWarning == true)
             {
                 Form WarningDialog = new DriverVersionConfirmationDialog();
