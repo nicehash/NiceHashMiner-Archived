@@ -14,8 +14,7 @@ namespace NiceHashMiner
     class sgminer : Miner
     {
         bool EnableOptimizedVersion;
-        int PlatformDevices;
-        string[] Devices;
+        int PlatformDevices, GPUPlatformNumber;
         const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 " +
                                     "--gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " +
                                     "--temp-target 75 --auto-fan --auto-gpu ";
@@ -39,8 +38,10 @@ namespace NiceHashMiner
             APIPort = 4050;
             EnableOptimizedVersion = true;
             PlatformDevices = 0;
+            GPUPlatformNumber = 0;
 
-            QueryCDevs();
+            if (!Config.ConfigData.DisableDetectionAMD)
+                QueryCDevs();
         }
 
         protected void AddPotentialCDev(string text)
@@ -48,21 +49,31 @@ namespace NiceHashMiner
             // get number of platform devices to be used to detect card's code name
             if (text.Contains("Platform devices:"))
             {
-                PlatformDevices = (int)Char.GetNumericValue(text.Split(' ')[3][0]);
-                Devices = new string[PlatformDevices];
-                Helpers.ConsolePrint(MinerDeviceName, "Platform Devices: " + PlatformDevices);
+                try {
+                    PlatformDevices = Int32.Parse(text.Split(' ')[3]);
+                    Helpers.ConsolePrint(MinerDeviceName, "Platform Devices: " + PlatformDevices);
+                }
+                catch { PlatformDevices = 0; }
+
                 return;
             }
 
             // check the card's code name
-            if (PlatformDevices > 0 && EnableOptimizedVersion)
+            if (PlatformDevices > 0)
             {
-                Devices[PlatformDevices-1] = text.Substring(14);
                 PlatformDevices--;
+                
+                if (!text.Contains("Tahiti"))
+                {
+                    SupportedAlgorithms[4].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";  // neoscrypt
+                    Helpers.ConsolePrint(MinerDeviceName, "The GPU detected (" + text.Substring(14) + ") is not Tahiti. Optimized version is disabled and changing default gpu-threads to 2.");
+                }
+
                 if (!(text.Contains("Tahiti") || text.Contains("Hawaii") || text.Contains("Pitcairn")))
                 {
                     EnableOptimizedVersion = false;
-                    Helpers.ConsolePrint(MinerDeviceName, "One of the GPUs detected is not Tahiti, Hawaii or Pitcaird. Optimized version is disabled!");
+                    Helpers.ConsolePrint(MinerDeviceName, "The GPU detected (" + text.Substring(14) + ") is not Hawaii or Pitcaird. Optimized version is disabled!");
+
                     return;
                 }
             }
@@ -84,23 +95,74 @@ namespace NiceHashMiner
 
         protected void QueryCDevs()
         {
-            Process P = new Process();
-            P.StartInfo.FileName = Path;
-            P.StartInfo.Arguments = "--ndevs";
-            P.StartInfo.UseShellExecute = false;
-            P.StartInfo.RedirectStandardError = true;
-            P.StartInfo.CreateNoWindow = true;
-            P.Start();
-
-            string outdata;
-
-            do
+            try
             {
-                outdata = P.StandardError.ReadLine();
-                if (outdata != null) AddPotentialCDev(outdata);
-            } while (outdata != null);
+                Process P = new Process();
+                P.StartInfo.FileName = Path;
+                P.StartInfo.UseShellExecute = false;
+                P.StartInfo.RedirectStandardError = true;
+                P.StartInfo.CreateNoWindow = true;
 
-            P.WaitForExit();
+                string outdata;
+
+                for (int i = 0; i < 10; i++)
+                {
+                    P.StartInfo.Arguments = "--gpu-platform " + i + " --ndevs";
+                    P.Start();
+                    
+                    do
+                    {
+                        outdata = P.StandardError.ReadLine();
+                        if (outdata != null)
+                        {
+                            if (outdata.Contains("CL Platform name") && outdata.Contains("AMD"))
+                            {
+                                GPUPlatformNumber = i;
+                                i = 20;
+                            }
+                            else if (outdata.Contains("Specified platform that does not exist"))
+                            {
+                                GPUPlatformNumber = -1;
+                                i = 20;
+                            }
+                        }
+                    } while (outdata != null);
+
+                    P.WaitForExit();
+                }
+
+                if (GPUPlatformNumber == -1)
+                {
+                    Helpers.ConsolePrint(MinerDeviceName, "No AMD GPUs found.");
+                    return;
+                }
+
+                P.StartInfo.Arguments = "--gpu-platform " + GPUPlatformNumber + " --ndevs";
+                P.Start();
+
+                do
+                {
+                    outdata = P.StandardError.ReadLine();
+                    if (outdata != null) AddPotentialCDev(outdata);
+                } while (outdata != null);
+
+                P.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(MinerDeviceName, "Exception: " + e.ToString());
+                
+                MinerFileNotFoundDialog WarningDialog = new MinerFileNotFoundDialog(MinerDeviceName, Path);
+                WarningDialog.ShowDialog();
+                
+                if (WarningDialog.DisableDetection)
+                    Config.ConfigData.DisableDetectionAMD = true;
+                
+                WarningDialog = null;
+
+                return;
+            }
+
 
             // check the driver version
             bool ShowWarningDialog = false;
@@ -108,7 +170,7 @@ namespace NiceHashMiner
 
             foreach (var manObj in moc)
             {
-                Helpers.ConsolePrint(MinerDeviceName, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
+                Helpers.ConsolePrint("DEBUG", "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
 
                 if (manObj["Name"].ToString().Contains("AMD") && ShowWarningDialog == false)
                 {
@@ -132,15 +194,6 @@ namespace NiceHashMiner
                 SupportedAlgorithms[8].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 32 --thread-concurrency 8192 --worksize  32 --gpu-threads 4";  // lyra2rev2
             }
 
-            for (int i = 0; i < Devices.Length; i++)
-            {
-                if (Devices[i] != null && !Devices[i].Contains("Tahiti"))
-                {
-                    Helpers.ConsolePrint(MinerDeviceName, "One of the GPUs detected is not Tahiti (" + Devices[i] + "). Changing default gpu-threads to 2");
-                    SupportedAlgorithms[4].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";  // neoscrypt
-                    break;
-                }
-            }
             if (ShowWarningDialog == true && Config.ConfigData.ShowDriverVersionWarning == true)
             {
                 Form WarningDialog = new DriverVersionConfirmationDialog();
@@ -170,7 +223,8 @@ namespace NiceHashMiner
                 username += "." + Config.ConfigData.WorkerName;
 
             string CommandLine = " /C \"cd /d " + DirName + " && sgminer.exe " +
-                                 "-k " + SupportedAlgorithms[index].MinerName +
+                                 "--gpu-platform " + GPUPlatformNumber +
+                                 " -k " + SupportedAlgorithms[index].MinerName +
                                  " --url=" + url +
                                  " --userpass=" + username + ":" + GetPassword(Algo) +
                                  " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
@@ -206,7 +260,8 @@ namespace NiceHashMiner
             Path = "sgminer.exe";
             WorkingDirectory = GetMinerDirectory(Algo.NiceHashName);
 
-            LastCommandLine = "-k " + Algo.MinerName +
+            LastCommandLine = "--gpu-platform " + GPUPlatformNumber + 
+                              " -k " + Algo.MinerName +
                               " --url=" + url +
                               " --userpass=" + username + ":" + GetPassword(Algo) +
                               " --api-listen" +

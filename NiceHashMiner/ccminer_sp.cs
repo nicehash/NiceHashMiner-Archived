@@ -14,7 +14,8 @@ namespace NiceHashMiner
             Path = "bin\\ccminer_sp.exe";
             APIPort = 4048;
 
-            QueryCDevs();
+            if (!Config.ConfigData.DisableDetectionNVidia5X)
+                QueryCDevs();
         }
 
 

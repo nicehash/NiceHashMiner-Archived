@@ -56,6 +56,10 @@ namespace NiceHashMiner
         public int[] BenchmarkTimeLimitsCPU;
         public int[] BenchmarkTimeLimitsNVIDIA;
         public int[] BenchmarkTimeLimitsAMD;
+        public bool DisableDetectionNVidia5X;
+        public bool DisableDetectionNVidia3X;
+        public bool DisableDetectionNVidia2X;
+        public bool DisableDetectionAMD;
         public bool StartMiningWhenIdle;
         public int MinIdleSeconds;
         public int LogLevel;
@@ -78,6 +82,10 @@ namespace NiceHashMiner
             ConfigData.DebugConsole = false;
             ConfigData.HideMiningWindows = false;
             ConfigData.AutoStartMining = false;
+            ConfigData.DisableDetectionNVidia5X = false;
+            ConfigData.DisableDetectionNVidia3X = false;
+            ConfigData.DisableDetectionNVidia2X = false;
+            ConfigData.DisableDetectionAMD = false;
             ConfigData.StartMiningWhenIdle = false;
             ConfigData.LogLevel = 1;
             ConfigData.LogMaxFileSize = 1048576;
