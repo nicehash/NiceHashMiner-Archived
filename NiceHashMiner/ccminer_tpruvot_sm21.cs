@@ -18,7 +18,8 @@ namespace NiceHashMiner
             tmp.RemoveAt(4);    // Remove WhirlpoolX
             SupportedAlgorithms = tmp.ToArray();
 
-            QueryCDevs();
+            if (!Config.ConfigData.DisableDetectionNVidia2X)
+                QueryCDevs();
         }
 
 

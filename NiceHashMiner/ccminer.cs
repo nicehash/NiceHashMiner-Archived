@@ -84,24 +84,48 @@ namespace NiceHashMiner
 
         protected void QueryCDevs()
         {
-            Process P = new Process();
-            P.StartInfo.FileName = Path;
-            P.StartInfo.Arguments = "--ndevs";
-            P.StartInfo.UseShellExecute = false;
-            P.StartInfo.RedirectStandardError = true;
-            P.StartInfo.CreateNoWindow = true;
-            P.Start();
-
-            string outdata;
-
-            do
+            try
             {
-                outdata = P.StandardError.ReadLine();
-                if (outdata != null)
-                    AddPotentialCDev(outdata);
-            } while (outdata != null);
+                Process P = new Process();
+                P.StartInfo.FileName = Path;
+                P.StartInfo.Arguments = "--ndevs";
+                P.StartInfo.UseShellExecute = false;
+                P.StartInfo.RedirectStandardError = true;
+                P.StartInfo.CreateNoWindow = true;
+                P.Start();
 
-            P.WaitForExit();
+                string outdata;
+
+                do
+                {
+                    outdata = P.StandardError.ReadLine();
+                    if (outdata != null)
+                        AddPotentialCDev(outdata);
+                } while (outdata != null);
+
+                P.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(MinerDeviceName, "Exception: " + e.ToString());
+                
+                MinerFileNotFoundDialog WarningDialog = new MinerFileNotFoundDialog(MinerDeviceName, Path);
+                WarningDialog.ShowDialog();
+
+                if (WarningDialog.DisableDetection)
+                {
+                    if (this is ccminer_sp)
+                        Config.ConfigData.DisableDetectionNVidia5X = true;
+                    else if (this is ccminer_tpruvot)
+                        Config.ConfigData.DisableDetectionNVidia3X = true;
+                    else if (this is ccminer_tpruvot_sm21)
+                        Config.ConfigData.DisableDetectionNVidia2X = true;
+                }
+
+                WarningDialog = null;
+
+                return;
+            }
         }
     }
 }

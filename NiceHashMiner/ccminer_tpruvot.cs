@@ -13,7 +13,8 @@ namespace NiceHashMiner
             Path = "bin\\ccminer_tpruvot.exe";
             APIPort = 4049;
 
-            QueryCDevs();
+            if (!Config.ConfigData.DisableDetectionNVidia3X)
+                QueryCDevs();
         }
 
 
