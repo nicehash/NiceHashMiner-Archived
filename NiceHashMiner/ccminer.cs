@@ -17,6 +17,7 @@ namespace NiceHashMiner
                 new Algorithm(3, "x11", "x11"),
                 new Algorithm(4, "x13", "x13"),
                 new Algorithm(5, "keccak", "keccak"),
+                new Algorithm(6, "x15", "x15"),
                 new Algorithm(7, "nist5", "nist5"),
                 new Algorithm(8, "neoscrypt", "neoscrypt"),
                 new Algorithm(10, "whirlpoolx", "whirlpoolx"),
@@ -41,6 +42,11 @@ namespace NiceHashMiner
                     CommandLine += G.ID.ToString() + ",";
 
             CommandLine = CommandLine.Remove(CommandLine.Length - 1);
+
+            if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("neoscrypt"))
+                Path = "bin\\ccminer_neoscrypt.exe";
+            else if (this is ccminer_sp)
+                Path = "bin\\ccminer_sp.exe";
 
             return CommandLine;
         }
@@ -74,6 +80,11 @@ namespace NiceHashMiner
                 LastCommandLine = "";
                 return; // no GPUs to start mining on
             }
+
+            if (this is ccminer_sp && Algo.NiceHashName.Equals("neoscrypt"))
+                Path = "bin\\ccminer_neoscrypt.exe";
+            else if (this is ccminer_sp)
+                Path = "bin\\ccminer_sp.exe";
 
             ProcessHandle = _Start();
         }
