@@ -14,7 +14,7 @@ namespace NiceHashMiner
     class sgminer : Miner
     {
         bool EnableOptimizedVersion;
-        int PlatformDevices, GPUPlatformNumber;
+        int PlatformDevices, tmpPlatformDevices, GPUPlatformNumber;
         const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 " +
                                     "--gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " +
                                     "--temp-target 75 --auto-fan --auto-gpu ";
@@ -25,6 +25,7 @@ namespace NiceHashMiner
                 new Algorithm( 3, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
                 new Algorithm( 4, "x13",        "x13",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
                 new Algorithm( 5, "keccak",     "keccak",     DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm( 6, "x15",        "x15",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
                 new Algorithm( 7, "nist5",      "nist5",      DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
                 new Algorithm( 8, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4"),
                 new Algorithm(10, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2"),
@@ -51,6 +52,7 @@ namespace NiceHashMiner
             {
                 try {
                     PlatformDevices = Int32.Parse(text.Split(' ')[3]);
+                    tmpPlatformDevices = Int32.Parse(text.Split(' ')[3]);
                     Helpers.ConsolePrint(MinerDeviceName, "Platform Devices: " + PlatformDevices);
                 }
                 catch { PlatformDevices = 0; }
@@ -147,6 +149,8 @@ namespace NiceHashMiner
                 } while (outdata != null);
 
                 P.WaitForExit();
+
+                PlatformDevices = tmpPlatformDevices;
             }
             catch (Exception e)
             {
@@ -174,6 +178,12 @@ namespace NiceHashMiner
 
                 if (manObj["Name"].ToString().Contains("AMD") && ShowWarningDialog == false)
                 {
+                    if (PlatformDevices > 0 && CDevs.Count < PlatformDevices)
+                    {
+                        Helpers.ConsolePrint("DEBUG", "Adding missed GPUs: " + manObj["name"].ToString());
+                        CDevs.Add(new ComputeDevice(CDevs.Count, MinerDeviceName, manObj["Name"].ToString()));
+                    }
+
                     Version AMDDriverVersion = new Version(manObj["DriverVersion"].ToString());
 
                     if (AMDDriverVersion.Major < 15)
