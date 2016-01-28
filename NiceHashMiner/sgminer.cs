@@ -224,7 +224,7 @@ namespace NiceHashMiner
             Path = "cmd";
             string DirName = GetMinerDirectory(Algo.NiceHashName);
 
-            string url = Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
+            string url = "stratum+tcp://" + Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
                          Form1.MiningLocation[Config.ConfigData.Location] + ".nicehash.com:" +
                          Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].port;
 
