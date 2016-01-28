@@ -14,8 +14,8 @@ namespace NiceHashMiner
 
             // disable neoscrypt & whirlpoolx
             var tmp = new List<Algorithm>(SupportedAlgorithms);
-            tmp.RemoveAt(4);    // Remove NeoScrypt
-            tmp.RemoveAt(4);    // Remove WhirlpoolX
+            tmp.RemoveAt(5);    // Remove NeoScrypt
+            tmp.RemoveAt(5);    // Remove WhirlpoolX
             SupportedAlgorithms = tmp.ToArray();
 
             if (!Config.ConfigData.DisableDetectionNVidia2X)
