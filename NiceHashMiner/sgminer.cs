@@ -199,9 +199,9 @@ namespace NiceHashMiner
             if (EnableOptimizedVersion == false)
             {
                 SupportedAlgorithms[0].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize  64 --gpu-threads 2";  // x11
-                SupportedAlgorithms[6].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 128 --gpu-threads 4";  // qubit
-                SupportedAlgorithms[7].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 256 --gpu-threads 1";  // quark
-                SupportedAlgorithms[8].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 32 --thread-concurrency 8192 --worksize  32 --gpu-threads 4";  // lyra2rev2
+                SupportedAlgorithms[7].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 128 --gpu-threads 4";  // qubit
+                SupportedAlgorithms[8].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 256 --gpu-threads 1";  // quark
+                SupportedAlgorithms[9].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 32 --thread-concurrency 8192 --worksize  32 --gpu-threads 4";  // lyra2rev2
             }
 
             if (ShowWarningDialog == true && Config.ConfigData.ShowDriverVersionWarning == true)
