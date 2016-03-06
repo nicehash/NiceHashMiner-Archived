@@ -13,6 +13,11 @@ namespace NiceHashMiner
             Path = "bin\\ccminer_tpruvot.exe";
             APIPort = 4049;
 
+            // disable ethereum
+            var tmp = new List<Algorithm>(SupportedAlgorithms);
+            tmp.RemoveAt(GetAlgoIndex("ethereum"));   // Remove Ethereum
+            SupportedAlgorithms = tmp.ToArray();
+
             if (!Config.ConfigData.DisableDetectionNVidia3X)
                 QueryCDevs();
         }

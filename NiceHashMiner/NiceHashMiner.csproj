@@ -82,6 +82,7 @@
     <Compile Include="DriverVersionConfirmationDialog.Designer.cs">
       <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Ethereum.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="CPUID.cs" />

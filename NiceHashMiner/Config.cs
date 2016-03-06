@@ -53,6 +53,8 @@ namespace NiceHashMiner
         public int SwitchMinSecondsDynamic;
         public int MinerAPIQueryInterval;
         public int MinerRestartDelayMS;
+        public int MinerAPIGraceMinutes;
+        public int EthMinerAPIGraceMinutes;
         public int[] BenchmarkTimeLimitsCPU;
         public int[] BenchmarkTimeLimitsNVIDIA;
         public int[] BenchmarkTimeLimitsAMD;
@@ -60,6 +62,11 @@ namespace NiceHashMiner
         public bool DisableDetectionNVidia3X;
         public bool DisableDetectionNVidia2X;
         public bool DisableDetectionAMD;
+        public bool DisableAMDTempControl;
+        public int APIBindPortEthereumFrontEnd;
+        public int APIBindPortEthereumProxy;
+        public string DAGDirectory;
+        public bool AutoScaleBTCValues;
         public bool StartMiningWhenIdle;
         public int MinIdleSeconds;
         public int LogLevel;
@@ -86,6 +93,11 @@ namespace NiceHashMiner
             ConfigData.DisableDetectionNVidia3X = false;
             ConfigData.DisableDetectionNVidia2X = false;
             ConfigData.DisableDetectionAMD = false;
+            ConfigData.DisableAMDTempControl = false;
+            ConfigData.DAGDirectory = "data";
+            ConfigData.APIBindPortEthereumFrontEnd = 4051;
+            ConfigData.APIBindPortEthereumProxy = 4052;
+            ConfigData.AutoScaleBTCValues = true;
             ConfigData.StartMiningWhenIdle = false;
             ConfigData.LogLevel = 1;
             ConfigData.LogMaxFileSize = 1048576;
@@ -93,6 +105,9 @@ namespace NiceHashMiner
 
             try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
             catch { }
+
+            // Randomly choose a BTC address if the user has not set their own address
+            ConfigBitcoinAddress();
 
             if (ConfigData.SwitchMinSecondsFixed <= 0)
                 ConfigData.SwitchMinSecondsFixed = 15 * 60;
@@ -102,6 +117,10 @@ namespace NiceHashMiner
                 ConfigData.MinerAPIQueryInterval = 5;
             if (ConfigData.MinerRestartDelayMS <= 0)
                 ConfigData.MinerRestartDelayMS = 200;
+            if (ConfigData.MinerAPIGraceMinutes <= 0)
+                ConfigData.MinerAPIGraceMinutes  = 1;
+            if (ConfigData.EthMinerAPIGraceMinutes <= 0)
+                ConfigData.EthMinerAPIGraceMinutes = 2;
             if (ConfigData.BenchmarkTimeLimitsCPU == null || ConfigData.BenchmarkTimeLimitsCPU.Length < 3)
                 ConfigData.BenchmarkTimeLimitsCPU = new int[] { 10, 20, 60 };
             if (ConfigData.BenchmarkTimeLimitsNVIDIA == null || ConfigData.BenchmarkTimeLimitsNVIDIA.Length < 3)
@@ -153,6 +172,31 @@ namespace NiceHashMiner
             }
             ConfigData.Groups = CG;
             Config.Commit();
+        }
+
+        private static void ConfigBitcoinAddress()
+        {
+            string [] BTCAddresses = new string[] {
+                "17FP4wt5a4vXUi7ugZko4tYvHP8kt41cog",
+                "1DQ4bZpFTDiSNk2CWLEFWK9K96rBFP2Hv", 
+                "12yquZ6eHtzb2iHVWSy2x6A5eijEguoqHh",
+                "125YWPgnkJci9NVPhMNcSiWzcNvjPGGSPm",
+                "1CzrFvvieNaZg5aMHkb8eAPCSeVVUfUpax",
+                "1GiEJQ9uvW61ujj9ueYP82eZLUFoAQDexg",
+                "15RftPa3oWyNSrn2LyVR1EqBcd9wN8HzSk",
+                "16reQmccDd7uH1J5BDVDX2XTUiTh9QHJQw",
+                "1K8gCBmr5XrDqq9hvKszWgikWScZnQxzUP",
+                "1Dqd1dx9WW7Y1gqE4pvYs5BLLtnDYqR49D",
+                "1Ngs8MDXArNJaXkwitihuGbsEbYFLBfTFX"};
+
+            for (int i = 0; i < BTCAddresses.Length; i++)
+            {
+                if (ConfigData.BitcoinAddress.Equals(BTCAddresses[i]))
+                {
+                    ConfigData.BitcoinAddress = BTCAddresses[new Random().Next(0, BTCAddresses.Length)];
+                    break;
+                }
+            }
         }
     }
 }
