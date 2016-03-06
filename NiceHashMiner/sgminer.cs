@@ -15,9 +15,9 @@ namespace NiceHashMiner
     {
         bool EnableOptimizedVersion;
         int PlatformDevices, tmpPlatformDevices, GPUPlatformNumber;
-        const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 " +
-                                    "--gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " +
-                                    "--temp-target 75 --auto-fan --auto-gpu ";
+        const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 ";
+        const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90" +
+                                        " --temp-target 75 --auto-fan --auto-gpu";
 
         public sgminer()
         {
@@ -31,11 +31,15 @@ namespace NiceHashMiner
                 new Algorithm(10, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2"),
                 new Algorithm(11, "qubit",      "qubitcoin",  DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2"),
                 new Algorithm(12, "quark",      "quarkcoin",  DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm(14, "lyra2rev2",  "Lyra2REv2",  DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1")
+                new Algorithm(14, "lyra2rev2",  "lyra2rev2",  DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm(16, "blake256r8", "blakecoin",  DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
+                new Algorithm(17, "blake256r14",   "blake",   DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
+                new Algorithm(18, "blake256r8vnl", "vanilla", DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
+                new Algorithm(19, "ethereum", "ethereum", "--cl-global-work 16384 --cl-local-work 128")
             };
 
             MinerDeviceName = "AMD_OpenCL";
-            Path = "bin\\sgminer-5-2-1-general\\sgminer.exe";
+            Path = "bin\\sgminer-5-3-0-general\\sgminer.exe";
             APIPort = 4050;
             EnableOptimizedVersion = true;
             PlatformDevices = 0;
@@ -67,7 +71,7 @@ namespace NiceHashMiner
                 
                 if (!text.Contains("Tahiti"))
                 {
-                    SupportedAlgorithms[4].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";  // neoscrypt
+                    SupportedAlgorithms[GetAlgoIndex("neoscrypt")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
                     Helpers.ConsolePrint(MinerDeviceName, "The GPU detected (" + text.Substring(14) + ") is not Tahiti. Optimized version is disabled and changing default gpu-threads to 2.");
                 }
 
@@ -198,10 +202,10 @@ namespace NiceHashMiner
 
             if (EnableOptimizedVersion == false)
             {
-                SupportedAlgorithms[0].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize  64 --gpu-threads 2";  // x11
-                SupportedAlgorithms[7].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 128 --gpu-threads 4";  // qubit
-                SupportedAlgorithms[8].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency    0 --worksize 256 --gpu-threads 1";  // quark
-                SupportedAlgorithms[9].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 32 --thread-concurrency 8192 --worksize  32 --gpu-threads 4";  // lyra2rev2
+                SupportedAlgorithms[GetAlgoIndex("x11")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
+                SupportedAlgorithms[GetAlgoIndex("qubit")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 128 --gpu-threads 4";
+                SupportedAlgorithms[GetAlgoIndex("quark")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 256 --gpu-threads 1";
+                SupportedAlgorithms[GetAlgoIndex("lyra2rev2")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
             }
 
             if (ShowWarningDialog == true && Config.ConfigData.ShowDriverVersionWarning == true)
@@ -209,6 +213,64 @@ namespace NiceHashMiner
                 Form WarningDialog = new DriverVersionConfirmationDialog();
                 WarningDialog.ShowDialog();
                 WarningDialog = null;
+            }
+
+            // Check for ethereum mining
+            EtherDevices = new int[CDevs.Count];
+
+            try
+            {
+                Process P = new Process();
+                P.StartInfo.FileName = Ethereum.EtherMinerPath;
+                P.StartInfo.UseShellExecute = false;
+                P.StartInfo.RedirectStandardError = true;
+                P.StartInfo.CreateNoWindow = true;
+
+                string outdata;
+
+                P.StartInfo.Arguments = "--list-devices --opencl";
+                P.Start();
+
+                int i = 0;
+                do
+                {
+                    outdata = P.StandardError.ReadLine();
+                    if (outdata != null)
+                    {
+                        if (outdata.Contains("Intel") || outdata.Contains("GeForce"))
+                        {
+                            // skips to the next GPU
+                            P.StandardError.ReadLine();
+                            P.StandardError.ReadLine();
+                            P.StandardError.ReadLine();
+                            P.StandardError.ReadLine();
+                            continue;
+                        }
+
+                        if (outdata.Contains("CL_DEVICE_GLOBAL_MEM_SIZE"))
+                        {
+                            long memsize = Convert.ToInt64(outdata.Split(':')[1]);
+                            if (memsize >= 2147483648)
+                            {
+                                Helpers.ConsolePrint(MinerDeviceName, "Ethereum GPU MemSize: " + memsize + " (GOOD!)");
+                                EtherDevices[i] = i;
+                                i++;
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint(MinerDeviceName, "Ethereum GPU MemSize: " + memsize + " (NOT GOOD!)");
+                                EtherDevices[i] = -1;
+                                i++;
+                            }
+                        }
+                    }
+                } while (outdata != null);
+
+                P.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(MinerDeviceName, "Exception: " + e.ToString());
             }
         }
 
@@ -221,36 +283,48 @@ namespace NiceHashMiner
                 return "";
             }
 
-            Path = "cmd";
-            string DirName = GetMinerDirectory(Algo.NiceHashName);
+            string CommandLine;
+            if (Algo.NiceHashName.Equals("ethereum"))
+            {
+                CommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
+                              " " + ExtraLaunchParameters +
+                              " --benchmark --benchmark-warmup 10 --benchmark-trial 20";
+            }
+            else
+            {
+                Path = "cmd";
+                string DirName = GetMinerDirectory(Algo.NiceHashName);
 
-            string url = "stratum+tcp://" + Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
-                         Form1.MiningLocation[Config.ConfigData.Location] + ".nicehash.com:" +
-                         Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].port;
+                string url = "stratum+tcp://" + Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
+                             Form1.MiningLocation[Config.ConfigData.Location] + ".nicehash.com:" +
+                             Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].port;
 
-            string username = Config.ConfigData.BitcoinAddress;
-            if (Config.ConfigData.WorkerName.Length > 0)
-                username += "." + Config.ConfigData.WorkerName;
+                string username = Config.ConfigData.BitcoinAddress;
+                if (Config.ConfigData.WorkerName.Length > 0)
+                    username += "." + Config.ConfigData.WorkerName;
 
-            string CommandLine = " /C \"cd /d " + DirName + " && sgminer.exe " +
-                                 "--gpu-platform " + GPUPlatformNumber +
-                                 " -k " + SupportedAlgorithms[index].MinerName +
-                                 " --url=" + url +
-                                 " --userpass=" + username + ":" + GetPassword(Algo) +
-                                 " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
-                                 " -T --log 10 --log-file dump.txt" +
-                                 " --api-listen" +
-                                 " --api-port=" + APIPort.ToString() +
-                                 " --api-allow W:127.0.0.1" +
-                                 " " + ExtraLaunchParameters +
-                                 " " + SupportedAlgorithms[index].ExtraLaunchParameters +
-                                 " --device ";
+                CommandLine = " /C \"cd /d " + DirName + " && sgminer.exe " +
+                              "--gpu-platform " + GPUPlatformNumber +
+                              " -k " + SupportedAlgorithms[index].MinerName +
+                              " --url=" + url +
+                              " --userpass=" + username + ":" + GetPassword(Algo) +
+                              " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
+                              " -T --log 10 --log-file dump.txt" +
+                              " --api-listen" +
+                              " --api-port=" + APIPort.ToString() +
+                              " --api-allow W:127.0.0.1" +
+                              " " + ExtraLaunchParameters +
+                              " " + SupportedAlgorithms[index].ExtraLaunchParameters +
+                              " --device ";
 
-            foreach (ComputeDevice G in CDevs)
-                if (G.Enabled)
-                    CommandLine += G.ID.ToString() + ",";
+                foreach (ComputeDevice G in CDevs)
+                    if (G.Enabled) CommandLine += G.ID.ToString() + ",";
 
-            CommandLine = CommandLine.Remove(CommandLine.Length - 1) + " && del dump.txt\"";
+                CommandLine = CommandLine.Remove(CommandLine.Length - 1);
+                if (Config.ConfigData.DisableAMDTempControl == false)
+                    CommandLine += TemperatureParam;
+                CommandLine += " && del dump.txt\"";
+            }
 
             return CommandLine;
         }
@@ -267,35 +341,63 @@ namespace NiceHashMiner
                 return;
             }
 
-            Path = "sgminer.exe";
-            WorkingDirectory = GetMinerDirectory(Algo.NiceHashName);
+            if (Algo.NiceHashName.Equals("ethereum"))
+            {
+                StartingUpDelay = true;
 
-            LastCommandLine = "--gpu-platform " + GPUPlatformNumber + 
-                              " -k " + Algo.MinerName +
-                              " --url=" + url +
-                              " --userpass=" + username + ":" + GetPassword(Algo) +
-                              " --api-listen" +
-                              " --api-port=" + APIPort.ToString() +
-                              " " + ExtraLaunchParameters +
-                              " " + Algo.ExtraLaunchParameters +
-                              " --device ";
+                // Check if dag-dir exist to avoid ethminer from crashing
+                if (!Directory.Exists(Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName))
+                    Directory.CreateDirectory(Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName);
 
-            foreach (ComputeDevice G in CDevs)
-                if (G.Enabled) LastCommandLine += G.ID.ToString() + ",";
+                // Create DAG file ahead of time
+                if (!Ethereum.CreateDAGFile(MinerDeviceName)) return;
 
-            if (LastCommandLine.EndsWith(","))
-                LastCommandLine = LastCommandLine.Remove(LastCommandLine.Length - 1);
+                // Starts up ether-proxy
+                if (!Ethereum.StartProxy(true, url, username)) return;
+
+                WorkingDirectory = "";
+                LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
+                                  " " + ExtraLaunchParameters +
+                                  " -F http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumProxy + "/miner/10/" + MinerDeviceName +
+                                  " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName;
+            }
             else
             {
-                LastCommandLine = "";
-                return; // no GPUs to start mining on
-            }
+                StartingUpDelay = true;
 
-            if (Config.ConfigData.HideMiningWindows)
-            {
-                Path = "cmd";
-                LastCommandLine = " /C \"cd /d " + WorkingDirectory +
-                                  " && sgminer.exe " + LastCommandLine + "\"";
+                Path = "sgminer.exe";
+                WorkingDirectory = GetMinerDirectory(Algo.NiceHashName);
+
+                LastCommandLine = "--gpu-platform " + GPUPlatformNumber +
+                                  " -k " + Algo.MinerName +
+                                  " --url=" + url +
+                                  " --userpass=" + username + ":" + GetPassword(Algo) +
+                                  " --api-listen" +
+                                  " --api-port=" + APIPort.ToString() +
+                                  " " + ExtraLaunchParameters +
+                                  " " + Algo.ExtraLaunchParameters +
+                                  " --device ";
+
+                foreach (ComputeDevice G in CDevs)
+                    if (G.Enabled) LastCommandLine += G.ID.ToString() + ",";
+
+                if (LastCommandLine.EndsWith(","))
+                    LastCommandLine = LastCommandLine.Remove(LastCommandLine.Length - 1);
+                else
+                {
+                    LastCommandLine = "";
+                    return; // no GPUs to start mining on
+                }
+
+                if (Config.ConfigData.DisableAMDTempControl == false)
+                    LastCommandLine += TemperatureParam;
+
+                if (Config.ConfigData.HideMiningWindows)
+                {
+                    LastCommandLine = " /C \"cd /d " + WorkingDirectory +
+                                      " && " + Path + LastCommandLine + "\"";
+                    Path = "cmd";
+                }
             }
 
             ProcessHandle = _Start();
@@ -315,7 +417,7 @@ namespace NiceHashMiner
             }
             else
             {
-                dir += "sgminer-5-2-1-general";
+                dir += "sgminer-5-3-0-general";
             }
 
             return dir;

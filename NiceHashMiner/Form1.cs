@@ -30,6 +30,7 @@ namespace NiceHashMiner
         private Form3 LoadingScreen;
         private int LoadCounter = 0;
         private int TotalLoadSteps = 11;
+        private bool ShowWarningNiceHashData;
 
         private Random R;
 
@@ -77,6 +78,7 @@ namespace NiceHashMiner
 
             textBox1.Text = Config.ConfigData.BitcoinAddress;
             textBox2.Text = Config.ConfigData.WorkerName;
+            ShowWarningNiceHashData = true;
         }
 
 
@@ -338,13 +340,11 @@ namespace NiceHashMiner
                         System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
                     }
                 }
+                m.CurrentAlgo = MaxProfitIndex;
 
                 m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
                     "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBox1.SelectedIndex] + ".nicehash.com:" +
                     NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
-
-                m.CurrentAlgo = MaxProfitIndex;
-                m.NumRetries = 12;
             }
         }
 
@@ -369,19 +369,29 @@ namespace NiceHashMiner
                 APIData AD = m.GetSummary();
                 if (AD == null)
                 {
-                    // Make sure sgminer has time to start properly on slow CPU system
-                    if (m is sgminer && m.NumRetries > 0)
+                    // Make sure sgminer or ethminer has time to start
+                    // properly on slow CPU system
+                    if (m.StartingUpDelay && m.NumRetries > 0)
+                    {
+                        m.NumRetries--;
+                        if (m.NumRetries == 0) m.StartingUpDelay = false;
+                        Helpers.ConsolePrint(m.MinerDeviceName, "NumRetries: " + m.NumRetries);
+                        continue;
+                    }
+
+                    if (m is sgminer && m.NumRetries > 0 && !m.AlgoNameIs("ethereum"))
                     {
                         m.NumRetries--;
                         continue;
                     }
 
                     // API is inaccessible, try to restart miner
-                    m.NumRetries = 12;
                     m.Restart();
-                    
+
                     continue;
                 }
+                else
+                    m.StartingUpDelay = false;
 
                 if (NiceHashData != null)
                     m.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
@@ -419,8 +429,8 @@ namespace NiceHashMiner
 
         private void SetCPUStats(string aname, double speed, double paying)
         {
-            label5.Text = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + " kH/s " + aname;
-            label11.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label5.Text = FormatSpeedOutput(speed) + aname;
+            label11.Text = FormatPayingOutput(paying);
             label16.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
@@ -428,8 +438,8 @@ namespace NiceHashMiner
 
         private void SetNVIDIAtp21Stats(string aname, double speed, double paying)
         {
-            label22.Text = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s " + aname;
-            label20.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label22.Text = FormatSpeedOutput(speed) + aname;
+            label20.Text = FormatPayingOutput(paying);
             label19.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
@@ -437,8 +447,8 @@ namespace NiceHashMiner
 
         private void SetNVIDIAtpStats(string aname, double speed, double paying)
         {
-            label8.Text = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s " + aname;
-            label14.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label8.Text = FormatSpeedOutput(speed) + aname;
+            label14.Text = FormatPayingOutput(paying);
             label18.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
@@ -446,8 +456,8 @@ namespace NiceHashMiner
 
         private void SetNVIDIAspStats(string aname, double speed, double paying)
         {
-            label6.Text = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s " + aname;
-            label12.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label6.Text = FormatSpeedOutput(speed) + aname;
+            label12.Text = FormatPayingOutput(paying);
             label17.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
@@ -455,8 +465,8 @@ namespace NiceHashMiner
 
         private void SetAMDOpenCLStats(string aname, double speed, double paying)
         {
-            label_AMDOpenCL_Mining_Speed.Text = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s " + aname;
-            label_AMDOpenCL_Mining_BTC_Day_Value.Text = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+            label_AMDOpenCL_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
+            label_AMDOpenCL_Mining_BTC_Day_Value.Text = FormatPayingOutput(paying);
             label_AMDOpenCL_Mining_USD_Day_Value.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
         }
@@ -467,7 +477,18 @@ namespace NiceHashMiner
             double TotalRate = 0;
             foreach (Miner m in Miners)
                 TotalRate += m.CurrentRate;
-            toolStripStatusLabel4.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
+
+            if (Config.ConfigData.AutoScaleBTCValues && TotalRate < 0.1)
+            {
+                toolStripStatusLabel1.Text = "mBTC/Day";
+                toolStripStatusLabel4.Text = (TotalRate * 1000).ToString("F7", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                toolStripStatusLabel1.Text = "BTC/Day";
+                toolStripStatusLabel4.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
+            }
+
             toolStripStatusLabel2.Text = (TotalRate * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
         }
 
@@ -480,7 +501,17 @@ namespace NiceHashMiner
                 double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim(), textBox1.Text.Trim() + "." + textBox2.Text.Trim());
                 if (Balance > 0)
                 {
-                    toolStripStatusLabel6.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
+                    if (Config.ConfigData.AutoScaleBTCValues && Balance < 0.1)
+                    {
+                        toolStripStatusLabel7.Text = "mBTC";
+                        toolStripStatusLabel6.Text = (Balance * 1000).ToString("F7", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        toolStripStatusLabel7.Text = "BTC";
+                        toolStripStatusLabel6.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
+                    }
+
                     toolStripStatusLabel3.Text = (Balance * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
                 }
             }
@@ -515,7 +546,7 @@ namespace NiceHashMiner
                 t = NiceHashStats.GetAlgorithmRates(worker);
             }
 
-            if (t == null && NiceHashData == null)
+            if (t == null && NiceHashData == null && ShowWarningNiceHashData)
             {
                 DialogResult dialogResult = MessageBox.Show("NiceHash Miner requires internet connection to run. " +
                                                             "Please ensure that you are connected to the " +
@@ -525,7 +556,10 @@ namespace NiceHashMiner
                                                             MessageBoxButtons.YesNo);
 
                 if (dialogResult == DialogResult.Yes)
+                {
+                    ShowWarningNiceHashData = false;
                     return;
+                }
                 else if (dialogResult == DialogResult.No)
                     System.Windows.Forms.Application.Exit();
             }
@@ -721,6 +755,35 @@ namespace NiceHashMiner
             PHandle.Start();
 
             Close();
+        }
+
+
+        private string FormatSpeedOutput(double speed)
+        {
+            string ret = "";
+
+            if (speed < 1000)
+                ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + " H/s ";
+            else if (speed < 100000)
+                ret = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + " kH/s ";
+            else if (speed < 100000000)
+                ret = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s ";
+            else
+                ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + " GH/s ";
+
+            return ret;
+        }
+
+        private string FormatPayingOutput(double paying)
+        {
+            string ret = "";
+
+            if (Config.ConfigData.AutoScaleBTCValues && paying < 0.1)
+                ret = (paying * 1000).ToString("F7", CultureInfo.InvariantCulture) + " mBTC/Day";
+            else
+                ret = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/Day";
+
+            return ret;
         }
 
 

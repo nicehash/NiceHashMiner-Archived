@@ -160,7 +160,7 @@ namespace NiceHashMiner
         }
 
 
-        private static string GetNiceHashAPIData(string URL, string worker)
+        public static string GetNiceHashAPIData(string URL, string worker)
         {
             string ResponseFromServer;
             try

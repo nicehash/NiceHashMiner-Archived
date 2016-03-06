@@ -12,10 +12,11 @@ namespace NiceHashMiner
             Path = "bin\\ccminer_tpruvot.exe";
             APIPort = 4021;
 
-            // disable neoscrypt & whirlpoolx
+            // disable neoscrypt & whirlpoolx & ethereum
             var tmp = new List<Algorithm>(SupportedAlgorithms);
-            tmp.RemoveAt(5);    // Remove NeoScrypt
-            tmp.RemoveAt(5);    // Remove WhirlpoolX
+            tmp.RemoveAt(GetAlgoIndex("neoscrypt"));    // Remove NeoScrypt
+            tmp.RemoveAt(GetAlgoIndex("whirlpoolx")-1); // Remove WhirlpoolX
+            tmp.RemoveAt(GetAlgoIndex("ethereum")-2);   // Remove Ethereum
             SupportedAlgorithms = tmp.ToArray();
 
             if (!Config.ConfigData.DisableDetectionNVidia2X)

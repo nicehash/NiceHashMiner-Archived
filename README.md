@@ -82,6 +82,17 @@ StartMiningWhenIdle | true or false | Automatically start mining when computer i
 MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many secunds computer has to be idle before mining starts.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
+MinerAPIGraceMinutes | number | This is to give time for sgminer's API to start up properly as it takes a bit of time to (if needed) compile and load the bin.
+EthMinerAPIGraceMinutes | number | This is to give time for the ether-proxy to properly start up. Increase this value if you are mining ethereum on slow GPU or if your ethminer keeps restarting.
+DisableDetectionNVidia5X | true or false | Set it to true if you would like to skip the detection of NVidia5.X GPUs.
+DisableDetectionNVidia3X | true or false | Set it to true if you would like to skip the detection of NVidia3.X GPUs.
+DisableDetectionNVidia2X | true or false | Set it to true if you would like to skip the detection of NVidia2.X GPUs.
+DisableDetectionAMD | true or false | Set it to true if you would like to skip the detection of AMD GPUs.
+DisableAMDTempControl | true or false | Set it to true if you would like to disable the built-in temperature control for AMD GPUs.
+APIBindPortEthereumFrontEnd | number | The port number for the ether-proxy web front end. Eg: http://127.0.0.1:4051
+APIBindPortEthereumProxy | number | The port number for the miners to connect to the ether-proxy.
+DAGDirectory | text | The DAG location for ethereum miners
+AutoScaleBTCValues | true or false | Set it to true if you wish to see the BTC values autoscale to the appropriate scale.
 Groups\ExtraLaunchParameters | text | Additional launch parameters when launching miner.
 Groups\Algorithms\ExtraLaunchParameters | text | Additional launch parameters when launching miner and this algorithm.
 Groups\Algorithms\BenchmarkSpeed | number | Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.
@@ -137,6 +148,9 @@ GPU 0 failure, disabling!
 
 > This is because the sgminer mining application, which is used for AMD GPU mining, requires a particular amount of free system memory (RAM) to be able to run successfully. We suggest you to upgrade your system with more RAM.
 
+Ethminer is running on all of my AMD GPUs including ones that are unticked from the miner
+> This is a limitation in the ethminer where in order to pick individual GPU, the ethminer would have to be run in multiple instances. To disable a certain GPU from mining, please disable the GPU directly from the Device Manager.
+
 # <a name="bugs"></a> How to report bugs and issues?
 
 To report bugs and issues please use the GitHub issue reporting tool: https://github.com/nicehash/NiceHashMiner/issues. Any bugs and issues reports are very much appreciated since it helps us to improve NiceHash Miner. Thank you.
@@ -147,3 +161,5 @@ To report bugs and issues please use the GitHub issue reporting tool: https://gi
 - For NVIDIA 5.x cards, sp's fork of ccminer has been used from here: https://github.com/sp-hash/ccminer.
 - For NVIDIA 2.1 and 3.x (older cards), tpruvot's fork of ccminer has been used from here: https://github.com/tpruvot/ccminer.
 - For AMD cards, sgminer has been used from here: https://github.com/sgminer-dev/sgminer.
+- For Ethereum miner, Genoil's fork of ethminer has been used from here: https://github.com/Genoil/cpp-ethereum
+- For Ethereum proxy, our fork of Sammy's proxy has been used from here: https://github.com/nicehash/ether-proxy

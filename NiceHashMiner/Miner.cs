@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace NiceHashMiner
 {
@@ -84,8 +85,10 @@ namespace NiceHashMiner
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
         public int NumRetries;
+        public bool StartingUpDelay;
 
         protected string Path;
+        protected int[] EtherDevices;
         protected string WorkingDirectory;
         protected Process ProcessHandle;
         protected BenchmarkComplete OnBenchmarkComplete;
@@ -102,6 +105,7 @@ namespace NiceHashMiner
             WorkingDirectory = "";
             ExtraLaunchParameters = "";
             UsePassword = null;
+            StartingUpDelay = false;
 
             CurrentAlgo = -1;
             CurrentRate = 0;
@@ -128,12 +132,11 @@ namespace NiceHashMiner
                 catch { }
                 ProcessHandle.Close();
                 ProcessHandle = null;
+                StartingUpDelay = false;
                 PreviousTotalMH = 0.0;
 
-                if (MinerDeviceName == "AMD_OpenCL")
-                {
-                    KillSGMiner();
-                }
+                if (AlgoNameIs("ethereum")) Ethereum.StopProxy();
+                else if (MinerDeviceName == "AMD_OpenCL") KillSGMiner();
             }
         }
 
@@ -158,6 +161,7 @@ namespace NiceHashMiner
 
             BenchmarkTag = tag;
             BenchmarkIndex = index;
+            CurrentAlgo = index;
             BenchmarkTime = time;
 
             string CommandLine = BenchmarkCreateCommandLine(index, time);
@@ -213,6 +217,18 @@ namespace NiceHashMiner
                 OnBenchmarkComplete(true, PrintSpeed(speed), BenchmarkTag);
                 return true;
             }
+            else if (outdata.Contains("min/mean/max:"))
+            {
+                string[] splt = outdata.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                int index = Array.IndexOf(splt, "mean");
+                double avg_spd = Convert.ToDouble(splt[index + 2]);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + avg_spd + "H/s");
+
+                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = avg_spd;
+
+                OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
+                return true;
+            }
 
             return false;
         }
@@ -229,7 +245,10 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerDeviceName, "Starting benchmark: " + CommandLine);
 
             Process BenchmarkHandle = new Process();
-            BenchmarkHandle.StartInfo.FileName = Path;
+            if (AlgoNameIs("ethereum"))
+                BenchmarkHandle.StartInfo.FileName = Ethereum.EtherMinerPath;
+            else
+                BenchmarkHandle.StartInfo.FileName = Path;
             BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;
             BenchmarkHandle.StartInfo.UseShellExecute = false;
             BenchmarkHandle.StartInfo.RedirectStandardError = true;
@@ -253,71 +272,79 @@ namespace NiceHashMiner
 
             try
             {
-                if (MinerDeviceName.Equals("AMD_OpenCL"))
-                {
-                    int NHDataIndex = SupportedAlgorithms[BenchmarkIndex].NiceHashID;
-                    
-                    if (Form1.NiceHashData == null)
-                    {
-                        Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
-                            "connection. Sgminer needs internet connection to do benchmarking.");
-
-                        throw new Exception("No internet connection");
-                    }
-                    
-                    if (Form1.NiceHashData[NHDataIndex].paying == 0)
-                    {
-                        Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
-                            "[algo: " + SupportedAlgorithms[BenchmarkIndex].NiceHashName + "(" + NHDataIndex + ")]");
-
-                        throw new Exception("No work can be used for benchmarking");
-                    }
-
-                    timer.Reset();
-                    timer.Start();
-                }
-
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
 
-                while (true)
+                if (AlgoNameIs("ethereum"))
+                {
+                    string outdata = BenchmarkHandle.StandardOutput.ReadToEnd();
+                    BenchmarkParseLine(outdata);
+                }
+                else
                 {
                     if (MinerDeviceName.Equals("AMD_OpenCL"))
                     {
-                        if (timer.Elapsed.Minutes >= BenchmarkTime + 1 && once == true)
+                        int NHDataIndex = SupportedAlgorithms[BenchmarkIndex].NiceHashID;
+
+                        if (Form1.NiceHashData == null)
                         {
-                            once = false;
-                            string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
-                            Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
+                            Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
+                                "connection. Sgminer needs internet connection to do benchmarking.");
+
+                            throw new Exception("No internet connection");
                         }
-                        if (timer.Elapsed.Minutes >= BenchmarkTime + 2)
+
+                        if (Form1.NiceHashData[NHDataIndex].paying == 0)
                         {
-                            timer.Stop();
-                            KillSGMiner();
-                            BenchmarkSignalHanged = true;
+                            Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
+                                "[algo: " + SupportedAlgorithms[BenchmarkIndex].NiceHashName + "(" + NHDataIndex + ")]");
+
+                            throw new Exception("No work can be used for benchmarking");
                         }
+
+                        timer.Reset();
+                        timer.Start();
                     }
 
-                    string outdata = BenchmarkGetConsoleOutputLine(BenchmarkHandle);
-                    if (outdata != null)
+                    while (true)
                     {
-                        if (outdata.Contains("Cuda error"))
-                            throw new Exception("CUDA error");
-                        if (outdata.Contains("is not supported"))
-                            throw new Exception("N/A");
-                        if (outdata.Contains("illegal memory access"))
-                            throw new Exception("CUDA error");
-                        if (outdata.Contains("unknown error"))
-                            throw new Exception("Unknown error");
-                        if (outdata.Contains("No servers could be used! Exiting."))
-                            throw new Exception("No pools or work can be used for benchmarking");
-                        if (BenchmarkParseLine(outdata))
-                            break;
+                        if (MinerDeviceName.Equals("AMD_OpenCL"))
+                        {
+                            if (timer.Elapsed.Minutes >= BenchmarkTime + 1 && once == true)
+                            {
+                                once = false;
+                                string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
+                                Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
+                            }
+                            if (timer.Elapsed.Minutes >= BenchmarkTime + 2)
+                            {
+                                timer.Stop();
+                                KillSGMiner();
+                                BenchmarkSignalHanged = true;
+                            }
+                        }
+
+                        string outdata = BenchmarkGetConsoleOutputLine(BenchmarkHandle);
+                        if (outdata != null)
+                        {
+                            if (outdata.Contains("Cuda error"))
+                                throw new Exception("CUDA error");
+                            if (outdata.Contains("is not supported"))
+                                throw new Exception("N/A");
+                            if (outdata.Contains("illegal memory access"))
+                                throw new Exception("CUDA error");
+                            if (outdata.Contains("unknown error"))
+                                throw new Exception("Unknown error");
+                            if (outdata.Contains("No servers could be used! Exiting."))
+                                throw new Exception("No pools or work can be used for benchmarking");
+                            if (BenchmarkParseLine(outdata))
+                                break;
+                        }
+                        if (BenchmarkSignalQuit)
+                            throw new Exception("Termined by user request");
+                        if (BenchmarkSignalHanged)
+                            throw new Exception("SGMiner is not responding");
                     }
-                    if (BenchmarkSignalQuit)
-                        throw new Exception("Termined by user request");
-                    if (BenchmarkSignalHanged)
-                        throw new Exception("SGMiner is not responding");
                 }
             }
             catch (Exception ex)
@@ -334,7 +361,10 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
 
             if (BenchmarkHandle != null)
-                BenchmarkHandle.Close();
+            {
+                try { BenchmarkHandle.Kill(); BenchmarkHandle.Close(); }
+                catch { }
+            }
         }
 
 
@@ -364,7 +394,15 @@ namespace NiceHashMiner
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
             }
 
-            P.StartInfo.FileName = Path;
+            NumRetries = Config.ConfigData.MinerAPIGraceMinutes * 60 / Config.ConfigData.MinerAPIQueryInterval;
+            if (AlgoNameIs("ethereum"))
+            {
+                NumRetries = Config.ConfigData.EthMinerAPIGraceMinutes * 60 / Config.ConfigData.MinerAPIQueryInterval;
+                P.StartInfo.FileName = Ethereum.EtherMinerPath;
+            }
+            else
+                P.StartInfo.FileName = Path;
+
             P.StartInfo.Arguments = LastCommandLine;
             P.StartInfo.CreateNoWindow = Config.ConfigData.HideMiningWindows;
             P.StartInfo.UseShellExecute = !Config.ConfigData.HideMiningWindows;
@@ -378,7 +416,7 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint(MinerDeviceName, ex.Message);
+                Helpers.ConsolePrint(MinerDeviceName, "_Start: " + ex.Message);
                 return null;
             }
         }
@@ -393,6 +431,12 @@ namespace NiceHashMiner
         virtual public void Restart()
         {
             Stop(); // stop miner first
+            if (this is sgminer) StartingUpDelay = true;
+            if (AlgoNameIs("ethereum"))
+            {
+                StartingUpDelay = true;
+                Ethereum.StartProxy(false, "", "");
+            }
             ProcessHandle = _Start(); // start with old command line
         }
 
@@ -493,79 +537,121 @@ namespace NiceHashMiner
 
         public APIData GetSummary()
         {
-            string resp = GetAPIData(APIPort, "summary");
-            if (resp == null) return null;
-
+            string resp;
             string aname = null;
             APIData ad = new APIData();
 
-            try
+            if (AlgoNameIs("ethereum"))
             {
-                string[] resps;
-
-                if (!MinerDeviceName.Equals("AMD_OpenCL"))
+                try
                 {
-                    resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < resps.Length; i++)
+                    resp = NiceHashStats.GetNiceHashAPIData("http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumFrontEnd + "/stats", MinerDeviceName);
+                    if (resp == null) return null;
+                    if (resp.Length < 800) return null; // response is too short
+
+                    Eth<EthMiner> oo;
+                    oo = JsonConvert.DeserializeObject<Eth<EthMiner>>(resp);
+
+                    ad.Speed = 0;
+                    aname = "ethereum";
+
+                    for (int i = 0; i < oo.miners.Length; i++)
                     {
-                        string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (optval.Length != 2) continue;
-                        if (optval[0] == "ALGO")
-                            aname = optval[1];
-                        else if (optval[0] == "KHS")
-                            ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                        if (!oo.miners[i].name.Equals(MinerDeviceName)) continue;
+
+                        if (oo.miners[i].timeout == true)
+                        {
+                            Helpers.ConsolePrint(MinerDeviceName, "Ethminer ERROR!");
+                            return null;
+                        }
+                        else if (oo.miners[i].warning == true)
+                            Helpers.ConsolePrint(MinerDeviceName, "Ethminer WARNING!");
+
+                        ad.Speed = oo.miners[i].hashrate * 1000;
+                        break;
                     }
+
+                    if (ad.Speed == 0) return null;
                 }
-                else
+                catch (Exception e)
                 {
-                    // Checks if all the GPUs are Alive first
-                    string resp2 = GetAPIData(APIPort, "devs");
-                    if (resp2 == null) return null;
+                    Helpers.ConsolePrint(MinerDeviceName, "GetSummary: " + e.Message);
+                    return null;
+                }
+            }
+            else
+            {
+                resp = GetAPIData(APIPort, "summary");
+                if (resp == null) return null;
 
-                    string [] checkGPUStatus = resp2.Split(new char [] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                try
+                {
+                    string[] resps;
 
-                    for (int i = 1; i < checkGPUStatus.Length - 1; i++)
+                    if (!MinerDeviceName.Equals("AMD_OpenCL"))
                     {
-                        if (!checkGPUStatus[i].Contains("Status=Alive"))
+                        resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < resps.Length; i++)
                         {
-                            Helpers.ConsolePrint(MinerDeviceName, "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
-                            return null;
+                            string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (optval.Length != 2) continue;
+                            if (optval[0] == "ALGO")
+                                aname = optval[1];
+                            else if (optval[0] == "KHS")
+                                ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                         }
-                    }
-
-                    resps = resp.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (resps[1].Contains("SUMMARY"))
-                    {
-                        string[] data = resps[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        // Get miner's current total speed
-                        string[] speed = data[4].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                        // Get miner's current total MH
-                        double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1], new CultureInfo("en-US"));
-
-                        ad.Speed = Double.Parse(speed[1]) * 1000;
-
-                        aname = SupportedAlgorithms[CurrentAlgo].MinerName;
-
-                        if (total_mh <= PreviousTotalMH)
-                        {
-                            Helpers.ConsolePrint(MinerDeviceName, "SGMiner might be stuck as no new hashes are being produced");
-                            Helpers.ConsolePrint(MinerDeviceName, "Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
-                            return null;
-                        }
-
-                        PreviousTotalMH = total_mh;
                     }
                     else
                     {
-                        ad.Speed = 0;
+                        // Checks if all the GPUs are Alive first
+                        string resp2 = GetAPIData(APIPort, "devs");
+                        if (resp2 == null) return null;
+
+                        string[] checkGPUStatus = resp2.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        for (int i = 1; i < checkGPUStatus.Length - 1; i++)
+                        {
+                            if (!checkGPUStatus[i].Contains("Status=Alive"))
+                            {
+                                Helpers.ConsolePrint(MinerDeviceName, "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
+                                return null;
+                            }
+                        }
+
+                        resps = resp.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (resps[1].Contains("SUMMARY"))
+                        {
+                            string[] data = resps[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            // Get miner's current total speed
+                            string[] speed = data[4].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                            // Get miner's current total MH
+                            double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1], new CultureInfo("en-US"));
+
+                            ad.Speed = Double.Parse(speed[1]) * 1000;
+
+                            aname = SupportedAlgorithms[CurrentAlgo].MinerName;
+
+                            if (total_mh <= PreviousTotalMH)
+                            {
+                                Helpers.ConsolePrint(MinerDeviceName, "SGMiner might be stuck as no new hashes are being produced");
+                                Helpers.ConsolePrint(MinerDeviceName, "Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
+                                return null;
+                            }
+
+                            PreviousTotalMH = total_mh;
+                        }
+                        else
+                        {
+                            ad.Speed = 0;
+                        }
                     }
                 }
-            }
-            catch
-            {
-                return null;
+                catch
+                {
+                    return null;
+                }
             }
 
             FillAlgorithm(aname, ref ad);
@@ -597,6 +683,25 @@ namespace NiceHashMiner
             }
 
             return MaxProfitIndex;
+        }
+
+
+        public int GetAlgoIndex(string aname)
+        {
+            for (int i = 0; i < SupportedAlgorithms.Length; i++)
+                if (SupportedAlgorithms[i].NiceHashName.Equals(aname))
+                    return i;
+            
+            return 0;
+        }
+
+
+        public bool AlgoNameIs(string algoname)
+        {
+            if (SupportedAlgorithms[CurrentAlgo].NiceHashName.Equals(algoname))
+                return true;
+
+            return false;
         }
     }
 }
