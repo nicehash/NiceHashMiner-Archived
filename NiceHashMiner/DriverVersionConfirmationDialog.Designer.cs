@@ -99,7 +99,6 @@
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Update AMD Driver Recommended";
-            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

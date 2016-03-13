@@ -548,6 +548,7 @@ namespace NiceHashMiner
 
             if (t == null && NiceHashData == null && ShowWarningNiceHashData)
             {
+                ShowWarningNiceHashData = false;
                 DialogResult dialogResult = MessageBox.Show("NiceHash Miner requires internet connection to run. " +
                                                             "Please ensure that you are connected to the " +
                                                             "internet before running NiceHash Miner. " +
@@ -556,10 +557,7 @@ namespace NiceHashMiner
                                                             MessageBoxButtons.YesNo);
 
                 if (dialogResult == DialogResult.Yes)
-                {
-                    ShowWarningNiceHashData = false;
                     return;
-                }
                 else if (dialogResult == DialogResult.No)
                     System.Windows.Forms.Application.Exit();
             }
@@ -625,6 +623,8 @@ namespace NiceHashMiner
                 if (m.CurrentAlgo >= 0)
                 {
                     algo = m.SupportedAlgorithms[m.CurrentAlgo].NiceHashID;
+                    // Hack for Ethereum
+                    if (algo == 19) algo = 999;
                     break;
                 }
             }

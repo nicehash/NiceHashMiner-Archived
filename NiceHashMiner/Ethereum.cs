@@ -139,8 +139,19 @@ namespace NiceHashMiner
                     P.StartInfo.UseShellExecute = !Config.ConfigData.HideMiningWindows;
                     P.EnableRaisingEvents = true;
                     P.Exited += P_Exited;
+
+                    if (Config.ConfigData.HideMiningWindows)
+                    {
+                        P.StartInfo.FileName = "cmd";
+                        P.StartInfo.Arguments = " /C \" " + EtherProxyPath + " " + EtherProxyConfigPath + "\"";
+                    }
+
                     try { P.Start(); }
-                    catch { return false; }
+                    catch
+                    {
+                        Helpers.ConsolePrint("Ethereum", "StartProxy: Failed to start proxy..");
+                        return false;
+                    }
                     ProcessProxyHandle = P;
 
                     EtherMinerRunning = 1;
@@ -186,6 +197,12 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint("Ethereum", "StopProxy: " + "Exiting proxy..");
                         try { ProcessProxyHandle.Kill(); }
                         catch { Helpers.ConsolePrint("Ethereum", "StopProxy: " + "Ethereum proxy failed to exit.."); }
+
+                        foreach (Process process in Process.GetProcessesByName("ether-proxy"))
+                        {
+                            try { process.Kill(); }
+                            catch { Helpers.ConsolePrint("Ethereum", "StopProxy: " + "Ethereum proxy failed to exit.."); }
+                        }
 
                         ProcessProxyHandle.Close();
                         ProcessProxyHandle = null;
