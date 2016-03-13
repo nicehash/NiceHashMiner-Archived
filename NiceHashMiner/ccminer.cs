@@ -41,6 +41,7 @@ namespace NiceHashMiner
             {
                 CommandLine = " --benchmark --benchmark-warmup 10 --benchmark-trial 20" +
                               " " + ExtraLaunchParameters +
+                              " " + SupportedAlgorithms[index].ExtraLaunchParameters +
                               " --cuda --cuda-devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
@@ -49,7 +50,7 @@ namespace NiceHashMiner
             }
             else
             {
-                CommandLine = "--algo=" + SupportedAlgorithms[index].MinerName +
+                CommandLine = " --algo=" + SupportedAlgorithms[index].MinerName +
                               " --benchmark" +
                               " --time-limit " + time.ToString() +
                               " " + ExtraLaunchParameters +
@@ -95,6 +96,7 @@ namespace NiceHashMiner
 
                 LastCommandLine = " --cuda -F http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumProxy + "/miner/10/" + MinerDeviceName + " " +
                                   " " + ExtraLaunchParameters +
+                                  " " + Algo.ExtraLaunchParameters +
                                   " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
                                   " --cuda-devices ";
 

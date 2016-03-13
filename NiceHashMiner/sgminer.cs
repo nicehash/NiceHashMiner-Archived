@@ -288,6 +288,7 @@ namespace NiceHashMiner
             {
                 CommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
                               " " + ExtraLaunchParameters +
+                              " " + Algo.ExtraLaunchParameters +
                               " --benchmark --benchmark-warmup 10 --benchmark-trial 20";
             }
             else
@@ -299,12 +300,12 @@ namespace NiceHashMiner
                              Form1.MiningLocation[Config.ConfigData.Location] + ".nicehash.com:" +
                              Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].port;
 
-                string username = Config.ConfigData.BitcoinAddress;
+                string username = Config.ConfigData.BitcoinAddress.Trim();
                 if (Config.ConfigData.WorkerName.Length > 0)
-                    username += "." + Config.ConfigData.WorkerName;
+                    username += "." + Config.ConfigData.WorkerName.Trim();
 
                 CommandLine = " /C \"cd /d " + DirName + " && sgminer.exe " +
-                              "--gpu-platform " + GPUPlatformNumber +
+                              " --gpu-platform " + GPUPlatformNumber +
                               " -k " + SupportedAlgorithms[index].MinerName +
                               " --url=" + url +
                               " --userpass=" + username + ":" + GetPassword(Algo) +
@@ -358,6 +359,7 @@ namespace NiceHashMiner
                 WorkingDirectory = "";
                 LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
                                   " " + ExtraLaunchParameters +
+                                  " " + Algo.ExtraLaunchParameters +
                                   " -F http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumProxy + "/miner/10/" + MinerDeviceName +
                                   " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName;
             }
@@ -368,7 +370,7 @@ namespace NiceHashMiner
                 Path = "sgminer.exe";
                 WorkingDirectory = GetMinerDirectory(Algo.NiceHashName);
 
-                LastCommandLine = "--gpu-platform " + GPUPlatformNumber +
+                LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
                                   " -k " + Algo.MinerName +
                                   " --url=" + url +
                                   " --userpass=" + username + ":" + GetPassword(Algo) +

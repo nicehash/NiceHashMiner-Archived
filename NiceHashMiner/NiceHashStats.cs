@@ -33,6 +33,9 @@ namespace NiceHashMiner
         public class nicehash_stats
         {
             public double balance;
+            public double balance_unexchanged;
+            public double balance_immature;
+            public double balance_confirmed;
             public double accepted_speed;
             public double rejected_speed;
             public int algo;
@@ -130,7 +133,18 @@ namespace NiceHashMiner
                 {
                     nhjson_current = JsonConvert.DeserializeObject<nicehash_json<nicehash_stats>>(r1);
                     for (int i = 0; i < nhjson_current.result.stats.Length; i++)
-                        balance += nhjson_current.result.stats[i].balance;
+                    {
+                        if (nhjson_current.result.stats[i].algo != 999)
+                        {
+                            balance += nhjson_current.result.stats[i].balance;
+                        }
+                        else if (nhjson_current.result.stats[i].algo == 999 && l == 0)
+                        {
+                            balance += nhjson_current.result.stats[i].balance_unexchanged +
+                                       nhjson_current.result.stats[i].balance_immature +
+                                       nhjson_current.result.stats[i].balance_confirmed;
+                        }
+                    }
                 }
                 catch
                 {
