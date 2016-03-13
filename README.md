@@ -151,6 +151,9 @@ GPU 0 failure, disabling!
 Ethminer is running on all of my AMD GPUs including ones that are unticked from the miner
 > This is a limitation in the ethminer where in order to pick individual GPU, the ethminer would have to be run in multiple instances. To disable a certain GPU from mining, please disable the GPU directly from the Device Manager.
 
+My benchmarking resutls are not accurate
+> Any kind of automation can only be done up to a particular level. We've spent significant effort to make benchmarking as good as possible, but it can't be made ideal. First of all, make sure to run Precise benchmark if Standard benchmark is not giving you satisfactory results. If you still see a deviation of actual mining speed from the one, calculated from benchmark, then you should manually enter these observed speed numbers from actual mining into config.json file or set them via the "Settings" button.
+
 # <a name="bugs"></a> How to report bugs and issues?
 
 To report bugs and issues please use the GitHub issue reporting tool: https://github.com/nicehash/NiceHashMiner/issues. Any bugs and issues reports are very much appreciated since it helps us to improve NiceHash Miner. Thank you.
