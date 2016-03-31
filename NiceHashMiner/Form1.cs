@@ -587,8 +587,9 @@ namespace NiceHashMiner
         {
             Helpers.ConsolePrint("NICEHASH", "Setting environment variables");
 
-            string[] envName  = { "GPU_MAX_ALLOC_PERCENT", "GPU_USE_SYNC_OBJECTS", "GPU_MAX_HEAP_SIZE" };
-            string[] envValue = { "100", "1", "100" };
+            string[] envName = { "GPU_MAX_ALLOC_PERCENT", "GPU_USE_SYNC_OBJECTS", "GPU_MAX_HEAP_SIZE",
+                                 "GPU_SINGLE_ALLOC_PERCENT", "GPU_MAX_HEAP_SIZE", "GPU_FORCE_64BIT_PTR" };
+            string[] envValue = { "100", "1", "100", "100", "100", "0" };
 
             for (int i = 0; i < envName.Length; i++)
             {
