@@ -140,9 +140,7 @@ namespace NiceHashMiner
                         }
                         else if (nhjson_current.result.stats[i].algo == 999 && l == 0)
                         {
-                            balance += nhjson_current.result.stats[i].balance_unexchanged +
-                                       nhjson_current.result.stats[i].balance_immature +
-                                       nhjson_current.result.stats[i].balance_confirmed;
+                            balance += nhjson_current.result.stats[i].balance_confirmed;
                         }
                     }
                 }
