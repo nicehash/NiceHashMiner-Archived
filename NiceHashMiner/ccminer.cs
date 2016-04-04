@@ -217,7 +217,10 @@ namespace NiceHashMiner
                 P.WaitForExit();
 
                 // Check for ethereum mining
-                if (this is ccminer_sp) AddEthereum(" 9");
+                if (CDevs.Count != 0)
+                {
+                    if (this is ccminer_sp) AddEthereum(" 9");
+                }
             }
             catch (Exception e)
             {

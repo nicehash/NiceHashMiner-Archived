@@ -94,10 +94,9 @@ namespace NiceHashMiner
         }
 
 
-        public static nicehash_stats GetStats(string btc, int location, int algo, string worker)
+        public static nicehash_stats GetStats(string btc, int algo, string worker)
         {
-            if (location > 1) location = 1;
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&location=" + location.ToString() + "&addr=" + btc, worker);
+            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&addr=" + btc, worker);
             if (r1 == null) return null;
 
             nicehash_json<nicehash_stats> nhjson_current;
@@ -123,11 +122,9 @@ namespace NiceHashMiner
         {
             double balance = 0;
 
-            for (int l = 0; l < 2; l++)
+            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&addr=" + btc, worker);
+            if (r1 != null)
             {
-                string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&location=" + l.ToString() + "&addr=" + btc, worker);
-                if (r1 == null) break;
-
                 nicehash_json<nicehash_stats> nhjson_current;
                 try
                 {
@@ -138,18 +135,13 @@ namespace NiceHashMiner
                         {
                             balance += nhjson_current.result.stats[i].balance;
                         }
-                        else if (nhjson_current.result.stats[i].algo == 999 && l == 0)
+                        else if (nhjson_current.result.stats[i].algo == 999)
                         {
-                            balance += nhjson_current.result.stats[i].balance_unexchanged +
-                                       nhjson_current.result.stats[i].balance_immature +
-                                       nhjson_current.result.stats[i].balance_confirmed;
+                            balance += nhjson_current.result.stats[i].balance_confirmed;
                         }
                     }
                 }
-                catch
-                {
-                    break;
-                }
+                catch { }
             }
 
             return balance;
