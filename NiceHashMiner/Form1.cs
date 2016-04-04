@@ -614,9 +614,6 @@ namespace NiceHashMiner
         {
             if (!VerifyMiningAddress()) return;
 
-            int location = comboBox1.SelectedIndex;
-            if (location > 1) location = 1;
-
             int algo = 0;
             // find first working algo
             foreach (Miner m in Miners)
@@ -630,7 +627,7 @@ namespace NiceHashMiner
                 }
             }
 
-            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBox1.Text.Trim() + "&l=" + location + "&a=" + algo);
+            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBox1.Text.Trim() + "&a=" + algo);
         }
 
 
