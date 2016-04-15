@@ -39,14 +39,19 @@ namespace NiceHashMiner
 
             if (SupportedAlgorithms[index].NiceHashName.Equals("ethereum"))
             {
-                CommandLine = " --benchmark --benchmark-warmup 10 --benchmark-trial 20" +
+                CommandLine = " --benchmark-warmup 10 --benchmark-trial 20" +
                               " " + ExtraLaunchParameters +
                               " " + SupportedAlgorithms[index].ExtraLaunchParameters +
+                              " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
                               " --cuda --cuda-devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
                     if (EtherDevices[i] != -1 && CDevs[i].Enabled)
                         CommandLine += i + " ";
+
+                CommandLine += " --benchmark ";
+                if (Ethereum.GetCurrentBlock(MinerDeviceName))
+                    CommandLine += Ethereum.CurrentBlockNum;
             }
             else
             {
@@ -95,6 +100,7 @@ namespace NiceHashMiner
                 if (!Ethereum.StartProxy(true, url, username)) return;
 
                 LastCommandLine = " --cuda -F http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumProxy + "/miner/10/" + MinerDeviceName + " " +
+                                  " --erase-dags old" +
                                   " " + ExtraLaunchParameters +
                                   " " + Algo.ExtraLaunchParameters +
                                   " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
@@ -102,7 +108,7 @@ namespace NiceHashMiner
 
                 for (int i = 0; i < CDevs.Count; i++)
                     if (EtherDevices[i] != -1 && CDevs[i].Enabled)
-                        LastCommandLine += i + " ";
+                        LastCommandLine += EtherDevices[i] + " ";
             }
             else
             {
@@ -140,7 +146,7 @@ namespace NiceHashMiner
 
         abstract protected void AddPotentialCDev(string text);
 
-        protected void AddEthereum(string aa)
+        protected void AddEthereum(string match)
         {
             EtherDevices = new int[CDevs.Count];
             try
@@ -149,6 +155,7 @@ namespace NiceHashMiner
                 P.StartInfo.FileName = Ethereum.EtherMinerPath;
                 P.StartInfo.UseShellExecute = false;
                 P.StartInfo.RedirectStandardError = true;
+                P.StartInfo.RedirectStandardOutput = true;
                 P.StartInfo.CreateNoWindow = true;
 
                 string outdata;
@@ -156,32 +163,34 @@ namespace NiceHashMiner
                 P.StartInfo.Arguments = "--list-devices --cuda";
                 P.Start();
 
-                int i = 0;
+                int index = 0, device = 0;
                 do
                 {
-                    outdata = P.StandardError.ReadLine();
-                    if (outdata != null)
+                    outdata = P.StandardOutput.ReadLine();
+                    if (outdata != null && outdata.Contains("GeForce"))
                     {
-                        // Find only the right cards
-                        if (outdata.Contains("GeForce") && outdata.Contains(aa))
-                        {
-                            outdata = P.StandardError.ReadLine();
-                            outdata = P.StandardError.ReadLine();
+                        string compute = P.StandardOutput.ReadLine();
+                        string memory = P.StandardOutput.ReadLine();
 
-                            long memsize = Convert.ToInt64(outdata.Split(':')[1]);
+                        // Find only the right cards
+                        if (compute.Contains(match))
+                        {
+                            EtherDevices[index] = -1;
+                            string [] memsplit = memory.Split(':');
+
+                            long memsize = Convert.ToInt64(memsplit[memsplit.Length - 1]);
                             if (memsize >= 2147483648)
                             {
                                 Helpers.ConsolePrint(MinerDeviceName, "Ethereum GPU MemSize: " + memsize + " (GOOD!)");
-                                EtherDevices[i] = i;
-                                i++;
+                                EtherDevices[index] = device;
+                                index++;
                             }
                             else
                             {
                                 Helpers.ConsolePrint(MinerDeviceName, "Ethereum GPU MemSize: " + memsize + " (NOT GOOD!)");
-                                EtherDevices[i] = -1;
-                                i++;
                             }
                         }
+                        device++;
                     }
                 } while (outdata != null);
 
@@ -219,7 +228,17 @@ namespace NiceHashMiner
                 // Check for ethereum mining
                 if (CDevs.Count != 0)
                 {
-                    if (this is ccminer_sp) AddEthereum(" 9");
+                    if (this is ccminer_sp)
+                    {
+                        Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
+                        AddEthereum("Compute version: 5.2");
+                        AddEthereum("Compute version: 5.0");
+                    }
+                    else if (this is ccminer_tpruvot)
+                    {
+                        Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
+                        AddEthereum("Compute version: 3.0");
+                    }
                 }
             }
             catch (Exception e)

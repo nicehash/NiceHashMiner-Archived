@@ -61,7 +61,7 @@ namespace NiceHashMiner
                 }
             }
 
-            CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName()));
+            CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim()));
         }
 
 

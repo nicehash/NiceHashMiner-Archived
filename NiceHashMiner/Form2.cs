@@ -155,6 +155,7 @@ namespace NiceHashMiner
                 button1.Enabled = true;
                 button2.Enabled = false;
                 button3.Enabled = true;
+                button4.Enabled = true;
             }
         }
 
@@ -184,6 +185,7 @@ namespace NiceHashMiner
             button1.Enabled = false;
             button2.Enabled = true;
             button3.Enabled = false;
+            button4.Enabled = false;
             InitiateBenchmark();
         }
 
@@ -222,6 +224,26 @@ namespace NiceHashMiner
                 int i = (int)e.Item.SubItems[2].Tag;
                 m.SupportedAlgorithms[i].Skip = !e.Item.Checked;
                 Config.RebuildGroups();
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form SubmitResultDialog = new SubmitResultDialog(TimeIndex);
+            SubmitResultDialog.ShowDialog();
+            SubmitResultDialog = null;
+
+            for (int i = 0; i < Form1.Miners.Length; i++)
+            {
+                for (int j = 0; j < Form1.Miners[i].CDevs.Count; j++)
+                {
+                    Form1.Miners[i].CDevs[j].Enabled = true;
+                    for (int k = 0; k < Config.ConfigData.Groups[i].DisabledDevices.Length; k++)
+                    {
+                        if (Config.ConfigData.Groups[i].DisabledDevices[k] == j)
+                            Form1.Miners[i].CDevs[j].Enabled = false;
+                    }
+                }
             }
         }
     }

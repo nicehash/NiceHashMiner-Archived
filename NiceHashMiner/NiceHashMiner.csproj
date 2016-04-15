@@ -70,6 +70,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SubmitResultDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubmitResultDialog.Designer.cs">
+      <DependentUpon>SubmitResultDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="BitcoinAddress.cs" />
     <Compile Include="Bitcoin.cs" />
     <Compile Include="ccminer_sp.cs" />
@@ -123,6 +129,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sgminer.cs" />
+    <EmbeddedResource Include="SubmitResultDialog.resx">
+      <DependentUpon>SubmitResultDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DriverVersionConfirmationDialog.resx">
       <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
     </EmbeddedResource>

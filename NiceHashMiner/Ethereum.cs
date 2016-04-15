@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace NiceHashMiner
 {
-    public class EtherProxy_Proxy
+    public class EtherProxyConfig_Proxy
     {
         public string listen;
         public string clientTimeout;
@@ -19,14 +19,14 @@ namespace NiceHashMiner
         public string largeLuckWindow;
     }
 
-    public class EtherProxy_Frontend
+    public class EtherProxyConfig_Frontend
     {
         public string listen;
         public string login;
         public string password;
     }
 
-    public class EtherProxy_Upstream
+    public class EtherProxyConfig_Upstream
     {
         public bool pool;
         public string name;
@@ -34,24 +34,24 @@ namespace NiceHashMiner
         public string timeout;
     }
 
-    public class EtherProxy
+    public class EtherProxyConfig
     {
         public int threads;
-        public EtherProxy_Proxy proxy;
-        public EtherProxy_Frontend frontend;
+        public EtherProxyConfig_Proxy proxy;
+        public EtherProxyConfig_Frontend frontend;
         public string upstreamCheckInterval;
-        public EtherProxy_Upstream[] upstream;
+        public EtherProxyConfig_Upstream[] upstream;
         public bool newrelicEnabled;
         public string newrelicName;
         public string newrelicKey;
         public bool newrelicVerbose;
 
-        public EtherProxy()
+        public EtherProxyConfig()
         {
             // Set defaults
             threads = 2;
 
-            proxy = new EtherProxy_Proxy();
+            proxy = new EtherProxyConfig_Proxy();
             proxy.listen = "0.0.0.0:" + Config.ConfigData.APIBindPortEthereumProxy;
             proxy.clientTimeout = "5m";
             proxy.blockRefreshInterval = "100ms";
@@ -60,14 +60,14 @@ namespace NiceHashMiner
             proxy.luckWindow = "24h";
             proxy.largeLuckWindow = "72h";
 
-            frontend = new EtherProxy_Frontend();
+            frontend = new EtherProxyConfig_Frontend();
             frontend.listen = "0.0.0.0:" + Config.ConfigData.APIBindPortEthereumFrontEnd;
             frontend.login = "admin";
             frontend.password = "";
             upstreamCheckInterval = "5s";
 
-            upstream = new EtherProxy_Upstream[1];
-            upstream[0] = new EtherProxy_Upstream();
+            upstream = new EtherProxyConfig_Upstream[1];
+            upstream[0] = new EtherProxyConfig_Upstream();
             upstream[0].pool = true;
             upstream[0].name = "NiceHash";
             upstream[0].url = "";
@@ -100,7 +100,7 @@ namespace NiceHashMiner
         public static string EtherProxyPath;
         public static string EtherProxyConfigPath;
         public static int EtherMinerRunning;
-        private static string CurrentBlockNum;
+        public static string CurrentBlockNum;
         private static readonly object _locker;
 
         static Ethereum()
@@ -122,8 +122,8 @@ namespace NiceHashMiner
                     if (writeconfig)
                     {
                         // Prepare and write config file
-                        EtherProxy ep = new EtherProxy();
-                        if (File.Exists(EtherProxyConfigPath)) ep = JsonConvert.DeserializeObject<EtherProxy>(File.ReadAllText(EtherProxyConfigPath));
+                        EtherProxyConfig ep = new EtherProxyConfig();
+                        if (File.Exists(EtherProxyConfigPath)) ep = JsonConvert.DeserializeObject<EtherProxyConfig>(File.ReadAllText(EtherProxyConfigPath));
                         ep.upstream[0].url = "http" + url.Substring(11) + "/n1c3-" + username + "/" + TotalSpeed();
                         try { File.WriteAllText("bin\\ethereum\\" + EtherProxyConfigPath, JsonConvert.SerializeObject(ep, Formatting.Indented)); }
                         catch (Exception e) { Helpers.ConsolePrint("Ethereum", "WriteConfigFile: " + e.ToString()); return false; }
@@ -219,9 +219,44 @@ namespace NiceHashMiner
                 if (!GetCurrentBlock(worker)) throw new Exception("GetCurrentBlock returns null..");
 
                 Helpers.ConsolePrint("Ethereum", "Creating DAG file for " + worker + "..");
+
+                if (worker.Equals("NVIDIA3.x"))
+                {
+                    if (Directory.Exists(Config.ConfigData.DAGDirectory + "\\NVIDIA5.x"))
+                    {
+                        string src = Config.ConfigData.DAGDirectory + "\\NVIDIA5.x";
+                        foreach (var file in Directory.GetFiles(src))
+                        {
+                            string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + worker, Path.GetFileName(file));
+                            if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
+                        }
+                    }
+                }
+                else if (worker.Equals("AMD_OpenCL"))
+                {
+                    if (Directory.Exists(Config.ConfigData.DAGDirectory + "\\NVIDIA5.x"))
+                    {
+                        string src = Config.ConfigData.DAGDirectory + "\\NVIDIA5.x";
+                        foreach (var file in Directory.GetFiles(src))
+                        {
+                            string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + worker, Path.GetFileName(file));
+                            if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
+                        }
+                    }
+                    else if (Directory.Exists(Config.ConfigData.DAGDirectory + "\\NVIDIA3.x"))
+                    {
+                        string src = Config.ConfigData.DAGDirectory + "\\NVIDIA3.x";
+                        foreach (var file in Directory.GetFiles(src))
+                        {
+                            string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + worker, Path.GetFileName(file));
+                            if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
+                        }
+                    }
+                }
+
                 Process P = new Process();
                 P.StartInfo.FileName = EtherMinerPath;
-                P.StartInfo.Arguments = " --dag-dir " + Config.ConfigData.DAGDirectory + " --create-dag " + CurrentBlockNum;
+                P.StartInfo.Arguments = " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + worker + " --create-dag " + CurrentBlockNum;
                 P.StartInfo.CreateNoWindow = Config.ConfigData.HideMiningWindows;
                 P.StartInfo.UseShellExecute = !Config.ConfigData.HideMiningWindows;
                 P.Start();
@@ -229,12 +264,6 @@ namespace NiceHashMiner
 
                 P.Close();
                 P = null;
-
-                foreach (var file in Directory.GetFiles(Config.ConfigData.DAGDirectory))
-                {
-                    string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + worker, Path.GetFileName(file));
-                    if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
-                }
             }
             catch (Exception e)
             {
@@ -267,6 +296,7 @@ namespace NiceHashMiner
             for (int i = 0; i < Config.ConfigData.Groups.Length; i++)
             {
                 if (Config.ConfigData.Groups[i].Name.Equals("NVIDIA5.x") ||
+                    Config.ConfigData.Groups[i].Name.Equals("NVIDIA3.x") ||
                     Config.ConfigData.Groups[i].Name.Equals("AMD_OpenCL"))
                 {
                     for (int j = 0; j < Config.ConfigData.Groups[i].Algorithms.Length; j++)
@@ -278,7 +308,7 @@ namespace NiceHashMiner
             return Convert.ToInt32(totalspeed / 1000000);
         }
 
-        private static bool GetCurrentBlock(string worker)
+        public static bool GetCurrentBlock(string worker)
         {
             string ret = NiceHashStats.GetNiceHashAPIData("https://etherchain.org/api/blocks/count", worker);
             if (ret == null) return false;

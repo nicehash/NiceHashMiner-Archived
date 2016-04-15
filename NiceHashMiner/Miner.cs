@@ -155,6 +155,7 @@ namespace NiceHashMiner
 
             if (EnabledDeviceCount() == 0)
             {
+                Helpers.ConsolePrint("BENCHMARK", "No device to benchmark..");
                 OnBenchmarkComplete(false, "Disabled", tag);
                 return; // ignore, disabled device
             }

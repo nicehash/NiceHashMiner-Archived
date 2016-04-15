@@ -495,7 +495,7 @@ namespace NiceHashMiner
 
         void BalanceCheck_Tick(object sender, EventArgs e)
         {
-            if (VerifyMiningAddress())
+            if (VerifyMiningAddress(false))
             {
                 Helpers.ConsolePrint("NICEHASH", "Balance get");
                 double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim(), textBox1.Text.Trim() + "." + textBox2.Text.Trim());
@@ -612,7 +612,7 @@ namespace NiceHashMiner
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!VerifyMiningAddress()) return;
+            if (!VerifyMiningAddress(true)) return;
 
             int algo = 0;
             // find first working algo
@@ -631,11 +631,16 @@ namespace NiceHashMiner
         }
 
 
-        private bool VerifyMiningAddress()
+        private bool VerifyMiningAddress(bool ShowError)
         {
-            if (!BitcoinAddress.ValidateBitcoinAddress(textBox1.Text.Trim()))
+            if (!BitcoinAddress.ValidateBitcoinAddress(textBox1.Text.Trim()) && ShowError)
             {
-                MessageBox.Show("Invalid Bitcoin address!\n\nPlease, enter valid Bitcoin address.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                DialogResult result = MessageBox.Show("Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one.", "Error",
+                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
+                
+                if (result == System.Windows.Forms.DialogResult.Yes)
+                    System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
+                
                 textBox1.Focus();
                 return false;
             }
@@ -646,7 +651,7 @@ namespace NiceHashMiner
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!VerifyMiningAddress()) return;
+            if (!VerifyMiningAddress(true)) return;
 
             if (NiceHashData == null)
             {
@@ -730,6 +735,7 @@ namespace NiceHashMiner
 
         private void button3_Click(object sender, EventArgs e)
         {
+            if (!VerifyMiningAddress(true)) return;
             Config.ConfigData.Location = comboBox1.SelectedIndex;
 
             SMACheck.Stop();
