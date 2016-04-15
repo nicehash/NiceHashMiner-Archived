@@ -15,7 +15,7 @@ namespace NiceHashMiner
 
             // disable ethereum
             var tmp = new List<Algorithm>(SupportedAlgorithms);
-            tmp.RemoveAt(GetAlgoIndex("ethereum"));   // Remove Ethereum
+            tmp.RemoveAt(GetAlgoIndex("neoscrypt"));   // Remove Neoscrypt
             SupportedAlgorithms = tmp.ToArray();
 
             if (!Config.ConfigData.DisableDetectionNVidia3X)

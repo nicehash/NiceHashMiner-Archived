@@ -111,7 +111,7 @@ namespace NiceHashMiner
 
                 string outdata;
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     P.StartInfo.Arguments = "--gpu-platform " + i + " --ndevs";
                     P.Start();
@@ -228,6 +228,7 @@ namespace NiceHashMiner
 
                 string outdata;
 
+                Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
                 P.StartInfo.Arguments = "--list-devices --opencl";
                 P.Start();
 
@@ -289,7 +290,17 @@ namespace NiceHashMiner
                 CommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
                               " " + ExtraLaunchParameters +
                               " " + Algo.ExtraLaunchParameters +
-                              " --benchmark --benchmark-warmup 10 --benchmark-trial 20";
+                              " --benchmark-warmup 10 --benchmark-trial 20" +
+                              " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
+                              " --opencl-devices ";
+
+                for (int i = 0; i < CDevs.Count; i++)
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled)
+                        CommandLine += i + " ";
+
+                CommandLine += " --benchmark ";
+                if (Ethereum.GetCurrentBlock(MinerDeviceName))
+                    CommandLine += Ethereum.CurrentBlockNum;
             }
             else
             {
@@ -358,10 +369,16 @@ namespace NiceHashMiner
 
                 WorkingDirectory = "";
                 LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
+                                  " --erase-dags old" +
                                   " " + ExtraLaunchParameters +
                                   " " + Algo.ExtraLaunchParameters +
                                   " -F http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumProxy + "/miner/10/" + MinerDeviceName +
-                                  " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName;
+                                  " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
+                                  " --opencl-devices ";
+
+                for (int i = 0; i < CDevs.Count; i++)
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled)
+                        LastCommandLine += i + " ";
             }
             else
             {

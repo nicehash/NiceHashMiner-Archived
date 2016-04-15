@@ -81,7 +81,7 @@ namespace NiceHashMiner
         {
             // Set defaults
             ConfigData = new Config();
-            ConfigData.BitcoinAddress = "17FP4wt5a4vXUi7ugZko4tYvHP8kt41cog";
+            ConfigData.BitcoinAddress = "";
             ConfigData.WorkerName = "worker1";
             ConfigData.Location = 0;
             ConfigData.LessThreads = 0;
@@ -105,9 +105,6 @@ namespace NiceHashMiner
 
             try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
             catch { }
-
-            // Randomly choose a BTC address if the user has not set their own address
-            ConfigBitcoinAddress();
 
             if (ConfigData.SwitchMinSecondsFixed <= 0)
                 ConfigData.SwitchMinSecondsFixed = 15 * 60;
@@ -172,31 +169,6 @@ namespace NiceHashMiner
             }
             ConfigData.Groups = CG;
             Config.Commit();
-        }
-
-        private static void ConfigBitcoinAddress()
-        {
-            string [] BTCAddresses = new string[] {
-                "17FP4wt5a4vXUi7ugZko4tYvHP8kt41cog",
-                "1DQ4bZpFTDiSNk2CWLEFWK9K96rBFP2Hv", 
-                "12yquZ6eHtzb2iHVWSy2x6A5eijEguoqHh",
-                "125YWPgnkJci9NVPhMNcSiWzcNvjPGGSPm",
-                "1CzrFvvieNaZg5aMHkb8eAPCSeVVUfUpax",
-                "1GiEJQ9uvW61ujj9ueYP82eZLUFoAQDexg",
-                "15RftPa3oWyNSrn2LyVR1EqBcd9wN8HzSk",
-                "16reQmccDd7uH1J5BDVDX2XTUiTh9QHJQw",
-                "1K8gCBmr5XrDqq9hvKszWgikWScZnQxzUP",
-                "1Dqd1dx9WW7Y1gqE4pvYs5BLLtnDYqR49D",
-                "1Ngs8MDXArNJaXkwitihuGbsEbYFLBfTFX"};
-
-            for (int i = 0; i < BTCAddresses.Length; i++)
-            {
-                if (ConfigData.BitcoinAddress.Equals(BTCAddresses[i]))
-                {
-                    ConfigData.BitcoinAddress = BTCAddresses[new Random().Next(0, BTCAddresses.Length)];
-                    break;
-                }
-            }
         }
     }
 }
