@@ -815,5 +815,14 @@ namespace NiceHashMiner
         {
             statusStrip1.Cursor = Cursors.Default;
         }
+
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+            // Commit to config.json
+            Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();
+            Config.ConfigData.WorkerName = textBox2.Text.Trim();
+            Config.ConfigData.Location = comboBox1.SelectedIndex;
+            Config.Commit();
+        }
     }
 }

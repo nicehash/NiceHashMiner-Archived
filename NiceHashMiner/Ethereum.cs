@@ -218,7 +218,9 @@ namespace NiceHashMiner
             {
                 if (!GetCurrentBlock(worker)) throw new Exception("GetCurrentBlock returns null..");
 
-                Helpers.ConsolePrint("Ethereum", "Creating DAG file for " + worker + "..");
+                // Check if dag-dir exist to avoid ethminer from crashing
+                Helpers.ConsolePrint("Ethereum", "Creating DAG directory for " + worker + "..");
+                if (!CreateDAGDirectory(worker)) throw new Exception("[" + worker + "] Cannot create directory for DAG files.");
 
                 if (worker.Equals("NVIDIA3.x"))
                 {
@@ -254,6 +256,8 @@ namespace NiceHashMiner
                     }
                 }
 
+                Helpers.ConsolePrint("Ethereum", "Creating DAG file for " + worker + "..");
+
                 Process P = new Process();
                 P.StartInfo.FileName = EtherMinerPath;
                 P.StartInfo.Arguments = " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + worker + " --create-dag " + CurrentBlockNum;
@@ -274,6 +278,18 @@ namespace NiceHashMiner
             return true;
         }
 
+        public static bool CreateDAGDirectory(string worker)
+        {
+            try
+            {
+                if (!Directory.Exists(Config.ConfigData.DAGDirectory + "\\" + worker))
+                    Directory.CreateDirectory(Config.ConfigData.DAGDirectory + "\\" + worker);
+            }
+            catch { return false; }
+
+            return true;
+        }
+        
         private static bool KillAllRunningProxy()
         {
             Process[] check = Process.GetProcessesByName("ether-proxy");

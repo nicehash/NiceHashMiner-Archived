@@ -43,8 +43,8 @@
             this.CloseBtn.Location = new System.Drawing.Point(396, 223);
             this.CloseBtn.Name = "CloseBtn";
             this.CloseBtn.Size = new System.Drawing.Size(75, 23);
-            this.CloseBtn.TabIndex = 0;
-            this.CloseBtn.Text = "Close";
+            this.CloseBtn.TabIndex = 2;
+            this.CloseBtn.Text = "&Close";
             this.CloseBtn.UseVisualStyleBackColor = true;
             this.CloseBtn.Click += new System.EventHandler(this.CloseBtn_Click);
             // 
@@ -53,8 +53,8 @@
             this.BenchmarkBtn.Location = new System.Drawing.Point(315, 223);
             this.BenchmarkBtn.Name = "BenchmarkBtn";
             this.BenchmarkBtn.Size = new System.Drawing.Size(75, 23);
-            this.BenchmarkBtn.TabIndex = 2;
-            this.BenchmarkBtn.Text = "Start";
+            this.BenchmarkBtn.TabIndex = 1;
+            this.BenchmarkBtn.Text = "&Start";
             this.BenchmarkBtn.UseVisualStyleBackColor = true;
             this.BenchmarkBtn.Click += new System.EventHandler(this.BenchmarkBtn_Click);
             // 
@@ -70,7 +70,7 @@
             this.DevicesListView.MultiSelect = false;
             this.DevicesListView.Name = "DevicesListView";
             this.DevicesListView.Size = new System.Drawing.Size(455, 136);
-            this.DevicesListView.TabIndex = 1;
+            this.DevicesListView.TabIndex = 0;
             this.DevicesListView.UseCompatibleStateImageBehavior = false;
             this.DevicesListView.View = System.Windows.Forms.View.Details;
             // 
@@ -89,7 +89,7 @@
             this.BenchmarkProgressBar.Location = new System.Drawing.Point(16, 191);
             this.BenchmarkProgressBar.Maximum = 10;
             this.BenchmarkProgressBar.Name = "BenchmarkProgressBar";
-            this.BenchmarkProgressBar.Size = new System.Drawing.Size(374, 23);
+            this.BenchmarkProgressBar.Size = new System.Drawing.Size(455, 23);
             this.BenchmarkProgressBar.Step = 1;
             this.BenchmarkProgressBar.TabIndex = 3;
             // 
@@ -108,9 +108,9 @@
             // 
             this.LabelProgressPercentage.BackColor = System.Drawing.SystemColors.Control;
             this.LabelProgressPercentage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelProgressPercentage.Location = new System.Drawing.Point(397, 191);
+            this.LabelProgressPercentage.Location = new System.Drawing.Point(16, 223);
             this.LabelProgressPercentage.Name = "LabelProgressPercentage";
-            this.LabelProgressPercentage.Size = new System.Drawing.Size(74, 23);
+            this.LabelProgressPercentage.Size = new System.Drawing.Size(293, 23);
             this.LabelProgressPercentage.TabIndex = 5;
             this.LabelProgressPercentage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 

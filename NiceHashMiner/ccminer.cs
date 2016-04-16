@@ -52,6 +52,9 @@ namespace NiceHashMiner
                 CommandLine += " --benchmark ";
                 if (Ethereum.GetCurrentBlock(MinerDeviceName))
                     CommandLine += Ethereum.CurrentBlockNum;
+
+                // Check if dag-dir exist to avoid ethminer from crashing
+                if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return "";
             }
             else
             {
@@ -88,10 +91,6 @@ namespace NiceHashMiner
             if (Algo.NiceHashName.Equals("ethereum"))
             {
                 StartingUpDelay = true;
-
-                // Check if dag-dir exist to avoid ethminer from crashing
-                if (!Directory.Exists(Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName))
-                    Directory.CreateDirectory(Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName);
 
                 // Create DAG file ahead of time
                 if (!Ethereum.CreateDAGFile(MinerDeviceName)) return;

@@ -12,6 +12,7 @@ namespace NiceHashMiner
     {
         private bool InBenchmark;
         private int Time, TimeIndex, DeviceChecked_Index;
+        private string CurrentAlgoName;
         private Miner mm;
 
         public SubmitResultDialog(int tI)
@@ -60,10 +61,6 @@ namespace NiceHashMiner
                 if (DevicesListView.Items[i].Selected)
                 {
                     DeviceChecked = true;
-                    //Helpers.ConsolePrint("DEBUG TEXT", "SubItems0: " + DevicesListView.Items[i].SubItems[0].Text);
-                    //Helpers.ConsolePrint("DEBUG TEXT", "SubItems1: " + DevicesListView.Items[i].SubItems[1].Text);
-                    //Helpers.ConsolePrint("DEBUG TEXT", "SubItems2: " + DevicesListView.Items[i].SubItems[2].Text);
-                    //Helpers.ConsolePrint("DEBUG TEXT", "SubItems3: " + DevicesListView.Items[i].SubItems[3].Text);
                     Int32.TryParse(DevicesListView.Items[i].SubItems[2].Text, out DeviceChecked_Index);
 
                     mm = DevicesListView.Items[i].Tag as Miner;
@@ -87,7 +84,6 @@ namespace NiceHashMiner
             // Temporarily disable the other ComputeDevices in the same Group
             for (int i = 0; i < mm.CDevs.Count; i++)
             {
-                Helpers.ConsolePrint("DEBUG", "ID: " + mm.CDevs[i].ID + " .. DeviceChecked_Index: " + DeviceChecked_Index);
                 if (mm.CDevs[i].ID != DeviceChecked_Index)
                     mm.CDevs[i].Enabled = false;
                 else
@@ -96,10 +92,8 @@ namespace NiceHashMiner
 
             index = 0;
 
-            Helpers.ConsolePrint("DEBUG", "Items.Count: " + DevicesListView.Items.Count);
             BenchmarkProgressBar.Maximum = mm.SupportedAlgorithms.Length;
 
-            Helpers.ConsolePrint("DEBUG", "Index: " + index + " .. algo: " + mm.SupportedAlgorithms[index].NiceHashName + " .. length: " + mm.SupportedAlgorithms.Length);
             url = "https://www.nicehash.com/?p=calc&name=" + DeviceName;
             InitiateBenchmark();
         }
@@ -114,8 +108,6 @@ namespace NiceHashMiner
 
             if (algoIndex < mm.SupportedAlgorithms.Length)
             {
-                Helpers.ConsolePrint("DEBUG IN", "algoIndex: " + algoIndex + " .. algo: " + mm.SupportedAlgorithms[algoIndex].NiceHashName + " .. NiceHashID: " + mm.SupportedAlgorithms[algoIndex].NiceHashID); //9
-
                 if (!mm.SupportedAlgorithms[algoIndex].Skip)
                 {
                     if (mm is cpuminer)
@@ -131,19 +123,18 @@ namespace NiceHashMiner
                             Time += 1;
                     }
 
-                    Helpers.ConsolePrint("DEBUG IN", "Benchmark should be starting here.. algoIndex: " + algoIndex + " .. Time: " + Time);
+                    CurrentAlgoName = mm.SupportedAlgorithms[algoIndex].NiceHashName;
+                    UpdateProgressBar(false);
                     mm.BenchmarkStart(algoIndex, Time, BenchmarkCompleted, DevicesListView.Items[DeviceChecked_Index].Tag);
                 }
                 else
                 {
-                    Helpers.ConsolePrint("DEBUG IN", "ELSE PART");
-                    UpdateProgressBar();
+                    UpdateProgressBar(true);
                     InitiateBenchmark();
                 }
             }
             else
             {
-                Helpers.ConsolePrint("DEBUG", "DONE!!");
                 double[] div = { 1000000, // Scrypt MH/s
                                  1000000000000, // SHA256 TH/s
                                  1000000, // ScryptNf MH/s
@@ -169,7 +160,6 @@ namespace NiceHashMiner
                 {
                     if (!mm.SupportedAlgorithms[i].Skip)
                     {
-                        Helpers.ConsolePrint("DEBUG", "Algo: " + mm.SupportedAlgorithms[i].NiceHashName + " .. Speed: " + mm.SupportedAlgorithms[i].BenchmarkSpeed);
                         int id = mm.SupportedAlgorithms[i].NiceHashID;
                         if (!mm.SupportedAlgorithms[i].NiceHashName.Equals("ethereum"))
                         {
@@ -189,7 +179,6 @@ namespace NiceHashMiner
                 BenchmarkProgressBar.Value = 0;
                 LabelProgressPercentage.Text = "Completed!";
 
-                //Helpers.ConsolePrint("DEBUG", "Now it is really done .. url: " + url + " .. escaped: " + Uri.EscapeDataString(url));
                 if (mm.BenchmarkSignalQuit)
                 {
                     LabelProgressPercentage.Text = "Stopped!";
@@ -204,7 +193,7 @@ namespace NiceHashMiner
         {
             if (this.InvokeRequired)
             {
-                UpdateProgressBar();
+                UpdateProgressBar(true);
                 BenchmarkComplete d = new BenchmarkComplete(BenchmarkCompleted);
                 this.Invoke(d, new object[] { success, text, tag });
             }
@@ -214,10 +203,11 @@ namespace NiceHashMiner
             }
         }
 
-        private void UpdateProgressBar()
+        private void UpdateProgressBar(bool step)
         {
-            BenchmarkProgressBar.PerformStep();
-            LabelProgressPercentage.Text = ((double)((double)BenchmarkProgressBar.Value / (double)BenchmarkProgressBar.Maximum) * 100).ToString("F2") + "%";
+            if (step) BenchmarkProgressBar.PerformStep();
+            LabelProgressPercentage.Text = ((double)((double)BenchmarkProgressBar.Value / (double)BenchmarkProgressBar.Maximum) * 100).ToString("F2") + "%" + 
+                                           " : Benchmarking " + CurrentAlgoName + ".. Please wait..";
         }
     }
 }
