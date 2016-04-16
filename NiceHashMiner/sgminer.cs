@@ -301,6 +301,9 @@ namespace NiceHashMiner
                 CommandLine += " --benchmark ";
                 if (Ethereum.GetCurrentBlock(MinerDeviceName))
                     CommandLine += Ethereum.CurrentBlockNum;
+
+                // Check if dag-dir exist to avoid ethminer from crashing
+                if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return "";
             }
             else
             {
