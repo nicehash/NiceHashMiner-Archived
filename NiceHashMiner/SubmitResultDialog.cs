@@ -80,6 +80,17 @@ namespace NiceHashMiner
             CloseBtn.Enabled = false;
             BenchmarkBtn.Text = "Stop";
             LabelProgressPercentage.Text = "0.00%";
+            index = 0;
+
+            Helpers.ConsolePrint("SubmitResultDialog", "Number of Devices: " + mm.CDevs.Count);
+            if (mm.CDevs.Count == 1 && mm.CountBenchmarkedAlgos() != 0)
+            {
+                DialogResult result = MessageBox.Show("You could use previously benchmarked values. Choose Yes to use previously benchmarked " +
+                                                      "values or choose No to re-run the benchmark?", "Use previously benchmarked values?",
+                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == System.Windows.Forms.DialogResult.Yes) index = 9999;
+            }
 
             // Temporarily disable the other ComputeDevices in the same Group
             for (int i = 0; i < mm.CDevs.Count; i++)
@@ -90,9 +101,34 @@ namespace NiceHashMiner
                     mm.CDevs[i].Enabled = true;
             }
 
-            index = 0;
-
             BenchmarkProgressBar.Maximum = mm.SupportedAlgorithms.Length;
+
+            // Parse GPU name
+            Helpers.ConsolePrint("SubmitResultDialog", "Old DeviceName: " + DeviceName);
+            if (DeviceName.Contains("GeForce") || DeviceName.Contains("GTX") || DeviceName.Contains("GT"))
+            {
+                string [] DeviceNameSplit = DeviceName.Split(' ');
+
+                for (int i = 0; i < DeviceNameSplit.Length; i++)
+                {
+                    Helpers.ConsolePrint("DEBUG", "DeviceNameSplit[" + i + "]: " + DeviceNameSplit[i]);
+
+                    if (DeviceNameSplit[i].Equals("GT") || DeviceNameSplit[i].Equals("GTX"))
+                    {
+                        if ((i + 2) <= DeviceNameSplit.Length)
+                        {
+                            DeviceName = "NVIDIA " + DeviceNameSplit[i] + DeviceNameSplit[i + 1];
+                            for (int j = i + 2; j < DeviceNameSplit.Length; j++)
+                            {
+                                DeviceName += " " + DeviceNameSplit[j];
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            }
+            Helpers.ConsolePrint("SubmitResultDialog", "New DeviceName: " + DeviceName);
 
             url = "https://www.nicehash.com/?p=calc&name=" + DeviceName;
             InitiateBenchmark();

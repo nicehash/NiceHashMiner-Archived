@@ -212,7 +212,7 @@ namespace NiceHashMiner
             }
         }
 
-        public static bool CreateDAGFile(string worker)
+        public static bool CreateDAGFile(bool HideWindow, string worker)
         {
             try
             {
@@ -261,8 +261,8 @@ namespace NiceHashMiner
                 Process P = new Process();
                 P.StartInfo.FileName = EtherMinerPath;
                 P.StartInfo.Arguments = " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + worker + " --create-dag " + CurrentBlockNum;
-                P.StartInfo.CreateNoWindow = Config.ConfigData.HideMiningWindows;
-                P.StartInfo.UseShellExecute = !Config.ConfigData.HideMiningWindows;
+                P.StartInfo.CreateNoWindow = HideWindow;
+                P.StartInfo.UseShellExecute = !HideWindow;
                 P.Start();
                 P.WaitForExit();
 

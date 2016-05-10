@@ -92,9 +92,23 @@ namespace NiceHashMiner
                 CurrentlyBenchmarking = m;
 
                 if (m is cpuminer)
+                {
                     Time = Config.ConfigData.BenchmarkTimeLimitsCPU[TimeIndex];
+                    lvi.SubItems[3].Text = "Please wait about " + Time + " seconds...";
+                }
                 else if (m is ccminer)
+                {
                     Time = Config.ConfigData.BenchmarkTimeLimitsNVIDIA[TimeIndex];
+                    
+                    if (lvi.SubItems[2].Text.Equals("ethereum"))
+                    {
+                        lvi.SubItems[3].Text = "Creating DAG file (10-20 minutes)..";
+                        if (Ethereum.CreateDAGFile(true, m.MinerDeviceName) == false) return;
+                        lvi.SubItems[3].Text = "Benchmarking (2-4 minutes)...";
+                    }
+                    else
+                        lvi.SubItems[3].Text = "Please wait about " + Time + " seconds...";
+                }
                 else
                 {
                     Time = Config.ConfigData.BenchmarkTimeLimitsAMD[TimeIndex] / 60;
@@ -102,6 +116,15 @@ namespace NiceHashMiner
                     // add an aditional minute if second is not 0
                     if (DateTime.Now.Second != 0)
                         Time += 1;
+
+                    if (lvi.SubItems[2].Text.Equals("ethereum"))
+                    {
+                        lvi.SubItems[3].Text = "Creating DAG file (10-20 minutes)..";
+                        if (Ethereum.CreateDAGFile(true, m.MinerDeviceName) == false) return;
+                        lvi.SubItems[3].Text = "Benchmarking (2-4 minutes)...";
+                    }
+                    else
+                        lvi.SubItems[3].Text = "Please wait about " + Time + " minutes...";
                 }
 
                 m.BenchmarkStart(i, Time, BenchmarkCompleted, lvi);

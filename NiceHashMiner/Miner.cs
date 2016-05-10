@@ -704,5 +704,18 @@ namespace NiceHashMiner
 
             return false;
         }
+
+        public int CountBenchmarkedAlgos()
+        {
+            int count = 0;
+
+            for (int i = 0; i < SupportedAlgorithms.Length; i++)
+            {
+                if (SupportedAlgorithms[i].BenchmarkSpeed > 0)
+                    count++;
+            }
+
+            return count;
+        }
     }
 }

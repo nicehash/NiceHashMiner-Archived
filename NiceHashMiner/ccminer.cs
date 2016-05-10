@@ -93,7 +93,7 @@ namespace NiceHashMiner
                 StartingUpDelay = true;
 
                 // Create DAG file ahead of time
-                if (!Ethereum.CreateDAGFile(MinerDeviceName)) return;
+                if (!Ethereum.CreateDAGFile(Config.ConfigData.HideMiningWindows, MinerDeviceName)) return;
 
                 // Starts up ether-proxy
                 if (!Ethereum.StartProxy(true, url, username)) return;

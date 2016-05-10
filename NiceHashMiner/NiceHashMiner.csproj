@@ -173,6 +173,7 @@
   <ItemGroup>
     <Content Include="Resources\logo.ico" />
     <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
+    <None Include="logo.ico" />
     <Content Include="Resources\NHM_help_50px.png" />
   </ItemGroup>
   <ItemGroup>
