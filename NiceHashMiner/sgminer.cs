@@ -197,6 +197,18 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint(MinerDeviceName, "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
                             "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
                     }
+                    else if (AMDDriverVersion.Major == 16 && AMDDriverVersion.Minor >= 150)
+                    {
+                        string src = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\" +
+                                     Path.Split('\\')[0] + "\\" + Path.Split('\\')[1] + "\\kernel";
+
+                        foreach (var file in Directory.GetFiles(src))
+                        {
+                            Helpers.ConsolePrint("DEBUG", "Path: " + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+                            string dest = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\" + System.IO.Path.GetFileName(file);
+                            if (!File.Exists(dest)) File.Copy(file, dest, false);
+                        }
+                    }
                 }
             }
 
@@ -365,7 +377,7 @@ namespace NiceHashMiner
                     Directory.CreateDirectory(Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName);
 
                 // Create DAG file ahead of time
-                if (!Ethereum.CreateDAGFile(MinerDeviceName)) return;
+                if (!Ethereum.CreateDAGFile(Config.ConfigData.HideMiningWindows, MinerDeviceName)) return;
 
                 // Starts up ether-proxy
                 if (!Ethereum.StartProxy(true, url, username)) return;

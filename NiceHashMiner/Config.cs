@@ -47,6 +47,7 @@ namespace NiceHashMiner
         public int Location;
         public bool AutoStartMining;
         public bool HideMiningWindows;
+        public bool MinimizeToTray;
         public int LessThreads;
         public int ForceCPUExtension; // 0 - automatic, 1 - SSE2, 2 - AVX, 3 - AVX2
         public int SwitchMinSecondsFixed;
@@ -88,6 +89,7 @@ namespace NiceHashMiner
             ConfigData.Groups = new Group[0];
             ConfigData.DebugConsole = false;
             ConfigData.HideMiningWindows = false;
+            ConfigData.MinimizeToTray = false;
             ConfigData.AutoStartMining = false;
             ConfigData.DisableDetectionNVidia5X = false;
             ConfigData.DisableDetectionNVidia3X = false;

@@ -655,8 +655,27 @@ namespace NiceHashMiner
 
             if (NiceHashData == null)
             {
-                MessageBox.Show("Unable to get NiceHash profitability data. If you are connected to internet, try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to get NiceHash profitability data. If you are connected to internet, try again later.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+
+            // Check if the user has run benchmark first
+            foreach (Miner m in Miners)
+            {
+                if (m.EnabledDeviceCount() == 0) continue;
+
+                if (m.CountBenchmarkedAlgos() == 0)
+                {
+                    DialogResult result = MessageBox.Show("You have not yet run the benchmark for device " + m.MinerDeviceName + ". " +
+                                                          "Without running the benchmark, NiceHashMiner will not be able to switch to " +
+                                                          "the most profitable algo. To continue mining, choose Yes. If you wish to benchmark " +
+                                                          "first, choose No and click on the benchmark button.", "Error!",
+                                                          MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+                    if (result == System.Windows.Forms.DialogResult.Yes) break;
+                    if (result == System.Windows.Forms.DialogResult.No) return;
+                }
             }
 
             textBox1.Enabled = false;
@@ -823,6 +842,25 @@ namespace NiceHashMiner
             Config.ConfigData.WorkerName = textBox2.Text.Trim();
             Config.ConfigData.Location = comboBox1.SelectedIndex;
             Config.Commit();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            notifyIcon1.Icon = Properties.Resources.logo;
+            notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion + "\nDouble-click to restore..";
+
+            if (Config.ConfigData.MinimizeToTray && FormWindowState.Minimized == this.WindowState)
+            {
+                notifyIcon1.Visible = true;
+                this.Hide();
+            }
+        }
+
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
         }
     }
 }

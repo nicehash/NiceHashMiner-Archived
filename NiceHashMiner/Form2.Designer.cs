@@ -55,10 +55,10 @@
             this.columnHeader3});
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
-            this.listView1.Location = new System.Drawing.Point(1, 128);
+            this.listView1.Location = new System.Drawing.Point(1, 145);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(392, 336);
+            this.listView1.Size = new System.Drawing.Size(462, 337);
             this.listView1.TabIndex = 6;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -72,24 +72,24 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Device";
-            this.columnHeader1.Width = 95;
+            this.columnHeader1.Width = 83;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Algorithm";
-            this.columnHeader2.Width = 106;
+            this.columnHeader2.Width = 85;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "Speed";
             this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeader3.Width = 113;
+            this.columnHeader3.Width = 197;
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(12, 12);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 23);
+            this.button1.Size = new System.Drawing.Size(107, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "Start &benchmark";
             this.button1.UseVisualStyleBackColor = true;
@@ -100,7 +100,7 @@
             this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(12, 41);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(102, 23);
+            this.button2.Size = new System.Drawing.Size(107, 23);
             this.button2.TabIndex = 1;
             this.button2.Text = "St&op benchmark";
             this.button2.UseVisualStyleBackColor = true;
@@ -143,9 +143,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(12, 99);
+            this.button3.Location = new System.Drawing.Point(12, 111);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(102, 23);
+            this.button3.Size = new System.Drawing.Size(107, 23);
             this.button3.TabIndex = 2;
             this.button3.Text = "&Reset";
             this.button3.UseVisualStyleBackColor = true;
@@ -155,9 +155,9 @@
             // 
             this.button4.Location = new System.Drawing.Point(12, 70);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(102, 23);
+            this.button4.Size = new System.Drawing.Size(107, 35);
             this.button4.TabIndex = 7;
-            this.button4.Text = "Sub&mit result";
+            this.button4.Text = "Check &profitability /\r\nSubmit result";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -165,7 +165,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(394, 466);
+            this.ClientSize = new System.Drawing.Size(464, 484);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.radioButton3);
@@ -176,7 +176,7 @@
             this.Controls.Add(this.listView1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(410, 200);
+            this.MinimumSize = new System.Drawing.Size(480, 200);
             this.Name = "Form2";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
