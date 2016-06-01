@@ -21,6 +21,7 @@ namespace NiceHashMiner
         public string ExtraLaunchParameters;
         public string UsePassword;
         public bool Skip;
+        public bool[] DisabledDevice;
 
         public Algorithm(int id, string nhname, string mname)
         {
@@ -80,14 +81,16 @@ namespace NiceHashMiner
         public Algorithm[] SupportedAlgorithms;
         public string ExtraLaunchParameters;
         public string UsePassword;
+        public double MinimumProfit;
         public int CurrentAlgo;
         public double CurrentRate;
+        public bool NotProfitable;
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
         public int NumRetries;
         public bool StartingUpDelay;
+        public string Path;
 
-        protected string Path;
         protected int[] EtherDevices;
         protected string WorkingDirectory;
         protected Process ProcessHandle;
@@ -109,6 +112,7 @@ namespace NiceHashMiner
 
             CurrentAlgo = -1;
             CurrentRate = 0;
+            NotProfitable = false;
             PreviousTotalMH = 0.0;
         }
 
@@ -280,6 +284,35 @@ namespace NiceHashMiner
                 {
                     string outdata = BenchmarkHandle.StandardOutput.ReadToEnd();
                     BenchmarkParseLine(outdata);
+                }
+                else if (this is cpuminer && AlgoNameIs("hodl"))
+                {
+                    int count = BenchmarkTime / 5;
+                    double total = 0, tmp;
+
+                    while (count > 0)
+                    {
+                        string outdata = BenchmarkHandle.StandardError.ReadLine();
+                        if (outdata != null)
+                        {
+                            if (outdata.Contains("Total: "))
+                            {
+                                int st = outdata.IndexOf("Total:") + 7;
+                                int len = outdata.Length - 6 - st;
+
+                                string parse = outdata.Substring(st, len).Trim();
+                                Double.TryParse(parse, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp);
+                                total += tmp;
+                                count--;
+                            }
+                        }
+                        if (BenchmarkSignalQuit)
+                            throw new Exception("Termined by user request");
+                    }
+
+                    double spd = total / (BenchmarkTime / 5);
+                    SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
+                    OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
                 }
                 else
                 {
@@ -683,6 +716,12 @@ namespace NiceHashMiner
                 }
             }
 
+            if (MaxProfit < MinimumProfit)
+                NotProfitable = true;
+            else
+                NotProfitable = false;
+
+
             return MaxProfitIndex;
         }
 
@@ -716,6 +755,18 @@ namespace NiceHashMiner
             }
 
             return count;
+        }
+
+        public void GetDisabledDevicePerAlgo()
+        {
+            for (int i = 0; i < SupportedAlgorithms.Length; i++)
+            {
+                SupportedAlgorithms[i].DisabledDevice = new bool[CDevs.Count];
+                for (int j = 0; j < CDevs.Count; j++)
+                {
+                    SupportedAlgorithms[i].DisabledDevice[j] = false;
+                }
+            }
         }
     }
 }

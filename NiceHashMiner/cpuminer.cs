@@ -10,7 +10,8 @@ namespace NiceHashMiner
     {
         private int Threads;
         private ulong AffinityMask;
-
+        private string CPUMinerPath;
+        private string HodlMinerPath;
 
         public cpuminer(int id, int threads, ulong affinity)
         {
@@ -22,22 +23,26 @@ namespace NiceHashMiner
             SupportedAlgorithms = new Algorithm[] { 
                     new Algorithm(9, "lyra2re", "lyra2"),
                     new Algorithm(13, "axiom", "axiom"),
-                    new Algorithm(15, "scryptjanenf16", "scryptjane:16")
+                    new Algorithm(15, "scryptjanenf16", "scryptjane:16"),
+                    new Algorithm(19, "hodl", "hodl")
                 };
 
             if (Config.ConfigData.ForceCPUExtension > 0)
             {
                 if (Config.ConfigData.ForceCPUExtension == 1)
                 {
-                    Path = "bin\\cpuminer_x64_SSE2.exe";
+                    CPUMinerPath = "bin\\cpuminer_x64_SSE2.exe";
+                    HodlMinerPath = "bin\\hodlminer\\hodlminer_core2.exe";
                 }
                 else if (Config.ConfigData.ForceCPUExtension == 2)
                 {
-                    Path = "bin\\cpuminer_x64_AVX.exe";
+                    CPUMinerPath = "bin\\cpuminer_x64_AVX.exe";
+                    HodlMinerPath = "bin\\hodlminer\\hodlminer_corei7_avx.exe";
                 }
                 else
                 {
-                    Path = "bin\\cpuminer_x64_AVX2.exe";
+                    CPUMinerPath = "bin\\cpuminer_x64_AVX2.exe";
+                    HodlMinerPath = "bin\\hodlminer\\hodlminer_core_avx2.exe";
                 }
             }
             else
@@ -50,14 +55,19 @@ namespace NiceHashMiner
                         if (CPUID.SupportsSSE2() == 0)
                             return;
 
-                        Path = "bin\\cpuminer_x64_SSE2.exe";
+                        CPUMinerPath = "bin\\cpuminer_x64_SSE2.exe";
+                        HodlMinerPath = "bin\\hodlminer\\hodlminer_core2.exe";
                     }
                     else
-                        Path = "bin\\cpuminer_x64_AVX.exe";
+                    {
+                        CPUMinerPath = "bin\\cpuminer_x64_AVX.exe";
+                        HodlMinerPath = "bin\\hodlminer\\hodlminer_corei7_avx.exe";
+                    }
                 }
                 else
                 {
-                    Path = "bin\\cpuminer_x64_AVX2.exe";
+                    CPUMinerPath = "bin\\cpuminer_x64_AVX2.exe";
+                    HodlMinerPath = "bin\\hodlminer\\hodlminer_core_avx2.exe";
                 }
             }
 
@@ -74,12 +84,19 @@ namespace NiceHashMiner
 
         protected override string BenchmarkCreateCommandLine(int index, int time)
         {
-            return "--algo=" + SupportedAlgorithms[index].MinerName + 
-                   " --benchmark" + 
-                   " --time-limit " + time.ToString() +
-                   " --threads=" + Threads.ToString() +
-                   " " + ExtraLaunchParameters + 
-                   " " + SupportedAlgorithms[index].ExtraLaunchParameters;
+            Path = CPUMinerPath;
+            if (SupportedAlgorithms[index].NiceHashName.Equals("hodl")) Path = HodlMinerPath;
+
+            string ret = "--algo=" + SupportedAlgorithms[index].MinerName + 
+                         " --benchmark" + 
+                         " --threads=" + Threads.ToString() +
+                         " " + ExtraLaunchParameters + 
+                         " " + SupportedAlgorithms[index].ExtraLaunchParameters;
+
+            if (!SupportedAlgorithms[index].NiceHashName.Equals("hodl"))
+                ret += " --time-limit " + time.ToString();
+
+            return ret;
         }
 
 
@@ -103,13 +120,18 @@ namespace NiceHashMiner
             Algorithm Algo = GetMinerAlgorithm(nhalgo);
             if (Algo == null) return;
 
+            Path = CPUMinerPath;
+            if (Algo.NiceHashName.Equals("hodl")) Path = HodlMinerPath;
+
             LastCommandLine = "--algo=" + Algo.MinerName + 
                               " --url=" + url + 
                               " --userpass=" + username + ":" + GetPassword(Algo) + 
-                              " --api-bind=" + APIPort.ToString() + 
                               " --threads=" + Threads.ToString() + 
                               " " + ExtraLaunchParameters + 
                               " " + Algo.ExtraLaunchParameters;
+
+            if (!Algo.NiceHashName.Equals("hodl"))
+                LastCommandLine += " --api-bind=" + APIPort.ToString();
 
             ProcessHandle = _Start();
         }

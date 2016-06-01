@@ -657,21 +657,17 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel6;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel7;
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel9;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader0;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
@@ -711,6 +707,10 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel10;
         private System.Windows.Forms.LinkLabel linkLabel_Choose_BTC_Wallet;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        public System.Windows.Forms.TextBox textBox1;
+        public System.Windows.Forms.ComboBox comboBox1;
+        public System.Windows.Forms.TextBox textBox2;
+        public System.Windows.Forms.ListView listView1;
     }
 }
 

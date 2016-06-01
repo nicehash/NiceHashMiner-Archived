@@ -15,6 +15,7 @@ namespace NiceHashMiner
     {
         bool EnableOptimizedVersion;
         int PlatformDevices, tmpPlatformDevices, GPUPlatformNumber;
+        List<string> GPUCodeName;
         const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 ";
         const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90" +
                                         " --temp-target 75 --auto-fan --auto-gpu";
@@ -35,15 +36,17 @@ namespace NiceHashMiner
                 new Algorithm(16, "blake256r8", "blakecoin",  DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
                 new Algorithm(17, "blake256r14",   "blake",   DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
                 new Algorithm(18, "blake256r8vnl", "vanilla", DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
-                new Algorithm(19, "ethereum", "ethereum", "--cl-global-work 16384 --cl-local-work 128")
+                new Algorithm(21, "decred", "decred", "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64"),
+                new Algorithm(22, "ethereum", "ethereum", "--cl-global-work 16384 --cl-local-work 128")
             };
 
             MinerDeviceName = "AMD_OpenCL";
-            Path = "bin\\sgminer-5-3-0-general\\sgminer.exe";
+            Path = "bin\\sgminer-5-4-0-general\\sgminer.exe";
             APIPort = 4050;
             EnableOptimizedVersion = true;
             PlatformDevices = 0;
             GPUPlatformNumber = 0;
+            GPUCodeName = new List<string>();
 
             if (!Config.ConfigData.DisableDetectionAMD)
                 QueryCDevs();
@@ -64,24 +67,11 @@ namespace NiceHashMiner
                 return;
             }
 
-            // check the card's code name
+            // gets all the card's code name
             if (PlatformDevices > 0)
             {
                 PlatformDevices--;
-                
-                if (!text.Contains("Tahiti"))
-                {
-                    SupportedAlgorithms[GetAlgoIndex("neoscrypt")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
-                    Helpers.ConsolePrint(MinerDeviceName, "The GPU detected (" + text.Substring(14) + ") is not Tahiti. Optimized version is disabled and changing default gpu-threads to 2.");
-                }
-
-                if (!(text.Contains("Tahiti") || text.Contains("Hawaii") || text.Contains("Pitcairn")))
-                {
-                    EnableOptimizedVersion = false;
-                    Helpers.ConsolePrint(MinerDeviceName, "The GPU detected (" + text.Substring(14) + ") is not Hawaii or Pitcaird. Optimized version is disabled!");
-
-                    return;
-                }
+                GPUCodeName.Add(text.Substring(14).Trim());
             }
 
             // skip useless lines
@@ -171,6 +161,23 @@ namespace NiceHashMiner
                 return;
             }
 
+            // Check for optimized version
+            for (int i = 0; i < GPUCodeName.Count; i++)
+            {
+                Helpers.ConsolePrint(MinerDeviceName, "List: " + GPUCodeName[i]);
+                if (!(GPUCodeName[i].Equals("Bonaire")  || GPUCodeName[i].Equals("Fiji")   || GPUCodeName[i].Equals("Hawaii") ||
+                      GPUCodeName[i].Equals("Pitcairn") || GPUCodeName[i].Equals("Tahiti") || GPUCodeName[i].Equals("Tonga")))
+                {
+                    Helpers.ConsolePrint(MinerDeviceName, "GPU (" + GPUCodeName[i] + ") is not optimized. Switching to general sgminer.");
+                    EnableOptimizedVersion = false;
+                }
+
+                if (!GPUCodeName[i].Equals("Tahiti"))
+                {
+                    SupportedAlgorithms[GetAlgoIndex("neoscrypt")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
+                    Helpers.ConsolePrint(MinerDeviceName, "The GPU detected (" + GPUCodeName[i] + ") is not Tahiti. Changing default gpu-threads to 2.");
+                }
+            }
 
             // check the driver version
             bool ShowWarningDialog = false;
@@ -178,13 +185,13 @@ namespace NiceHashMiner
 
             foreach (var manObj in moc)
             {
-                Helpers.ConsolePrint("DEBUG", "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
+                Helpers.ConsolePrint(MinerDeviceName, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
 
                 if (manObj["Name"].ToString().Contains("AMD") && ShowWarningDialog == false)
                 {
                     if (PlatformDevices > 0 && CDevs.Count < PlatformDevices)
                     {
-                        Helpers.ConsolePrint("DEBUG", "Adding missed GPUs: " + manObj["name"].ToString());
+                        Helpers.ConsolePrint(MinerDeviceName, "Adding missed GPUs: " + manObj["name"].ToString());
                         CDevs.Add(new ComputeDevice(CDevs.Count, MinerDeviceName, manObj["Name"].ToString()));
                     }
 
@@ -204,7 +211,7 @@ namespace NiceHashMiner
 
                         foreach (var file in Directory.GetFiles(src))
                         {
-                            Helpers.ConsolePrint("DEBUG", "Path: " + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+                            Helpers.ConsolePrint(MinerDeviceName, "Path: " + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
                             string dest = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\" + System.IO.Path.GetFileName(file);
                             if (!File.Exists(dest)) File.Copy(file, dest, false);
                         }
@@ -307,7 +314,7 @@ namespace NiceHashMiner
                               " --opencl-devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled)
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
                         CommandLine += i + " ";
 
                 CommandLine += " --benchmark ";
@@ -344,8 +351,9 @@ namespace NiceHashMiner
                               " " + SupportedAlgorithms[index].ExtraLaunchParameters +
                               " --device ";
 
-                foreach (ComputeDevice G in CDevs)
-                    if (G.Enabled) CommandLine += G.ID.ToString() + ",";
+                for (int i = 0; i < CDevs.Count; i++)
+                    if (CDevs[i].Enabled && !Algo.DisabledDevice[i])
+                        CommandLine += CDevs[i].ID.ToString() + ",";
 
                 CommandLine = CommandLine.Remove(CommandLine.Length - 1);
                 if (Config.ConfigData.DisableAMDTempControl == false)
@@ -392,7 +400,7 @@ namespace NiceHashMiner
                                   " --opencl-devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled)
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
                         LastCommandLine += i + " ";
             }
             else
@@ -412,8 +420,9 @@ namespace NiceHashMiner
                                   " " + Algo.ExtraLaunchParameters +
                                   " --device ";
 
-                foreach (ComputeDevice G in CDevs)
-                    if (G.Enabled) LastCommandLine += G.ID.ToString() + ",";
+                for (int i = 0; i < CDevs.Count; i++)
+                    if (CDevs[i].Enabled && !Algo.DisabledDevice[i])
+                        LastCommandLine += CDevs[i].ID.ToString() + ",";
 
                 if (LastCommandLine.EndsWith(","))
                     LastCommandLine = LastCommandLine.Remove(LastCommandLine.Length - 1);
@@ -441,20 +450,34 @@ namespace NiceHashMiner
         {
             string dir = new DirectoryInfo(".").FullName + "\\bin\\";
 
-            if (EnableOptimizedVersion && (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2")))
+            if (EnableOptimizedVersion)
             {
-                dir += "sgminer-5-1-0-optimized";
-            }
-            else if (EnableOptimizedVersion && algo.Equals("qubit"))
-            {
-                dir += "sgminer-5-1-1-optimized";
-            }
-            else
-            {
-                dir += "sgminer-5-3-0-general";
+                if (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2") || algo.Equals("qubit"))
+                {
+                    for (int i = 0; i < GPUCodeName.Count; i++)
+                    {
+                        if (!(GPUCodeName[i].Equals("Hawaii") || GPUCodeName[i].Equals("Pitcairn") || GPUCodeName[i].Equals("Tahiti")))
+                        {
+                            if (!Helpers.InternalCheckIsWow64())
+                                return dir + "sgminer-5-4-0-general";
+
+                            SupportedAlgorithms[GetAlgoIndex("x11")].ExtraLaunchParameters   = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                            SupportedAlgorithms[GetAlgoIndex("qubit")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                            SupportedAlgorithms[GetAlgoIndex("quark")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                            SupportedAlgorithms[GetAlgoIndex("lyra2rev2")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+
+                            return dir + "sgminer-5-4-0-tweaked";
+                        }
+                    }
+
+                    if (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2"))
+                        return dir + "sgminer-5-1-0-optimized";
+                    else
+                        return dir + "sgminer-5-1-1-optimized";
+                }
             }
 
-            return dir;
+            return dir + "sgminer-5-4-0-general";
         }
     }
 }
