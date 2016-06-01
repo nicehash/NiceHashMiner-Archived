@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace NiceHashMiner
 {
@@ -23,6 +24,20 @@ namespace NiceHashMiner
             {
                 return false;
             }
+        }
+
+        public static bool ValidateWorkerName(string workername)
+        {
+            if (workername.Length > 7 || !isAlphaNumeric(workername))
+                return false;
+
+            return true;
+        }
+
+        public static bool isAlphaNumeric(string strToCheck)
+        {
+            Regex rg = new Regex(@"^[a-zA-Z0-9\s,]*$");
+            return rg.IsMatch(strToCheck);
         }
 
         const string Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";

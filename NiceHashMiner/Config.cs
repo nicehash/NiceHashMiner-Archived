@@ -17,6 +17,7 @@ namespace NiceHashMiner
         public string UsePassword;
         public double BenchmarkSpeed;
         public bool Skip;
+        public bool[] DisabledDevices;
 #pragma warning restore 649
     }
 
@@ -27,6 +28,7 @@ namespace NiceHashMiner
         public int APIBindPort;
         public string ExtraLaunchParameters;
         public string UsePassword;
+        public double MinimumProfit;
         public int[] DisabledDevices;
         public Algo[] Algorithms;
 #pragma warning restore 649
@@ -73,6 +75,9 @@ namespace NiceHashMiner
         public int LogLevel;
         public long LogMaxFileSize;  // in bytes
         public bool ShowDriverVersionWarning;
+        public bool DisableWindowsErrorReporting;
+        public bool UseNewSettingsPage;
+        public bool NVIDIAP0State;
         public Group[] Groups;
 #pragma warning restore 649
 
@@ -104,6 +109,9 @@ namespace NiceHashMiner
             ConfigData.LogLevel = 1;
             ConfigData.LogMaxFileSize = 1048576;
             ConfigData.ShowDriverVersionWarning = true;
+            ConfigData.DisableWindowsErrorReporting = false;
+            ConfigData.UseNewSettingsPage = true;
+            ConfigData.NVIDIAP0State = false;
 
             try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
             catch { }
@@ -151,6 +159,7 @@ namespace NiceHashMiner
                 CG[i].APIBindPort = Form1.Miners[i].APIPort;
                 CG[i].ExtraLaunchParameters = Form1.Miners[i].ExtraLaunchParameters;
                 CG[i].UsePassword = Form1.Miners[i].UsePassword;
+                CG[i].MinimumProfit = Form1.Miners[i].MinimumProfit;
                 CG[i].Algorithms = new Algo[Form1.Miners[i].SupportedAlgorithms.Length];
                 for (int k = 0; k < Form1.Miners[i].SupportedAlgorithms.Length; k++)
                 {
@@ -160,6 +169,12 @@ namespace NiceHashMiner
                     CG[i].Algorithms[k].ExtraLaunchParameters = Form1.Miners[i].SupportedAlgorithms[k].ExtraLaunchParameters;
                     CG[i].Algorithms[k].UsePassword = Form1.Miners[i].SupportedAlgorithms[k].UsePassword;
                     CG[i].Algorithms[k].Skip = Form1.Miners[i].SupportedAlgorithms[k].Skip;
+
+                    CG[i].Algorithms[k].DisabledDevices = new bool[Form1.Miners[i].CDevs.Count];
+                    for (int j = 0; j < Form1.Miners[i].CDevs.Count; j++)
+                    {
+                        CG[i].Algorithms[k].DisabledDevices[j] = Form1.Miners[i].SupportedAlgorithms[k].DisabledDevice[j];
+                    }
                 }
                 List<int> DD = new List<int>();
                 for (int k = 0; k < Form1.Miners[i].CDevs.Count; k++)

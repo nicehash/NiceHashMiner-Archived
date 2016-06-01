@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Globalization;
 using System.Management;
+using Microsoft.Win32;
 
 namespace NiceHashMiner
 {
@@ -29,7 +30,7 @@ namespace NiceHashMiner
         private Timer IdleCheck;
         private Form3 LoadingScreen;
         private int LoadCounter = 0;
-        private int TotalLoadSteps = 11;
+        private int TotalLoadSteps = 13;
         private bool ShowWarningNiceHashData;
 
         private Random R;
@@ -193,6 +194,7 @@ namespace NiceHashMiner
                 {
                     Miners[i].ExtraLaunchParameters = Config.ConfigData.Groups[i].ExtraLaunchParameters;
                     Miners[i].UsePassword = Config.ConfigData.Groups[i].UsePassword;
+                    Miners[i].MinimumProfit = Config.ConfigData.Groups[i].MinimumProfit;
                     if (Config.ConfigData.Groups[i].APIBindPort > 0)
                         Miners[i].APIPort = Config.ConfigData.Groups[i].APIBindPort;
                     for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length && z < Miners[i].SupportedAlgorithms.Length; z++)
@@ -201,7 +203,32 @@ namespace NiceHashMiner
                         Miners[i].SupportedAlgorithms[z].ExtraLaunchParameters = Config.ConfigData.Groups[i].Algorithms[z].ExtraLaunchParameters;
                         Miners[i].SupportedAlgorithms[z].UsePassword = Config.ConfigData.Groups[i].Algorithms[z].UsePassword;
                         Miners[i].SupportedAlgorithms[z].Skip = Config.ConfigData.Groups[i].Algorithms[z].Skip;
+
+                        Miners[i].SupportedAlgorithms[z].DisabledDevice = new bool[Miners[i].CDevs.Count];
+                        if (Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices != null)
+                        {
+                            if (Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length < Miners[i].CDevs.Count)
+                            {
+                                for (int j = 0; j < Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length; j++)
+                                    Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices[j];
+                                for (int j = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length; j < Miners[i].CDevs.Count; j++)
+                                    Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = false;
+                            }
+                            else
+                            {
+                                for (int j = 0; j < Miners[i].CDevs.Count; j++)
+                                    Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices[j];
+                            }
+                        }
+                        else
+                        {
+                            Miners[i].GetDisabledDevicePerAlgo();
+                        }
                     }
+                }
+                else
+                {
+                    Miners[i].GetDisabledDevicePerAlgo();
                 }
                 for (int k = 0; k < Miners[i].CDevs.Count; k++)
                 {
@@ -278,6 +305,20 @@ namespace NiceHashMiner
             SetEnvironmentVariables();
 
             IncreaseLoadCounter();
+            if (Config.ConfigData.DisableWindowsErrorReporting)
+            {
+                LoadingScreen.LoadText.Text = "Disabling Windows error reporting...";
+                DisableWindowsErrorReporting();
+            }
+
+            IncreaseLoadCounter();
+            if (Config.ConfigData.NVIDIAP0State)
+            {
+                LoadingScreen.LoadText.Text = "Changing all supported nVidia GPUs to P0 state...";
+                ChangeP0State();
+            }
+
+            IncreaseLoadCounter();
         }
 
 
@@ -331,6 +372,12 @@ namespace NiceHashMiner
 
                 int MaxProfitIndex = m.GetMaxProfitIndex(NiceHashData);
 
+                if (m.NotProfitable)
+                {
+                    m.Stop();
+                    continue;
+                }
+                
                 if (m.CurrentAlgo != MaxProfitIndex)
                 {
                     if (m.CurrentAlgo >= 0)
@@ -364,7 +411,25 @@ namespace NiceHashMiner
 
             foreach (Miner m in Miners)
             {
-                if (m.EnabledDeviceCount() == 0) continue;
+                if (m.EnabledDeviceCount() == 0 || m.NotProfitable) continue;
+
+                if (m is cpuminer && m.AlgoNameIs("hodl"))
+                {
+                    string pname = m.Path.Split('\\')[2];
+                    pname = pname.Substring(0, pname.Length - 4);
+
+                    Process[] processes = Process.GetProcessesByName(pname);
+
+                    if (processes.Length < CPUID.GetPhysicalProcessorCount())
+                        m.Restart();
+
+                    int algoIndex = m.GetAlgoIndex("hodl");
+                    CPUAlgoName = "hodl";
+                    CPUTotalSpeed = m.SupportedAlgorithms[algoIndex].BenchmarkSpeed;
+                    CPUTotalRate = NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
+
+                    continue;
+                }
 
                 APIData AD = m.GetSummary();
                 if (AD == null)
@@ -430,6 +495,7 @@ namespace NiceHashMiner
         private void SetCPUStats(string aname, double speed, double paying)
         {
             label5.Text = FormatSpeedOutput(speed) + aname;
+            if (aname.Equals("hodl")) label5.Text += "**";
             label11.Text = FormatPayingOutput(paying);
             label16.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/Day";
             UpdateGlobalRate();
@@ -627,7 +693,7 @@ namespace NiceHashMiner
                 }
             }
 
-            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBox1.Text.Trim() + "&a=" + algo);
+            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBox1.Text.Trim());
         }
 
 
@@ -642,6 +708,14 @@ namespace NiceHashMiner
                     System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
                 
                 textBox1.Focus();
+                return false;
+            }
+            else if (!BitcoinAddress.ValidateWorkerName(textBox2.Text.Trim()) && ShowError)
+            {
+                DialogResult result = MessageBox.Show("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 7 character long).", "Error",
+                                                      MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                textBox2.Focus();
                 return false;
             }
 
@@ -772,12 +846,40 @@ namespace NiceHashMiner
                 "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
                 return;
 
-            Process PHandle = new Process();
-            PHandle.StartInfo.FileName = Application.ExecutablePath;
-            PHandle.StartInfo.Arguments = "-config";
-            PHandle.Start();
+            if (!Config.ConfigData.UseNewSettingsPage)
+            {
+                Process PHandle = new Process();
+                PHandle.StartInfo.FileName = Application.ExecutablePath;
+                PHandle.StartInfo.Arguments = "-config";
+                PHandle.Start();
 
-            Close();
+                Close();
+            }
+            else
+            {
+                Form_Settings Settings = new Form_Settings();
+                Settings.ShowDialog();
+                Settings = null;
+
+                // Update GUI
+                if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < MiningLocation.Length)
+                    comboBox1.SelectedIndex = Config.ConfigData.Location;
+                else
+                    comboBox1.SelectedIndex = 0;
+
+                textBox1.Text = Config.ConfigData.BitcoinAddress;
+                textBox2.Text = Config.ConfigData.WorkerName;
+
+                MessageBox.Show(Application.ProductName + " will exit now. This new settings dialog is still in beta and " +
+                                Application.ProductName + " needs to restart to take effect.", "Restarting " + Application.ProductName,
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                Process PHandle = new Process();
+                PHandle.StartInfo.FileName = Application.ExecutablePath;
+                PHandle.Start();
+
+                Close();
+            }
         }
 
 
@@ -861,6 +963,222 @@ namespace NiceHashMiner
             this.Show();
             this.WindowState = FormWindowState.Normal;
             notifyIcon1.Visible = false;
+        }
+
+        private void DisableWindowsErrorReporting()
+        {
+            bool failed = false;
+
+            Helpers.ConsolePrint("NICEHASH", "Trying to disable Windows error reporting");
+
+            // CurrentUser
+            try
+            {
+                using (RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\Windows Error Reporting"))
+                {
+                    if (rk != null)
+                    {
+                        Object o = rk.GetValue("DontShowUI");
+                        if (o != null)
+                        {
+                            int val = (int)o;
+                            Helpers.ConsolePrint("NICEHASH", "Current DontShowUI value: " + val);
+
+                            if (val == 0)
+                            {
+                                Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
+                                rk.SetValue("DontShowUI", 1);
+                            }
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint("NICEHASH", "Registry key not found .. creating one..");
+                            rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
+                            Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
+                            rk.SetValue("DontShowUI", 1);
+                        }
+                    }
+                    else
+                        Helpers.ConsolePrint("NICEHASH", "Unable to open SubKey.");
+                }
+            }
+            catch (Exception ex)
+            {
+                failed = true;
+                Helpers.ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
+                RestartWithAdminPrivilege("Would you like to restart NiceHash Miner with administrative permission to disable Windows error reporting?",
+                                          "Needs administrator permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            }
+
+            // LocalMachine
+            try
+            {
+                using (RegistryKey rk = Registry.LocalMachine.CreateSubKey(@"Software\Microsoft\Windows\Windows Error Reporting"))
+                {
+                    if (rk != null)
+                    {
+                        Object o = rk.GetValue("DontShowUI");
+                        if (o != null)
+                        {
+                            int val = (int)o;
+                            Helpers.ConsolePrint("NICEHASH", "DontShowUI: " + val);
+
+                            if (val == 0)
+                            {
+                                Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
+                                rk.SetValue("DontShowUI", 1);
+                            }
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint("NICEHASH", "Registry key not found .. creating one..");
+                            rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
+                            Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
+                            rk.SetValue("DontShowUI", 1);
+                        }
+                    }
+                    else
+                        Helpers.ConsolePrint("NICEHASH", "Unable to open SubKey.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
+                if (!failed)
+                {
+                    RestartWithAdminPrivilege("Would you like to restart NiceHash Miner with administrative permission to disable Windows error reporting?",
+                                              "Needs administrator permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
+        private void ChangeP0State()
+        {
+            string stdOut, stdErr, args, smiPath;
+            stdOut = stdErr = args = String.Empty;
+            smiPath = "\"C:\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe\"";
+
+            try
+            {
+                Process P = new Process();
+                P.StartInfo.FileName = smiPath;
+                P.StartInfo.Arguments = "--list-gpus";
+                P.StartInfo.UseShellExecute = false;
+                P.StartInfo.RedirectStandardOutput = true;
+                P.StartInfo.RedirectStandardError = true;
+                P.StartInfo.CreateNoWindow = true;
+                P.Start();
+                P.WaitForExit();
+
+                stdOut = P.StandardOutput.ReadToEnd();
+                stdErr = P.StandardError.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] Exception: " + ex.Message);
+            }
+
+            if (stdOut.Length < 10)
+            {
+                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] NVSMI: Error! Output too short. (" + stdOut + ")");
+                return;
+            }
+            else
+            {
+                string[] strGPUs = stdOut.Split('\n');
+                int numGPUs = strGPUs.Length - 1;
+                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] Num GPUs: " + numGPUs);
+
+                for (int i = 0; i < numGPUs; i++)
+                {
+                    string mem, clk;
+                    mem = clk = String.Empty;
+
+                    try
+                    {
+                        args = "-i " + i + " -q -d SUPPORTED_CLOCKS";
+                        Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] GetClocks Start Process: " + args);
+                        Process GetClocks = new Process();
+                        GetClocks.StartInfo.FileName = smiPath;
+                        GetClocks.StartInfo.Arguments = args;
+                        GetClocks.StartInfo.UseShellExecute = false;
+                        GetClocks.StartInfo.RedirectStandardOutput = true;
+                        GetClocks.Start();
+
+                        string outdata;
+                        do
+                        {
+                            outdata = GetClocks.StandardOutput.ReadLine();
+                            if (outdata != null)
+                            {
+                                if (outdata.Contains("Memory"))
+                                {
+                                    mem = outdata.Split(':')[1].Trim();
+                                    mem = mem.Substring(0, mem.Length - 4);
+                                }
+                                else if (outdata.Contains("Graphics"))
+                                {
+                                    clk = outdata.Split(':')[1].Trim();
+                                    clk = clk.Substring(0, clk.Length - 4);
+                                    break;
+                                }
+                            }
+                        } while (outdata != null);
+
+                        GetClocks.Kill();
+                        GetClocks.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] Exception: " + ex.Message);
+                    }
+
+                    if (mem.Length > 1 && clk.Length > 1)
+                    {
+                        try
+                        {
+                            args = "-i " + i + " -ac " + mem + "," + clk;
+                            Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock Start Process: " + args);
+                            Process SetClock = new Process();
+                            SetClock.StartInfo.FileName = smiPath;
+                            SetClock.StartInfo.Arguments = args;
+                            SetClock.StartInfo.UseShellExecute = false;
+                            SetClock.StartInfo.RedirectStandardOutput = true;
+                            SetClock.Start();
+
+                            string outdata = SetClock.StandardOutput.ReadToEnd();
+                            Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock: " + outdata);
+                            if (outdata.Contains("Applications clocks set to"))
+                                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock: Successfully set.");
+                            else if (outdata.Contains("is not supported"))
+                                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock: Setting applications clocks is not supported.");
+                            else if (outdata.Contains("does not have permission"))
+                            {
+                                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock: The current user does not have permission to change clocks.");
+                                RestartWithAdminPrivilege("Would you like to restart NiceHash Miner with administrative permission to change nVidia GPUs to P0 state?",
+                                                          "Needs administrator permission", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] Exception: " + ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void RestartWithAdminPrivilege(string msg, string caption, MessageBoxButtons btn, MessageBoxIcon ico)
+        {
+            if (MessageBox.Show(msg, caption, btn, ico) == System.Windows.Forms.DialogResult.Yes)
+            {
+                Process PHandle = new Process();
+                PHandle.StartInfo.FileName = Application.ExecutablePath;
+                PHandle.StartInfo.Verb = "runas";
+                PHandle.Start();
+
+                Close();
+            }
         }
     }
 }

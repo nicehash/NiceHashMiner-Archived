@@ -28,7 +28,7 @@ namespace NiceHashMiner
                 new Algorithm(16, "blake256r8", "blakecoin"),
                 new Algorithm(17, "blake256r14", "blake"),
                 new Algorithm(18, "blake256r8vnl", "vanilla"),
-                new Algorithm(19, "ethereum", "ethereum")
+                new Algorithm(22, "ethereum", "ethereum")
             };
         }
 
@@ -46,7 +46,7 @@ namespace NiceHashMiner
                               " --cuda --cuda-devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled)
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !SupportedAlgorithms[index].DisabledDevice[i])
                         CommandLine += i + " ";
 
                 CommandLine += " --benchmark ";
@@ -65,9 +65,9 @@ namespace NiceHashMiner
                               " " + SupportedAlgorithms[index].ExtraLaunchParameters +
                               " --devices ";
 
-                foreach (ComputeDevice G in CDevs)
-                    if (G.Enabled)
-                        CommandLine += G.ID.ToString() + ",";
+                for (int i = 0; i < CDevs.Count; i++)
+                    if (CDevs[i].Enabled && !SupportedAlgorithms[index].DisabledDevice[i])
+                        CommandLine += CDevs[i].ID.ToString() + ",";
 
                 CommandLine = CommandLine.Remove(CommandLine.Length - 1);
 
@@ -106,7 +106,7 @@ namespace NiceHashMiner
                                   " --cuda-devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled)
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
                         LastCommandLine += EtherDevices[i] + " ";
             }
             else
@@ -119,9 +119,9 @@ namespace NiceHashMiner
                                   " " + Algo.ExtraLaunchParameters +
                                   " --devices ";
 
-                foreach (ComputeDevice G in CDevs)
-                    if (G.Enabled)
-                        LastCommandLine += G.ID.ToString() + ",";
+                for (int i = 0; i < CDevs.Count; i++)
+                    if (CDevs[i].Enabled && !Algo.DisabledDevice[i])
+                        LastCommandLine += CDevs[i].ID.ToString() + ",";
 
                 if (LastCommandLine.EndsWith(","))
                 {
