@@ -13,6 +13,7 @@ namespace NiceHashMiner
             MinerDeviceName = "NVIDIA5.x";
             Path = "bin\\ccminer_sp.exe";
             APIPort = 4048;
+            ER = new EthminerReader(APIPort);
 
             if (!Config.ConfigData.DisableDetectionNVidia5X)
                 QueryCDevs();
@@ -42,6 +43,9 @@ namespace NiceHashMiner
 
         protected override string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)
         {
+            if (AlgoNameIs("decred"))
+                return BenchmarkHandle.StandardOutput.ReadLine();
+
             return BenchmarkHandle.StandardError.ReadLine();
         }
     }

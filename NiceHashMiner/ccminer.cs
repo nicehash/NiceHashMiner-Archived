@@ -28,7 +28,8 @@ namespace NiceHashMiner
                 new Algorithm(16, "blake256r8", "blakecoin"),
                 new Algorithm(17, "blake256r14", "blake"),
                 new Algorithm(18, "blake256r8vnl", "vanilla"),
-                new Algorithm(22, "ethereum", "ethereum")
+                new Algorithm(20, "daggerhashimoto", "daggerhashimoto"),
+                new Algorithm(21, "decred", "decred")
             };
         }
 
@@ -37,7 +38,7 @@ namespace NiceHashMiner
         {
             string CommandLine = "";
 
-            if (SupportedAlgorithms[index].NiceHashName.Equals("ethereum"))
+            if (SupportedAlgorithms[index].NiceHashName.Equals("daggerhashimoto"))
             {
                 CommandLine = " --benchmark-warmup 10 --benchmark-trial 20" +
                               " " + ExtraLaunchParameters +
@@ -71,10 +72,16 @@ namespace NiceHashMiner
 
                 CommandLine = CommandLine.Remove(CommandLine.Length - 1);
 
-                if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("neoscrypt"))
+                if (SupportedAlgorithms[index].NiceHashName.Equals("decred"))
+                    Path = "bin\\ccminer_decred.exe";
+                else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("neoscrypt"))
                     Path = "bin\\ccminer_neoscrypt.exe";
+                else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("lyra2rev2"))
+                    Path = "bin\\ccminer_sp_lyra2v2.exe";
                 else if (this is ccminer_sp)
                     Path = "bin\\ccminer_sp.exe";
+                else
+                    Path = "bin\\ccminer_tpruvot.exe";
             }
 
             return CommandLine;
@@ -88,26 +95,24 @@ namespace NiceHashMiner
             Algorithm Algo = GetMinerAlgorithm(nhalgo);
             if (Algo == null) return;
 
-            if (Algo.NiceHashName.Equals("ethereum"))
+            if (Algo.NiceHashName.Equals("daggerhashimoto"))
             {
-                StartingUpDelay = true;
+                // Check if dag-dir exist to avoid ethminer from crashing
+                if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return;
 
-                // Create DAG file ahead of time
-                if (!Ethereum.CreateDAGFile(Config.ConfigData.HideMiningWindows, MinerDeviceName)) return;
-
-                // Starts up ether-proxy
-                if (!Ethereum.StartProxy(true, url, username)) return;
-
-                LastCommandLine = " --cuda -F http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumProxy + "/miner/10/" + MinerDeviceName + " " +
+                LastCommandLine = " --cuda" +
                                   " --erase-dags old" +
                                   " " + ExtraLaunchParameters +
                                   " " + Algo.ExtraLaunchParameters +
+                                  " -S " + url.Substring(14) +
+                                  " -O " + username + ":" + GetPassword(Algo) +
                                   " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
+                                  " --report-port " + APIPort.ToString() +
                                   " --cuda-devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
                     if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
-                        LastCommandLine += EtherDevices[i] + " ";
+                        LastCommandLine += i + " ";
             }
             else
             {
@@ -133,10 +138,16 @@ namespace NiceHashMiner
                     return; // no GPUs to start mining on
                 }
 
-                if (this is ccminer_sp && Algo.NiceHashName.Equals("neoscrypt"))
+                if (Algo.NiceHashName.Equals("decred"))
+                    Path = "bin\\ccminer_decred.exe";
+                else if (this is ccminer_sp && Algo.NiceHashName.Equals("neoscrypt"))
                     Path = "bin\\ccminer_neoscrypt.exe";
+                else if (this is ccminer_sp && Algo.NiceHashName.Equals("lyra2rev2"))
+                    Path = "bin\\ccminer_sp_lyra2v2.exe";
                 else if (this is ccminer_sp)
                     Path = "bin\\ccminer_sp.exe";
+                else
+                    Path = "bin\\ccminer_tpruvot.exe";
             }
 
             ProcessHandle = _Start();

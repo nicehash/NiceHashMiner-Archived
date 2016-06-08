@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace NiceHashMiner
@@ -99,8 +100,8 @@ namespace NiceHashMiner
                 else if (m is ccminer)
                 {
                     Time = Config.ConfigData.BenchmarkTimeLimitsNVIDIA[TimeIndex];
-                    
-                    if (lvi.SubItems[2].Text.Equals("ethereum"))
+
+                    if (lvi.SubItems[2].Text.Equals("daggerhashimoto"))
                     {
                         lvi.SubItems[3].Text = "Creating DAG file (10-20 minutes)..";
                         if (Ethereum.CreateDAGFile(true, m.MinerDeviceName) == false) return;
@@ -117,7 +118,7 @@ namespace NiceHashMiner
                     if (DateTime.Now.Second != 0)
                         Time += 1;
 
-                    if (lvi.SubItems[2].Text.Equals("ethereum"))
+                    if (lvi.SubItems[2].Text.Equals("daggerhashimoto"))
                     {
                         lvi.SubItems[3].Text = "Creating DAG file (10-20 minutes)..";
                         if (Ethereum.CreateDAGFile(true, m.MinerDeviceName) == false) return;

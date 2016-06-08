@@ -90,6 +90,7 @@ namespace NiceHashMiner
         public int NumRetries;
         public bool StartingUpDelay;
         public string Path;
+        public EthminerReader ER;
 
         protected int[] EtherDevices;
         protected string WorkingDirectory;
@@ -139,7 +140,7 @@ namespace NiceHashMiner
                 StartingUpDelay = false;
                 PreviousTotalMH = 0.0;
 
-                if (AlgoNameIs("ethereum")) Ethereum.StopProxy();
+                if (AlgoNameIs("daggerhashimoto")) ER.Stop();
                 else if (MinerDeviceName == "AMD_OpenCL") KillSGMiner();
             }
         }
@@ -250,7 +251,7 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerDeviceName, "Starting benchmark: " + CommandLine);
 
             Process BenchmarkHandle = new Process();
-            if (AlgoNameIs("ethereum"))
+            if (AlgoNameIs("daggerhashimoto"))
                 BenchmarkHandle.StartInfo.FileName = Ethereum.EtherMinerPath;
             else
                 BenchmarkHandle.StartInfo.FileName = Path;
@@ -280,7 +281,7 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
 
-                if (AlgoNameIs("ethereum"))
+                if (AlgoNameIs("daggerhashimoto"))
                 {
                     string outdata = BenchmarkHandle.StandardOutput.ReadToEnd();
                     BenchmarkParseLine(outdata);
@@ -429,9 +430,10 @@ namespace NiceHashMiner
             }
 
             NumRetries = Config.ConfigData.MinerAPIGraceMinutes * 60 / Config.ConfigData.MinerAPIQueryInterval;
-            if (AlgoNameIs("ethereum"))
+            if (AlgoNameIs("daggerhashimoto"))
             {
                 NumRetries = Config.ConfigData.EthMinerAPIGraceMinutes * 60 / Config.ConfigData.MinerAPIQueryInterval;
+                ER.Start();
                 P.StartInfo.FileName = Ethereum.EtherMinerPath;
             }
             else
@@ -464,13 +466,9 @@ namespace NiceHashMiner
 
         virtual public void Restart()
         {
+            Helpers.ConsolePrint(MinerDeviceName, "Restarting miner..");
             Stop(); // stop miner first
             if (this is sgminer) StartingUpDelay = true;
-            if (AlgoNameIs("ethereum"))
-            {
-                StartingUpDelay = true;
-                Ethereum.StartProxy(false, "", "");
-            }
             ProcessHandle = _Start(); // start with old command line
         }
 
@@ -575,37 +573,30 @@ namespace NiceHashMiner
             string aname = null;
             APIData ad = new APIData();
 
-            if (AlgoNameIs("ethereum"))
+            if (AlgoNameIs("daggerhashimoto"))
             {
                 try
                 {
-                    resp = NiceHashStats.GetNiceHashAPIData("http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumFrontEnd + "/stats", MinerDeviceName);
-                    if (resp == null) return null;
-                    if (resp.Length < 800) return null; // response is too short
-
-                    Eth<EthMiner> oo;
-                    oo = JsonConvert.DeserializeObject<Eth<EthMiner>>(resp);
-
-                    ad.Speed = 0;
-                    aname = "ethereum";
-
-                    for (int i = 0; i < oo.miners.Length; i++)
+                    FillAlgorithm("daggerhashimoto", ref ad);
+                    if (ER.GetIsRunning() && ER.GetDAGprogress() != 100 && ER.GetSpeed() < 1)
                     {
-                        if (!oo.miners[i].name.Equals(MinerDeviceName)) continue;
-
-                        if (oo.miners[i].timeout == true)
+                        ad.AlgorithmName = "Creating DAG " + ER.GetDAGprogress().ToString() + "%";
+                        aname = "Creating DAG File";
+                        ad.Speed = 0;
+                    }
+                    else
+                    {
+                        double time = 10;
+                        if (ER.GetIsRunning()) time = 30;
+                        if ((DateTime.Now.Subtract(ER.GetLastActiveTime())).TotalSeconds > time)
                         {
-                            Helpers.ConsolePrint(MinerDeviceName, "Ethminer ERROR!");
+                            Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
+                            Restart();
                             return null;
                         }
-                        else if (oo.miners[i].warning == true)
-                            Helpers.ConsolePrint(MinerDeviceName, "Ethminer WARNING!");
 
-                        ad.Speed = oo.miners[i].hashrate * 1000;
-                        break;
+                        ad.Speed = ER.GetSpeed() * 1000 * 1000;
                     }
-
-                    if (ad.Speed == 0) return null;
                 }
                 catch (Exception e)
                 {
@@ -686,9 +677,9 @@ namespace NiceHashMiner
                 {
                     return null;
                 }
+            
+                FillAlgorithm(aname, ref ad);
             }
-
-            FillAlgorithm(aname, ref ad);
 
             return ad;
         }
@@ -702,6 +693,7 @@ namespace NiceHashMiner
             for (int i = 0; i < SupportedAlgorithms.Length; i++)
             {
                 if (SupportedAlgorithms[i].Skip) continue;
+                if (EnabledDevicePerAlgoCount(i) == 0) continue;
 
                 SupportedAlgorithms[i].CurrentProfit = SupportedAlgorithms[i].BenchmarkSpeed *
                     NiceHashData[SupportedAlgorithms[i].NiceHashID].paying * 0.000000001;
@@ -765,8 +757,27 @@ namespace NiceHashMiner
                 for (int j = 0; j < CDevs.Count; j++)
                 {
                     SupportedAlgorithms[i].DisabledDevice[j] = false;
+                    if ((CDevs[j].Name.Contains("750") && CDevs[j].Name.Contains("Ti")) &&
+                        (SupportedAlgorithms[i].NiceHashName.Equals("daggerhashimoto")))
+                    {
+                        Helpers.ConsolePrint(MinerDeviceName, "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
+                        SupportedAlgorithms[i].DisabledDevice[j] = true;
+                    }
                 }
             }
+        }
+
+        public int EnabledDevicePerAlgoCount(int algoIndex)
+        {
+            int count = 0;
+
+            for (int i = 0; i < CDevs.Count; i++)
+            {
+                if (!SupportedAlgorithms[algoIndex].DisabledDevice[i])
+                    count++;
+            }
+
+            return count;
         }
     }
 }
