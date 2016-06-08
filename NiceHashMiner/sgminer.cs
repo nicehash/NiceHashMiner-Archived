@@ -36,13 +36,14 @@ namespace NiceHashMiner
                 new Algorithm(16, "blake256r8", "blakecoin",  DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
                 new Algorithm(17, "blake256r14",   "blake",   DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
                 new Algorithm(18, "blake256r8vnl", "vanilla", DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
-                new Algorithm(21, "decred", "decred", "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64"),
-                new Algorithm(22, "ethereum", "ethereum", "--cl-global-work 16384 --cl-local-work 128")
+                new Algorithm(20, "daggerhashimoto", "daggerhashimoto"),
+                new Algorithm(21, "decred", "decred", "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64")
             };
 
             MinerDeviceName = "AMD_OpenCL";
             Path = "bin\\sgminer-5-4-0-general\\sgminer.exe";
             APIPort = 4050;
+            ER = new EthminerReader(APIPort);
             EnableOptimizedVersion = true;
             PlatformDevices = 0;
             GPUPlatformNumber = 0;
@@ -211,7 +212,6 @@ namespace NiceHashMiner
 
                         foreach (var file in Directory.GetFiles(src))
                         {
-                            Helpers.ConsolePrint(MinerDeviceName, "Path: " + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
                             string dest = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\" + System.IO.Path.GetFileName(file);
                             if (!File.Exists(dest)) File.Copy(file, dest, false);
                         }
@@ -304,7 +304,7 @@ namespace NiceHashMiner
             }
 
             string CommandLine;
-            if (Algo.NiceHashName.Equals("ethereum"))
+            if (Algo.NiceHashName.Equals("daggerhashimoto"))
             {
                 CommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
                               " " + ExtraLaunchParameters +
@@ -376,27 +376,20 @@ namespace NiceHashMiner
                 return;
             }
 
-            if (Algo.NiceHashName.Equals("ethereum"))
+            if (Algo.NiceHashName.Equals("daggerhashimoto"))
             {
-                StartingUpDelay = true;
-
                 // Check if dag-dir exist to avoid ethminer from crashing
-                if (!Directory.Exists(Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName))
-                    Directory.CreateDirectory(Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName);
-
-                // Create DAG file ahead of time
-                if (!Ethereum.CreateDAGFile(Config.ConfigData.HideMiningWindows, MinerDeviceName)) return;
-
-                // Starts up ether-proxy
-                if (!Ethereum.StartProxy(true, url, username)) return;
+                if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return;
 
                 WorkingDirectory = "";
                 LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
                                   " --erase-dags old" +
                                   " " + ExtraLaunchParameters +
                                   " " + Algo.ExtraLaunchParameters +
-                                  " -F http://127.0.0.1:" + Config.ConfigData.APIBindPortEthereumProxy + "/miner/10/" + MinerDeviceName +
+                                  " -S " + url.Substring(14) +
+                                  " -O " + username + ":" + GetPassword(Algo) +
                                   " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
+                                  " --report-port " + APIPort.ToString() +
                                   " --opencl-devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)

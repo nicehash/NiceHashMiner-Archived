@@ -4,212 +4,140 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
-using System.Threading;
+using System.Net;
+using System.Net.Sockets;
+using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
-    public class EtherProxyConfig_Proxy
+    public class EthminerReader
     {
-        public string listen;
-        public string clientTimeout;
-        public string blockRefreshInterval;
-        public string hashrateWindow;
-        public bool submitHashrate;
-        public string luckWindow;
-        public string largeLuckWindow;
-    }
-
-    public class EtherProxyConfig_Frontend
-    {
-        public string listen;
-        public string login;
-        public string password;
-    }
-
-    public class EtherProxyConfig_Upstream
-    {
-        public bool pool;
-        public string name;
-        public string url;
-        public string timeout;
-    }
-
-    public class EtherProxyConfig
-    {
-        public int threads;
-        public EtherProxyConfig_Proxy proxy;
-        public EtherProxyConfig_Frontend frontend;
-        public string upstreamCheckInterval;
-        public EtherProxyConfig_Upstream[] upstream;
-        public bool newrelicEnabled;
-        public string newrelicName;
-        public string newrelicKey;
-        public bool newrelicVerbose;
-
-        public EtherProxyConfig()
+        /// <summary>
+        /// Initialize ethminer instance that listens on certain UDP port for speed and DAG progress reports. You may have multiple instances,
+        /// but each one must be listening on another port!
+        /// </summary>
+        /// <param name="port">UDP listening port.</param>
+        public EthminerReader(int port)
         {
-            // Set defaults
-            threads = 2;
-
-            proxy = new EtherProxyConfig_Proxy();
-            proxy.listen = "0.0.0.0:" + Config.ConfigData.APIBindPortEthereumProxy;
-            proxy.clientTimeout = "5m";
-            proxy.blockRefreshInterval = "100ms";
-            proxy.hashrateWindow = "15m";
-            proxy.submitHashrate = false;
-            proxy.luckWindow = "24h";
-            proxy.largeLuckWindow = "72h";
-
-            frontend = new EtherProxyConfig_Frontend();
-            frontend.listen = "0.0.0.0:" + Config.ConfigData.APIBindPortEthereumFrontEnd;
-            frontend.login = "admin";
-            frontend.password = "";
-            upstreamCheckInterval = "5s";
-
-            upstream = new EtherProxyConfig_Upstream[1];
-            upstream[0] = new EtherProxyConfig_Upstream();
-            upstream[0].pool = true;
-            upstream[0].name = "NiceHash";
-            upstream[0].url = "";
-            upstream[0].timeout = "10s";
-
-            newrelicEnabled = false;
-            newrelicName = "MyEtherProxy";
-            newrelicKey = "SECRET_KEY";
-            newrelicVerbose = false;
+            bindPort = port;
+            ipep = new IPEndPoint(IPAddress.Any, bindPort);
+            client = new UdpClient(ipep);
         }
-    }
 
-    public class EthMiner
-    {
-        public string name;
-        public long hashrate;
-        public bool timeout;
-        public bool warning;
-    }
+        /// <summary>
+        /// Start listening.
+        /// </summary>
+        public void Start()
+        {
+            isRunning = true;
+            speed = 0;
+            DAGprogress = 0;
+            lastActiveTime = DateTime.Now;
+            workerTimer = new Timer();
+            workerTimer.Tick += workerTimer_Tick;
+            workerTimer.Interval = 1000;
+            workerTimer.Start();
+        }
 
-    public class Eth<T>
-    {
-        public EthMiner[] miners;
+        /// <summary>
+        /// Stop listening. Call this before application exits or if you are about to restart ethminer reader.
+        /// </summary>
+        public void Stop()
+        {
+            isRunning = false;
+            speed = 0;
+            DAGprogress = 0;
+            workerTimer.Stop();
+        }
+
+        /// <summary>
+        /// Get if miner is still running.
+        /// </summary>
+        /// <returns>State of miner.</returns>
+        public bool GetIsRunning()
+        {
+            return isRunning;
+        }
+
+        /// <summary>
+        /// Get speed of miner in MH/s.
+        /// </summary>
+        /// <returns>Speed of miner in MH/s.</returns>
+        public double GetSpeed()
+        {
+            return speed;
+        }
+
+        /// <summary>
+        /// Get DAG progress in %. It only reports correct progress if ethminer is launched with -D parameter.
+        /// </summary>
+        /// <returns>DAG creation progress in %. When mining, this value is 100.</returns>
+        public uint GetDAGprogress()
+        {
+            return DAGprogress;
+        }
+
+        /// <summary>
+        /// Get DateTime when miner sent UDP status packet.
+        /// </summary>
+        /// <returns>DateTime of last active time.</returns>
+        public DateTime GetLastActiveTime()
+        {
+            return lastActiveTime;
+        }
+
+        public string ByteArrayToString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba) hex.AppendFormat("{0:x2} ", b);
+            return hex.ToString();
+        }
+
+        #region PRIVATE_PROPERTIES
+        private IPEndPoint ipep;
+        private UdpClient client;
+        private double speed;
+        private uint DAGprogress;
+        private int bindPort;
+        private bool isRunning;
+        private Timer workerTimer;
+        private DateTime lastActiveTime;
+        #endregion
+
+        #region PRIVATE_METHODS
+        private void workerTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                client.Client.Blocking = false;
+
+                if (isRunning && client.Available > 0)
+                {
+                    byte[] data = client.Receive(ref ipep);
+                    //Helpers.ConsolePrint("DEBUG", "ByteArray: " + ByteArrayToString(data));
+                    speed = BitConverter.ToDouble(data, 0);
+                    DAGprogress = BitConverter.ToUInt32(data, 8);
+                    lastActiveTime = DateTime.Now;
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("EthminerReader", "Error: " + ex.Message);
+            }
+        }
+
+        #endregion
     }
 
     public static class Ethereum
     {
-        public static Process ProcessProxyHandle;
         public static string EtherMinerPath;
-        public static string EtherProxyPath;
-        public static string EtherProxyConfigPath;
-        public static int EtherMinerRunning;
         public static string CurrentBlockNum;
-        private static readonly object _locker;
 
         static Ethereum()
         {
             EtherMinerPath = "bin\\ethereum\\ethminer.exe";
-            EtherProxyPath = "ether-proxy.exe";
-            EtherProxyConfigPath = "config.json";
-            EtherMinerRunning = 0;
             CurrentBlockNum = "";
-            _locker = new object();
-        }
-
-        public static bool StartProxy(bool writeconfig, string url, string username)
-        {
-            lock (_locker)
-            {
-                if (EtherMinerRunning == 0)
-                {
-                    if (writeconfig)
-                    {
-                        // Prepare and write config file
-                        EtherProxyConfig ep = new EtherProxyConfig();
-                        if (File.Exists(EtherProxyConfigPath)) ep = JsonConvert.DeserializeObject<EtherProxyConfig>(File.ReadAllText(EtherProxyConfigPath));
-                        ep.upstream[0].url = "http" + url.Substring(11) + "/n1c3-" + username + "/" + TotalSpeed();
-                        try { File.WriteAllText("bin\\ethereum\\" + EtherProxyConfigPath, JsonConvert.SerializeObject(ep, Formatting.Indented)); }
-                        catch (Exception e) { Helpers.ConsolePrint("Ethereum", "WriteConfigFile: " + e.ToString()); return false; }
-                    }
-
-                    // Setup and start proxy
-                    Helpers.ConsolePrint("Ethereum", "StartProxy: " + "Starting proxy..");
-                    Process P = new Process();
-                    P.StartInfo.FileName = EtherProxyPath;
-                    P.StartInfo.Arguments = " " + EtherProxyConfigPath;
-                    P.StartInfo.WorkingDirectory = "bin\\ethereum";
-                    P.StartInfo.CreateNoWindow = Config.ConfigData.HideMiningWindows;
-                    P.StartInfo.UseShellExecute = !Config.ConfigData.HideMiningWindows;
-                    P.EnableRaisingEvents = true;
-                    P.Exited += P_Exited;
-
-                    if (Config.ConfigData.HideMiningWindows)
-                    {
-                        P.StartInfo.FileName = "cmd";
-                        P.StartInfo.Arguments = " /C \" " + EtherProxyPath + " " + EtherProxyConfigPath + "\"";
-                    }
-
-                    try { P.Start(); }
-                    catch
-                    {
-                        Helpers.ConsolePrint("Ethereum", "StartProxy: Failed to start proxy..");
-                        return false;
-                    }
-                    ProcessProxyHandle = P;
-
-                    EtherMinerRunning = 1;
-                }
-                else
-                    EtherMinerRunning++;
-
-                Helpers.ConsolePrint("Ethereum", "EtherMinerRunning: " + EtherMinerRunning);
-            }
-
-            return true;
-        }
-
-        static void P_Exited(object sender, EventArgs e)
-        {
-            lock (_locker)
-            {
-                if (ProcessProxyHandle != null)
-                {
-                    try { ProcessProxyHandle.Kill(); }
-                    catch { }
-
-                    ProcessProxyHandle.Close();
-                    ProcessProxyHandle = null;
-                    EtherMinerRunning = 0;
-                }
-            }
-        }
-
-        public static void StopProxy()
-        {
-            lock (_locker)
-            {
-                if (ProcessProxyHandle != null)
-                {
-                    if (EtherMinerRunning > 1)
-                    {
-                        EtherMinerRunning--;
-                        return;
-                    }
-                    else
-                    {
-                        Helpers.ConsolePrint("Ethereum", "StopProxy: " + "Exiting proxy..");
-                        try { ProcessProxyHandle.Kill(); }
-                        catch { Helpers.ConsolePrint("Ethereum", "StopProxy: " + "Ethereum proxy failed to exit.."); }
-
-                        foreach (Process process in Process.GetProcessesByName("ether-proxy"))
-                        {
-                            try { process.Kill(); }
-                            catch { Helpers.ConsolePrint("Ethereum", "StopProxy: " + "Ethereum proxy failed to exit.."); }
-                        }
-
-                        ProcessProxyHandle.Close();
-                        ProcessProxyHandle = null;
-                        EtherMinerRunning = 0;
-                    }
-                }
-            }
         }
 
         public static bool CreateDAGFile(bool HideWindow, string worker)
@@ -219,51 +147,35 @@ namespace NiceHashMiner
                 if (!GetCurrentBlock(worker)) throw new Exception("GetCurrentBlock returns null..");
 
                 // Check if dag-dir exist to avoid ethminer from crashing
-                Helpers.ConsolePrint("Ethereum", "Creating DAG directory for " + worker + "..");
+                Helpers.ConsolePrint(worker, "Creating DAG directory for " + worker + "..");
                 if (!CreateDAGDirectory(worker)) throw new Exception("[" + worker + "] Cannot create directory for DAG files.");
 
-                if (worker.Equals("NVIDIA3.x"))
+                if (worker.Equals("NVIDIA5.x"))
                 {
-                    if (Directory.Exists(Config.ConfigData.DAGDirectory + "\\NVIDIA5.x"))
-                    {
-                        string src = Config.ConfigData.DAGDirectory + "\\NVIDIA5.x";
-                        foreach (var file in Directory.GetFiles(src))
-                        {
-                            string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + worker, Path.GetFileName(file));
-                            if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
-                        }
-                    }
+                    CopyDAGFiles("NVIDIA3.x", worker);
+                    CopyDAGFiles("AMD_OpenCL", worker);
+                }
+                else if (worker.Equals("NVIDIA3.x"))
+                {
+                    CopyDAGFiles("NVIDIA5.x", worker);
+                    CopyDAGFiles("AMD_OpenCL", worker);
                 }
                 else if (worker.Equals("AMD_OpenCL"))
                 {
-                    if (Directory.Exists(Config.ConfigData.DAGDirectory + "\\NVIDIA5.x"))
-                    {
-                        string src = Config.ConfigData.DAGDirectory + "\\NVIDIA5.x";
-                        foreach (var file in Directory.GetFiles(src))
-                        {
-                            string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + worker, Path.GetFileName(file));
-                            if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
-                        }
-                    }
-                    else if (Directory.Exists(Config.ConfigData.DAGDirectory + "\\NVIDIA3.x"))
-                    {
-                        string src = Config.ConfigData.DAGDirectory + "\\NVIDIA3.x";
-                        foreach (var file in Directory.GetFiles(src))
-                        {
-                            string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + worker, Path.GetFileName(file));
-                            if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
-                        }
-                    }
+                    CopyDAGFiles("NVIDIA5.x", worker);
+                    CopyDAGFiles("NVIDIA3.x", worker);
                 }
 
-                Helpers.ConsolePrint("Ethereum", "Creating DAG file for " + worker + "..");
-
+                Helpers.ConsolePrint(worker, "Creating DAG file for " + worker + "..");
+                
                 Process P = new Process();
                 P.StartInfo.FileName = EtherMinerPath;
                 P.StartInfo.Arguments = " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + worker + " --create-dag " + CurrentBlockNum;
+                Helpers.ConsolePrint(worker, "CreateDAGFile Arguments: " + P.StartInfo.Arguments);
                 P.StartInfo.CreateNoWindow = HideWindow;
                 P.StartInfo.UseShellExecute = !HideWindow;
                 P.Start();
+                
                 P.WaitForExit();
 
                 P.Close();
@@ -271,7 +183,7 @@ namespace NiceHashMiner
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("Ethereum", "Exception: " + e.ToString());
+                Helpers.ConsolePrint(worker, "Exception: " + e.ToString());
                 return false;
             }
 
@@ -290,40 +202,6 @@ namespace NiceHashMiner
             return true;
         }
         
-        private static bool KillAllRunningProxy()
-        {
-            Process[] check = Process.GetProcessesByName("ether-proxy");
-
-            if (check == null) return false;
-
-            foreach (Process process in check)
-            {
-                try { process.Kill(); }
-                catch (Exception e) { Helpers.ConsolePrint("Ethereum", "KillAllRunningProxy: " + e.ToString()); }
-            }
-
-            return true;
-        }
-
-        private static int TotalSpeed()
-        {
-            double totalspeed = 0.0;
-
-            for (int i = 0; i < Config.ConfigData.Groups.Length; i++)
-            {
-                if (Config.ConfigData.Groups[i].Name.Equals("NVIDIA5.x") ||
-                    Config.ConfigData.Groups[i].Name.Equals("NVIDIA3.x") ||
-                    Config.ConfigData.Groups[i].Name.Equals("AMD_OpenCL"))
-                {
-                    for (int j = 0; j < Config.ConfigData.Groups[i].Algorithms.Length; j++)
-                        if (Config.ConfigData.Groups[i].Algorithms[j].Name.Equals("ethereum"))
-                            totalspeed += Config.ConfigData.Groups[i].Algorithms[j].BenchmarkSpeed;
-                }
-            }
-
-            return Convert.ToInt32(totalspeed / 1000000);
-        }
-
         public static bool GetCurrentBlock(string worker)
         {
             string ret = NiceHashStats.GetNiceHashAPIData("https://etherchain.org/api/blocks/count", worker);
@@ -332,6 +210,19 @@ namespace NiceHashMiner
             CurrentBlockNum = ret.Substring(0, ret.Length - 3);
 
             return true;
+        }
+
+        private static void CopyDAGFiles(string from, string to)
+        {
+            if (Directory.Exists(Config.ConfigData.DAGDirectory + "\\" + from))
+            {
+                string src = Config.ConfigData.DAGDirectory + "\\" + from;
+                foreach (var file in Directory.GetFiles(src))
+                {
+                    string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + to, Path.GetFileName(file));
+                    if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
+                }
+            }
         }
     }
 }

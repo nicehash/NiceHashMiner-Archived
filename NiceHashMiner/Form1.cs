@@ -434,7 +434,7 @@ namespace NiceHashMiner
                 APIData AD = m.GetSummary();
                 if (AD == null)
                 {
-                    // Make sure sgminer or ethminer has time to start
+                    // Make sure sgminer has time to start
                     // properly on slow CPU system
                     if (m.StartingUpDelay && m.NumRetries > 0)
                     {
@@ -444,7 +444,7 @@ namespace NiceHashMiner
                         continue;
                     }
 
-                    if (m is sgminer && m.NumRetries > 0 && !m.AlgoNameIs("ethereum"))
+                    if (m is sgminer && m.NumRetries > 0)
                     {
                         m.NumRetries--;
                         continue;

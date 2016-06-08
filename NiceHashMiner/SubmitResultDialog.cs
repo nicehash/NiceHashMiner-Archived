@@ -190,14 +190,14 @@ namespace NiceHashMiner
                                  1000000000, // Blake256r8
                                  1000000000, // Blake256r14
                                  1000000000, // Blake256r8vnl
-                                 1000000 };  // Ethereum
+                                 1000000 };  // Daggerhashimoto
 
                 for (int i = 0; i < mm.SupportedAlgorithms.Length; i++)
                 {
                     if (!mm.SupportedAlgorithms[i].Skip)
                     {
                         int id = mm.SupportedAlgorithms[i].NiceHashID;
-                        if (!mm.SupportedAlgorithms[i].NiceHashName.Equals("ethereum"))
+                        if (!mm.SupportedAlgorithms[i].NiceHashName.Equals("daggerhashimoto"))
                         {
                             url += "&speed" + id + "=" + (mm.SupportedAlgorithms[i].BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
                         }
