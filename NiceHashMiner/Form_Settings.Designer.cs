@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox_CPU0_ExtraLaunchParameters = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
@@ -47,6 +48,7 @@
             this.comboBox_CPU0_ForceCPUExtension = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkBox_NVIDIAP0State = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableWindowsErrorReporting = new System.Windows.Forms.CheckBox();
             this.checkBox_UseNewSettingsPage = new System.Windows.Forms.CheckBox();
             this.textBox_LogMaxFileSize = new System.Windows.Forms.TextBox();
@@ -177,7 +179,7 @@
             this.checkBox_AMD_DisableAMDTempControl = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.button_Close = new System.Windows.Forms.Button();
-            this.checkBox_NVIDIAP0State = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabPage2.SuspendLayout();
             this.tabControl_CPU0.SuspendLayout();
             this.tabPage7.SuspendLayout();
@@ -447,6 +449,16 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_NVIDIAP0State
+            // 
+            this.checkBox_NVIDIAP0State.AutoSize = true;
+            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 293);
+            this.checkBox_NVIDIAP0State.Name = "checkBox_NVIDIAP0State";
+            this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(100, 17);
+            this.checkBox_NVIDIAP0State.TabIndex = 64;
+            this.checkBox_NVIDIAP0State.Text = "NVIDIAP0State";
+            this.checkBox_NVIDIAP0State.UseVisualStyleBackColor = true;
             // 
             // checkBox_DisableWindowsErrorReporting
             // 
@@ -1633,15 +1645,11 @@
             this.button_Close.UseVisualStyleBackColor = true;
             this.button_Close.Click += new System.EventHandler(this.button_Close_Click);
             // 
-            // checkBox_NVIDIAP0State
+            // toolTip1
             // 
-            this.checkBox_NVIDIAP0State.AutoSize = true;
-            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 293);
-            this.checkBox_NVIDIAP0State.Name = "checkBox_NVIDIAP0State";
-            this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(100, 17);
-            this.checkBox_NVIDIAP0State.TabIndex = 64;
-            this.checkBox_NVIDIAP0State.Text = "NVIDIAP0State";
-            this.checkBox_NVIDIAP0State.UseVisualStyleBackColor = true;
+            this.toolTip1.IsBalloon = true;
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
             // Form_Settings
             // 
@@ -1837,5 +1845,6 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.CheckBox checkBox_NVIDIAP0State;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

@@ -24,6 +24,9 @@ namespace NiceHashMiner
             SetupNVIDIA3XTab();
             SetupNVIDIA2XTab();
             SetupAMDTab();
+
+            toolTip1.SetToolTip(this.checkBox_DebugConsole, "Enable or disable debug console.");
+            toolTip1.SetToolTip(this.checkBox_AutoStartMining, "Start mining automatically when NiceHashMiner starts up.");
         }
 
         private void SetupGeneralTab()
@@ -718,6 +721,11 @@ namespace NiceHashMiner
         private void Form_Settings_FormClosing(object sender, FormClosingEventArgs e)
         {
             Config.Commit();
+        }
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+            toolTip1.ToolTipTitle = e.AssociatedControl.Text;
         }
     }
 }
