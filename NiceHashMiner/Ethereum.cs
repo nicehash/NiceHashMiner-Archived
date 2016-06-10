@@ -20,8 +20,6 @@ namespace NiceHashMiner
         public EthminerReader(int port)
         {
             bindPort = port;
-            ipep = new IPEndPoint(IPAddress.Any, bindPort);
-            client = new UdpClient(ipep);
         }
 
         /// <summary>
@@ -33,9 +31,11 @@ namespace NiceHashMiner
             speed = 0;
             DAGprogress = 0;
             lastActiveTime = DateTime.Now;
+            ipep = new IPEndPoint(IPAddress.Any, bindPort);
+            client = new UdpClient(ipep);
             workerTimer = new Timer();
             workerTimer.Tick += workerTimer_Tick;
-            workerTimer.Interval = 1000;
+            workerTimer.Interval = 50;
             workerTimer.Start();
         }
 
@@ -48,6 +48,8 @@ namespace NiceHashMiner
             speed = 0;
             DAGprogress = 0;
             workerTimer.Stop();
+            client.Close();
+            client = null;
         }
 
         /// <summary>
@@ -140,8 +142,10 @@ namespace NiceHashMiner
             CurrentBlockNum = "";
         }
 
-        public static bool CreateDAGFile(bool HideWindow, string worker)
+        public static bool CreateDAGFile(bool HideWindow, string worker, out string err)
         {
+            err = null;
+
             try
             {
                 if (!GetCurrentBlock(worker)) throw new Exception("GetCurrentBlock returns null..");
@@ -174,20 +178,29 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint(worker, "CreateDAGFile Arguments: " + P.StartInfo.Arguments);
                 P.StartInfo.CreateNoWindow = HideWindow;
                 P.StartInfo.UseShellExecute = !HideWindow;
-                P.Start();
-                
-                P.WaitForExit();
 
-                P.Close();
-                P = null;
+                Form5 f = new Form5(worker, P);
+                f.ShowDialog();
+
+                if (f.Success)
+                    return true;
+                else
+                    throw new Exception(f.Error);
+                //P.Start();
+                
+                //P.WaitForExit();
+
+                //P.Close();
+                //P = null;
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint(worker, "Exception: " + e.ToString());
+                err = e.Message;
+                Helpers.ConsolePrint(worker, "Exception: " + e.Message);
                 return false;
             }
 
-            return true;
+            //return true;
         }
 
         public static bool CreateDAGDirectory(string worker)

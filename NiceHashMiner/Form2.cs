@@ -77,6 +77,7 @@ namespace NiceHashMiner
         {
             if (listView1.Items.Count > index)
             {
+                string err;
                 ListViewItem lvi = listView1.Items[index];
                 index++;
 
@@ -104,7 +105,12 @@ namespace NiceHashMiner
                     if (lvi.SubItems[2].Text.Equals("daggerhashimoto"))
                     {
                         lvi.SubItems[3].Text = "Creating DAG file (10-20 minutes)..";
-                        if (Ethereum.CreateDAGFile(true, m.MinerDeviceName) == false) return;
+                        if (Ethereum.CreateDAGFile(true, m.MinerDeviceName, out err) == false)
+                        {
+                            lvi.SubItems[3].Text = err;
+                            InitiateBenchmark();
+                            return;
+                        }
                         lvi.SubItems[3].Text = "Benchmarking (2-4 minutes)...";
                     }
                     else
@@ -121,7 +127,12 @@ namespace NiceHashMiner
                     if (lvi.SubItems[2].Text.Equals("daggerhashimoto"))
                     {
                         lvi.SubItems[3].Text = "Creating DAG file (10-20 minutes)..";
-                        if (Ethereum.CreateDAGFile(true, m.MinerDeviceName) == false) return;
+                        if (Ethereum.CreateDAGFile(true, m.MinerDeviceName, out err) == false)
+                        {
+                            lvi.SubItems[3].Text = err;
+                            InitiateBenchmark();
+                            return;
+                        }
                         lvi.SubItems[3].Text = "Benchmarking (2-4 minutes)...";
                     }
                     else
