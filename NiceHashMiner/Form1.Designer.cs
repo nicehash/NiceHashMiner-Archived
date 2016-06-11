@@ -342,7 +342,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(120, 13);
             this.label7.TabIndex = 16;
-            this.label7.Text = "GPU NVIDIA5.x Mining:";
+            this.label7.Text = "GPU NVIDIA5/6 Mining:";
             // 
             // label8
             // 

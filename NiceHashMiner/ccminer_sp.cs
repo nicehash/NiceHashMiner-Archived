@@ -31,8 +31,8 @@ namespace NiceHashMiner
             int id = int.Parse(splt[0].Split('#')[1]);
             string name = splt[1];
 
-            // add only SM 5.2 or SM 5.0 devices
-            if (name.Contains("SM 5."))
+            // add only SM 5.2 or SM 5.0 devices (or 6.x)
+            if (name.Contains("SM 5.") || name.Contains("SM 6."))
             {
                 name = name.Substring(8);
                 CDevs.Add(new ComputeDevice(id, MinerDeviceName, name));
