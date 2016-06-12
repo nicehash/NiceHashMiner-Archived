@@ -31,7 +31,7 @@ namespace NiceHashMiner
             speed = 0;
             DAGprogress = 0;
             lastActiveTime = DateTime.Now;
-            ipep = new IPEndPoint(IPAddress.Any, bindPort);
+            ipep = new IPEndPoint(IPAddress.Loopback, bindPort);
             client = new UdpClient(ipep);
             workerTimer = new Timer();
             workerTimer.Tick += workerTimer_Tick;
@@ -177,7 +177,8 @@ namespace NiceHashMiner
                 P.StartInfo.Arguments = " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + worker + " --create-dag " + CurrentBlockNum;
                 Helpers.ConsolePrint(worker, "CreateDAGFile Arguments: " + P.StartInfo.Arguments);
                 P.StartInfo.CreateNoWindow = HideWindow;
-                P.StartInfo.UseShellExecute = !HideWindow;
+                //P.StartInfo.UseShellExecute = !HideWindow;
+                P.StartInfo.UseShellExecute = false;
 
                 Form5 f = new Form5(worker, P);
                 f.ShowDialog();

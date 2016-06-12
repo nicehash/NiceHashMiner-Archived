@@ -65,6 +65,7 @@ namespace NiceHashMiner
             ProcessHandle.StartInfo.FileName = "setcpuaff.exe";
             ProcessHandle.StartInfo.Arguments = pid.ToString() + " " + mask.ToString();
             ProcessHandle.StartInfo.CreateNoWindow = true;
+            ProcessHandle.StartInfo.UseShellExecute = false;
             ProcessHandle.Start();
         }
     }

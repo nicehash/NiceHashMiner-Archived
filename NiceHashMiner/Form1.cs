@@ -165,7 +165,7 @@ namespace NiceHashMiner
                     Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
             }
 
-            LoadingScreen.LoadText.Text = "Querying NVIDIA5.x & NVIDIA6.x devices...";
+            LoadingScreen.LoadText.Text = "Querying NVIDIA5.x and NVIDIA6.x devices...";
             IncreaseLoadCounter();
 
             Miners[CPUs] = new ccminer_sp();
