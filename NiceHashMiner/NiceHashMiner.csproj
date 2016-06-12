@@ -82,6 +82,7 @@
     <Compile Include="Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="NiceHashProcess.cs" />
     <Compile Include="SubmitResultDialog.cs">
       <SubType>Form</SubType>
     </Compile>

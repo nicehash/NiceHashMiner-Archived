@@ -137,9 +137,9 @@ namespace NiceHashMiner
         }
 
 
-        protected override Process _Start()
+        protected override NiceHashProcess _Start()
         {
-            Process P = base._Start();
+            NiceHashProcess P = base._Start();
 
             if (AffinityMask != 0 && P != null)
                 CPUID.AdjustAffinity(P.Id, AffinityMask);

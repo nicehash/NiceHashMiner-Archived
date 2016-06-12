@@ -94,7 +94,7 @@ namespace NiceHashMiner
 
         protected int[] EtherDevices;
         protected string WorkingDirectory;
-        protected Process ProcessHandle;
+        protected NiceHashProcess ProcessHandle;
         protected BenchmarkComplete OnBenchmarkComplete;
         protected object BenchmarkTag;
         protected int BenchmarkIndex;
@@ -415,14 +415,14 @@ namespace NiceHashMiner
         }
 
 
-        virtual protected Process _Start()
+        virtual protected NiceHashProcess _Start()
         {
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0 || EnabledDeviceCount() == 0) return null;
 
             Helpers.ConsolePrint(MinerDeviceName, "Starting miner: " + LastCommandLine);
 
-            Process P = new Process();
+            NiceHashProcess P = new NiceHashProcess();
 
             if (WorkingDirectory.Length > 1)
             {
@@ -441,9 +441,11 @@ namespace NiceHashMiner
 
             P.StartInfo.Arguments = LastCommandLine;
             P.StartInfo.CreateNoWindow = Config.ConfigData.HideMiningWindows;
-            P.StartInfo.UseShellExecute = !Config.ConfigData.HideMiningWindows;
-            P.EnableRaisingEvents = true;
-            P.Exited += Miner_Exited;
+            //P.StartInfo.UseShellExecute = !Config.ConfigData.HideMiningWindows;
+            P.StartInfo.UseShellExecute = false;
+            //P.EnableRaisingEvents = true;
+            //P.Exited += Miner_Exited;
+            P.ExitEvent = Miner_Exited;
 
             try
             {
@@ -458,7 +460,7 @@ namespace NiceHashMiner
         }
 
 
-        virtual protected void Miner_Exited(object sender, EventArgs e)
+        virtual protected void Miner_Exited()
         {
             Stop();
         }
