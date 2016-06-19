@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Globalization;
 using System.Management;
-using Microsoft.Win32;
 
 namespace NiceHashMiner
 {
@@ -44,19 +43,13 @@ namespace NiceHashMiner
         {
             InitializeComponent();
 
+            Helpers.ConsolePrint("TEST", International.GetText("test1"), "asd", 55);
+
             if (ss)
             {
                 Form4 f4 = new Form4();
                 f4.ShowDialog();
             }
-
-            if (Config.ConfigData.LogLevel > 0)
-                Logger.ConfigureWithFile();
-
-            if (Config.ConfigData.DebugConsole)
-                Helpers.AllocConsole();
-
-            Helpers.ConsolePrint("NICEHASH", "Starting up");
 
             // Log the computer's amount of Total RAM and Page File Size
             ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
@@ -305,17 +298,31 @@ namespace NiceHashMiner
             SetEnvironmentVariables();
 
             IncreaseLoadCounter();
-            if (Config.ConfigData.DisableWindowsErrorReporting)
-            {
-                LoadingScreen.LoadText.Text = "Disabling Windows error reporting...";
-                DisableWindowsErrorReporting();
-            }
+            LoadingScreen.LoadText.Text = "Setting Windows error reporting...";
+            Helpers.DisableWindowsErrorReporting(Config.ConfigData.DisableWindowsErrorReporting);
 
             IncreaseLoadCounter();
             if (Config.ConfigData.NVIDIAP0State)
             {
                 LoadingScreen.LoadText.Text = "Changing all supported nVidia GPUs to P0 state...";
-                ChangeP0State();
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo();
+                    psi.FileName = "nvidiasetp0state.exe";
+                    psi.Verb = "runas";
+                    psi.UseShellExecute = true;
+                    psi.CreateNoWindow = true;
+                    Process p = Process.Start(psi);
+                    p.WaitForExit();
+                    if (p.ExitCode != 0)
+                        Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode.ToString());
+                    else
+                        Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
+                }
             }
 
             IncreaseLoadCounter();
@@ -374,7 +381,7 @@ namespace NiceHashMiner
 
                 if (m.NotProfitable)
                 {
-                    m.Stop();
+                    m.Stop(false);
                     continue;
                 }
                 
@@ -382,7 +389,7 @@ namespace NiceHashMiner
                 {
                     if (m.CurrentAlgo >= 0)
                     {
-                        m.Stop();
+                        m.Stop(true);
                         // wait 0.5 seconds before going on
                         System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
                     }
@@ -392,6 +399,7 @@ namespace NiceHashMiner
                 m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
                     "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBox1.SelectedIndex] + ".nicehash.com:" +
                     NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+                    //"stratum+tcp://127.0.0.1:" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
             }
         }
 
@@ -780,7 +788,7 @@ namespace NiceHashMiner
 
             foreach (Miner m in Miners)
             {
-                m.Stop();
+                m.Stop(false);
                 m.CurrentAlgo = -1;
                 m.CurrentRate = 0;
             }
@@ -822,7 +830,7 @@ namespace NiceHashMiner
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             foreach (Miner m in Miners)
-                m.Stop();
+                m.Stop(false);
         }
 
 
@@ -963,222 +971,6 @@ namespace NiceHashMiner
             this.Show();
             this.WindowState = FormWindowState.Normal;
             notifyIcon1.Visible = false;
-        }
-
-        private void DisableWindowsErrorReporting()
-        {
-            bool failed = false;
-
-            Helpers.ConsolePrint("NICEHASH", "Trying to disable Windows error reporting");
-
-            // CurrentUser
-            try
-            {
-                using (RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\Windows Error Reporting"))
-                {
-                    if (rk != null)
-                    {
-                        Object o = rk.GetValue("DontShowUI");
-                        if (o != null)
-                        {
-                            int val = (int)o;
-                            Helpers.ConsolePrint("NICEHASH", "Current DontShowUI value: " + val);
-
-                            if (val == 0)
-                            {
-                                Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
-                                rk.SetValue("DontShowUI", 1);
-                            }
-                        }
-                        else
-                        {
-                            Helpers.ConsolePrint("NICEHASH", "Registry key not found .. creating one..");
-                            rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
-                            Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
-                            rk.SetValue("DontShowUI", 1);
-                        }
-                    }
-                    else
-                        Helpers.ConsolePrint("NICEHASH", "Unable to open SubKey.");
-                }
-            }
-            catch (Exception ex)
-            {
-                failed = true;
-                Helpers.ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
-                RestartWithAdminPrivilege("Would you like to restart NiceHash Miner with administrative permission to disable Windows error reporting?",
-                                          "Needs administrator permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            }
-
-            // LocalMachine
-            try
-            {
-                using (RegistryKey rk = Registry.LocalMachine.CreateSubKey(@"Software\Microsoft\Windows\Windows Error Reporting"))
-                {
-                    if (rk != null)
-                    {
-                        Object o = rk.GetValue("DontShowUI");
-                        if (o != null)
-                        {
-                            int val = (int)o;
-                            Helpers.ConsolePrint("NICEHASH", "DontShowUI: " + val);
-
-                            if (val == 0)
-                            {
-                                Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
-                                rk.SetValue("DontShowUI", 1);
-                            }
-                        }
-                        else
-                        {
-                            Helpers.ConsolePrint("NICEHASH", "Registry key not found .. creating one..");
-                            rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
-                            Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
-                            rk.SetValue("DontShowUI", 1);
-                        }
-                    }
-                    else
-                        Helpers.ConsolePrint("NICEHASH", "Unable to open SubKey.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
-                if (!failed)
-                {
-                    RestartWithAdminPrivilege("Would you like to restart NiceHash Miner with administrative permission to disable Windows error reporting?",
-                                              "Needs administrator permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                }
-            }
-        }
-
-        private void ChangeP0State()
-        {
-            string stdOut, stdErr, args, smiPath;
-            stdOut = stdErr = args = String.Empty;
-            smiPath = "\"C:\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe\"";
-
-            try
-            {
-                Process P = new Process();
-                P.StartInfo.FileName = smiPath;
-                P.StartInfo.Arguments = "--list-gpus";
-                P.StartInfo.UseShellExecute = false;
-                P.StartInfo.RedirectStandardOutput = true;
-                P.StartInfo.RedirectStandardError = true;
-                P.StartInfo.CreateNoWindow = true;
-                P.Start();
-                P.WaitForExit();
-
-                stdOut = P.StandardOutput.ReadToEnd();
-                stdErr = P.StandardError.ReadToEnd();
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] Exception: " + ex.Message);
-            }
-
-            if (stdOut.Length < 10)
-            {
-                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] NVSMI: Error! Output too short. (" + stdOut + ")");
-                return;
-            }
-            else
-            {
-                string[] strGPUs = stdOut.Split('\n');
-                int numGPUs = strGPUs.Length - 1;
-                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] Num GPUs: " + numGPUs);
-
-                for (int i = 0; i < numGPUs; i++)
-                {
-                    string mem, clk;
-                    mem = clk = String.Empty;
-
-                    try
-                    {
-                        args = "-i " + i + " -q -d SUPPORTED_CLOCKS";
-                        Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] GetClocks Start Process: " + args);
-                        Process GetClocks = new Process();
-                        GetClocks.StartInfo.FileName = smiPath;
-                        GetClocks.StartInfo.Arguments = args;
-                        GetClocks.StartInfo.UseShellExecute = false;
-                        GetClocks.StartInfo.RedirectStandardOutput = true;
-                        GetClocks.Start();
-
-                        string outdata;
-                        do
-                        {
-                            outdata = GetClocks.StandardOutput.ReadLine();
-                            if (outdata != null)
-                            {
-                                if (outdata.Contains("Memory"))
-                                {
-                                    mem = outdata.Split(':')[1].Trim();
-                                    mem = mem.Substring(0, mem.Length - 4);
-                                }
-                                else if (outdata.Contains("Graphics"))
-                                {
-                                    clk = outdata.Split(':')[1].Trim();
-                                    clk = clk.Substring(0, clk.Length - 4);
-                                    break;
-                                }
-                            }
-                        } while (outdata != null);
-
-                        GetClocks.Kill();
-                        GetClocks.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] Exception: " + ex.Message);
-                    }
-
-                    if (mem.Length > 1 && clk.Length > 1)
-                    {
-                        try
-                        {
-                            args = "-i " + i + " -ac " + mem + "," + clk;
-                            Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock Start Process: " + args);
-                            Process SetClock = new Process();
-                            SetClock.StartInfo.FileName = smiPath;
-                            SetClock.StartInfo.Arguments = args;
-                            SetClock.StartInfo.UseShellExecute = false;
-                            SetClock.StartInfo.RedirectStandardOutput = true;
-                            SetClock.Start();
-
-                            string outdata = SetClock.StandardOutput.ReadToEnd();
-                            Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock: " + outdata);
-                            if (outdata.Contains("Applications clocks set to"))
-                                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock: Successfully set.");
-                            else if (outdata.Contains("is not supported"))
-                                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock: Setting applications clocks is not supported.");
-                            else if (outdata.Contains("does not have permission"))
-                            {
-                                Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] SetClock: The current user does not have permission to change clocks.");
-                                RestartWithAdminPrivilege("Would you like to restart NiceHash Miner with administrative permission to change nVidia GPUs to P0 state?",
-                                                          "Needs administrator permission", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Helpers.ConsolePrint("NICEHASH", "[ChangeP0State] Exception: " + ex.Message);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void RestartWithAdminPrivilege(string msg, string caption, MessageBoxButtons btn, MessageBoxIcon ico)
-        {
-            if (MessageBox.Show(msg, caption, btn, ico) == System.Windows.Forms.DialogResult.Yes)
-            {
-                Process PHandle = new Process();
-                PHandle.StartInfo.FileName = Application.ExecutablePath;
-                PHandle.StartInfo.Verb = "runas";
-                PHandle.Start();
-
-                Close();
-            }
         }
     }
 }

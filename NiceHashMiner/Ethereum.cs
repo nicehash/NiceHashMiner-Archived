@@ -148,7 +148,12 @@ namespace NiceHashMiner
 
             try
             {
-                if (!GetCurrentBlock(worker)) throw new Exception("GetCurrentBlock returns null..");
+                if (!GetCurrentBlock(worker)) 
+                {
+                    Helpers.ConsolePrint(worker, "Failed to obtain current block, using default 1700000.");
+                    CurrentBlockNum = "1700000";
+                    //throw new Exception("GetCurrentBlock returns null..");
+                }
 
                 // Check if dag-dir exist to avoid ethminer from crashing
                 Helpers.ConsolePrint(worker, "Creating DAG directory for " + worker + "..");

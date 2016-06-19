@@ -12,7 +12,7 @@ namespace NiceHashMiner
             MinerDeviceName = "NVIDIA3.x";
             Path = "bin\\ccminer_tpruvot.exe";
             APIPort = 4049;
-            ER = new EthminerReader(APIPort);
+            //ER = new EthminerReader(APIPort);
 
             // disable neoscrypt
             var tmp = new List<Algorithm>(SupportedAlgorithms);

@@ -43,7 +43,7 @@ namespace NiceHashMiner
             MinerDeviceName = "AMD_OpenCL";
             Path = "bin\\sgminer-5-4-0-general\\sgminer.exe";
             APIPort = 4050;
-            ER = new EthminerReader(APIPort);
+            //ER = new EthminerReader(APIPort);
             EnableOptimizedVersion = true;
             PlatformDevices = 0;
             GPUPlatformNumber = 0;
@@ -309,20 +309,30 @@ namespace NiceHashMiner
                 CommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
                               " " + ExtraLaunchParameters +
                               " " + Algo.ExtraLaunchParameters +
-                              " --benchmark-warmup 10 --benchmark-trial 20" +
-                              " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
+                              " --benchmark-warmup 40 --benchmark-trial 20" +
+                              //" --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
                               " --opencl-devices ";
 
+                int dagdev = -1;
                 for (int i = 0; i < CDevs.Count; i++)
+                {
                     if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
+                    {
                         CommandLine += i + " ";
+                        if (dagdev == -1) dagdev = i;
+                    }
+                }
+
+                CommandLine += " --dag-load-mode single " + dagdev.ToString();
 
                 CommandLine += " --benchmark ";
                 if (Ethereum.GetCurrentBlock(MinerDeviceName))
                     CommandLine += Ethereum.CurrentBlockNum;
+                else
+                    CommandLine += Config.ConfigData.ethminerDefaultBlockHeight.ToString();
 
                 // Check if dag-dir exist to avoid ethminer from crashing
-                if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return "";
+                //if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return "";
             }
             else
             {
@@ -379,22 +389,30 @@ namespace NiceHashMiner
             if (Algo.NiceHashName.Equals("daggerhashimoto"))
             {
                 // Check if dag-dir exist to avoid ethminer from crashing
-                if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return;
+                //if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return;
 
                 WorkingDirectory = "";
                 LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
-                                  " --erase-dags old" +
+                                  //" --erase-dags old" +
                                   " " + ExtraLaunchParameters +
                                   " " + Algo.ExtraLaunchParameters +
-                                  " -S " + url.Substring(14) +
+                                  " -ES -S " + url.Substring(14) +
                                   " -O " + username + ":" + GetPassword(Algo) +
-                                  " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
-                                  " --report-port " + APIPort.ToString() +
+                                  //" --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
+                                  " --api-port " + Config.ConfigData.ethminerAPIPortAMD.ToString() +
                                   " --opencl-devices ";
 
+                int dagdev = -1;
                 for (int i = 0; i < CDevs.Count; i++)
+                {
                     if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
-                        LastCommandLine += i + " ";
+                    {
+                        LastCommandLine += i.ToString() + " ";
+                        if (dagdev == -1) dagdev = i;
+                    }
+                }
+
+                LastCommandLine += " --dag-load-mode singlekeep " + dagdev.ToString();
             }
             else
             {

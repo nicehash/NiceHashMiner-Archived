@@ -119,7 +119,7 @@ namespace NiceHashMiner
                 workDir = StartInfo.WorkingDirectory;
 
             bool res = CreateProcess(StartInfo.FileName,
-                StartInfo.Arguments,
+                " " + StartInfo.Arguments,
                 ref pSec,
                 ref tSec,
                 false,

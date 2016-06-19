@@ -15,6 +15,17 @@ namespace NiceHashMiner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            if (Config.ConfigData.LogLevel > 0)
+                Logger.ConfigureWithFile();
+
+            if (Config.ConfigData.DebugConsole)
+                Helpers.AllocConsole();
+
+            Helpers.ConsolePrint("NICEHASH", "Starting up");
+
+            // Init languages
+            International.Initialize(Config.ConfigData.Language);
+
             if (argv.Length > 0 && argv[0] == "-config")
                 Application.Run(new Form1(true));
             else

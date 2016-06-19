@@ -43,6 +43,7 @@ namespace NiceHashMiner
     public class Config
     {
 #pragma warning disable 649
+        public int Language;
         public bool DebugConsole;
         public string BitcoinAddress;
         public string WorkerName;
@@ -78,6 +79,9 @@ namespace NiceHashMiner
         public bool DisableWindowsErrorReporting;
         public bool UseNewSettingsPage;
         public bool NVIDIAP0State;
+        public int ethminerAPIPortNvidia;
+        public int ethminerAPIPortAMD;
+        public int ethminerDefaultBlockHeight;
         public Group[] Groups;
 #pragma warning restore 649
 
@@ -87,6 +91,7 @@ namespace NiceHashMiner
         {
             // Set defaults
             ConfigData = new Config();
+            ConfigData.Language = 0;
             ConfigData.BitcoinAddress = "";
             ConfigData.WorkerName = "worker1";
             ConfigData.Location = 0;
@@ -112,6 +117,10 @@ namespace NiceHashMiner
             ConfigData.DisableWindowsErrorReporting = false;
             ConfigData.UseNewSettingsPage = true;
             ConfigData.NVIDIAP0State = false;
+            ConfigData.MinerRestartDelayMS = 500;
+            ConfigData.ethminerAPIPortNvidia = 34561;
+            ConfigData.ethminerAPIPortAMD = 34562;
+            ConfigData.ethminerDefaultBlockHeight = 1700000;
 
             try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
             catch { }

@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ethminerAPI.cs" />
     <Compile Include="Form5.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +83,7 @@
     <Compile Include="Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="International.cs" />
     <Compile Include="NiceHashProcess.cs" />
     <Compile Include="SubmitResultDialog.cs">
       <SubType>Form</SubType>
@@ -179,6 +181,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
+    <None Include="langs\en.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -192,7 +198,6 @@
   <ItemGroup>
     <Content Include="Resources\logo.ico" />
     <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
-    <None Include="logo.ico" />
     <Content Include="Resources\NHM_help_50px.png" />
   </ItemGroup>
   <ItemGroup>
