@@ -85,7 +85,7 @@ namespace NiceHashMiner
 
         public static Config ConfigData;
 
-        static Config()
+        public static void InitializeConfig()
         {
             // Set defaults
             ConfigData = new Config();
@@ -102,7 +102,8 @@ namespace NiceHashMiner
             }
             catch { }
 
-            if (ConfigData.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0)
+            if (ConfigData.ConfigFileVersion == null || 
+                ConfigData.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0)
             {
                 Helpers.ConsolePrint("CONFIG", "Config file is from an older version of NiceHashMiner..");
                 Helpers.ConsolePrint("CONFIG", "Backing up config.json to config_old.json..");

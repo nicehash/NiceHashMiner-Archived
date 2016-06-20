@@ -15,6 +15,8 @@ namespace NiceHashMiner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            Config.InitializeConfig();
+
             if (Config.ConfigData.LogLevel > 0)
                 Logger.ConfigureWithFile();
 

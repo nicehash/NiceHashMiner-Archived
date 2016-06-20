@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace NiceHashMiner
 {
@@ -281,7 +282,7 @@ namespace NiceHashMiner
             }
 
             for (int i = 0; i < Form1.NiceHashData.Length; i++)
-                url += "&speed" + i + "=" + (total[i] / SubmitResultDialog.div[i]);
+                url += "&speed" + i + "=" + (total[i] / SubmitResultDialog.div[i]).ToString("F2", CultureInfo.InvariantCulture);
 
             System.Diagnostics.Process.Start(url);
         }

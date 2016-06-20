@@ -80,7 +80,7 @@ namespace NiceHashMiner
                 else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("neoscrypt"))
                     Path = "bin\\ccminer_neoscrypt.exe";
                 else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("lyra2rev2"))
-                    Path = "bin\\ccminer_sp_lyra2v2.exe";
+                    Path = "bin\\ccminer_nanashi_lyra2rev2.exe";
                 else if (this is ccminer_sp)
                     Path = "bin\\ccminer_sp.exe";
                 else
