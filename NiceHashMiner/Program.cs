@@ -21,7 +21,7 @@ namespace NiceHashMiner
             if (Config.ConfigData.DebugConsole)
                 Helpers.AllocConsole();
 
-            Helpers.ConsolePrint("NICEHASH", "Starting up");
+            Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
 
             // Init languages
             International.Initialize(Config.ConfigData.Language);

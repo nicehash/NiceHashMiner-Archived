@@ -43,7 +43,6 @@ namespace NiceHashMiner
             MinerDeviceName = "AMD_OpenCL";
             Path = "bin\\sgminer-5-4-0-general\\sgminer.exe";
             APIPort = 4050;
-            //ER = new EthminerReader(APIPort);
             EnableOptimizedVersion = true;
             PlatformDevices = 0;
             GPUPlatformNumber = 0;
@@ -171,6 +170,13 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint(MinerDeviceName, "GPU (" + GPUCodeName[i] + ") is not optimized. Switching to general sgminer.");
                     EnableOptimizedVersion = false;
+                }
+                else
+                {
+                    SupportedAlgorithms[GetAlgoIndex("x11")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                    SupportedAlgorithms[GetAlgoIndex("qubit")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                    SupportedAlgorithms[GetAlgoIndex("quark")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                    SupportedAlgorithms[GetAlgoIndex("lyra2rev2")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1";
                 }
 
                 if (!GPUCodeName[i].Equals("Tahiti"))
@@ -310,7 +316,6 @@ namespace NiceHashMiner
                               " " + ExtraLaunchParameters +
                               " " + Algo.ExtraLaunchParameters +
                               " --benchmark-warmup 40 --benchmark-trial 20" +
-                              //" --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
                               " --opencl-devices ";
 
                 int dagdev = -1;
@@ -325,14 +330,8 @@ namespace NiceHashMiner
 
                 CommandLine += " --dag-load-mode single " + dagdev.ToString();
 
-                CommandLine += " --benchmark ";
-                if (Ethereum.GetCurrentBlock(MinerDeviceName))
-                    CommandLine += Ethereum.CurrentBlockNum;
-                else
-                    CommandLine += Config.ConfigData.ethminerDefaultBlockHeight.ToString();
-
-                // Check if dag-dir exist to avoid ethminer from crashing
-                //if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return "";
+                Ethereum.GetCurrentBlock(MinerDeviceName);
+                CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
             }
             else
             {
@@ -388,17 +387,12 @@ namespace NiceHashMiner
 
             if (Algo.NiceHashName.Equals("daggerhashimoto"))
             {
-                // Check if dag-dir exist to avoid ethminer from crashing
-                //if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return;
-
                 WorkingDirectory = "";
                 LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
-                                  //" --erase-dags old" +
                                   " " + ExtraLaunchParameters +
                                   " " + Algo.ExtraLaunchParameters +
                                   " -ES -S " + url.Substring(14) +
                                   " -O " + username + ":" + GetPassword(Algo) +
-                                  //" --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
                                   " --api-port " + Config.ConfigData.ethminerAPIPortAMD.ToString() +
                                   " --opencl-devices ";
 
@@ -418,8 +412,8 @@ namespace NiceHashMiner
             {
                 StartingUpDelay = true;
 
-                Path = "sgminer.exe";
                 WorkingDirectory = GetMinerDirectory(Algo.NiceHashName);
+                Path = WorkingDirectory + "sgminer.exe";
 
                 LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
                                   " -k " + Algo.MinerName +
@@ -445,13 +439,6 @@ namespace NiceHashMiner
 
                 if (Config.ConfigData.DisableAMDTempControl == false)
                     LastCommandLine += TemperatureParam;
-
-                if (Config.ConfigData.HideMiningWindows)
-                {
-                    LastCommandLine = " /C \"cd /d " + WorkingDirectory +
-                                      " && " + Path + LastCommandLine + "\"";
-                    Path = "cmd";
-                }
             }
 
             ProcessHandle = _Start();
@@ -459,7 +446,7 @@ namespace NiceHashMiner
 
         private string GetMinerDirectory(string algo)
         {
-            string dir = new DirectoryInfo(".").FullName + "\\bin\\";
+            string dir = "bin\\";
 
             if (EnableOptimizedVersion)
             {
@@ -470,25 +457,20 @@ namespace NiceHashMiner
                         if (!(GPUCodeName[i].Equals("Hawaii") || GPUCodeName[i].Equals("Pitcairn") || GPUCodeName[i].Equals("Tahiti")))
                         {
                             if (!Helpers.InternalCheckIsWow64())
-                                return dir + "sgminer-5-4-0-general";
+                                return dir + "sgminer-5-4-0-general\\";
 
-                            SupportedAlgorithms[GetAlgoIndex("x11")].ExtraLaunchParameters   = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
-                            SupportedAlgorithms[GetAlgoIndex("qubit")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
-                            SupportedAlgorithms[GetAlgoIndex("quark")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
-                            SupportedAlgorithms[GetAlgoIndex("lyra2rev2")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1";
-
-                            return dir + "sgminer-5-4-0-tweaked";
+                            return dir + "sgminer-5-4-0-tweaked\\";
                         }
                     }
 
                     if (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2"))
-                        return dir + "sgminer-5-1-0-optimized";
+                        return dir + "sgminer-5-1-0-optimized\\";
                     else
-                        return dir + "sgminer-5-1-1-optimized";
+                        return dir + "sgminer-5-1-1-optimized\\";
                 }
             }
 
-            return dir + "sgminer-5-4-0-general";
+            return dir + "sgminer-5-4-0-general\\";
         }
     }
 }

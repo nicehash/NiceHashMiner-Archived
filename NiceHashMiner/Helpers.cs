@@ -134,10 +134,7 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                //failed = true;
                 Helpers.ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
-                //RestartWithAdminPrivilege("Would you like to restart NiceHash Miner with administrative permission to disable Windows error reporting?",
-                //                          "Needs administrator permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             }
         }
     }

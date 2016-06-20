@@ -10,6 +10,7 @@ namespace NiceHashMiner
 {
     public partial class SubmitResultDialog : Form
     {
+        public static double[] div;
         private bool InBenchmark;
         private int Time, TimeIndex, DeviceChecked_Index;
         private string CurrentAlgoName;
@@ -38,6 +39,32 @@ namespace NiceHashMiner
             }
         }
 
+        static SubmitResultDialog()
+        {
+            div = new double[] { 1000000,       //   0 (MH/s) Scrypt
+                                 1000000000000, //   1 (TH/s) SHA256
+                                 1000000,       //   2 (MH/s) ScryptNf
+                                 1000000,       //   3 (MH/s) X11
+                                 1000000,       //   4 (MH/s) X13
+                                 1000000,       //   5 (MH/s) Keccak
+                                 1000000,       //   6 (MH/s) X15
+                                 1000000,       //   7 (MH/s) Nist5
+                                 1000000,       //   8 (MH/s) NeoScrypt
+                                 1000000,       //   9 (MH/s) Lyra2RE
+                                 1000000,       //  10 (MH/s) WhirlpoolX
+                                 1000000,       //  11 (MH/s) Qubit
+                                 1000000,       //  12 (MH/s) Quark
+                                 1000,          //  13 (kH/s) Axiom
+                                 1000000,       //  14 (MH/s) Lyra2REv2
+                                 1000,          //  15 (kH/s) ScryptJaneNf16
+                                 1000000000,    //  16 (GH/s) Blake256r8
+                                 1000000000,    //  17 (GH/s) Blake256r14
+                                 1000000000,    //  18 (GH/s) Blake256r8vnl
+                                 1000,          //  19 (kH/s) Hodl
+                                 1000000,       //  20 (MH/s) Daggerhashimoto
+                                 1000000000,    //  21 (GH/s) Decred
+                                 1000000 };     // 999 (MH/s) Ethereum
+        }
         private void CloseBtn_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -171,40 +198,13 @@ namespace NiceHashMiner
             }
             else
             {
-                double[] div = { 1000000, // Scrypt MH/s
-                                 1000000000000, // SHA256 TH/s
-                                 1000000, // ScryptNf MH/s
-                                 1000000, // X11
-                                 1000000, // X13
-                                 1000000, // Keccak
-                                 1000000, // X15
-                                 1000000, // Nist5
-                                 1000000, // NeoScrypt
-                                 1000000, // Lyra2RE
-                                 1000000, // WhirlpoolX
-                                 1000000, // Qubit
-                                 1000000, // Quark
-                                 1000,    // Axiom
-                                 1000000, // Lyra2REv2
-                                 1000,    // ScryptJaneNf16
-                                 1000000000, // Blake256r8
-                                 1000000000, // Blake256r14
-                                 1000000000, // Blake256r8vnl
-                                 1000000 };  // Daggerhashimoto
 
                 for (int i = 0; i < mm.SupportedAlgorithms.Length; i++)
                 {
                     if (!mm.SupportedAlgorithms[i].Skip)
                     {
                         int id = mm.SupportedAlgorithms[i].NiceHashID;
-                        if (!mm.SupportedAlgorithms[i].NiceHashName.Equals("daggerhashimoto"))
-                        {
-                            url += "&speed" + id + "=" + (mm.SupportedAlgorithms[i].BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else
-                        {
-                            url += "&speedeth=" + (mm.SupportedAlgorithms[i].BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
-                        }
+                        url += "&speed" + id + "=" + (mm.SupportedAlgorithms[i].BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
 

@@ -138,109 +138,23 @@ namespace NiceHashMiner
 
         static Ethereum()
         {
-            EtherMinerPath = "bin\\ethereum\\ethminer.exe";
+            EtherMinerPath = "bin\\ethminer.exe";
             CurrentBlockNum = "";
         }
 
-        public static bool CreateDAGFile(bool HideWindow, string worker, out string err)
-        {
-            err = null;
-
-            try
-            {
-                if (!GetCurrentBlock(worker)) 
-                {
-                    Helpers.ConsolePrint(worker, "Failed to obtain current block, using default 1700000.");
-                    CurrentBlockNum = "1700000";
-                    //throw new Exception("GetCurrentBlock returns null..");
-                }
-
-                // Check if dag-dir exist to avoid ethminer from crashing
-                Helpers.ConsolePrint(worker, "Creating DAG directory for " + worker + "..");
-                if (!CreateDAGDirectory(worker)) throw new Exception("[" + worker + "] Cannot create directory for DAG files.");
-
-                if (worker.Equals("NVIDIA5.x"))
-                {
-                    CopyDAGFiles("NVIDIA3.x", worker);
-                    CopyDAGFiles("AMD_OpenCL", worker);
-                }
-                else if (worker.Equals("NVIDIA3.x"))
-                {
-                    CopyDAGFiles("NVIDIA5.x", worker);
-                    CopyDAGFiles("AMD_OpenCL", worker);
-                }
-                else if (worker.Equals("AMD_OpenCL"))
-                {
-                    CopyDAGFiles("NVIDIA5.x", worker);
-                    CopyDAGFiles("NVIDIA3.x", worker);
-                }
-
-                Helpers.ConsolePrint(worker, "Creating DAG file for " + worker + "..");
-                
-                Process P = new Process();
-                P.StartInfo.FileName = EtherMinerPath;
-                P.StartInfo.Arguments = " --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + worker + " --create-dag " + CurrentBlockNum;
-                Helpers.ConsolePrint(worker, "CreateDAGFile Arguments: " + P.StartInfo.Arguments);
-                P.StartInfo.CreateNoWindow = HideWindow;
-                //P.StartInfo.UseShellExecute = !HideWindow;
-                P.StartInfo.UseShellExecute = false;
-
-                Form5 f = new Form5(worker, P);
-                f.ShowDialog();
-
-                if (f.Success)
-                    return true;
-                else
-                    throw new Exception(f.Error);
-                //P.Start();
-                
-                //P.WaitForExit();
-
-                //P.Close();
-                //P = null;
-            }
-            catch (Exception e)
-            {
-                err = e.Message;
-                Helpers.ConsolePrint(worker, "Exception: " + e.Message);
-                return false;
-            }
-
-            //return true;
-        }
-
-        public static bool CreateDAGDirectory(string worker)
-        {
-            try
-            {
-                if (!Directory.Exists(Config.ConfigData.DAGDirectory + "\\" + worker))
-                    Directory.CreateDirectory(Config.ConfigData.DAGDirectory + "\\" + worker);
-            }
-            catch { return false; }
-
-            return true;
-        }
-        
-        public static bool GetCurrentBlock(string worker)
+        public static void GetCurrentBlock(string worker)
         {
             string ret = NiceHashStats.GetNiceHashAPIData("https://etherchain.org/api/blocks/count", worker);
-            if (ret == null) return false;
-            ret = ret.Substring(ret.LastIndexOf("count") + 7);
-            CurrentBlockNum = ret.Substring(0, ret.Length - 3);
-
-            return true;
-        }
-
-        private static void CopyDAGFiles(string from, string to)
-        {
-            if (Directory.Exists(Config.ConfigData.DAGDirectory + "\\" + from))
+            
+            if (ret == null)
             {
-                string src = Config.ConfigData.DAGDirectory + "\\" + from;
-                foreach (var file in Directory.GetFiles(src))
-                {
-                    string dest = Path.Combine(Config.ConfigData.DAGDirectory + "\\" + to, Path.GetFileName(file));
-                    if (file.Contains("full") && !File.Exists(dest)) File.Copy(file, dest, false);
-                }
+                Helpers.ConsolePrint(worker, "Failed to obtain current block, using default 1700000.");
+                CurrentBlockNum = Config.ConfigData.ethminerDefaultBlockHeight.ToString();
+            }
+            else
+            {
+                ret = ret.Substring(ret.LastIndexOf("count") + 7);
+                CurrentBlockNum = ret.Substring(0, ret.Length - 3);
             }
         }
     }

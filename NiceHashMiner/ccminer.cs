@@ -43,7 +43,6 @@ namespace NiceHashMiner
                 CommandLine = " --benchmark-warmup 40 --benchmark-trial 20" +
                               " " + ExtraLaunchParameters +
                               " " + SupportedAlgorithms[index].ExtraLaunchParameters +
-                              //" --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
                               " --cuda --cuda-devices ";
 
                 int dagdev = -1;
@@ -58,14 +57,8 @@ namespace NiceHashMiner
 
                 CommandLine += " --dag-load-mode single " + dagdev.ToString();
 
-                CommandLine += " --benchmark ";
-                if (Ethereum.GetCurrentBlock(MinerDeviceName))
-                    CommandLine += Ethereum.CurrentBlockNum;
-                else
-                    CommandLine += Config.ConfigData.ethminerDefaultBlockHeight.ToString();
-
-                // Check if dag-dir exist to avoid ethminer from crashing
-                //if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return "";
+                Ethereum.GetCurrentBlock(MinerDeviceName);
+                CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
             }
             else
             {
@@ -107,16 +100,11 @@ namespace NiceHashMiner
 
             if (Algo.NiceHashName.Equals("daggerhashimoto"))
             {
-                // Check if dag-dir exist to avoid ethminer from crashing
-                //if (!Ethereum.CreateDAGDirectory(MinerDeviceName)) return;
-
                 LastCommandLine = " --cuda" +
-                                  //" --erase-dags old" +
                                   " " + ExtraLaunchParameters +
                                   " " + Algo.ExtraLaunchParameters +
                                   " -ES -S " + url.Substring(14) +
                                   " -O " + username + ":" + GetPassword(Algo) +
-                                  //" --dag-dir " + Config.ConfigData.DAGDirectory + "\\" + MinerDeviceName +
                                   " --api-port " + Config.ConfigData.ethminerAPIPortNvidia.ToString() +
                                   " --cuda-devices ";
 
@@ -161,7 +149,7 @@ namespace NiceHashMiner
                 else if (this is ccminer_sp && Algo.NiceHashName.Equals("neoscrypt"))
                     Path = "bin\\ccminer_neoscrypt.exe";
                 else if (this is ccminer_sp && Algo.NiceHashName.Equals("lyra2rev2"))
-                    Path = "bin\\ccminer_sp_lyra2v2.exe";
+                    Path = "bin\\ccminer_nanashi_lyra2rev2.exe";
                 else if (this is ccminer_sp)
                     Path = "bin\\ccminer_sp.exe";
                 else
@@ -259,6 +247,7 @@ namespace NiceHashMiner
                     if (this is ccminer_sp)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
+                        AddEthereum("Compute version: 6.0");
                         AddEthereum("Compute version: 5.2");
                         AddEthereum("Compute version: 5.0");
                     }

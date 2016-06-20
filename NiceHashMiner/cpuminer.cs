@@ -24,7 +24,7 @@ namespace NiceHashMiner
                     new Algorithm(9, "lyra2re", "lyra2"),
                     new Algorithm(13, "axiom", "axiom"),
                     new Algorithm(15, "scryptjanenf16", "scryptjane:16"),
-                    new Algorithm(19, "hodl", "hodl")
+                    new Algorithm(19, "hodl", "hodl", "--extranonce-subscribe")
                 };
 
             if (Config.ConfigData.ForceCPUExtension > 0)

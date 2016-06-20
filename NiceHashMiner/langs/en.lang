@@ -1,6 +1,9 @@
-﻿{ "Name" : "English", "ID" : 0, "Entries" : {
-	"hello" : "Hello!",
-	"bye" : "ByeBye!",
-	"test1" : "Example {0} of this {1}"
-	}
+﻿{
+    "Name": "English",
+    "ID": 0,
+    "Entries": {
+        "hello": "Hello!",
+        "bye": "ByeBye!",
+        "test1": "Example {0} of this {1}"
+    }
 }

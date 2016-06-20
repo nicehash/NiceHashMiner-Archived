@@ -85,12 +85,12 @@ namespace NiceHashMiner
         public int CurrentAlgo;
         public double CurrentRate;
         public bool NotProfitable;
+        public bool IsRunning;
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
         public int NumRetries;
         public bool StartingUpDelay;
         public string Path;
-        //public EthminerReader ER;
 
         protected int[] EtherDevices;
         protected string WorkingDirectory;
@@ -117,6 +117,7 @@ namespace NiceHashMiner
             CurrentAlgo = -1;
             CurrentRate = 0;
             NotProfitable = false;
+            IsRunning = false;
             PreviousTotalMH = 0.0;
         }
 
@@ -149,9 +150,7 @@ namespace NiceHashMiner
                 catch { }
                 ProcessHandle.Close();
                 ProcessHandle = null;
-                
-                //if (AlgoNameIs("daggerhashimoto")) ER.Stop();
-                //else
+
                 if (MinerDeviceName == "AMD_OpenCL") KillSGMiner();
             }
 
@@ -165,6 +164,8 @@ namespace NiceHashMiner
 
             StartingUpDelay = false;
             PreviousTotalMH = 0.0;
+            NotProfitable = false;
+            IsRunning = false;
         }
 
         abstract protected string BenchmarkCreateCommandLine(int index, int time);
@@ -450,6 +451,8 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0 || EnabledDeviceCount() == 0) return null;
 
+            Helpers.ConsolePrint(MinerDeviceName, "Starting miner: " + LastCommandLine);
+
             NiceHashProcess P = new NiceHashProcess();
 
             if (WorkingDirectory.Length > 1)
@@ -460,7 +463,6 @@ namespace NiceHashMiner
             NumRetries = Config.ConfigData.MinerAPIGraceMinutes * 60 / Config.ConfigData.MinerAPIQueryInterval;
             if (AlgoNameIs("daggerhashimoto"))
             {
-                NumRetries = Config.ConfigData.EthMinerAPIGraceMinutes * 60 / Config.ConfigData.MinerAPIQueryInterval;
                 ethminerLink = new ethminerAPI((this is sgminer) ? Config.ConfigData.ethminerAPIPortAMD : Config.ConfigData.ethminerAPIPortNvidia);
                 P.StartInfo.FileName = Ethereum.EtherMinerPath;
                 P.ExitEvent = ethMiner_Exited;
@@ -481,6 +483,8 @@ namespace NiceHashMiner
             {
                 if (P.Start())
                 {
+                    IsRunning = true;
+
                     if (AlgoNameIs("daggerhashimoto"))
                     {
                         ethminerProcess = P;
@@ -626,6 +630,13 @@ namespace NiceHashMiner
                 bool ismining;
                 if (!ethminerLink.GetSpeed(out ismining, out ad.Speed))
                 {
+                    if (NumRetries > 0)
+                    {
+                        NumRetries--;
+                        ad.Speed = 0;
+                        return ad;
+                    }
+
                     Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
                     Stop(false);
                     _Start();
@@ -637,36 +648,8 @@ namespace NiceHashMiner
                     // resend start mining command
                     ethminerLink.StartMining();
                 }
+                NumRetries = 0;
                 ad.Speed *= 1000 * 1000;
-
-                //try
-                //{
-                //    FillAlgorithm("daggerhashimoto", ref ad);
-                //    if (ER.GetIsRunning() && ER.GetDAGprogress() != 100 && ER.GetSpeed() < 1)
-                //    {
-                //        ad.AlgorithmName = "Creating DAG " + ER.GetDAGprogress().ToString() + "%";
-                //        aname = "Creating DAG File";
-                //        ad.Speed = 0;
-                //    }
-                //    else
-                //    {
-                //        double time = 10;
-                //        if (ER.GetIsRunning()) time = 30;
-                //        if ((DateTime.Now.Subtract(ER.GetLastActiveTime())).TotalSeconds > time)
-                //        {
-                //            Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
-                //            Restart();
-                //            return null;
-                //        }
-
-                //        ad.Speed = ER.GetSpeed() * 1000 * 1000;
-                //    }
-                //}
-                //catch (Exception e)
-                //{
-                //    Helpers.ConsolePrint(MinerDeviceName, "GetSummary: " + e.Message);
-                //    return null;
-                //}
             }
             else
             {
@@ -751,7 +734,7 @@ namespace NiceHashMiner
 
         virtual public int GetMaxProfitIndex(NiceHashSMA[] NiceHashData)
         {
-            double MaxProfit = 0;
+            double MaxProfit = -1;
             int MaxProfitIndex = 0;
 
             for (int i = 0; i < SupportedAlgorithms.Length; i++)

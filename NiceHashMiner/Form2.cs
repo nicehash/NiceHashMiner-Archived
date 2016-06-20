@@ -48,7 +48,7 @@ namespace NiceHashMiner
             inBenchmark = false;
 
             if (autostart)
-                button1_Click(null, null);
+                buttonStartBenchmark_Click(null, null);
         }
 
 
@@ -77,7 +77,6 @@ namespace NiceHashMiner
         {
             if (listView1.Items.Count > index)
             {
-                //string err;
                 ListViewItem lvi = listView1.Items[index];
                 index++;
 
@@ -103,17 +102,7 @@ namespace NiceHashMiner
                     Time = Config.ConfigData.BenchmarkTimeLimitsNVIDIA[TimeIndex];
 
                     if (lvi.SubItems[2].Text.Equals("daggerhashimoto"))
-                    {
-                        //lvi.SubItems[3].Text = "Creating DAG file (10-20 minutes)..";
-                        //if (Ethereum.CreateDAGFile(true, m.MinerDeviceName, out err) == false)
-                        //{
-                        //    lvi.SubItems[3].Text = err;
-                        //    inBenchmark = false;
-                        //    InitiateBenchmark();
-                        //    return;
-                        //}
                         lvi.SubItems[3].Text = "Benchmarking (2-4 minutes)...";
-                    }
                     else
                         lvi.SubItems[3].Text = "Please wait about " + Time + " seconds...";
                 }
@@ -126,17 +115,7 @@ namespace NiceHashMiner
                         Time += 1;
 
                     if (lvi.SubItems[2].Text.Equals("daggerhashimoto"))
-                    {
-                        //lvi.SubItems[3].Text = "Creating DAG file (10-20 minutes)..";
-                        //if (Ethereum.CreateDAGFile(true, m.MinerDeviceName, out err) == false)
-                        //{
-                        //    lvi.SubItems[3].Text = err;
-                        //    inBenchmark = false;
-                        //    InitiateBenchmark();
-                        //    return;
-                        //}
                         lvi.SubItems[3].Text = "Benchmarking (2-4 minutes)...";
-                    }
                     else
                         lvi.SubItems[3].Text = "Please wait about " + Time + " minutes...";
                 }
@@ -189,10 +168,10 @@ namespace NiceHashMiner
                 
                 Config.RebuildGroups();
 
-                button1.Enabled = true;
-                button2.Enabled = false;
-                button3.Enabled = true;
-                button4.Enabled = true;
+                buttonStartBenchmark.Enabled = true;
+                buttonStopBenchmark.Enabled = false;
+                buttonReset.Enabled = true;
+                buttonSubmitHardware.Enabled = true;
             }
         }
 
@@ -216,24 +195,24 @@ namespace NiceHashMiner
             TimeIndex = 2;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonStartBenchmark_Click(object sender, EventArgs e)
         {
             index = 0;
-            button1.Enabled = false;
-            button2.Enabled = true;
-            button3.Enabled = false;
-            button4.Enabled = false;
+            buttonStartBenchmark.Enabled = false;
+            buttonStopBenchmark.Enabled = true;
+            buttonReset.Enabled = false;
+            buttonSubmitHardware.Enabled = false;
             InitiateBenchmark();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonStopBenchmark_Click(object sender, EventArgs e)
         {
             if (CurrentlyBenchmarking != null)
                 CurrentlyBenchmarking.BenchmarkSignalQuit = true;
             index = 9999;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void buttonReset_Click(object sender, EventArgs e)
         {
             foreach (Miner m in Form1.Miners)
             {
@@ -264,7 +243,7 @@ namespace NiceHashMiner
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void buttonSubmitHardware_Click(object sender, EventArgs e)
         {
             Form SubmitResultDialog = new SubmitResultDialog(TimeIndex);
             SubmitResultDialog.ShowDialog();
@@ -282,6 +261,34 @@ namespace NiceHashMiner
                     }
                 }
             }
+        }
+
+        private void buttonCheckProfitability_Click(object sender, EventArgs e)
+        {
+            string url = "https://www.nicehash.com/?p=calc&name=CUSTOM";
+            double[] total = new double[Form1.NiceHashData.Length];
+
+            for (int i = 0; i < Form1.NiceHashData.Length; i++)
+                total[i] = 0;
+
+            for (int i = 0; i < Form1.Miners.Length; i++)
+            {
+                if (Form1.Miners[i].EnabledDeviceCount() < 1) continue;
+                for (int j = 0; j < Form1.Miners[i].SupportedAlgorithms.Length; j++)
+                {
+                    total[Form1.Miners[i].SupportedAlgorithms[j].NiceHashID] += Form1.Miners[i].SupportedAlgorithms[j].BenchmarkSpeed;
+                }
+            }
+
+            for (int i = 0; i < Form1.NiceHashData.Length; i++)
+                url += "&speed" + i + "=" + (total[i] / SubmitResultDialog.div[i]);
+
+            System.Diagnostics.Process.Start(url);
+        }
+
+        private void buttonClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -178,6 +178,19 @@ namespace NiceHashMiner
 
             Miners[CPUs + 3] = new sgminer();
 
+            for (int i = 0; i < CPUs; i++)
+            {
+                try
+                {
+                    if ((Miners[CPUs + 0].CDevs.Count > 0 || Miners[CPUs + 1].CDevs.Count > 0 ||
+                         Miners[CPUs + 2].CDevs.Count > 0 || Miners[CPUs + 3].CDevs.Count > 0) && i < CPUs)
+                    {
+                        Miners[i].CDevs[0].Enabled = false;
+                    }
+                }
+                catch { }
+            }
+
             LoadingScreen.LoadText.Text = "Saving config...";
             IncreaseLoadCounter();
             
@@ -228,6 +241,7 @@ namespace NiceHashMiner
                     ComputeDevice D = Miners[i].CDevs[k];
                     if (Config.ConfigData.Groups.Length > i)
                     {
+                        D.Enabled = true;
                         for (int z = 0; z < Config.ConfigData.Groups[i].DisabledDevices.Length; z++)
                         {
                             if (Config.ConfigData.Groups[i].DisabledDevices[z] == k)
@@ -399,7 +413,6 @@ namespace NiceHashMiner
                 m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
                     "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBox1.SelectedIndex] + ".nicehash.com:" +
                     NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
-                    //"stratum+tcp://127.0.0.1:" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
             }
         }
 
@@ -493,7 +506,7 @@ namespace NiceHashMiner
                 }
             }
 
-            if (CPUAlgoName.Length > 0)
+            if (CPUAlgoName != null && CPUAlgoName.Length > 0)
             {
                 SetCPUStats(CPUAlgoName, CPUTotalSpeed, CPUTotalRate);
             }
@@ -946,6 +959,15 @@ namespace NiceHashMiner
         }
 
         private void textBox1_Leave(object sender, EventArgs e)
+        {
+            // Commit to config.json
+            Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();
+            Config.ConfigData.WorkerName = textBox2.Text.Trim();
+            Config.ConfigData.Location = comboBox1.SelectedIndex;
+            Config.Commit();
+        }
+
+        private void textBox2_Leave(object sender, EventArgs e)
         {
             // Commit to config.json
             Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();

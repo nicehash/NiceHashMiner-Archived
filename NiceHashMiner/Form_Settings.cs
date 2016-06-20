@@ -25,8 +25,50 @@ namespace NiceHashMiner
             SetupNVIDIA2XTab();
             SetupAMDTab();
 
-            toolTip1.SetToolTip(this.checkBox_DebugConsole, "Enable or disable debug console.");
-            toolTip1.SetToolTip(this.checkBox_AutoStartMining, "Start mining automatically when NiceHashMiner starts up.");
+            // Setup Tooltips
+            toolTip1.SetToolTip(this.checkBox_DebugConsole, "When set to true, it displays debug console.");
+            toolTip1.SetToolTip(this.textBox_BitcoinAddress, "User's bitcoin address for mining.");
+            toolTip1.SetToolTip(this.textBox_WorkerName, "To identify user's computer.");
+            toolTip1.SetToolTip(this.comboBox_Location, "Sets the mining location. 0 for Europe (Amsterdam), 1 for USA (San Jose), 2 for China (Hong Kong) and 3 for Japan (Tokyo).");
+            toolTip1.SetToolTip(this.checkBox_AutoStartMining, "When set to true, NiceHashMiner will automatically start mining when launched.");
+            toolTip1.SetToolTip(this.checkBox_HideMiningWindows, "When set to true, sgminer, ccminer and cpuminer console windows will be hidden.");
+            toolTip1.SetToolTip(this.checkBox_MinimizeToTray, "When set to true, NiceHashMiner will minimize to tray.");
+            toolTip1.SetToolTip(this.textBox_CPU0_LessThreads, "Reduce number of threads used on each CPU by LessThreads.");
+            toolTip1.SetToolTip(this.comboBox_CPU0_ForceCPUExtension, "Force certain CPU extension miner. 0 for automatic, 1 for SSE2, 2 for AVX and 3 for AVX2.");
+
+            toolTip1.SetToolTip(this.textBox_SwitchMinSecondsFixed, "Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.");
+            toolTip1.SetToolTip(this.textBox_SwitchMinSecondsDynamic, "Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHashMiner users to have the exact same switching pattern.");
+            toolTip1.SetToolTip(this.textBox_MinerAPIQueryInterval, "Amount of time (in seconds) that NiceHashMiner will query the miner for update on mining speed.");
+            toolTip1.SetToolTip(this.textBox_MinerRestartDelayMS, "Amount of time (in milliseconds) that NiceHashMiner will wait before restarting the miner.");
+            toolTip1.SetToolTip(this.textBox_MinerAPIGraceMinutes, "This is to give time (in minutes) for sgminer's API to start up properly as it takes a bit of time to (if needed) compile and load the bin.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Quick, "Amount of times (in seconds) for quick benchmarking the CPUs.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Standard, "Amount of times (in seconds) for standard benchmarking the CPUs.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Precise, "Amount of times (in seconds) for precise benchmarking the CPUs.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Quick, "Amount of times (in seconds) for quick benchmarking the NVIDIA GPUs.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Standard, "Amount of times (in seconds) for standard benchmarking the NVIDIA GPUs.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Precise, "Amount of times (in seconds) for precise benchmarking the NVIDIA GPUs.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Quick, "Amount of times (in seconds) for quick benchmarking the AMD GPUs.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Standard, "Amount of times (in seconds) for standard benchmarking the AMD GPUs.");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Precise, "Amount of times (in seconds) for precise benchmarking the AMD GPUs.");
+
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia5X, "Set it to true if you would like to skip the detection of NVidia5.x GPUs.");
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia3X, "Set it to true if you would like to skip the detection of NVidia3.x GPUs.");
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia2X, "Set it to true if you would like to skip the detection of NVidia2.x GPUs.");
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionAMD, "Set it to true if you would like to skip the detection of AMD GPUs.");
+
+            toolTip1.SetToolTip(this.checkBox_AMD_DisableAMDTempControl, "Set it to true if you would like to disable the built-in temperature control for AMD GPUs (except daggerhashimoto algo).");
+            toolTip1.SetToolTip(this.textBox_DAGDirectory, "The DAG location for ethminer.");
+            toolTip1.SetToolTip(this.checkBox_AutoScaleBTCValues, "Set it to true if you would like to see the BTC values autoscale to the appropriate scale.");
+            toolTip1.SetToolTip(this.checkBox_StartMiningWhenIdle, "Automatically start mining when computer is idle and stop mining when computer is being used.");
+
+            toolTip1.SetToolTip(this.textBox_MinIdleSeconds, "When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.");
+            toolTip1.SetToolTip(this.textBox_LogLevel, "Set to 0 if you don't want any logging or set to 1 if you would want logging.");
+            toolTip1.SetToolTip(this.textBox_LogMaxFileSize, "Sets the maximum size for the log file.");
+
+            toolTip1.SetToolTip(this.checkBox_ShowDriverVersionWarning, "When set to true, NiceHashMiner would give warning if less optimal version of a driver is installed.");
+            toolTip1.SetToolTip(this.checkBox_DisableWindowsErrorReporting, "When set to true, in the event of a miner crash, NiceHashMiner would still be able to restart the miner again as it is not blocked by Windows error message.");
+            toolTip1.SetToolTip(this.checkBox_UseNewSettingsPage, "When set to true, NiceHashMiner would use the new settings page.");
+            toolTip1.SetToolTip(this.checkBox_NVIDIAP0State, "When set to true, NiceHashMiner would change all supported NVidia GPUs to P0 state.");
         }
 
         private void SetupGeneralTab()
@@ -72,9 +114,6 @@ namespace NiceHashMiner
             textBox_MinerAPIQueryInterval.Text = Config.ConfigData.MinerAPIQueryInterval.ToString();
             textBox_MinerRestartDelayMS.Text = Config.ConfigData.MinerRestartDelayMS.ToString();
             textBox_MinerAPIGraceMinutes.Text = Config.ConfigData.MinerAPIGraceMinutes.ToString();
-            textBox_EthMinerAPIGraceMinutes.Text = Config.ConfigData.EthMinerAPIGraceMinutes.ToString();
-            textBox_APIBindPortEthereumFrontEnd.Text = Config.ConfigData.APIBindPortEthereumFrontEnd.ToString();
-            textBox_APIBindPortEthereumProxy.Text = Config.ConfigData.APIBindPortEthereumProxy.ToString();
             textBox_MinIdleSeconds.Text = Config.ConfigData.MinIdleSeconds.ToString();
             textBox_LogLevel.Text = Config.ConfigData.LogLevel.ToString();
             textBox_LogMaxFileSize.Text = Config.ConfigData.LogMaxFileSize.ToString();
@@ -97,9 +136,6 @@ namespace NiceHashMiner
             this.textBox_MinerAPIQueryInterval.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerRestartDelayMS.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerAPIGraceMinutes.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-            this.textBox_EthMinerAPIGraceMinutes.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-            this.textBox_APIBindPortEthereumFrontEnd.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-            this.textBox_APIBindPortEthereumProxy.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinIdleSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_LogLevel.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_LogMaxFileSize.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
@@ -133,6 +169,12 @@ namespace NiceHashMiner
             textBox_CPU0_ExtraLaunchParameters.Text = Config.ConfigData.Groups[0].ExtraLaunchParameters;
             textBox_CPU0_ExtraLaunchParameters.Tag = (int)0;
             textBox_CPU0_ExtraLaunchParameters.Leave += Main_ExtraLaunchParameters_Leave;
+
+            // Setup Tooltips
+            toolTip1.SetToolTip(comboBox_CPU0_ForceCPUExtension, "Force certain CPU extension miner. 0 is automatic, 1 for SSE2, 2 for AVX and 3 for AVX2.");
+            toolTip1.SetToolTip(textBox_CPU0_LessThreads, "Reduce number of threads used on each CPU by LessThreads.");
+            toolTip1.SetToolTip(textBox_CPU0_APIBindPort, "API port that will be used by this group.");
+            toolTip1.SetToolTip(textBox_CPU0_ExtraLaunchParameters, "Additional launch parameters when launching miner.");
 
             // Setup Algos
             int tabIndex = 6;
@@ -173,6 +215,12 @@ namespace NiceHashMiner
             textBox_NVIDIA5X_ExtraLaunchParameters.Text = Config.ConfigData.Groups[minerIndex].ExtraLaunchParameters;
             textBox_NVIDIA5X_ExtraLaunchParameters.Tag = minerIndex;
             textBox_NVIDIA5X_ExtraLaunchParameters.Leave += Main_ExtraLaunchParameters_Leave;
+
+            // Setup Tooltips
+            toolTip1.SetToolTip(textBox_NVIDIA5X_APIBindPort, "API port that will be used by this group.");
+            toolTip1.SetToolTip(textBox_NVIDIA5X_UsePassword, "Use this password when launching miner. If null, default password 'x' is used.");
+            toolTip1.SetToolTip(textBox_NVIDIA5X_MinimumProfit, "If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.");
+            toolTip1.SetToolTip(textBox_NVIDIA5X_ExtraLaunchParameters, "Additional launch parameters when launching miner.");
         }
 
         private void SetupNVIDIA3XTab()
@@ -205,6 +253,12 @@ namespace NiceHashMiner
             textBox_NVIDIA3X_ExtraLaunchParameters.Text = Config.ConfigData.Groups[minerIndex].ExtraLaunchParameters;
             textBox_NVIDIA3X_ExtraLaunchParameters.Tag = minerIndex;
             textBox_NVIDIA3X_ExtraLaunchParameters.Leave += Main_ExtraLaunchParameters_Leave;
+
+            // Setup Tooltips
+            toolTip1.SetToolTip(textBox_NVIDIA3X_APIBindPort, "API port that will be used by this group.");
+            toolTip1.SetToolTip(textBox_NVIDIA3X_UsePassword, "Use this password when launching miner. If null, default password 'x' is used.");
+            toolTip1.SetToolTip(textBox_NVIDIA3X_MinimumProfit, "If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.");
+            toolTip1.SetToolTip(textBox_NVIDIA3X_ExtraLaunchParameters, "Additional launch parameters when launching miner.");
         }
 
         private void SetupNVIDIA2XTab()
@@ -238,6 +292,12 @@ namespace NiceHashMiner
             textBox_NVIDIA2X_ExtraLaunchParameters.Text = Config.ConfigData.Groups[minerIndex].ExtraLaunchParameters;
             textBox_NVIDIA2X_ExtraLaunchParameters.Tag = minerIndex;
             textBox_NVIDIA2X_ExtraLaunchParameters.Leave += Main_ExtraLaunchParameters_Leave;
+
+            // Setup Tooltips
+            toolTip1.SetToolTip(textBox_NVIDIA2X_APIBindPort, "API port that will be used by this group.");
+            toolTip1.SetToolTip(textBox_NVIDIA2X_UsePassword, "Use this password when launching miner. If null, default password 'x' is used.");
+            toolTip1.SetToolTip(textBox_NVIDIA2X_MinimumProfit, "If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.");
+            toolTip1.SetToolTip(textBox_NVIDIA2X_ExtraLaunchParameters, "Additional launch parameters when launching miner.");
         }
 
         private void SetupAMDTab()
@@ -274,6 +334,13 @@ namespace NiceHashMiner
             textBox_AMD_ExtraLaunchParameters.Text = Config.ConfigData.Groups[minerIndex].ExtraLaunchParameters;
             textBox_AMD_ExtraLaunchParameters.Tag = minerIndex;
             textBox_AMD_ExtraLaunchParameters.Leave += Main_ExtraLaunchParameters_Leave;
+
+            // Setup Tooltips
+            toolTip1.SetToolTip(checkBox_AMD_DisableAMDTempControl, "Set it to true if you would like to disable the built-in temperature control for AMD GPUs (except daggerhashimoto algo).");
+            toolTip1.SetToolTip(textBox_AMD_APIBindPort, "API port that will be used by this group.");
+            toolTip1.SetToolTip(textBox_AMD_UsePassword, "Use this password when launching miner. If null, default password 'x' is used.");
+            toolTip1.SetToolTip(textBox_AMD_MinimumProfit, "If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.");
+            toolTip1.SetToolTip(textBox_AMD_ExtraLaunchParameters, "Additional launch parameters when launching miner.");
         }
 
         private void ShowAlgoSettings(ref TabControl tabCtl, ref int tabIndex, int minerIndex, string minerName, int numDevices)
@@ -312,6 +379,10 @@ namespace NiceHashMiner
                 Skip[i].Tag = tag;
                 Skip[i].CheckedChanged += Algo_Skip_CheckedChanged;
 
+                toolTip1.SetToolTip(Skip[i], "Set to true if you would like to skip & disable a particular algorithm. " +
+                                             "Benchmarking as well as actual mining will be disabled for this particular algorithm. " +
+                                             "That said, auto-switching will skip this algorithm when mining will be running.");
+
                 // UsePassword
                 labelUsePassword[i] = new Label();
                 labelUsePassword[i].AutoSize = true;
@@ -329,6 +400,8 @@ namespace NiceHashMiner
                 textboxUsePassword[i].Text = Config.ConfigData.Groups[minerIndex].Algorithms[i].UsePassword;
                 textboxUsePassword[i].Tag = tag;
                 textboxUsePassword[i].Leave += Algo_UsePassword_Leave;
+
+                toolTip1.SetToolTip(textboxUsePassword[i], "Use this password when launching miner and this algorithm. If null, Groups's UsePassword is used.");
 
                 // Benchmark Speed
                 labelBenchmarkSpeed[i] = new Label();
@@ -355,6 +428,8 @@ namespace NiceHashMiner
                 textboxBenchmarkSpeed[i].Text = Config.ConfigData.Groups[minerIndex].Algorithms[i].BenchmarkSpeed.ToString();
                 textboxBenchmarkSpeed[i].Tag = tag;
                 textboxBenchmarkSpeed[i].Leave += Algo_BenchmarkSpeed_Leave;
+
+                toolTip1.SetToolTip(textboxBenchmarkSpeed[i], "Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.");
 
                 // Disabled Devices per Algo
                 labelDisabledDevices[i] = new Label();
@@ -385,6 +460,8 @@ namespace NiceHashMiner
                 textboxExtraLaunchParameters[i].Text = Config.ConfigData.Groups[minerIndex].Algorithms[i].ExtraLaunchParameters;
                 textboxExtraLaunchParameters[i].Tag = tag;
                 textboxExtraLaunchParameters[i].Leave += Algo_ExtraLaunchParameters_Leave;
+
+                toolTip1.SetToolTip(textboxExtraLaunchParameters[i], "Additional launch parameters when launching miner and this algorithm.");
 
                 // Add TabPages
                 algoTabPage[i].Controls.Add(Skip[i]);
@@ -439,9 +516,6 @@ namespace NiceHashMiner
             if (!ParseStringToInt32(ref textBox_MinerAPIQueryInterval, ref Config.ConfigData.MinerAPIQueryInterval)) return;
             if (!ParseStringToInt32(ref textBox_MinerRestartDelayMS, ref Config.ConfigData.MinerRestartDelayMS)) return;
             if (!ParseStringToInt32(ref textBox_MinerAPIGraceMinutes, ref Config.ConfigData.MinerAPIGraceMinutes)) return;
-            if (!ParseStringToInt32(ref textBox_EthMinerAPIGraceMinutes, ref Config.ConfigData.EthMinerAPIGraceMinutes)) return;
-            if (!ParseStringToInt32(ref textBox_APIBindPortEthereumFrontEnd, ref Config.ConfigData.APIBindPortEthereumFrontEnd)) return;
-            if (!ParseStringToInt32(ref textBox_APIBindPortEthereumProxy, ref Config.ConfigData.APIBindPortEthereumProxy)) return;
             if (!ParseStringToInt32(ref textBox_MinIdleSeconds, ref Config.ConfigData.MinIdleSeconds)) return;
             if (!ParseStringToInt32(ref textBox_LogLevel, ref Config.ConfigData.LogLevel)) return;
             if (!ParseStringToInt64(ref textBox_LogMaxFileSize, ref Config.ConfigData.LogMaxFileSize)) return;
@@ -607,7 +681,19 @@ namespace NiceHashMiner
 
         private void DisabledDevice(bool mainDD, ref TabPage tb, ref int tabIndex, int minerIndex, int algoIndex, int numDevices, int x, int y, string minerName)
         {
-            if (numDevices > 0)
+            if (minerName.Contains("CPU"))
+            {
+                Label labelNoDevice = new Label();
+                labelNoDevice.AutoSize = true;
+                labelNoDevice.Location = new System.Drawing.Point(x, y + 1);
+                labelNoDevice.Name = "labelSkipCPU";
+                labelNoDevice.Size = new System.Drawing.Size(92, 13);
+                labelNoDevice.TabIndex = 99;
+                labelNoDevice.Text = "Use Skip for CPUs..";
+                
+                tb.Controls.Add(labelNoDevice);
+            }
+            else if (numDevices > 0)
             {
                 List<int> lst = new List<int>();
                 if (mainDD)
@@ -639,6 +725,8 @@ namespace NiceHashMiner
                         DisabledDevice[i].Checked = Config.ConfigData.Groups[minerIndex].Algorithms[algoIndex].DisabledDevices[i];
                         DisabledDevice[i].CheckedChanged += AlgoDisabledDevice_CheckedChanged;
                     }
+
+                    toolTip1.SetToolTip(DisabledDevice[i], "Any devices that are checked will be skipped by NiceHashMiner for only this algorithm.");
 
                     tb.Controls.Add(DisabledDevice[i]);
                     x += 61;
@@ -725,7 +813,7 @@ namespace NiceHashMiner
 
         private void toolTip1_Popup(object sender, PopupEventArgs e)
         {
-            toolTip1.ToolTipTitle = e.AssociatedControl.Text;
+            toolTip1.ToolTipTitle = "Explanation";
         }
     }
 }

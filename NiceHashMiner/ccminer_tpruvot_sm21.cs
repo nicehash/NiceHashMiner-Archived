@@ -14,9 +14,9 @@ namespace NiceHashMiner
 
             // disable neoscrypt & whirlpoolx & daggerhashimoto
             var tmp = new List<Algorithm>(SupportedAlgorithms);
+            tmp[GetAlgoIndex("whirlpoolx")].MinerName = "whirlpool";    // Needed for new tpruvot's ccminer
             tmp.RemoveAt(GetAlgoIndex("neoscrypt"));    // Remove NeoScrypt
-            tmp.RemoveAt(GetAlgoIndex("whirlpoolx")-1); // Remove WhirlpoolX
-            tmp.RemoveAt(GetAlgoIndex("daggerhashimoto") - 2);   // Remove Daggerhashimoto
+            tmp.RemoveAt(GetAlgoIndex("daggerhashimoto") - 1);   // Remove Daggerhashimoto
             SupportedAlgorithms = tmp.ToArray();
 
             if (!Config.ConfigData.DisableDetectionNVidia2X)

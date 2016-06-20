@@ -171,10 +171,22 @@ namespace NiceHashMiner
             string ResponseFromServer;
             try
             {
+                string ActiveMinersGroup = "";
+                
+                for (int i = 0; i < Form1.Miners.Length; i++)
+                    if (Form1.Miners[i].IsRunning)
+                        ActiveMinersGroup += Form1.Miners[i].MinerDeviceName + "/";
+
+                if (ActiveMinersGroup.Length > 0)
+                    ActiveMinersGroup = ActiveMinersGroup.Remove(ActiveMinersGroup.Length - 1);
+                else
+                    ActiveMinersGroup = "IDLE";
+
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
                 WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
                 if (worker.Length > 64) worker = worker.Substring(0, 64);
                 WR.Headers.Add("NiceHash-Worker-ID", worker);
+                WR.Headers.Add("NHM-Active-Miners-Group", ActiveMinersGroup);
                 WR.Timeout = 10000;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();

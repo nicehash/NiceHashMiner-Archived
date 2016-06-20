@@ -43,6 +43,7 @@ namespace NiceHashMiner
     public class Config
     {
 #pragma warning disable 649
+        public Version ConfigFileVersion;
         public int Language;
         public bool DebugConsole;
         public string BitcoinAddress;
@@ -58,7 +59,6 @@ namespace NiceHashMiner
         public int MinerAPIQueryInterval;
         public int MinerRestartDelayMS;
         public int MinerAPIGraceMinutes;
-        public int EthMinerAPIGraceMinutes;
         public int[] BenchmarkTimeLimitsCPU;
         public int[] BenchmarkTimeLimitsNVIDIA;
         public int[] BenchmarkTimeLimitsAMD;
@@ -67,8 +67,6 @@ namespace NiceHashMiner
         public bool DisableDetectionNVidia2X;
         public bool DisableDetectionAMD;
         public bool DisableAMDTempControl;
-        public int APIBindPortEthereumFrontEnd;
-        public int APIBindPortEthereumProxy;
         public string DAGDirectory;
         public bool AutoScaleBTCValues;
         public bool StartMiningWhenIdle;
@@ -91,6 +89,60 @@ namespace NiceHashMiner
         {
             // Set defaults
             ConfigData = new Config();
+            SetDefaults();
+
+            try
+            {
+                if (new FileInfo("config.json").Length > 17000)
+                    ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+                else
+                {
+                    File.Delete("config.json");
+                }
+            }
+            catch { }
+
+            if (ConfigData.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0)
+            {
+                Helpers.ConsolePrint("CONFIG", "Config file is from an older version of NiceHashMiner..");
+                Helpers.ConsolePrint("CONFIG", "Backing up config.json to config_old.json..");
+                try
+                {
+                    if (File.Exists("config_old.json"))
+                        File.Delete("config_old.json");
+                    File.Move("config.json", "config_old.json");
+                } catch { }
+
+                SetDefaults();
+            }
+
+            if (ConfigData.SwitchMinSecondsFixed <= 0)
+                ConfigData.SwitchMinSecondsFixed = 150;
+            if (ConfigData.SwitchMinSecondsDynamic <= 0)
+                ConfigData.SwitchMinSecondsDynamic = 60;
+            if (ConfigData.MinerAPIQueryInterval <= 0)
+                ConfigData.MinerAPIQueryInterval = 5;
+            if (ConfigData.MinerRestartDelayMS <= 0)
+                ConfigData.MinerRestartDelayMS = 200;
+            if (ConfigData.MinerAPIGraceMinutes <= 0)
+                ConfigData.MinerAPIGraceMinutes  = 1;
+            if (ConfigData.BenchmarkTimeLimitsCPU == null || ConfigData.BenchmarkTimeLimitsCPU.Length < 3)
+                ConfigData.BenchmarkTimeLimitsCPU = new int[] { 10, 20, 60 };
+            if (ConfigData.BenchmarkTimeLimitsNVIDIA == null || ConfigData.BenchmarkTimeLimitsNVIDIA.Length < 3)
+                ConfigData.BenchmarkTimeLimitsNVIDIA = new int[] { 10, 20, 60 };
+            if (ConfigData.BenchmarkTimeLimitsAMD == null || ConfigData.BenchmarkTimeLimitsAMD.Length < 3)
+                ConfigData.BenchmarkTimeLimitsAMD = new int[] { 120, 180, 240 };
+            if (ConfigData.MinIdleSeconds <= 0)
+                ConfigData.MinIdleSeconds = 60;
+            if (ConfigData.LogLevel != 0 || ConfigData.LogLevel != 1)
+                ConfigData.LogLevel = 1;
+            if (ConfigData.LogMaxFileSize <= 0)
+                ConfigData.LogMaxFileSize = 1048576;
+        }
+
+        public static void SetDefaults()
+        {
+            ConfigData.ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             ConfigData.Language = 0;
             ConfigData.BitcoinAddress = "";
             ConfigData.WorkerName = "worker1";
@@ -107,8 +159,6 @@ namespace NiceHashMiner
             ConfigData.DisableDetectionAMD = false;
             ConfigData.DisableAMDTempControl = false;
             ConfigData.DAGDirectory = "data";
-            ConfigData.APIBindPortEthereumFrontEnd = 4051;
-            ConfigData.APIBindPortEthereumProxy = 4052;
             ConfigData.AutoScaleBTCValues = true;
             ConfigData.StartMiningWhenIdle = false;
             ConfigData.LogLevel = 1;
@@ -121,34 +171,6 @@ namespace NiceHashMiner
             ConfigData.ethminerAPIPortNvidia = 34561;
             ConfigData.ethminerAPIPortAMD = 34562;
             ConfigData.ethminerDefaultBlockHeight = 1700000;
-
-            try { ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json")); }
-            catch { }
-
-            if (ConfigData.SwitchMinSecondsFixed <= 0)
-                ConfigData.SwitchMinSecondsFixed = 15 * 60;
-            if (ConfigData.SwitchMinSecondsDynamic <= 0)
-                ConfigData.SwitchMinSecondsDynamic = 3 * 60;
-            if (ConfigData.MinerAPIQueryInterval <= 0)
-                ConfigData.MinerAPIQueryInterval = 5;
-            if (ConfigData.MinerRestartDelayMS <= 0)
-                ConfigData.MinerRestartDelayMS = 200;
-            if (ConfigData.MinerAPIGraceMinutes <= 0)
-                ConfigData.MinerAPIGraceMinutes  = 1;
-            if (ConfigData.EthMinerAPIGraceMinutes <= 0)
-                ConfigData.EthMinerAPIGraceMinutes = 2;
-            if (ConfigData.BenchmarkTimeLimitsCPU == null || ConfigData.BenchmarkTimeLimitsCPU.Length < 3)
-                ConfigData.BenchmarkTimeLimitsCPU = new int[] { 10, 20, 60 };
-            if (ConfigData.BenchmarkTimeLimitsNVIDIA == null || ConfigData.BenchmarkTimeLimitsNVIDIA.Length < 3)
-                ConfigData.BenchmarkTimeLimitsNVIDIA = new int[] { 10, 20, 60 };
-            if (ConfigData.BenchmarkTimeLimitsAMD == null || ConfigData.BenchmarkTimeLimitsAMD.Length < 3)
-                ConfigData.BenchmarkTimeLimitsAMD = new int[] { 120, 180, 240 };
-            if (ConfigData.MinIdleSeconds <= 0)
-                ConfigData.MinIdleSeconds = 60;
-            if (ConfigData.LogLevel != 0 || ConfigData.LogLevel != 1)
-                ConfigData.LogLevel = 1;
-            if (ConfigData.LogMaxFileSize <= 0)
-                ConfigData.LogMaxFileSize = 1048576;
         }
 
         public static void Commit()
