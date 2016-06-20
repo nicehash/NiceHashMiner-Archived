@@ -17,7 +17,7 @@ namespace NiceHashMiner
 
             Config.InitializeConfig();
 
-            if (Config.ConfigData.LogLevel > 0)
+            if (Config.ConfigData.LogToFile)
                 Logger.ConfigureWithFile();
 
             if (Config.ConfigData.DebugConsole)

@@ -52,7 +52,7 @@ namespace NiceHashMiner
             toolTip1.SetToolTip(this.label_MinerAPIQueryInterval, "Amount of time (in seconds) that NiceHashMiner will query the miner for update on mining speed.");
             toolTip1.SetToolTip(this.textBox_MinerRestartDelayMS, "Amount of time (in milliseconds) that NiceHashMiner will wait before restarting the miner.");
             toolTip1.SetToolTip(this.label_MinerRestartDelayMS, "Amount of time (in milliseconds) that NiceHashMiner will wait before restarting the miner.");
-            toolTip1.SetToolTip(this.textBox_MinerAPIGraceMinutes, "This is to give time (in minutes) for sgminer's API to start up properly as it takes a bit of time to (if needed) compile and load the bin.");
+            toolTip1.SetToolTip(this.textBox_MinerAPIGraceSeconds, "This is to give time (in minutes) for sgminer's API to start up properly as it takes a bit of time to (if needed) compile and load the bin.");
             toolTip1.SetToolTip(this.label_MinerAPIGraceMinutes, "This is to give time (in minutes) for sgminer's API to start up properly as it takes a bit of time to (if needed) compile and load the bin.");
 
             toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Quick, "Amount of times (in seconds) for quick benchmarking the CPUs.");
@@ -85,8 +85,7 @@ namespace NiceHashMiner
 
             toolTip1.SetToolTip(this.textBox_MinIdleSeconds, "When StartMiningWhenIdle is checked, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.");
             toolTip1.SetToolTip(this.label_MinIdleSeconds, "When StartMiningWhenIdle is checked, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.");
-            toolTip1.SetToolTip(this.textBox_LogLevel, "Set to 0 if you don't want any logging or set to 1 if you would want logging.");
-            toolTip1.SetToolTip(this.label_LogLevel, "Set to 0 if you don't want any logging or set to 1 if you would want logging.");
+            toolTip1.SetToolTip(this.checkBox_LogToFile, "Check to log console output to file.");
             toolTip1.SetToolTip(this.textBox_LogMaxFileSize, "Sets the maximum size for the log file.");
             toolTip1.SetToolTip(this.label_LogMaxFileSize, "Sets the maximum size for the log file.");
 
@@ -119,6 +118,7 @@ namespace NiceHashMiner
             checkBox_DisableWindowsErrorReporting.Checked = Config.ConfigData.DisableWindowsErrorReporting;
             checkBox_UseNewSettingsPage.Checked = Config.ConfigData.UseNewSettingsPage;
             checkBox_NVIDIAP0State.Checked = Config.ConfigData.NVIDIAP0State;
+            checkBox_LogToFile.Checked = Config.ConfigData.LogToFile;
 
             // Add EventHandler for all the general tab's checkboxes
             this.checkBox_AutoScaleBTCValues.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
@@ -135,6 +135,7 @@ namespace NiceHashMiner
             this.checkBox_StartMiningWhenIdle.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             this.checkBox_UseNewSettingsPage.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             this.checkBox_NVIDIAP0State.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+            this.checkBox_LogToFile.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
 
             // Textboxes
             textBox_BitcoinAddress.Text = Config.ConfigData.BitcoinAddress;
@@ -143,9 +144,8 @@ namespace NiceHashMiner
             textBox_SwitchMinSecondsDynamic.Text = Config.ConfigData.SwitchMinSecondsDynamic.ToString();
             textBox_MinerAPIQueryInterval.Text = Config.ConfigData.MinerAPIQueryInterval.ToString();
             textBox_MinerRestartDelayMS.Text = Config.ConfigData.MinerRestartDelayMS.ToString();
-            textBox_MinerAPIGraceMinutes.Text = Config.ConfigData.MinerAPIGraceMinutes.ToString();
+            textBox_MinerAPIGraceSeconds.Text = Config.ConfigData.MinerAPIGraceSeconds.ToString();
             textBox_MinIdleSeconds.Text = Config.ConfigData.MinIdleSeconds.ToString();
-            textBox_LogLevel.Text = Config.ConfigData.LogLevel.ToString();
             textBox_LogMaxFileSize.Text = Config.ConfigData.LogMaxFileSize.ToString();
             textBox_BenchmarkTimeLimitsCPU_Quick.Text = Config.ConfigData.BenchmarkTimeLimitsCPU[0].ToString();
             textBox_BenchmarkTimeLimitsCPU_Standard.Text = Config.ConfigData.BenchmarkTimeLimitsCPU[1].ToString();
@@ -167,9 +167,8 @@ namespace NiceHashMiner
             this.textBox_SwitchMinSecondsDynamic.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerAPIQueryInterval.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerRestartDelayMS.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-            this.textBox_MinerAPIGraceMinutes.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+            this.textBox_MinerAPIGraceSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinIdleSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-            this.textBox_LogLevel.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_LogMaxFileSize.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_BenchmarkTimeLimitsCPU_Quick.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_BenchmarkTimeLimitsCPU_Standard.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
@@ -185,7 +184,7 @@ namespace NiceHashMiner
             this.textBox_ethminerDefaultBlockHeight.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
 
             // ComboBox
-            comboBox_Language.SelectedIndex = Config.ConfigData.Language;
+            //comboBox_Language.SelectedIndex = Config.ConfigData.Language;
             comboBox_Location.SelectedIndex = Config.ConfigData.Location;
 
             // Add EventHandler for all the general tab's textboxes
@@ -566,6 +565,7 @@ namespace NiceHashMiner
             Config.ConfigData.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
             Config.ConfigData.UseNewSettingsPage = checkBox_UseNewSettingsPage.Checked;
             Config.ConfigData.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
+            Config.ConfigData.LogToFile = checkBox_LogToFile.Checked;
         }
 
         private void GeneralTextBoxes_Leave(object sender, EventArgs e)
@@ -576,9 +576,8 @@ namespace NiceHashMiner
             if (!ParseStringToInt32(ref textBox_SwitchMinSecondsDynamic, ref Config.ConfigData.SwitchMinSecondsDynamic)) return;
             if (!ParseStringToInt32(ref textBox_MinerAPIQueryInterval, ref Config.ConfigData.MinerAPIQueryInterval)) return;
             if (!ParseStringToInt32(ref textBox_MinerRestartDelayMS, ref Config.ConfigData.MinerRestartDelayMS)) return;
-            if (!ParseStringToInt32(ref textBox_MinerAPIGraceMinutes, ref Config.ConfigData.MinerAPIGraceMinutes)) return;
+            if (!ParseStringToInt32(ref textBox_MinerAPIGraceSeconds, ref Config.ConfigData.MinerAPIGraceSeconds)) return;
             if (!ParseStringToInt32(ref textBox_MinIdleSeconds, ref Config.ConfigData.MinIdleSeconds)) return;
-            if (!ParseStringToInt32(ref textBox_LogLevel, ref Config.ConfigData.LogLevel)) return;
             if (!ParseStringToInt64(ref textBox_LogMaxFileSize, ref Config.ConfigData.LogMaxFileSize)) return;
             if (!ParseStringToInt32(ref textBox_BenchmarkTimeLimitsCPU_Quick, ref Config.ConfigData.BenchmarkTimeLimitsCPU[0])) return;
             if (!ParseStringToInt32(ref textBox_BenchmarkTimeLimitsCPU_Standard, ref Config.ConfigData.BenchmarkTimeLimitsCPU[1])) return;
@@ -596,7 +595,7 @@ namespace NiceHashMiner
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)
         {
-            Config.ConfigData.Language = comboBox_Language.SelectedIndex;
+            //Config.ConfigData.Language = comboBox_Language.SelectedIndex;
             Config.ConfigData.Location = comboBox_Location.SelectedIndex;
         }
 

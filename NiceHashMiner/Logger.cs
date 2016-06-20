@@ -17,12 +17,12 @@ namespace NiceHashMiner
         {
             Hierarchy h = (Hierarchy)LogManager.GetRepository();
 
-            if (Config.ConfigData.LogLevel == 1)
+            if (Config.ConfigData.LogToFile)
                 h.Root.Level = Level.Info;
-            else if (Config.ConfigData.LogLevel == 2)
-                h.Root.Level = Level.Warn;
-            else if (Config.ConfigData.LogLevel == 3)
-                h.Root.Level = Level.Error;
+            //else if (Config.ConfigData.LogLevel == 2)
+            //    h.Root.Level = Level.Warn;
+            //else if (Config.ConfigData.LogLevel == 3)
+            //    h.Root.Level = Level.Error;
 
             h.Root.AddAppender(CreateFileAppender());
             h.Configured = true;

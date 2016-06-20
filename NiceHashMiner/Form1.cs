@@ -43,7 +43,7 @@ namespace NiceHashMiner
         {
             InitializeComponent();
 
-            Helpers.ConsolePrint("TEST", International.GetText("test1"), "asd", 55);
+            //Helpers.ConsolePrint("TEST", International.GetText("test1"), "asd", 55);
 
             if (ss)
             {

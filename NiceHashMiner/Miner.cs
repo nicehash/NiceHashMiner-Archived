@@ -460,7 +460,7 @@ namespace NiceHashMiner
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
             }
 
-            NumRetries = Config.ConfigData.MinerAPIGraceMinutes * 60 / Config.ConfigData.MinerAPIQueryInterval;
+            NumRetries = Config.ConfigData.MinerAPIGraceSeconds / Config.ConfigData.MinerAPIQueryInterval;
             if (AlgoNameIs("daggerhashimoto"))
             {
                 ethminerLink = new ethminerAPI((this is sgminer) ? Config.ConfigData.ethminerAPIPortAMD : Config.ConfigData.ethminerAPIPortNvidia);
