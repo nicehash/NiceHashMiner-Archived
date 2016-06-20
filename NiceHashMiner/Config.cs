@@ -67,7 +67,6 @@ namespace NiceHashMiner
         public bool DisableDetectionNVidia2X;
         public bool DisableDetectionAMD;
         public bool DisableAMDTempControl;
-        public string DAGDirectory;
         public bool AutoScaleBTCValues;
         public bool StartMiningWhenIdle;
         public int MinIdleSeconds;
@@ -159,7 +158,6 @@ namespace NiceHashMiner
             ConfigData.DisableDetectionNVidia2X = false;
             ConfigData.DisableDetectionAMD = false;
             ConfigData.DisableAMDTempControl = false;
-            ConfigData.DAGDirectory = "data";
             ConfigData.AutoScaleBTCValues = true;
             ConfigData.StartMiningWhenIdle = false;
             ConfigData.LogLevel = 1;

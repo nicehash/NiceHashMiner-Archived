@@ -247,7 +247,7 @@ namespace NiceHashMiner
                     if (this is ccminer_sp)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
-                        AddEthereum("Compute version: 6.0");
+                        //AddEthereum("Compute version: 6.0");
                         AddEthereum("Compute version: 5.2");
                         AddEthereum("Compute version: 5.0");
                     }

@@ -4,6 +4,21 @@
     "Entries": {
         "hello": "Hello!",
         "bye": "ByeBye!",
-        "test1": "Example {0} of this {1}"
+        "test1": "Example {0} of this {1}",
+
+		"form1_service_loc": "Service location",
+		"form1_btc_address": "Bitcoin address",
+		"form1_worker_name": "Worker name",
+		"form1_visit_us": "Visit us @ www.nicehash.com",
+		"form1_check_stats": "Check my stats online!",
+		"form1_choose_bitcoin_wallet": "Help me choose my Bitcoin wallet",
+		"form1_rate": "Rate",
+		"form1_rate_day": "Day",
+		"form1_global_rate": "Global rate",
+		"form1_balance": "Balance",
+		"form1_benchmark": "&Benchmark",
+		"form1_settings": "S&ettings",
+		"form1_start": "&Start",
+		"form1_stop": "St&op"
     }
 }
