@@ -103,7 +103,7 @@ namespace NiceHashMiner
                 LastCommandLine = " --cuda" +
                                   " " + ExtraLaunchParameters +
                                   " " + Algo.ExtraLaunchParameters +
-                                  " -ES -S " + url.Substring(14) +
+                                  " -S " + url.Substring(14) +
                                   " -O " + username + ":" + GetPassword(Algo) +
                                   " --api-port " + Config.ConfigData.ethminerAPIPortNvidia.ToString() +
                                   " --cuda-devices ";
