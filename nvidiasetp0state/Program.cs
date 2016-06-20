@@ -88,7 +88,6 @@ namespace nvidiasetp0state
                     catch (Exception ex)
                     {
                         Console.WriteLine("[ChangeP0State] Exception: " + ex.Message);
-                        return 3;
                     }
 
                     if (mem.Length > 1 && clk.Length > 1)
@@ -118,7 +117,6 @@ namespace nvidiasetp0state
                         catch (Exception ex)
                         {
                             Console.WriteLine("[ChangeP0State] Exception: " + ex.Message);
-                            return 4;
                         }
                     }
                 }
