@@ -117,13 +117,13 @@ namespace NiceHashMiner
             }
 
             if (ConfigData.SwitchMinSecondsFixed <= 0)
-                ConfigData.SwitchMinSecondsFixed = 150;
+                ConfigData.SwitchMinSecondsFixed = 90;
             if (ConfigData.SwitchMinSecondsDynamic <= 0)
-                ConfigData.SwitchMinSecondsDynamic = 60;
+                ConfigData.SwitchMinSecondsDynamic = 30;
             if (ConfigData.MinerAPIQueryInterval <= 0)
                 ConfigData.MinerAPIQueryInterval = 5;
             if (ConfigData.MinerRestartDelayMS <= 0)
-                ConfigData.MinerRestartDelayMS = 200;
+                ConfigData.MinerRestartDelayMS = 500;
             if (ConfigData.MinerAPIGraceSeconds < 0)
                 ConfigData.MinerAPIGraceSeconds = 0;
             if (ConfigData.BenchmarkTimeLimitsCPU == null || ConfigData.BenchmarkTimeLimitsCPU.Length < 3)
@@ -169,6 +169,9 @@ namespace NiceHashMiner
             ConfigData.ethminerAPIPortAMD = 34562;
             ConfigData.ethminerDefaultBlockHeight = 1700000;
             ConfigData.MinerAPIGraceSeconds = 30;
+            ConfigData.SwitchMinSecondsFixed = 90;
+            ConfigData.SwitchMinSecondsDynamic = 30;
+            ConfigData.MinIdleSeconds = 60;
         }
 
         public static void Commit()

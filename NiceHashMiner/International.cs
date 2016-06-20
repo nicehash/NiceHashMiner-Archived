@@ -22,20 +22,28 @@ namespace NiceHashMiner
         private static List<Language> GetLanguages()
         {
             List<Language> langs = new List<Language>();
-            DirectoryInfo di = new DirectoryInfo("langs");
-            FileInfo[] files = di.GetFiles("*.lang");
 
-            foreach (FileInfo fi in files)
+            try
             {
-                try
+                DirectoryInfo di = new DirectoryInfo("langs");
+                FileInfo[] files = di.GetFiles("*.lang");
+
+                foreach (FileInfo fi in files)
                 {
-                    Language l = JsonConvert.DeserializeObject<Language>(File.ReadAllText(fi.FullName));
-                    langs.Add(l);
+                    try
+                    {
+                        Language l = JsonConvert.DeserializeObject<Language>(File.ReadAllText(fi.FullName));
+                        langs.Add(l);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
             }
 
             return langs;
@@ -78,6 +86,8 @@ namespace NiceHashMiner
 
         public static string GetText(string token)
         {
+            if (SelectedLanguage == null) return "";
+
             if (SelectedLanguage.Entries.ContainsKey(token))
                 return SelectedLanguage.Entries[token];
             else

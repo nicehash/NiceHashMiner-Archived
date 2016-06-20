@@ -451,8 +451,6 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0 || EnabledDeviceCount() == 0) return null;
 
-            Helpers.ConsolePrint(MinerDeviceName, "Starting miner: " + LastCommandLine);
-
             NiceHashProcess P = new NiceHashProcess();
 
             if (WorkingDirectory.Length > 1)
