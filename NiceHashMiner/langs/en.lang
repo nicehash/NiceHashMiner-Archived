@@ -146,8 +146,7 @@
         "Form_Settings_ToolTip_label_SwitchMinSecondsFixed": "Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
         "Form_Settings_ToolTip_textBox_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHashMiner users to have the exact same switching pattern.",
         "Form_Settings_ToolTip_label_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHashMiner users to have the exact same switching pattern.",
-        "Form_Settings_ToolTip_textBox_SwitchMinSecondsAMD": "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
-        "Form_Settings_ToolTip_label_SwitchMinSecondsAMD": "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
+        "Form_Settings_ToolTip_SwitchMinSecondsAMD": "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
         
         "Form_Settings_ToolTip_textBox_MinerAPIQueryInterval": "Amount of time (in seconds) that NiceHashMiner will query the miner for update on mining speed.",
         "Form_Settings_ToolTip_label_MinerAPIQueryInterval": "Amount of time (in seconds) that NiceHashMiner will query the miner for update on mining speed.",
