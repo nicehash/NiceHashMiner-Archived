@@ -187,8 +187,14 @@ namespace NiceHashMiner
             this.textBox_ethminerAPIPortAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_ethminerDefaultBlockHeight.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
 
+            // Add language selections list
+            Dictionary<int, string> lang = International.GetAvailableLanguages();
+            comboBox_Language.DataSource = new BindingSource(lang, null);
+            comboBox_Language.DisplayMember = "Value";
+            comboBox_Language.ValueMember = "Key";
+
             // ComboBox
-            //comboBox_Language.SelectedIndex = Config.ConfigData.Language;
+            comboBox_Language.SelectedIndex = Config.ConfigData.Language;
             comboBox_Location.SelectedIndex = Config.ConfigData.Location;
 
             // Add EventHandler for all the general tab's textboxes
@@ -622,7 +628,7 @@ namespace NiceHashMiner
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)
         {
-            //Config.ConfigData.Language = comboBox_Language.SelectedIndex;
+            Config.ConfigData.Language = comboBox_Language.SelectedIndex;
             Config.ConfigData.Location = comboBox_Location.SelectedIndex;
         }
 
