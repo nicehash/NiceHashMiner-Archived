@@ -11,6 +11,7 @@ namespace NiceHashMiner
 {
     public partial class Form_Settings : Form
     {
+        public int ret;
         private int numCPUs;
 
         public Form_Settings()
@@ -945,18 +946,19 @@ namespace NiceHashMiner
             return true;
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
+        private void buttonSaveClose_Click(object sender, EventArgs e)
         {
             Config.Commit();
-            MessageBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
-                            International.GetText("Form_Settings_buttonSaveTitle"),
+            MessageBox.Show(International.GetText("Form_Settings_buttonSaveCloseMsg"),
+                            International.GetText("Form_Settings_buttonSaveCloseTitle"),
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ret = 0;
+            this.Close();
         }
 
-        private void button_Close_Click(object sender, EventArgs e)
+        private void buttonCloseNoSave_Click(object sender, EventArgs e)
         {
-            // Need to add confirmation to save before exit if
-            // the user has not save yet.
+            ret = 1;
             this.Close();
         }
 
@@ -970,6 +972,7 @@ namespace NiceHashMiner
             {
                 Config.SetDefaults();
                 Config.Commit();
+                ret = 2;
                 this.Close();
             }
         }
@@ -977,6 +980,19 @@ namespace NiceHashMiner
         private void toolTip1_Popup(object sender, PopupEventArgs e)
         {
             toolTip1.ToolTipTitle = International.GetText("Form_Settings_ToolTip_Explaination");
+        }
+
+        private void Form_Settings_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (ret != 0 && ret != 2)
+            {
+                DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
+                                                      International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
+                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == System.Windows.Forms.DialogResult.No)
+                    e.Cancel = true;
+            }
         }
     }
 }

@@ -120,8 +120,10 @@
         "Form_Settings_labelNoDevice": "No device found..",
         "Form_Settings_ParseIntTitle": "Input Error",
         "Form_Settings_ParseIntMsg": "This input box only accepts numbers (0-9).",
-        "Form_Settings_buttonSaveTitle": "Settings saved!",
-        "Form_Settings_buttonSaveMsg": "Settings saved!",
+        "Form_Settings_buttonSaveCloseTitle": "Settings saved!",
+        "Form_Settings_buttonSaveCloseMsg": "Settings saved! NiceHashMiner will restart now.",
+        "Form_Settings_buttonCloseNoSaveTitle": "Warning!",
+        "Form_Settings_buttonCloseNoSaveMsg": "Warning! You are choosing to close settings without saving. Are you sure you would like to continue?",
         "Form_Settings_buttonDefaultsTitle": "Set default settings?",
         "Form_Settings_buttonDefaultsMsg": "Are you sure you would like to set everything back to defaults? This will restart NiceHashMiner automatically.",
 

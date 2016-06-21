@@ -49,6 +49,8 @@
             this.comboBox_CPU0_ForceCPUExtension = new System.Windows.Forms.ComboBox();
             this.label_CPU0_ForceCPUExtension = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.textBox_SwitchMinSecondsAMD = new System.Windows.Forms.TextBox();
+            this.label_SwitchMinSecondsAMD = new System.Windows.Forms.Label();
             this.checkBox_LogToFile = new System.Windows.Forms.CheckBox();
             this.textBox_ethminerDefaultBlockHeight = new System.Windows.Forms.TextBox();
             this.textBox_ethminerAPIPortAMD = new System.Windows.Forms.TextBox();
@@ -186,12 +188,10 @@
             this.label_AMD_APIBindPort = new System.Windows.Forms.Label();
             this.checkBox_AMD_DisableAMDTempControl = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.button_Close = new System.Windows.Forms.Button();
+            this.buttonCloseNoSave = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.buttonDefaults = new System.Windows.Forms.Button();
-            this.buttonSave = new System.Windows.Forms.Button();
-            this.label_SwitchMinSecondsAMD = new System.Windows.Forms.Label();
-            this.textBox_SwitchMinSecondsAMD = new System.Windows.Forms.TextBox();
+            this.buttonSaveClose = new System.Windows.Forms.Button();
             this.tabPage2.SuspendLayout();
             this.tabControl_CPU0.SuspendLayout();
             this.tabPage7.SuspendLayout();
@@ -463,6 +463,22 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // textBox_SwitchMinSecondsAMD
+            // 
+            this.textBox_SwitchMinSecondsAMD.Location = new System.Drawing.Point(501, 217);
+            this.textBox_SwitchMinSecondsAMD.Name = "textBox_SwitchMinSecondsAMD";
+            this.textBox_SwitchMinSecondsAMD.Size = new System.Drawing.Size(139, 20);
+            this.textBox_SwitchMinSecondsAMD.TabIndex = 75;
+            // 
+            // label_SwitchMinSecondsAMD
+            // 
+            this.label_SwitchMinSecondsAMD.AutoSize = true;
+            this.label_SwitchMinSecondsAMD.Location = new System.Drawing.Point(498, 197);
+            this.label_SwitchMinSecondsAMD.Name = "label_SwitchMinSecondsAMD";
+            this.label_SwitchMinSecondsAMD.Size = new System.Drawing.Size(125, 13);
+            this.label_SwitchMinSecondsAMD.TabIndex = 74;
+            this.label_SwitchMinSecondsAMD.Text = "SwitchMinSecondsAMD:";
             // 
             // checkBox_LogToFile
             // 
@@ -1719,15 +1735,15 @@
             this.checkBox_AMD_DisableAMDTempControl.Text = "DisableAMDTempControl";
             this.checkBox_AMD_DisableAMDTempControl.UseVisualStyleBackColor = true;
             // 
-            // button_Close
+            // buttonCloseNoSave
             // 
-            this.button_Close.Location = new System.Drawing.Point(757, 372);
-            this.button_Close.Name = "button_Close";
-            this.button_Close.Size = new System.Drawing.Size(75, 23);
-            this.button_Close.TabIndex = 1;
-            this.button_Close.Text = "&Close";
-            this.button_Close.UseVisualStyleBackColor = true;
-            this.button_Close.Click += new System.EventHandler(this.button_Close_Click);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(697, 372);
+            this.buttonCloseNoSave.Name = "buttonCloseNoSave";
+            this.buttonCloseNoSave.Size = new System.Drawing.Size(135, 23);
+            this.buttonCloseNoSave.TabIndex = 1;
+            this.buttonCloseNoSave.Text = "&Close without Saving";
+            this.buttonCloseNoSave.UseVisualStyleBackColor = true;
+            this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
             // toolTip1
             // 
@@ -1737,7 +1753,7 @@
             // 
             // buttonDefaults
             // 
-            this.buttonDefaults.Location = new System.Drawing.Point(676, 372);
+            this.buttonDefaults.Location = new System.Drawing.Point(500, 372);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(75, 23);
             this.buttonDefaults.TabIndex = 2;
@@ -1745,40 +1761,24 @@
             this.buttonDefaults.UseVisualStyleBackColor = true;
             this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
             // 
-            // buttonSave
+            // buttonSaveClose
             // 
-            this.buttonSave.Location = new System.Drawing.Point(595, 372);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonSave.TabIndex = 3;
-            this.buttonSave.Text = "&Save";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // label_SwitchMinSecondsAMD
-            // 
-            this.label_SwitchMinSecondsAMD.AutoSize = true;
-            this.label_SwitchMinSecondsAMD.Location = new System.Drawing.Point(498, 197);
-            this.label_SwitchMinSecondsAMD.Name = "label_SwitchMinSecondsAMD";
-            this.label_SwitchMinSecondsAMD.Size = new System.Drawing.Size(125, 13);
-            this.label_SwitchMinSecondsAMD.TabIndex = 74;
-            this.label_SwitchMinSecondsAMD.Text = "SwitchMinSecondsAMD:";
-            // 
-            // textBox_SwitchMinSecondsAMD
-            // 
-            this.textBox_SwitchMinSecondsAMD.Location = new System.Drawing.Point(501, 217);
-            this.textBox_SwitchMinSecondsAMD.Name = "textBox_SwitchMinSecondsAMD";
-            this.textBox_SwitchMinSecondsAMD.Size = new System.Drawing.Size(139, 20);
-            this.textBox_SwitchMinSecondsAMD.TabIndex = 75;
+            this.buttonSaveClose.Location = new System.Drawing.Point(581, 372);
+            this.buttonSaveClose.Name = "buttonSaveClose";
+            this.buttonSaveClose.Size = new System.Drawing.Size(110, 23);
+            this.buttonSaveClose.TabIndex = 3;
+            this.buttonSaveClose.Text = "&Save and Close";
+            this.buttonSaveClose.UseVisualStyleBackColor = true;
+            this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
             // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(844, 407);
-            this.Controls.Add(this.buttonSave);
+            this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.buttonDefaults);
-            this.Controls.Add(this.button_Close);
+            this.Controls.Add(this.buttonCloseNoSave);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -1787,6 +1787,7 @@
             this.Name = "Form_Settings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Settings_FormClosing);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabControl_CPU0.ResumeLayout(false);
@@ -1940,7 +1941,7 @@
         private System.Windows.Forms.Label label_NVIDIA2X_DisabledDevices;
         private System.Windows.Forms.Label label_NVIDIA3X_DisabledDevices;
         private System.Windows.Forms.Label label_NVIDIA5X_DisabledDevices;
-        private System.Windows.Forms.Button button_Close;
+        private System.Windows.Forms.Button buttonCloseNoSave;
         private System.Windows.Forms.TextBox textBox_NVIDIA5X_MinimumProfit;
         private System.Windows.Forms.Label label_NVIDIA5X_MinimumProfit;
         private System.Windows.Forms.TextBox textBox_NVIDIA3X_MinimumProfit;
@@ -1966,7 +1967,7 @@
         private System.Windows.Forms.Label label_ethminerDefaultBlockHeight;
         private System.Windows.Forms.CheckBox checkBox_LogToFile;
         private System.Windows.Forms.Button buttonDefaults;
-        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button buttonSaveClose;
         private System.Windows.Forms.Label label_AMD_DaggerHashimotoGenerateDevice;
         private System.Windows.Forms.TextBox textBox_AMD_DaggerHashimotoGenerateDevice;
         private System.Windows.Forms.TextBox textBox_NVIDIA2X_DaggerHashimotoGenerateDevice;

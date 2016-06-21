@@ -927,20 +927,12 @@ namespace NiceHashMiner
             {
                 Form_Settings Settings = new Form_Settings();
                 Settings.ShowDialog();
-                Settings = null;
 
-                // Update GUI
-                if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < MiningLocation.Length)
-                    comboBox1.SelectedIndex = Config.ConfigData.Location;
-                else
-                    comboBox1.SelectedIndex = 0;
+                if (Settings.ret == 1) return;
 
-                textBox1.Text = Config.ConfigData.BitcoinAddress;
-                textBox2.Text = Config.ConfigData.WorkerName;
-
-                MessageBox.Show(String.Format(International.GetText("form1_msgbox_buttonBenchmarkRestartWarningMsg"), ProductName),
-                                String.Format(International.GetText("form1_msgbox_buttonBenchmarkRestartWarningTitle"), ProductName),
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show(String.Format(International.GetText("form1_msgbox_buttonBenchmarkRestartWarningMsg"), ProductName),
+                //                String.Format(International.GetText("form1_msgbox_buttonBenchmarkRestartWarningTitle"), ProductName),
+                //                MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 Process PHandle = new Process();
                 PHandle.StartInfo.FileName = Application.ExecutablePath;
