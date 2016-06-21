@@ -201,9 +201,16 @@ namespace NiceHashMiner
                             long memsize = Convert.ToInt64(memsplit[memsplit.Length - 1]);
                             if (memsize >= 2147483648)
                             {
-                                Helpers.ConsolePrint(MinerDeviceName, "Ethereum GPU MemSize: " + memsize + " (GOOD!)");
-                                EtherDevices[index] = device;
-                                index++;
+                                if (outdata.Contains("750") && outdata.Contains("Ti"))
+                                {
+                                    Helpers.ConsolePrint(MinerDeviceName, "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
+                                }
+                                else
+                                {
+                                    Helpers.ConsolePrint(MinerDeviceName, "Ethereum GPU MemSize: " + memsize + " (GOOD!)");
+                                    EtherDevices[index] = device;
+                                    index++;
+                                }
                             }
                             else
                             {

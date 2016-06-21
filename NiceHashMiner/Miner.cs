@@ -182,7 +182,7 @@ namespace NiceHashMiner
                 return;
             }
 
-            if (EnabledDeviceCount() == 0)
+            if (EnabledDeviceCount() == 0 || EnabledDevicePerAlgoCount(index) < 1)
             {
                 Helpers.ConsolePrint("BENCHMARK", "No device to benchmark..");
                 OnBenchmarkComplete(false, "Disabled", tag);
