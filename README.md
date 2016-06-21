@@ -114,7 +114,6 @@ NVIDIAP0State | true or false | When set to true, NiceHashMiner would change all
 ethminerAPIPortNvidia | number | Ethminer API port that will be used to get the status of the miner.
 ethminerAPIPortAMD | number | Ethminer API port that will be used to get the status of the miner.
 ethminerDefaultBlockHeight | number | A fallback number that will be used if API call fails. This is only used for benchmarking.
-
 Groups\Name | text | Used for identification purposes in the config file
 Groups\APIBindPort | number | API port that will be used by this group.
 Groups\ExtraLaunchParameters | text | Additional launch parameters when launching miner.
@@ -122,7 +121,6 @@ Groups\UsePassword | text or null | Use this password when launching miner. If n
 Groups\MinimumProfit | number | If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.
 Groups\DaggerHashimotoGenerateDevice | number | Choose which GPU that will create the on GPU DAG file. As a rule of thumb, choose the fastest GPU that is available.
 Groups\DisabledDevices | numbers | List of GPUs that will be disabled and will not be used for benchmarking and mining by NiceHashMiner.
-
 Groups\Algorithms\Name | text | Used for identification purposes in the config file.
 Groups\Algorithms\ExtraLaunchParameters | text | Additional launch parameters when launching miner and this algorithm.
 Groups\Algorithms\UsePassword | text or null | Use this password when launching miner and this algorithm. If null, Groups\UsePassword is used.
@@ -193,6 +191,7 @@ To report bugs and issues please use the GitHub issue reporting tool: https://gi
 - For CPU mining our tpruvot's forked cpuminer has been used from here: https://github.com/nicehash/cpuminer-multi (compiled with MingW64).
 - For NVIDIA 5.x and 6.x cards, sp's fork of ccminer has been used from here: https://github.com/sp-hash/ccminer.
 - For NVIDIA 2.1 and 3.x (older cards), tpruvot's fork of ccminer has been used from here: https://github.com/tpruvot/ccminer.
+- Special Decred ccminer forked from tpruvot's ccminer has been used from here: https://github.com/nicehash/ccminer-tpruvot.
 - Optimized Lyra2REv2 ccminer developed by Nanashi Meiyo-Meijin: https://github.com/nicehash/ccminer-nanashi.
 - For AMD cards, sgminer has been used from here: https://github.com/sgminer-dev/sgminer.
 - For Ethereum miner, Genoil's fork of ethminer has been used from here: https://github.com/nicehash/cpp-ethereum.
