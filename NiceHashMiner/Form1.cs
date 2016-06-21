@@ -30,6 +30,7 @@ namespace NiceHashMiner
         private Form3 LoadingScreen;
         private int LoadCounter = 0;
         private int TotalLoadSteps = 13;
+        private int CPUs;
         private bool ShowWarningNiceHashData;
 
         private Random R;
@@ -160,7 +161,7 @@ namespace NiceHashMiner
             StartupTimer = null;
 
             // get all CPUs
-            int CPUs = CPUID.GetPhysicalProcessorCount();
+            CPUs = CPUID.GetPhysicalProcessorCount();
 
             // get all cores (including virtual - HT can benefit mining)
             int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / CPUs;
@@ -316,6 +317,7 @@ namespace NiceHashMiner
             SMAMinerCheck = new Timer();
             SMAMinerCheck.Tick += SMAMinerCheck_Tick;
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+            if (Miners[CPUs + 3].CDevs.Count > 0) SMACheck.Interval += (Config.ConfigData.SwitchMinSecondsAMD * 1000);
 
             UpdateCheck = new Timer();
             UpdateCheck.Tick += UpdateCheck_Tick;
@@ -424,6 +426,7 @@ namespace NiceHashMiner
         private void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+            if (Miners[CPUs + 3].CDevs.Count > 0) SMACheck.Interval += (Config.ConfigData.SwitchMinSecondsAMD * 1000);
 
             string Worker = textBox2.Text.Trim();
             if (Worker.Length > 0)

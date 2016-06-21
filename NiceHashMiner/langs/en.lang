@@ -146,6 +146,8 @@
         "Form_Settings_ToolTip_label_SwitchMinSecondsFixed": "Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
         "Form_Settings_ToolTip_textBox_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHashMiner users to have the exact same switching pattern.",
         "Form_Settings_ToolTip_label_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHashMiner users to have the exact same switching pattern.",
+        "Form_Settings_ToolTip_textBox_SwitchMinSecondsAMD": "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
+        "Form_Settings_ToolTip_label_SwitchMinSecondsAMD": "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
         
         "Form_Settings_ToolTip_textBox_MinerAPIQueryInterval": "Amount of time (in seconds) that NiceHashMiner will query the miner for update on mining speed.",
         "Form_Settings_ToolTip_label_MinerAPIQueryInterval": "Amount of time (in seconds) that NiceHashMiner will query the miner for update on mining speed.",
@@ -191,7 +193,7 @@
         "Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning": "When checked, NiceHashMiner would give warning if less optimal version of a driver is installed.",
         "Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting": "When checked, in the event of a miner crash, NiceHashMiner would still be able to restart the miner again as it is not blocked by Windows error message.",
         "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "When checked, NiceHashMiner would use the new settings page.",
-        "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "When checked, NiceHashMiner would change all supported NVidia GPUs to P0 state.",
+        "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "When checked, NiceHashMiner would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.",
         "Form_Settings_ToolTip_textBox_ethminerAPIPortNvidia": "API port that will be used by ethminer for Nvidia GPUs.",
         "Form_Settings_ToolTip_label_ethminerAPIPortNvidia": "API port that will be used by ethminer for Nvidia GPUs.",
         "Form_Settings_ToolTip_textBox_ethminerAPIPortAMD": "API port that will be used by ethminer for AMD GPUs",

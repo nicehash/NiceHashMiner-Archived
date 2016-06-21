@@ -57,6 +57,7 @@ namespace NiceHashMiner
         public int ForceCPUExtension; // 0 - automatic, 1 - SSE2, 2 - AVX, 3 - AVX2
         public int SwitchMinSecondsFixed;
         public int SwitchMinSecondsDynamic;
+        public int SwitchMinSecondsAMD;
         public int MinerAPIQueryInterval;
         public int MinerRestartDelayMS;
         public int MinerAPIGraceSeconds;
@@ -121,6 +122,8 @@ namespace NiceHashMiner
                 ConfigData.SwitchMinSecondsFixed = 90;
             if (ConfigData.SwitchMinSecondsDynamic <= 0)
                 ConfigData.SwitchMinSecondsDynamic = 30;
+            if (ConfigData.SwitchMinSecondsAMD <= 0)
+                ConfigData.SwitchMinSecondsAMD = 60;
             if (ConfigData.MinerAPIQueryInterval <= 0)
                 ConfigData.MinerAPIQueryInterval = 5;
             if (ConfigData.MinerRestartDelayMS <= 0)
@@ -172,6 +175,7 @@ namespace NiceHashMiner
             ConfigData.MinerAPIGraceSeconds = 30;
             ConfigData.SwitchMinSecondsFixed = 90;
             ConfigData.SwitchMinSecondsDynamic = 30;
+            ConfigData.SwitchMinSecondsAMD = 90;
             ConfigData.MinIdleSeconds = 60;
         }
 

@@ -47,6 +47,8 @@ namespace NiceHashMiner
             toolTip1.SetToolTip(this.label_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_label_SwitchMinSecondsFixed"));
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_textBox_SwitchMinSecondsDynamic"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_label_SwitchMinSecondsDynamic"));
+            toolTip1.SetToolTip(this.textBox_SwitchMinSecondsAMD, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
+            toolTip1.SetToolTip(this.label_SwitchMinSecondsAMD, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
 
             toolTip1.SetToolTip(this.textBox_MinerAPIQueryInterval, International.GetText("Form_Settings_ToolTip_textBox_MinerAPIQueryInterval"));
             toolTip1.SetToolTip(this.label_MinerAPIQueryInterval, International.GetText("Form_Settings_ToolTip_label_MinerAPIQueryInterval"));
@@ -142,6 +144,7 @@ namespace NiceHashMiner
             textBox_WorkerName.Text = Config.ConfigData.WorkerName;
             textBox_SwitchMinSecondsFixed.Text = Config.ConfigData.SwitchMinSecondsFixed.ToString();
             textBox_SwitchMinSecondsDynamic.Text = Config.ConfigData.SwitchMinSecondsDynamic.ToString();
+            textBox_SwitchMinSecondsAMD.Text = Config.ConfigData.SwitchMinSecondsAMD.ToString();
             textBox_MinerAPIQueryInterval.Text = Config.ConfigData.MinerAPIQueryInterval.ToString();
             textBox_MinerRestartDelayMS.Text = Config.ConfigData.MinerRestartDelayMS.ToString();
             textBox_MinerAPIGraceSeconds.Text = Config.ConfigData.MinerAPIGraceSeconds.ToString();
@@ -165,6 +168,7 @@ namespace NiceHashMiner
             this.textBox_WorkerName.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_SwitchMinSecondsFixed.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_SwitchMinSecondsDynamic.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+            this.textBox_SwitchMinSecondsAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerAPIQueryInterval.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerRestartDelayMS.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerAPIGraceSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
@@ -596,6 +600,7 @@ namespace NiceHashMiner
             Config.ConfigData.WorkerName = textBox_WorkerName.Text.Trim();
             if (!ParseStringToInt32(ref textBox_SwitchMinSecondsFixed, ref Config.ConfigData.SwitchMinSecondsFixed)) return;
             if (!ParseStringToInt32(ref textBox_SwitchMinSecondsDynamic, ref Config.ConfigData.SwitchMinSecondsDynamic)) return;
+            if (!ParseStringToInt32(ref textBox_SwitchMinSecondsAMD, ref Config.ConfigData.SwitchMinSecondsAMD)) return;
             if (!ParseStringToInt32(ref textBox_MinerAPIQueryInterval, ref Config.ConfigData.MinerAPIQueryInterval)) return;
             if (!ParseStringToInt32(ref textBox_MinerRestartDelayMS, ref Config.ConfigData.MinerRestartDelayMS)) return;
             if (!ParseStringToInt32(ref textBox_MinerAPIGraceSeconds, ref Config.ConfigData.MinerAPIGraceSeconds)) return;
