@@ -117,7 +117,7 @@
             this.tabPage_NVIDIA5X = new System.Windows.Forms.TabPage();
             this.textBox_NVIDIA5X_MinimumProfit = new System.Windows.Forms.TextBox();
             this.label_NVIDIA5X_MinimumProfit = new System.Windows.Forms.Label();
-            this.label46 = new System.Windows.Forms.Label();
+            this.label_NVIDIA5X_DisabledDevices = new System.Windows.Forms.Label();
             this.tabControl_NVIDIA5X_Algos = new System.Windows.Forms.TabControl();
             this.label_NVIDIA5X_ExtraLaunchParameters = new System.Windows.Forms.Label();
             this.textBox_NVIDIA5X_ExtraLaunchParameters = new System.Windows.Forms.TextBox();
@@ -128,7 +128,7 @@
             this.tabPage_NVIDIA3X = new System.Windows.Forms.TabPage();
             this.textBox_NVIDIA3X_MinimumProfit = new System.Windows.Forms.TextBox();
             this.label_NVIDIA3X_MinimumProfit = new System.Windows.Forms.Label();
-            this.label45 = new System.Windows.Forms.Label();
+            this.label_NVIDIA3X_DisabledDevices = new System.Windows.Forms.Label();
             this.tabControl_NVIDIA3X_Algos = new System.Windows.Forms.TabControl();
             this.label_NVIDIA3X_ExtraLaunchParameters = new System.Windows.Forms.Label();
             this.textBox_NVIDIA3X_ExtraLaunchParameters = new System.Windows.Forms.TextBox();
@@ -139,7 +139,7 @@
             this.tabPage_NVIDIA2X = new System.Windows.Forms.TabPage();
             this.textBox_NVIDIA2X_MinimumProfit = new System.Windows.Forms.TextBox();
             this.label_NVIDIA2X_MinimumProfit = new System.Windows.Forms.Label();
-            this.label44 = new System.Windows.Forms.Label();
+            this.label_NVIDIA2X_DisabledDevices = new System.Windows.Forms.Label();
             this.tabControl_NVIDIA2X_Algos = new System.Windows.Forms.TabControl();
             this.tabPage38 = new System.Windows.Forms.TabPage();
             this.textBox54 = new System.Windows.Forms.TextBox();
@@ -156,7 +156,7 @@
             this.textBox_NVIDIA2X_APIBindPort = new System.Windows.Forms.TextBox();
             this.label_NVIDIA2X_APIBindPort = new System.Windows.Forms.Label();
             this.tabPage_AMD = new System.Windows.Forms.TabPage();
-            this.label38 = new System.Windows.Forms.Label();
+            this.label_AMD_DisabledDevices = new System.Windows.Forms.Label();
             this.textBox_AMD_MinimumProfit = new System.Windows.Forms.TextBox();
             this.label_AMD_MinimumProfit = new System.Windows.Forms.Label();
             this.tabControl_AMD_Algos = new System.Windows.Forms.TabControl();
@@ -180,6 +180,16 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.button_Close = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonDefaults = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.label_AMD_DaggerHashimotoGenerateDevice = new System.Windows.Forms.Label();
+            this.textBox_AMD_DaggerHashimotoGenerateDevice = new System.Windows.Forms.TextBox();
+            this.label_NVIDIA2X_DaggerHashimotoGenerateDevice = new System.Windows.Forms.Label();
+            this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice = new System.Windows.Forms.TextBox();
+            this.label_NVIDIA3X_DaggerHashimotoGenerateDevice = new System.Windows.Forms.Label();
+            this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice = new System.Windows.Forms.TextBox();
+            this.label_NVIDIA5X_DaggerHashimotoGenerateDevice = new System.Windows.Forms.Label();
+            this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice = new System.Windows.Forms.TextBox();
             this.tabPage2.SuspendLayout();
             this.tabControl_CPU0.SuspendLayout();
             this.tabPage7.SuspendLayout();
@@ -453,7 +463,7 @@
             // checkBox_LogToFile
             // 
             this.checkBox_LogToFile.AutoSize = true;
-            this.checkBox_LogToFile.Location = new System.Drawing.Point(6, 316);
+            this.checkBox_LogToFile.Location = new System.Drawing.Point(6, 315);
             this.checkBox_LogToFile.Name = "checkBox_LogToFile";
             this.checkBox_LogToFile.Size = new System.Drawing.Size(72, 17);
             this.checkBox_LogToFile.TabIndex = 73;
@@ -523,7 +533,7 @@
             this.comboBox_Language.FormattingEnabled = true;
             this.comboBox_Language.Location = new System.Drawing.Point(190, 28);
             this.comboBox_Language.Name = "comboBox_Language";
-            this.comboBox_Language.Size = new System.Drawing.Size(147, 21);
+            this.comboBox_Language.Size = new System.Drawing.Size(190, 21);
             this.comboBox_Language.TabIndex = 65;
             // 
             // checkBox_NVIDIAP0State
@@ -1022,9 +1032,11 @@
             // 
             // tabPage_NVIDIA5X
             // 
+            this.tabPage_NVIDIA5X.Controls.Add(this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice);
+            this.tabPage_NVIDIA5X.Controls.Add(this.label_NVIDIA5X_DaggerHashimotoGenerateDevice);
             this.tabPage_NVIDIA5X.Controls.Add(this.textBox_NVIDIA5X_MinimumProfit);
             this.tabPage_NVIDIA5X.Controls.Add(this.label_NVIDIA5X_MinimumProfit);
-            this.tabPage_NVIDIA5X.Controls.Add(this.label46);
+            this.tabPage_NVIDIA5X.Controls.Add(this.label_NVIDIA5X_DisabledDevices);
             this.tabPage_NVIDIA5X.Controls.Add(this.tabControl_NVIDIA5X_Algos);
             this.tabPage_NVIDIA5X.Controls.Add(this.label_NVIDIA5X_ExtraLaunchParameters);
             this.tabPage_NVIDIA5X.Controls.Add(this.textBox_NVIDIA5X_ExtraLaunchParameters);
@@ -1056,24 +1068,24 @@
             this.label_NVIDIA5X_MinimumProfit.TabIndex = 99;
             this.label_NVIDIA5X_MinimumProfit.Text = "MinimumProfit ($/day):";
             // 
-            // label46
+            // label_NVIDIA5X_DisabledDevices
             // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(6, 33);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(90, 13);
-            this.label46.TabIndex = 99;
-            this.label46.Text = "DisabledDevices:";
+            this.label_NVIDIA5X_DisabledDevices.AutoSize = true;
+            this.label_NVIDIA5X_DisabledDevices.Location = new System.Drawing.Point(6, 33);
+            this.label_NVIDIA5X_DisabledDevices.Name = "label_NVIDIA5X_DisabledDevices";
+            this.label_NVIDIA5X_DisabledDevices.Size = new System.Drawing.Size(90, 13);
+            this.label_NVIDIA5X_DisabledDevices.TabIndex = 99;
+            this.label_NVIDIA5X_DisabledDevices.Text = "DisabledDevices:";
             // 
             // tabControl_NVIDIA5X_Algos
             // 
             this.tabControl_NVIDIA5X_Algos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl_NVIDIA5X_Algos.Location = new System.Drawing.Point(9, 81);
+            this.tabControl_NVIDIA5X_Algos.Location = new System.Drawing.Point(6, 102);
             this.tabControl_NVIDIA5X_Algos.Name = "tabControl_NVIDIA5X_Algos";
             this.tabControl_NVIDIA5X_Algos.SelectedIndex = 0;
-            this.tabControl_NVIDIA5X_Algos.Size = new System.Drawing.Size(808, 233);
+            this.tabControl_NVIDIA5X_Algos.Size = new System.Drawing.Size(811, 230);
             this.tabControl_NVIDIA5X_Algos.TabIndex = 99;
             // 
             // label_NVIDIA5X_ExtraLaunchParameters
@@ -1128,9 +1140,11 @@
             // 
             // tabPage_NVIDIA3X
             // 
+            this.tabPage_NVIDIA3X.Controls.Add(this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice);
+            this.tabPage_NVIDIA3X.Controls.Add(this.label_NVIDIA3X_DaggerHashimotoGenerateDevice);
             this.tabPage_NVIDIA3X.Controls.Add(this.textBox_NVIDIA3X_MinimumProfit);
             this.tabPage_NVIDIA3X.Controls.Add(this.label_NVIDIA3X_MinimumProfit);
-            this.tabPage_NVIDIA3X.Controls.Add(this.label45);
+            this.tabPage_NVIDIA3X.Controls.Add(this.label_NVIDIA3X_DisabledDevices);
             this.tabPage_NVIDIA3X.Controls.Add(this.tabControl_NVIDIA3X_Algos);
             this.tabPage_NVIDIA3X.Controls.Add(this.label_NVIDIA3X_ExtraLaunchParameters);
             this.tabPage_NVIDIA3X.Controls.Add(this.textBox_NVIDIA3X_ExtraLaunchParameters);
@@ -1162,24 +1176,24 @@
             this.label_NVIDIA3X_MinimumProfit.TabIndex = 99;
             this.label_NVIDIA3X_MinimumProfit.Text = "MinimumProfit ($/day):";
             // 
-            // label45
+            // label_NVIDIA3X_DisabledDevices
             // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(6, 33);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(90, 13);
-            this.label45.TabIndex = 99;
-            this.label45.Text = "DisabledDevices:";
+            this.label_NVIDIA3X_DisabledDevices.AutoSize = true;
+            this.label_NVIDIA3X_DisabledDevices.Location = new System.Drawing.Point(6, 33);
+            this.label_NVIDIA3X_DisabledDevices.Name = "label_NVIDIA3X_DisabledDevices";
+            this.label_NVIDIA3X_DisabledDevices.Size = new System.Drawing.Size(90, 13);
+            this.label_NVIDIA3X_DisabledDevices.TabIndex = 99;
+            this.label_NVIDIA3X_DisabledDevices.Text = "DisabledDevices:";
             // 
             // tabControl_NVIDIA3X_Algos
             // 
             this.tabControl_NVIDIA3X_Algos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl_NVIDIA3X_Algos.Location = new System.Drawing.Point(9, 81);
+            this.tabControl_NVIDIA3X_Algos.Location = new System.Drawing.Point(6, 102);
             this.tabControl_NVIDIA3X_Algos.Name = "tabControl_NVIDIA3X_Algos";
             this.tabControl_NVIDIA3X_Algos.SelectedIndex = 0;
-            this.tabControl_NVIDIA3X_Algos.Size = new System.Drawing.Size(808, 233);
+            this.tabControl_NVIDIA3X_Algos.Size = new System.Drawing.Size(811, 230);
             this.tabControl_NVIDIA3X_Algos.TabIndex = 99;
             // 
             // label_NVIDIA3X_ExtraLaunchParameters
@@ -1234,9 +1248,11 @@
             // 
             // tabPage_NVIDIA2X
             // 
+            this.tabPage_NVIDIA2X.Controls.Add(this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice);
+            this.tabPage_NVIDIA2X.Controls.Add(this.label_NVIDIA2X_DaggerHashimotoGenerateDevice);
             this.tabPage_NVIDIA2X.Controls.Add(this.textBox_NVIDIA2X_MinimumProfit);
             this.tabPage_NVIDIA2X.Controls.Add(this.label_NVIDIA2X_MinimumProfit);
-            this.tabPage_NVIDIA2X.Controls.Add(this.label44);
+            this.tabPage_NVIDIA2X.Controls.Add(this.label_NVIDIA2X_DisabledDevices);
             this.tabPage_NVIDIA2X.Controls.Add(this.tabControl_NVIDIA2X_Algos);
             this.tabPage_NVIDIA2X.Controls.Add(this.label_NVIDIA2X_ExtraLaunchParameters);
             this.tabPage_NVIDIA2X.Controls.Add(this.textBox_NVIDIA2X_ExtraLaunchParameters);
@@ -1268,14 +1284,14 @@
             this.label_NVIDIA2X_MinimumProfit.TabIndex = 99;
             this.label_NVIDIA2X_MinimumProfit.Text = "MinimumProfit ($/day):";
             // 
-            // label44
+            // label_NVIDIA2X_DisabledDevices
             // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(6, 33);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(90, 13);
-            this.label44.TabIndex = 99;
-            this.label44.Text = "DisabledDevices:";
+            this.label_NVIDIA2X_DisabledDevices.AutoSize = true;
+            this.label_NVIDIA2X_DisabledDevices.Location = new System.Drawing.Point(6, 33);
+            this.label_NVIDIA2X_DisabledDevices.Name = "label_NVIDIA2X_DisabledDevices";
+            this.label_NVIDIA2X_DisabledDevices.Size = new System.Drawing.Size(90, 13);
+            this.label_NVIDIA2X_DisabledDevices.TabIndex = 99;
+            this.label_NVIDIA2X_DisabledDevices.Text = "DisabledDevices:";
             // 
             // tabControl_NVIDIA2X_Algos
             // 
@@ -1283,7 +1299,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl_NVIDIA2X_Algos.Controls.Add(this.tabPage38);
-            this.tabControl_NVIDIA2X_Algos.Location = new System.Drawing.Point(9, 81);
+            this.tabControl_NVIDIA2X_Algos.Location = new System.Drawing.Point(6, 102);
             this.tabControl_NVIDIA2X_Algos.Name = "tabControl_NVIDIA2X_Algos";
             this.tabControl_NVIDIA2X_Algos.SelectedIndex = 0;
             this.tabControl_NVIDIA2X_Algos.Size = new System.Drawing.Size(808, 233);
@@ -1418,7 +1434,9 @@
             // 
             // tabPage_AMD
             // 
-            this.tabPage_AMD.Controls.Add(this.label38);
+            this.tabPage_AMD.Controls.Add(this.textBox_AMD_DaggerHashimotoGenerateDevice);
+            this.tabPage_AMD.Controls.Add(this.label_AMD_DaggerHashimotoGenerateDevice);
+            this.tabPage_AMD.Controls.Add(this.label_AMD_DisabledDevices);
             this.tabPage_AMD.Controls.Add(this.textBox_AMD_MinimumProfit);
             this.tabPage_AMD.Controls.Add(this.label_AMD_MinimumProfit);
             this.tabPage_AMD.Controls.Add(this.tabControl_AMD_Algos);
@@ -1437,14 +1455,14 @@
             this.tabPage_AMD.Text = "AMD_OpenCL";
             this.tabPage_AMD.UseVisualStyleBackColor = true;
             // 
-            // label38
+            // label_AMD_DisabledDevices
             // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(6, 33);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(90, 13);
-            this.label38.TabIndex = 99;
-            this.label38.Text = "DisabledDevices:";
+            this.label_AMD_DisabledDevices.AutoSize = true;
+            this.label_AMD_DisabledDevices.Location = new System.Drawing.Point(6, 33);
+            this.label_AMD_DisabledDevices.Name = "label_AMD_DisabledDevices";
+            this.label_AMD_DisabledDevices.Size = new System.Drawing.Size(90, 13);
+            this.label_AMD_DisabledDevices.TabIndex = 99;
+            this.label_AMD_DisabledDevices.Text = "DisabledDevices:";
             // 
             // textBox_AMD_MinimumProfit
             // 
@@ -1468,10 +1486,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl_AMD_Algos.Controls.Add(this.tabPage52);
-            this.tabControl_AMD_Algos.Location = new System.Drawing.Point(9, 81);
+            this.tabControl_AMD_Algos.Location = new System.Drawing.Point(6, 102);
             this.tabControl_AMD_Algos.Name = "tabControl_AMD_Algos";
             this.tabControl_AMD_Algos.SelectedIndex = 0;
-            this.tabControl_AMD_Algos.Size = new System.Drawing.Size(808, 233);
+            this.tabControl_AMD_Algos.Size = new System.Drawing.Size(811, 230);
             this.tabControl_AMD_Algos.TabIndex = 6;
             // 
             // tabPage52
@@ -1488,7 +1506,7 @@
             this.tabPage52.Location = new System.Drawing.Point(4, 22);
             this.tabPage52.Name = "tabPage52";
             this.tabPage52.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage52.Size = new System.Drawing.Size(800, 207);
+            this.tabPage52.Size = new System.Drawing.Size(803, 204);
             this.tabPage52.TabIndex = 0;
             this.tabPage52.Text = "x11";
             this.tabPage52.UseVisualStyleBackColor = true;
@@ -1518,7 +1536,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox57.Location = new System.Drawing.Point(6, 71);
             this.textBox57.Name = "textBox57";
-            this.textBox57.Size = new System.Drawing.Size(788, 20);
+            this.textBox57.Size = new System.Drawing.Size(791, 20);
             this.textBox57.TabIndex = 25;
             // 
             // label62
@@ -1634,11 +1652,11 @@
             // 
             // button_Close
             // 
-            this.button_Close.Location = new System.Drawing.Point(757, 376);
+            this.button_Close.Location = new System.Drawing.Point(757, 372);
             this.button_Close.Name = "button_Close";
             this.button_Close.Size = new System.Drawing.Size(75, 23);
             this.button_Close.TabIndex = 1;
-            this.button_Close.Text = "Close";
+            this.button_Close.Text = "&Close";
             this.button_Close.UseVisualStyleBackColor = true;
             this.button_Close.Click += new System.EventHandler(this.button_Close_Click);
             // 
@@ -1648,11 +1666,98 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
+            // buttonDefaults
+            // 
+            this.buttonDefaults.Location = new System.Drawing.Point(676, 372);
+            this.buttonDefaults.Name = "buttonDefaults";
+            this.buttonDefaults.Size = new System.Drawing.Size(75, 23);
+            this.buttonDefaults.TabIndex = 2;
+            this.buttonDefaults.Text = "&Defaults";
+            this.buttonDefaults.UseVisualStyleBackColor = true;
+            this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(595, 372);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.TabIndex = 3;
+            this.buttonSave.Text = "&Save";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // label_AMD_DaggerHashimotoGenerateDevice
+            // 
+            this.label_AMD_DaggerHashimotoGenerateDevice.AutoSize = true;
+            this.label_AMD_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(7, 82);
+            this.label_AMD_DaggerHashimotoGenerateDevice.Name = "label_AMD_DaggerHashimotoGenerateDevice";
+            this.label_AMD_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(173, 13);
+            this.label_AMD_DaggerHashimotoGenerateDevice.TabIndex = 101;
+            this.label_AMD_DaggerHashimotoGenerateDevice.Text = "DaggerHashimotoGenerateDevice:";
+            // 
+            // textBox_AMD_DaggerHashimotoGenerateDevice
+            // 
+            this.textBox_AMD_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(186, 79);
+            this.textBox_AMD_DaggerHashimotoGenerateDevice.Name = "textBox_AMD_DaggerHashimotoGenerateDevice";
+            this.textBox_AMD_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(100, 20);
+            this.textBox_AMD_DaggerHashimotoGenerateDevice.TabIndex = 102;
+            // 
+            // label_NVIDIA2X_DaggerHashimotoGenerateDevice
+            // 
+            this.label_NVIDIA2X_DaggerHashimotoGenerateDevice.AutoSize = true;
+            this.label_NVIDIA2X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(7, 82);
+            this.label_NVIDIA2X_DaggerHashimotoGenerateDevice.Name = "label_NVIDIA2X_DaggerHashimotoGenerateDevice";
+            this.label_NVIDIA2X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(173, 13);
+            this.label_NVIDIA2X_DaggerHashimotoGenerateDevice.TabIndex = 100;
+            this.label_NVIDIA2X_DaggerHashimotoGenerateDevice.Text = "DaggerHashimotoGenerateDevice:";
+            // 
+            // textBox_NVIDIA2X_DaggerHashimotoGenerateDevice
+            // 
+            this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(186, 79);
+            this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.Name = "textBox_NVIDIA2X_DaggerHashimotoGenerateDevice";
+            this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(100, 20);
+            this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.TabIndex = 101;
+            // 
+            // label_NVIDIA3X_DaggerHashimotoGenerateDevice
+            // 
+            this.label_NVIDIA3X_DaggerHashimotoGenerateDevice.AutoSize = true;
+            this.label_NVIDIA3X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(7, 82);
+            this.label_NVIDIA3X_DaggerHashimotoGenerateDevice.Name = "label_NVIDIA3X_DaggerHashimotoGenerateDevice";
+            this.label_NVIDIA3X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(173, 13);
+            this.label_NVIDIA3X_DaggerHashimotoGenerateDevice.TabIndex = 100;
+            this.label_NVIDIA3X_DaggerHashimotoGenerateDevice.Text = "DaggerHashimotoGenerateDevice:";
+            // 
+            // textBox_NVIDIA3X_DaggerHashimotoGenerateDevice
+            // 
+            this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.BackColor = System.Drawing.SystemColors.Window;
+            this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(186, 79);
+            this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.Name = "textBox_NVIDIA3X_DaggerHashimotoGenerateDevice";
+            this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(100, 20);
+            this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.TabIndex = 101;
+            // 
+            // label_NVIDIA5X_DaggerHashimotoGenerateDevice
+            // 
+            this.label_NVIDIA5X_DaggerHashimotoGenerateDevice.AutoSize = true;
+            this.label_NVIDIA5X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(7, 82);
+            this.label_NVIDIA5X_DaggerHashimotoGenerateDevice.Name = "label_NVIDIA5X_DaggerHashimotoGenerateDevice";
+            this.label_NVIDIA5X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(173, 13);
+            this.label_NVIDIA5X_DaggerHashimotoGenerateDevice.TabIndex = 100;
+            this.label_NVIDIA5X_DaggerHashimotoGenerateDevice.Text = "DaggerHashimotoGenerateDevice:";
+            // 
+            // textBox_NVIDIA5X_DaggerHashimotoGenerateDevice
+            // 
+            this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(186, 79);
+            this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.Name = "textBox_NVIDIA5X_DaggerHashimotoGenerateDevice";
+            this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(100, 20);
+            this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.TabIndex = 101;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(844, 411);
+            this.ClientSize = new System.Drawing.Size(844, 407);
+            this.Controls.Add(this.buttonSave);
+            this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.button_Close);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1662,7 +1767,6 @@
             this.Name = "Form_Settings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Settings_FormClosing);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabControl_CPU0.ResumeLayout(false);
@@ -1813,9 +1917,9 @@
         private System.Windows.Forms.TextBox textBox_AMD_APIBindPort;
         private System.Windows.Forms.Label label_AMD_APIBindPort;
         private System.Windows.Forms.TabControl tabControl_NVIDIA3X_Algos;
-        private System.Windows.Forms.Label label44;
-        private System.Windows.Forms.Label label45;
-        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Label label_NVIDIA2X_DisabledDevices;
+        private System.Windows.Forms.Label label_NVIDIA3X_DisabledDevices;
+        private System.Windows.Forms.Label label_NVIDIA5X_DisabledDevices;
         private System.Windows.Forms.Button button_Close;
         private System.Windows.Forms.TextBox textBox_NVIDIA5X_MinimumProfit;
         private System.Windows.Forms.Label label_NVIDIA5X_MinimumProfit;
@@ -1825,7 +1929,7 @@
         private System.Windows.Forms.Label label_NVIDIA2X_MinimumProfit;
         private System.Windows.Forms.TextBox textBox_AMD_MinimumProfit;
         private System.Windows.Forms.Label label_AMD_MinimumProfit;
-        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label_AMD_DisabledDevices;
         private System.Windows.Forms.CheckBox checkBox_UseNewSettingsPage;
         private System.Windows.Forms.CheckBox checkBox_DisableWindowsErrorReporting;
         private System.Windows.Forms.CheckBox checkBox1;
@@ -1841,5 +1945,15 @@
         private System.Windows.Forms.TextBox textBox_ethminerAPIPortNvidia;
         private System.Windows.Forms.Label label_ethminerDefaultBlockHeight;
         private System.Windows.Forms.CheckBox checkBox_LogToFile;
+        private System.Windows.Forms.Button buttonDefaults;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Label label_AMD_DaggerHashimotoGenerateDevice;
+        private System.Windows.Forms.TextBox textBox_AMD_DaggerHashimotoGenerateDevice;
+        private System.Windows.Forms.TextBox textBox_NVIDIA2X_DaggerHashimotoGenerateDevice;
+        private System.Windows.Forms.Label label_NVIDIA2X_DaggerHashimotoGenerateDevice;
+        private System.Windows.Forms.TextBox textBox_NVIDIA5X_DaggerHashimotoGenerateDevice;
+        private System.Windows.Forms.Label label_NVIDIA5X_DaggerHashimotoGenerateDevice;
+        private System.Windows.Forms.TextBox textBox_NVIDIA3X_DaggerHashimotoGenerateDevice;
+        private System.Windows.Forms.Label label_NVIDIA3X_DaggerHashimotoGenerateDevice;
     }
 }

@@ -29,6 +29,7 @@ namespace NiceHashMiner
         public string ExtraLaunchParameters;
         public string UsePassword;
         public double MinimumProfit;
+        public int DaggerHashimotoGenerateDevice;
         public int[] DisabledDevices;
         public Algo[] Algorithms;
 #pragma warning restore 649
@@ -192,6 +193,7 @@ namespace NiceHashMiner
                 CG[i].ExtraLaunchParameters = Form1.Miners[i].ExtraLaunchParameters;
                 CG[i].UsePassword = Form1.Miners[i].UsePassword;
                 CG[i].MinimumProfit = Form1.Miners[i].MinimumProfit;
+                CG[i].DaggerHashimotoGenerateDevice = Form1.Miners[i].DaggerHashimotoGenerateDevice;
                 CG[i].Algorithms = new Algo[Form1.Miners[i].SupportedAlgorithms.Length];
                 for (int k = 0; k < Form1.Miners[i].SupportedAlgorithms.Length; k++)
                 {

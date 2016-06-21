@@ -19,6 +19,12 @@ namespace NiceHashMiner
         public SubmitResultDialog(int tI)
         {
             InitializeComponent();
+
+            this.Text = International.GetText("SubmitResultDialog_title");
+            labelInstruction.Text = International.GetText("SubmitResultDialog_labelInstruction");
+            StartStopBtn.Text = International.GetText("SubmitResultDialog_StartBtn");
+            CloseBtn.Text = International.GetText("SubmitResultDialog_CloseBtn");
+
             TimeIndex = tI;
             InBenchmark = false;
             DeviceChecked_Index = 0;
@@ -97,7 +103,8 @@ namespace NiceHashMiner
 
             if (!DeviceChecked)
             {
-                MessageBox.Show("Please choose at least one device to submit the results.", "No device selected",
+                MessageBox.Show(International.GetText("SubmitResultDialog_NoDeviceCheckedMsg"),
+                                International.GetText("SubmitResultDialog_NoDeviceCheckedTitle"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -105,15 +112,15 @@ namespace NiceHashMiner
             InBenchmark = true;
             DevicesListView.Enabled = false;
             CloseBtn.Enabled = false;
-            BenchmarkBtn.Text = "Stop";
+            StartStopBtn.Text = International.GetText("SubmitResultDialog_StopBtn");
             LabelProgressPercentage.Text = "0.00%";
             index = 0;
 
             Helpers.ConsolePrint("SubmitResultDialog", "Number of Devices: " + mm.CDevs.Count);
             if (mm.CDevs.Count == 1 && mm.CountBenchmarkedAlgos() != 0)
             {
-                DialogResult result = MessageBox.Show("You could use previously benchmarked values. Choose Yes to use previously benchmarked " +
-                                                      "values or choose No to re-run the benchmark?", "Use previously benchmarked values?",
+                DialogResult result = MessageBox.Show(International.GetText("SubmitResultDialog_UsePreviousBenchmarkedValueMsg"),
+                                                      International.GetText("SubmitResultDialog_UsePreviousBenchmarkedValueTitle"),
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == System.Windows.Forms.DialogResult.Yes) index = 9999;
@@ -211,13 +218,13 @@ namespace NiceHashMiner
                 InBenchmark = false;
                 DevicesListView.Enabled = true;
                 CloseBtn.Enabled = true;
-                BenchmarkBtn.Text = "Start";
+                StartStopBtn.Text = International.GetText("SubmitResultDialog_StartBtn");
                 BenchmarkProgressBar.Value = 0;
-                LabelProgressPercentage.Text = "Completed!";
+                LabelProgressPercentage.Text = International.GetText("SubmitResultDialog_LabelProgressPercentageCompleted");
 
                 if (mm.BenchmarkSignalQuit)
                 {
-                    LabelProgressPercentage.Text = "Stopped!";
+                    LabelProgressPercentage.Text = International.GetText("SubmitResultDialog_LabelProgressPercentageStopped");
                     return;
                 }
 
@@ -242,8 +249,8 @@ namespace NiceHashMiner
         private void UpdateProgressBar(bool step)
         {
             if (step) BenchmarkProgressBar.PerformStep();
-            LabelProgressPercentage.Text = ((double)((double)BenchmarkProgressBar.Value / (double)BenchmarkProgressBar.Maximum) * 100).ToString("F2") + "%" + 
-                                           " : Benchmarking " + CurrentAlgoName + ".. Please wait..";
+            LabelProgressPercentage.Text = String.Format(International.GetText("SubmitResultDialog_LabelProgressPercentageInProgress"),
+                                           ((double)((double)BenchmarkProgressBar.Value / (double)BenchmarkProgressBar.Maximum) * 100).ToString("F2"), CurrentAlgoName);
         }
     }
 }

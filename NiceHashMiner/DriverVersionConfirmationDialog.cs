@@ -13,6 +13,11 @@ namespace NiceHashMiner
         public DriverVersionConfirmationDialog()
         {
             InitializeComponent();
+
+            this.Text = International.GetText("DriverVersionConfirmationDialog_title");
+            labelWarning.Text = International.GetText("DriverVersionConfirmationDialog_labelWarning");
+            linkToDriverDownloadPage.Text = International.GetText("DriverVersionConfirmationDialog_linkToDriverDownloadPage");
+            chkBoxDontShowAgain.Text = International.GetText("DriverVersionConfirmationDialog_chkBoxDontShowAgain");
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

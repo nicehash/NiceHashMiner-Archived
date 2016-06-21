@@ -35,9 +35,9 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonStartBenchmark = new System.Windows.Forms.Button();
             this.buttonStopBenchmark = new System.Windows.Forms.Button();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radioButton_QuickBenchmark = new System.Windows.Forms.RadioButton();
+            this.radioButton_StandardBenchmark = new System.Windows.Forms.RadioButton();
+            this.radioButton_PreciseBenchmark = new System.Windows.Forms.RadioButton();
             this.buttonReset = new System.Windows.Forms.Button();
             this.buttonSubmitHardware = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
@@ -108,40 +108,40 @@
             this.buttonStopBenchmark.UseVisualStyleBackColor = true;
             this.buttonStopBenchmark.Click += new System.EventHandler(this.buttonStopBenchmark_Click);
             // 
-            // radioButton1
+            // radioButton_QuickBenchmark
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(146, 15);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(204, 17);
-            this.radioButton1.TabIndex = 3;
-            this.radioButton1.Text = "&Quick benchmark (can be inaccurate)";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            this.radioButton_QuickBenchmark.AutoSize = true;
+            this.radioButton_QuickBenchmark.Location = new System.Drawing.Point(146, 15);
+            this.radioButton_QuickBenchmark.Name = "radioButton_QuickBenchmark";
+            this.radioButton_QuickBenchmark.Size = new System.Drawing.Size(204, 17);
+            this.radioButton_QuickBenchmark.TabIndex = 3;
+            this.radioButton_QuickBenchmark.Text = "&Quick benchmark (can be inaccurate)";
+            this.radioButton_QuickBenchmark.UseVisualStyleBackColor = true;
+            this.radioButton_QuickBenchmark.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
-            // radioButton2
+            // radioButton_StandardBenchmark
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Checked = true;
-            this.radioButton2.Location = new System.Drawing.Point(146, 44);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(124, 17);
-            this.radioButton2.TabIndex = 4;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "&Standard benchmark";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            this.radioButton_StandardBenchmark.AutoSize = true;
+            this.radioButton_StandardBenchmark.Checked = true;
+            this.radioButton_StandardBenchmark.Location = new System.Drawing.Point(146, 44);
+            this.radioButton_StandardBenchmark.Name = "radioButton_StandardBenchmark";
+            this.radioButton_StandardBenchmark.Size = new System.Drawing.Size(124, 17);
+            this.radioButton_StandardBenchmark.TabIndex = 4;
+            this.radioButton_StandardBenchmark.TabStop = true;
+            this.radioButton_StandardBenchmark.Text = "&Standard benchmark";
+            this.radioButton_StandardBenchmark.UseVisualStyleBackColor = true;
+            this.radioButton_StandardBenchmark.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
-            // radioButton3
+            // radioButton_PreciseBenchmark
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(146, 73);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(195, 17);
-            this.radioButton3.TabIndex = 5;
-            this.radioButton3.Text = "&Precise benchmark (will take longer)";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
+            this.radioButton_PreciseBenchmark.AutoSize = true;
+            this.radioButton_PreciseBenchmark.Location = new System.Drawing.Point(146, 73);
+            this.radioButton_PreciseBenchmark.Name = "radioButton_PreciseBenchmark";
+            this.radioButton_PreciseBenchmark.Size = new System.Drawing.Size(195, 17);
+            this.radioButton_PreciseBenchmark.TabIndex = 5;
+            this.radioButton_PreciseBenchmark.Text = "&Precise benchmark (will take longer)";
+            this.radioButton_PreciseBenchmark.UseVisualStyleBackColor = true;
+            this.radioButton_PreciseBenchmark.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
             // 
             // buttonReset
             // 
@@ -192,9 +192,9 @@
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonSubmitHardware);
             this.Controls.Add(this.buttonReset);
-            this.Controls.Add(this.radioButton3);
-            this.Controls.Add(this.radioButton2);
-            this.Controls.Add(this.radioButton1);
+            this.Controls.Add(this.radioButton_PreciseBenchmark);
+            this.Controls.Add(this.radioButton_StandardBenchmark);
+            this.Controls.Add(this.radioButton_QuickBenchmark);
             this.Controls.Add(this.buttonStopBenchmark);
             this.Controls.Add(this.buttonStartBenchmark);
             this.Controls.Add(this.listView1);
@@ -220,9 +220,9 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.Button buttonStartBenchmark;
         private System.Windows.Forms.Button buttonStopBenchmark;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.RadioButton radioButton_QuickBenchmark;
+        private System.Windows.Forms.RadioButton radioButton_StandardBenchmark;
+        private System.Windows.Forms.RadioButton radioButton_PreciseBenchmark;
         private System.Windows.Forms.ColumnHeader columnHeader0;
         private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.Button buttonSubmitHardware;

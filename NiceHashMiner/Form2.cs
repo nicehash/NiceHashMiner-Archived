@@ -23,6 +23,23 @@ namespace NiceHashMiner
         {
             InitializeComponent();
 
+            this.Text = International.GetText("form2_title");
+            buttonStartBenchmark.Text = International.GetText("form2_buttonStartBenchmark");
+            buttonStopBenchmark.Text = International.GetText("form2_buttonStopBenchmark");
+            buttonReset.Text = International.GetText("form2_buttonReset");
+            buttonClose.Text = International.GetText("form2_buttonClose");
+            buttonCheckProfitability.Text = International.GetText("form2_buttonCheckProfitability");
+            buttonSubmitHardware.Text = International.GetText("form2_buttonSubmitHardware");
+
+            radioButton_QuickBenchmark.Text = International.GetText("form2_radioButton_QuickBenchmark");
+            radioButton_StandardBenchmark.Text = International.GetText("form2_radioButton_StandardBenchmark");
+            radioButton_PreciseBenchmark.Text = International.GetText("form2_radioButton_PreciseBenchmark");
+
+            listView1.Columns[0].Text = International.GetText("form2_listView_Columns0");
+            listView1.Columns[1].Text = International.GetText("form2_listView_Columns1");
+            listView1.Columns[2].Text = International.GetText("form2_listView_Columns2");
+            listView1.Columns[3].Text = International.GetText("form2_listView_Columns3");
+
             foreach (Miner m in Form1.Miners)
             {
                 for (int i = 0; i < m.SupportedAlgorithms.Length; i++)
@@ -89,23 +106,23 @@ namespace NiceHashMiner
 
                 Miner m = lvi.Tag as Miner;
                 int i = (int)lvi.SubItems[2].Tag;
-                lvi.SubItems[3].Text = "Please wait...";
+                //lvi.SubItems[3].Text = "Please wait...";
                 inBenchmark = true;
                 CurrentlyBenchmarking = m;
 
                 if (m is cpuminer)
                 {
                     Time = Config.ConfigData.BenchmarkTimeLimitsCPU[TimeIndex];
-                    lvi.SubItems[3].Text = "Please wait about " + Time + " seconds...";
+                    lvi.SubItems[3].Text = String.Format(International.GetText("form2_listView_WaitSeconds"), Time);
                 }
                 else if (m is ccminer)
                 {
                     Time = Config.ConfigData.BenchmarkTimeLimitsNVIDIA[TimeIndex];
 
                     if (lvi.SubItems[2].Text.Equals("daggerhashimoto"))
-                        lvi.SubItems[3].Text = "Benchmarking (2-4 minutes)...";
+                        lvi.SubItems[3].Text = International.GetText("form2_listView_WaitForEth");
                     else
-                        lvi.SubItems[3].Text = "Please wait about " + Time + " seconds...";
+                        lvi.SubItems[3].Text = String.Format(International.GetText("form2_listView_WaitSeconds"), Time);
                 }
                 else
                 {
@@ -116,9 +133,9 @@ namespace NiceHashMiner
                         Time += 1;
 
                     if (lvi.SubItems[2].Text.Equals("daggerhashimoto"))
-                        lvi.SubItems[3].Text = "Benchmarking (2-4 minutes)...";
+                        lvi.SubItems[3].Text = International.GetText("form2_listView_WaitForEth");
                     else
-                        lvi.SubItems[3].Text = "Please wait about " + Time + " minutes...";
+                        lvi.SubItems[3].Text = String.Format(International.GetText("form2_listView_WaitMinutes"), Time);
                 }
 
                 m.BenchmarkStart(i, Time, BenchmarkCompleted, lvi);

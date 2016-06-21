@@ -17,11 +17,10 @@ namespace NiceHashMiner
             InitializeComponent();
 
             DisableDetection = false;
-            this.linkLabelError.Text = MinerDeviceName + ": File " + Path + " is not found!\n\n" +
-                                   "Please make sure that the file is accessible and that your anti-virus is not blocking the application.\n" + 
-                                   "Please refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section (Link).\n\n" +
-                                   "A re-download of NiceHash Miner might be needed.";
+            this.Text = International.GetText("MinerFileNotFoundDialog_title");
+            this.linkLabelError.Text = String.Format(International.GetText("MinerFileNotFoundDialog_linkLabelError"), MinerDeviceName, Path);
             this.linkLabelError.LinkArea = new LinkArea(this.linkLabelError.Text.IndexOf("Link"), 4);
+            this.chkBoxDisableDetection.Text = International.GetText("MinerFileNotFoundDialog_chkBoxDisableDetection");
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

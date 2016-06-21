@@ -82,6 +82,7 @@ namespace NiceHashMiner
         public string ExtraLaunchParameters;
         public string UsePassword;
         public double MinimumProfit;
+        public int DaggerHashimotoGenerateDevice;
         public int CurrentAlgo;
         public double CurrentRate;
         public bool NotProfitable;

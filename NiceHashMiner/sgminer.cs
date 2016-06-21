@@ -324,7 +324,9 @@ namespace NiceHashMiner
                     if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
                     {
                         CommandLine += i + " ";
-                        if (dagdev == -1) dagdev = i;
+                        if (i == DaggerHashimotoGenerateDevice)
+                            dagdev = DaggerHashimotoGenerateDevice;
+                        else if (dagdev == -1) dagdev = i;
                     }
                 }
 
@@ -402,7 +404,9 @@ namespace NiceHashMiner
                     if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
                     {
                         LastCommandLine += i.ToString() + " ";
-                        if (dagdev == -1) dagdev = i;
+                        if (i == DaggerHashimotoGenerateDevice)
+                            dagdev = DaggerHashimotoGenerateDevice;
+                        else if (dagdev == -1) dagdev = i;
                     }
                 }
 

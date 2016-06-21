@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.CloseBtn = new System.Windows.Forms.Button();
-            this.BenchmarkBtn = new System.Windows.Forms.Button();
+            this.StartStopBtn = new System.Windows.Forms.Button();
             this.DevicesListView = new System.Windows.Forms.ListView();
             this.Group = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DeviceName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.BenchmarkProgressBar = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelInstruction = new System.Windows.Forms.Label();
             this.LabelProgressPercentage = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -48,15 +48,15 @@
             this.CloseBtn.UseVisualStyleBackColor = true;
             this.CloseBtn.Click += new System.EventHandler(this.CloseBtn_Click);
             // 
-            // BenchmarkBtn
+            // StartStopBtn
             // 
-            this.BenchmarkBtn.Location = new System.Drawing.Point(315, 223);
-            this.BenchmarkBtn.Name = "BenchmarkBtn";
-            this.BenchmarkBtn.Size = new System.Drawing.Size(75, 23);
-            this.BenchmarkBtn.TabIndex = 1;
-            this.BenchmarkBtn.Text = "&Start";
-            this.BenchmarkBtn.UseVisualStyleBackColor = true;
-            this.BenchmarkBtn.Click += new System.EventHandler(this.BenchmarkBtn_Click);
+            this.StartStopBtn.Location = new System.Drawing.Point(315, 223);
+            this.StartStopBtn.Name = "StartStopBtn";
+            this.StartStopBtn.Size = new System.Drawing.Size(75, 23);
+            this.StartStopBtn.TabIndex = 1;
+            this.StartStopBtn.Text = "&Start";
+            this.StartStopBtn.UseVisualStyleBackColor = true;
+            this.StartStopBtn.Click += new System.EventHandler(this.BenchmarkBtn_Click);
             // 
             // DevicesListView
             // 
@@ -93,14 +93,14 @@
             this.BenchmarkProgressBar.Step = 1;
             this.BenchmarkProgressBar.TabIndex = 3;
             // 
-            // label1
+            // labelInstruction
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(447, 26);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Please select a device to be benchmarked and once it is done, it will automatiall" +
+            this.labelInstruction.AutoSize = true;
+            this.labelInstruction.Location = new System.Drawing.Point(13, 13);
+            this.labelInstruction.Name = "labelInstruction";
+            this.labelInstruction.Size = new System.Drawing.Size(447, 26);
+            this.labelInstruction.TabIndex = 4;
+            this.labelInstruction.Text = "Please select a device to be benchmarked and once it is done, it will automatiall" +
     "y open a new\r\nweb page to display the profitability calculator on the NiceHash\'s" +
     " website.";
             // 
@@ -120,9 +120,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(488, 254);
             this.Controls.Add(this.LabelProgressPercentage);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelInstruction);
             this.Controls.Add(this.DevicesListView);
-            this.Controls.Add(this.BenchmarkBtn);
+            this.Controls.Add(this.StartStopBtn);
             this.Controls.Add(this.CloseBtn);
             this.Controls.Add(this.BenchmarkProgressBar);
             this.MaximizeBox = false;
@@ -140,12 +140,12 @@
         #endregion
 
         private System.Windows.Forms.Button CloseBtn;
-        private System.Windows.Forms.Button BenchmarkBtn;
+        private System.Windows.Forms.Button StartStopBtn;
         private System.Windows.Forms.ListView DevicesListView;
         private System.Windows.Forms.ProgressBar BenchmarkProgressBar;
         private System.Windows.Forms.ColumnHeader DeviceName;
         private System.Windows.Forms.ColumnHeader Group;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelInstruction;
         private System.Windows.Forms.Label LabelProgressPercentage;
     }
 }

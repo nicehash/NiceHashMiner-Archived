@@ -13,6 +13,8 @@ namespace NiceHashMiner
         public Form3()
         {
             InitializeComponent();
+
+            label_LoadingText.Text = International.GetText("form3_label_LoadingText");
         }
     }
 }

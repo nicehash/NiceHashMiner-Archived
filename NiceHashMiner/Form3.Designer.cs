@@ -30,7 +30,7 @@
         {
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.LoadText = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label_LoadingText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -53,16 +53,16 @@
             this.LoadText.Text = "                                                                                 " +
     "           ";
             // 
-            // label1
+            // label_LoadingText
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(84, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(136, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Loading, please wait...";
+            this.label_LoadingText.AutoSize = true;
+            this.label_LoadingText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label_LoadingText.ForeColor = System.Drawing.Color.Black;
+            this.label_LoadingText.Location = new System.Drawing.Point(84, 9);
+            this.label_LoadingText.Name = "label_LoadingText";
+            this.label_LoadingText.Size = new System.Drawing.Size(136, 13);
+            this.label_LoadingText.TabIndex = 0;
+            this.label_LoadingText.Text = "Loading, please wait...";
             // 
             // Form3
             // 
@@ -73,7 +73,7 @@
             this.ControlBox = false;
             this.Controls.Add(this.LoadText);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label_LoadingText);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -91,6 +91,6 @@
 
         public System.Windows.Forms.ProgressBar progressBar1;
         public System.Windows.Forms.Label LoadText;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_LoadingText;
     }
 }
