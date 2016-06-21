@@ -174,18 +174,18 @@
         "Form_Settings_ToolTip_textBox_BenchmarkTimeLimitsAMD_Precise": "Amount of times (in seconds) for precise benchmarking the AMD GPUs.",
         "Form_Settings_ToolTip_label_BenchmarkTimeLimitsAMD_Precise": "Amount of times (in seconds) for precise benchmarking the AMD GPUs.",
 
-        "Form_Settings_ToolTip_checkBox_DisableDetectionNVidia5X": "Set it to true if you would like to skip the detection of NVidia5.x GPUs.",
-        "Form_Settings_ToolTip_checkBox_DisableDetectionNVidia3X": "Set it to true if you would like to skip the detection of NVidia3.x GPUs.",
-        "Form_Settings_ToolTip_checkBox_DisableDetectionNVidia2X": "Set it to true if you would like to skip the detection of NVidia2.x GPUs.",
-        "Form_Settings_ToolTip_checkBox_DisableDetectionAMD": "Set it to true if you would like to skip the detection of AMD GPUs.",
+        "Form_Settings_ToolTip_checkBox_DisableDetectionNVidia5X": "Check it, if you would like to skip the detection of NVidia5.x GPUs.",
+        "Form_Settings_ToolTip_checkBox_DisableDetectionNVidia3X": "Check it, if you would like to skip the detection of NVidia3.x GPUs.",
+        "Form_Settings_ToolTip_checkBox_DisableDetectionNVidia2X": "Check it, if you would like to skip the detection of NVidia2.x GPUs.",
+        "Form_Settings_ToolTip_checkBox_DisableDetectionAMD": "Check it, if you would like to skip the detection of AMD GPUs.",
 
-        "Form_Settings_ToolTip_checkBox_AMD_DisableAMDTempControl": "Set it to true if you would like to disable the built-in temperature control for AMD GPUs (except daggerhashimoto algo).",
-        "Form_Settings_ToolTip_checkBox_AutoScaleBTCValues": "Set it to true if you would like to see the BTC values autoscale to the appropriate scale.",
+        "Form_Settings_ToolTip_checkBox_AMD_DisableAMDTempControl": "Check it, if you would like to disable the built-in temperature control for AMD GPUs (except daggerhashimoto algo).",
+        "Form_Settings_ToolTip_checkBox_AutoScaleBTCValues": "Check it, if you would like to see the BTC values autoscale to the appropriate scale.",
         "Form_Settings_ToolTip_checkBox_StartMiningWhenIdle": "Automatically start mining when computer is idle and stop mining when computer is being used.",
 
         "Form_Settings_ToolTip_textBox_MinIdleSeconds": "When StartMiningWhenIdle is checked, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.",
         "Form_Settings_ToolTip_label_MinIdleSeconds": "When StartMiningWhenIdle is checked, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.",
-        "Form_Settings_ToolTip_checkBox_LogToFile": "Check to log console output to file.",
+        "Form_Settings_ToolTip_checkBox_LogToFile": "Check it, to log console output to file.",
         "Form_Settings_ToolTip_textBox_LogMaxFileSize": "Sets the maximum size for the log file.",
         "Form_Settings_ToolTip_label_LogMaxFileSize": "Sets the maximum size for the log file.",
 
@@ -205,7 +205,7 @@
         "Form_Settings_ToolTip_MinimumProfit": "If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.",
         "Form_Settings_ToolTip_ExtraLaunchParameters": "Additional launch parameters when launching miner.",
         "Form_Settings_ToolTip_DaggerHashimotoGenerateDevice": "Choose which GPU that will create the on GPU DAG file. As a rule of thumb, choose the fastest GPU that is available.",
-        "Form_Settings_ToolTip_DisableAMDTempControl": "Set it to true if you would like to disable the built-in temperature control for AMD GPUs (except daggerhashimoto algo).",
+        "Form_Settings_ToolTip_DisableAMDTempControl": "Check it, if you would like to disable the built-in temperature control for AMD GPUs (except daggerhashimoto algo).",
         
         "Form_Settings_ToolTip_AlgoSkip": "Check it if you would like to skip & disable a particular algorithm. Benchmarking as well as actual mining will be disabled for this particular algorithm. That said, auto-switching will skip this algorithm when mining will be running.",
         "Form_Settings_ToolTip_AlgoUsePassword": "Use this password when launching miner and this algorithm. If null, Groups's UsePassword is used.",

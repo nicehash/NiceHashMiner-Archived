@@ -101,7 +101,7 @@ namespace NiceHashMiner
 
             R = new Random((int)DateTime.Now.Ticks);
 
-            Text += " v" + Application.ProductVersion + " [BETA]";
+            Text += " v" + Application.ProductVersion;
 
             if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < MiningLocation.Length)
                 comboBox1.SelectedIndex = Config.ConfigData.Location;
