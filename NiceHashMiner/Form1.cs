@@ -317,8 +317,8 @@ namespace NiceHashMiner
             SMAMinerCheck = new Timer();
             SMAMinerCheck.Tick += SMAMinerCheck_Tick;
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
-            if (Miners[CPUs + 3].CDevs.Count > 0) SMACheck.Interval += (Config.ConfigData.SwitchMinSecondsAMD * 1000);
-
+            if (Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+            
             UpdateCheck = new Timer();
             UpdateCheck.Tick += UpdateCheck_Tick;
             UpdateCheck.Interval = 1000 * 3600; // every 1 hour
@@ -426,7 +426,7 @@ namespace NiceHashMiner
         private void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
-            if (Miners[CPUs + 3].CDevs.Count > 0) SMACheck.Interval += (Config.ConfigData.SwitchMinSecondsAMD * 1000);
+            if (Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
 
             string Worker = textBox2.Text.Trim();
             if (Worker.Length > 0)
