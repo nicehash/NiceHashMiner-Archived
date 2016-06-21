@@ -307,12 +307,15 @@ namespace NiceHashMiner
 
                 if (AlgoNameIs("daggerhashimoto"))
                 {
-                    string outdata = BenchmarkHandle.StandardOutput.ReadToEnd();
-                    
-                    if (outdata.Contains("No GPU device with sufficient memory was found"))
-                        throw new Exception("[daggerhashimoto] No GPU device with sufficient memory was found.");
+                    while (true)
+                    {
+                        string outdata = BenchmarkHandle.StandardOutput.ReadLine();
 
-                    BenchmarkParseLine(outdata);
+                        if (outdata.Contains("No GPU device with sufficient memory was found"))
+                            throw new Exception("[daggerhashimoto] No GPU device with sufficient memory was found.");
+
+                        BenchmarkParseLine(outdata);
+                    }
                 }
                 else if (this is cpuminer && AlgoNameIs("hodl"))
                 {
