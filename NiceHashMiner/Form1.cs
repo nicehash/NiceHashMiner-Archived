@@ -18,6 +18,7 @@ namespace NiceHashMiner
         public static NiceHashSMA[] NiceHashData = null;
 
         public static Miner[] Miners;
+        public static double BitcoinRate;
 
         private Timer MinerStatsCheck;
         private Timer UpdateCheck;
@@ -34,8 +35,6 @@ namespace NiceHashMiner
         private bool ShowWarningNiceHashData;
 
         private Random R;
-
-        private double BitcoinRate;
 
         private Form2 BenchmarkForm;
 
@@ -479,7 +478,7 @@ namespace NiceHashMiner
 
             foreach (Miner m in Miners)
             {
-                if (m.EnabledDeviceCount() == 0 || m.NotProfitable) continue;
+                if (m.EnabledDeviceCount() == 0 || m.NotProfitable || m.CurrentAlgo == -1) continue;
 
                 if (m is cpuminer && m.AlgoNameIs("hodl"))
                 {

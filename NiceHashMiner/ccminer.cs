@@ -98,7 +98,7 @@ namespace NiceHashMiner
             if (ProcessHandle != null) return; // ignore, already running 
 
             Algorithm Algo = GetMinerAlgorithm(nhalgo);
-            if (Algo == null) return;
+            if (Algo == null || EnabledDevicePerAlgoCount(GetAlgoIndex(Algo.NiceHashName)) < 1) return;
 
             if (Algo.NiceHashName.Equals("daggerhashimoto"))
             {
@@ -192,10 +192,11 @@ namespace NiceHashMiner
                         string compute = P.StandardOutput.ReadLine();
                         string memory = P.StandardOutput.ReadLine();
 
+                        EtherDevices[index] = -1;
+
                         // Find only the right cards
                         if (compute.Contains(match))
                         {
-                            EtherDevices[index] = -1;
                             string [] memsplit = memory.Split(':');
 
                             long memsize = Convert.ToInt64(memsplit[memsplit.Length - 1]);
@@ -216,6 +217,10 @@ namespace NiceHashMiner
                             {
                                 Helpers.ConsolePrint(MinerDeviceName, "Ethereum GPU MemSize: " + memsize + " (NOT GOOD!)");
                             }
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerDeviceName, "Skipping GPU " + outdata + " as it does match the criteria [" + match + "]");
                         }
                         device++;
                     }

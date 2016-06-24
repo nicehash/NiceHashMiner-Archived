@@ -355,9 +355,6 @@ namespace NiceHashMiner
                               " --userpass=" + username + ":" + GetPassword(Algo) +
                               " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
                               " -T --log 10 --log-file dump.txt" +
-                              " --api-listen" +
-                              " --api-port=" + APIPort.ToString() +
-                              " --api-allow W:127.0.0.1" +
                               " " + ExtraLaunchParameters +
                               " " + SupportedAlgorithms[index].ExtraLaunchParameters +
                               " --device ";

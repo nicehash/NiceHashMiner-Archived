@@ -117,7 +117,7 @@ namespace NiceHashMiner
 
             CurrentAlgo = -1;
             CurrentRate = 0;
-            NotProfitable = false;
+            NotProfitable = true;
             IsRunning = false;
             PreviousTotalMH = 0.0;
         }
@@ -165,8 +165,9 @@ namespace NiceHashMiner
 
             StartingUpDelay = false;
             PreviousTotalMH = 0.0;
-            NotProfitable = false;
+            NotProfitable = true;
             IsRunning = false;
+            CurrentAlgo = -1;
         }
 
         abstract protected string BenchmarkCreateCommandLine(int index, int time);
@@ -655,7 +656,6 @@ namespace NiceHashMiner
                     // resend start mining command
                     ethminerLink.StartMining();
                 }
-                NumRetries = 0;
                 ad.Speed *= 1000 * 1000;
             }
             else
@@ -762,7 +762,7 @@ namespace NiceHashMiner
                 }
             }
 
-            if (MaxProfit < MinimumProfit)
+            if ((MaxProfit * Form1.BitcoinRate) < MinimumProfit)
                 NotProfitable = true;
             else
                 NotProfitable = false;
@@ -784,8 +784,12 @@ namespace NiceHashMiner
 
         public bool AlgoNameIs(string algoname)
         {
-            if (SupportedAlgorithms[CurrentAlgo].NiceHashName.Equals(algoname))
-                return true;
+            try
+            {
+                if (SupportedAlgorithms[CurrentAlgo].NiceHashName.Equals(algoname))
+                    return true;
+            }
+            catch { return false; }
 
             return false;
         }
@@ -827,8 +831,18 @@ namespace NiceHashMiner
 
             for (int i = 0; i < CDevs.Count; i++)
             {
-                if (!SupportedAlgorithms[algoIndex].DisabledDevice[i])
-                    count++;
+                if (!SupportedAlgorithms[algoIndex].DisabledDevice[i] && CDevs[i].Enabled)
+                {
+                    if (SupportedAlgorithms[algoIndex].NiceHashID == 20)
+                    {
+                        if (EtherDevices[i] != -1)
+                            count++;
+                    }
+                    else
+                    {
+                        count++;
+                    }
+                }
             }
 
             return count;
