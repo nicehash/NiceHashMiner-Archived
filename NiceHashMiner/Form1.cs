@@ -43,13 +43,13 @@ namespace NiceHashMiner
         {
             InitializeComponent();
 
-            label_ServiceLocation.Text = International.GetText("form1_service_loc") + ":";
-            label_BitcoinAddress.Text = International.GetText("form1_btc_address") + ":";
-            label_WorkerName.Text = International.GetText("form1_worker_name") + ":";
+            labelServiceLocation.Text = International.GetText("form1_service_loc") + ":";
+            labelBitcoinAddress.Text = International.GetText("form1_btc_address") + ":";
+            labelWorkerName.Text = International.GetText("form1_worker_name") + ":";
 
-            linkLabel_VisitUs.Text = International.GetText("form1_visit_us");
-            linkLabel_CheckStats.Text = International.GetText("form1_check_stats");
-            linkLabel_ChooseBTCWallet.Text = International.GetText("form1_choose_bitcoin_wallet");
+            linkLabelVisitUs.Text = International.GetText("form1_visit_us");
+            linkLabelCheckStats.Text = International.GetText("form1_check_stats");
+            linkLabelChooseBTCWallet.Text = International.GetText("form1_choose_bitcoin_wallet");
 
             label_RateCPU.Text = International.GetText("form1_rate") + ":";
             label_RateNVIDIA5X.Text = International.GetText("form1_rate") + ":";
@@ -69,13 +69,13 @@ namespace NiceHashMiner
             label_RateNVIDIA2XDollar.Text = "0.00 $/" + International.GetText("form1_rate_day");
             label_RateAMDDollar.Text = "0.00 $/" + International.GetText("form1_rate_day");
 
-            toolStripStatusLabel_GlobalRate.Text = International.GetText("form1_global_rate") + ":";
-            toolStripStatusLabel_BTCDay.Text = "BTC/" + International.GetText("form1_rate_day");
-            toolStripStatusLabel_Balance.Text = "$/" + International.GetText("form1_rate_day") + "     " + International.GetText("form1_balance") + ":";
+            toolStripStatusLabelGlobalRateText.Text = International.GetText("form1_global_rate") + ":";
+            toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("form1_rate_day");
+            toolStripStatusLabelBalanceText.Text = "$/" + International.GetText("form1_rate_day") + "     " + International.GetText("form1_balance") + ":";
 
-            listView1.Columns[0].Text = International.GetText("form1_listView_Columns0");
-            listView1.Columns[1].Text = International.GetText("form1_listView_Columns1");
-            listView1.Columns[2].Text = International.GetText("form1_listView_Columns2");
+            listViewDevices.Columns[0].Text = International.GetText("form1_listView_Columns0");
+            listViewDevices.Columns[1].Text = International.GetText("form1_listView_Columns1");
+            listViewDevices.Columns[2].Text = International.GetText("form1_listView_Columns2");
 
             buttonBenchmark.Text = International.GetText("form1_benchmark");
             buttonSettings.Text = International.GetText("form1_settings");
@@ -103,12 +103,12 @@ namespace NiceHashMiner
             Text += " v" + Application.ProductVersion;
 
             if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < MiningLocation.Length)
-                comboBox1.SelectedIndex = Config.ConfigData.Location;
+                comboBoxLocation.SelectedIndex = Config.ConfigData.Location;
             else
-                comboBox1.SelectedIndex = 0;
+                comboBoxLocation.SelectedIndex = 0;
 
-            textBox1.Text = Config.ConfigData.BitcoinAddress;
-            textBox2.Text = Config.ConfigData.WorkerName;
+            textBoxBTCAddress.Text = Config.ConfigData.BitcoinAddress;
+            textBoxWorkerName.Text = Config.ConfigData.WorkerName;
             ShowWarningNiceHashData = true;
         }
 
@@ -119,7 +119,7 @@ namespace NiceHashMiner
 
             if (Config.ConfigData.AutoStartMining)
             {
-                button1_Click(null, null);
+                buttonStartMining_Click(null, null);
             }
 
             IdleCheck = new Timer();
@@ -139,7 +139,7 @@ namespace NiceHashMiner
             {
                 if (MSIdle < (Config.ConfigData.MinIdleSeconds * 1000))
                 {
-                    button2_Click(null, null);
+                    buttonStopMining_Click(null, null);
                     Helpers.ConsolePrint("NICEHASH", "Resumed from idling");
                 }
             }
@@ -148,7 +148,7 @@ namespace NiceHashMiner
                 if (BenchmarkForm == null && (MSIdle > (Config.ConfigData.MinIdleSeconds * 1000)))
                 {
                     Helpers.ConsolePrint("NICEHASH", "Entering idling state");
-                    button1_Click(null, null);
+                    buttonStartMining_Click(null, null);
                 }
             }
         }
@@ -221,6 +221,7 @@ namespace NiceHashMiner
 
             Miners[CPUs + 3] = new sgminer();
 
+            // Auto uncheck CPU if any GPU is found
             for (int i = 0; i < CPUs; i++)
             {
                 try
@@ -300,7 +301,7 @@ namespace NiceHashMiner
                     lvi.SubItems.Add(D.Name);
                     lvi.Checked = D.Enabled;
                     lvi.Tag = D;
-                    listView1.Items.Add(lvi);
+                    listViewDevices.Items.Add(lvi);
                 }
             }
 
@@ -427,11 +428,11 @@ namespace NiceHashMiner
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
             if (Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
 
-            string Worker = textBox2.Text.Trim();
+            string Worker = textBoxWorkerName.Text.Trim();
             if (Worker.Length > 0)
-                Worker = textBox1.Text.Trim() + "." + Worker;
+                Worker = textBoxBTCAddress.Text.Trim() + "." + Worker;
             else
-                Worker = textBox1.Text.Trim();
+                Worker = textBoxBTCAddress.Text.Trim();
 
             foreach (Miner m in Miners)
             {
@@ -457,7 +458,7 @@ namespace NiceHashMiner
                 m.CurrentAlgo = MaxProfitIndex;
 
                 m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
-                    "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBox1.SelectedIndex] + ".nicehash.com:" +
+                    "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" +
                     NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
             }
         }
@@ -561,8 +562,8 @@ namespace NiceHashMiner
 
         private void SetCPUStats(string aname, double speed, double paying)
         {
-            label5.Text = FormatSpeedOutput(speed) + aname;
-            if (aname.Equals("hodl")) label5.Text += "**";
+            labelCPU_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
+            if (aname.Equals("hodl")) labelCPU_Mining_Speed.Text += "**";
             label_RateCPUBTC.Text = FormatPayingOutput(paying);
             label_RateCPUDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
             UpdateGlobalRate();
@@ -571,7 +572,7 @@ namespace NiceHashMiner
 
         private void SetNVIDIAtp21Stats(string aname, double speed, double paying)
         {
-            label22.Text = FormatSpeedOutput(speed) + aname;
+            labelNVIDIA2X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA2XBTC.Text = FormatPayingOutput(paying);
             label_RateNVIDIA2XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
             UpdateGlobalRate();
@@ -580,7 +581,7 @@ namespace NiceHashMiner
 
         private void SetNVIDIAtpStats(string aname, double speed, double paying)
         {
-            label8.Text = FormatSpeedOutput(speed) + aname;
+            labelNVIDIA3X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA3XBTC.Text = FormatPayingOutput(paying);
             label_RateNVIDIA3XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
             UpdateGlobalRate();
@@ -589,7 +590,7 @@ namespace NiceHashMiner
 
         private void SetNVIDIAspStats(string aname, double speed, double paying)
         {
-            label6.Text = FormatSpeedOutput(speed) + aname;
+            labelNVIDIA5X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA5XBTC.Text = FormatPayingOutput(paying);
             label_RateNVIDIA5XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
             UpdateGlobalRate();
@@ -598,7 +599,7 @@ namespace NiceHashMiner
 
         private void SetAMDOpenCLStats(string aname, double speed, double paying)
         {
-            label_AMDOpenCL_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
+            labelAMDOpenCL_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateAMDBTC.Text = FormatPayingOutput(paying);
             label_RateAMDDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
             UpdateGlobalRate();
@@ -613,16 +614,16 @@ namespace NiceHashMiner
 
             if (Config.ConfigData.AutoScaleBTCValues && TotalRate < 0.1)
             {
-                toolStripStatusLabel_BTCDay.Text = "mBTC/" + International.GetText("form1_rate_day");
-                toolStripStatusLabel4.Text = (TotalRate * 1000).ToString("F7", CultureInfo.InvariantCulture);
+                toolStripStatusLabelBTCDayText.Text = "mBTC/" + International.GetText("form1_rate_day");
+                toolStripStatusLabelGlobalRateValue.Text = (TotalRate * 1000).ToString("F7", CultureInfo.InvariantCulture);
             }
             else
             {
-                toolStripStatusLabel_BTCDay.Text = "BTC/" + International.GetText("form1_rate_day");
-                toolStripStatusLabel4.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
+                toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("form1_rate_day");
+                toolStripStatusLabelGlobalRateValue.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
             }
 
-            toolStripStatusLabel2.Text = (TotalRate * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
+            toolStripStatusLabelBTCDayValue.Text = (TotalRate * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
         }
 
 
@@ -631,21 +632,21 @@ namespace NiceHashMiner
             if (VerifyMiningAddress(false))
             {
                 Helpers.ConsolePrint("NICEHASH", "Balance get");
-                double Balance = NiceHashStats.GetBalance(textBox1.Text.Trim(), textBox1.Text.Trim() + "." + textBox2.Text.Trim());
+                double Balance = NiceHashStats.GetBalance(textBoxBTCAddress.Text.Trim(), textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim());
                 if (Balance > 0)
                 {
                     if (Config.ConfigData.AutoScaleBTCValues && Balance < 0.1)
                     {
-                        toolStripStatusLabel7.Text = "mBTC";
-                        toolStripStatusLabel6.Text = (Balance * 1000).ToString("F7", CultureInfo.InvariantCulture);
+                        toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
+                        toolStripStatusLabelBalanceBTCValue.Text = (Balance * 1000).ToString("F7", CultureInfo.InvariantCulture);
                     }
                     else
                     {
-                        toolStripStatusLabel7.Text = "BTC";
-                        toolStripStatusLabel6.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
+                        toolStripStatusLabelBalanceBTCCode.Text = "BTC";
+                        toolStripStatusLabelBalanceBTCValue.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
                     }
 
-                    toolStripStatusLabel3.Text = (Balance * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
+                    toolStripStatusLabelBalanceDollarText.Text = (Balance * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
                 }
             }
         }
@@ -662,7 +663,7 @@ namespace NiceHashMiner
 
         void SMACheck_Tick(object sender, EventArgs e)
         {
-            string worker = textBox1.Text.Trim() + "." + textBox2.Text.Trim();
+            string worker = textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim();
             Helpers.ConsolePrint("NICEHASH", "SMA get");
             NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates(worker);
 
@@ -697,7 +698,7 @@ namespace NiceHashMiner
         void UpdateCheck_Tick(object sender, EventArgs e)
         {
             Helpers.ConsolePrint("NICEHASH", "Version get");
-            string ver = NiceHashStats.GetVersion(textBox1.Text.Trim() + "." + textBox2.Text.Trim());
+            string ver = NiceHashStats.GetVersion(textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim());
 
             if (ver == null) return;
 
@@ -707,7 +708,7 @@ namespace NiceHashMiner
 
             if (ret < 0)
             {
-                linkLabel_VisitUs.Text = String.Format(International.GetText("form1_new_version_released"), ver);
+                linkLabelVisitUs.Text = String.Format(International.GetText("form1_new_version_released"), ver);
                 VisitURL = "https://github.com/nicehash/NiceHashMiner/releases/tag/" + ver;
             }
         }
@@ -740,30 +741,9 @@ namespace NiceHashMiner
         }
 
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (!VerifyMiningAddress(true)) return;
-
-            int algo = 0;
-            // find first working algo
-            foreach (Miner m in Miners)
-            {
-                if (m.CurrentAlgo >= 0)
-                {
-                    algo = m.SupportedAlgorithms[m.CurrentAlgo].NiceHashID;
-                    // Hack for Ethereum
-                    if (algo == 19) algo = 999;
-                    break;
-                }
-            }
-
-            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBox1.Text.Trim());
-        }
-
-
         private bool VerifyMiningAddress(bool ShowError)
         {
-            if (!BitcoinAddress.ValidateBitcoinAddress(textBox1.Text.Trim()) && ShowError)
+            if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress.Text.Trim()) && ShowError)
             {
                 DialogResult result = MessageBox.Show(International.GetText("form1_msgbox_InvalidBTCAddressMsg"),
                                                       International.GetText("form1_msgbox_InvalidBTCAddressTitle"),
@@ -772,16 +752,16 @@ namespace NiceHashMiner
                 if (result == System.Windows.Forms.DialogResult.Yes)
                     System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
                 
-                textBox1.Focus();
+                textBoxBTCAddress.Focus();
                 return false;
             }
-            else if (!BitcoinAddress.ValidateWorkerName(textBox2.Text.Trim()) && ShowError)
+            else if (!BitcoinAddress.ValidateWorkerName(textBoxWorkerName.Text.Trim()) && ShowError)
             {
                 DialogResult result = MessageBox.Show(International.GetText("form1_msgbox_InvalidWorkerNameMsg"),
                                                       International.GetText("form1_msgbox_InvalidWorkerNameTitle"),
                                                       MessageBoxButtons.OK, MessageBoxIcon.Stop);
 
-                textBox2.Focus();
+                textBoxWorkerName.Focus();
                 return false;
             }
 
@@ -789,7 +769,90 @@ namespace NiceHashMiner
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void linkLabelVisitUs_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(VisitURL);
+        }
+
+
+        private void linkLabelCheckStats_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (!VerifyMiningAddress(true)) return;
+
+            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBoxBTCAddress.Text.Trim());
+        }
+
+
+        private void linkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
+        }
+
+
+        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            ComputeDevice G = e.Item.Tag as ComputeDevice;
+            G.Enabled = e.Item.Checked;
+            if (LoadingScreen == null)
+                Config.RebuildGroups();
+        }
+
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach (Miner m in Miners)
+                m.Stop(false);
+        }
+
+
+        private void buttonBenchmark_Click(object sender, EventArgs e)
+        {
+            if (!VerifyMiningAddress(true)) return;
+            Config.ConfigData.Location = comboBoxLocation.SelectedIndex;
+
+            SMACheck.Stop();
+            BenchmarkForm = new Form2(false);
+            BenchmarkForm.ShowDialog();
+            BenchmarkForm = null;
+            SMACheck.Start();
+        }
+
+
+        private void buttonSettings_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_buttonBenchmarkWarningMsg"), ProductName),
+                                                  International.GetText("form1_msgbox_buttonBenchmarkWarningTitle"),
+                                                  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == System.Windows.Forms.DialogResult.No)
+                return;
+
+            if (!Config.ConfigData.UseNewSettingsPage)
+            {
+                Process PHandle = new Process();
+                PHandle.StartInfo.FileName = Application.ExecutablePath;
+                PHandle.StartInfo.Arguments = "-config";
+                PHandle.Start();
+
+                Close();
+            }
+            else
+            {
+                Form_Settings Settings = new Form_Settings();
+                Settings.ShowDialog();
+
+                if (Settings.ret == 1) return;
+
+                Process PHandle = new Process();
+                PHandle.StartInfo.FileName = Application.ExecutablePath;
+                PHandle.Start();
+
+                Close();
+            }
+        }
+
+
+        private void buttonStartMining_Click(object sender, EventArgs e)
         {
             if (!VerifyMiningAddress(true)) return;
 
@@ -817,19 +880,19 @@ namespace NiceHashMiner
                 }
             }
 
-            textBox1.Enabled = false;
-            textBox2.Enabled = false;
-            comboBox1.Enabled = false;
+            textBoxBTCAddress.Enabled = false;
+            textBoxWorkerName.Enabled = false;
+            comboBoxLocation.Enabled = false;
             buttonBenchmark.Enabled = false;
             buttonStartMining.Enabled = false;
             buttonSettings.Enabled = false;
-            listView1.Enabled = false;
+            listViewDevices.Enabled = false;
             buttonStopMining.Enabled = true;
 
             // todo: commit saving when values are changed
-            Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();
-            Config.ConfigData.WorkerName = textBox2.Text.Trim();
-            Config.ConfigData.Location = comboBox1.SelectedIndex;
+            Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text.Trim();
+            Config.ConfigData.WorkerName = textBoxWorkerName.Text.Trim();
+            Config.ConfigData.Location = comboBoxLocation.SelectedIndex;
             Config.Commit();
 
             SMAMinerCheck.Start();
@@ -838,7 +901,7 @@ namespace NiceHashMiner
         }
 
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonStopMining_Click(object sender, EventArgs e)
         {
             MinerStatsCheck.Stop();
             SMAMinerCheck.Stop();
@@ -856,89 +919,16 @@ namespace NiceHashMiner
             SetNVIDIAtpStats("", 0, 0);
             SetAMDOpenCLStats("", 0, 0);
 
-            textBox1.Enabled = true;
-            textBox2.Enabled = true;
-            comboBox1.Enabled = true;
+            textBoxBTCAddress.Enabled = true;
+            textBoxWorkerName.Enabled = true;
+            comboBoxLocation.Enabled = true;
             buttonBenchmark.Enabled = true;
             buttonStartMining.Enabled = true;
             buttonSettings.Enabled = true;
-            listView1.Enabled = true;
+            listViewDevices.Enabled = true;
             buttonStopMining.Enabled = false;
 
             UpdateGlobalRate();
-        }
-
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(VisitURL);
-        }
-
-
-        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            ComputeDevice G = e.Item.Tag as ComputeDevice;
-            G.Enabled = e.Item.Checked;
-            if (LoadingScreen == null)
-                Config.RebuildGroups();
-        }
-
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            foreach (Miner m in Miners)
-                m.Stop(false);
-        }
-
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (!VerifyMiningAddress(true)) return;
-            Config.ConfigData.Location = comboBox1.SelectedIndex;
-
-            SMACheck.Stop();
-            BenchmarkForm = new Form2(false);
-            BenchmarkForm.ShowDialog();
-            BenchmarkForm = null;
-            SMACheck.Start();
-        }
-
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_buttonBenchmarkWarningMsg"), ProductName),
-                                                  International.GetText("form1_msgbox_buttonBenchmarkWarningTitle"),
-                                                  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == System.Windows.Forms.DialogResult.No)
-                return;
-
-            if (!Config.ConfigData.UseNewSettingsPage)
-            {
-                Process PHandle = new Process();
-                PHandle.StartInfo.FileName = Application.ExecutablePath;
-                PHandle.StartInfo.Arguments = "-config";
-                PHandle.Start();
-
-                Close();
-            }
-            else
-            {
-                Form_Settings Settings = new Form_Settings();
-                Settings.ShowDialog();
-
-                if (Settings.ret == 1) return;
-
-                //MessageBox.Show(String.Format(International.GetText("form1_msgbox_buttonBenchmarkRestartWarningMsg"), ProductName),
-                //                String.Format(International.GetText("form1_msgbox_buttonBenchmarkRestartWarningTitle"), ProductName),
-                //                MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                Process PHandle = new Process();
-                PHandle.StartInfo.FileName = Application.ExecutablePath;
-                PHandle.Start();
-
-                Close();
-            }
         }
 
 
@@ -976,11 +966,6 @@ namespace NiceHashMiner
             System.Diagnostics.Process.Start("https://github.com/nicehash/NiceHashMiner");
         }
 
-        private void linkLabel_Choose_BTC_Wallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
-        }
-
         private void toolStripStatusLabel10_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs6");
@@ -996,24 +981,16 @@ namespace NiceHashMiner
             statusStrip1.Cursor = Cursors.Default;
         }
 
-        private void textBox1_Leave(object sender, EventArgs e)
+        private void textBoxCheckBoxMain_Leave(object sender, EventArgs e)
         {
             // Commit to config.json
-            Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();
-            Config.ConfigData.WorkerName = textBox2.Text.Trim();
-            Config.ConfigData.Location = comboBox1.SelectedIndex;
+            Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text.Trim();
+            Config.ConfigData.WorkerName = textBoxWorkerName.Text.Trim();
+            Config.ConfigData.Location = comboBoxLocation.SelectedIndex;
             Config.Commit();
         }
 
-        private void textBox2_Leave(object sender, EventArgs e)
-        {
-            // Commit to config.json
-            Config.ConfigData.BitcoinAddress = textBox1.Text.Trim();
-            Config.ConfigData.WorkerName = textBox2.Text.Trim();
-            Config.ConfigData.Location = comboBox1.SelectedIndex;
-            Config.Commit();
-        }
-
+        // Minimize to system tray if MinimizeToTray is set to true
         private void Form1_Resize(object sender, EventArgs e)
         {
             notifyIcon1.Icon = Properties.Resources.logo;
@@ -1026,6 +1003,7 @@ namespace NiceHashMiner
             }
         }
 
+        // Restore NiceHashMiner from the system tray
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
             this.Show();
