@@ -75,7 +75,7 @@ namespace NiceHashMiner
             }
 
             // skip useless lines
-            if (!text.Contains("GPU") || !text.Contains("assigned")) return;
+            if (!text.Contains("GPU") || !text.Contains("assigned") || GPUCodeName.Count == 0) return;
 
             string[] splt = text.Split(':');
 
@@ -194,9 +194,9 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint(MinerDeviceName, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
 
-                if (manObj["Name"].ToString().Contains("AMD") && ShowWarningDialog == false)
+                if ((manObj["Name"].ToString().Contains("AMD") || manObj["Name"].ToString().Contains("Radeon")) && ShowWarningDialog == false)
                 {
-                    if (PlatformDevices > 0 && CDevs.Count < PlatformDevices)
+                    if (GPUCodeName.Count > 0 && CDevs.Count < GPUCodeName.Count)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "Adding missed GPUs: " + manObj["name"].ToString());
                         CDevs.Add(new ComputeDevice(CDevs.Count, MinerDeviceName, manObj["Name"].ToString()));

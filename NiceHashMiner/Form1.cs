@@ -440,7 +440,7 @@ namespace NiceHashMiner
 
                 int MaxProfitIndex = m.GetMaxProfitIndex(NiceHashData);
 
-                if (m.NotProfitable)
+                if (m.NotProfitable || MaxProfitIndex == -1)
                 {
                     m.Stop(false);
                     continue;
@@ -479,7 +479,7 @@ namespace NiceHashMiner
 
             foreach (Miner m in Miners)
             {
-                if (m.EnabledDeviceCount() == 0 || m.NotProfitable || m.CurrentAlgo == -1) continue;
+                if (!m.IsRunning) continue;
 
                 if (m is cpuminer && m.AlgoNameIs("hodl"))
                 {
@@ -512,12 +512,6 @@ namespace NiceHashMiner
                         continue;
                     }
 
-                    if (m is sgminer && m.NumRetries > 0)
-                    {
-                        m.NumRetries--;
-                        continue;
-                    }
-
                     // API is inaccessible, try to restart miner
                     m.Restart();
 
@@ -528,6 +522,8 @@ namespace NiceHashMiner
 
                 if (NiceHashData != null)
                     m.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
+                else
+                    m.CurrentRate = 0;
 
                 if (m is cpuminer)
                 {
@@ -889,14 +885,14 @@ namespace NiceHashMiner
             listViewDevices.Enabled = false;
             buttonStopMining.Enabled = true;
 
-            // todo: commit saving when values are changed
             Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             Config.ConfigData.WorkerName = textBoxWorkerName.Text.Trim();
             Config.ConfigData.Location = comboBoxLocation.SelectedIndex;
             Config.Commit();
 
+            SMAMinerCheck.Interval = 100;
             SMAMinerCheck.Start();
-            SMAMinerCheck_Tick(null, null);
+            //SMAMinerCheck_Tick(null, null);
             MinerStatsCheck.Start();
         }
 

@@ -166,9 +166,16 @@ namespace NiceHashMiner
 
         abstract protected void AddPotentialCDev(string text);
 
-        protected void AddEthereum(string match)
+        protected void AddEthereum(string match, bool initialize)
         {
-            EtherDevices = new int[CDevs.Count];
+            if (initialize)
+            {
+                for (int i = 0; i < CDevs.Count; i++)
+                {
+                    EtherDevices[i] = -1;
+                }
+            }
+
             try
             {
                 Process P = new Process();
@@ -192,14 +199,13 @@ namespace NiceHashMiner
                         string compute = P.StandardOutput.ReadLine();
                         string memory = P.StandardOutput.ReadLine();
 
-                        EtherDevices[index] = -1;
-
                         // Find only the right cards
                         if (compute.Contains(match))
                         {
-                            string [] memsplit = memory.Split(':');
-
+                            string[] memsplit = memory.Split(':');
                             long memsize = Convert.ToInt64(memsplit[memsplit.Length - 1]);
+                            EtherDevices[index] = -1;
+
                             if (memsize >= 2147483648)
                             {
                                 if (outdata.Contains("750") && outdata.Contains("Ti"))
@@ -260,17 +266,19 @@ namespace NiceHashMiner
                 // Check for ethereum mining
                 if (CDevs.Count != 0)
                 {
+                    EtherDevices = new int[CDevs.Count];
+
                     if (this is ccminer_sp)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
                         //AddEthereum("Compute version: 6.0");
-                        AddEthereum("Compute version: 5.2");
-                        AddEthereum("Compute version: 5.0");
+                        AddEthereum("Compute version: 5.2", true);
+                        AddEthereum("Compute version: 5.0", false);
                     }
                     else if (this is ccminer_tpruvot)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
-                        AddEthereum("Compute version: 3.0");
+                        AddEthereum("Compute version: 3.0", true);
                     }
                 }
             }

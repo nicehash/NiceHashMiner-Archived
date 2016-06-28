@@ -742,7 +742,7 @@ namespace NiceHashMiner
         virtual public int GetMaxProfitIndex(NiceHashSMA[] NiceHashData)
         {
             double MaxProfit = -1;
-            int MaxProfitIndex = 0;
+            int MaxProfitIndex = -1;
 
             for (int i = 0; i < SupportedAlgorithms.Length; i++)
             {
@@ -831,9 +831,9 @@ namespace NiceHashMiner
 
             for (int i = 0; i < CDevs.Count; i++)
             {
-                if (!SupportedAlgorithms[algoIndex].DisabledDevice[i] && CDevs[i].Enabled)
+                if (CDevs[i].Enabled && !SupportedAlgorithms[algoIndex].DisabledDevice[i])
                 {
-                    if (SupportedAlgorithms[algoIndex].NiceHashID == 20)
+                    if (SupportedAlgorithms[algoIndex].NiceHashName.Equals("daggerhashimoto"))
                     {
                         if (EtherDevices[i] != -1)
                             count++;
