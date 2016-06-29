@@ -20,6 +20,10 @@ namespace NiceHashMiner
             ret = 1;
             numCPUs = CPUID.GetPhysicalProcessorCount();
 
+            buttonDefaults.Text = International.GetText("Form_Settings_buttonDefaultsText");
+            buttonSaveClose.Text = International.GetText("Form_Settings_buttonSaveText");
+            buttonCloseNoSave.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
+
             SetupGeneralTab();
             SetupCPUTab();
             SetupNVIDIA5XTab();
@@ -55,29 +59,29 @@ namespace NiceHashMiner
             toolTip1.SetToolTip(this.textBox_MinerAPIGraceSeconds, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSeconds"));
             toolTip1.SetToolTip(this.label_MinerAPIGraceMinutes, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSeconds"));
 
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Quick, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsCPU_Quick"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsCPU_Quick, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsCPU_Quick"));
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Standard, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsCPU_Standard"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsCPU_Standard, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsCPU_Standard"));
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Precise, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsCPU_Precise"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsCPU_Precise, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsCPU_Precise"));
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Quick, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsNVIDIA_Quick"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsNVIDIA_Quick, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsNVIDIA_Quick"));
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Standard, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsNVIDIA_Standard"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsNVIDIA_Standard, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsNVIDIA_Standard"));
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Precise, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsNVIDIA_Precise"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsNVIDIA_Precise, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsNVIDIA_Precise"));
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Quick, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsAMD_Quick"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsAMD_Quick, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsAMD_Quick"));
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Standard, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsAMD_Standard"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsAMD_Standard, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsAMD_Standard"));
-            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Precise, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsAMD_Precise"));
-            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsAMD_Precise, International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimitsAMD_Precise"));
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Quick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), "CPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsCPU_Quick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), "CPUs") + ".");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Standard, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Standard"), "CPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsCPU_Standard, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Standard"), "CPUs") + ".");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Precise, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Precise"), "CPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsCPU_Precise, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Precise"), "CPUs") + ".");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Quick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), "NVIDIA GPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsNVIDIA_Quick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), "NVIDIA GPUs") + ".");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Standard, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Standard"), "NVIDIA GPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsNVIDIA_Standard, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Standard"), "NVIDIA GPUs") + ".");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsNVIDIA_Precise, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Precise"), "NVIDIA GPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsNVIDIA_Precise, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Precise"), "NVIDIA GPUs") + ".");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Quick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), "AMD GPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsAMD_Quick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), "AMD GPUs") + ".");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Standard, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Standard"), "AMD GPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsAMD_Standard, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Standard"), "AMD GPUs") + ".");
+            toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsAMD_Precise, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Precise"), "AMD GPUs") + ".");
+            toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsAMD_Precise, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Precise"), "AMD GPUs") + ".");
 
-            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia5X, International.GetText("Form_Settings_ToolTip_checkBox_DisableDetectionNVIDIA5X"));
-            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia3X, International.GetText("Form_Settings_ToolTip_checkBox_DisableDetectionNVIDIA3X"));
-            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia2X, International.GetText("Form_Settings_ToolTip_checkBox_DisableDetectionNVIDIA2X"));
-            toolTip1.SetToolTip(this.checkBox_DisableDetectionAMD, International.GetText("Form_Settings_ToolTip_checkBox_DisableDetectionAMD"));
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia5X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA5.x"));
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia3X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA3.x"));
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia2X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA2.x"));
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionAMD, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
 
             toolTip1.SetToolTip(this.checkBox_AutoScaleBTCValues, International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
             toolTip1.SetToolTip(this.checkBox_StartMiningWhenIdle, International.GetText("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
@@ -92,10 +96,10 @@ namespace NiceHashMiner
             toolTip1.SetToolTip(this.checkBox_DisableWindowsErrorReporting, International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
             toolTip1.SetToolTip(this.checkBox_UseNewSettingsPage, International.GetText("Form_Settings_ToolTip_checkBox_UseNewSettingsPage"));
             toolTip1.SetToolTip(this.checkBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
-            toolTip1.SetToolTip(this.textBox_ethminerAPIPortNvidia, International.GetText("Form_Settings_ToolTip_ethminerAPIPortNVIDIA"));
-            toolTip1.SetToolTip(this.label_ethminerAPIPortNvidia, International.GetText("Form_Settings_ToolTip_ethminerAPIPortNVIDIA"));
-            toolTip1.SetToolTip(this.textBox_ethminerAPIPortAMD, International.GetText("Form_Settings_ToolTip_ethminerAPIPortAMD"));
-            toolTip1.SetToolTip(this.label_ethminerAPIPortAMD, International.GetText("Form_Settings_ToolTip_ethminerAPIPortAMD"));
+            toolTip1.SetToolTip(this.textBox_ethminerAPIPortNvidia, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "NVIDIA"));
+            toolTip1.SetToolTip(this.label_ethminerAPIPortNvidia, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "NVIDIA"));
+            toolTip1.SetToolTip(this.textBox_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
+            toolTip1.SetToolTip(this.label_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
         }
@@ -107,10 +111,10 @@ namespace NiceHashMiner
             checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
-            checkBox_DisableDetectionNVidia5X.Text = International.GetText("Form_Settings_General_DisableDetectionNVidia5X");
-            checkBox_DisableDetectionNVidia3X.Text = International.GetText("Form_Settings_General_DisableDetectionNVidia3X");
-            checkBox_DisableDetectionNVidia2X.Text = International.GetText("Form_Settings_General_DisableDetectionNVidia2X");
-            checkBox_DisableDetectionAMD.Text = International.GetText("Form_Settings_General_DisableDetectionAMD");
+            checkBox_DisableDetectionNVidia5X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA5.x");
+            checkBox_DisableDetectionNVidia3X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA3.x");
+            checkBox_DisableDetectionNVidia2X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA2.x");
+            checkBox_DisableDetectionAMD.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
             checkBox_ShowDriverVersionWarning.Text = International.GetText("Form_Settings_General_ShowDriverVersionWarning");
@@ -120,8 +124,8 @@ namespace NiceHashMiner
             checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
-            label_BitcoinAddress.Text = International.GetText("Form_Settings_General_BitcoinAddress") + ":";
-            label_WorkerName.Text = International.GetText("Form_Settings_General_WorkerName") + ":";
+            label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
+            label_WorkerName.Text = International.GetText("WorkerName") + ":";
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
@@ -138,17 +142,17 @@ namespace NiceHashMiner
             label_ethminerAPIPortAMD.Text = International.GetText("Form_Settings_General_ethminerAPIPortAMD") + ":";
 
             label_BenchmarkTimeLimitsCPU_Group.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
-            label_BenchmarkTimeLimitsCPU_Quick.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Quick") + ":";
-            label_BenchmarkTimeLimitsCPU_Standard.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Standard") + ":";
-            label_BenchmarkTimeLimitsCPU_Precise.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Precise") + ":";
+            label_BenchmarkTimeLimitsCPU_Quick.Text = International.GetText("Quick") + ":";
+            label_BenchmarkTimeLimitsCPU_Standard.Text = International.GetText("Standard") + ":";
+            label_BenchmarkTimeLimitsCPU_Precise.Text = International.GetText("Precise") + ":";
             label_BenchmarkTimeLimitsNVIDIA_Group.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group") + ":";
-            label_BenchmarkTimeLimitsNVIDIA_Quick.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Quick") + ":";
-            label_BenchmarkTimeLimitsNVIDIA_Standard.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Standard") + ":";
-            label_BenchmarkTimeLimitsNVIDIA_Precise.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Precise") + ":";
+            label_BenchmarkTimeLimitsNVIDIA_Quick.Text = International.GetText("Quick") + ":";
+            label_BenchmarkTimeLimitsNVIDIA_Standard.Text = International.GetText("Standard") + ":";
+            label_BenchmarkTimeLimitsNVIDIA_Precise.Text = International.GetText("Precise") + ":";
             label_BenchmarkTimeLimitsAMD_Group.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Group") + ":";
-            label_BenchmarkTimeLimitsAMD_Quick.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Quick") + ":";
-            label_BenchmarkTimeLimitsAMD_Standard.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Standard") + ":";
-            label_BenchmarkTimeLimitsAMD_Precise.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Precise") + ":";
+            label_BenchmarkTimeLimitsAMD_Quick.Text = International.GetText("Quick") + ":";
+            label_BenchmarkTimeLimitsAMD_Standard.Text = International.GetText("Standard") + ":";
+            label_BenchmarkTimeLimitsAMD_Precise.Text = International.GetText("Precise") + ":";
 
             // Checkboxes set checked value
             checkBox_DebugConsole.Checked = Config.ConfigData.DebugConsole;

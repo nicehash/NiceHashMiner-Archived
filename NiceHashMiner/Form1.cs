@@ -49,34 +49,34 @@ namespace NiceHashMiner
             MessageBoxManager.Register();
 
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";
-            labelBitcoinAddress.Text = International.GetText("form1_btc_address") + ":";
-            labelWorkerName.Text = International.GetText("form1_worker_name") + ":";
+            labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
+            labelWorkerName.Text = International.GetText("WorkerName") + ":";
 
             linkLabelVisitUs.Text = International.GetText("form1_visit_us");
             linkLabelCheckStats.Text = International.GetText("form1_check_stats");
             linkLabelChooseBTCWallet.Text = International.GetText("form1_choose_bitcoin_wallet");
 
-            label_RateCPU.Text = International.GetText("form1_rate") + ":";
-            label_RateNVIDIA5X.Text = International.GetText("form1_rate") + ":";
-            label_RateNVIDIA3X.Text = International.GetText("form1_rate") + ":";
-            label_RateNVIDIA2X.Text = International.GetText("form1_rate") + ":";
-            label_RateAMD.Text = International.GetText("form1_rate") + ":";
+            label_RateCPU.Text = International.GetText("Rate") + ":";
+            label_RateNVIDIA5X.Text = International.GetText("Rate") + ":";
+            label_RateNVIDIA3X.Text = International.GetText("Rate") + ":";
+            label_RateNVIDIA2X.Text = International.GetText("Rate") + ":";
+            label_RateAMD.Text = International.GetText("Rate") + ":";
 
-            label_RateCPUBTC.Text = "0.00000000 BTC/" + International.GetText("form1_rate_day");
-            label_RateNVIDIA5XBTC.Text = "0.00000000 BTC/" + International.GetText("form1_rate_day");
-            label_RateNVIDIA3XBTC.Text = "0.00000000 BTC/" + International.GetText("form1_rate_day");
-            label_RateNVIDIA2XBTC.Text = "0.00000000 BTC/" + International.GetText("form1_rate_day");
-            label_RateAMDBTC.Text = "0.00000000 BTC/" + International.GetText("form1_rate_day");
+            label_RateCPUBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
+            label_RateNVIDIA5XBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
+            label_RateNVIDIA3XBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
+            label_RateNVIDIA2XBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
+            label_RateAMDBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
 
-            label_RateCPUDollar.Text = "0.00 $/" + International.GetText("form1_rate_day");
-            label_RateNVIDIA5XDollar.Text = "0.00 $/" + International.GetText("form1_rate_day");
-            label_RateNVIDIA3XDollar.Text = "0.00 $/" + International.GetText("form1_rate_day");
-            label_RateNVIDIA2XDollar.Text = "0.00 $/" + International.GetText("form1_rate_day");
-            label_RateAMDDollar.Text = "0.00 $/" + International.GetText("form1_rate_day");
+            label_RateCPUDollar.Text = "0.00 $/" + International.GetText("Day");
+            label_RateNVIDIA5XDollar.Text = "0.00 $/" + International.GetText("Day");
+            label_RateNVIDIA3XDollar.Text = "0.00 $/" + International.GetText("Day");
+            label_RateNVIDIA2XDollar.Text = "0.00 $/" + International.GetText("Day");
+            label_RateAMDDollar.Text = "0.00 $/" + International.GetText("Day");
 
             toolStripStatusLabelGlobalRateText.Text = International.GetText("form1_global_rate") + ":";
-            toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("form1_rate_day");
-            toolStripStatusLabelBalanceText.Text = "$/" + International.GetText("form1_rate_day") + "     " + International.GetText("form1_balance") + ":";
+            toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
+            toolStripStatusLabelBalanceText.Text = "$/" + International.GetText("Day") + "     " + International.GetText("form1_balance") + ":";
 
             listViewDevices.Columns[0].Text = International.GetText("form1_listView_Columns0");
             listViewDevices.Columns[1].Text = International.GetText("form1_listView_Columns1");
@@ -566,7 +566,7 @@ namespace NiceHashMiner
             labelCPU_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             if (aname.Equals("hodl")) labelCPU_Mining_Speed.Text += "**";
             label_RateCPUBTC.Text = FormatPayingOutput(paying);
-            label_RateCPUDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
+            label_RateCPUDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("Day");
             UpdateGlobalRate();
         }
 
@@ -575,7 +575,7 @@ namespace NiceHashMiner
         {
             labelNVIDIA2X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA2XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA2XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
+            label_RateNVIDIA2XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("Day");
             UpdateGlobalRate();
         }
 
@@ -584,7 +584,7 @@ namespace NiceHashMiner
         {
             labelNVIDIA3X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA3XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA3XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
+            label_RateNVIDIA3XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("Day");
             UpdateGlobalRate();
         }
 
@@ -593,7 +593,7 @@ namespace NiceHashMiner
         {
             labelNVIDIA5X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA5XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA5XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
+            label_RateNVIDIA5XDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("Day");
             UpdateGlobalRate();
         }
 
@@ -602,7 +602,7 @@ namespace NiceHashMiner
         {
             labelAMDOpenCL_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateAMDBTC.Text = FormatPayingOutput(paying);
-            label_RateAMDDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("form1_rate_day");
+            label_RateAMDDollar.Text = (paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) + " $/" + International.GetText("Day");
             UpdateGlobalRate();
         }
 
@@ -615,12 +615,12 @@ namespace NiceHashMiner
 
             if (Config.ConfigData.AutoScaleBTCValues && TotalRate < 0.1)
             {
-                toolStripStatusLabelBTCDayText.Text = "mBTC/" + International.GetText("form1_rate_day");
+                toolStripStatusLabelBTCDayText.Text = "mBTC/" + International.GetText("Day");
                 toolStripStatusLabelGlobalRateValue.Text = (TotalRate * 1000).ToString("F7", CultureInfo.InvariantCulture);
             }
             else
             {
-                toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("form1_rate_day");
+                toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
                 toolStripStatusLabelGlobalRateValue.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
             }
 
@@ -948,9 +948,9 @@ namespace NiceHashMiner
             string ret = "";
 
             if (Config.ConfigData.AutoScaleBTCValues && paying < 0.1)
-                ret = (paying * 1000).ToString("F7", CultureInfo.InvariantCulture) + " mBTC/" + International.GetText("form1_rate_day");
+                ret = (paying * 1000).ToString("F7", CultureInfo.InvariantCulture) + " mBTC/" + International.GetText("Day");
             else
-                ret = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/" + International.GetText("form1_rate_day");
+                ret = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/" + International.GetText("Day");
 
             return ret;
         }
@@ -978,7 +978,7 @@ namespace NiceHashMiner
 
         private void textBoxCheckBoxMain_Leave(object sender, EventArgs e)
         {
-            if (VerifyMiningAddress(true))
+            if (VerifyMiningAddress(false))
             {
                 // Commit to config.json
                 Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text.Trim();
