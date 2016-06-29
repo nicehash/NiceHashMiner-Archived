@@ -40,7 +40,7 @@
             this.labelWarning.Location = new System.Drawing.Point(7, 10);
             this.labelWarning.Name = "labelWarning";
             this.labelWarning.Size = new System.Drawing.Size(488, 30);
-            this.labelWarning.TabIndex = 2;
+            this.labelWarning.TabIndex = 99;
             this.labelWarning.Text = "You\'re not using optimal AMD Driver version. Most stable driver for mining is the" +
     " 15.7.1 version.\r\nWe strongly suggest you to use this driver version.";
             this.labelWarning.UseCompatibleTextRendering = true;
@@ -63,7 +63,7 @@
             this.chkBoxDontShowAgain.Location = new System.Drawing.Point(7, 70);
             this.chkBoxDontShowAgain.Name = "chkBoxDontShowAgain";
             this.chkBoxDontShowAgain.Size = new System.Drawing.Size(180, 18);
-            this.chkBoxDontShowAgain.TabIndex = 1;
+            this.chkBoxDontShowAgain.TabIndex = 2;
             this.chkBoxDontShowAgain.Text = "&Do not show this warning again";
             this.chkBoxDontShowAgain.UseCompatibleTextRendering = true;
             this.chkBoxDontShowAgain.UseVisualStyleBackColor = true;
@@ -74,7 +74,7 @@
             this.linkToDriverDownloadPage.Location = new System.Drawing.Point(5, 44);
             this.linkToDriverDownloadPage.Name = "linkToDriverDownloadPage";
             this.linkToDriverDownloadPage.Size = new System.Drawing.Size(149, 13);
-            this.linkToDriverDownloadPage.TabIndex = 3;
+            this.linkToDriverDownloadPage.TabIndex = 1;
             this.linkToDriverDownloadPage.TabStop = true;
             this.linkToDriverDownloadPage.Text = "&Link to Driver Download Page";
             this.linkToDriverDownloadPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkToDriverDownloadPage_LinkClicked);

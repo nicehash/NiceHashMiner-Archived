@@ -341,7 +341,7 @@ namespace NiceHashMiner
                 string DirName = GetMinerDirectory(Algo.NiceHashName);
 
                 string url = "stratum+tcp://" + Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
-                             Form1.MiningLocation[Config.ConfigData.Location] + ".nicehash.com:" +
+                             Form1.MiningLocation[Config.ConfigData.ServiceLocation] + ".nicehash.com:" +
                              Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].port;
 
                 string username = Config.ConfigData.BitcoinAddress.Trim();

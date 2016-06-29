@@ -49,7 +49,7 @@ namespace NiceHashMiner
         public bool DebugConsole;
         public string BitcoinAddress;
         public string WorkerName;
-        public int Location;
+        public int ServiceLocation;
         public bool AutoStartMining;
         public bool HideMiningWindows;
         public bool MinimizeToTray;
@@ -148,7 +148,7 @@ namespace NiceHashMiner
             ConfigData.Language = 0;
             ConfigData.BitcoinAddress = "";
             ConfigData.WorkerName = "worker1";
-            ConfigData.Location = 0;
+            ConfigData.ServiceLocation = 0;
             ConfigData.LessThreads = 0;
             ConfigData.Groups = new Group[0];
             ConfigData.DebugConsole = false;
@@ -165,7 +165,7 @@ namespace NiceHashMiner
             ConfigData.LogToFile = true;
             ConfigData.LogMaxFileSize = 1048576;
             ConfigData.ShowDriverVersionWarning = true;
-            ConfigData.DisableWindowsErrorReporting = false;
+            ConfigData.DisableWindowsErrorReporting = true;
             ConfigData.UseNewSettingsPage = true;
             ConfigData.NVIDIAP0State = false;
             ConfigData.MinerRestartDelayMS = 500;

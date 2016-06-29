@@ -41,7 +41,7 @@
             this.linkLabelError.Location = new System.Drawing.Point(12, 9);
             this.linkLabelError.Name = "linkLabelError";
             this.linkLabelError.Size = new System.Drawing.Size(525, 80);
-            this.linkLabelError.TabIndex = 2;
+            this.linkLabelError.TabIndex = 1;
             this.linkLabelError.TabStop = true;
             this.linkLabelError.Text = resources.GetString("linkLabelError.Text");
             this.linkLabelError.UseCompatibleTextRendering = true;
@@ -53,7 +53,7 @@
             this.chkBoxDisableDetection.Location = new System.Drawing.Point(12, 102);
             this.chkBoxDisableDetection.Name = "chkBoxDisableDetection";
             this.chkBoxDisableDetection.Size = new System.Drawing.Size(179, 18);
-            this.chkBoxDisableDetection.TabIndex = 1;
+            this.chkBoxDisableDetection.TabIndex = 2;
             this.chkBoxDisableDetection.Text = "&Disable detection of this device";
             this.chkBoxDisableDetection.UseCompatibleTextRendering = true;
             this.chkBoxDisableDetection.UseVisualStyleBackColor = true;

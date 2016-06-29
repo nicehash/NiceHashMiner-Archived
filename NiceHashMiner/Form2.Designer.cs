@@ -61,7 +61,7 @@
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(462, 354);
-            this.listView1.TabIndex = 6;
+            this.listView1.TabIndex = 9;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listView1_ItemChecked);
@@ -114,7 +114,7 @@
             this.radioButton_QuickBenchmark.Location = new System.Drawing.Point(146, 15);
             this.radioButton_QuickBenchmark.Name = "radioButton_QuickBenchmark";
             this.radioButton_QuickBenchmark.Size = new System.Drawing.Size(204, 17);
-            this.radioButton_QuickBenchmark.TabIndex = 3;
+            this.radioButton_QuickBenchmark.TabIndex = 6;
             this.radioButton_QuickBenchmark.Text = "&Quick benchmark (can be inaccurate)";
             this.radioButton_QuickBenchmark.UseVisualStyleBackColor = true;
             this.radioButton_QuickBenchmark.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
@@ -126,7 +126,7 @@
             this.radioButton_StandardBenchmark.Location = new System.Drawing.Point(146, 44);
             this.radioButton_StandardBenchmark.Name = "radioButton_StandardBenchmark";
             this.radioButton_StandardBenchmark.Size = new System.Drawing.Size(124, 17);
-            this.radioButton_StandardBenchmark.TabIndex = 4;
+            this.radioButton_StandardBenchmark.TabIndex = 7;
             this.radioButton_StandardBenchmark.TabStop = true;
             this.radioButton_StandardBenchmark.Text = "&Standard benchmark";
             this.radioButton_StandardBenchmark.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@
             this.radioButton_PreciseBenchmark.Location = new System.Drawing.Point(146, 73);
             this.radioButton_PreciseBenchmark.Name = "radioButton_PreciseBenchmark";
             this.radioButton_PreciseBenchmark.Size = new System.Drawing.Size(195, 17);
-            this.radioButton_PreciseBenchmark.TabIndex = 5;
+            this.radioButton_PreciseBenchmark.TabIndex = 8;
             this.radioButton_PreciseBenchmark.Text = "&Precise benchmark (will take longer)";
             this.radioButton_PreciseBenchmark.UseVisualStyleBackColor = true;
             this.radioButton_PreciseBenchmark.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
@@ -158,7 +158,7 @@
             this.buttonSubmitHardware.Location = new System.Drawing.Point(254, 99);
             this.buttonSubmitHardware.Name = "buttonSubmitHardware";
             this.buttonSubmitHardware.Size = new System.Drawing.Size(115, 23);
-            this.buttonSubmitHardware.TabIndex = 7;
+            this.buttonSubmitHardware.TabIndex = 5;
             this.buttonSubmitHardware.Text = "Submit &hardware";
             this.buttonSubmitHardware.UseVisualStyleBackColor = true;
             this.buttonSubmitHardware.Click += new System.EventHandler(this.buttonSubmitHardware_Click);
@@ -168,7 +168,7 @@
             this.buttonClose.Location = new System.Drawing.Point(12, 99);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(115, 23);
-            this.buttonClose.TabIndex = 8;
+            this.buttonClose.TabIndex = 3;
             this.buttonClose.Text = "&Close";
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
@@ -178,7 +178,7 @@
             this.buttonCheckProfitability.Location = new System.Drawing.Point(133, 99);
             this.buttonCheckProfitability.Name = "buttonCheckProfitability";
             this.buttonCheckProfitability.Size = new System.Drawing.Size(115, 23);
-            this.buttonCheckProfitability.TabIndex = 9;
+            this.buttonCheckProfitability.TabIndex = 4;
             this.buttonCheckProfitability.Text = "Check &profitability";
             this.buttonCheckProfitability.UseVisualStyleBackColor = true;
             this.buttonCheckProfitability.Click += new System.EventHandler(this.buttonCheckProfitability_Click);

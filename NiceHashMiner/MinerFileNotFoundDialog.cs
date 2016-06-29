@@ -18,8 +18,8 @@ namespace NiceHashMiner
 
             DisableDetection = false;
             this.Text = International.GetText("MinerFileNotFoundDialog_title");
-            this.linkLabelError.Text = String.Format(International.GetText("MinerFileNotFoundDialog_linkLabelError"), MinerDeviceName, Path);
-            this.linkLabelError.LinkArea = new LinkArea(this.linkLabelError.Text.IndexOf("Link"), 4);
+            this.linkLabelError.Text = String.Format(International.GetText("MinerFileNotFoundDialog_linkLabelError"), MinerDeviceName, Path, International.GetText("MinerFileNotFoundDialog_link"));
+            this.linkLabelError.LinkArea = new LinkArea(this.linkLabelError.Text.IndexOf(International.GetText("MinerFileNotFoundDialog_link")), International.GetText("MinerFileNotFoundDialog_link").Length);
             this.chkBoxDisableDetection.Text = International.GetText("MinerFileNotFoundDialog_chkBoxDisableDetection");
         }
 

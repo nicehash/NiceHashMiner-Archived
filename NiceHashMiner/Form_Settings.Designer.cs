@@ -73,21 +73,21 @@
             this.textBox_BenchmarkTimeLimitsAMD_Standard = new System.Windows.Forms.TextBox();
             this.label_BenchmarkTimeLimitsAMD_Quick = new System.Windows.Forms.Label();
             this.textBox_BenchmarkTimeLimitsAMD_Quick = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
+            this.label_BenchmarkTimeLimitsAMD_Group = new System.Windows.Forms.Label();
             this.label_BenchmarkTimeLimitsNVIDIA_Precise = new System.Windows.Forms.Label();
             this.textBox_BenchmarkTimeLimitsNVIDIA_Precise = new System.Windows.Forms.TextBox();
             this.label_BenchmarkTimeLimitsNVIDIA_Standard = new System.Windows.Forms.Label();
             this.textBox_BenchmarkTimeLimitsNVIDIA_Standard = new System.Windows.Forms.TextBox();
             this.label_BenchmarkTimeLimitsNVIDIA_Quick = new System.Windows.Forms.Label();
             this.textBox_BenchmarkTimeLimitsNVIDIA_Quick = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
+            this.label_BenchmarkTimeLimitsNVIDIA_Group = new System.Windows.Forms.Label();
             this.label_BenchmarkTimeLimitsCPU_Precise = new System.Windows.Forms.Label();
             this.textBox_BenchmarkTimeLimitsCPU_Precise = new System.Windows.Forms.TextBox();
             this.label_BenchmarkTimeLimitsCPU_Standard = new System.Windows.Forms.Label();
             this.textBox_BenchmarkTimeLimitsCPU_Standard = new System.Windows.Forms.TextBox();
             this.label_BenchmarkTimeLimitsCPU_Quick = new System.Windows.Forms.Label();
             this.textBox_BenchmarkTimeLimitsCPU_Quick = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
+            this.label_BenchmarkTimeLimitsCPU_Group = new System.Windows.Forms.Label();
             this.textBox_MinerAPIGraceSeconds = new System.Windows.Forms.TextBox();
             this.label_MinerAPIGraceMinutes = new System.Windows.Forms.Label();
             this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
@@ -98,8 +98,8 @@
             this.label_SwitchMinSecondsDynamic = new System.Windows.Forms.Label();
             this.label_SwitchMinSecondsFixed = new System.Windows.Forms.Label();
             this.textBox_SwitchMinSecondsFixed = new System.Windows.Forms.TextBox();
-            this.comboBox_Location = new System.Windows.Forms.ComboBox();
-            this.label_Location = new System.Windows.Forms.Label();
+            this.comboBox_ServiceLocation = new System.Windows.Forms.ComboBox();
+            this.label_ServiceLocation = new System.Windows.Forms.Label();
             this.textBox_WorkerName = new System.Windows.Forms.TextBox();
             this.textBox_BitcoinAddress = new System.Windows.Forms.TextBox();
             this.label_WorkerName = new System.Windows.Forms.Label();
@@ -221,7 +221,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(823, 338);
+            this.tabPage2.Size = new System.Drawing.Size(868, 338);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "CPU0";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -232,7 +232,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_CPU0_ExtraLaunchParameters.Location = new System.Drawing.Point(135, 33);
             this.textBox_CPU0_ExtraLaunchParameters.Name = "textBox_CPU0_ExtraLaunchParameters";
-            this.textBox_CPU0_ExtraLaunchParameters.Size = new System.Drawing.Size(678, 20);
+            this.textBox_CPU0_ExtraLaunchParameters.Size = new System.Drawing.Size(727, 20);
             this.textBox_CPU0_ExtraLaunchParameters.TabIndex = 4;
             // 
             // label_CPU0_ExtraLaunchParameters
@@ -250,10 +250,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl_CPU0.Controls.Add(this.tabPage7);
-            this.tabControl_CPU0.Location = new System.Drawing.Point(9, 59);
+            this.tabControl_CPU0.Location = new System.Drawing.Point(6, 59);
             this.tabControl_CPU0.Name = "tabControl_CPU0";
             this.tabControl_CPU0.SelectedIndex = 0;
-            this.tabControl_CPU0.Size = new System.Drawing.Size(808, 258);
+            this.tabControl_CPU0.Size = new System.Drawing.Size(856, 273);
             this.tabControl_CPU0.TabIndex = 5;
             // 
             // tabPage7
@@ -268,7 +268,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(800, 232);
+            this.tabPage7.Size = new System.Drawing.Size(848, 247);
             this.tabPage7.TabIndex = 0;
             this.tabPage7.Text = "lyra2re";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -279,7 +279,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_CPU0_lyra2re_ExtraLaunchParameters.Location = new System.Drawing.Point(9, 48);
             this.textBox_CPU0_lyra2re_ExtraLaunchParameters.Name = "textBox_CPU0_lyra2re_ExtraLaunchParameters";
-            this.textBox_CPU0_lyra2re_ExtraLaunchParameters.Size = new System.Drawing.Size(785, 20);
+            this.textBox_CPU0_lyra2re_ExtraLaunchParameters.Size = new System.Drawing.Size(833, 20);
             this.textBox_CPU0_lyra2re_ExtraLaunchParameters.TabIndex = 18;
             // 
             // label31
@@ -335,7 +335,7 @@
             // 
             // textBox_CPU0_APIBindPort
             // 
-            this.textBox_CPU0_APIBindPort.Location = new System.Drawing.Point(497, 6);
+            this.textBox_CPU0_APIBindPort.Location = new System.Drawing.Point(503, 6);
             this.textBox_CPU0_APIBindPort.Name = "textBox_CPU0_APIBindPort";
             this.textBox_CPU0_APIBindPort.Size = new System.Drawing.Size(100, 20);
             this.textBox_CPU0_APIBindPort.TabIndex = 3;
@@ -343,7 +343,7 @@
             // label_CPU0_APIBindPort
             // 
             this.label_CPU0_APIBindPort.AutoSize = true;
-            this.label_CPU0_APIBindPort.Location = new System.Drawing.Point(427, 9);
+            this.label_CPU0_APIBindPort.Location = new System.Drawing.Point(431, 9);
             this.label_CPU0_APIBindPort.Name = "label_CPU0_APIBindPort";
             this.label_CPU0_APIBindPort.Size = new System.Drawing.Size(67, 13);
             this.label_CPU0_APIBindPort.TabIndex = 99;
@@ -351,7 +351,7 @@
             // 
             // textBox_CPU0_LessThreads
             // 
-            this.textBox_CPU0_LessThreads.Location = new System.Drawing.Point(318, 6);
+            this.textBox_CPU0_LessThreads.Location = new System.Drawing.Point(322, 6);
             this.textBox_CPU0_LessThreads.Name = "textBox_CPU0_LessThreads";
             this.textBox_CPU0_LessThreads.Size = new System.Drawing.Size(100, 20);
             this.textBox_CPU0_LessThreads.TabIndex = 2;
@@ -359,7 +359,7 @@
             // label_CPU0_LessThreads
             // 
             this.label_CPU0_LessThreads.AutoSize = true;
-            this.label_CPU0_LessThreads.Location = new System.Drawing.Point(244, 9);
+            this.label_CPU0_LessThreads.Location = new System.Drawing.Point(248, 9);
             this.label_CPU0_LessThreads.Name = "label_CPU0_LessThreads";
             this.label_CPU0_LessThreads.Size = new System.Drawing.Size(71, 13);
             this.label_CPU0_LessThreads.TabIndex = 99;
@@ -374,7 +374,7 @@
             "SSE2",
             "AVX",
             "AVX2"});
-            this.comboBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(114, 6);
+            this.comboBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(118, 6);
             this.comboBox_CPU0_ForceCPUExtension.Name = "comboBox_CPU0_ForceCPUExtension";
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(121, 21);
             this.comboBox_CPU0_ForceCPUExtension.TabIndex = 1;
@@ -414,21 +414,21 @@
             this.tabPage1.Controls.Add(this.textBox_BenchmarkTimeLimitsAMD_Standard);
             this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsAMD_Quick);
             this.tabPage1.Controls.Add(this.textBox_BenchmarkTimeLimitsAMD_Quick);
-            this.tabPage1.Controls.Add(this.label22);
+            this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsAMD_Group);
             this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsNVIDIA_Precise);
             this.tabPage1.Controls.Add(this.textBox_BenchmarkTimeLimitsNVIDIA_Precise);
             this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsNVIDIA_Standard);
             this.tabPage1.Controls.Add(this.textBox_BenchmarkTimeLimitsNVIDIA_Standard);
             this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsNVIDIA_Quick);
             this.tabPage1.Controls.Add(this.textBox_BenchmarkTimeLimitsNVIDIA_Quick);
-            this.tabPage1.Controls.Add(this.label14);
+            this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsNVIDIA_Group);
             this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsCPU_Precise);
             this.tabPage1.Controls.Add(this.textBox_BenchmarkTimeLimitsCPU_Precise);
             this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsCPU_Standard);
             this.tabPage1.Controls.Add(this.textBox_BenchmarkTimeLimitsCPU_Standard);
             this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsCPU_Quick);
             this.tabPage1.Controls.Add(this.textBox_BenchmarkTimeLimitsCPU_Quick);
-            this.tabPage1.Controls.Add(this.label18);
+            this.tabPage1.Controls.Add(this.label_BenchmarkTimeLimitsCPU_Group);
             this.tabPage1.Controls.Add(this.textBox_MinerAPIGraceSeconds);
             this.tabPage1.Controls.Add(this.label_MinerAPIGraceMinutes);
             this.tabPage1.Controls.Add(this.textBox_MinerRestartDelayMS);
@@ -439,8 +439,8 @@
             this.tabPage1.Controls.Add(this.label_SwitchMinSecondsDynamic);
             this.tabPage1.Controls.Add(this.label_SwitchMinSecondsFixed);
             this.tabPage1.Controls.Add(this.textBox_SwitchMinSecondsFixed);
-            this.tabPage1.Controls.Add(this.comboBox_Location);
-            this.tabPage1.Controls.Add(this.label_Location);
+            this.tabPage1.Controls.Add(this.comboBox_ServiceLocation);
+            this.tabPage1.Controls.Add(this.label_ServiceLocation);
             this.tabPage1.Controls.Add(this.textBox_WorkerName);
             this.tabPage1.Controls.Add(this.textBox_BitcoinAddress);
             this.tabPage1.Controls.Add(this.label_WorkerName);
@@ -459,25 +459,25 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(823, 338);
+            this.tabPage1.Size = new System.Drawing.Size(868, 338);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // textBox_SwitchMinSecondsAMD
             // 
-            this.textBox_SwitchMinSecondsAMD.Location = new System.Drawing.Point(501, 217);
+            this.textBox_SwitchMinSecondsAMD.Location = new System.Drawing.Point(535, 225);
             this.textBox_SwitchMinSecondsAMD.Name = "textBox_SwitchMinSecondsAMD";
             this.textBox_SwitchMinSecondsAMD.Size = new System.Drawing.Size(139, 20);
-            this.textBox_SwitchMinSecondsAMD.TabIndex = 75;
+            this.textBox_SwitchMinSecondsAMD.TabIndex = 28;
             // 
             // label_SwitchMinSecondsAMD
             // 
             this.label_SwitchMinSecondsAMD.AutoSize = true;
-            this.label_SwitchMinSecondsAMD.Location = new System.Drawing.Point(498, 197);
+            this.label_SwitchMinSecondsAMD.Location = new System.Drawing.Point(532, 204);
             this.label_SwitchMinSecondsAMD.Name = "label_SwitchMinSecondsAMD";
             this.label_SwitchMinSecondsAMD.Size = new System.Drawing.Size(125, 13);
-            this.label_SwitchMinSecondsAMD.TabIndex = 74;
+            this.label_SwitchMinSecondsAMD.TabIndex = 99;
             this.label_SwitchMinSecondsAMD.Text = "SwitchMinSecondsAMD:";
             // 
             // checkBox_LogToFile
@@ -486,75 +486,75 @@
             this.checkBox_LogToFile.Location = new System.Drawing.Point(6, 315);
             this.checkBox_LogToFile.Name = "checkBox_LogToFile";
             this.checkBox_LogToFile.Size = new System.Drawing.Size(72, 17);
-            this.checkBox_LogToFile.TabIndex = 73;
+            this.checkBox_LogToFile.TabIndex = 14;
             this.checkBox_LogToFile.Text = "Log to file";
             this.checkBox_LogToFile.UseVisualStyleBackColor = true;
             // 
             // textBox_ethminerDefaultBlockHeight
             // 
-            this.textBox_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(190, 264);
+            this.textBox_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(203, 274);
             this.textBox_ethminerDefaultBlockHeight.Name = "textBox_ethminerDefaultBlockHeight";
-            this.textBox_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(131, 20);
-            this.textBox_ethminerDefaultBlockHeight.TabIndex = 72;
+            this.textBox_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(160, 20);
+            this.textBox_ethminerDefaultBlockHeight.TabIndex = 20;
             // 
             // textBox_ethminerAPIPortAMD
             // 
-            this.textBox_ethminerAPIPortAMD.Location = new System.Drawing.Point(501, 264);
+            this.textBox_ethminerAPIPortAMD.Location = new System.Drawing.Point(535, 274);
             this.textBox_ethminerAPIPortAMD.Name = "textBox_ethminerAPIPortAMD";
             this.textBox_ethminerAPIPortAMD.Size = new System.Drawing.Size(139, 20);
-            this.textBox_ethminerAPIPortAMD.TabIndex = 71;
+            this.textBox_ethminerAPIPortAMD.TabIndex = 29;
             // 
             // textBox_ethminerAPIPortNvidia
             // 
-            this.textBox_ethminerAPIPortNvidia.Location = new System.Drawing.Point(351, 264);
+            this.textBox_ethminerAPIPortNvidia.Location = new System.Drawing.Point(379, 274);
             this.textBox_ethminerAPIPortNvidia.Name = "textBox_ethminerAPIPortNvidia";
-            this.textBox_ethminerAPIPortNvidia.Size = new System.Drawing.Size(131, 20);
-            this.textBox_ethminerAPIPortNvidia.TabIndex = 70;
+            this.textBox_ethminerAPIPortNvidia.Size = new System.Drawing.Size(140, 20);
+            this.textBox_ethminerAPIPortNvidia.TabIndex = 24;
             // 
             // label_ethminerDefaultBlockHeight
             // 
             this.label_ethminerDefaultBlockHeight.AutoSize = true;
-            this.label_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(186, 244);
+            this.label_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(199, 253);
             this.label_ethminerDefaultBlockHeight.Name = "label_ethminerDefaultBlockHeight";
             this.label_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(142, 13);
-            this.label_ethminerDefaultBlockHeight.TabIndex = 69;
+            this.label_ethminerDefaultBlockHeight.TabIndex = 99;
             this.label_ethminerDefaultBlockHeight.Text = "ethminerDefaultBlockHeight:";
             // 
             // label_ethminerAPIPortAMD
             // 
             this.label_ethminerAPIPortAMD.AutoSize = true;
-            this.label_ethminerAPIPortAMD.Location = new System.Drawing.Point(498, 244);
+            this.label_ethminerAPIPortAMD.Location = new System.Drawing.Point(532, 253);
             this.label_ethminerAPIPortAMD.Name = "label_ethminerAPIPortAMD";
             this.label_ethminerAPIPortAMD.Size = new System.Drawing.Size(110, 13);
-            this.label_ethminerAPIPortAMD.TabIndex = 68;
+            this.label_ethminerAPIPortAMD.TabIndex = 99;
             this.label_ethminerAPIPortAMD.Text = "ethminerAPIPortAMD:";
             // 
             // label_ethminerAPIPortNvidia
             // 
             this.label_ethminerAPIPortNvidia.AutoSize = true;
-            this.label_ethminerAPIPortNvidia.Location = new System.Drawing.Point(348, 244);
+            this.label_ethminerAPIPortNvidia.Location = new System.Drawing.Point(376, 253);
             this.label_ethminerAPIPortNvidia.Name = "label_ethminerAPIPortNvidia";
             this.label_ethminerAPIPortNvidia.Size = new System.Drawing.Size(122, 13);
-            this.label_ethminerAPIPortNvidia.TabIndex = 67;
+            this.label_ethminerAPIPortNvidia.TabIndex = 99;
             this.label_ethminerAPIPortNvidia.Text = "ethminerAPIPortNVIDIA:";
             // 
             // label_Language
             // 
             this.label_Language.AutoSize = true;
-            this.label_Language.Location = new System.Drawing.Point(186, 8);
+            this.label_Language.Location = new System.Drawing.Point(199, 8);
             this.label_Language.Name = "label_Language";
             this.label_Language.Size = new System.Drawing.Size(58, 13);
-            this.label_Language.TabIndex = 66;
+            this.label_Language.TabIndex = 99;
             this.label_Language.Text = "Language:";
             // 
             // comboBox_Language
             // 
             this.comboBox_Language.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Language.FormattingEnabled = true;
-            this.comboBox_Language.Location = new System.Drawing.Point(190, 28);
+            this.comboBox_Language.Location = new System.Drawing.Point(203, 28);
             this.comboBox_Language.Name = "comboBox_Language";
             this.comboBox_Language.Size = new System.Drawing.Size(190, 21);
-            this.comboBox_Language.TabIndex = 65;
+            this.comboBox_Language.TabIndex = 15;
             // 
             // checkBox_NVIDIAP0State
             // 
@@ -562,7 +562,7 @@
             this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 293);
             this.checkBox_NVIDIAP0State.Name = "checkBox_NVIDIAP0State";
             this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(100, 17);
-            this.checkBox_NVIDIAP0State.TabIndex = 64;
+            this.checkBox_NVIDIAP0State.TabIndex = 13;
             this.checkBox_NVIDIAP0State.Text = "NVIDIAP0State";
             this.checkBox_NVIDIAP0State.UseVisualStyleBackColor = true;
             // 
@@ -572,7 +572,7 @@
             this.checkBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(6, 249);
             this.checkBox_DisableWindowsErrorReporting.Name = "checkBox_DisableWindowsErrorReporting";
             this.checkBox_DisableWindowsErrorReporting.Size = new System.Drawing.Size(173, 17);
-            this.checkBox_DisableWindowsErrorReporting.TabIndex = 63;
+            this.checkBox_DisableWindowsErrorReporting.TabIndex = 11;
             this.checkBox_DisableWindowsErrorReporting.Text = "DisableWindowsErrorReporting";
             this.checkBox_DisableWindowsErrorReporting.UseVisualStyleBackColor = true;
             // 
@@ -582,346 +582,346 @@
             this.checkBox_UseNewSettingsPage.Location = new System.Drawing.Point(6, 271);
             this.checkBox_UseNewSettingsPage.Name = "checkBox_UseNewSettingsPage";
             this.checkBox_UseNewSettingsPage.Size = new System.Drawing.Size(130, 17);
-            this.checkBox_UseNewSettingsPage.TabIndex = 62;
+            this.checkBox_UseNewSettingsPage.TabIndex = 12;
             this.checkBox_UseNewSettingsPage.Text = "UseNewSettingsPage";
             this.checkBox_UseNewSettingsPage.UseVisualStyleBackColor = true;
             // 
             // textBox_LogMaxFileSize
             // 
-            this.textBox_LogMaxFileSize.Location = new System.Drawing.Point(501, 170);
+            this.textBox_LogMaxFileSize.Location = new System.Drawing.Point(535, 176);
             this.textBox_LogMaxFileSize.Name = "textBox_LogMaxFileSize";
             this.textBox_LogMaxFileSize.Size = new System.Drawing.Size(139, 20);
-            this.textBox_LogMaxFileSize.TabIndex = 61;
+            this.textBox_LogMaxFileSize.TabIndex = 27;
             // 
             // label_LogMaxFileSize
             // 
             this.label_LogMaxFileSize.AutoSize = true;
-            this.label_LogMaxFileSize.Location = new System.Drawing.Point(498, 150);
+            this.label_LogMaxFileSize.Location = new System.Drawing.Point(532, 155);
             this.label_LogMaxFileSize.Name = "label_LogMaxFileSize";
             this.label_LogMaxFileSize.Size = new System.Drawing.Size(84, 13);
-            this.label_LogMaxFileSize.TabIndex = 60;
+            this.label_LogMaxFileSize.TabIndex = 99;
             this.label_LogMaxFileSize.Text = "LogMaxFileSize:";
             // 
             // textBox_MinIdleSeconds
             // 
-            this.textBox_MinIdleSeconds.Location = new System.Drawing.Point(351, 122);
+            this.textBox_MinIdleSeconds.Location = new System.Drawing.Point(379, 127);
             this.textBox_MinIdleSeconds.Name = "textBox_MinIdleSeconds";
-            this.textBox_MinIdleSeconds.Size = new System.Drawing.Size(131, 20);
-            this.textBox_MinIdleSeconds.TabIndex = 56;
+            this.textBox_MinIdleSeconds.Size = new System.Drawing.Size(140, 20);
+            this.textBox_MinIdleSeconds.TabIndex = 21;
             // 
             // label_MinIdleSeconds
             // 
             this.label_MinIdleSeconds.AutoSize = true;
-            this.label_MinIdleSeconds.Location = new System.Drawing.Point(348, 102);
+            this.label_MinIdleSeconds.Location = new System.Drawing.Point(376, 106);
             this.label_MinIdleSeconds.Name = "label_MinIdleSeconds";
             this.label_MinIdleSeconds.Size = new System.Drawing.Size(86, 13);
-            this.label_MinIdleSeconds.TabIndex = 55;
+            this.label_MinIdleSeconds.TabIndex = 99;
             this.label_MinIdleSeconds.Text = "MinIdleSeconds:";
             // 
             // label_BenchmarkTimeLimitsAMD_Precise
             // 
             this.label_BenchmarkTimeLimitsAMD_Precise.AutoSize = true;
-            this.label_BenchmarkTimeLimitsAMD_Precise.Location = new System.Drawing.Point(760, 276);
+            this.label_BenchmarkTimeLimitsAMD_Precise.Location = new System.Drawing.Point(688, 278);
             this.label_BenchmarkTimeLimitsAMD_Precise.Name = "label_BenchmarkTimeLimitsAMD_Precise";
             this.label_BenchmarkTimeLimitsAMD_Precise.Size = new System.Drawing.Size(42, 13);
-            this.label_BenchmarkTimeLimitsAMD_Precise.TabIndex = 49;
+            this.label_BenchmarkTimeLimitsAMD_Precise.TabIndex = 99;
             this.label_BenchmarkTimeLimitsAMD_Precise.Text = "Precise";
             // 
             // textBox_BenchmarkTimeLimitsAMD_Precise
             // 
-            this.textBox_BenchmarkTimeLimitsAMD_Precise.Location = new System.Drawing.Point(654, 273);
+            this.textBox_BenchmarkTimeLimitsAMD_Precise.Location = new System.Drawing.Point(751, 275);
             this.textBox_BenchmarkTimeLimitsAMD_Precise.Name = "textBox_BenchmarkTimeLimitsAMD_Precise";
             this.textBox_BenchmarkTimeLimitsAMD_Precise.Size = new System.Drawing.Size(100, 20);
-            this.textBox_BenchmarkTimeLimitsAMD_Precise.TabIndex = 48;
+            this.textBox_BenchmarkTimeLimitsAMD_Precise.TabIndex = 38;
             // 
             // label_BenchmarkTimeLimitsAMD_Standard
             // 
             this.label_BenchmarkTimeLimitsAMD_Standard.AutoSize = true;
-            this.label_BenchmarkTimeLimitsAMD_Standard.Location = new System.Drawing.Point(760, 251);
+            this.label_BenchmarkTimeLimitsAMD_Standard.Location = new System.Drawing.Point(688, 253);
             this.label_BenchmarkTimeLimitsAMD_Standard.Name = "label_BenchmarkTimeLimitsAMD_Standard";
             this.label_BenchmarkTimeLimitsAMD_Standard.Size = new System.Drawing.Size(50, 13);
-            this.label_BenchmarkTimeLimitsAMD_Standard.TabIndex = 47;
+            this.label_BenchmarkTimeLimitsAMD_Standard.TabIndex = 99;
             this.label_BenchmarkTimeLimitsAMD_Standard.Text = "Standard";
             // 
             // textBox_BenchmarkTimeLimitsAMD_Standard
             // 
-            this.textBox_BenchmarkTimeLimitsAMD_Standard.Location = new System.Drawing.Point(654, 248);
+            this.textBox_BenchmarkTimeLimitsAMD_Standard.Location = new System.Drawing.Point(751, 250);
             this.textBox_BenchmarkTimeLimitsAMD_Standard.Name = "textBox_BenchmarkTimeLimitsAMD_Standard";
             this.textBox_BenchmarkTimeLimitsAMD_Standard.Size = new System.Drawing.Size(100, 20);
-            this.textBox_BenchmarkTimeLimitsAMD_Standard.TabIndex = 46;
+            this.textBox_BenchmarkTimeLimitsAMD_Standard.TabIndex = 37;
             // 
             // label_BenchmarkTimeLimitsAMD_Quick
             // 
             this.label_BenchmarkTimeLimitsAMD_Quick.AutoSize = true;
-            this.label_BenchmarkTimeLimitsAMD_Quick.Location = new System.Drawing.Point(760, 226);
+            this.label_BenchmarkTimeLimitsAMD_Quick.Location = new System.Drawing.Point(688, 228);
             this.label_BenchmarkTimeLimitsAMD_Quick.Name = "label_BenchmarkTimeLimitsAMD_Quick";
             this.label_BenchmarkTimeLimitsAMD_Quick.Size = new System.Drawing.Size(35, 13);
-            this.label_BenchmarkTimeLimitsAMD_Quick.TabIndex = 45;
+            this.label_BenchmarkTimeLimitsAMD_Quick.TabIndex = 99;
             this.label_BenchmarkTimeLimitsAMD_Quick.Text = "Quick";
             // 
             // textBox_BenchmarkTimeLimitsAMD_Quick
             // 
-            this.textBox_BenchmarkTimeLimitsAMD_Quick.Location = new System.Drawing.Point(654, 223);
+            this.textBox_BenchmarkTimeLimitsAMD_Quick.Location = new System.Drawing.Point(751, 225);
             this.textBox_BenchmarkTimeLimitsAMD_Quick.Name = "textBox_BenchmarkTimeLimitsAMD_Quick";
             this.textBox_BenchmarkTimeLimitsAMD_Quick.Size = new System.Drawing.Size(100, 20);
-            this.textBox_BenchmarkTimeLimitsAMD_Quick.TabIndex = 44;
+            this.textBox_BenchmarkTimeLimitsAMD_Quick.TabIndex = 36;
             // 
-            // label22
+            // label_BenchmarkTimeLimitsAMD_Group
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(651, 205);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(137, 13);
-            this.label22.TabIndex = 43;
-            this.label22.Text = "BenchmarkTimeLimitsAMD:";
+            this.label_BenchmarkTimeLimitsAMD_Group.AutoSize = true;
+            this.label_BenchmarkTimeLimitsAMD_Group.Location = new System.Drawing.Point(687, 207);
+            this.label_BenchmarkTimeLimitsAMD_Group.Name = "label_BenchmarkTimeLimitsAMD_Group";
+            this.label_BenchmarkTimeLimitsAMD_Group.Size = new System.Drawing.Size(137, 13);
+            this.label_BenchmarkTimeLimitsAMD_Group.TabIndex = 99;
+            this.label_BenchmarkTimeLimitsAMD_Group.Text = "BenchmarkTimeLimitsAMD:";
             // 
             // label_BenchmarkTimeLimitsNVIDIA_Precise
             // 
             this.label_BenchmarkTimeLimitsNVIDIA_Precise.AutoSize = true;
-            this.label_BenchmarkTimeLimitsNVIDIA_Precise.Location = new System.Drawing.Point(760, 177);
+            this.label_BenchmarkTimeLimitsNVIDIA_Precise.Location = new System.Drawing.Point(688, 179);
             this.label_BenchmarkTimeLimitsNVIDIA_Precise.Name = "label_BenchmarkTimeLimitsNVIDIA_Precise";
             this.label_BenchmarkTimeLimitsNVIDIA_Precise.Size = new System.Drawing.Size(42, 13);
-            this.label_BenchmarkTimeLimitsNVIDIA_Precise.TabIndex = 42;
+            this.label_BenchmarkTimeLimitsNVIDIA_Precise.TabIndex = 99;
             this.label_BenchmarkTimeLimitsNVIDIA_Precise.Text = "Precise";
             // 
             // textBox_BenchmarkTimeLimitsNVIDIA_Precise
             // 
-            this.textBox_BenchmarkTimeLimitsNVIDIA_Precise.Location = new System.Drawing.Point(654, 174);
+            this.textBox_BenchmarkTimeLimitsNVIDIA_Precise.Location = new System.Drawing.Point(751, 176);
             this.textBox_BenchmarkTimeLimitsNVIDIA_Precise.Name = "textBox_BenchmarkTimeLimitsNVIDIA_Precise";
             this.textBox_BenchmarkTimeLimitsNVIDIA_Precise.Size = new System.Drawing.Size(100, 20);
-            this.textBox_BenchmarkTimeLimitsNVIDIA_Precise.TabIndex = 41;
+            this.textBox_BenchmarkTimeLimitsNVIDIA_Precise.TabIndex = 35;
             // 
             // label_BenchmarkTimeLimitsNVIDIA_Standard
             // 
             this.label_BenchmarkTimeLimitsNVIDIA_Standard.AutoSize = true;
-            this.label_BenchmarkTimeLimitsNVIDIA_Standard.Location = new System.Drawing.Point(760, 152);
+            this.label_BenchmarkTimeLimitsNVIDIA_Standard.Location = new System.Drawing.Point(688, 154);
             this.label_BenchmarkTimeLimitsNVIDIA_Standard.Name = "label_BenchmarkTimeLimitsNVIDIA_Standard";
             this.label_BenchmarkTimeLimitsNVIDIA_Standard.Size = new System.Drawing.Size(50, 13);
-            this.label_BenchmarkTimeLimitsNVIDIA_Standard.TabIndex = 40;
+            this.label_BenchmarkTimeLimitsNVIDIA_Standard.TabIndex = 99;
             this.label_BenchmarkTimeLimitsNVIDIA_Standard.Text = "Standard";
             // 
             // textBox_BenchmarkTimeLimitsNVIDIA_Standard
             // 
-            this.textBox_BenchmarkTimeLimitsNVIDIA_Standard.Location = new System.Drawing.Point(654, 149);
+            this.textBox_BenchmarkTimeLimitsNVIDIA_Standard.Location = new System.Drawing.Point(751, 151);
             this.textBox_BenchmarkTimeLimitsNVIDIA_Standard.Name = "textBox_BenchmarkTimeLimitsNVIDIA_Standard";
             this.textBox_BenchmarkTimeLimitsNVIDIA_Standard.Size = new System.Drawing.Size(100, 20);
-            this.textBox_BenchmarkTimeLimitsNVIDIA_Standard.TabIndex = 39;
+            this.textBox_BenchmarkTimeLimitsNVIDIA_Standard.TabIndex = 34;
             // 
             // label_BenchmarkTimeLimitsNVIDIA_Quick
             // 
             this.label_BenchmarkTimeLimitsNVIDIA_Quick.AutoSize = true;
-            this.label_BenchmarkTimeLimitsNVIDIA_Quick.Location = new System.Drawing.Point(760, 127);
+            this.label_BenchmarkTimeLimitsNVIDIA_Quick.Location = new System.Drawing.Point(688, 129);
             this.label_BenchmarkTimeLimitsNVIDIA_Quick.Name = "label_BenchmarkTimeLimitsNVIDIA_Quick";
             this.label_BenchmarkTimeLimitsNVIDIA_Quick.Size = new System.Drawing.Size(35, 13);
-            this.label_BenchmarkTimeLimitsNVIDIA_Quick.TabIndex = 38;
+            this.label_BenchmarkTimeLimitsNVIDIA_Quick.TabIndex = 99;
             this.label_BenchmarkTimeLimitsNVIDIA_Quick.Text = "Quick";
             // 
             // textBox_BenchmarkTimeLimitsNVIDIA_Quick
             // 
-            this.textBox_BenchmarkTimeLimitsNVIDIA_Quick.Location = new System.Drawing.Point(654, 124);
+            this.textBox_BenchmarkTimeLimitsNVIDIA_Quick.Location = new System.Drawing.Point(751, 126);
             this.textBox_BenchmarkTimeLimitsNVIDIA_Quick.Name = "textBox_BenchmarkTimeLimitsNVIDIA_Quick";
             this.textBox_BenchmarkTimeLimitsNVIDIA_Quick.Size = new System.Drawing.Size(100, 20);
-            this.textBox_BenchmarkTimeLimitsNVIDIA_Quick.TabIndex = 37;
+            this.textBox_BenchmarkTimeLimitsNVIDIA_Quick.TabIndex = 33;
             // 
-            // label14
+            // label_BenchmarkTimeLimitsNVIDIA_Group
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(651, 106);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(149, 13);
-            this.label14.TabIndex = 36;
-            this.label14.Text = "BenchmarkTimeLimitsNVIDIA:";
+            this.label_BenchmarkTimeLimitsNVIDIA_Group.AutoSize = true;
+            this.label_BenchmarkTimeLimitsNVIDIA_Group.Location = new System.Drawing.Point(687, 106);
+            this.label_BenchmarkTimeLimitsNVIDIA_Group.Name = "label_BenchmarkTimeLimitsNVIDIA_Group";
+            this.label_BenchmarkTimeLimitsNVIDIA_Group.Size = new System.Drawing.Size(149, 13);
+            this.label_BenchmarkTimeLimitsNVIDIA_Group.TabIndex = 99;
+            this.label_BenchmarkTimeLimitsNVIDIA_Group.Text = "BenchmarkTimeLimitsNVIDIA:";
             // 
             // label_BenchmarkTimeLimitsCPU_Precise
             // 
             this.label_BenchmarkTimeLimitsCPU_Precise.AutoSize = true;
-            this.label_BenchmarkTimeLimitsCPU_Precise.Location = new System.Drawing.Point(760, 78);
+            this.label_BenchmarkTimeLimitsCPU_Precise.Location = new System.Drawing.Point(688, 80);
             this.label_BenchmarkTimeLimitsCPU_Precise.Name = "label_BenchmarkTimeLimitsCPU_Precise";
             this.label_BenchmarkTimeLimitsCPU_Precise.Size = new System.Drawing.Size(42, 13);
-            this.label_BenchmarkTimeLimitsCPU_Precise.TabIndex = 35;
+            this.label_BenchmarkTimeLimitsCPU_Precise.TabIndex = 99;
             this.label_BenchmarkTimeLimitsCPU_Precise.Text = "Precise";
             // 
             // textBox_BenchmarkTimeLimitsCPU_Precise
             // 
-            this.textBox_BenchmarkTimeLimitsCPU_Precise.Location = new System.Drawing.Point(654, 75);
+            this.textBox_BenchmarkTimeLimitsCPU_Precise.Location = new System.Drawing.Point(751, 77);
             this.textBox_BenchmarkTimeLimitsCPU_Precise.Name = "textBox_BenchmarkTimeLimitsCPU_Precise";
             this.textBox_BenchmarkTimeLimitsCPU_Precise.Size = new System.Drawing.Size(100, 20);
-            this.textBox_BenchmarkTimeLimitsCPU_Precise.TabIndex = 34;
+            this.textBox_BenchmarkTimeLimitsCPU_Precise.TabIndex = 32;
             // 
             // label_BenchmarkTimeLimitsCPU_Standard
             // 
             this.label_BenchmarkTimeLimitsCPU_Standard.AutoSize = true;
-            this.label_BenchmarkTimeLimitsCPU_Standard.Location = new System.Drawing.Point(760, 53);
+            this.label_BenchmarkTimeLimitsCPU_Standard.Location = new System.Drawing.Point(688, 54);
             this.label_BenchmarkTimeLimitsCPU_Standard.Name = "label_BenchmarkTimeLimitsCPU_Standard";
             this.label_BenchmarkTimeLimitsCPU_Standard.Size = new System.Drawing.Size(50, 13);
-            this.label_BenchmarkTimeLimitsCPU_Standard.TabIndex = 33;
+            this.label_BenchmarkTimeLimitsCPU_Standard.TabIndex = 99;
             this.label_BenchmarkTimeLimitsCPU_Standard.Text = "Standard";
             // 
             // textBox_BenchmarkTimeLimitsCPU_Standard
             // 
-            this.textBox_BenchmarkTimeLimitsCPU_Standard.Location = new System.Drawing.Point(654, 50);
+            this.textBox_BenchmarkTimeLimitsCPU_Standard.Location = new System.Drawing.Point(751, 51);
             this.textBox_BenchmarkTimeLimitsCPU_Standard.Name = "textBox_BenchmarkTimeLimitsCPU_Standard";
             this.textBox_BenchmarkTimeLimitsCPU_Standard.Size = new System.Drawing.Size(100, 20);
-            this.textBox_BenchmarkTimeLimitsCPU_Standard.TabIndex = 32;
+            this.textBox_BenchmarkTimeLimitsCPU_Standard.TabIndex = 31;
             // 
             // label_BenchmarkTimeLimitsCPU_Quick
             // 
             this.label_BenchmarkTimeLimitsCPU_Quick.AutoSize = true;
-            this.label_BenchmarkTimeLimitsCPU_Quick.Location = new System.Drawing.Point(760, 28);
+            this.label_BenchmarkTimeLimitsCPU_Quick.Location = new System.Drawing.Point(688, 28);
             this.label_BenchmarkTimeLimitsCPU_Quick.Name = "label_BenchmarkTimeLimitsCPU_Quick";
             this.label_BenchmarkTimeLimitsCPU_Quick.Size = new System.Drawing.Size(35, 13);
-            this.label_BenchmarkTimeLimitsCPU_Quick.TabIndex = 31;
+            this.label_BenchmarkTimeLimitsCPU_Quick.TabIndex = 99;
             this.label_BenchmarkTimeLimitsCPU_Quick.Text = "Quick";
             // 
             // textBox_BenchmarkTimeLimitsCPU_Quick
             // 
-            this.textBox_BenchmarkTimeLimitsCPU_Quick.Location = new System.Drawing.Point(654, 25);
+            this.textBox_BenchmarkTimeLimitsCPU_Quick.Location = new System.Drawing.Point(751, 25);
             this.textBox_BenchmarkTimeLimitsCPU_Quick.Name = "textBox_BenchmarkTimeLimitsCPU_Quick";
             this.textBox_BenchmarkTimeLimitsCPU_Quick.Size = new System.Drawing.Size(100, 20);
             this.textBox_BenchmarkTimeLimitsCPU_Quick.TabIndex = 30;
             // 
-            // label18
+            // label_BenchmarkTimeLimitsCPU_Group
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(651, 7);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(135, 13);
-            this.label18.TabIndex = 29;
-            this.label18.Text = "BenchmarkTimeLimitsCPU:";
+            this.label_BenchmarkTimeLimitsCPU_Group.AutoSize = true;
+            this.label_BenchmarkTimeLimitsCPU_Group.Location = new System.Drawing.Point(687, 7);
+            this.label_BenchmarkTimeLimitsCPU_Group.Name = "label_BenchmarkTimeLimitsCPU_Group";
+            this.label_BenchmarkTimeLimitsCPU_Group.Size = new System.Drawing.Size(135, 13);
+            this.label_BenchmarkTimeLimitsCPU_Group.TabIndex = 99;
+            this.label_BenchmarkTimeLimitsCPU_Group.Text = "BenchmarkTimeLimitsCPU:";
             // 
             // textBox_MinerAPIGraceSeconds
             // 
-            this.textBox_MinerAPIGraceSeconds.Location = new System.Drawing.Point(190, 172);
+            this.textBox_MinerAPIGraceSeconds.Location = new System.Drawing.Point(203, 176);
             this.textBox_MinerAPIGraceSeconds.Name = "textBox_MinerAPIGraceSeconds";
-            this.textBox_MinerAPIGraceSeconds.Size = new System.Drawing.Size(131, 20);
-            this.textBox_MinerAPIGraceSeconds.TabIndex = 26;
+            this.textBox_MinerAPIGraceSeconds.Size = new System.Drawing.Size(160, 20);
+            this.textBox_MinerAPIGraceSeconds.TabIndex = 18;
             // 
             // label_MinerAPIGraceMinutes
             // 
             this.label_MinerAPIGraceMinutes.AutoSize = true;
-            this.label_MinerAPIGraceMinutes.Location = new System.Drawing.Point(187, 152);
+            this.label_MinerAPIGraceMinutes.Location = new System.Drawing.Point(200, 155);
             this.label_MinerAPIGraceMinutes.Name = "label_MinerAPIGraceMinutes";
             this.label_MinerAPIGraceMinutes.Size = new System.Drawing.Size(124, 13);
-            this.label_MinerAPIGraceMinutes.TabIndex = 25;
+            this.label_MinerAPIGraceMinutes.TabIndex = 99;
             this.label_MinerAPIGraceMinutes.Text = "MinerAPIGraceSeconds:";
             // 
             // textBox_MinerRestartDelayMS
             // 
-            this.textBox_MinerRestartDelayMS.Location = new System.Drawing.Point(501, 122);
+            this.textBox_MinerRestartDelayMS.Location = new System.Drawing.Point(535, 127);
             this.textBox_MinerRestartDelayMS.Name = "textBox_MinerRestartDelayMS";
             this.textBox_MinerRestartDelayMS.Size = new System.Drawing.Size(139, 20);
-            this.textBox_MinerRestartDelayMS.TabIndex = 24;
+            this.textBox_MinerRestartDelayMS.TabIndex = 26;
             // 
             // label_MinerRestartDelayMS
             // 
             this.label_MinerRestartDelayMS.AutoSize = true;
-            this.label_MinerRestartDelayMS.Location = new System.Drawing.Point(498, 102);
+            this.label_MinerRestartDelayMS.Location = new System.Drawing.Point(532, 106);
             this.label_MinerRestartDelayMS.Name = "label_MinerRestartDelayMS";
             this.label_MinerRestartDelayMS.Size = new System.Drawing.Size(113, 13);
-            this.label_MinerRestartDelayMS.TabIndex = 23;
+            this.label_MinerRestartDelayMS.TabIndex = 99;
             this.label_MinerRestartDelayMS.Text = "MinerRestartDelayMS:";
             // 
             // textBox_MinerAPIQueryInterval
             // 
-            this.textBox_MinerAPIQueryInterval.Location = new System.Drawing.Point(351, 170);
+            this.textBox_MinerAPIQueryInterval.Location = new System.Drawing.Point(379, 176);
             this.textBox_MinerAPIQueryInterval.Name = "textBox_MinerAPIQueryInterval";
-            this.textBox_MinerAPIQueryInterval.Size = new System.Drawing.Size(131, 20);
+            this.textBox_MinerAPIQueryInterval.Size = new System.Drawing.Size(140, 20);
             this.textBox_MinerAPIQueryInterval.TabIndex = 22;
             // 
             // label_MinerAPIQueryInterval
             // 
             this.label_MinerAPIQueryInterval.AutoSize = true;
-            this.label_MinerAPIQueryInterval.Location = new System.Drawing.Point(348, 150);
+            this.label_MinerAPIQueryInterval.Location = new System.Drawing.Point(376, 155);
             this.label_MinerAPIQueryInterval.Name = "label_MinerAPIQueryInterval";
             this.label_MinerAPIQueryInterval.Size = new System.Drawing.Size(116, 13);
-            this.label_MinerAPIQueryInterval.TabIndex = 21;
+            this.label_MinerAPIQueryInterval.TabIndex = 99;
             this.label_MinerAPIQueryInterval.Text = "MinerAPIQueryInterval:";
             // 
             // textBox_SwitchMinSecondsDynamic
             // 
-            this.textBox_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(351, 217);
+            this.textBox_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(379, 225);
             this.textBox_SwitchMinSecondsDynamic.Name = "textBox_SwitchMinSecondsDynamic";
-            this.textBox_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(131, 20);
-            this.textBox_SwitchMinSecondsDynamic.TabIndex = 20;
+            this.textBox_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(140, 20);
+            this.textBox_SwitchMinSecondsDynamic.TabIndex = 23;
             // 
             // label_SwitchMinSecondsDynamic
             // 
             this.label_SwitchMinSecondsDynamic.AutoSize = true;
-            this.label_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(348, 197);
+            this.label_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(376, 204);
             this.label_SwitchMinSecondsDynamic.Name = "label_SwitchMinSecondsDynamic";
             this.label_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(142, 13);
-            this.label_SwitchMinSecondsDynamic.TabIndex = 19;
+            this.label_SwitchMinSecondsDynamic.TabIndex = 99;
             this.label_SwitchMinSecondsDynamic.Text = "SwitchMinSecondsDynamic:";
             // 
             // label_SwitchMinSecondsFixed
             // 
             this.label_SwitchMinSecondsFixed.AutoSize = true;
-            this.label_SwitchMinSecondsFixed.Location = new System.Drawing.Point(186, 197);
+            this.label_SwitchMinSecondsFixed.Location = new System.Drawing.Point(199, 204);
             this.label_SwitchMinSecondsFixed.Name = "label_SwitchMinSecondsFixed";
             this.label_SwitchMinSecondsFixed.Size = new System.Drawing.Size(126, 13);
-            this.label_SwitchMinSecondsFixed.TabIndex = 18;
+            this.label_SwitchMinSecondsFixed.TabIndex = 99;
             this.label_SwitchMinSecondsFixed.Text = "SwitchMinSecondsFixed:";
             // 
             // textBox_SwitchMinSecondsFixed
             // 
-            this.textBox_SwitchMinSecondsFixed.Location = new System.Drawing.Point(189, 217);
+            this.textBox_SwitchMinSecondsFixed.Location = new System.Drawing.Point(202, 225);
             this.textBox_SwitchMinSecondsFixed.Name = "textBox_SwitchMinSecondsFixed";
-            this.textBox_SwitchMinSecondsFixed.Size = new System.Drawing.Size(131, 20);
-            this.textBox_SwitchMinSecondsFixed.TabIndex = 17;
+            this.textBox_SwitchMinSecondsFixed.Size = new System.Drawing.Size(160, 20);
+            this.textBox_SwitchMinSecondsFixed.TabIndex = 19;
             // 
-            // comboBox_Location
+            // comboBox_ServiceLocation
             // 
-            this.comboBox_Location.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_Location.FormattingEnabled = true;
-            this.comboBox_Location.Items.AddRange(new object[] {
+            this.comboBox_ServiceLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_ServiceLocation.FormattingEnabled = true;
+            this.comboBox_ServiceLocation.Items.AddRange(new object[] {
             "Europe - Amsterdam",
             "USA - San Jose",
             "China - Hong Kong",
             "Japan - Tokyo"});
-            this.comboBox_Location.Location = new System.Drawing.Point(189, 122);
-            this.comboBox_Location.Name = "comboBox_Location";
-            this.comboBox_Location.Size = new System.Drawing.Size(147, 21);
-            this.comboBox_Location.TabIndex = 16;
+            this.comboBox_ServiceLocation.Location = new System.Drawing.Point(202, 127);
+            this.comboBox_ServiceLocation.Name = "comboBox_ServiceLocation";
+            this.comboBox_ServiceLocation.Size = new System.Drawing.Size(160, 21);
+            this.comboBox_ServiceLocation.TabIndex = 17;
             // 
-            // label_Location
+            // label_ServiceLocation
             // 
-            this.label_Location.AutoSize = true;
-            this.label_Location.Location = new System.Drawing.Point(186, 102);
-            this.label_Location.Name = "label_Location";
-            this.label_Location.Size = new System.Drawing.Size(51, 13);
-            this.label_Location.TabIndex = 15;
-            this.label_Location.Text = "Location:";
+            this.label_ServiceLocation.AutoSize = true;
+            this.label_ServiceLocation.Location = new System.Drawing.Point(199, 106);
+            this.label_ServiceLocation.Name = "label_ServiceLocation";
+            this.label_ServiceLocation.Size = new System.Drawing.Size(87, 13);
+            this.label_ServiceLocation.TabIndex = 99;
+            this.label_ServiceLocation.Text = "ServiceLocation:";
             // 
             // textBox_WorkerName
             // 
-            this.textBox_WorkerName.Location = new System.Drawing.Point(501, 76);
+            this.textBox_WorkerName.Location = new System.Drawing.Point(535, 78);
             this.textBox_WorkerName.Name = "textBox_WorkerName";
             this.textBox_WorkerName.Size = new System.Drawing.Size(139, 20);
-            this.textBox_WorkerName.TabIndex = 14;
+            this.textBox_WorkerName.TabIndex = 25;
             // 
             // textBox_BitcoinAddress
             // 
-            this.textBox_BitcoinAddress.Location = new System.Drawing.Point(190, 77);
+            this.textBox_BitcoinAddress.Location = new System.Drawing.Point(203, 77);
             this.textBox_BitcoinAddress.Name = "textBox_BitcoinAddress";
-            this.textBox_BitcoinAddress.Size = new System.Drawing.Size(292, 20);
-            this.textBox_BitcoinAddress.TabIndex = 13;
+            this.textBox_BitcoinAddress.Size = new System.Drawing.Size(316, 20);
+            this.textBox_BitcoinAddress.TabIndex = 16;
             // 
             // label_WorkerName
             // 
             this.label_WorkerName.AutoSize = true;
-            this.label_WorkerName.Location = new System.Drawing.Point(498, 57);
+            this.label_WorkerName.Location = new System.Drawing.Point(532, 57);
             this.label_WorkerName.Name = "label_WorkerName";
             this.label_WorkerName.Size = new System.Drawing.Size(73, 13);
-            this.label_WorkerName.TabIndex = 12;
+            this.label_WorkerName.TabIndex = 99;
             this.label_WorkerName.Text = "WorkerName:";
             // 
             // label_BitcoinAddress
             // 
             this.label_BitcoinAddress.AutoSize = true;
-            this.label_BitcoinAddress.Location = new System.Drawing.Point(187, 57);
+            this.label_BitcoinAddress.Location = new System.Drawing.Point(200, 57);
             this.label_BitcoinAddress.Name = "label_BitcoinAddress";
             this.label_BitcoinAddress.Size = new System.Drawing.Size(80, 13);
-            this.label_BitcoinAddress.TabIndex = 11;
+            this.label_BitcoinAddress.TabIndex = 99;
             this.label_BitcoinAddress.Text = "BitcoinAddress:";
             // 
             // checkBox_ShowDriverVersionWarning
@@ -1047,7 +1047,7 @@
             this.tabControl1.Location = new System.Drawing.Point(6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(831, 364);
+            this.tabControl1.Size = new System.Drawing.Size(876, 364);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage_NVIDIA5X
@@ -1067,14 +1067,14 @@
             this.tabPage_NVIDIA5X.Location = new System.Drawing.Point(4, 22);
             this.tabPage_NVIDIA5X.Name = "tabPage_NVIDIA5X";
             this.tabPage_NVIDIA5X.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_NVIDIA5X.Size = new System.Drawing.Size(823, 338);
+            this.tabPage_NVIDIA5X.Size = new System.Drawing.Size(868, 338);
             this.tabPage_NVIDIA5X.TabIndex = 2;
             this.tabPage_NVIDIA5X.Text = "NVIDIA5X";
             this.tabPage_NVIDIA5X.UseVisualStyleBackColor = true;
             // 
             // textBox_NVIDIA5X_DaggerHashimotoGenerateDevice
             // 
-            this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(186, 79);
+            this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(191, 79);
             this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.Name = "textBox_NVIDIA5X_DaggerHashimotoGenerateDevice";
             this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA5X_DaggerHashimotoGenerateDevice.TabIndex = 101;
@@ -1090,7 +1090,7 @@
             // 
             // textBox_NVIDIA5X_MinimumProfit
             // 
-            this.textBox_NVIDIA5X_MinimumProfit.Location = new System.Drawing.Point(487, 6);
+            this.textBox_NVIDIA5X_MinimumProfit.Location = new System.Drawing.Point(491, 6);
             this.textBox_NVIDIA5X_MinimumProfit.Name = "textBox_NVIDIA5X_MinimumProfit";
             this.textBox_NVIDIA5X_MinimumProfit.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA5X_MinimumProfit.TabIndex = 3;
@@ -1098,7 +1098,7 @@
             // label_NVIDIA5X_MinimumProfit
             // 
             this.label_NVIDIA5X_MinimumProfit.AutoSize = true;
-            this.label_NVIDIA5X_MinimumProfit.Location = new System.Drawing.Point(372, 9);
+            this.label_NVIDIA5X_MinimumProfit.Location = new System.Drawing.Point(376, 9);
             this.label_NVIDIA5X_MinimumProfit.Name = "label_NVIDIA5X_MinimumProfit";
             this.label_NVIDIA5X_MinimumProfit.Size = new System.Drawing.Size(112, 13);
             this.label_NVIDIA5X_MinimumProfit.TabIndex = 99;
@@ -1121,7 +1121,7 @@
             this.tabControl_NVIDIA5X_Algos.Location = new System.Drawing.Point(6, 102);
             this.tabControl_NVIDIA5X_Algos.Name = "tabControl_NVIDIA5X_Algos";
             this.tabControl_NVIDIA5X_Algos.SelectedIndex = 0;
-            this.tabControl_NVIDIA5X_Algos.Size = new System.Drawing.Size(811, 230);
+            this.tabControl_NVIDIA5X_Algos.Size = new System.Drawing.Size(856, 230);
             this.tabControl_NVIDIA5X_Algos.TabIndex = 99;
             // 
             // label_NVIDIA5X_ExtraLaunchParameters
@@ -1139,12 +1139,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_NVIDIA5X_ExtraLaunchParameters.Location = new System.Drawing.Point(135, 55);
             this.textBox_NVIDIA5X_ExtraLaunchParameters.Name = "textBox_NVIDIA5X_ExtraLaunchParameters";
-            this.textBox_NVIDIA5X_ExtraLaunchParameters.Size = new System.Drawing.Size(682, 20);
+            this.textBox_NVIDIA5X_ExtraLaunchParameters.Size = new System.Drawing.Size(727, 20);
             this.textBox_NVIDIA5X_ExtraLaunchParameters.TabIndex = 99;
             // 
             // textBox_NVIDIA5X_UsePassword
             // 
-            this.textBox_NVIDIA5X_UsePassword.Location = new System.Drawing.Point(263, 6);
+            this.textBox_NVIDIA5X_UsePassword.Location = new System.Drawing.Point(267, 6);
             this.textBox_NVIDIA5X_UsePassword.Name = "textBox_NVIDIA5X_UsePassword";
             this.textBox_NVIDIA5X_UsePassword.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA5X_UsePassword.TabIndex = 2;
@@ -1152,7 +1152,7 @@
             // label_NVIDIA5X_UsePassword
             // 
             this.label_NVIDIA5X_UsePassword.AutoSize = true;
-            this.label_NVIDIA5X_UsePassword.Location = new System.Drawing.Point(185, 9);
+            this.label_NVIDIA5X_UsePassword.Location = new System.Drawing.Point(189, 9);
             this.label_NVIDIA5X_UsePassword.Name = "label_NVIDIA5X_UsePassword";
             this.label_NVIDIA5X_UsePassword.Size = new System.Drawing.Size(75, 13);
             this.label_NVIDIA5X_UsePassword.TabIndex = 99;
@@ -1160,7 +1160,7 @@
             // 
             // textBox_NVIDIA5X_APIBindPort
             // 
-            this.textBox_NVIDIA5X_APIBindPort.Location = new System.Drawing.Point(76, 6);
+            this.textBox_NVIDIA5X_APIBindPort.Location = new System.Drawing.Point(80, 6);
             this.textBox_NVIDIA5X_APIBindPort.Name = "textBox_NVIDIA5X_APIBindPort";
             this.textBox_NVIDIA5X_APIBindPort.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA5X_APIBindPort.TabIndex = 1;
@@ -1191,7 +1191,7 @@
             this.tabPage_NVIDIA3X.Location = new System.Drawing.Point(4, 22);
             this.tabPage_NVIDIA3X.Name = "tabPage_NVIDIA3X";
             this.tabPage_NVIDIA3X.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_NVIDIA3X.Size = new System.Drawing.Size(823, 338);
+            this.tabPage_NVIDIA3X.Size = new System.Drawing.Size(868, 338);
             this.tabPage_NVIDIA3X.TabIndex = 3;
             this.tabPage_NVIDIA3X.Text = "NVIDIA3X";
             this.tabPage_NVIDIA3X.UseVisualStyleBackColor = true;
@@ -1199,7 +1199,7 @@
             // textBox_NVIDIA3X_DaggerHashimotoGenerateDevice
             // 
             this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.BackColor = System.Drawing.SystemColors.Window;
-            this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(186, 79);
+            this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(191, 79);
             this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.Name = "textBox_NVIDIA3X_DaggerHashimotoGenerateDevice";
             this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA3X_DaggerHashimotoGenerateDevice.TabIndex = 101;
@@ -1215,7 +1215,7 @@
             // 
             // textBox_NVIDIA3X_MinimumProfit
             // 
-            this.textBox_NVIDIA3X_MinimumProfit.Location = new System.Drawing.Point(487, 6);
+            this.textBox_NVIDIA3X_MinimumProfit.Location = new System.Drawing.Point(491, 6);
             this.textBox_NVIDIA3X_MinimumProfit.Name = "textBox_NVIDIA3X_MinimumProfit";
             this.textBox_NVIDIA3X_MinimumProfit.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA3X_MinimumProfit.TabIndex = 3;
@@ -1223,7 +1223,7 @@
             // label_NVIDIA3X_MinimumProfit
             // 
             this.label_NVIDIA3X_MinimumProfit.AutoSize = true;
-            this.label_NVIDIA3X_MinimumProfit.Location = new System.Drawing.Point(372, 9);
+            this.label_NVIDIA3X_MinimumProfit.Location = new System.Drawing.Point(376, 9);
             this.label_NVIDIA3X_MinimumProfit.Name = "label_NVIDIA3X_MinimumProfit";
             this.label_NVIDIA3X_MinimumProfit.Size = new System.Drawing.Size(112, 13);
             this.label_NVIDIA3X_MinimumProfit.TabIndex = 99;
@@ -1246,7 +1246,7 @@
             this.tabControl_NVIDIA3X_Algos.Location = new System.Drawing.Point(6, 102);
             this.tabControl_NVIDIA3X_Algos.Name = "tabControl_NVIDIA3X_Algos";
             this.tabControl_NVIDIA3X_Algos.SelectedIndex = 0;
-            this.tabControl_NVIDIA3X_Algos.Size = new System.Drawing.Size(811, 230);
+            this.tabControl_NVIDIA3X_Algos.Size = new System.Drawing.Size(856, 230);
             this.tabControl_NVIDIA3X_Algos.TabIndex = 99;
             // 
             // label_NVIDIA3X_ExtraLaunchParameters
@@ -1264,12 +1264,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_NVIDIA3X_ExtraLaunchParameters.Location = new System.Drawing.Point(135, 55);
             this.textBox_NVIDIA3X_ExtraLaunchParameters.Name = "textBox_NVIDIA3X_ExtraLaunchParameters";
-            this.textBox_NVIDIA3X_ExtraLaunchParameters.Size = new System.Drawing.Size(658, 20);
+            this.textBox_NVIDIA3X_ExtraLaunchParameters.Size = new System.Drawing.Size(727, 20);
             this.textBox_NVIDIA3X_ExtraLaunchParameters.TabIndex = 99;
             // 
             // textBox_NVIDIA3X_UsePassword
             // 
-            this.textBox_NVIDIA3X_UsePassword.Location = new System.Drawing.Point(263, 6);
+            this.textBox_NVIDIA3X_UsePassword.Location = new System.Drawing.Point(267, 6);
             this.textBox_NVIDIA3X_UsePassword.Name = "textBox_NVIDIA3X_UsePassword";
             this.textBox_NVIDIA3X_UsePassword.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA3X_UsePassword.TabIndex = 2;
@@ -1277,7 +1277,7 @@
             // label_NVIDIA3X_UsePassword
             // 
             this.label_NVIDIA3X_UsePassword.AutoSize = true;
-            this.label_NVIDIA3X_UsePassword.Location = new System.Drawing.Point(185, 9);
+            this.label_NVIDIA3X_UsePassword.Location = new System.Drawing.Point(189, 9);
             this.label_NVIDIA3X_UsePassword.Name = "label_NVIDIA3X_UsePassword";
             this.label_NVIDIA3X_UsePassword.Size = new System.Drawing.Size(75, 13);
             this.label_NVIDIA3X_UsePassword.TabIndex = 99;
@@ -1285,7 +1285,7 @@
             // 
             // textBox_NVIDIA3X_APIBindPort
             // 
-            this.textBox_NVIDIA3X_APIBindPort.Location = new System.Drawing.Point(76, 6);
+            this.textBox_NVIDIA3X_APIBindPort.Location = new System.Drawing.Point(80, 6);
             this.textBox_NVIDIA3X_APIBindPort.Name = "textBox_NVIDIA3X_APIBindPort";
             this.textBox_NVIDIA3X_APIBindPort.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA3X_APIBindPort.TabIndex = 1;
@@ -1316,14 +1316,14 @@
             this.tabPage_NVIDIA2X.Location = new System.Drawing.Point(4, 22);
             this.tabPage_NVIDIA2X.Name = "tabPage_NVIDIA2X";
             this.tabPage_NVIDIA2X.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_NVIDIA2X.Size = new System.Drawing.Size(823, 338);
+            this.tabPage_NVIDIA2X.Size = new System.Drawing.Size(868, 338);
             this.tabPage_NVIDIA2X.TabIndex = 4;
             this.tabPage_NVIDIA2X.Text = "NVIDIA2X";
             this.tabPage_NVIDIA2X.UseVisualStyleBackColor = true;
             // 
             // textBox_NVIDIA2X_DaggerHashimotoGenerateDevice
             // 
-            this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(186, 79);
+            this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(191, 79);
             this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.Name = "textBox_NVIDIA2X_DaggerHashimotoGenerateDevice";
             this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA2X_DaggerHashimotoGenerateDevice.TabIndex = 101;
@@ -1339,7 +1339,7 @@
             // 
             // textBox_NVIDIA2X_MinimumProfit
             // 
-            this.textBox_NVIDIA2X_MinimumProfit.Location = new System.Drawing.Point(487, 6);
+            this.textBox_NVIDIA2X_MinimumProfit.Location = new System.Drawing.Point(491, 6);
             this.textBox_NVIDIA2X_MinimumProfit.Name = "textBox_NVIDIA2X_MinimumProfit";
             this.textBox_NVIDIA2X_MinimumProfit.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA2X_MinimumProfit.TabIndex = 3;
@@ -1347,7 +1347,7 @@
             // label_NVIDIA2X_MinimumProfit
             // 
             this.label_NVIDIA2X_MinimumProfit.AutoSize = true;
-            this.label_NVIDIA2X_MinimumProfit.Location = new System.Drawing.Point(372, 9);
+            this.label_NVIDIA2X_MinimumProfit.Location = new System.Drawing.Point(376, 9);
             this.label_NVIDIA2X_MinimumProfit.Name = "label_NVIDIA2X_MinimumProfit";
             this.label_NVIDIA2X_MinimumProfit.Size = new System.Drawing.Size(112, 13);
             this.label_NVIDIA2X_MinimumProfit.TabIndex = 99;
@@ -1371,7 +1371,7 @@
             this.tabControl_NVIDIA2X_Algos.Location = new System.Drawing.Point(6, 102);
             this.tabControl_NVIDIA2X_Algos.Name = "tabControl_NVIDIA2X_Algos";
             this.tabControl_NVIDIA2X_Algos.SelectedIndex = 0;
-            this.tabControl_NVIDIA2X_Algos.Size = new System.Drawing.Size(808, 233);
+            this.tabControl_NVIDIA2X_Algos.Size = new System.Drawing.Size(856, 230);
             this.tabControl_NVIDIA2X_Algos.TabIndex = 99;
             // 
             // tabPage38
@@ -1386,7 +1386,7 @@
             this.tabPage38.Location = new System.Drawing.Point(4, 22);
             this.tabPage38.Name = "tabPage38";
             this.tabPage38.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage38.Size = new System.Drawing.Size(800, 207);
+            this.tabPage38.Size = new System.Drawing.Size(848, 204);
             this.tabPage38.TabIndex = 0;
             this.tabPage38.Text = "x11";
             this.tabPage38.UseVisualStyleBackColor = true;
@@ -1397,7 +1397,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox54.Location = new System.Drawing.Point(6, 45);
             this.textBox54.Name = "textBox54";
-            this.textBox54.Size = new System.Drawing.Size(788, 20);
+            this.textBox54.Size = new System.Drawing.Size(836, 20);
             this.textBox54.TabIndex = 25;
             // 
             // label59
@@ -1466,12 +1466,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_NVIDIA2X_ExtraLaunchParameters.Location = new System.Drawing.Point(135, 55);
             this.textBox_NVIDIA2X_ExtraLaunchParameters.Name = "textBox_NVIDIA2X_ExtraLaunchParameters";
-            this.textBox_NVIDIA2X_ExtraLaunchParameters.Size = new System.Drawing.Size(682, 20);
+            this.textBox_NVIDIA2X_ExtraLaunchParameters.Size = new System.Drawing.Size(727, 20);
             this.textBox_NVIDIA2X_ExtraLaunchParameters.TabIndex = 99;
             // 
             // textBox_NVIDIA2X_UsePassword
             // 
-            this.textBox_NVIDIA2X_UsePassword.Location = new System.Drawing.Point(263, 6);
+            this.textBox_NVIDIA2X_UsePassword.Location = new System.Drawing.Point(267, 6);
             this.textBox_NVIDIA2X_UsePassword.Name = "textBox_NVIDIA2X_UsePassword";
             this.textBox_NVIDIA2X_UsePassword.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA2X_UsePassword.TabIndex = 2;
@@ -1479,7 +1479,7 @@
             // label_NVIDIA2X_UsePassword
             // 
             this.label_NVIDIA2X_UsePassword.AutoSize = true;
-            this.label_NVIDIA2X_UsePassword.Location = new System.Drawing.Point(185, 9);
+            this.label_NVIDIA2X_UsePassword.Location = new System.Drawing.Point(189, 9);
             this.label_NVIDIA2X_UsePassword.Name = "label_NVIDIA2X_UsePassword";
             this.label_NVIDIA2X_UsePassword.Size = new System.Drawing.Size(75, 13);
             this.label_NVIDIA2X_UsePassword.TabIndex = 99;
@@ -1487,7 +1487,7 @@
             // 
             // textBox_NVIDIA2X_APIBindPort
             // 
-            this.textBox_NVIDIA2X_APIBindPort.Location = new System.Drawing.Point(76, 6);
+            this.textBox_NVIDIA2X_APIBindPort.Location = new System.Drawing.Point(80, 6);
             this.textBox_NVIDIA2X_APIBindPort.Name = "textBox_NVIDIA2X_APIBindPort";
             this.textBox_NVIDIA2X_APIBindPort.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA2X_APIBindPort.TabIndex = 1;
@@ -1519,14 +1519,14 @@
             this.tabPage_AMD.Location = new System.Drawing.Point(4, 22);
             this.tabPage_AMD.Name = "tabPage_AMD";
             this.tabPage_AMD.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_AMD.Size = new System.Drawing.Size(823, 338);
+            this.tabPage_AMD.Size = new System.Drawing.Size(868, 338);
             this.tabPage_AMD.TabIndex = 5;
             this.tabPage_AMD.Text = "AMD_OpenCL";
             this.tabPage_AMD.UseVisualStyleBackColor = true;
             // 
             // textBox_AMD_DaggerHashimotoGenerateDevice
             // 
-            this.textBox_AMD_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(186, 79);
+            this.textBox_AMD_DaggerHashimotoGenerateDevice.Location = new System.Drawing.Point(191, 79);
             this.textBox_AMD_DaggerHashimotoGenerateDevice.Name = "textBox_AMD_DaggerHashimotoGenerateDevice";
             this.textBox_AMD_DaggerHashimotoGenerateDevice.Size = new System.Drawing.Size(100, 20);
             this.textBox_AMD_DaggerHashimotoGenerateDevice.TabIndex = 102;
@@ -1551,7 +1551,7 @@
             // 
             // textBox_AMD_MinimumProfit
             // 
-            this.textBox_AMD_MinimumProfit.Location = new System.Drawing.Point(487, 6);
+            this.textBox_AMD_MinimumProfit.Location = new System.Drawing.Point(491, 6);
             this.textBox_AMD_MinimumProfit.Name = "textBox_AMD_MinimumProfit";
             this.textBox_AMD_MinimumProfit.Size = new System.Drawing.Size(100, 20);
             this.textBox_AMD_MinimumProfit.TabIndex = 3;
@@ -1559,7 +1559,7 @@
             // label_AMD_MinimumProfit
             // 
             this.label_AMD_MinimumProfit.AutoSize = true;
-            this.label_AMD_MinimumProfit.Location = new System.Drawing.Point(372, 9);
+            this.label_AMD_MinimumProfit.Location = new System.Drawing.Point(376, 9);
             this.label_AMD_MinimumProfit.Name = "label_AMD_MinimumProfit";
             this.label_AMD_MinimumProfit.Size = new System.Drawing.Size(112, 13);
             this.label_AMD_MinimumProfit.TabIndex = 100;
@@ -1574,7 +1574,7 @@
             this.tabControl_AMD_Algos.Location = new System.Drawing.Point(6, 102);
             this.tabControl_AMD_Algos.Name = "tabControl_AMD_Algos";
             this.tabControl_AMD_Algos.SelectedIndex = 0;
-            this.tabControl_AMD_Algos.Size = new System.Drawing.Size(811, 230);
+            this.tabControl_AMD_Algos.Size = new System.Drawing.Size(856, 230);
             this.tabControl_AMD_Algos.TabIndex = 6;
             // 
             // tabPage52
@@ -1591,7 +1591,7 @@
             this.tabPage52.Location = new System.Drawing.Point(4, 22);
             this.tabPage52.Name = "tabPage52";
             this.tabPage52.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage52.Size = new System.Drawing.Size(803, 204);
+            this.tabPage52.Size = new System.Drawing.Size(848, 204);
             this.tabPage52.TabIndex = 0;
             this.tabPage52.Text = "x11";
             this.tabPage52.UseVisualStyleBackColor = true;
@@ -1621,7 +1621,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox57.Location = new System.Drawing.Point(6, 71);
             this.textBox57.Name = "textBox57";
-            this.textBox57.Size = new System.Drawing.Size(791, 20);
+            this.textBox57.Size = new System.Drawing.Size(836, 20);
             this.textBox57.TabIndex = 25;
             // 
             // label62
@@ -1690,12 +1690,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_AMD_ExtraLaunchParameters.Location = new System.Drawing.Point(135, 55);
             this.textBox_AMD_ExtraLaunchParameters.Name = "textBox_AMD_ExtraLaunchParameters";
-            this.textBox_AMD_ExtraLaunchParameters.Size = new System.Drawing.Size(682, 20);
+            this.textBox_AMD_ExtraLaunchParameters.Size = new System.Drawing.Size(727, 20);
             this.textBox_AMD_ExtraLaunchParameters.TabIndex = 5;
             // 
             // textBox_AMD_UsePassword
             // 
-            this.textBox_AMD_UsePassword.Location = new System.Drawing.Point(263, 6);
+            this.textBox_AMD_UsePassword.Location = new System.Drawing.Point(267, 6);
             this.textBox_AMD_UsePassword.Name = "textBox_AMD_UsePassword";
             this.textBox_AMD_UsePassword.Size = new System.Drawing.Size(100, 20);
             this.textBox_AMD_UsePassword.TabIndex = 2;
@@ -1703,7 +1703,7 @@
             // label_AMD_UsePassword
             // 
             this.label_AMD_UsePassword.AutoSize = true;
-            this.label_AMD_UsePassword.Location = new System.Drawing.Point(185, 9);
+            this.label_AMD_UsePassword.Location = new System.Drawing.Point(189, 9);
             this.label_AMD_UsePassword.Name = "label_AMD_UsePassword";
             this.label_AMD_UsePassword.Size = new System.Drawing.Size(75, 13);
             this.label_AMD_UsePassword.TabIndex = 99;
@@ -1711,7 +1711,7 @@
             // 
             // textBox_AMD_APIBindPort
             // 
-            this.textBox_AMD_APIBindPort.Location = new System.Drawing.Point(76, 6);
+            this.textBox_AMD_APIBindPort.Location = new System.Drawing.Point(80, 6);
             this.textBox_AMD_APIBindPort.Name = "textBox_AMD_APIBindPort";
             this.textBox_AMD_APIBindPort.Size = new System.Drawing.Size(100, 20);
             this.textBox_AMD_APIBindPort.TabIndex = 1;
@@ -1728,7 +1728,7 @@
             // checkBox_AMD_DisableAMDTempControl
             // 
             this.checkBox_AMD_DisableAMDTempControl.AutoSize = true;
-            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(596, 8);
+            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(600, 8);
             this.checkBox_AMD_DisableAMDTempControl.Name = "checkBox_AMD_DisableAMDTempControl";
             this.checkBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(145, 17);
             this.checkBox_AMD_DisableAMDTempControl.TabIndex = 4;
@@ -1737,10 +1737,10 @@
             // 
             // buttonCloseNoSave
             // 
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(697, 372);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(746, 372);
             this.buttonCloseNoSave.Name = "buttonCloseNoSave";
             this.buttonCloseNoSave.Size = new System.Drawing.Size(135, 23);
-            this.buttonCloseNoSave.TabIndex = 1;
+            this.buttonCloseNoSave.TabIndex = 42;
             this.buttonCloseNoSave.Text = "&Close without Saving";
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
@@ -1753,20 +1753,20 @@
             // 
             // buttonDefaults
             // 
-            this.buttonDefaults.Location = new System.Drawing.Point(500, 372);
+            this.buttonDefaults.Location = new System.Drawing.Point(549, 372);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(75, 23);
-            this.buttonDefaults.TabIndex = 2;
+            this.buttonDefaults.TabIndex = 40;
             this.buttonDefaults.Text = "&Defaults";
             this.buttonDefaults.UseVisualStyleBackColor = true;
             this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
             // 
             // buttonSaveClose
             // 
-            this.buttonSaveClose.Location = new System.Drawing.Point(581, 372);
+            this.buttonSaveClose.Location = new System.Drawing.Point(630, 372);
             this.buttonSaveClose.Name = "buttonSaveClose";
             this.buttonSaveClose.Size = new System.Drawing.Size(110, 23);
-            this.buttonSaveClose.TabIndex = 3;
+            this.buttonSaveClose.TabIndex = 41;
             this.buttonSaveClose.Text = "&Save and Close";
             this.buttonSaveClose.UseVisualStyleBackColor = true;
             this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
@@ -1775,15 +1775,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(844, 407);
+            this.ClientSize = new System.Drawing.Size(889, 402);
             this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonCloseNoSave);
             this.Controls.Add(this.tabControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(836, 371);
+            this.MinimumSize = new System.Drawing.Size(905, 441);
             this.Name = "Form_Settings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
@@ -1826,7 +1827,7 @@
         private System.Windows.Forms.CheckBox checkBox_AutoStartMining;
         private System.Windows.Forms.CheckBox checkBox_DebugConsole;
         private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia2X;
-        private System.Windows.Forms.Label label_Location;
+        private System.Windows.Forms.Label label_ServiceLocation;
         private System.Windows.Forms.TextBox textBox_WorkerName;
         private System.Windows.Forms.TextBox textBox_BitcoinAddress;
         private System.Windows.Forms.Label label_WorkerName;
@@ -1844,7 +1845,7 @@
         private System.Windows.Forms.Label label_CPU0_ForceCPUExtension;
         private System.Windows.Forms.Label label_SwitchMinSecondsFixed;
         private System.Windows.Forms.TextBox textBox_SwitchMinSecondsFixed;
-        private System.Windows.Forms.ComboBox comboBox_Location;
+        private System.Windows.Forms.ComboBox comboBox_ServiceLocation;
         private System.Windows.Forms.TextBox textBox_MinerAPIQueryInterval;
         private System.Windows.Forms.Label label_MinerAPIQueryInterval;
         private System.Windows.Forms.TextBox textBox_SwitchMinSecondsDynamic;
@@ -1859,21 +1860,21 @@
         private System.Windows.Forms.TextBox textBox_BenchmarkTimeLimitsAMD_Standard;
         private System.Windows.Forms.Label label_BenchmarkTimeLimitsAMD_Quick;
         private System.Windows.Forms.TextBox textBox_BenchmarkTimeLimitsAMD_Quick;
-        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label_BenchmarkTimeLimitsAMD_Group;
         private System.Windows.Forms.Label label_BenchmarkTimeLimitsNVIDIA_Precise;
         private System.Windows.Forms.TextBox textBox_BenchmarkTimeLimitsNVIDIA_Precise;
         private System.Windows.Forms.Label label_BenchmarkTimeLimitsNVIDIA_Standard;
         private System.Windows.Forms.TextBox textBox_BenchmarkTimeLimitsNVIDIA_Standard;
         private System.Windows.Forms.Label label_BenchmarkTimeLimitsNVIDIA_Quick;
         private System.Windows.Forms.TextBox textBox_BenchmarkTimeLimitsNVIDIA_Quick;
-        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label_BenchmarkTimeLimitsNVIDIA_Group;
         private System.Windows.Forms.Label label_BenchmarkTimeLimitsCPU_Precise;
         private System.Windows.Forms.TextBox textBox_BenchmarkTimeLimitsCPU_Precise;
         private System.Windows.Forms.Label label_BenchmarkTimeLimitsCPU_Standard;
         private System.Windows.Forms.TextBox textBox_BenchmarkTimeLimitsCPU_Standard;
         private System.Windows.Forms.Label label_BenchmarkTimeLimitsCPU_Quick;
         private System.Windows.Forms.TextBox textBox_BenchmarkTimeLimitsCPU_Quick;
-        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label_BenchmarkTimeLimitsCPU_Group;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.TabControl tabControl_CPU0;
         private System.Windows.Forms.TabPage tabPage7;

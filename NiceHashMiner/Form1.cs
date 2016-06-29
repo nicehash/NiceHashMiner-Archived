@@ -43,7 +43,12 @@ namespace NiceHashMiner
         {
             InitializeComponent();
 
-            labelServiceLocation.Text = International.GetText("form1_service_loc") + ":";
+            MessageBoxManager.Yes = International.GetText("Global_Yes");
+            MessageBoxManager.No = International.GetText("Global_No");
+            MessageBoxManager.OK = International.GetText("Global_OK");
+            MessageBoxManager.Register();
+
+            labelServiceLocation.Text = International.GetText("Service_Location") + ":";
             labelBitcoinAddress.Text = International.GetText("form1_btc_address") + ":";
             labelWorkerName.Text = International.GetText("form1_worker_name") + ":";
 
@@ -102,8 +107,8 @@ namespace NiceHashMiner
 
             Text += " v" + Application.ProductVersion;
 
-            if (Config.ConfigData.Location >= 0 && Config.ConfigData.Location < MiningLocation.Length)
-                comboBoxLocation.SelectedIndex = Config.ConfigData.Location;
+            if (Config.ConfigData.ServiceLocation >= 0 && Config.ConfigData.ServiceLocation < MiningLocation.Length)
+                comboBoxLocation.SelectedIndex = Config.ConfigData.ServiceLocation;
             else
                 comboBoxLocation.SelectedIndex = 0;
 
@@ -168,7 +173,7 @@ namespace NiceHashMiner
             if (!Helpers.InternalCheckIsWow64() && !Config.ConfigData.AutoStartMining)
             {
                 MessageBox.Show(International.GetText("form1_msgbox_CPUMining64bitMsg"),
-                                International.GetText("form1_msgbox_CPUMining64bitTitle"),
+                                International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CPUs = 0;
             }
@@ -176,7 +181,7 @@ namespace NiceHashMiner
             if (ThreadsPerCPU * CPUs > 64)
             {
                 MessageBox.Show(International.GetText("form1_msgbox_CPUMining64CoresMsg"),
-                                International.GetText("form1_msgbox_CPUMining64CoresTitle"),
+                                International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CPUs = 0;
             }
@@ -186,7 +191,7 @@ namespace NiceHashMiner
             if (ThreadsPerCPU < 1)
             {
                 MessageBox.Show(International.GetText("form1_msgbox_CPUMiningLessThreadMsg"),
-                                International.GetText("form1_msgbox_CPUMiningLessThreadTitle"),
+                                International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CPUs = 0;
             }
@@ -681,7 +686,7 @@ namespace NiceHashMiner
                 ShowWarningNiceHashData = false;
                 DialogResult dialogResult = MessageBox.Show(International.GetText("form1_msgbox_NoInternetMsg"),
                                                             International.GetText("form1_msgbox_NoInternetTitle"),
-                                                            MessageBoxButtons.YesNo);
+                                                            MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                 if (dialogResult == DialogResult.Yes)
                     return;
@@ -742,8 +747,8 @@ namespace NiceHashMiner
             if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress.Text.Trim()) && ShowError)
             {
                 DialogResult result = MessageBox.Show(International.GetText("form1_msgbox_InvalidBTCAddressMsg"),
-                                                      International.GetText("form1_msgbox_InvalidBTCAddressTitle"),
-                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
+                                                      International.GetText("Error_with_Exclamation"),
+                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                 
                 if (result == System.Windows.Forms.DialogResult.Yes)
                     System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
@@ -754,8 +759,8 @@ namespace NiceHashMiner
             else if (!BitcoinAddress.ValidateWorkerName(textBoxWorkerName.Text.Trim()) && ShowError)
             {
                 DialogResult result = MessageBox.Show(International.GetText("form1_msgbox_InvalidWorkerNameMsg"),
-                                                      International.GetText("form1_msgbox_InvalidWorkerNameTitle"),
-                                                      MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                                      International.GetText("Error_with_Exclamation"),
+                                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 textBoxWorkerName.Focus();
                 return false;
@@ -798,13 +803,14 @@ namespace NiceHashMiner
         {
             foreach (Miner m in Miners)
                 m.Stop(false);
+
+            MessageBoxManager.Unregister();
         }
 
 
         private void buttonBenchmark_Click(object sender, EventArgs e)
         {
-            if (!VerifyMiningAddress(true)) return;
-            Config.ConfigData.Location = comboBoxLocation.SelectedIndex;
+            Config.ConfigData.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             SMACheck.Stop();
             BenchmarkForm = new Form2(false);
@@ -816,13 +822,6 @@ namespace NiceHashMiner
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_buttonBenchmarkWarningMsg"), ProductName),
-                                                  International.GetText("form1_msgbox_buttonBenchmarkWarningTitle"),
-                                                  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == System.Windows.Forms.DialogResult.No)
-                return;
-
             if (!Config.ConfigData.UseNewSettingsPage)
             {
                 Process PHandle = new Process();
@@ -855,7 +854,7 @@ namespace NiceHashMiner
             if (NiceHashData == null)
             {
                 MessageBox.Show(International.GetText("form1_msgbox_NullNiceHashDataMsg"),
-                                International.GetText("form1_msgbox_NullNiceHashDataTitle"),
+                                International.GetText("Error_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -868,8 +867,8 @@ namespace NiceHashMiner
                 if (m.CountBenchmarkedAlgos() == 0)
                 {
                     DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_HaveNotBenchmarkedMsg"), m.MinerDeviceName),
-                                                          International.GetText("form1_msgbox_HaveNotBenchmarkedTitle"),
-                                                          MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                                                          International.GetText("Warning_with_Exclamation"),
+                                                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (result == System.Windows.Forms.DialogResult.Yes) break;
                     if (result == System.Windows.Forms.DialogResult.No) return;
@@ -887,7 +886,7 @@ namespace NiceHashMiner
 
             Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             Config.ConfigData.WorkerName = textBoxWorkerName.Text.Trim();
-            Config.ConfigData.Location = comboBoxLocation.SelectedIndex;
+            Config.ConfigData.ServiceLocation = comboBoxLocation.SelectedIndex;
             Config.Commit();
 
             SMAMinerCheck.Interval = 100;
@@ -979,11 +978,14 @@ namespace NiceHashMiner
 
         private void textBoxCheckBoxMain_Leave(object sender, EventArgs e)
         {
-            // Commit to config.json
-            Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text.Trim();
-            Config.ConfigData.WorkerName = textBoxWorkerName.Text.Trim();
-            Config.ConfigData.Location = comboBoxLocation.SelectedIndex;
-            Config.Commit();
+            if (VerifyMiningAddress(true))
+            {
+                // Commit to config.json
+                Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text.Trim();
+                Config.ConfigData.WorkerName = textBoxWorkerName.Text.Trim();
+                Config.ConfigData.ServiceLocation = comboBoxLocation.SelectedIndex;
+                Config.Commit();
+            }
         }
 
         // Minimize to system tray if MinimizeToTray is set to true

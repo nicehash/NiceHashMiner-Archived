@@ -28,10 +28,43 @@ namespace NiceHashMiner
             // Init languages
             International.Initialize(Config.ConfigData.Language);
 
-            if (argv.Length > 0 && argv[0] == "-config")
-                Application.Run(new Form1(true));
-            else
-                Application.Run(new Form1(false));
+            if (argv.Length > 0)
+            {
+                string val;
+
+                if (ParseCommandLine(argv, "-lang", out val))
+                {
+                    int lang;
+                    if (Int32.TryParse(val, out lang))
+                    {
+                        International.Initialize(lang);
+                    }
+                }
+                if (ParseCommandLine(argv, "-config", out val))
+                    Application.Run(new Form1(true));
+            }
+            
+            Application.Run(new Form1(false));
+        }
+
+        private static bool ParseCommandLine(string[] argv, string find, out string value)
+        {
+            value = "";
+
+            for (int i = 0; i < argv.Length; i++)
+            {
+                if (argv[i].Equals(find))
+                {
+                    if ((i + 1) < argv.Length && argv[i + 1].Trim()[0] != '-')
+                    {
+                        value = argv[i + 1];
+                    }
+
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -189,6 +189,7 @@ namespace NiceHashMiner
                 buttonStartBenchmark.Enabled = true;
                 buttonStopBenchmark.Enabled = false;
                 buttonReset.Enabled = true;
+                buttonCheckProfitability.Enabled = true;
                 buttonSubmitHardware.Enabled = true;
             }
         }
@@ -219,6 +220,7 @@ namespace NiceHashMiner
             buttonStartBenchmark.Enabled = false;
             buttonStopBenchmark.Enabled = true;
             buttonReset.Enabled = false;
+            buttonCheckProfitability.Enabled = false;
             buttonSubmitHardware.Enabled = false;
             InitiateBenchmark();
         }
@@ -284,9 +286,10 @@ namespace NiceHashMiner
         private void buttonCheckProfitability_Click(object sender, EventArgs e)
         {
             string url = "https://www.nicehash.com/?p=calc&name=CUSTOM";
-            double[] total = new double[Form1.NiceHashData.Length];
+            int len = Form1.NiceHashData == null ? 23 : Form1.NiceHashData.Length;
+            double[] total = new double[len];
 
-            for (int i = 0; i < Form1.NiceHashData.Length; i++)
+            for (int i = 0; i < len; i++)
                 total[i] = 0;
 
             for (int i = 0; i < Form1.Miners.Length; i++)
@@ -298,7 +301,7 @@ namespace NiceHashMiner
                 }
             }
 
-            for (int i = 0; i < Form1.NiceHashData.Length; i++)
+            for (int i = 0; i < len; i++)
                 url += "&speed" + i + "=" + (total[i] / SubmitResultDialog.div[i]).ToString("F2", CultureInfo.InvariantCulture);
 
             System.Diagnostics.Process.Start(url);

@@ -91,7 +91,7 @@
             this.BenchmarkProgressBar.Name = "BenchmarkProgressBar";
             this.BenchmarkProgressBar.Size = new System.Drawing.Size(455, 23);
             this.BenchmarkProgressBar.Step = 1;
-            this.BenchmarkProgressBar.TabIndex = 3;
+            this.BenchmarkProgressBar.TabIndex = 99;
             // 
             // labelInstruction
             // 
@@ -99,7 +99,7 @@
             this.labelInstruction.Location = new System.Drawing.Point(13, 13);
             this.labelInstruction.Name = "labelInstruction";
             this.labelInstruction.Size = new System.Drawing.Size(447, 26);
-            this.labelInstruction.TabIndex = 4;
+            this.labelInstruction.TabIndex = 99;
             this.labelInstruction.Text = "Please select a device to be benchmarked and once it is done, it will automatiall" +
     "y open a new\r\nweb page to display the profitability calculator on the NiceHash\'s" +
     " website.";
@@ -111,7 +111,7 @@
             this.LabelProgressPercentage.Location = new System.Drawing.Point(16, 223);
             this.LabelProgressPercentage.Name = "LabelProgressPercentage";
             this.LabelProgressPercentage.Size = new System.Drawing.Size(293, 23);
-            this.LabelProgressPercentage.TabIndex = 5;
+            this.LabelProgressPercentage.TabIndex = 99;
             this.LabelProgressPercentage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SubmitResultDialog
