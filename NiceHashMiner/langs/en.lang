@@ -204,7 +204,7 @@
         "Form_Settings_ToolTip_CPU_ForceCPUExtension": "Force certain CPU extension miner.",
 
         "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
-        "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHashMiner users to have the exact same switching pattern.",
+        "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm.\n\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\n\nRandom part is used to prevent all world-wide NiceHashMiner users to have the exact same switching pattern.",
         "Form_Settings_ToolTip_SwitchMinSecondsAMD": "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
         
         "Form_Settings_ToolTip_MinerAPIQueryInterval": "API query interval for ccminer, sgminer cpuminer and ethminer.",
