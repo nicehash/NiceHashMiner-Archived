@@ -1090,7 +1090,7 @@
             // 
             // textBox_NVIDIA5X_MinimumProfit
             // 
-            this.textBox_NVIDIA5X_MinimumProfit.Location = new System.Drawing.Point(491, 6);
+            this.textBox_NVIDIA5X_MinimumProfit.Location = new System.Drawing.Point(525, 6);
             this.textBox_NVIDIA5X_MinimumProfit.Name = "textBox_NVIDIA5X_MinimumProfit";
             this.textBox_NVIDIA5X_MinimumProfit.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA5X_MinimumProfit.TabIndex = 3;
@@ -1215,7 +1215,7 @@
             // 
             // textBox_NVIDIA3X_MinimumProfit
             // 
-            this.textBox_NVIDIA3X_MinimumProfit.Location = new System.Drawing.Point(491, 6);
+            this.textBox_NVIDIA3X_MinimumProfit.Location = new System.Drawing.Point(525, 6);
             this.textBox_NVIDIA3X_MinimumProfit.Name = "textBox_NVIDIA3X_MinimumProfit";
             this.textBox_NVIDIA3X_MinimumProfit.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA3X_MinimumProfit.TabIndex = 3;
@@ -1339,7 +1339,7 @@
             // 
             // textBox_NVIDIA2X_MinimumProfit
             // 
-            this.textBox_NVIDIA2X_MinimumProfit.Location = new System.Drawing.Point(491, 6);
+            this.textBox_NVIDIA2X_MinimumProfit.Location = new System.Drawing.Point(525, 6);
             this.textBox_NVIDIA2X_MinimumProfit.Name = "textBox_NVIDIA2X_MinimumProfit";
             this.textBox_NVIDIA2X_MinimumProfit.Size = new System.Drawing.Size(100, 20);
             this.textBox_NVIDIA2X_MinimumProfit.TabIndex = 3;
@@ -1551,7 +1551,7 @@
             // 
             // textBox_AMD_MinimumProfit
             // 
-            this.textBox_AMD_MinimumProfit.Location = new System.Drawing.Point(491, 6);
+            this.textBox_AMD_MinimumProfit.Location = new System.Drawing.Point(525, 6);
             this.textBox_AMD_MinimumProfit.Name = "textBox_AMD_MinimumProfit";
             this.textBox_AMD_MinimumProfit.Size = new System.Drawing.Size(100, 20);
             this.textBox_AMD_MinimumProfit.TabIndex = 3;
@@ -1728,7 +1728,7 @@
             // checkBox_AMD_DisableAMDTempControl
             // 
             this.checkBox_AMD_DisableAMDTempControl.AutoSize = true;
-            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(600, 8);
+            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(667, 8);
             this.checkBox_AMD_DisableAMDTempControl.Name = "checkBox_AMD_DisableAMDTempControl";
             this.checkBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(145, 17);
             this.checkBox_AMD_DisableAMDTempControl.TabIndex = 4;

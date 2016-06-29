@@ -40,7 +40,7 @@
             // 
             // CloseBtn
             // 
-            this.CloseBtn.Location = new System.Drawing.Point(396, 223);
+            this.CloseBtn.Location = new System.Drawing.Point(472, 220);
             this.CloseBtn.Name = "CloseBtn";
             this.CloseBtn.Size = new System.Drawing.Size(75, 23);
             this.CloseBtn.TabIndex = 2;
@@ -50,7 +50,7 @@
             // 
             // StartStopBtn
             // 
-            this.StartStopBtn.Location = new System.Drawing.Point(315, 223);
+            this.StartStopBtn.Location = new System.Drawing.Point(391, 220);
             this.StartStopBtn.Name = "StartStopBtn";
             this.StartStopBtn.Size = new System.Drawing.Size(75, 23);
             this.StartStopBtn.TabIndex = 1;
@@ -69,7 +69,7 @@
             this.DevicesListView.Location = new System.Drawing.Point(16, 46);
             this.DevicesListView.MultiSelect = false;
             this.DevicesListView.Name = "DevicesListView";
-            this.DevicesListView.Size = new System.Drawing.Size(455, 136);
+            this.DevicesListView.Size = new System.Drawing.Size(531, 136);
             this.DevicesListView.TabIndex = 0;
             this.DevicesListView.UseCompatibleStateImageBehavior = false;
             this.DevicesListView.View = System.Windows.Forms.View.Details;
@@ -82,14 +82,14 @@
             // DeviceName
             // 
             this.DeviceName.Text = "Device Name";
-            this.DeviceName.Width = 309;
+            this.DeviceName.Width = 351;
             // 
             // BenchmarkProgressBar
             // 
             this.BenchmarkProgressBar.Location = new System.Drawing.Point(16, 191);
             this.BenchmarkProgressBar.Maximum = 10;
             this.BenchmarkProgressBar.Name = "BenchmarkProgressBar";
-            this.BenchmarkProgressBar.Size = new System.Drawing.Size(455, 23);
+            this.BenchmarkProgressBar.Size = new System.Drawing.Size(531, 23);
             this.BenchmarkProgressBar.Step = 1;
             this.BenchmarkProgressBar.TabIndex = 99;
             // 
@@ -118,13 +118,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(488, 254);
+            this.ClientSize = new System.Drawing.Size(559, 254);
             this.Controls.Add(this.LabelProgressPercentage);
             this.Controls.Add(this.labelInstruction);
             this.Controls.Add(this.DevicesListView);
             this.Controls.Add(this.StartStopBtn);
             this.Controls.Add(this.CloseBtn);
             this.Controls.Add(this.BenchmarkProgressBar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SubmitResultDialog";

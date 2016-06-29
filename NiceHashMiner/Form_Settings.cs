@@ -589,7 +589,7 @@ namespace NiceHashMiner
                 labelUsePassword[i].Text = International.GetText("Form_Settings_General_UsePassword") + ":";
 
                 textboxUsePassword[i] = new TextBox();
-                textboxUsePassword[i].Location = new System.Drawing.Point(170, 7);
+                textboxUsePassword[i].Location = new System.Drawing.Point(180, 7);
                 textboxUsePassword[i].Name = "textBox_" + minerName + "_" + algoName + "_UsePassword";
                 textboxUsePassword[i].Size = new System.Drawing.Size(100, 20);
                 textboxUsePassword[i].TabIndex = tabIndex++;
@@ -603,7 +603,7 @@ namespace NiceHashMiner
                 // Benchmark Speed
                 labelBenchmarkSpeed[i] = new Label();
                 labelBenchmarkSpeed[i].AutoSize = true;
-                labelBenchmarkSpeed[i].Location = new System.Drawing.Point(300, 10);
+                labelBenchmarkSpeed[i].Location = new System.Drawing.Point(320, 10);
                 labelBenchmarkSpeed[i].Name = "label_" + minerName + "_" + algoName + "_BenchmarkSpeed";
                 labelBenchmarkSpeed[i].Size = new System.Drawing.Size(95, 13);
                 labelBenchmarkSpeed[i].TabIndex = 99;
@@ -611,14 +611,14 @@ namespace NiceHashMiner
 
                 labelBenchmarkSpeedUnit[i] = new Label();
                 labelBenchmarkSpeedUnit[i].AutoSize = true;
-                labelBenchmarkSpeedUnit[i].Location = new System.Drawing.Point(525, 10);
+                labelBenchmarkSpeedUnit[i].Location = new System.Drawing.Point(565, 10);
                 labelBenchmarkSpeedUnit[i].Name = "label_" + minerName + "_" + algoName + "_BenchmarkSpeedUnit";
                 labelBenchmarkSpeedUnit[i].Size = new System.Drawing.Size(95, 13);
                 labelBenchmarkSpeedUnit[i].TabIndex = 99;
                 labelBenchmarkSpeedUnit[i].Text = "H/s";
 
                 textboxBenchmarkSpeed[i] = new TextBox();
-                textboxBenchmarkSpeed[i].Location = new System.Drawing.Point(400, 7);
+                textboxBenchmarkSpeed[i].Location = new System.Drawing.Point(440, 7);
                 textboxBenchmarkSpeed[i].Name = "textBox_" + minerName + "_" + algoName + "_BenchmarkSpeed";
                 textboxBenchmarkSpeed[i].Size = new System.Drawing.Size(120, 20);
                 textboxBenchmarkSpeed[i].TabIndex = tabIndex++;
