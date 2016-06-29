@@ -303,7 +303,7 @@
             // 
             // textBox_CPU0_lyra2re_BenchmarkSpeed
             // 
-            this.textBox_CPU0_lyra2re_BenchmarkSpeed.Location = new System.Drawing.Point(356, 7);
+            this.textBox_CPU0_lyra2re_BenchmarkSpeed.Location = new System.Drawing.Point(462, 7);
             this.textBox_CPU0_lyra2re_BenchmarkSpeed.Name = "textBox_CPU0_lyra2re_BenchmarkSpeed";
             this.textBox_CPU0_lyra2re_BenchmarkSpeed.Size = new System.Drawing.Size(100, 20);
             this.textBox_CPU0_lyra2re_BenchmarkSpeed.TabIndex = 15;
@@ -311,7 +311,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(258, 10);
+            this.label32.Location = new System.Drawing.Point(364, 10);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(95, 13);
             this.label32.TabIndex = 14;
@@ -319,7 +319,7 @@
             // 
             // textBox_CPU0_lyra2re_UsePassword
             // 
-            this.textBox_CPU0_lyra2re_UsePassword.Location = new System.Drawing.Point(140, 7);
+            this.textBox_CPU0_lyra2re_UsePassword.Location = new System.Drawing.Point(188, 7);
             this.textBox_CPU0_lyra2re_UsePassword.Name = "textBox_CPU0_lyra2re_UsePassword";
             this.textBox_CPU0_lyra2re_UsePassword.Size = new System.Drawing.Size(100, 20);
             this.textBox_CPU0_lyra2re_UsePassword.TabIndex = 13;
@@ -327,7 +327,7 @@
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(62, 10);
+            this.label40.Location = new System.Drawing.Point(110, 10);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(75, 13);
             this.label40.TabIndex = 12;

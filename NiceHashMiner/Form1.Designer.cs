@@ -174,7 +174,7 @@
             // toolStripStatusLabelBTCDayText
             // 
             this.toolStripStatusLabelBTCDayText.Name = "toolStripStatusLabelBTCDayText";
-            this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(52, 20);
+            this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(54, 20);
             this.toolStripStatusLabelBTCDayText.Text = "BTC/Day";
             // 
             // toolStripStatusLabelBTCDayValue
@@ -200,7 +200,7 @@
             // toolStripStatusLabelBalanceBTCCode
             // 
             this.toolStripStatusLabelBalanceBTCCode.Name = "toolStripStatusLabelBalanceBTCCode";
-            this.toolStripStatusLabelBalanceBTCCode.Size = new System.Drawing.Size(27, 20);
+            this.toolStripStatusLabelBalanceBTCCode.Size = new System.Drawing.Size(29, 20);
             this.toolStripStatusLabelBalanceBTCCode.Text = "BTC";
             // 
             // toolStripStatusLabelBalanceDollarText
@@ -368,7 +368,7 @@
             // label_RateCPU
             // 
             this.label_RateCPU.AutoSize = true;
-            this.label_RateCPU.Location = new System.Drawing.Point(312, 199);
+            this.label_RateCPU.Location = new System.Drawing.Point(305, 199);
             this.label_RateCPU.Name = "label_RateCPU";
             this.label_RateCPU.Size = new System.Drawing.Size(33, 13);
             this.label_RateCPU.TabIndex = 99;
@@ -397,7 +397,7 @@
             // label_RateNVIDIA5X
             // 
             this.label_RateNVIDIA5X.AutoSize = true;
-            this.label_RateNVIDIA5X.Location = new System.Drawing.Point(312, 212);
+            this.label_RateNVIDIA5X.Location = new System.Drawing.Point(305, 212);
             this.label_RateNVIDIA5X.Name = "label_RateNVIDIA5X";
             this.label_RateNVIDIA5X.Size = new System.Drawing.Size(33, 13);
             this.label_RateNVIDIA5X.TabIndex = 99;
@@ -416,7 +416,7 @@
             // label_RateNVIDIA3X
             // 
             this.label_RateNVIDIA3X.AutoSize = true;
-            this.label_RateNVIDIA3X.Location = new System.Drawing.Point(312, 225);
+            this.label_RateNVIDIA3X.Location = new System.Drawing.Point(305, 225);
             this.label_RateNVIDIA3X.Name = "label_RateNVIDIA3X";
             this.label_RateNVIDIA3X.Size = new System.Drawing.Size(33, 13);
             this.label_RateNVIDIA3X.TabIndex = 99;
@@ -491,7 +491,7 @@
             // label_RateAMD
             // 
             this.label_RateAMD.AutoSize = true;
-            this.label_RateAMD.Location = new System.Drawing.Point(312, 251);
+            this.label_RateAMD.Location = new System.Drawing.Point(305, 251);
             this.label_RateAMD.Name = "label_RateAMD";
             this.label_RateAMD.Size = new System.Drawing.Size(33, 13);
             this.label_RateAMD.TabIndex = 99;
@@ -538,7 +538,7 @@
             // label_RateNVIDIA2X
             // 
             this.label_RateNVIDIA2X.AutoSize = true;
-            this.label_RateNVIDIA2X.Location = new System.Drawing.Point(312, 238);
+            this.label_RateNVIDIA2X.Location = new System.Drawing.Point(305, 238);
             this.label_RateNVIDIA2X.Name = "label_RateNVIDIA2X";
             this.label_RateNVIDIA2X.Size = new System.Drawing.Size(33, 13);
             this.label_RateNVIDIA2X.TabIndex = 99;

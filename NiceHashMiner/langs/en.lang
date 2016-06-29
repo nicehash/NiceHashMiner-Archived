@@ -2,7 +2,7 @@
     "Name": "English",
     "ID": 0,
     "Entries": {
-        "Global_Yes": "Yes!",
+        "Global_Yes": "Yes",
         "Global_No": "No",
         "Global_OK": "OK",
 
@@ -199,7 +199,7 @@
         "Form_Settings_ToolTip_MinerRestartDelayMS": "Amount of time (in milliseconds) that NiceHashMiner will wait before restarting the miner.",
         "Form_Settings_ToolTip_MinerAPIGraceSeconds": "Period of time when restart of miner is not forced if API is unreachable.",
 
-        "Form_Settings_ToolTip_BenchmarkTimeLimits": "Amount of times (in seconds) for {0} benchmarking the {1}.",
+        "Form_Settings_ToolTip_BenchmarkTimeLimits": "Amount of time (in seconds) for {0} benchmarking the {1}",
 
         "Form_Settings_ToolTip_checkBox_DisableDetection": "Check it, if you would like to skip the detection of {0} GPUs.",
         "Form_Settings_ToolTip_checkBox_AutoScaleBTCValues": "Check it, if you would like to see the BTC values autoscale to the appropriate scale.",
