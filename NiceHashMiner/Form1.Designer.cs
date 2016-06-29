@@ -85,6 +85,7 @@
             this.buttonHelp = new System.Windows.Forms.Button();
             this.linkLabelChooseBTCWallet = new System.Windows.Forms.LinkLabel();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.labelDemoMode = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -593,11 +594,25 @@
             // 
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
+            // labelDemoMode
+            // 
+            this.labelDemoMode.AutoSize = true;
+            this.labelDemoMode.BackColor = System.Drawing.Color.Transparent;
+            this.labelDemoMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDemoMode.ForeColor = System.Drawing.Color.Red;
+            this.labelDemoMode.Location = new System.Drawing.Point(6, 35);
+            this.labelDemoMode.Name = "labelDemoMode";
+            this.labelDemoMode.Size = new System.Drawing.Size(422, 25);
+            this.labelDemoMode.TabIndex = 100;
+            this.labelDemoMode.Text = "NiceHash Miner is running in DEMO mode!";
+            this.labelDemoMode.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(544, 292);
+            this.Controls.Add(this.labelDemoMode);
             this.Controls.Add(this.linkLabelChooseBTCWallet);
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.label_RateNVIDIA2XDollar);
@@ -713,6 +728,7 @@
         public System.Windows.Forms.TextBox textBoxWorkerName;
         public System.Windows.Forms.ListView listViewDevices;
         private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
+        private System.Windows.Forms.Label labelDemoMode;
     }
 }
 

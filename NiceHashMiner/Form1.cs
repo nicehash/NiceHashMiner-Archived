@@ -33,6 +33,7 @@ namespace NiceHashMiner
         private int TotalLoadSteps = 13;
         private int CPUs;
         private bool ShowWarningNiceHashData;
+        private bool DemoMode;
 
         private Random R;
 
@@ -115,6 +116,7 @@ namespace NiceHashMiner
             textBoxBTCAddress.Text = Config.ConfigData.BitcoinAddress;
             textBoxWorkerName.Text = Config.ConfigData.WorkerName;
             ShowWarningNiceHashData = true;
+            DemoMode = false;
         }
 
 
@@ -849,7 +851,24 @@ namespace NiceHashMiner
 
         private void buttonStartMining_Click(object sender, EventArgs e)
         {
-            if (!VerifyMiningAddress(true)) return;
+            if (textBoxBTCAddress.Text.Equals(""))
+            {
+                DialogResult result = MessageBox.Show(International.GetText("form1_DemoModeMsg"),
+                                                      International.GetText("form1_DemoModeTitle"),
+                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == System.Windows.Forms.DialogResult.Yes)
+                {
+                    DemoMode = true;
+                    labelDemoMode.Visible = true;
+                    labelDemoMode.Text = International.GetText("form1_DemoModeLabel");
+
+                    textBoxBTCAddress.Text = BitcoinAddress.GetRandomBTCAddress();
+                }
+                else
+                    return;
+            }
+            else if (!VerifyMiningAddress(true)) return;
 
             if (NiceHashData == null)
             {
@@ -871,7 +890,17 @@ namespace NiceHashMiner
                                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (result == System.Windows.Forms.DialogResult.Yes) break;
-                    if (result == System.Windows.Forms.DialogResult.No) return;
+                    if (result == System.Windows.Forms.DialogResult.No)
+                    {
+                        DemoMode = false;
+                        labelDemoMode.Visible = false;
+
+                        textBoxBTCAddress.Text = "";
+                        Config.ConfigData.BitcoinAddress = "";
+                        Config.Commit();
+
+                        return;
+                    }
                 }
             }
 
@@ -887,7 +916,7 @@ namespace NiceHashMiner
             Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             Config.ConfigData.WorkerName = textBoxWorkerName.Text.Trim();
             Config.ConfigData.ServiceLocation = comboBoxLocation.SelectedIndex;
-            Config.Commit();
+            if (!DemoMode) Config.Commit();
 
             SMAMinerCheck.Interval = 100;
             SMAMinerCheck.Start();
@@ -922,6 +951,16 @@ namespace NiceHashMiner
             buttonSettings.Enabled = true;
             listViewDevices.Enabled = true;
             buttonStopMining.Enabled = false;
+
+            if (DemoMode)
+            {
+                DemoMode = false;
+                labelDemoMode.Visible = false;
+
+                textBoxBTCAddress.Text = "";
+                Config.ConfigData.BitcoinAddress = "";
+                Config.Commit();
+            }
 
             UpdateGlobalRate();
         }

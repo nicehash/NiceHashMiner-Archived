@@ -27,6 +27,9 @@
         "form1_start": "&Start",
         "form1_stop": "St&op",
         "form1_new_version_released": "IMPORTANT! New version v{0} has\r\nbeen released. Click here to download it.",
+        "form1_DemoModeLabel": "NiceHash Miner is running in DEMO mode!",
+        "form1_DemoModeTitle": "Start mining in DEMO mode?",
+        "form1_DemoModeMsg": "You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!",
 
         "form1_loadtext_CPU": "Querying CPU devices...",
         "form1_loadtext_NVIDIA5X": "Querying NVIDIA5.x and NVIDIA6.x devices...",
@@ -139,7 +142,7 @@
 
         "Form_Settings_General_BenchmarkTimeLimitsCPU_Group": "Benchmark Time Limits (CPU) [s]",
         "Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group": "Benchmark Time Limits (NVIDIA) [s]",
-        "Form_Settings_General_BenchmarkTimeLimitsAMD_Group": "Benchmark Time Limits (AMD) [m]",
+        "Form_Settings_General_BenchmarkTimeLimitsAMD_Group": "Benchmark Time Limits (AMD) [s]",
         
         "Form_Settings_General_CPU_ForceCPUExtension": "Force CPU Extension",
         "Form_Settings_General_CPU_LessThreads": "Less Threads",
