@@ -238,9 +238,12 @@ namespace NiceHashMiner
 
             // Add language selections list
             Dictionary<int, string> lang = International.GetAvailableLanguages();
-            comboBox_Language.DataSource = new BindingSource(lang, null);
-            comboBox_Language.DisplayMember = "Value";
-            comboBox_Language.ValueMember = "Key";
+
+            comboBox_Language.Items.Clear();
+            for (int i = 0; i < lang.Count; i++)
+            {
+                comboBox_Language.Items.Add(lang[i]);
+            }
 
             // ComboBox
             comboBox_Language.SelectedIndex = Config.ConfigData.Language;
