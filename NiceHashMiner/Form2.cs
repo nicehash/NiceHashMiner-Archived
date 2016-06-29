@@ -189,6 +189,7 @@ namespace NiceHashMiner
                 buttonStartBenchmark.Enabled = true;
                 buttonStopBenchmark.Enabled = false;
                 buttonReset.Enabled = true;
+                buttonClose.Enabled = true;
                 buttonCheckProfitability.Enabled = true;
                 buttonSubmitHardware.Enabled = true;
             }
@@ -220,6 +221,7 @@ namespace NiceHashMiner
             buttonStartBenchmark.Enabled = false;
             buttonStopBenchmark.Enabled = true;
             buttonReset.Enabled = false;
+            buttonClose.Enabled = false;
             buttonCheckProfitability.Enabled = false;
             buttonSubmitHardware.Enabled = false;
             InitiateBenchmark();

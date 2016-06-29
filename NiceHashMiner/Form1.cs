@@ -812,13 +812,29 @@ namespace NiceHashMiner
 
         private void buttonBenchmark_Click(object sender, EventArgs e)
         {
+            bool NoBTCAddress = false;
+
             Config.ConfigData.ServiceLocation = comboBoxLocation.SelectedIndex;
+
+            if (textBoxBTCAddress.Text == "")
+            {
+                NoBTCAddress = true;
+                textBoxBTCAddress.Text = BitcoinAddress.GetRandomBTCAddress();
+                Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text;
+            }
 
             SMACheck.Stop();
             BenchmarkForm = new Form2(false);
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
             SMACheck.Start();
+
+            if (NoBTCAddress)
+            {
+                NoBTCAddress = false;
+                textBoxBTCAddress.Text = "";
+                Config.ConfigData.BitcoinAddress = "";
+            }
         }
 
 
