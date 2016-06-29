@@ -174,7 +174,7 @@
             // toolStripStatusLabelBTCDayText
             // 
             this.toolStripStatusLabelBTCDayText.Name = "toolStripStatusLabelBTCDayText";
-            this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(54, 20);
+            this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(52, 20);
             this.toolStripStatusLabelBTCDayText.Text = "BTC/Day";
             // 
             // toolStripStatusLabelBTCDayValue
@@ -200,7 +200,7 @@
             // toolStripStatusLabelBalanceBTCCode
             // 
             this.toolStripStatusLabelBalanceBTCCode.Name = "toolStripStatusLabelBalanceBTCCode";
-            this.toolStripStatusLabelBalanceBTCCode.Size = new System.Drawing.Size(29, 20);
+            this.toolStripStatusLabelBalanceBTCCode.Size = new System.Drawing.Size(27, 20);
             this.toolStripStatusLabelBalanceBTCCode.Text = "BTC";
             // 
             // toolStripStatusLabelBalanceDollarText
@@ -285,7 +285,7 @@
             // columnHeader0
             // 
             this.columnHeader0.Text = "Enabled";
-            this.columnHeader0.Width = 53;
+            this.columnHeader0.Width = 63;
             // 
             // columnHeader2
             // 

@@ -77,6 +77,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.chkBoxDisableDetection);
             this.Controls.Add(this.linkLabelError);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MinerFileNotFoundDialog";

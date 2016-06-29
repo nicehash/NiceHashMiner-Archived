@@ -317,7 +317,7 @@ namespace NiceHashMiner
             textBox_NVIDIA5X_MinimumProfit.Leave += Main_MinimumProfit_Leave;
 
             // Main disabled devices
-            DisabledDevice(true, ref tabPage_NVIDIA5X, ref tabIndex, minerIndex, -1, numDevices, 102, 32, minerName);
+            DisabledDevice(true, ref tabPage_NVIDIA5X, ref tabIndex, minerIndex, -1, numDevices, 112, 32, minerName);
             
             textBox_NVIDIA5X_ExtraLaunchParameters.Text = Config.ConfigData.Groups[minerIndex].ExtraLaunchParameters;
             textBox_NVIDIA5X_ExtraLaunchParameters.Tag = minerIndex;
@@ -378,7 +378,7 @@ namespace NiceHashMiner
             textBox_NVIDIA3X_MinimumProfit.Leave += Main_MinimumProfit_Leave;
 
             // Main disabled devices
-            DisabledDevice(true, ref tabPage_NVIDIA3X, ref tabIndex, minerIndex, -1, numDevices, 102, 32, minerName);
+            DisabledDevice(true, ref tabPage_NVIDIA3X, ref tabIndex, minerIndex, -1, numDevices, 112, 32, minerName);
 
             textBox_NVIDIA3X_ExtraLaunchParameters.Text = Config.ConfigData.Groups[minerIndex].ExtraLaunchParameters;
             textBox_NVIDIA3X_ExtraLaunchParameters.Tag = minerIndex;
@@ -439,7 +439,7 @@ namespace NiceHashMiner
             textBox_NVIDIA2X_MinimumProfit.Leave += Main_MinimumProfit_Leave;
 
             // Main disabled devices
-            DisabledDevice(true, ref tabPage_NVIDIA2X, ref tabIndex, minerIndex, -1, numDevices, 102, 32, minerName);
+            DisabledDevice(true, ref tabPage_NVIDIA2X, ref tabIndex, minerIndex, -1, numDevices, 112, 32, minerName);
             
             textBox_NVIDIA2X_ExtraLaunchParameters.Text = Config.ConfigData.Groups[minerIndex].ExtraLaunchParameters;
             textBox_NVIDIA2X_ExtraLaunchParameters.Tag = minerIndex;
@@ -506,7 +506,7 @@ namespace NiceHashMiner
             checkBox_AMD_DisableAMDTempControl.CheckedChanged += checkBox_AMD_DisableAMDTempControl_CheckedChanged;
 
             // Main disabled devices
-            DisabledDevice(true, ref tabPage_AMD, ref tabIndex, minerIndex, -1, numDevices, 102, 32, minerName);
+            DisabledDevice(true, ref tabPage_AMD, ref tabIndex, minerIndex, -1, numDevices, 112, 32, minerName);
 
             textBox_AMD_ExtraLaunchParameters.Text = Config.ConfigData.Groups[minerIndex].ExtraLaunchParameters;
             textBox_AMD_ExtraLaunchParameters.Tag = minerIndex;
@@ -643,7 +643,7 @@ namespace NiceHashMiner
                     labelDisabledDevices[i].Text = International.GetText("Form_Settings_General_DisabledDevices") + ":";
 
                     toolTip1.SetToolTip(labelDisabledDevices[i], International.GetText("Form_Settings_ToolTip_AlgoDisabledDevices"));
-                    DisabledDevice(false, ref algoTabPage[i], ref tabIndex, minerIndex, i, numDevices, 99, 31, minerName);
+                    DisabledDevice(false, ref algoTabPage[i], ref tabIndex, minerIndex, i, numDevices, 109, 31, minerName);
 
                     x = 3; y = 55;
                 }
@@ -947,7 +947,7 @@ namespace NiceHashMiner
                 labelCPUDevice.TabIndex = 99;
                 labelCPUDevice.Text = International.GetText("Form_Settings_labelCPUDevice");
                 
-                tb.Controls.Add(labelCPUDevice);
+                //tb.Controls.Add(labelCPUDevice);
             }
             else if (numDevices > 0)
             {

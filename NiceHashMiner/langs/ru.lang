@@ -135,9 +135,9 @@
         "Form_Settings_General_ethminerAPIPortNVIDIA": "Ethminer API Port NVIDIA",
         "Form_Settings_General_ethminerAPIPortAMD": "Ethminer API Port AMD",
 
-        "Form_Settings_General_BenchmarkTimeLimitsCPU_Group": "Лимит времени бенчм.(CPU)[с]",
-        "Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group": "Лимит времени бенчм.(NVIDIA)[с]",
-        "Form_Settings_General_BenchmarkTimeLimitsAMD_Group": "Лимит времени бенчм.(AMD)[м]",
+        "Form_Settings_General_BenchmarkTimeLimitsCPU_Group": "Лимит времени бенчм.(CPU) [с]",
+        "Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group": "Лимит времени бенчм.(NVIDIA) [с]",
+        "Form_Settings_General_BenchmarkTimeLimitsAMD_Group": "Лимит времени бенчм.(AMD) [с]",
 
         "Form_Settings_General_CPU_ForceCPUExtension": "Технология для CPU",
         "Form_Settings_General_CPU_LessThreads": "Less Threads",

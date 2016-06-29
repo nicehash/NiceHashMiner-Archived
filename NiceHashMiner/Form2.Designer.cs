@@ -60,7 +60,7 @@
             this.listView1.Location = new System.Drawing.Point(1, 128);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(462, 354);
+            this.listView1.Size = new System.Drawing.Size(472, 354);
             this.listView1.TabIndex = 9;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -69,7 +69,7 @@
             // columnHeader0
             // 
             this.columnHeader0.Text = "Enabled";
-            this.columnHeader0.Width = 51;
+            this.columnHeader0.Width = 63;
             // 
             // columnHeader1
             // 
@@ -187,7 +187,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(464, 484);
+            this.ClientSize = new System.Drawing.Size(474, 484);
             this.Controls.Add(this.buttonCheckProfitability);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonSubmitHardware);
@@ -200,7 +200,7 @@
             this.Controls.Add(this.listView1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(480, 200);
+            this.MinimumSize = new System.Drawing.Size(490, 200);
             this.Name = "Form2";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

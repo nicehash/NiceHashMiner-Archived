@@ -15,6 +15,7 @@ namespace NiceHashMiner
             InitializeComponent();
 
             label_LoadingText.Text = International.GetText("form3_label_LoadingText");
+            label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
         }
     }
 }
