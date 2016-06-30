@@ -193,5 +193,5 @@ To report bugs and issues please use the GitHub issue reporting tool: https://gi
 - For NVIDIA 2.1 and 3.x (older cards), tpruvot's fork of ccminer has been used from here: https://github.com/tpruvot/ccminer.
 - Special Decred ccminer forked from tpruvot's ccminer has been used from here: https://github.com/nicehash/ccminer-tpruvot.
 - Optimized Lyra2REv2 ccminer developed by Nanashi Meiyo-Meijin: https://github.com/nicehash/ccminer-nanashi.
-- For AMD cards, sgminer has been used from here: https://github.com/sgminer-dev/sgminer.
+- For AMD cards, sgminer has been used from here: https://github.com/nicehash/sgminer.
 - For Ethereum miner, Genoil's fork of ethminer has been used from here: https://github.com/nicehash/cpp-ethereum.
