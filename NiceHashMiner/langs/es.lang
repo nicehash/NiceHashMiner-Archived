@@ -29,7 +29,7 @@
         "form1_new_version_released": "¡Importante! La nueva versión v{0} ha\r\nsido liberada. Pincha aquí para descargarla.",
         "form1_DemoModeLabel": "NiceHash Miner está en modo DEMO",
         "form1_DemoModeTitle": "¿Abrir NiceHash Miner en modo DEMO?",
-        "form1_DemoModeMsg": "No has introducido una dirección bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, puedes probar tu ordenador para ver cuántos bitcoin podrías ganar. ¿Quieres continuar en modo DEMO? \n\nAVISO: ¡NO GANARÁS NADA EN MODO DEMO!",
+        "form1_DemoModeMsg": "No has introducido una dirección bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, puedes probar tu ordenador para ver cuántos bitcoin podrías ganar. ¿Quieres continuar en modo DEMO? \n\n AVISO: ¡NO GANARÁS NADA EN MODO DEMO!",
 
         "form1_loadtext_CPU": "Buscando CPU...",
         "form1_loadtext_NVIDIA5X": "Buscando dispositivos NVIDIA5.x y NVIDIA6.x ...",
@@ -212,7 +212,7 @@
         "Form_Settings_ToolTip_checkBox_LogToFile": "Actívalo para registrar la salida de la consola en un archivo.",
         "Form_Settings_ToolTip_LogMaxFileSize": "Establece el tamaño máximo para el archivo de registro (log).",
 
-        "Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning": Si activado, NiceHash Miner dará un aviso si\nla óptima versión del driver está activada.",
+        "Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning": "Si activado, NiceHash Miner dará un aviso si\nla óptima versión del driver está activada.",
         "Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting": "si activado, in the event of a miner crash,\nNiceHashMiner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.",
         "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Si activado, NiceHashMiner would use the new settings page.",
         "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Si activado, NiceHashMiner pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
