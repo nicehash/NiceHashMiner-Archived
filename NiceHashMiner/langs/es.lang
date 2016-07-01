@@ -75,7 +75,7 @@
         "form2_radioButton_PreciseBenchmark": "&Benchmark detallado (tardará mas)",
         "form2_listView_Columns0": "Activado",
         "form2_listView_Columns1": "Dispositivo",
-        "form2_listView_Columns2": "Algoritmo,
+        "form2_listView_Columns2": "Algoritmo",
         "form2_listView_Columns3": "velocidad",
         "form2_listView_WaitSeconds": "Por favor espera {0} segundos...",
         "form2_listView_WaitMinutes": "Por favor espera {0} minutos...",
