@@ -29,7 +29,7 @@
         "form1_new_version_released": "¡Importante! La nueva versión v{0} ha\r\nsido liberada. Pincha aquí para descargarla.",
         "form1_DemoModeLabel": "NiceHash Miner está en modo DEMO",
         "form1_DemoModeTitle": "¿Abrir NiceHash Miner en modo DEMO?",
-        "form1_DemoModeMsg": "No has introducido una dirección bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, puedes probar tu ordenador para ver cuántos bitcoin podrías ganar. ¿Quieres continuar en modo DEMO?\n\AVISO: ¡NO GANARÁS NADA EN MODO DEMO!",
+        "form1_DemoModeMsg": "No has introducido una dirección bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, puedes probar tu ordenador para ver cuántos bitcoin podrías ganar. ¿Quieres continuar en modo DEMO? \n\nAVISO: ¡NO GANARÁS NADA EN MODO DEMO!",
 
         "form1_loadtext_CPU": "Buscando CPU...",
         "form1_loadtext_NVIDIA5X": "Buscando dispositivos NVIDIA5.x y NVIDIA6.x ...",
