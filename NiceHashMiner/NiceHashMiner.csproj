@@ -71,6 +71,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ethminerAPI.cs" />
+    <Compile Include="Form_ChooseLanguage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_ChooseLanguage.Designer.cs">
+      <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +144,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sgminer.cs" />
+    <EmbeddedResource Include="Form_ChooseLanguage.resx">
+      <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </EmbeddedResource>
@@ -174,6 +183,9 @@
     </Compile>
     <None Include="app.config" />
     <None Include="langs\en.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="langs\es.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="langs\ru.lang">

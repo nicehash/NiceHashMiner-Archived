@@ -116,7 +116,7 @@
         "Form_Settings_General_AutoStartMining": "Autoempezar a minar",
         "Form_Settings_General_HideMiningWindows": "Ocultar ventanas de minado",
         "Form_Settings_General_MinimizeToTray": "Minimizar al Tray",
-        "Form_Settings_General_DisableDetection": "Desactivar detección de  {0}",
+        "Form_Settings_General_DisableDetection": "Desactivar detección de {0}",
         "Form_Settings_General_AutoScaleBTCValues": "Autoescalar valores de BTC",
         "Form_Settings_General_StartMiningWhenIdle": "Empezar a minar si el ordenador no se está usando",
         "Form_Settings_General_ShowDriverVersionWarning": "Mostrar alerta de versión del driver",

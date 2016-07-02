@@ -2,9 +2,9 @@
     "Name": "English",
     "ID": 0,
     "Entries": {
-        "Global_Yes": "Yes",
-        "Global_No": "No",
-        "Global_OK": "OK",
+        "Global_Yes": "&Yes",
+        "Global_No": "&No",
+        "Global_OK": "&OK",
 
         "Service_Location": "Service location",
         "Warning_with_Exclamation": "Warning!",

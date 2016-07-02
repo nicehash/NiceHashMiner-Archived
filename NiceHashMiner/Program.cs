@@ -15,6 +15,8 @@ namespace NiceHashMiner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            bool ConfigExist = Config.ConfigFileExist();
+            
             Config.InitializeConfig();
 
             if (Config.ConfigData.LogToFile)
@@ -25,22 +27,30 @@ namespace NiceHashMiner
 
             Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
 
+            string tmp;
+            if (!ConfigExist && !ParseCommandLine(argv, "-lang", out tmp))
+            {
+                Helpers.ConsolePrint("NICEHASH", "No config file found. Running NiceHash Miner for the first time. Choosing a default language.");
+                Application.Run(new Form_ChooseLanguage());
+            }
+
             // Init languages
             International.Initialize(Config.ConfigData.Language);
 
             if (argv.Length > 0)
             {
-                string val;
-
-                if (ParseCommandLine(argv, "-lang", out val))
+                if (ParseCommandLine(argv, "-lang", out tmp))
                 {
                     int lang;
-                    if (Int32.TryParse(val, out lang))
+                    if (Int32.TryParse(tmp, out lang))
                     {
+                        Helpers.ConsolePrint("NICEHASH", "Language is overwritten by command line parameter (-lang).");
                         International.Initialize(lang);
+                        Config.ConfigData.Language = lang;
                     }
                 }
-                if (ParseCommandLine(argv, "-config", out val))
+
+                if (ParseCommandLine(argv, "-config", out tmp))
                     Application.Run(new Form1(true));
             }
             
