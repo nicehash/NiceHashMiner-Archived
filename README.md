@@ -1,4 +1,4 @@
-# NiceHashMiner
+# NiceHash Miner
 
 - [Introduction](#introduction)
 - [What are the benefits?](#benefits)
