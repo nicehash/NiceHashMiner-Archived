@@ -44,6 +44,7 @@
             // 
             // comboBox_Languages
             // 
+            this.comboBox_Languages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Languages.FormattingEnabled = true;
             this.comboBox_Languages.Location = new System.Drawing.Point(84, 29);
             this.comboBox_Languages.Name = "comboBox_Languages";
