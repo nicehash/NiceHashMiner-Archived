@@ -455,6 +455,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint(MinerDeviceName, "Resuming ethminer..");
                 ethminerLink.StartMining();
+                IsRunning = true;
                 return null;
             }
 
