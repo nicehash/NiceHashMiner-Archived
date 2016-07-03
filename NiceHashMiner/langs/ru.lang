@@ -2,9 +2,9 @@
     "Name": "Русский",
     "ID": 1,
     "Entries": {
-        "Global_Yes": "Да",
-        "Global_No": "Нет",
-        "Global_OK": "OK",
+        "Global_Yes": "&Да",
+        "Global_No": "&Нет",
+        "Global_OK": "&OK",
 
         "Service_Location": "Локация",
         "Warning_with_Exclamation": "Предупреждение!",
