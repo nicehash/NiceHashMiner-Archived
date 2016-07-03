@@ -9,7 +9,7 @@
         "Service_Location": "Servidor",
         "Warning_with_Exclamation": "¡Cuidado!",
         "Error_with_Exclamation": "¡Error!",
-        "BitcoinAddress": "Dirección bitcoin",
+        "BitcoinAddress": "Dirección Bitcoin",
         "WorkerName": "Nombre del equipo",
         "Rate": "Ratio",
         "Day": "Día",
@@ -29,7 +29,7 @@
         "form1_new_version_released": "¡Importante! La nueva versión v{0} ha\r\nsido liberada. Pincha aquí para descargarla.",
         "form1_DemoModeLabel": "NiceHash Miner está en modo DEMO",
         "form1_DemoModeTitle": "¿Abrir NiceHash Miner en modo DEMO?",
-        "form1_DemoModeMsg": "No has introducido una dirección bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, puedes probar tu ordenador para ver cuántos bitcoin podrías ganar. ¿Quieres continuar en modo DEMO? \n\n AVISO: ¡NO GANARÁS NADA EN MODO DEMO!",
+        "form1_DemoModeMsg": "No has introducido una dirección Bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, puedes probar tu ordenador para ver cuántos Bitcoin podrías ganar. ¿Quieres continuar en modo DEMO? \n\n AVISO: ¡NO GANARÁS NADA EN MODO DEMO!",
 
         "form1_loadtext_CPU": "Buscando CPU...",
         "form1_loadtext_NVIDIA5X": "Buscando dispositivos NVIDIA5.x y NVIDIA6.x ...",
@@ -47,14 +47,14 @@
 
         "form1_msgbox_CPUMining64bitMsg": "El minado CPU de NiceHash Miner solo funciona en la version de 64 bit del sistema operativo.",
         "form1_msgbox_CPUMining64CoresMsg": "NiceHash Miner solo soporta hasta 64 núcleos virtuales. El minado de CPU se desactivará.",
-        "form1_msgbox_CPUMiningLessThreadMsg": "LessThreads es mayor a el número de núcleos por CPU. El minado de CPU será desactivado.",
+        "form1_msgbox_CPUMiningLessThreadMsg": "LessThreads es mayor a el número de hilos por CPU. El minado de CPU será desactivado.",
         "form1_msgbox_NoInternetTitle": "Comprueba la conexión a Internet",
         "form1_msgbox_NoInternetMsg": "NiceHash Miner requiere una conexión a Internet. Asegúrate de que estás conectado a internet antes de ejecutar NiceHash Miner. ¿Quieres continuar?",
-        "form1_msgbox_InvalidBTCAddressMsg": "¡Dirección bitcoin inválida!\n\nPor favor introduce una dirección bitcoin valida o pulsa Sí para crear una",
+        "form1_msgbox_InvalidBTCAddressMsg": "¡Dirección Bitcoin inválida!\n\nPor favor introduce una dirección Bitcoin valida o pulsa Sí para crear una",
         "form1_msgbox_InvalidWorkerNameMsg": "¡Nombre inválido!\n\nIntroduce un nombre válido, por favor. (Aa-Zz, 0-9, de hasta 7 carácteres).",
         "form1_msgbox_NullNiceHashDataMsg": "Imposible obtener los datos de rentabilidad de NiceHash. Si estás conectado a Internet, por favor inténtalo de nuevo.",
         "form1_msgbox_HaveNotBenchmarkedMsg": "No has realizado el benchmark para este dispositivo {0}. Sin hacer un benchmark antes, NiceHashMiner no sera capaz de elegir el algoritmo mas rentable. Para continuar minando, pulsa Sí. Si quieres hacer un benchmark antes, elige No y pincha en el botón de Benchmark.",
-        "form1_msgbox_buttonBenchmarkWarningMsg": "Editando las siguientes opciones no es recomendado para usuarios NO avanzados.\r\n\r\nSi {0} se cierra por una mala configuración, puedes restaurarlo eliminando 'config.json'.\r\n\r\n¿Continuar con la edición de la configuración?",
+        "form1_msgbox_buttonBenchmarkWarningMsg": "Editar las siguientes opciones no es recomendado para usuarios principiantes.\r\n\r\nSi {0} se cierra por una mala configuración, puedes restaurarlo eliminando 'config.json'.\r\n\r\n¿Continuar con la edición de la configuración?",
         "form1_msgbox_buttonBenchmarkRestartWarningTitle": "Reiniciando {0}",
         "form1_msgbox_buttonBenchmarkRestartWarningMsg": "{0} se cerrará. Estas nuevas configuraciones aún estan en beta y {0} necesitan un reinicio del programa para que se apliquen.",
 
@@ -92,7 +92,7 @@
 
 
         "MinerFileNotFoundDialog_title": "¡Archivo no encontrado!",
-        "MinerFileNotFoundDialog_linkLabelError": "{0}: ¡El archivo {1} no se encuentra!\n\nPor favor asegúrate que el archivo es accesible y que tu antivirus no está bloqueando el programa.\nPor favor ve a la sección \"Mi antivirus está bloqueando la aplicación\" en la sección de Solución de problemas (Troubleshooting) ({2}).\n\nUna redescarga de NiceHash Miner podría ser necesaria.",
+        "MinerFileNotFoundDialog_linkLabelError": "{0}: ¡El archivo {1} no se encuentra!\n\nPor favor asegúrate que el archivo es accesible y que tu antivirus no está bloqueando el programa.\nPor favor ve a la sección Mi antivirus está bloqueando la aplicación \"My anti-virus is blocking the application \" en la sección de Solución de problemas (Troubleshooting) ({2}).\n\nVolver a descargar NiceHash Miner podría ser necesaria.",
         "MinerFileNotFoundDialog_link": "Enlace",
         "MinerFileNotFoundDialog_chkBoxDisableDetection": "&Desactivar detección de este dispositivo.",
 
@@ -152,7 +152,7 @@
         "Form_Settings_General_MinimumProfit": "Ganancias mínimas ($/día)",
         "Form_Settings_General_DisabledDevices": "Dispositivos sin uso",
         "Form_Settings_General_ExtraLaunchParameters": "Parámetros de inicio",
-        "Form_Settings_General_DaggerHashimotoGenerateDevice": "Dispositivo que genera el DAG",
+        "Form_Settings_General_DaggerHashimotoGenerateDevice": "Dispositivo que generará el DAG",
         "Form_Settings_General_DisableAMDTempControl": "Desactivar control de temperatura de AMD",
 
         "Form_Settings_Algo_Skip": "Saltar",
@@ -168,13 +168,13 @@
         "Form_Settings_BenchmarkSpeedWarningMsg": "¡Error! Por favor introduce una velocidad de benchmark que sea un número y sea mayor o igual a 0.",
         "Form_Settings_DaggerHashimotoGenerateDeviceWarningTitle": "¡Número de dispositivo inválido!",
         "Form_Settings_DaggerHashimotoGenerateDeviceWarningMsg": "¡Error! Por favor introduce un número de dispositivo que sea mayor o igual a 0.",
-        "Form_Settings_labelCPUDevice": "Usar Saltar para CPUs..",
+        "Form_Settings_labelCPUDevice": "Usar Saltar para CPUs...",
         "Form_Settings_labelNoDevice": "No se ha encontrado dispositivo...",
-        "Form_Settings_ParseIntTitle": "Eror de entrada",
-        "Form_Settings_ParseIntMsg": "Esta caja solo acepta números (0-9).",
+        "Form_Settings_ParseIntTitle": "Error de entrada",
+        "Form_Settings_ParseIntMsg": "Solo se aceptan números (0-9).",
         "Form_Settings_buttonDefaultsText": "&Predeterminados",
         "Form_Settings_buttonDefaultsTitle": "¿Poner configuración predeterminada?",
-        "Form_Settings_buttonDefaultsMsg": "¿Estás seguro de que quieres poner la configuración predeterminada? NiceHash Miner se reiniciará automáticamente.",
+        "Form_Settings_buttonDefaultsMsg": "¿Estás seguro de que quieres establecer la configuración predeterminada? NiceHash Miner se reiniciará automáticamente.",
         "Form_Settings_buttonSaveText": "&Guardar y cerrar",
         "Form_Settings_buttonSaveTitle": "¡Configuración guardada!",
         "Form_Settings_buttonSaveMsg": "¡Configuración guardada!",
@@ -185,7 +185,7 @@
         "Form_Settings_ToolTip_Explaination": "Explicación",
         "Form_Settings_ToolTip_Language": "Cambia el lenguaje predeterminado de NiceHash Miner.",
         "Form_Settings_ToolTip_checkBox_DebugConsole": "Si está marcada, abre la consola de depuración.",
-        "Form_Settings_ToolTip_BitcoinAddress": "Dirección bitcoin del usuario para minar.",
+        "Form_Settings_ToolTip_BitcoinAddress": "Dirección Bitcoin del usuario para minar.",
         "Form_Settings_ToolTip_WorkerName": "Para identificar el ordenador del usuario.",
         "Form_Settings_ToolTip_ServiceLocation": "Establece la ubicación de minado. Elegir Hong Kong o Japón añadirá latencia extra.",
         "Form_Settings_ToolTip_checkBox_AutoStartMining": "Si está marcada, NiceHashMiner empezará a minar al abrirse.",
@@ -208,7 +208,7 @@
         "Form_Settings_ToolTip_checkBox_AutoScaleBTCValues": "Marcalo si quieres ver los valores de BTC autoescalar a la escala apropiada.",
         "Form_Settings_ToolTip_checkBox_StartMiningWhenIdle": "Empezar a minar cuando el ordenador está inactivo y parar de minar cuando está en uso.",
 
-        "Form_Settings_ToolTip_MinIdleSeconds": "Cuando StartMiningWhenIdle está activado, MinIdleSeconds dice \ncuántos segundos tiene el ordenador que estar inactivo antes de minar.",
+        "Form_Settings_ToolTip_MinIdleSeconds": "Cuando StartMiningWhenIdle (minar el ordenador está inactivo) está activado, MinIdleSeconds  dice \ncuántos segundos tiene el ordenador que estar inactivo antes de minar.",
         "Form_Settings_ToolTip_checkBox_LogToFile": "Márcalo para registrar la salida de la consola en un archivo.",
         "Form_Settings_ToolTip_LogMaxFileSize": "Establece el tamaño máximo para el archivo de registro (log).",
 
@@ -220,17 +220,17 @@
         "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Establece la altura de bloque usado para hacer el benchmark si la llamada a la API falla.",
 
         "Form_Settings_ToolTip_APIBindPort": "Puerto de la API que será usado por este grupo.",
-        "Form_Settings_ToolTip_UsePassword": "Usa esta contraseña al iniciar el minero (el usuario es tu dirección bitcoin y la contraseña es la que pongas aquí). Si está vacío, la contraseña 'x' será usada. ",
-        "Form_Settings_ToolTip_MinimumProfit": "Si se establece cualquier valor diferente a 0(USD), NiceHash Miner parará de minar\nsi la rentabilidad cae por debajo del mínimo.",
+        "Form_Settings_ToolTip_UsePassword": "Usa esta contraseña al iniciar el minero (el usuario es tu dirección Bitcoin y la contraseña es la que pongas aquí). Si está vacío, la contraseña 'x' será usada. ",
+        "Form_Settings_ToolTip_MinimumProfit": "Si se establece cualquier valor diferente a 0 (USD), NiceHash Miner parará de minar\nsi la rentabilidad cae por debajo del mínimo indicado.",
         "Form_Settings_ToolTip_DisabledDevices": "NiceHash Miner ignorará los dispositivos marcados.",
         "Form_Settings_ToolTip_ExtraLaunchParameters": "Parámetros de inicio adicionales.",
         "Form_Settings_ToolTip_DaggerHashimotoGenerateDevice": "Elige que GPU creará el archivo DAG.\nElije la GPU más rápida posible.",
-        "Form_Settings_ToolTip_DisableAMDTempControl": "Márcalo si quieres desactivar el control de temperatura predeterminado\npara las GPUs de AMD (excepto el algoritmo daggerhashimoto).",
+        "Form_Settings_ToolTip_DisableAMDTempControl": "Márcalo si quieres desactivar el control de temperatura predeterminado\npara las GPUs de AMD (excepto para el algoritmo daggerhashimoto).",
         
         "Form_Settings_ToolTip_AlgoSkip": "Márcalo si quieres saltar y desactivar un algoritmo en particular.\nEl minado y el benchmark serán desactivados para este algoritmo en particular.\nEl cambio automático de algoritmo también ignorará este algoritmo.",
-        "Form_Settings_ToolTip_AlgoUsePassword": "Usa esta contraseña al iniciar este minero y este algoritmo. Si no se establece, UsePassword de Grupos será usada.",
+        "Form_Settings_ToolTip_AlgoUsePassword": "Usa esta contraseña al iniciar este minero y este algoritmo. Si no se establece, UsePassword del grupo se usará.",
         "Form_Settings_ToolTip_AlgoBenchmarkSpeed": "Personalización de los ratios de los algoritmos al cambiar manualmente las velocidades de los benchmark.",
-        "Form_Settings_ToolTip_AlgoDisabledDevices": "Todos los dispositivos marcados serán saltados por NiceHash Miner (solo para este algoritmo).",
+        "Form_Settings_ToolTip_AlgoDisabledDevices": "Todos los dispositivos marcados serán ignorados por NiceHash Miner (solo para este algoritmo).",
         "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Parámetros de inicio adicionales al lanzar el minero y este algoritmo."
     }
 }
