@@ -166,7 +166,7 @@ namespace NiceHashMiner
             StartingUpDelay = false;
             PreviousTotalMH = 0.0;
             NotProfitable = true;
-            IsRunning = false;
+            //IsRunning = false;
             CurrentAlgo = -1;
         }
 

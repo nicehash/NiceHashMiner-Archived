@@ -453,9 +453,12 @@ namespace NiceHashMiner
                     m.Stop(false);
                     continue;
                 }
-
+                
                 if (m.CurrentAlgo != MaxProfitIndex)
                 {
+                    Helpers.ConsolePrint(m.MinerDeviceName, "Switching to most profitable algorithm: " + m.SupportedAlgorithms[MaxProfitIndex].NiceHashName);
+
+                    MinerStatsCheck.Stop();
                     if (m.CurrentAlgo >= 0)
                     {
                         m.Stop(true);
@@ -467,6 +470,7 @@ namespace NiceHashMiner
                     m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
                         "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" +
                         NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+                    MinerStatsCheck.Start();
                 }
             }
         }
@@ -960,6 +964,7 @@ namespace NiceHashMiner
             foreach (Miner m in Miners)
             {
                 m.Stop(false);
+                m.IsRunning = false;
                 m.CurrentAlgo = -1;
                 m.CurrentRate = 0;
             }
