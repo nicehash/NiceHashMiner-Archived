@@ -908,7 +908,15 @@ namespace NiceHashMiner
                                                           International.GetText("Warning_with_Exclamation"),
                                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                    if (result == System.Windows.Forms.DialogResult.Yes) break;
+                    if (result == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        if (!(m is cpuminer))
+                        {
+                            // quick and ugly way to prevent GPUs from starting on extremely unprofitable x11
+                            m.SupportedAlgorithms[13].BenchmarkSpeed = 1;
+                        }
+                        break;
+                    }
                     if (result == System.Windows.Forms.DialogResult.No)
                     {
                         DemoMode = false;
