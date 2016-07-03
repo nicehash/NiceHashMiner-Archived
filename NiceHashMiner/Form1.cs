@@ -449,6 +449,7 @@ namespace NiceHashMiner
 
                 if (m.NotProfitable || MaxProfitIndex == -1)
                 {
+                    Helpers.ConsolePrint(m.MinerDeviceName, "Miner is not profitable.. STOPPING..");
                     m.Stop(false);
                     continue;
                 }
@@ -509,6 +510,8 @@ namespace NiceHashMiner
                 APIData AD = m.GetSummary();
                 if (AD == null)
                 {
+                    Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
+
                     // Make sure sgminer has time to start
                     // properly on slow CPU system
                     if (m.StartingUpDelay && m.NumRetries > 0)
@@ -819,7 +822,7 @@ namespace NiceHashMiner
             if (textBoxBTCAddress.Text == "")
             {
                 NoBTCAddress = true;
-                textBoxBTCAddress.Text = BitcoinAddress.GetRandomBTCAddress();
+                textBoxBTCAddress.Text = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
                 Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text;
             }
 
@@ -879,7 +882,7 @@ namespace NiceHashMiner
                     labelDemoMode.Visible = true;
                     labelDemoMode.Text = International.GetText("form1_DemoModeLabel");
 
-                    textBoxBTCAddress.Text = BitcoinAddress.GetRandomBTCAddress();
+                    textBoxBTCAddress.Text = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
                 }
                 else
                     return;

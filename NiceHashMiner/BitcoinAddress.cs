@@ -6,20 +6,6 @@ namespace NiceHashMiner
 {
     public class BitcoinAddress
     {
-        public static string GetRandomBTCAddress()
-        {
-            string[] addresses = { "1DQ4bZpFTDiSNk2CWLEFWK9K96rBFP2Hv", "12yquZ6eHtzb2iHVWSy2x6A5eijEguoqHh",
-                                   "125YWPgnkJci9NVPhMNcSiWzcNvjPGGSPm", "1CzrFvvieNaZg5aMHkb8eAPCSeVVUfUpax",
-                                   "1GiEJQ9uvW61ujj9ueYP82eZLUFoAQDexg", "15RftPa3oWyNSrn2LyVR1EqBcd9wN8HzSk",
-                                   "16reQmccDd7uH1J5BDVDX2XTUiTh9QHJQw", "1K8gCBmr5XrDqq9hvKszWgikWScZnQxzUP",
-                                   "1Dqd1dx9WW7Y1gqE4pvYs5BLLtnDYqR49D", "1Ngs8MDXArNJaXkwitihuGbsEbYFLBfTFX" };
-
-            Random r = new Random();
-            int index = r.Next(0, addresses.Length);
-
-            return addresses[index];
-        }
-
         public static bool ValidateBitcoinAddress(string address)
         {
             try
