@@ -453,7 +453,7 @@ namespace NiceHashMiner
                     m.Stop(false);
                     continue;
                 }
-                
+
                 if (m.CurrentAlgo != MaxProfitIndex)
                 {
                     if (m.CurrentAlgo >= 0)
@@ -462,12 +462,12 @@ namespace NiceHashMiner
                         // wait 0.5 seconds before going on
                         System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
                     }
-                }
-                m.CurrentAlgo = MaxProfitIndex;
+                    m.CurrentAlgo = MaxProfitIndex;
 
-                m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
-                    "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" +
-                    NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+                    m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
+                        "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" +
+                        NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+                }
             }
         }
 
