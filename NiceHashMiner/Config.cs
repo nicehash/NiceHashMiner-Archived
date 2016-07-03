@@ -225,5 +225,13 @@ namespace NiceHashMiner
             ConfigData.Groups = CG;
             Config.Commit();
         }
+
+        public static bool ConfigFileExist()
+        {
+            if (File.Exists("config.json"))
+                return true;
+
+            return false;
+        }
     }
 }

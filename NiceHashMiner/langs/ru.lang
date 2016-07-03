@@ -2,9 +2,9 @@
     "Name": "Русский",
     "ID": 1,
     "Entries": {
-        "Global_Yes": "Да",
-        "Global_No": "Нет",
-        "Global_OK": "OK",
+        "Global_Yes": "&Да",
+        "Global_No": "&Нет",
+        "Global_OK": "&OK",
 
         "Service_Location": "Локация",
         "Warning_with_Exclamation": "Предупреждение!",
@@ -27,7 +27,10 @@
         "form1_start": "&Старт",
         "form1_stop": "Ст&оп",
         "form1_new_version_released": "ВАЖНО! Новая версия v{0} была\r\nвыпущена. Кликните здесь, чтобы скачать.",
-
+ 	"form1_DemoModeLabel": "NiceHash Miner работает в режиме ДЕМО!",
+        "form1_DemoModeTitle": "Запустить майнинг в режиме ДЕМО?",
+        "form1_DemoModeMsg": "Вы не ввели Биткоин-адрес. NiceHash Miner начнет майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nДИСКЛАМАЦИЯ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
+ 
         "form1_loadtext_CPU": "Проверка CPU устройств...",
         "form1_loadtext_NVIDIA5X": "Проверка NVIDIA5.x и NVIDIA6.x устройств...",
         "form1_loadtext_NVIDIA3X": "Проверка NVIDIA3.x устройств...",
@@ -94,7 +97,7 @@
 
 
         "SubmitResultDialog_title": "Отправить результаты бенчмаркинга",
-        "SubmitResultDialog_labelInstruction": "Выберите, пожалуйста, устройство для бенчмаркинга и, как только он закончится, автоматически\r\nоткроется. новая веб-страница для отображения калькулятора прибыльности на сайте NiceHash.",
+        "SubmitResultDialog_labelInstruction": "Выберите, пожалуйста, устройство для бенчмаркинга и, как только он закончится, автоматически \r\nоткроется новая веб-страница для отображения калькулятора прибыльности на сайте NiceHash.",
         "SubmitResultDialog_StartBtn":"&Старт",
         "SubmitResultDialog_StopBtn":"С&топ",
         "SubmitResultDialog_CloseBtn":"&Закрыть",

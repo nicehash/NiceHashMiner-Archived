@@ -375,7 +375,7 @@ namespace NiceHashMiner
 
         public override void Start(int nhalgo, string url, string username)
         {
-            if (ProcessHandle != null) return; // ignore, already running 
+            //if (ProcessHandle != null) return; // ignore, already running 
 
             Algorithm Algo = GetMinerAlgorithm(nhalgo);
             if (Algo == null)

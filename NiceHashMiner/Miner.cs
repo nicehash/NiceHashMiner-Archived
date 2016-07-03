@@ -166,7 +166,7 @@ namespace NiceHashMiner
             StartingUpDelay = false;
             PreviousTotalMH = 0.0;
             NotProfitable = true;
-            IsRunning = false;
+            //IsRunning = false;
             CurrentAlgo = -1;
         }
 
@@ -455,6 +455,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint(MinerDeviceName, "Resuming ethminer..");
                 ethminerLink.StartMining();
+                IsRunning = true;
                 return null;
             }
 

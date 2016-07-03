@@ -228,6 +228,8 @@ namespace NiceHashMiner
                     return;
                 }
 
+                url += "&nhmver=" + Application.ProductVersion.ToString();  // Add version info
+                url += "&cost=1&power=1"; // Set default power and cost to 1
                 System.Diagnostics.Process.Start(url);
             }
         }

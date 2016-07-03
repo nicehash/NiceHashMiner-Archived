@@ -449,24 +449,29 @@ namespace NiceHashMiner
 
                 if (m.NotProfitable || MaxProfitIndex == -1)
                 {
+                    Helpers.ConsolePrint(m.MinerDeviceName, "Miner is not profitable.. STOPPING..");
                     m.Stop(false);
                     continue;
                 }
                 
                 if (m.CurrentAlgo != MaxProfitIndex)
                 {
+                    Helpers.ConsolePrint(m.MinerDeviceName, "Switching to most profitable algorithm: " + m.SupportedAlgorithms[MaxProfitIndex].NiceHashName);
+
+                    MinerStatsCheck.Stop();
                     if (m.CurrentAlgo >= 0)
                     {
                         m.Stop(true);
                         // wait 0.5 seconds before going on
                         System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
                     }
-                }
-                m.CurrentAlgo = MaxProfitIndex;
+                    m.CurrentAlgo = MaxProfitIndex;
 
-                m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
-                    "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" +
-                    NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+                    m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
+                        "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" +
+                        NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+                    MinerStatsCheck.Start();
+                }
             }
         }
 
@@ -509,6 +514,8 @@ namespace NiceHashMiner
                 APIData AD = m.GetSummary();
                 if (AD == null)
                 {
+                    Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
+
                     // Make sure sgminer has time to start
                     // properly on slow CPU system
                     if (m.StartingUpDelay && m.NumRetries > 0)
@@ -819,7 +826,7 @@ namespace NiceHashMiner
             if (textBoxBTCAddress.Text == "")
             {
                 NoBTCAddress = true;
-                textBoxBTCAddress.Text = BitcoinAddress.GetRandomBTCAddress();
+                textBoxBTCAddress.Text = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
                 Config.ConfigData.BitcoinAddress = textBoxBTCAddress.Text;
             }
 
@@ -879,7 +886,7 @@ namespace NiceHashMiner
                     labelDemoMode.Visible = true;
                     labelDemoMode.Text = International.GetText("form1_DemoModeLabel");
 
-                    textBoxBTCAddress.Text = BitcoinAddress.GetRandomBTCAddress();
+                    textBoxBTCAddress.Text = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
                 }
                 else
                     return;
@@ -905,7 +912,15 @@ namespace NiceHashMiner
                                                           International.GetText("Warning_with_Exclamation"),
                                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                    if (result == System.Windows.Forms.DialogResult.Yes) break;
+                    if (result == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        if (!(m is cpuminer))
+                        {
+                            // quick and ugly way to prevent GPUs from starting on extremely unprofitable x11
+                            m.SupportedAlgorithms[13].BenchmarkSpeed = 1;
+                        }
+                        break;
+                    }
                     if (result == System.Windows.Forms.DialogResult.No)
                     {
                         DemoMode = false;
@@ -949,6 +964,7 @@ namespace NiceHashMiner
             foreach (Miner m in Miners)
             {
                 m.Stop(false);
+                m.IsRunning = false;
                 m.CurrentAlgo = -1;
                 m.CurrentRate = 0;
             }

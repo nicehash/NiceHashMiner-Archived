@@ -1,4 +1,4 @@
-# NiceHashMiner
+# NiceHash Miner
 
 - [Introduction](#introduction)
 - [What are the benefits?](#benefits)
@@ -16,7 +16,7 @@
 
 NiceHash Miner is an **easy to use CPU & GPU cryptocurrency miner for Windows**. With a simple an intuitive graphical user interface it allows you to quickly turn your PC, workstation or server into **money-making cryptocurrency mining machine**. Why leave your computer idle, whereas it could **earn you Bitcoins with just a few clicks**?
 
-<img src="https://nicehash.com/imgs/NHM_v1200.png" />
+<img src="https://nicehash.com/imgs/NHM_v1610.png" />
 
 Please follow us on Twitter <a href="https://twitter.com/NiceHashMining" target="_blank">@NiceHashMining</a> for updates on new versions and other important information.
 
@@ -193,5 +193,5 @@ To report bugs and issues please use the GitHub issue reporting tool: https://gi
 - For NVIDIA 2.1 and 3.x (older cards), tpruvot's fork of ccminer has been used from here: https://github.com/tpruvot/ccminer.
 - Special Decred ccminer forked from tpruvot's ccminer has been used from here: https://github.com/nicehash/ccminer-tpruvot.
 - Optimized Lyra2REv2 ccminer developed by Nanashi Meiyo-Meijin: https://github.com/nicehash/ccminer-nanashi.
-- For AMD cards, sgminer has been used from here: https://github.com/sgminer-dev/sgminer.
+- For AMD cards, sgminer has been used from here: https://github.com/nicehash/sgminer.
 - For Ethereum miner, Genoil's fork of ethminer has been used from here: https://github.com/nicehash/cpp-ethereum.
