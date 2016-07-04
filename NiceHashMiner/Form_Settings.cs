@@ -57,7 +57,9 @@ namespace NiceHashMiner
             toolTip1.SetToolTip(this.textBox_MinerRestartDelayMS, International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
             toolTip1.SetToolTip(this.label_MinerRestartDelayMS, International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
             toolTip1.SetToolTip(this.textBox_MinerAPIGraceSeconds, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSeconds"));
-            toolTip1.SetToolTip(this.label_MinerAPIGraceMinutes, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSeconds"));
+            toolTip1.SetToolTip(this.label_MinerAPIGraceSeconds, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSeconds"));
+            toolTip1.SetToolTip(this.textBox_MinerAPIGraceSecondsAMD, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSecondsAMD"));
+            toolTip1.SetToolTip(this.label_MinerAPIGraceSecondsAMD, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSecondsAMD"));
 
             toolTip1.SetToolTip(this.textBox_BenchmarkTimeLimitsCPU_Quick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), "CPUs") + ".");
             toolTip1.SetToolTip(this.label_BenchmarkTimeLimitsCPU_Quick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), "CPUs") + ".");
@@ -129,7 +131,8 @@ namespace NiceHashMiner
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
-            label_MinerAPIGraceMinutes.Text = International.GetText("Form_Settings_General_MinerAPIGraceSeconds") + ":";
+            label_MinerAPIGraceSeconds.Text = International.GetText("Form_Settings_General_MinerAPIGraceSeconds") + ":";
+            label_MinerAPIGraceSecondsAMD.Text = International.GetText("Form_Settings_General_MinerAPIGraceSecondsAMD") + ":";
             label_MinerAPIQueryInterval.Text = International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";
             label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
 
@@ -197,6 +200,7 @@ namespace NiceHashMiner
             textBox_MinerAPIQueryInterval.Text = Config.ConfigData.MinerAPIQueryInterval.ToString();
             textBox_MinerRestartDelayMS.Text = Config.ConfigData.MinerRestartDelayMS.ToString();
             textBox_MinerAPIGraceSeconds.Text = Config.ConfigData.MinerAPIGraceSeconds.ToString();
+            textBox_MinerAPIGraceSecondsAMD.Text = Config.ConfigData.MinerAPIGraceSecondsAMD.ToString();
             textBox_MinIdleSeconds.Text = Config.ConfigData.MinIdleSeconds.ToString();
             textBox_LogMaxFileSize.Text = Config.ConfigData.LogMaxFileSize.ToString();
             textBox_BenchmarkTimeLimitsCPU_Quick.Text = Config.ConfigData.BenchmarkTimeLimitsCPU[0].ToString();
@@ -221,6 +225,7 @@ namespace NiceHashMiner
             this.textBox_MinerAPIQueryInterval.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerRestartDelayMS.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinerAPIGraceSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+            this.textBox_MinerAPIGraceSecondsAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_MinIdleSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_LogMaxFileSize.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
             this.textBox_BenchmarkTimeLimitsCPU_Quick.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
@@ -729,6 +734,7 @@ namespace NiceHashMiner
             if (!ParseStringToInt32(ref textBox_MinerAPIQueryInterval, ref Config.ConfigData.MinerAPIQueryInterval)) return;
             if (!ParseStringToInt32(ref textBox_MinerRestartDelayMS, ref Config.ConfigData.MinerRestartDelayMS)) return;
             if (!ParseStringToInt32(ref textBox_MinerAPIGraceSeconds, ref Config.ConfigData.MinerAPIGraceSeconds)) return;
+            if (!ParseStringToInt32(ref textBox_MinerAPIGraceSecondsAMD, ref Config.ConfigData.MinerAPIGraceSecondsAMD)) return;
             if (!ParseStringToInt32(ref textBox_MinIdleSeconds, ref Config.ConfigData.MinIdleSeconds)) return;
             if (!ParseStringToInt64(ref textBox_LogMaxFileSize, ref Config.ConfigData.LogMaxFileSize)) return;
             if (!ParseStringToInt32(ref textBox_BenchmarkTimeLimitsCPU_Quick, ref Config.ConfigData.BenchmarkTimeLimitsCPU[0])) return;

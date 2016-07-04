@@ -18,6 +18,7 @@ namespace NiceHashMiner
             labelWarning.Text = International.GetText("DriverVersionConfirmationDialog_labelWarning");
             linkToDriverDownloadPage.Text = International.GetText("DriverVersionConfirmationDialog_linkToDriverDownloadPage");
             chkBoxDontShowAgain.Text = International.GetText("DriverVersionConfirmationDialog_chkBoxDontShowAgain");
+            buttonOK.Text = International.GetText("Global_OK");
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

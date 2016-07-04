@@ -79,9 +79,9 @@ namespace NiceHashMiner
             toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
             toolStripStatusLabelBalanceText.Text = "$/" + International.GetText("Day") + "     " + International.GetText("form1_balance") + ":";
 
-            listViewDevices.Columns[0].Text = International.GetText("form1_listView_Columns0");
-            listViewDevices.Columns[1].Text = International.GetText("form1_listView_Columns1");
-            listViewDevices.Columns[2].Text = International.GetText("form1_listView_Columns2");
+            listViewDevices.Columns[0].Text = International.GetText("ListView_Enabled");
+            listViewDevices.Columns[1].Text = International.GetText("ListView_Group");
+            listViewDevices.Columns[2].Text = International.GetText("ListView_Device");
 
             buttonBenchmark.Text = International.GetText("form1_benchmark");
             buttonSettings.Text = International.GetText("form1_settings");

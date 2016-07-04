@@ -470,6 +470,9 @@ namespace NiceHashMiner
             }
 
             NumRetries = Config.ConfigData.MinerAPIGraceSeconds / Config.ConfigData.MinerAPIQueryInterval;
+            if (this is sgminer && !AlgoNameIs("daggerhashimoto"))
+                NumRetries = (Config.ConfigData.MinerAPIGraceSeconds + Config.ConfigData.MinerAPIGraceSecondsAMD) / Config.ConfigData.MinerAPIQueryInterval;
+
             if (AlgoNameIs("daggerhashimoto"))
             {
                 ethminerLink = new ethminerAPI((this is sgminer) ? Config.ConfigData.ethminerAPIPortAMD : Config.ConfigData.ethminerAPIPortNvidia);

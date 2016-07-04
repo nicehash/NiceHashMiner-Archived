@@ -25,6 +25,9 @@ namespace NiceHashMiner
             StartStopBtn.Text = International.GetText("SubmitResultDialog_StartBtn");
             CloseBtn.Text = International.GetText("SubmitResultDialog_CloseBtn");
 
+            DevicesListView.Columns[0].Text = International.GetText("ListView_Group");
+            DevicesListView.Columns[1].Text = International.GetText("ListView_Device");
+
             TimeIndex = tI;
             InBenchmark = false;
             DeviceChecked_Index = 0;
