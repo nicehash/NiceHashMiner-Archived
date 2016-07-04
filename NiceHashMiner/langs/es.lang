@@ -16,6 +16,11 @@
         "Quick": "Rápido",
         "Standard": "Estandar",
         "Precise": "Preciso",
+		"ListView_Enabled": "Habilitado",
+        "ListView_Group": "Grupo",
+        "ListView_Device": "Dispositivo",
+        "ListView_Algorithm": "Algoritmo",
+        "ListView_Speed": "Velocidad",
 
         "form1_visit_us": "Visítanos en @ www.nicehash.com",
         "form1_check_stats": "¡Ver mis estadísticas!",
@@ -58,11 +63,7 @@
         "form1_msgbox_buttonBenchmarkRestartWarningTitle": "Reiniciando {0}",
         "form1_msgbox_buttonBenchmarkRestartWarningMsg": "{0} se cerrará. Estas nuevas configuraciones aún estan en beta y {0} necesitan un reinicio del programa para que se apliquen.",
 
-        "form1_listView_Columns0": "Usar",
-        "form1_listView_Columns1": "Grupo",
-        "form1_listView_Columns2": "Dispositivo",
-
-
+		
         "form2_title": "Benchmark",
         "form2_buttonStartBenchmark": "Empezar &benchmark",
         "form2_buttonStopBenchmark": "&Parar benchmark",
@@ -73,10 +74,6 @@
         "form2_radioButton_QuickBenchmark": "Benchmark &rápido (podría ser impreciso)",
         "form2_radioButton_StandardBenchmark": "Benchmark &estandar",
         "form2_radioButton_PreciseBenchmark": "Benchmark &detallado (tardará mas)",
-        "form2_listView_Columns0": "Activado",
-        "form2_listView_Columns1": "Dispositivo",
-        "form2_listView_Columns2": "Algoritmo",
-        "form2_listView_Columns3": "Velocidad",
         "form2_listView_WaitSeconds": "Por favor espera {0} segundos...",
         "form2_listView_WaitMinutes": "Por favor espera {0} minutos...",
         "form2_listView_WaitForEth": "Benchmarking (2-4 minutos)...",
@@ -129,6 +126,7 @@
         "Form_Settings_General_MinIdleSeconds": "Tiempo de espera mínimo [s]",
         "Form_Settings_General_MinerRestartDelayMS": "Retraso de reinicio [ms]",
         "Form_Settings_General_MinerAPIGraceSeconds": "Tolerancia fallo API del minero [s]",
+		"Form_Settings_General_MinerAPIGraceSecondsAMD": "Tolerancia fallo API del minero AMD [s]",
         "Form_Settings_General_MinerAPIQueryInterval": "Intervalo de llamada API [s]",
         "Form_Settings_General_LogMaxFileSize": "Tamaño del registro",
 
@@ -201,6 +199,7 @@
         "Form_Settings_ToolTip_MinerAPIQueryInterval": "Intervalo de consulta de API para ccminer, sgminer cpuminer and ethminer.",
         "Form_Settings_ToolTip_MinerRestartDelayMS": "Cantidad de tiempo (en milisegundos) que NiceHashMiner esperará antes de reiniciar el minero.",
         "Form_Settings_ToolTip_MinerAPIGraceSeconds": "Periodo de tiempo en el que el minero no es forzado a reiniciarse cuando falla una consulta de API.",
+		"Form_Settings_ToolTip_MinerAPIGraceSecondsAMD": "Periodo de tiempo en el que el minero AMD no es forzado a reiniciarse cuando falla una consulta de API.",
 
         "Form_Settings_ToolTip_BenchmarkTimeLimits": "Cantidad de tiempo (en segundos) para {0} ejecutar el benchmark de {1}",
 
