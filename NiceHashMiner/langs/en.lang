@@ -16,6 +16,12 @@
         "Quick": "Quick",
         "Standard": "Standard",
         "Precise": "Precise",
+        "ListView_Enabled": "Enabled",
+        "ListView_Group": "Group",
+        "ListView_Device": "Device",
+        "ListView_Algorithm": "Algorithm",
+        "ListView_Speed": "Speed",
+
 
         "form1_visit_us": "Visit us @ www.nicehash.com",
         "form1_check_stats": "Check my stats online!",
@@ -58,10 +64,6 @@
         "form1_msgbox_buttonBenchmarkRestartWarningTitle": "Restarting {0}",
         "form1_msgbox_buttonBenchmarkRestartWarningMsg": "{0} will exit now. This new settings dialog is still in beta and {0} needs to restart to take effect.",
 
-        "form1_listView_Columns0": "Enabled",
-        "form1_listView_Columns1": "Group",
-        "form1_listView_Columns2": "Device",
-
 
         "form2_title": "Benchmark",
         "form2_buttonStartBenchmark": "Start &benchmark",
@@ -73,10 +75,6 @@
         "form2_radioButton_QuickBenchmark": "&Quick benchmark (can be inaccurate)",
         "form2_radioButton_StandardBenchmark": "&Standard benchmark",
         "form2_radioButton_PreciseBenchmark": "&Precise benchmark (will take longer)",
-        "form2_listView_Columns0": "Enabled",
-        "form2_listView_Columns1": "Device",
-        "form2_listView_Columns2": "Algorithm",
-        "form2_listView_Columns3": "Speed",
         "form2_listView_WaitSeconds": "Please wait about {0} seconds...",
         "form2_listView_WaitMinutes": "Please wait about {0} minutes...",
         "form2_listView_WaitForEth": "Benchmarking (2-4 minutes)...",
@@ -129,6 +127,7 @@
         "Form_Settings_General_MinIdleSeconds": "Minimum Idle [s]",
         "Form_Settings_General_MinerRestartDelayMS": "Miner Restart Delay [ms]",
         "Form_Settings_General_MinerAPIGraceSeconds": "Miner API Grace [s]",
+        "Form_Settings_General_MinerAPIGraceSecondsAMD": "AMD Miner API Grace [s]",
         "Form_Settings_General_MinerAPIQueryInterval": "Miner API Query Interval [s]",
         "Form_Settings_General_LogMaxFileSize": "Log Max File Size [bytes]",
 
@@ -149,7 +148,7 @@
         
         "Form_Settings_General_APIBindPort": "API Bind Port",
         "Form_Settings_General_UsePassword": "Use Password",
-        "Form_Settings_General_MinimumProfit": "Minimum Profit ($/day):",
+        "Form_Settings_General_MinimumProfit": "Minimum Profit ($/day)",
         "Form_Settings_General_DisabledDevices": "Disabled Devices",
         "Form_Settings_General_ExtraLaunchParameters": "Extra Launch Parameters",
         "Form_Settings_General_DaggerHashimotoGenerateDevice": "Dagger Hashimoto Generate Device",
@@ -201,6 +200,7 @@
         "Form_Settings_ToolTip_MinerAPIQueryInterval": "API query interval for ccminer, sgminer cpuminer and ethminer.",
         "Form_Settings_ToolTip_MinerRestartDelayMS": "Amount of time (in milliseconds) that NiceHashMiner will wait before restarting the miner.",
         "Form_Settings_ToolTip_MinerAPIGraceSeconds": "Period of time when restart of miner is not forced if API is unreachable.",
+        "Form_Settings_ToolTip_MinerAPIGraceSecondsAMD": "Period of additional time when restart of AMD GPU miner is not forced if API is unreachable.",
 
         "Form_Settings_ToolTip_BenchmarkTimeLimits": "Amount of time (in seconds) for {0} benchmarking the {1}",
 

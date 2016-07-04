@@ -35,10 +35,10 @@ namespace NiceHashMiner
             radioButton_StandardBenchmark.Text = International.GetText("form2_radioButton_StandardBenchmark");
             radioButton_PreciseBenchmark.Text = International.GetText("form2_radioButton_PreciseBenchmark");
 
-            listView1.Columns[0].Text = International.GetText("form2_listView_Columns0");
-            listView1.Columns[1].Text = International.GetText("form2_listView_Columns1");
-            listView1.Columns[2].Text = International.GetText("form2_listView_Columns2");
-            listView1.Columns[3].Text = International.GetText("form2_listView_Columns3");
+            listView1.Columns[0].Text = International.GetText("ListView_Enabled");
+            listView1.Columns[1].Text = International.GetText("ListView_Device");
+            listView1.Columns[2].Text = International.GetText("ListView_Algorithm");
+            listView1.Columns[3].Text = International.GetText("ListView_Speed");
 
             foreach (Miner m in Form1.Miners)
             {

@@ -61,6 +61,7 @@ namespace NiceHashMiner
         public int MinerAPIQueryInterval;
         public int MinerRestartDelayMS;
         public int MinerAPIGraceSeconds;
+        public int MinerAPIGraceSecondsAMD;
         public int[] BenchmarkTimeLimitsCPU;
         public int[] BenchmarkTimeLimitsNVIDIA;
         public int[] BenchmarkTimeLimitsAMD;
@@ -130,6 +131,8 @@ namespace NiceHashMiner
                 ConfigData.MinerRestartDelayMS = 500;
             if (ConfigData.MinerAPIGraceSeconds < 0)
                 ConfigData.MinerAPIGraceSeconds = 0;
+            if (ConfigData.MinerAPIGraceSecondsAMD < 0)
+                ConfigData.MinerAPIGraceSecondsAMD = 0;
             if (ConfigData.BenchmarkTimeLimitsCPU == null || ConfigData.BenchmarkTimeLimitsCPU.Length < 3)
                 ConfigData.BenchmarkTimeLimitsCPU = new int[] { 10, 20, 60 };
             if (ConfigData.BenchmarkTimeLimitsNVIDIA == null || ConfigData.BenchmarkTimeLimitsNVIDIA.Length < 3)
@@ -172,7 +175,8 @@ namespace NiceHashMiner
             ConfigData.ethminerAPIPortNvidia = 34561;
             ConfigData.ethminerAPIPortAMD = 34562;
             ConfigData.ethminerDefaultBlockHeight = 1700000;
-            ConfigData.MinerAPIGraceSeconds = 90;
+            ConfigData.MinerAPIGraceSeconds = 30;
+            ConfigData.MinerAPIGraceSecondsAMD = 60;
             ConfigData.SwitchMinSecondsFixed = 90;
             ConfigData.SwitchMinSecondsDynamic = 30;
             ConfigData.SwitchMinSecondsAMD = 90;
