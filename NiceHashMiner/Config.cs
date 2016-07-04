@@ -172,7 +172,7 @@ namespace NiceHashMiner
             ConfigData.ethminerAPIPortNvidia = 34561;
             ConfigData.ethminerAPIPortAMD = 34562;
             ConfigData.ethminerDefaultBlockHeight = 1700000;
-            ConfigData.MinerAPIGraceSeconds = 30;
+            ConfigData.MinerAPIGraceSeconds = 90;
             ConfigData.SwitchMinSecondsFixed = 90;
             ConfigData.SwitchMinSecondsDynamic = 30;
             ConfigData.SwitchMinSecondsAMD = 90;
