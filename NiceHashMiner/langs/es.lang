@@ -16,7 +16,7 @@
         "Quick": "Rápido",
         "Standard": "Estandar",
         "Precise": "Preciso",
-		"ListView_Enabled": "Habilitado",
+	"ListView_Enabled": "Habilitado",
         "ListView_Group": "Grupo",
         "ListView_Device": "Dispositivo",
         "ListView_Algorithm": "Algoritmo",
@@ -126,7 +126,7 @@
         "Form_Settings_General_MinIdleSeconds": "Tiempo de espera mínimo [s]",
         "Form_Settings_General_MinerRestartDelayMS": "Retraso de reinicio [ms]",
         "Form_Settings_General_MinerAPIGraceSeconds": "Tolerancia fallo API del minero [s]",
-		"Form_Settings_General_MinerAPIGraceSecondsAMD": "Tolerancia fallo API del minero AMD [s]",
+	"Form_Settings_General_MinerAPIGraceSecondsAMD": "Tolerancia fallo API del minero AMD [s]",
         "Form_Settings_General_MinerAPIQueryInterval": "Intervalo de llamada API [s]",
         "Form_Settings_General_LogMaxFileSize": "Tamaño del registro",
 
@@ -199,7 +199,7 @@
         "Form_Settings_ToolTip_MinerAPIQueryInterval": "Intervalo de consulta de API para ccminer, sgminer cpuminer and ethminer.",
         "Form_Settings_ToolTip_MinerRestartDelayMS": "Cantidad de tiempo (en milisegundos) que NiceHashMiner esperará antes de reiniciar el minero.",
         "Form_Settings_ToolTip_MinerAPIGraceSeconds": "Periodo de tiempo en el que el minero no es forzado a reiniciarse cuando falla una consulta de API.",
-		"Form_Settings_ToolTip_MinerAPIGraceSecondsAMD": "Periodo de tiempo en el que el minero AMD no es forzado a reiniciarse cuando falla una consulta de API.",
+	"Form_Settings_ToolTip_MinerAPIGraceSecondsAMD": "Periodo de tiempo en el que el minero AMD no es forzado a reiniciarse cuando falla una consulta de API.",
 
         "Form_Settings_ToolTip_BenchmarkTimeLimits": "Cantidad de tiempo (en segundos) para {0} ejecutar el benchmark de {1}",
 
