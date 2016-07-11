@@ -117,6 +117,9 @@ namespace NiceHashMiner
             textBoxWorkerName.Text = Config.ConfigData.WorkerName;
             ShowWarningNiceHashData = true;
             DemoMode = false;
+
+            if (CurrencyConverter.CurrencyConverter.ConverterActive)
+                toolStripStatusLabelBalanceDollarValue.Text = "(" + Config.ConfigData.DisplayCurrency + ")";
         }
 
 
@@ -655,8 +658,17 @@ namespace NiceHashMiner
                         toolStripStatusLabelBalanceBTCCode.Text = "BTC";
                         toolStripStatusLabelBalanceBTCValue.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
                     }
-
-                    toolStripStatusLabelBalanceDollarText.Text = (Balance * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
+                    
+                    Helpers.ConsolePrint("CurrencyConverter", "IsActive: " + CurrencyConverter.CurrencyConverter.ConverterActive);
+                    if(CurrencyConverter.CurrencyConverter.ConverterActive == false)
+                        toolStripStatusLabelBalanceDollarText.Text = (Balance * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
+                    else
+                    {
+                        Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + Config.ConfigData.DisplayCurrency);
+                        double Amount = (Balance * BitcoinRate);
+                        Amount = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(Amount);
+                        toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
+                    }
                 }
             }
         }

@@ -46,6 +46,7 @@ namespace NiceHashMiner
 #pragma warning disable 649
         public Version ConfigFileVersion;
         public int Language;
+        public string DisplayCurrency;
         public bool DebugConsole;
         public string BitcoinAddress;
         public string WorkerName;
@@ -181,6 +182,7 @@ namespace NiceHashMiner
             ConfigData.SwitchMinSecondsDynamic = 30;
             ConfigData.SwitchMinSecondsAMD = 90;
             ConfigData.MinIdleSeconds = 60;
+            ConfigData.DisplayCurrency = "USD";
         }
 
         public static void Commit()
