@@ -196,6 +196,7 @@
       "Form_Settings_ToolTip_AlgoUsePassword":"Использовать этот пароль при запуске майнера и этого алгоритма. Если не указано, будет использоваться пароль группы.",
       "Form_Settings_ToolTip_AlgoBenchmarkSpeed":"Ручная настройка скорости бенчмарка для каждого алгоритма.",
       "Form_Settings_ToolTip_AlgoDisabledDevices":"Отмеченные устройства будут пропущены NiceHashMiner (только для этого алгоритма).",
-      "Form_Settings_ToolTip_AlgoExtraLaunchParameters":"Дополнительные параметры при запуске майнера и этого алгоритма."
+      "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Дополнительные параметры при запуске майнера и этого алгоритма.",
+      "Form_Settings_DisplayCurrency":  "Дисплей валюты"
    }
 }

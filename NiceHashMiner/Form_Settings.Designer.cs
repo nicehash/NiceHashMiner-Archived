@@ -49,7 +49,7 @@
             this.comboBox_CPU0_ForceCPUExtension = new System.Windows.Forms.ComboBox();
             this.label_CPU0_ForceCPUExtension = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
+            this.displayCurrencyLabel = new System.Windows.Forms.Label();
             this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
             this.textBox_MinerAPIGraceSecondsAMD = new System.Windows.Forms.TextBox();
             this.label_MinerAPIGraceSecondsAMD = new System.Windows.Forms.Label();
@@ -394,7 +394,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.displayCurrencyLabel);
             this.tabPage1.Controls.Add(this.currencyConverterCombobox);
             this.tabPage1.Controls.Add(this.textBox_MinerAPIGraceSecondsAMD);
             this.tabPage1.Controls.Add(this.label_MinerAPIGraceSecondsAMD);
@@ -472,14 +472,14 @@
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // displayCurrencyLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(550, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 13);
-            this.label1.TabIndex = 102;
-            this.label1.Text = "Display Currency";
+            this.displayCurrencyLabel.AutoSize = true;
+            this.displayCurrencyLabel.Location = new System.Drawing.Point(550, 8);
+            this.displayCurrencyLabel.Name = "displayCurrencyLabel";
+            this.displayCurrencyLabel.Size = new System.Drawing.Size(86, 13);
+            this.displayCurrencyLabel.TabIndex = 102;
+            this.displayCurrencyLabel.Text = "Display Currency";
             // 
             // currencyConverterCombobox
             // 
@@ -2061,7 +2061,7 @@
         private System.Windows.Forms.Label label_SwitchMinSecondsAMD;
         private System.Windows.Forms.TextBox textBox_MinerAPIGraceSecondsAMD;
         private System.Windows.Forms.Label label_MinerAPIGraceSecondsAMD;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label displayCurrencyLabel;
         private System.Windows.Forms.ComboBox currencyConverterCombobox;
     }
 }

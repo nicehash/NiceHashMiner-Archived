@@ -109,6 +109,9 @@ namespace NiceHashMiner
                 currencyConverterCombobox.SelectedItem = Config.ConfigData.DisplayCurrency;
             else
                 currencyConverterCombobox.SelectedItem = "USD";
+
+
+            displayCurrencyLabel.Text = International.GetText("Form_Settings_DisplayCurrency");
         }
 
         private void SetupGeneralTab()
