@@ -80,6 +80,7 @@ Parameter | Range | Description
 ConfigFileVersion | Version | This is to identify which version of NiceHashMiner did the config file is made from.
 Language | number | Language selection for NiceHashMiner GUI.
 DebugConsole | true or false | When set to true, it displays debug console.
+DisplayCurrency | valid 3 letter code | Converts to selected currency via http://fixer.io valid options are any supported via fixer.
 BitcoinAddress | valid BTC address | The address that NiceHashMiner will mine to.
 WorkerName | text | To identify the computer on NiceHash web UI.
 Location | number | Used to select the location of the mining server.
