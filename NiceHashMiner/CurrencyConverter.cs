@@ -16,6 +16,9 @@ namespace NiceHashMiner.CurrencyConverter
 
         public static double ConvertToActiveCurrency(double amount)
         {
+            if (!ConverterActive)
+                return amount;
+
             if(LastResponse == null || DateTime.Now - LastUpdate > TimeSpan.FromMinutes(10))
             {
                 UpdateAPI();
