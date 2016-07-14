@@ -109,17 +109,17 @@
     <Compile Include="Config.cs" />
     <Compile Include="CPUID.cs" />
     <Compile Include="Miners\cpuminer.cs" />
-    <Compile Include="Forms\Form1.cs">
+    <Compile Include="Forms\Form_Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Forms\Form_Main.Designer.cs">
+      <DependentUpon>Form_Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form2.cs">
+    <Compile Include="Forms\Form_Benchmark.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="Forms\Form_Benchmark.Designer.cs">
+      <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Form3.cs">
       <SubType>Form</SubType>
@@ -157,11 +157,11 @@
     <EmbeddedResource Include="Forms\DriverVersionConfirmationDialog.resx">
       <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_Main.resx">
+      <DependentUpon>Form_Main.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_Benchmark.resx">
+      <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form3.resx">
       <DependentUpon>Form3.cs</DependentUpon>

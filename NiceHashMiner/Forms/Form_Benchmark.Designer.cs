@@ -1,6 +1,6 @@
 ﻿namespace NiceHashMiner
 {
-    partial class Form2
+    partial class Form_Benchmark
     {
         /// <summary>
         /// Required designer variable.
@@ -183,7 +183,7 @@
             this.buttonCheckProfitability.UseVisualStyleBackColor = true;
             this.buttonCheckProfitability.Click += new System.EventHandler(this.buttonCheckProfitability_Click);
             // 
-            // Form2
+            // Form_Benchmark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -201,7 +201,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(490, 200);
-            this.Name = "Form2";
+            this.Name = "Form_Benchmark";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

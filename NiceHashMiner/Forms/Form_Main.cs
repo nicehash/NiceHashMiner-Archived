@@ -11,7 +11,7 @@ using System.Management;
 
 namespace NiceHashMiner
 {
-    public partial class Form1 : Form
+    public partial class Form_Main : Form
     {
         public static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
         private static string VisitURL = "http://www.nicehash.com";
@@ -28,7 +28,7 @@ namespace NiceHashMiner
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Timer IdleCheck;
-        private Form3 LoadingScreen;
+        private Form_Loading LoadingScreen;
         private int LoadCounter = 0;
         private int TotalLoadSteps = 13;
         private int CPUs;
@@ -37,10 +37,10 @@ namespace NiceHashMiner
 
         private Random R;
 
-        private Form2 BenchmarkForm;
+        private Form_Benchmark BenchmarkForm;
 
 
-        public Form1(bool ss)
+        public Form_Main(bool ss)
         {
             InitializeComponent();
 
@@ -92,7 +92,7 @@ namespace NiceHashMiner
 
             if (ss)
             {
-                Form4 f4 = new Form4();
+                Form_ConfigSettings f4 = new Form_ConfigSettings();
                 f4.ShowDialog();
             }
 
@@ -403,7 +403,7 @@ namespace NiceHashMiner
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            LoadingScreen = new Form3();
+            LoadingScreen = new Form_Loading();
             LoadingScreen.Location = new Point(this.Location.X + (this.Width - LoadingScreen.Width) / 2, this.Location.Y + (this.Height - LoadingScreen.Height) / 2);
             LoadingScreen.Show();
             LoadingScreen.progressBar1.Maximum = TotalLoadSteps;
@@ -857,7 +857,7 @@ namespace NiceHashMiner
             }
 
             SMACheck.Stop();
-            BenchmarkForm = new Form2(false);
+            BenchmarkForm = new Form_Benchmark(false);
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
             SMACheck.Start();

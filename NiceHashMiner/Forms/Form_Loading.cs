@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
-    public partial class Form3 : Form
+    public partial class Form_Loading : Form
     {
-        public Form3()
+        public Form_Loading()
         {
             InitializeComponent();
 

@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace NiceHashMiner
 {
-    public partial class Form2 : Form
+    public partial class Form_Benchmark : Form
     {
         private int index;
         private bool inBenchmark;
@@ -19,7 +19,7 @@ namespace NiceHashMiner
         private int TimeIndex = 1;
         private Miner CurrentlyBenchmarking;
 
-        public Form2(bool autostart)
+        public Form_Benchmark(bool autostart)
         {
             InitializeComponent();
 
@@ -40,7 +40,7 @@ namespace NiceHashMiner
             listView1.Columns[2].Text = International.GetText("ListView_Algorithm");
             listView1.Columns[3].Text = International.GetText("ListView_Speed");
 
-            foreach (Miner m in Form1.Miners)
+            foreach (Miner m in Form_Main.Miners)
             {
                 for (int i = 0; i < m.SupportedAlgorithms.Length; i++)
                 {
@@ -143,12 +143,12 @@ namespace NiceHashMiner
             else
             {
                 // average all cpu benchmarks
-                if (Form1.Miners[0] is cpuminer)
+                if (Form_Main.Miners[0] is cpuminer)
                 {
                     Helpers.ConsolePrint("BENCHMARK", "Calculating average CPU speeds:");
 
-                    double[] Speeds = new double[Form1.Miners[0].SupportedAlgorithms.Length];
-                    int[] MTaken = new int[Form1.Miners[0].SupportedAlgorithms.Length];
+                    double[] Speeds = new double[Form_Main.Miners[0].SupportedAlgorithms.Length];
+                    int[] MTaken = new int[Form_Main.Miners[0].SupportedAlgorithms.Length];
 
                     foreach (ListViewItem lvi in listView1.Items)
                     {
@@ -167,9 +167,9 @@ namespace NiceHashMiner
                     for (int i = 0; i < Speeds.Length; i++)
                     {
                         if (MTaken[i] > 0) Speeds[i] /= MTaken[i];
-                        Helpers.ConsolePrint("BENCHMARK", Form1.Miners[0].SupportedAlgorithms[i].NiceHashName + " average speed: " + Form1.Miners[0].PrintSpeed(Speeds[i]));
+                        Helpers.ConsolePrint("BENCHMARK", Form_Main.Miners[0].SupportedAlgorithms[i].NiceHashName + " average speed: " + Form_Main.Miners[0].PrintSpeed(Speeds[i]));
 
-                        foreach (Miner m in Form1.Miners)
+                        foreach (Miner m in Form_Main.Miners)
                         {
                             if (m is cpuminer)
                                 m.SupportedAlgorithms[i].BenchmarkSpeed = Speeds[i];
@@ -236,7 +236,7 @@ namespace NiceHashMiner
 
         private void buttonReset_Click(object sender, EventArgs e)
         {
-            foreach (Miner m in Form1.Miners)
+            foreach (Miner m in Form_Main.Miners)
             {
                 for (int i = 0; i < m.SupportedAlgorithms.Length; i++)
                 {
@@ -271,15 +271,15 @@ namespace NiceHashMiner
             SubmitResultDialog.ShowDialog();
             SubmitResultDialog = null;
 
-            for (int i = 0; i < Form1.Miners.Length; i++)
+            for (int i = 0; i < Form_Main.Miners.Length; i++)
             {
-                for (int j = 0; j < Form1.Miners[i].CDevs.Count; j++)
+                for (int j = 0; j < Form_Main.Miners[i].CDevs.Count; j++)
                 {
-                    Form1.Miners[i].CDevs[j].Enabled = true;
+                    Form_Main.Miners[i].CDevs[j].Enabled = true;
                     for (int k = 0; k < Config.ConfigData.Groups[i].DisabledDevices.Length; k++)
                     {
                         if (Config.ConfigData.Groups[i].DisabledDevices[k] == j)
-                            Form1.Miners[i].CDevs[j].Enabled = false;
+                            Form_Main.Miners[i].CDevs[j].Enabled = false;
                     }
                 }
             }
@@ -288,18 +288,18 @@ namespace NiceHashMiner
         private void buttonCheckProfitability_Click(object sender, EventArgs e)
         {
             string url = "https://www.nicehash.com/?p=calc&name=CUSTOM";
-            int len = Form1.NiceHashData == null ? 23 : Form1.NiceHashData.Length;
+            int len = Form_Main.NiceHashData == null ? 23 : Form_Main.NiceHashData.Length;
             double[] total = new double[len];
 
             for (int i = 0; i < len; i++)
                 total[i] = 0;
 
-            for (int i = 0; i < Form1.Miners.Length; i++)
+            for (int i = 0; i < Form_Main.Miners.Length; i++)
             {
-                if (Form1.Miners[i].EnabledDeviceCount() < 1) continue;
-                for (int j = 0; j < Form1.Miners[i].SupportedAlgorithms.Length; j++)
+                if (Form_Main.Miners[i].EnabledDeviceCount() < 1) continue;
+                for (int j = 0; j < Form_Main.Miners[i].SupportedAlgorithms.Length; j++)
                 {
-                    total[Form1.Miners[i].SupportedAlgorithms[j].NiceHashID] += Form1.Miners[i].SupportedAlgorithms[j].BenchmarkSpeed;
+                    total[Form_Main.Miners[i].SupportedAlgorithms[j].NiceHashID] += Form_Main.Miners[i].SupportedAlgorithms[j].BenchmarkSpeed;
                 }
             }
 

@@ -51,10 +51,10 @@ namespace NiceHashMiner
                 }
 
                 if (ParseCommandLine(argv, "-config", out tmp))
-                    Application.Run(new Form1(true));
+                    Application.Run(new Form_Main(true));
             }
             
-            Application.Run(new Form1(false));
+            Application.Run(new Form_Main(false));
         }
 
         private static bool ParseCommandLine(string[] argv, string find, out string value)

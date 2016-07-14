@@ -33,16 +33,16 @@ namespace NiceHashMiner
             DeviceChecked_Index = 0;
             mm = null;
 
-            for (int i = 0; i < Form1.Miners.Length; i++)
+            for (int i = 0; i < Form_Main.Miners.Length; i++)
             {
-                for (int j = 0; j < Form1.Miners[i].CDevs.Count; j++)
+                for (int j = 0; j < Form_Main.Miners[i].CDevs.Count; j++)
                 {
-                    ComputeDevice D = Form1.Miners[i].CDevs[j];
+                    ComputeDevice D = Form_Main.Miners[i].CDevs[j];
 
                     ListViewItem lvi = new ListViewItem(D.Vendor);
                     lvi.SubItems.Add(D.Name);
                     lvi.SubItems.Add(D.ID.ToString());
-                    lvi.Tag = Form1.Miners[i];
+                    lvi.Tag = Form_Main.Miners[i];
                     DevicesListView.Items.Add(lvi);
                 }
             }
