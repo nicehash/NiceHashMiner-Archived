@@ -49,6 +49,10 @@
             this.comboBox_CPU0_ForceCPUExtension = new System.Windows.Forms.ComboBox();
             this.label_CPU0_ForceCPUExtension = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.displayCurrencyLabel = new System.Windows.Forms.Label();
+            this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
+            this.textBox_MinerAPIGraceSecondsAMD = new System.Windows.Forms.TextBox();
+            this.label_MinerAPIGraceSecondsAMD = new System.Windows.Forms.Label();
             this.textBox_SwitchMinSecondsAMD = new System.Windows.Forms.TextBox();
             this.label_SwitchMinSecondsAMD = new System.Windows.Forms.Label();
             this.checkBox_LogToFile = new System.Windows.Forms.CheckBox();
@@ -192,8 +196,6 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonSaveClose = new System.Windows.Forms.Button();
-            this.label_MinerAPIGraceSecondsAMD = new System.Windows.Forms.Label();
-            this.textBox_MinerAPIGraceSecondsAMD = new System.Windows.Forms.TextBox();
             this.tabPage2.SuspendLayout();
             this.tabControl_CPU0.SuspendLayout();
             this.tabPage7.SuspendLayout();
@@ -223,7 +225,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(893, 338);
+            this.tabPage2.Size = new System.Drawing.Size(900, 353);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "CPU0";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -392,6 +394,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.displayCurrencyLabel);
+            this.tabPage1.Controls.Add(this.currencyConverterCombobox);
             this.tabPage1.Controls.Add(this.textBox_MinerAPIGraceSecondsAMD);
             this.tabPage1.Controls.Add(this.label_MinerAPIGraceSecondsAMD);
             this.tabPage1.Controls.Add(this.textBox_SwitchMinSecondsAMD);
@@ -467,6 +471,74 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // displayCurrencyLabel
+            // 
+            this.displayCurrencyLabel.AutoSize = true;
+            this.displayCurrencyLabel.Location = new System.Drawing.Point(550, 8);
+            this.displayCurrencyLabel.Name = "displayCurrencyLabel";
+            this.displayCurrencyLabel.Size = new System.Drawing.Size(86, 13);
+            this.displayCurrencyLabel.TabIndex = 102;
+            this.displayCurrencyLabel.Text = "Display Currency";
+            // 
+            // currencyConverterCombobox
+            // 
+            this.currencyConverterCombobox.FormattingEnabled = true;
+            this.currencyConverterCombobox.Items.AddRange(new object[] {
+            "AUD",
+            "BGN",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HRK",
+            "HUF",
+            "IDR",
+            "ILS",
+            "INR",
+            "JPY",
+            "KRW",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RON",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TRY",
+            "USD",
+            "ZAR"});
+            this.currencyConverterCombobox.Location = new System.Drawing.Point(550, 28);
+            this.currencyConverterCombobox.Name = "currencyConverterCombobox";
+            this.currencyConverterCombobox.Size = new System.Drawing.Size(121, 21);
+            this.currencyConverterCombobox.Sorted = true;
+            this.currencyConverterCombobox.TabIndex = 101;
+            this.currencyConverterCombobox.SelectedIndexChanged += new System.EventHandler(this.currencyConverterCombobox_SelectedIndexChanged);
+            // 
+            // textBox_MinerAPIGraceSecondsAMD
+            // 
+            this.textBox_MinerAPIGraceSecondsAMD.Location = new System.Drawing.Point(379, 176);
+            this.textBox_MinerAPIGraceSecondsAMD.Name = "textBox_MinerAPIGraceSecondsAMD";
+            this.textBox_MinerAPIGraceSecondsAMD.Size = new System.Drawing.Size(139, 20);
+            this.textBox_MinerAPIGraceSecondsAMD.TabIndex = 23;
+            // 
+            // label_MinerAPIGraceSecondsAMD
+            // 
+            this.label_MinerAPIGraceSecondsAMD.AutoSize = true;
+            this.label_MinerAPIGraceSecondsAMD.Location = new System.Drawing.Point(376, 155);
+            this.label_MinerAPIGraceSecondsAMD.Name = "label_MinerAPIGraceSecondsAMD";
+            this.label_MinerAPIGraceSecondsAMD.Size = new System.Drawing.Size(148, 13);
+            this.label_MinerAPIGraceSecondsAMD.TabIndex = 100;
+            this.label_MinerAPIGraceSecondsAMD.Text = "MinerAPIGraceSecondsAMD:";
             // 
             // textBox_SwitchMinSecondsAMD
             // 
@@ -1040,8 +1112,8 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
@@ -1072,7 +1144,7 @@
             this.tabPage_NVIDIA5X.Location = new System.Drawing.Point(4, 22);
             this.tabPage_NVIDIA5X.Name = "tabPage_NVIDIA5X";
             this.tabPage_NVIDIA5X.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_NVIDIA5X.Size = new System.Drawing.Size(893, 338);
+            this.tabPage_NVIDIA5X.Size = new System.Drawing.Size(900, 353);
             this.tabPage_NVIDIA5X.TabIndex = 2;
             this.tabPage_NVIDIA5X.Text = "NVIDIA5X";
             this.tabPage_NVIDIA5X.UseVisualStyleBackColor = true;
@@ -1196,7 +1268,7 @@
             this.tabPage_NVIDIA3X.Location = new System.Drawing.Point(4, 22);
             this.tabPage_NVIDIA3X.Name = "tabPage_NVIDIA3X";
             this.tabPage_NVIDIA3X.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_NVIDIA3X.Size = new System.Drawing.Size(893, 338);
+            this.tabPage_NVIDIA3X.Size = new System.Drawing.Size(900, 353);
             this.tabPage_NVIDIA3X.TabIndex = 3;
             this.tabPage_NVIDIA3X.Text = "NVIDIA3X";
             this.tabPage_NVIDIA3X.UseVisualStyleBackColor = true;
@@ -1321,7 +1393,7 @@
             this.tabPage_NVIDIA2X.Location = new System.Drawing.Point(4, 22);
             this.tabPage_NVIDIA2X.Name = "tabPage_NVIDIA2X";
             this.tabPage_NVIDIA2X.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_NVIDIA2X.Size = new System.Drawing.Size(893, 338);
+            this.tabPage_NVIDIA2X.Size = new System.Drawing.Size(900, 353);
             this.tabPage_NVIDIA2X.TabIndex = 4;
             this.tabPage_NVIDIA2X.Text = "NVIDIA2X";
             this.tabPage_NVIDIA2X.UseVisualStyleBackColor = true;
@@ -1524,7 +1596,7 @@
             this.tabPage_AMD.Location = new System.Drawing.Point(4, 22);
             this.tabPage_AMD.Name = "tabPage_AMD";
             this.tabPage_AMD.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_AMD.Size = new System.Drawing.Size(893, 338);
+            this.tabPage_AMD.Size = new System.Drawing.Size(900, 353);
             this.tabPage_AMD.TabIndex = 5;
             this.tabPage_AMD.Text = "AMD_OpenCL";
             this.tabPage_AMD.UseVisualStyleBackColor = true;
@@ -1779,22 +1851,6 @@
             this.buttonSaveClose.UseVisualStyleBackColor = true;
             this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
             // 
-            // label_MinerAPIGraceSecondsAMD
-            // 
-            this.label_MinerAPIGraceSecondsAMD.AutoSize = true;
-            this.label_MinerAPIGraceSecondsAMD.Location = new System.Drawing.Point(376, 155);
-            this.label_MinerAPIGraceSecondsAMD.Name = "label_MinerAPIGraceSecondsAMD";
-            this.label_MinerAPIGraceSecondsAMD.Size = new System.Drawing.Size(148, 13);
-            this.label_MinerAPIGraceSecondsAMD.TabIndex = 100;
-            this.label_MinerAPIGraceSecondsAMD.Text = "MinerAPIGraceSecondsAMD:";
-            // 
-            // textBox_MinerAPIGraceSecondsAMD
-            // 
-            this.textBox_MinerAPIGraceSecondsAMD.Location = new System.Drawing.Point(379, 176);
-            this.textBox_MinerAPIGraceSecondsAMD.Name = "textBox_MinerAPIGraceSecondsAMD";
-            this.textBox_MinerAPIGraceSecondsAMD.Size = new System.Drawing.Size(139, 20);
-            this.textBox_MinerAPIGraceSecondsAMD.TabIndex = 23;
-            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2005,5 +2061,7 @@
         private System.Windows.Forms.Label label_SwitchMinSecondsAMD;
         private System.Windows.Forms.TextBox textBox_MinerAPIGraceSecondsAMD;
         private System.Windows.Forms.Label label_MinerAPIGraceSecondsAMD;
+        private System.Windows.Forms.Label displayCurrencyLabel;
+        private System.Windows.Forms.ComboBox currencyConverterCombobox;
     }
 }

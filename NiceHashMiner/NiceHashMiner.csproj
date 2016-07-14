@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrencyConverter.cs" />
     <Compile Include="ethminerAPI.cs" />
     <Compile Include="Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
