@@ -33,9 +33,9 @@ namespace NiceHashMiner.CurrencyConverter
             }
 
             Helpers.ConsolePrint("CurrencyConverter", "Current Currency: " + Config.ConfigData.DisplayCurrency);
-
-            if (LastResponse.rates.ContainsKey(Config.ConfigData.DisplayCurrency))
-                return amount * LastResponse.rates[Config.ConfigData.DisplayCurrency];
+            double usdExchangeRate = 1.0;
+            if (LastResponse.rates.TryGetValue(Config.ConfigData.DisplayCurrency, out usdExchangeRate))
+                return amount * usdExchangeRate;
             else
             {
                 Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + Config.ConfigData.DisplayCurrency + " falling back to USD rates");

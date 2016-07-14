@@ -144,6 +144,8 @@ namespace NiceHashMiner
                 ConfigData.MinIdleSeconds = 60;
             if (ConfigData.LogMaxFileSize <= 0)
                 ConfigData.LogMaxFileSize = 1048576;
+            if (ConfigData.DisplayCurrency == null)
+                ConfigData.DisplayCurrency = "USD";
         }
 
         public static void SetDefaults()
