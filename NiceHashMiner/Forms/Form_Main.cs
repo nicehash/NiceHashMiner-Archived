@@ -11,7 +11,7 @@ using System.Management;
 
 namespace NiceHashMiner
 {
-    public partial class Form_Main : Form
+    public partial class Form_Main : Form, Form_Loading.AfterInitializationCaller
     {
         public static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
         private static string VisitURL = "http://www.nicehash.com";
@@ -28,15 +28,13 @@ namespace NiceHashMiner
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Timer IdleCheck;
-        private Form_Loading LoadingScreen;
-        private int LoadCounter = 0;
-        private int TotalLoadSteps = 13;
         private int CPUs;
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
 
         private Random R;
 
+        private Form_Loading LoadingScreen;
         private Form_Benchmark BenchmarkForm;
 
 
@@ -125,8 +123,11 @@ namespace NiceHashMiner
         }
 
 
-        private void AfterLoadComplete()
+        public void AfterLoadComplete()
         {
+            // TODO dispose object, check LoadingScreen 
+            LoadingScreen = null;
+
             this.Enabled = true;
 
             if (Config.ConfigData.AutoStartMining)
@@ -213,23 +214,19 @@ namespace NiceHashMiner
                     Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
             }
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_NVIDIA5X");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA5X"));
 
             Miners[CPUs] = new ccminer_sp();
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_NVIDIA3X");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA3X"));
             
             Miners[CPUs + 1] = new ccminer_tpruvot();
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_NVIDIA2X");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA2X"));
 
             Miners[CPUs + 2] = new ccminer_tpruvot_sm21();
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_AMD");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_AMD"));
 
             Miners[CPUs + 3] = new sgminer();
 
@@ -247,8 +244,7 @@ namespace NiceHashMiner
                 catch { }
             }
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_SaveConfig");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SaveConfig"));
             
             for (int i = 0; i < Miners.Length; i++)
             {
@@ -319,8 +315,8 @@ namespace NiceHashMiner
 
             Config.RebuildGroups();
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_CheckLatestVersion");
-            IncreaseLoadCounter();
+
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_CheckLatestVersion"));
 
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -337,8 +333,7 @@ namespace NiceHashMiner
             UpdateCheck.Start();
             UpdateCheck_Tick(null, null);
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_GetNiceHashSMA");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_GetNiceHashSMA"));
 
             SMACheck = new Timer();
             SMACheck.Tick += SMACheck_Tick;
@@ -346,8 +341,7 @@ namespace NiceHashMiner
             SMACheck.Start();
             SMACheck_Tick(null, null);
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_GetBTCRate");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_GetBTCRate"));
 
             BitcoinExchangeCheck = new Timer();
             BitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
@@ -355,8 +349,7 @@ namespace NiceHashMiner
             BitcoinExchangeCheck.Start();
             BitcoinExchangeCheck_Tick(null, null);
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_GetNiceHashBalance");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_GetNiceHashBalance"));
 
             BalanceCheck = new Timer();
             BalanceCheck.Tick += BalanceCheck_Tick;
@@ -364,19 +357,18 @@ namespace NiceHashMiner
             BalanceCheck.Start();
             BalanceCheck_Tick(null, null);
 
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_SetEnvironmentVariable");
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SetEnvironmentVariable"));
 
             SetEnvironmentVariables();
 
-            IncreaseLoadCounter();
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_SetWindowsErrorReporting");
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SetWindowsErrorReporting"));
+            
             Helpers.DisableWindowsErrorReporting(Config.ConfigData.DisableWindowsErrorReporting);
 
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounter();
             if (Config.ConfigData.NVIDIAP0State)
             {
-                LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_NVIDIAP0State");
+                LoadingScreen.SetInfoMsg(International.GetText("form1_loadtext_NVIDIAP0State"));
                 try
                 {
                     ProcessStartInfo psi = new ProcessStartInfo();
@@ -397,18 +389,15 @@ namespace NiceHashMiner
                 }
             }
 
-            IncreaseLoadCounter();
+            LoadingScreen.IncreaseLoadCounter();
         }
 
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            LoadingScreen = new Form_Loading();
+            LoadingScreen = new Form_Loading(this, International.GetText("form1_loadtext_CPU"));
             LoadingScreen.Location = new Point(this.Location.X + (this.Width - LoadingScreen.Width) / 2, this.Location.Y + (this.Height - LoadingScreen.Height) / 2);
             LoadingScreen.Show();
-            LoadingScreen.progressBar1.Maximum = TotalLoadSteps;
-            LoadingScreen.progressBar1.Value = 0;
-            LoadingScreen.LoadText.Text = International.GetText("form1_loadtext_CPU");
 
             StartupTimer = new Timer();
             StartupTimer.Tick += StartupTimer_Tick;
@@ -417,22 +406,7 @@ namespace NiceHashMiner
         }
 
 
-        private void IncreaseLoadCounter()
-        {
-            LoadCounter++;
-            LoadingScreen.progressBar1.Value = LoadCounter;
-            LoadingScreen.Update();
-            if (LoadCounter >= TotalLoadSteps)
-            {
-                if (LoadingScreen != null)
-                {
-                    LoadingScreen.Close();
-                    LoadingScreen = null;
-
-                    AfterLoadComplete();
-                }
-            }
-        }
+        
 
 
         private void SMAMinerCheck_Tick(object sender, EventArgs e)

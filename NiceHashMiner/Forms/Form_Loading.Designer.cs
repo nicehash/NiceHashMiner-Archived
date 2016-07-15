@@ -89,8 +89,8 @@
 
         #endregion
 
-        public System.Windows.Forms.ProgressBar progressBar1;
-        public System.Windows.Forms.Label LoadText;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label LoadText;
         private System.Windows.Forms.Label label_LoadingText;
     }
 }
