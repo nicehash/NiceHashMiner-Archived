@@ -40,7 +40,7 @@ namespace NiceHashMiner
         private Form_Benchmark BenchmarkForm;
 
 
-        public Form_Main(bool ss)
+        public Form_Main(bool showConfigSettingsDialog)
         {
             InitializeComponent();
 
@@ -90,7 +90,7 @@ namespace NiceHashMiner
             buttonStartMining.Text = International.GetText("form1_start");
             buttonStopMining.Text = International.GetText("form1_stop");
 
-            if (ss)
+            if (showConfigSettingsDialog)
             {
                 Form_ConfigSettings f4 = new Form_ConfigSettings();
                 f4.ShowDialog();
