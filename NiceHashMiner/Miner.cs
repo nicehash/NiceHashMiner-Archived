@@ -167,7 +167,7 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             NotProfitable = true;
             //IsRunning = false;
-            CurrentAlgo = -1;
+            //CurrentAlgo = -1;
         }
 
         abstract protected string BenchmarkCreateCommandLine(int index, int time);
