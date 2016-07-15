@@ -723,10 +723,10 @@
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel10;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        public System.Windows.Forms.TextBox textBoxBTCAddress;
-        public System.Windows.Forms.ComboBox comboBoxLocation;
-        public System.Windows.Forms.TextBox textBoxWorkerName;
-        public System.Windows.Forms.ListView listViewDevices;
+        private System.Windows.Forms.TextBox textBoxBTCAddress;
+        private System.Windows.Forms.ComboBox comboBoxLocation;
+        private System.Windows.Forms.TextBox textBoxWorkerName;
+        private System.Windows.Forms.ListView listViewDevices;
         private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
     }
