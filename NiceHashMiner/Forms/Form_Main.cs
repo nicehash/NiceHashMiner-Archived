@@ -51,25 +51,27 @@ namespace NiceHashMiner
             linkLabelCheckStats.Text = International.GetText("form1_check_stats");
             linkLabelChooseBTCWallet.Text = International.GetText("form1_choose_bitcoin_wallet");
 
-            label_RateCPU.Text = International.GetText("Rate") + ":";
-            label_RateNVIDIA5X.Text = International.GetText("Rate") + ":";
-            label_RateNVIDIA3X.Text = International.GetText("Rate") + ":";
-            label_RateNVIDIA2X.Text = International.GetText("Rate") + ":";
-            label_RateAMD.Text = International.GetText("Rate") + ":";
+            string rateString = International.GetText("Rate") + ":";
+            label_RateCPU.Text = rateString;
+            label_RateNVIDIA5X.Text = rateString;
+            label_RateNVIDIA3X.Text = rateString;
+            label_RateNVIDIA2X.Text = rateString;
+            label_RateAMD.Text = rateString;
 
-            label_RateCPUBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
-            label_RateNVIDIA5XBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
-            label_RateNVIDIA3XBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
-            label_RateNVIDIA2XBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
-            label_RateAMDBTC.Text = "0.00000000 BTC/" + International.GetText("Day");
+            string ratesBTCInitialString = "0.00000000 BTC/" + International.GetText("Day");
+            label_RateCPUBTC.Text = ratesBTCInitialString;
+            label_RateNVIDIA5XBTC.Text = ratesBTCInitialString;
+            label_RateNVIDIA3XBTC.Text = ratesBTCInitialString;
+            label_RateNVIDIA2XBTC.Text = ratesBTCInitialString;
+            label_RateAMDBTC.Text = ratesBTCInitialString;
 
 
-
-            label_RateCPUDollar.Text = String.Format("0.00 {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
-            label_RateNVIDIA5XDollar.Text = String.Format("0.00 {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
-            label_RateNVIDIA3XDollar.Text = String.Format("0.00 {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
-            label_RateNVIDIA2XDollar.Text = String.Format("0.00 {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
-            label_RateAMDDollar.Text = String.Format("0.00 {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
+            string ratesDollarInitialString = String.Format("0.00 {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
+            label_RateCPUDollar.Text = ratesDollarInitialString;
+            label_RateNVIDIA5XDollar.Text = ratesDollarInitialString;
+            label_RateNVIDIA3XDollar.Text = ratesDollarInitialString;
+            label_RateNVIDIA2XDollar.Text = ratesDollarInitialString;
+            label_RateAMDDollar.Text = ratesDollarInitialString;
 
             toolStripStatusLabelGlobalRateText.Text = International.GetText("form1_global_rate") + ":";
             toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
@@ -542,6 +544,18 @@ namespace NiceHashMiner
             }
         }
 
+        private void SetDeviceGroupStats(
+            ref Label labelSpeed,
+            ref Label labelRateBTC,
+            ref Label labelRateCurrency,
+            string aname, double speed, double paying)
+        {
+            labelSpeed.Text = FormatSpeedOutput(speed) + aname;
+            labelRateBTC.Text = FormatPayingOutput(paying);
+            labelRateCurrency.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
+                + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
+            UpdateGlobalRate();
+        }
 
         private void SetCPUStats(string aname, double speed, double paying)
         {
@@ -556,41 +570,25 @@ namespace NiceHashMiner
 
         private void SetNVIDIAtp21Stats(string aname, double speed, double paying)
         {
-            labelNVIDIA2X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
-            label_RateNVIDIA2XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA2XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
-                + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
-            UpdateGlobalRate();
+            SetDeviceGroupStats(ref labelNVIDIA2X_Mining_Speed, ref label_RateNVIDIA2XBTC, ref label_RateNVIDIA2XDollar, aname, speed, paying);
         }
 
 
         private void SetNVIDIAtpStats(string aname, double speed, double paying)
         {
-            labelNVIDIA3X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
-            label_RateNVIDIA3XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA3XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
-                + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
-            UpdateGlobalRate();
+            SetDeviceGroupStats(ref labelNVIDIA3X_Mining_Speed, ref label_RateNVIDIA3XBTC, ref label_RateNVIDIA3XDollar, aname, speed, paying);
         }
 
 
         private void SetNVIDIAspStats(string aname, double speed, double paying)
         {
-            labelNVIDIA5X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
-            label_RateNVIDIA5XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA5XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) 
-                + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
-            UpdateGlobalRate();
+            SetDeviceGroupStats(ref labelNVIDIA5X_Mining_Speed, ref label_RateNVIDIA5XBTC, ref label_RateNVIDIA5XDollar, aname, speed, paying);
         }
 
 
         private void SetAMDOpenCLStats(string aname, double speed, double paying)
         {
-            labelAMDOpenCL_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
-            label_RateAMDBTC.Text = FormatPayingOutput(paying);
-            label_RateAMDDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
-                + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
-            UpdateGlobalRate();
+            SetDeviceGroupStats(ref labelAMDOpenCL_Mining_Speed, ref label_RateAMDBTC, ref label_RateAMDDollar, aname, speed, paying);
         }
 
 
