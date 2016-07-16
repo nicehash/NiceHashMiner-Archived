@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Globalization;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {

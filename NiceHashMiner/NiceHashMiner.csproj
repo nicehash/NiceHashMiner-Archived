@@ -70,6 +70,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configs\BenchmarkConfig.cs" />
+    <Compile Include="Configs\ComputeDevicesSettup.cs" />
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="ethminerAPI.cs" />
     <Compile Include="Forms\Form_ChooseLanguage.cs">
@@ -107,7 +109,7 @@
     </Compile>
     <Compile Include="Ethereum.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Configs\Legacy\Config.cs" />
     <Compile Include="CPUID.cs" />
     <Compile Include="Miners\cpuminer.cs" />
     <Compile Include="Forms\Form_Main.cs">

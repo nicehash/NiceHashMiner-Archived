@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.CurrencyConverter
 {

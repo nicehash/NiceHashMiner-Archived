@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
 using Newtonsoft.Json;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {
@@ -57,10 +58,12 @@ namespace NiceHashMiner
 
     public class ComputeDevice
     {
-        public int ID;
-        public string Vendor;
-        public string Name;
+        readonly public int ID;
+        readonly public string Vendor;
+        readonly public string Name;
         public bool Enabled;
+        // 
+        readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
 
         public ComputeDevice(int id, string v, string n)
         {
@@ -68,6 +71,8 @@ namespace NiceHashMiner
             Vendor = v;
             Name = n;
             Enabled = true;
+            // add to all devices
+            AllAvaliableDevices.Add(this);
         }
     }
 

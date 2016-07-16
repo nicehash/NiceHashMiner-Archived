@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Globalization;
 using System.Management;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {

@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Configs
 {
     public class SubConfigClass
     { }
