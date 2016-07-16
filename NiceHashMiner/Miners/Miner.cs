@@ -65,12 +65,12 @@ namespace NiceHashMiner
         // 
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
 
-        public ComputeDevice(int id, string v, string n)
+        public ComputeDevice(int id, string vendor, string name, bool enabled = true)
         {
             ID = id;
-            Vendor = v;
-            Name = n;
-            Enabled = true;
+            Vendor = vendor;
+            Name = name;
+            Enabled = enabled;
             // add to all devices
             AllAvaliableDevices.Add(this);
         }
