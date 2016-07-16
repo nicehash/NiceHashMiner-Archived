@@ -6,17 +6,10 @@ namespace NiceHashMiner.Utils
 {
     class CommandLineParser
     {
-        //// single parameter flags don't need aditional parameters
-        //private static readonly string[] SingleParameterFlags = { "-config" };
-        //private static readonly string[] DoubleParameterFlags = { "-lang" };
-        //// TODO temp, for now we only have two
-        //Dictionary<string, bool> IsParameterUsedDict = new Dictionary<string, bool>();
-        //Dictionary<string, string> DoubleParameterUsedDict = new Dictionary<string, string>();
-
         // keep it simple only two parameters for now
-        bool isConfig = false;
-        bool isLang = false;
-        int langValue = 0;
+        readonly bool isConfig = false;
+        readonly bool isLang = false;
+        readonly int langValue = 0;
 
         // properties
         public bool IsConfig { get { return isConfig; } }
