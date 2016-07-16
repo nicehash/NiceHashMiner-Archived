@@ -17,7 +17,7 @@ namespace NiceHashMiner
         private int LoadCounter = 0;
         // TODO find out what are the 13 loading steps, think if this should really be hardcoded
         private int TotalLoadSteps = 13;
-        private AfterInitializationCaller AfterInitCaller;
+        private readonly AfterInitializationCaller AfterInitCaller;
 
         public Form_Loading(AfterInitializationCaller initCaller, string startInfoMsg)
         {

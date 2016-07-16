@@ -354,7 +354,7 @@ namespace NiceHashMiner
                     {
                         int NHDataIndex = SupportedAlgorithms[BenchmarkIndex].NiceHashID;
 
-                        if (Form_Main.NiceHashData == null)
+                        if (Globals.NiceHashData == null)
                         {
                             Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
                                 "connection. Sgminer needs internet connection to do benchmarking.");
@@ -362,7 +362,7 @@ namespace NiceHashMiner
                             throw new Exception("No internet connection");
                         }
 
-                        if (Form_Main.NiceHashData[NHDataIndex].paying == 0)
+                        if (Globals.NiceHashData[NHDataIndex].paying == 0)
                         {
                             Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
                                 "[algo: " + SupportedAlgorithms[BenchmarkIndex].NiceHashName + "(" + NHDataIndex + ")]");
@@ -766,7 +766,7 @@ namespace NiceHashMiner
                 }
             }
 
-            if ((MaxProfit * Form_Main.BitcoinRate) < MinimumProfit)
+            if ((MaxProfit * Globals.BitcoinRate) < MinimumProfit)
                 NotProfitable = true;
             else
                 NotProfitable = false;

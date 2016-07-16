@@ -7,8 +7,8 @@ namespace NiceHashMiner.CurrencyConverter
 {
     public static class CurrencyConverter
     {
-        public static DateTime LastUpdate = DateTime.Now;
-        public static CurrencyAPIResponse LastResponse;
+        private static DateTime LastUpdate = DateTime.Now;
+        private static CurrencyAPIResponse LastResponse;
 
         public static bool ConverterActive  {
             get { return Config.ConfigData.DisplayCurrency != "USD"; }

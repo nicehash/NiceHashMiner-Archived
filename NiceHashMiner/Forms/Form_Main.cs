@@ -13,12 +13,7 @@ namespace NiceHashMiner
 {
     public partial class Form_Main : Form, Form_Loading.AfterInitializationCaller
     {
-        public static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
         private static string VisitURL = "http://www.nicehash.com";
-        public static NiceHashSMA[] NiceHashData = null;
-
-        public static Miner[] Miners;
-        public static double BitcoinRate;
 
         private Timer MinerStatsCheck;
         private Timer UpdateCheck;
@@ -108,7 +103,7 @@ namespace NiceHashMiner
 
             Text += " v" + Application.ProductVersion;
 
-            if (Config.ConfigData.ServiceLocation >= 0 && Config.ConfigData.ServiceLocation < MiningLocation.Length)
+            if (Config.ConfigData.ServiceLocation >= 0 && Config.ConfigData.ServiceLocation < Globals.MiningLocation.Length)
                 comboBoxLocation.SelectedIndex = Config.ConfigData.ServiceLocation;
             else
                 comboBoxLocation.SelectedIndex = 0;
@@ -204,41 +199,40 @@ namespace NiceHashMiner
                 CPUs = 0;
             }
 
-            Miners = new Miner[CPUs + 4];
+            Globals.Miners = new Miner[CPUs + 4];
 
             if (CPUs == 1)
-                Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
+                Globals.Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
             else
             {
                 for (int i = 0; i < CPUs; i++)
-                    Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
+                    Globals.Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
             }
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA5X"));
 
-            Miners[CPUs] = new ccminer_sp();
+            Globals.Miners[CPUs] = new ccminer_sp();
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA3X"));
-            
-            Miners[CPUs + 1] = new ccminer_tpruvot();
+
+            Globals.Miners[CPUs + 1] = new ccminer_tpruvot();
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA2X"));
 
-            Miners[CPUs + 2] = new ccminer_tpruvot_sm21();
+            Globals.Miners[CPUs + 2] = new ccminer_tpruvot_sm21();
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_AMD"));
 
-            Miners[CPUs + 3] = new sgminer();
+            Globals.Miners[CPUs + 3] = new sgminer();
 
             // Auto uncheck CPU if any GPU is found
             for (int i = 0; i < CPUs; i++)
             {
                 try
                 {
-                    if ((Miners[CPUs + 0].CDevs.Count > 0 || Miners[CPUs + 1].CDevs.Count > 0 ||
-                         Miners[CPUs + 2].CDevs.Count > 0 || Miners[CPUs + 3].CDevs.Count > 0) && i < CPUs)
+                    if ((Globals.Miners[CPUs + 0].CDevs.Count > 0 || Globals.Miners[CPUs + 1].CDevs.Count > 0 || Globals.Miners[CPUs + 2].CDevs.Count > 0 || Globals.Miners[CPUs + 3].CDevs.Count > 0) && i < CPUs)
                     {
-                        Miners[i].CDevs[0].Enabled = false;
+                        Globals.Miners[i].CDevs[0].Enabled = false;
                     }
                 }
                 catch { }
@@ -246,52 +240,52 @@ namespace NiceHashMiner
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SaveConfig"));
             
-            for (int i = 0; i < Miners.Length; i++)
+            for (int i = 0; i < Globals.Miners.Length; i++)
             {
                 if (Config.ConfigData.Groups.Length > i)
                 {
-                    Miners[i].ExtraLaunchParameters = Config.ConfigData.Groups[i].ExtraLaunchParameters;
-                    Miners[i].UsePassword = Config.ConfigData.Groups[i].UsePassword;
-                    Miners[i].MinimumProfit = Config.ConfigData.Groups[i].MinimumProfit;
-                    Miners[i].DaggerHashimotoGenerateDevice = Config.ConfigData.Groups[i].DaggerHashimotoGenerateDevice;
+                    Globals.Miners[i].ExtraLaunchParameters = Config.ConfigData.Groups[i].ExtraLaunchParameters;
+                    Globals.Miners[i].UsePassword = Config.ConfigData.Groups[i].UsePassword;
+                    Globals.Miners[i].MinimumProfit = Config.ConfigData.Groups[i].MinimumProfit;
+                    Globals.Miners[i].DaggerHashimotoGenerateDevice = Config.ConfigData.Groups[i].DaggerHashimotoGenerateDevice;
                     if (Config.ConfigData.Groups[i].APIBindPort > 0)
-                        Miners[i].APIPort = Config.ConfigData.Groups[i].APIBindPort;
-                    for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length && z < Miners[i].SupportedAlgorithms.Length; z++)
+                        Globals.Miners[i].APIPort = Config.ConfigData.Groups[i].APIBindPort;
+                    for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length && z < Globals.Miners[i].SupportedAlgorithms.Length; z++)
                     {
-                        Miners[i].SupportedAlgorithms[z].BenchmarkSpeed = Config.ConfigData.Groups[i].Algorithms[z].BenchmarkSpeed;
-                        Miners[i].SupportedAlgorithms[z].ExtraLaunchParameters = Config.ConfigData.Groups[i].Algorithms[z].ExtraLaunchParameters;
-                        Miners[i].SupportedAlgorithms[z].UsePassword = Config.ConfigData.Groups[i].Algorithms[z].UsePassword;
-                        Miners[i].SupportedAlgorithms[z].Skip = Config.ConfigData.Groups[i].Algorithms[z].Skip;
+                        Globals.Miners[i].SupportedAlgorithms[z].BenchmarkSpeed = Config.ConfigData.Groups[i].Algorithms[z].BenchmarkSpeed;
+                        Globals.Miners[i].SupportedAlgorithms[z].ExtraLaunchParameters = Config.ConfigData.Groups[i].Algorithms[z].ExtraLaunchParameters;
+                        Globals.Miners[i].SupportedAlgorithms[z].UsePassword = Config.ConfigData.Groups[i].Algorithms[z].UsePassword;
+                        Globals.Miners[i].SupportedAlgorithms[z].Skip = Config.ConfigData.Groups[i].Algorithms[z].Skip;
 
-                        Miners[i].SupportedAlgorithms[z].DisabledDevice = new bool[Miners[i].CDevs.Count];
+                        Globals.Miners[i].SupportedAlgorithms[z].DisabledDevice = new bool[Globals.Miners[i].CDevs.Count];
                         if (Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices != null)
                         {
-                            if (Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length < Miners[i].CDevs.Count)
+                            if (Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length < Globals.Miners[i].CDevs.Count)
                             {
                                 for (int j = 0; j < Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length; j++)
-                                    Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices[j];
-                                for (int j = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length; j < Miners[i].CDevs.Count; j++)
-                                    Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = false;
+                                    Globals.Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices[j];
+                                for (int j = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length; j < Globals.Miners[i].CDevs.Count; j++)
+                                    Globals.Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = false;
                             }
                             else
                             {
-                                for (int j = 0; j < Miners[i].CDevs.Count; j++)
-                                    Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices[j];
+                                for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
+                                    Globals.Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices[j];
                             }
                         }
                         else
                         {
-                            Miners[i].GetDisabledDevicePerAlgo();
+                            Globals.Miners[i].GetDisabledDevicePerAlgo();
                         }
                     }
                 }
                 else
                 {
-                    Miners[i].GetDisabledDevicePerAlgo();
+                    Globals.Miners[i].GetDisabledDevicePerAlgo();
                 }
-                for (int k = 0; k < Miners[i].CDevs.Count; k++)
+                for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++)
                 {
-                    ComputeDevice D = Miners[i].CDevs[k];
+                    ComputeDevice D = Globals.Miners[i].CDevs[k];
                     if (Config.ConfigData.Groups.Length > i)
                     {
                         D.Enabled = true;
@@ -325,7 +319,7 @@ namespace NiceHashMiner
             SMAMinerCheck = new Timer();
             SMAMinerCheck.Tick += SMAMinerCheck_Tick;
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
-            if (Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+            if (Globals.Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
             
             UpdateCheck = new Timer();
             UpdateCheck.Tick += UpdateCheck_Tick;
@@ -412,7 +406,7 @@ namespace NiceHashMiner
         private void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
-            if (Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+            if (Globals.Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
 
             string Worker = textBoxWorkerName.Text.Trim();
             if (Worker.Length > 0)
@@ -420,11 +414,11 @@ namespace NiceHashMiner
             else
                 Worker = textBoxBTCAddress.Text.Trim();
 
-            foreach (Miner m in Miners)
+            foreach (Miner m in Globals.Miners)
             {
                 if (m.EnabledDeviceCount() == 0) continue;
 
-                int MaxProfitIndex = m.GetMaxProfitIndex(NiceHashData);
+                int MaxProfitIndex = m.GetMaxProfitIndex(Globals.NiceHashData);
 
                 if (m.NotProfitable || MaxProfitIndex == -1)
                 {
@@ -447,8 +441,7 @@ namespace NiceHashMiner
                     m.CurrentAlgo = MaxProfitIndex;
 
                     m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
-                        "stratum+tcp://" + NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" +
-                        NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+                        "stratum+tcp://" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + Globals.MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
                     MinerStatsCheck.Start();
                 }
             }
@@ -468,7 +461,7 @@ namespace NiceHashMiner
             SetNVIDIAtpStats("", 0, 0);
             SetAMDOpenCLStats("", 0, 0);
 
-            foreach (Miner m in Miners)
+            foreach (Miner m in Globals.Miners)
             {
                 if (!m.IsRunning) continue;
 
@@ -485,7 +478,7 @@ namespace NiceHashMiner
                     int algoIndex = m.GetAlgoIndex("hodl");
                     CPUAlgoName = "hodl";
                     CPUTotalSpeed = m.SupportedAlgorithms[algoIndex].BenchmarkSpeed;
-                    CPUTotalRate = NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
+                    CPUTotalRate = Globals.NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
 
                     continue;
                 }
@@ -513,8 +506,8 @@ namespace NiceHashMiner
                 else
                     m.StartingUpDelay = false;
 
-                if (NiceHashData != null)
-                    m.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
+                if (Globals.NiceHashData != null)
+                    m.CurrentRate = Globals.NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
                 else
                     m.CurrentRate = 0;
 
@@ -554,7 +547,7 @@ namespace NiceHashMiner
             labelCPU_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             if (aname.Equals("hodl")) labelCPU_Mining_Speed.Text += "**";
             label_RateCPUBTC.Text = FormatPayingOutput(paying);
-            label_RateCPUDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
+            label_RateCPUDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
             UpdateGlobalRate();
         }
@@ -564,7 +557,7 @@ namespace NiceHashMiner
         {
             labelNVIDIA2X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA2XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA2XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
+            label_RateNVIDIA2XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
             UpdateGlobalRate();
         }
@@ -574,7 +567,7 @@ namespace NiceHashMiner
         {
             labelNVIDIA3X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA3XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA3XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
+            label_RateNVIDIA3XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
             UpdateGlobalRate();
         }
@@ -584,7 +577,7 @@ namespace NiceHashMiner
         {
             labelNVIDIA5X_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateNVIDIA5XBTC.Text = FormatPayingOutput(paying);
-            label_RateNVIDIA5XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) 
+            label_RateNVIDIA5XDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture) 
                 + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
             UpdateGlobalRate();
         }
@@ -594,7 +587,7 @@ namespace NiceHashMiner
         {
             labelAMDOpenCL_Mining_Speed.Text = FormatSpeedOutput(speed) + aname;
             label_RateAMDBTC.Text = FormatPayingOutput(paying);
-            label_RateAMDDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
+            label_RateAMDDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : Config.ConfigData.DisplayCurrency) + International.GetText("Day");
             UpdateGlobalRate();
         }
@@ -603,7 +596,7 @@ namespace NiceHashMiner
         private void UpdateGlobalRate()
         {
             double TotalRate = 0;
-            foreach (Miner m in Miners)
+            foreach (Miner m in Globals.Miners)
                 TotalRate += m.CurrentRate;
 
             if (Config.ConfigData.AutoScaleBTCValues && TotalRate < 0.1)
@@ -621,10 +614,10 @@ namespace NiceHashMiner
 
 
             if(CurrencyConverter.CurrencyConverter.ConverterActive == false)
-                toolStripStatusLabelBTCDayValue.Text = (TotalRate * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
+                toolStripStatusLabelBTCDayValue.Text = (TotalRate *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
             else
 
-                toolStripStatusLabelBTCDayValue.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency((TotalRate * BitcoinRate)).ToString("F2", CultureInfo.InvariantCulture);
+                toolStripStatusLabelBTCDayValue.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency((TotalRate *Globals.BitcoinRate)).ToString("F2", CultureInfo.InvariantCulture);
         }
 
 
@@ -649,11 +642,11 @@ namespace NiceHashMiner
                     
                     Helpers.ConsolePrint("CurrencyConverter", "IsActive: " + CurrencyConverter.CurrencyConverter.ConverterActive);
                     if(CurrencyConverter.CurrencyConverter.ConverterActive == false)
-                        toolStripStatusLabelBalanceDollarText.Text = (Balance * BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
+                        toolStripStatusLabelBalanceDollarText.Text = (Balance *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
                     else
                     {
                         Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + Config.ConfigData.DisplayCurrency);
-                        double Amount = (Balance * BitcoinRate);
+                        double Amount = (Balance *Globals.BitcoinRate);
                         Amount = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(Amount);
                         toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
                     }
@@ -666,8 +659,8 @@ namespace NiceHashMiner
         {
             Helpers.ConsolePrint("COINBASE", "Bitcoin rate get");
             double BR = Bitcoin.GetUSDExchangeRate();
-            if (BR > 0) BitcoinRate = BR;
-            Helpers.ConsolePrint("COINBASE", "Current Bitcoin rate: " + BitcoinRate.ToString("F2", CultureInfo.InvariantCulture));
+            if (BR > 0) Globals.BitcoinRate = BR;
+            Helpers.ConsolePrint("COINBASE", "Current Bitcoin rate: " + Globals.BitcoinRate.ToString("F2", CultureInfo.InvariantCulture));
         }
 
 
@@ -681,7 +674,7 @@ namespace NiceHashMiner
             {
                 if (t != null)
                 {
-                    NiceHashData = t;
+                    Globals.NiceHashData = t;
                     break;
                 }
 
@@ -690,7 +683,7 @@ namespace NiceHashMiner
                 t = NiceHashStats.GetAlgorithmRates(worker);
             }
 
-            if (t == null && NiceHashData == null && ShowWarningNiceHashData)
+            if (t == null && Globals.NiceHashData == null && ShowWarningNiceHashData)
             {
                 ShowWarningNiceHashData = false;
                 DialogResult dialogResult = MessageBox.Show(International.GetText("form1_msgbox_NoInternetMsg"),
@@ -810,7 +803,7 @@ namespace NiceHashMiner
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach (Miner m in Miners)
+            foreach (Miner m in Globals.Miners)
                 m.Stop(false);
 
             MessageBoxManager.Unregister();
@@ -893,7 +886,7 @@ namespace NiceHashMiner
             }
             else if (!VerifyMiningAddress(true)) return;
 
-            if (NiceHashData == null)
+            if (Globals.NiceHashData == null)
             {
                 MessageBox.Show(International.GetText("form1_msgbox_NullNiceHashDataMsg"),
                                 International.GetText("Error_with_Exclamation"),
@@ -902,7 +895,7 @@ namespace NiceHashMiner
             }
 
             // Check if the user has run benchmark first
-            foreach (Miner m in Miners)
+            foreach (Miner m in Globals.Miners)
             {
                 if (m.EnabledDeviceCount() == 0) continue;
 
@@ -961,7 +954,7 @@ namespace NiceHashMiner
             MinerStatsCheck.Stop();
             SMAMinerCheck.Stop();
 
-            foreach (Miner m in Miners)
+            foreach (Miner m in Globals.Miners)
             {
                 m.Stop(false);
                 m.IsRunning = false;

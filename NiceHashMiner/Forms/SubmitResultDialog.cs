@@ -10,6 +10,7 @@ namespace NiceHashMiner
 {
     public partial class SubmitResultDialog : Form
     {
+        // TODO get back to this recheck if global
         public static double[] div;
         private bool InBenchmark;
         private int Time, TimeIndex, DeviceChecked_Index;
@@ -33,16 +34,16 @@ namespace NiceHashMiner
             DeviceChecked_Index = 0;
             mm = null;
 
-            for (int i = 0; i < Form_Main.Miners.Length; i++)
+            for (int i = 0; i < Globals.Miners.Length; i++)
             {
-                for (int j = 0; j < Form_Main.Miners[i].CDevs.Count; j++)
+                for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
                 {
-                    ComputeDevice D = Form_Main.Miners[i].CDevs[j];
+                    ComputeDevice D = Globals.Miners[i].CDevs[j];
 
                     ListViewItem lvi = new ListViewItem(D.Vendor);
                     lvi.SubItems.Add(D.Name);
                     lvi.SubItems.Add(D.ID.ToString());
-                    lvi.Tag = Form_Main.Miners[i];
+                    lvi.Tag = Globals.Miners[i];
                     DevicesListView.Items.Add(lvi);
                 }
             }

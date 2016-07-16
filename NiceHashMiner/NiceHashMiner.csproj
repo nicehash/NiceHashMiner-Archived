@@ -84,6 +84,7 @@
     <Compile Include="Forms\Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Globals.cs" />
     <Compile Include="International.cs" />
     <Compile Include="NiceHashProcess.cs" />
     <Compile Include="Forms\SubmitResultDialog.cs">
