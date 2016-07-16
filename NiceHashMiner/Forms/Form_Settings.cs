@@ -311,7 +311,7 @@ namespace NiceHashMiner
         {
             int minerIndex = numCPUs;
             string minerName = Config.ConfigData.Groups[minerIndex].Name;
-            int numDevices = Form1.Miners[minerIndex].CDevs.Count;
+            int numDevices = Globals.Miners[minerIndex].CDevs.Count;
             int tabIndex = 3;
 
             label_NVIDIA5X_APIBindPort.Text = International.GetText("Form_Settings_General_APIBindPort") + ":";
@@ -372,7 +372,7 @@ namespace NiceHashMiner
         {
             int minerIndex = numCPUs + 1;
             string minerName = Config.ConfigData.Groups[minerIndex].Name;
-            int numDevices = Form1.Miners[minerIndex].CDevs.Count;
+            int numDevices = Globals.Miners[minerIndex].CDevs.Count;
             int tabIndex = 3;
 
             label_NVIDIA3X_APIBindPort.Text = International.GetText("Form_Settings_General_APIBindPort") + ":";
@@ -433,7 +433,7 @@ namespace NiceHashMiner
         {
             int minerIndex = numCPUs + 2;
             string minerName = Config.ConfigData.Groups[minerIndex].Name;
-            int numDevices = Form1.Miners[minerIndex].CDevs.Count;
+            int numDevices = Globals.Miners[minerIndex].CDevs.Count;
             int tabIndex = 3;
 
             label_NVIDIA2X_APIBindPort.Text = International.GetText("Form_Settings_General_APIBindPort") + ":";
@@ -495,7 +495,7 @@ namespace NiceHashMiner
         {
             int minerIndex = numCPUs + 3;
             string minerName = Config.ConfigData.Groups[minerIndex].Name;
-            int numDevices = Form1.Miners[minerIndex].CDevs.Count;
+            int numDevices = Globals.Miners[minerIndex].CDevs.Count;
             int tabIndex = 4;
 
             label_AMD_APIBindPort.Text = International.GetText("Form_Settings_General_APIBindPort") + ":";

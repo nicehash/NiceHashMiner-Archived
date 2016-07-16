@@ -173,9 +173,9 @@ namespace NiceHashMiner
             {
                 string ActiveMinersGroup = "";
                 
-                for (int i = 0; i < Form1.Miners.Length; i++)
-                    if (Form1.Miners[i].IsRunning)
-                        ActiveMinersGroup += Form1.Miners[i].MinerDeviceName + "/";
+                for (int i = 0; i < Globals.Miners.Length; i++)
+                    if (Globals.Miners[i].IsRunning)
+                        ActiveMinersGroup += Globals.Miners[i].MinerDeviceName + "/";
 
                 if (ActiveMinersGroup.Length > 0)
                     ActiveMinersGroup = ActiveMinersGroup.Remove(ActiveMinersGroup.Length - 1);

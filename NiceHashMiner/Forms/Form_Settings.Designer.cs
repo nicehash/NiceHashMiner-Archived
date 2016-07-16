@@ -1899,7 +1899,7 @@
 
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabControl tabControl1;
-        public System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia3X;
         private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia5X;
         private System.Windows.Forms.CheckBox checkBox_MinimizeToTray;

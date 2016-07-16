@@ -93,7 +93,7 @@
 
         #endregion
 
-        public System.Windows.Forms.LinkLabel linkLabelError;
+        private System.Windows.Forms.LinkLabel linkLabelError;
         private System.Windows.Forms.CheckBox chkBoxDisableDetection;
         private System.Windows.Forms.Button buttonOK;
 
