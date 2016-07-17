@@ -120,7 +120,8 @@ namespace NiceHashMiner
 
         public void AfterLoadComplete()
         {
-            // TODO dispose object, check LoadingScreen 
+            // TODO dispose object, check LoadingScreen => this is tightly coupled with the
+            // check box functionality for rebuilding Groups. Find a way around and fix.
             LoadingScreen = null;
 
             this.Enabled = true;
