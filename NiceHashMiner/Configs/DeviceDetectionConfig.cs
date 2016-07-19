@@ -9,10 +9,18 @@ namespace NiceHashMiner.Configs
     /// </summary>
     public class DeviceDetectionConfig
     {
+        public bool DisableDetectionNVidia5X { get; set; }
+        public bool DisableDetectionNVidia3X { get; set; }
+        public bool DisableDetectionNVidia2X { get; set; }
+        public bool DisableDetectionAMD { get; set; }
+
         // TODO no need to initialize to false but just mirroring legacy for now
-        public bool DisableDetectionNVidia5X = false;
-        public bool DisableDetectionNVidia3X = false;
-        public bool DisableDetectionNVidia2X = false;
-        public bool DisableDetectionAMD = false;
+        public DeviceDetectionConfig()
+        {
+            DisableDetectionNVidia5X = false;
+            DisableDetectionNVidia3X = false;
+            DisableDetectionNVidia2X = false;
+            DisableDetectionAMD = false;
+        }
     }
 }

@@ -75,8 +75,10 @@
     <Compile Include="Configs\ComputeDevicesSettup.cs" />
     <Compile Include="Configs\DeviceDetectionConfig.cs" />
     <Compile Include="CurrencyConverter.cs" />
+    <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
+    <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="ethminerAPI.cs" />
     <Compile Include="Forms\Form_ChooseLanguage.cs">
@@ -93,6 +95,7 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="International.cs" />
+    <Compile Include="Miners\MinerPaths.cs" />
     <Compile Include="NiceHashProcess.cs" />
     <Compile Include="Forms\SubmitResultDialog.cs">
       <SubType>Form</SubType>
