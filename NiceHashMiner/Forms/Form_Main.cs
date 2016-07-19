@@ -842,6 +842,7 @@ namespace NiceHashMiner
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
+            // TODO remove this
             if (!Config.ConfigData.UseNewSettingsPage)
             {
                 Process PHandle = new Process();

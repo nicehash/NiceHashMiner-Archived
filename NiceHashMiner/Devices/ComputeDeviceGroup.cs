@@ -11,7 +11,7 @@ namespace NiceHashMiner.Devices
     /// </summary>
     public class ComputeDeviceGroup
     {
-        // here we save references to our devices
+        // here we save references devices for the group
         private List<ComputeDevice> _devices;
 
         readonly public DeviceGroupType Type;

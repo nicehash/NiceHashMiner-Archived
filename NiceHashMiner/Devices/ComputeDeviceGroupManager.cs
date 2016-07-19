@@ -81,6 +81,13 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public bool IsGroupEnabled(DeviceGroupType deviceGroupType)
+        {
+            ComputeDeviceGroup selectedGroup = null;
+            bool isGetFound = _groups.TryGetValue(deviceGroupType, out selectedGroup);
+            return isGetFound && selectedGroup.IsEnabled;
+        }
+
         
     }
 }

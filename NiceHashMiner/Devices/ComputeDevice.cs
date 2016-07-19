@@ -22,6 +22,7 @@ namespace NiceHashMiner.Devices
             Enabled = enabled;
             // add to all devices
             AllAvaliableDevices.Add(this);
+            // add to group manager
             ComputeDeviceGroupManager.Instance.AddDevice(this);
         }
     }
