@@ -88,8 +88,10 @@ namespace NiceHashMiner
 
             if (showConfigSettingsDialog)
             {
-                Form_ConfigSettings f4 = new Form_ConfigSettings();
-                f4.ShowDialog();
+                Helpers.ConsolePrint("NICEHASH", "-config flag ignored");
+                //// will not work
+                //var settingsForm = new Form_Settings();
+                //settingsForm.ShowDialog();
             }
 
             // Log the computer's amount of Total RAM and Page File Size

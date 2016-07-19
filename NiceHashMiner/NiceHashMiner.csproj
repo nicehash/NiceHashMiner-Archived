@@ -138,12 +138,6 @@
     <Compile Include="Forms\Form_Loading.Designer.cs">
       <DependentUpon>Form_Loading.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_ConfigSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_ConfigSettings.Designer.cs">
-      <DependentUpon>Form_ConfigSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />
     <Compile Include="Forms\MinerFileNotFoundDialog.cs">
@@ -177,9 +171,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Loading.resx">
       <DependentUpon>Form_Loading.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_ConfigSettings.resx">
-      <DependentUpon>Form_ConfigSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MinerFileNotFoundDialog.resx">
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>

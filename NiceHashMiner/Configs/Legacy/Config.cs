@@ -6,10 +6,7 @@ using Newtonsoft.Json;
 
 namespace NiceHashMiner.Configs
 {
-    public class SubConfigClass
-    { }
-
-    public class Algo : SubConfigClass
+    public class Algo
     {
 #pragma warning disable 649
         public string Name; // only used for easier manual identification in config file
@@ -21,7 +18,7 @@ namespace NiceHashMiner.Configs
 #pragma warning restore 649
     }
 
-    public class Group : SubConfigClass
+    public class Group
     {
 #pragma warning disable 649
         public string Name; // only used for easier manual identification in config file
