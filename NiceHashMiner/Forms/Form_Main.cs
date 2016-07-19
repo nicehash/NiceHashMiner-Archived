@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Management;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {

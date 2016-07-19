@@ -73,8 +73,11 @@
     <Compile Include="Configs\BenchmarkConfig.cs" />
     <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
     <Compile Include="Configs\ComputeDevicesSettup.cs" />
+    <Compile Include="Configs\DebugSettingsConfig.cs" />
     <Compile Include="Configs\DeviceDetectionConfig.cs" />
+    <Compile Include="Configs\NewMainConfig.cs" />
     <Compile Include="CurrencyConverter.cs" />
+    <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
@@ -95,6 +98,8 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="International.cs" />
+    <Compile Include="Devices\ComputeDeviceGroup.cs" />
+    <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
     <Compile Include="Miners\MinerPaths.cs" />
     <Compile Include="NiceHashProcess.cs" />
     <Compile Include="Forms\SubmitResultDialog.cs">

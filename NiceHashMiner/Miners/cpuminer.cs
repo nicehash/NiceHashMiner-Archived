@@ -4,6 +4,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Globalization;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {

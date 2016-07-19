@@ -10,7 +10,7 @@ namespace NiceHashMiner.Enums
         AMD_OpenCL,
         NVIDIA_2_1,
         NVIDIA_3_x,
-        NVIDIA_5_x,
+        NVIDIA_5_x, // includes 6.x ATM
         NVIDIA_6_x, // TODO draft not in use
     }
 }

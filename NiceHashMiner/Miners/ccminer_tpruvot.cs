@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {

@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Management;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {

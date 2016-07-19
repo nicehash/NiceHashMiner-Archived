@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {
