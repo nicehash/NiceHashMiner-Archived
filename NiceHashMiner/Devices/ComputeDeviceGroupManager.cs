@@ -46,7 +46,7 @@ namespace NiceHashMiner.Devices
         }
 
         public void AddDevice(ComputeDevice computeDevice) {
-            // TODO this is based on the current Miners implementation
+            // TODO this is based on the current Miners implementation it is bound to change
             ComputeDeviceGroup selectedGroup = null;
             bool isGetFound = false;
             // check and get group for vendor

@@ -87,7 +87,7 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerDeviceName, "Detected: " + name);
 
             // add AMD OpenCL devices
-            CDevs.Add(new ComputeDevice(id, MinerDeviceName, name));
+            CDevs.Add(new ComputeDevice(id, MinerDeviceName, name, this));
             Helpers.ConsolePrint(MinerDeviceName, "Added: " + name);
         }
 
@@ -201,7 +201,7 @@ namespace NiceHashMiner
                     if (GPUCodeName.Count > 0 && CDevs.Count < GPUCodeName.Count)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "Adding missed GPUs: " + manObj["name"].ToString());
-                        CDevs.Add(new ComputeDevice(CDevs.Count, MinerDeviceName, manObj["Name"].ToString()));
+                        CDevs.Add(new ComputeDevice(CDevs.Count, MinerDeviceName, manObj["Name"].ToString(), this));
                     }
 
                     Version AMDDriverVersion = new Version(manObj["DriverVersion"].ToString());

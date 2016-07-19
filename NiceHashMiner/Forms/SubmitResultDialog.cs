@@ -36,18 +36,14 @@ namespace NiceHashMiner
             DeviceChecked_Index = 0;
             mm = null;
 
-            for (int i = 0; i < Globals.Miners.Length; i++)
+            // #new way // # TODO CPU hangs up NullReference Exception (old implementation same issue)
+            foreach (var computeDevice in ComputeDevice.AllAvaliableDevices)
             {
-                for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
-                {
-                    ComputeDevice D = Globals.Miners[i].CDevs[j];
-
-                    ListViewItem lvi = new ListViewItem(D.Vendor);
-                    lvi.SubItems.Add(D.Name);
-                    lvi.SubItems.Add(D.ID.ToString());
-                    lvi.Tag = Globals.Miners[i];
-                    DevicesListView.Items.Add(lvi);
-                }
+                ListViewItem lvi = new ListViewItem(computeDevice.Vendor);
+                lvi.SubItems.Add(computeDevice.Name);
+                lvi.SubItems.Add(computeDevice.ID.ToString());
+                lvi.Tag = computeDevice.Miner;
+                DevicesListView.Items.Add(lvi);
             }
         }
 

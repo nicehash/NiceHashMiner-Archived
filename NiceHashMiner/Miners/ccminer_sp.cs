@@ -36,7 +36,7 @@ namespace NiceHashMiner
             if (name.Contains("SM 5.") || name.Contains("SM 6."))
             {
                 name = name.Substring(8);
-                CDevs.Add(new ComputeDevice(id, MinerDeviceName, name));
+                CDevs.Add(new ComputeDevice(id, MinerDeviceName, name, this));
                 Helpers.ConsolePrint(MinerDeviceName, "Added: " + name);
             }
         }
