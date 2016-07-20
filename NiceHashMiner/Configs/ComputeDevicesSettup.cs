@@ -22,5 +22,31 @@ namespace NiceHashMiner.Configs
             SettupID = settupID;
             DevicesSettup = devicesSettup.ToArray();
         }
+
+        /// <summary>
+        /// IsSameDeviceSettup, checks for hardware/device changes.
+        /// We check [Name, Vendor, ID, for now order sensitive]
+        /// Make sure to call this function after all ComputeDevices are registered/found
+        /// </summary>
+        /// <returns>True if hardware settup is the same, False otherwise</returns>
+        public bool IsSameDeviceSettup() {
+            bool isSame = DevicesSettup.Length == ComputeDevice.AllAvaliableDevices.Count;
+            if (isSame) {
+                for (int i = 0; i < DevicesSettup.Length; ++i) {
+                    var first = DevicesSettup[i];
+                    var second = ComputeDevice.AllAvaliableDevices[i];
+                    isSame = 
+                           first.ID     == second.ID
+                        && first.Name   == second.Name
+                        && first.Vendor == second.Vendor;
+                    if (isSame == false) {
+                        // we have a change stop
+                        break;
+                    }
+                }
+            }
+
+            return isSame;
+        }
     }
 }

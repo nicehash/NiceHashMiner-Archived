@@ -244,8 +244,13 @@ namespace NiceHashMiner
                 catch { }
             }
 
+            /////////////////////////////////////////////
+            /////// from here on we have our devices and Miners initialized
+            NewMainConfig.SetComputeDeviceConfig();
+
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SaveConfig"));
-            
+
+            // get algorithm settup from settings
             for (int i = 0; i < Globals.Miners.Length; i++)
             {
                 if (Config.ConfigData.Groups.Length > i)
@@ -289,28 +294,15 @@ namespace NiceHashMiner
                 {
                     Globals.Miners[i].GetDisabledDevicePerAlgo();
                 }
-                for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++)
-                {
-                    ComputeDevice D = Globals.Miners[i].CDevs[k];
-                    if (Config.ConfigData.Groups.Length > i)
-                    {
-                        D.Enabled = true;
-                        for (int z = 0; z < Config.ConfigData.Groups[i].DisabledDevices.Length; z++)
-                        {
-                            if (Config.ConfigData.Groups[i].DisabledDevices[z] == k)
-                            {
-                                D.Enabled = false;
-                                break;
-                            }
-                        }
-                    }
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.SubItems.Add(D.Vendor);
-                    lvi.SubItems.Add(D.Name);
-                    lvi.Checked = D.Enabled;
-                    lvi.Tag = D;
-                    listViewDevices.Items.Add(lvi);
-                }
+            }
+            // All devices settup should be initialized in AllDevices
+            foreach (var computeDevice in ComputeDevice.AllAvaliableDevices) {
+                ListViewItem lvi = new ListViewItem();
+                lvi.SubItems.Add(computeDevice.Vendor);
+                lvi.SubItems.Add(computeDevice.Name);
+                lvi.Checked = computeDevice.Enabled;
+                lvi.Tag = computeDevice;
+                listViewDevices.Items.Add(lvi);
             }
 
             Config.RebuildGroups();

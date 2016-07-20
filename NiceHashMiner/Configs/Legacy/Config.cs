@@ -183,12 +183,20 @@ namespace NiceHashMiner.Configs
             ConfigData.SwitchMinSecondsAMD = 90;
             ConfigData.MinIdleSeconds = 60;
             ConfigData.DisplayCurrency = "USD";
+
+            // TODO TEMP migration START
+            NewMainConfig.SetDefaults();
+            // TODO TEMP migration END
         }
 
         public static void Commit()
         {
             try { File.WriteAllText("config.json", JsonConvert.SerializeObject(ConfigData, Formatting.Indented)); }
             catch { }
+
+            // TODO TEMP migration START
+            NewMainConfig.Commit();
+            // TODO TEMP migration END
         }
 
         public static void RebuildGroups()
@@ -230,6 +238,10 @@ namespace NiceHashMiner.Configs
             }
             ConfigData.Groups = CG;
             Config.Commit();
+
+            // TODO TEMP migration START
+            NewMainConfig.RebuildGroups();
+            // TODO TEMP migration END
         }
 
         public static bool ConfigFileExist()

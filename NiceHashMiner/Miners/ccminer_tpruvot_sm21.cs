@@ -41,7 +41,7 @@ namespace NiceHashMiner
             if (name.Contains("SM 2.1"))
             {
                 name = name.Substring(8);
-                CDevs.Add(new ComputeDevice(id, MinerDeviceName, name, this));
+                CDevs.Add(new ComputeDevice(id, MinerDeviceName, name, this, true));
                 Helpers.ConsolePrint(MinerDeviceName, "Added: " + name);
             }
         }

@@ -15,8 +15,9 @@ namespace NiceHashMiner
 {
     public class Algorithm
     {
-        public int NiceHashID;
-        public string NiceHashName;
+        readonly public int NiceHashID;
+        readonly public string NiceHashName;
+        // TODO make this readonly possible
         public string MinerName;
         public double BenchmarkSpeed;
         public double CurrentProfit;

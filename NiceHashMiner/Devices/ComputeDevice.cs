@@ -19,7 +19,7 @@ namespace NiceHashMiner.Devices
         // 
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
 
-        public ComputeDevice(int id, string vendor, string name, Miner miner, bool enabled = true)
+        public ComputeDevice(int id, string vendor, string name, Miner miner, bool addToGlobalList = false, bool enabled = true)
         {
             ID = id;
             Vendor = vendor;
@@ -27,10 +27,13 @@ namespace NiceHashMiner.Devices
             Enabled = enabled;
             // TODO temp solution
             Miner = miner;
-            // add to all devices
-            AllAvaliableDevices.Add(this);
-            // add to group manager
-            ComputeDeviceGroupManager.Instance.AddDevice(this);
+            if (addToGlobalList) {
+                // add to all devices
+                AllAvaliableDevices.Add(this);
+                // add to group manager
+                ComputeDeviceGroupManager.Instance.AddDevice(this);
+            }
+            
         }
     }
 }
