@@ -238,10 +238,6 @@ namespace NiceHashMiner.Configs
             }
             ConfigData.Groups = CG;
             Config.Commit();
-
-            // TODO TEMP migration START
-            NewMainConfig.RebuildGroups();
-            // TODO TEMP migration END
         }
 
         public static bool ConfigFileExist()
