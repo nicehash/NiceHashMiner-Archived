@@ -13,6 +13,8 @@ namespace NiceHashMiner.Devices
     {
         // here we save references devices for the group
         private List<ComputeDevice> _devices;
+        // references just for unique devices (like a set of different card types), will not save same card type more then once
+        private List<ComputeDevice> _uniqueDevices;
 
         readonly public DeviceGroupType Type;
         readonly public string Name;
@@ -32,6 +34,7 @@ namespace NiceHashMiner.Devices
         public ComputeDeviceGroup(DeviceGroupType type)
         {
             _devices = new List<ComputeDevice>();
+            _uniqueDevices = new List<ComputeDevice>();
             Type = type;
             // TODO will work for now different logic for CPU
             Name = GroupNames.GetName(type);
@@ -41,6 +44,21 @@ namespace NiceHashMiner.Devices
         {
             // TODO maybe check if already added or something
             _devices.Add(device);
+            addUniqueDevice(device);
+        }
+
+        private void addUniqueDevice(ComputeDevice device) {
+            bool containsModel = false;
+            foreach (var curCDev in _uniqueDevices) {
+                // Vendor is the same for the group
+                if (curCDev.Name == device.Name /*&& curCDev.Vendor == device.Vendor*/) {
+                    containsModel = true;
+                    break;
+                }
+            }
+            if (!containsModel) {
+                _uniqueDevices.Add(device);
+            }
         }
     }
 }

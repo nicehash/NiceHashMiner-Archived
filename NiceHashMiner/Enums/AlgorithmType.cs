@@ -9,6 +9,7 @@ namespace NiceHashMiner.Enums
     /// </summary>
     public enum AlgorithmType : int
     {
+        NONE = -1,
         Scrypt = 0,
         SHA256 = 1,
         ScryptNf = 2,

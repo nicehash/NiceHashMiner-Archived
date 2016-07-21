@@ -17,20 +17,20 @@ namespace NiceHashMiner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var commandLineArgs = new CommandLineParser(argv);
-
+            // #1 first initialize config
             bool ConfigExist = Config.ConfigFileExist();
-            
             Config.InitializeConfig();
             // TODO TEMP migration START
             NewMainConfig.InitializeConfig();
             // TODO TEMP migration END
-
             if (Config.ConfigData.LogToFile)
                 Logger.ConfigureWithFile();
 
             if (Config.ConfigData.DebugConsole)
                 Helpers.AllocConsole();
+
+            // #2 then parse args
+            var commandLineArgs = new CommandLineParser(argv);
 
             Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
 

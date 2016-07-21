@@ -30,7 +30,7 @@ namespace NiceHashMiner.Miners
         /// </summary>
         public const string ethminer = _bin + @"\ethminer.exe";
         /// <summary>
-        /// hodlminer
+        /// hodlminer also CPU
         /// </summary>
         public const string hodlminer_core_avx2 =   _bin + @"\hodlminer\hodlminer_core_avx2.exe";
         public const string hodlminer_core2 =       _bin + @"\hodlminer\hodlminer_core2.exe";

@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Devices
 {
@@ -12,7 +13,7 @@ namespace NiceHashMiner.Devices
     /// Query CPUs, GPUs [Nvidia, AMD]
     /// TODO For now it depends on current Miners implementation, bound to change
     /// CPU query stays the same
-    /// GPU querying must change
+    /// GPU querying should change
     /// </summary>
     public class ComputeDeviceQueryManager
     {
@@ -49,9 +50,9 @@ namespace NiceHashMiner.Devices
             QueryNVIDIA();
             // #3 AMD
             QueryAMD();
-            // uncheck CPU if GPUs present
+            // #4 uncheck CPU if GPUs present, call it after we Query all devices
             UncheckedCPU();
-            // remove reference
+            // #5 remove reference
             MessageNotifier = null;
         }
 
@@ -136,6 +137,57 @@ namespace NiceHashMiner.Devices
                 catch { }
             }
         }
+
+        #region NEW IMPLEMENTATION
+
+        // TODO add new GPU guery methods
+        /// The new query methods will be based on ccminer and sgminer
+
+        #region NVIDIA ccminer UNUSED
+        private DeviceGroupType getNvidiaGroupType(string name) {
+            if(name.Contains("SM 2.1")) {
+                return DeviceGroupType.NVIDIA_2_1;
+            }
+            if(name.Contains("SM 3.")) {
+                return DeviceGroupType.NVIDIA_3_x;
+            }
+            if (name.Contains("SM 5.") || name.Contains("SM 6.")) { // TEMP until support for SM 6.x
+                return DeviceGroupType.NVIDIA_5_x;
+            }
+            return DeviceGroupType.NONE;
+        }
+
+        private void AddPotentialNvidiaCDev(string text)
+        {
+            if (!text.Contains("GPU")) return;
+            string[] splt = text.Split(':');
+
+            int id = int.Parse(splt[0].Split('#')[1]);
+            string name = splt[1];
+
+            DeviceGroupType groupType = getNvidiaGroupType(name);
+
+            if (groupType != DeviceGroupType.NONE) {
+                string DeviceGroupName = GroupNames.GetName(groupType);
+                Helpers.ConsolePrint(DeviceGroupName, "Detected: " + text);
+                
+                string saveName = name.Substring(8);
+                // TODO will be added to global
+                // TODO this is NO GOOD
+                new ComputeDevice(id, DeviceGroupName, saveName, null, true);
+                Helpers.ConsolePrint(DeviceGroupName, "Added: " + saveName);
+            }
+        }
+
+        private void QueryNVIDIA_ccminers() {
+            // TODO rethnk this it makes sense to make one class to query and a miner factory that returns the correct miner for the device
+        }
+
+        #endregion // NVIDIA ccminer UNUSED
+
+
+
+        #endregion // NEW IMPLEMENTATION
 
     }
 }

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {
@@ -165,8 +166,27 @@ namespace NiceHashMiner
             ProcessHandle = _Start();
         }
 
+        // this method checks SM versions
+        abstract protected bool IsPotentialDevSM(string name);
 
-        abstract protected void AddPotentialCDev(string text);
+        protected void AddPotentialCDev(string text) {
+            if (!text.Contains("GPU")) return;
+
+            Helpers.ConsolePrint(MinerDeviceName, "Detected: " + text);
+
+            string[] splt = text.Split(':');
+
+            int id = int.Parse(splt[0].Split('#')[1]);
+            string name = splt[1];
+
+            // add only suported SM by miner
+            if (IsPotentialDevSM(name))
+            {
+                name = name.Substring(8);
+                CDevs.Add(new ComputeDevice(id, MinerDeviceName, name, this, true));
+                Helpers.ConsolePrint(MinerDeviceName, "Added: " + name);
+            }
+        }
 
         protected void AddEthereum(string match, bool initialize)
         {

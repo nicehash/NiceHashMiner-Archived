@@ -31,7 +31,7 @@ namespace NiceHashMiner.Devices
         /// <summary>
         /// Use enum types, we could use a list here but keep dict for now
         /// </summary>
-        Dictionary<DeviceGroupType, ComputeDeviceGroup> _groups;
+        private Dictionary<DeviceGroupType, ComputeDeviceGroup> _groups;
 
         private ComputeDeviceGroupManager()
         {
