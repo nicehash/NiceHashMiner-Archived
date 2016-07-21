@@ -87,6 +87,7 @@ namespace NiceHashMiner
         {
             if (willswitch && AlgoNameIs("daggerhashimoto"))
             {
+                // TODO ethminerLink null ERROR
                 // daggerhashimoto - we only "pause" mining
                 Helpers.ConsolePrint(MinerDeviceName, "Pausing ethminer..");
                 ethminerLink.StopMining();

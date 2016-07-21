@@ -79,6 +79,7 @@
     <Compile Include="Configs\NewMainConfig.cs" />
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkType.cs" />
@@ -99,6 +100,7 @@
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="International.cs" />
     <Compile Include="Devices\ComputeDeviceGroup.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />

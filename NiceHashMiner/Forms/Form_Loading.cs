@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,18 +9,18 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
-    public partial class Form_Loading : Form
+    public partial class Form_Loading : Form, IMessageNotifier
     {
-        public interface AfterInitializationCaller {
+        public interface IAfterInitializationCaller {
             void AfterLoadComplete();
         }
 
         private int LoadCounter = 0;
         // TODO find out what are the 13 loading steps, think if this should really be hardcoded
         private int TotalLoadSteps = 13;
-        private readonly AfterInitializationCaller AfterInitCaller;
+        private readonly IAfterInitializationCaller AfterInitCaller;
 
-        public Form_Loading(AfterInitializationCaller initCaller, string startInfoMsg)
+        public Form_Loading(IAfterInitializationCaller initCaller, string startInfoMsg)
         {
             InitializeComponent();
 
@@ -58,5 +59,15 @@ namespace NiceHashMiner
                 this.Dispose();
             }
         }
+
+        #region IMessageNotifier
+        public void SetMessage(string infoMsg) {
+            SetInfoMsg(infoMsg);
+        }
+
+        public void SetMessageAndIncrementStep(string infoMsg) {
+            IncreaseLoadCounterAndMessage(infoMsg);
+        }
+        #endregion //IMessageNotifier
     }
 }

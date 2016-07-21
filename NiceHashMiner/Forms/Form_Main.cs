@@ -14,7 +14,7 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
-    public partial class Form_Main : Form, Form_Loading.AfterInitializationCaller
+    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller
     {
         private static string VisitURL = "http://www.nicehash.com";
 
@@ -26,6 +26,7 @@ namespace NiceHashMiner
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Timer IdleCheck;
+        // TODO revisit this and see it's use, maybe refacotr
         private int CPUs;
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
@@ -168,82 +169,15 @@ namespace NiceHashMiner
             }
         }
 
-
+        // This is a single shot timer
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             StartupTimer.Stop();
             StartupTimer = null;
 
-            // get all CPUs
-            CPUs = CPUID.GetPhysicalProcessorCount();
-
-            // get all cores (including virtual - HT can benefit mining)
-            int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / CPUs;
-
-            if (!Helpers.InternalCheckIsWow64() && !Config.ConfigData.AutoStartMining)
-            {
-                MessageBox.Show(International.GetText("form1_msgbox_CPUMining64bitMsg"),
-                                International.GetText("Warning_with_Exclamation"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                CPUs = 0;
-            }
-
-            if (ThreadsPerCPU * CPUs > 64)
-            {
-                MessageBox.Show(International.GetText("form1_msgbox_CPUMining64CoresMsg"),
-                                International.GetText("Warning_with_Exclamation"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                CPUs = 0;
-            }
-
-            int ThreadsPerCPUMask = ThreadsPerCPU;
-            ThreadsPerCPU -= Config.ConfigData.LessThreads;
-            if (ThreadsPerCPU < 1)
-            {
-                MessageBox.Show(International.GetText("form1_msgbox_CPUMiningLessThreadMsg"),
-                                International.GetText("Warning_with_Exclamation"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                CPUs = 0;
-            }
-
-            Globals.Miners = new Miner[CPUs + 4];
-
-            if (CPUs == 1)
-                Globals.Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
-            else
-            {
-                for (int i = 0; i < CPUs; i++)
-                    Globals.Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
-            }
-
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA5X"));
-
-            Globals.Miners[CPUs] = new ccminer_sp();
-
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA3X"));
-
-            Globals.Miners[CPUs + 1] = new ccminer_tpruvot();
-
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_NVIDIA2X"));
-
-            Globals.Miners[CPUs + 2] = new ccminer_tpruvot_sm21();
-
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_AMD"));
-
-            Globals.Miners[CPUs + 3] = new sgminer();
-
-            // Auto uncheck CPU if any GPU is found
-            for (int i = 0; i < CPUs; i++)
-            {
-                try
-                {
-                    if ((Globals.Miners[CPUs + 0].CDevs.Count > 0 || Globals.Miners[CPUs + 1].CDevs.Count > 0 || Globals.Miners[CPUs + 2].CDevs.Count > 0 || Globals.Miners[CPUs + 3].CDevs.Count > 0) && i < CPUs)
-                    {
-                        Globals.Miners[i].CDevs[0].Enabled = false;
-                    }
-                }
-                catch { }
-            }
+            // Query Avaliable ComputeDevices
+            ComputeDeviceQueryManager.Instance.QueryDevices(LoadingScreen);
+            CPUs = ComputeDeviceQueryManager.Instance.CPUs;
 
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
@@ -251,6 +185,7 @@ namespace NiceHashMiner
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SaveConfig"));
 
+            // TODO find a way to migrate this mess
             // get algorithm settup from settings
             for (int i = 0; i < Globals.Miners.Length; i++)
             {
