@@ -7,7 +7,6 @@ namespace NiceHashMiner.Utils
     class CommandLineParser
     {
         // keep it simple only two parameters for now
-        readonly public bool IsConfig = false;
         readonly public bool IsLang = false;
         readonly public int LangValue = 0;
 
@@ -15,7 +14,7 @@ namespace NiceHashMiner.Utils
         {
             string tmpString;
             if(ParseCommandLine(argv, "-config", out tmpString)) {
-                IsConfig = true;
+                Helpers.ConsolePrint("CommandLineParser", "-config parameter has been depreciated, run setting from GUI");
             }
             if (ParseCommandLine(argv, "-lang", out tmpString)) {
                 IsLang = true;

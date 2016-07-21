@@ -75,7 +75,7 @@ namespace NiceHashMiner.Configs
         public long LogMaxFileSize;  // in bytes
         public bool ShowDriverVersionWarning;
         public bool DisableWindowsErrorReporting;
-        public bool UseNewSettingsPage;
+        public bool UseNewSettingsPage; // depriciate this
         public bool NVIDIAP0State;
         public int ethminerAPIPortNvidia;
         public int ethminerAPIPortAMD;

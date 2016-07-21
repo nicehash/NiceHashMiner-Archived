@@ -37,7 +37,7 @@ namespace NiceHashMiner
         private Form_Benchmark BenchmarkForm;
 
 
-        public Form_Main(bool showConfigSettingsDialog)
+        public Form_Main()
         {
             InitializeComponent();
 
@@ -88,14 +88,6 @@ namespace NiceHashMiner
             buttonSettings.Text = International.GetText("form1_settings");
             buttonStartMining.Text = International.GetText("form1_start");
             buttonStopMining.Text = International.GetText("form1_stop");
-
-            if (showConfigSettingsDialog)
-            {
-                Helpers.ConsolePrint("NICEHASH", "-config flag ignored");
-                //// will not work
-                //var settingsForm = new Form_Settings();
-                //settingsForm.ShowDialog();
-            }
 
             // Log the computer's amount of Total RAM and Page File Size
             ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
@@ -770,29 +762,16 @@ namespace NiceHashMiner
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            // TODO remove this
-            if (!Config.ConfigData.UseNewSettingsPage)
-            {
-                Process PHandle = new Process();
-                PHandle.StartInfo.FileName = Application.ExecutablePath;
-                PHandle.StartInfo.Arguments = "-config";
-                PHandle.Start();
+            Form_Settings Settings = new Form_Settings();
+            Settings.ShowDialog();
 
-                Close();
-            }
-            else
-            {
-                Form_Settings Settings = new Form_Settings();
-                Settings.ShowDialog();
+            if (Settings.ret == 1) return;
 
-                if (Settings.ret == 1) return;
+            Process PHandle = new Process();
+            PHandle.StartInfo.FileName = Application.ExecutablePath;
+            PHandle.Start();
 
-                Process PHandle = new Process();
-                PHandle.StartInfo.FileName = Application.ExecutablePath;
-                PHandle.Start();
-
-                Close();
-            }
+            Close();
         }
 
 

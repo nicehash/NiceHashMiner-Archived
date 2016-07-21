@@ -49,7 +49,7 @@ namespace NiceHashMiner
                 Config.ConfigData.Language = commandLineArgs.LangValue;
             }
             
-            Application.Run(new Form_Main(commandLineArgs.IsConfig));
+            Application.Run(new Form_Main());
         }
 
     }
