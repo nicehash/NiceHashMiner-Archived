@@ -10,49 +10,13 @@ using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
-    public class Algorithm
-    {
-        readonly public int NiceHashID;
-        readonly public string NiceHashName;
-        // TODO make this readonly possible
-        public string MinerName;
-        public double BenchmarkSpeed;
-        public double CurrentProfit;
-        public string ExtraLaunchParameters;
-        public string UsePassword;
-        public bool Skip;
-        public bool[] DisabledDevice;
-
-        public Algorithm(int id, string nhname, string mname)
-        {
-            NiceHashID = id;
-            NiceHashName = nhname;
-            MinerName = mname;
-            BenchmarkSpeed = 0;
-            ExtraLaunchParameters = "";
-            UsePassword = null;
-            Skip = false;
-        }
-
-        public Algorithm(int id, string nhname, string mname, string xtraparam)
-        {
-            NiceHashID = id;
-            NiceHashName = nhname;
-            MinerName = mname;
-            BenchmarkSpeed = 0;
-            ExtraLaunchParameters = xtraparam;
-            UsePassword = null;
-            Skip = false;
-        }
-    }
-
-
     public class APIData
     {
-        public int AlgorithmID;
+        public AlgorithmType AlgorithmID;
         public string AlgorithmName;
         public double Speed;
     }
@@ -117,7 +81,7 @@ namespace NiceHashMiner
             }
         }
 
-        abstract public void Start(int nhalgo, string url, string username);
+        abstract public void Start(AlgorithmType nhalgo, string url, string username);
 
         virtual public void Stop(bool willswitch)
         {
@@ -338,7 +302,7 @@ namespace NiceHashMiner
                 {
                     if (MinerDeviceName.Equals("AMD_OpenCL"))
                     {
-                        int NHDataIndex = SupportedAlgorithms[BenchmarkIndex].NiceHashID;
+                        AlgorithmType NHDataIndex = SupportedAlgorithms[BenchmarkIndex].NiceHashID;
 
                         if (Globals.NiceHashData == null)
                         {
@@ -552,7 +516,7 @@ namespace NiceHashMiner
         }
 
 
-        protected Algorithm GetMinerAlgorithm(int nhid)
+        protected Algorithm GetMinerAlgorithm(AlgorithmType nhid)
         {
             for (int i = 0; i < SupportedAlgorithms.Length; i++)
             {
@@ -729,7 +693,7 @@ namespace NiceHashMiner
         }
 
 
-        virtual public int GetMaxProfitIndex(NiceHashSMA[] NiceHashData)
+        virtual public int GetMaxProfitIndex(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData)
         {
             double MaxProfit = -1;
             int MaxProfitIndex = -1;

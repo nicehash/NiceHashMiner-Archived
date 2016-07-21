@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -23,10 +24,10 @@ namespace NiceHashMiner
             AffinityMask = affinity;
 
             SupportedAlgorithms = new Algorithm[] { 
-                    new Algorithm(9, "lyra2re", "lyra2"),
-                    new Algorithm(13, "axiom", "axiom"),
-                    new Algorithm(15, "scryptjanenf16", "scryptjane:16"),
-                    new Algorithm(19, "hodl", "hodl", "--extranonce-subscribe")
+                    new Algorithm(AlgorithmType.Lyra2RE, "lyra2re", "lyra2"),
+                    new Algorithm(AlgorithmType.Axiom, "axiom", "axiom"),
+                    new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjanenf16", "scryptjane:16"),
+                    new Algorithm(AlgorithmType.Hodl, "hodl", "hodl", "--extranonce-subscribe")
                 };
 
             if (Config.ConfigData.ForceCPUExtension > 0)
@@ -113,7 +114,7 @@ namespace NiceHashMiner
         }
 
 
-        public override void Start(int nhalgo, string url, string username)
+        public override void Start(AlgorithmType nhalgo, string url, string username)
         {
             if (ProcessHandle != null) return; // ignore, already running
 

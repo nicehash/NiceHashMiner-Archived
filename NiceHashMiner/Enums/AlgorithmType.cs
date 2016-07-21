@@ -5,7 +5,7 @@ using System.Text;
 namespace NiceHashMiner.Enums
 {
     /// <summary>
-    /// AlgorithmType enum should mirror the values from https://www.nicehash.com/?p=api
+    /// AlgorithmType enum should/must mirror the values from https://www.nicehash.com/?p=api
     /// </summary>
     public enum AlgorithmType : int
     {

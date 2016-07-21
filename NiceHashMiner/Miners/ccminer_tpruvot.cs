@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -17,7 +18,9 @@ namespace NiceHashMiner
 
             // disable neoscrypt
             var tmp = new List<Algorithm>(SupportedAlgorithms);
-            tmp[GetAlgoIndex("whirlpoolx")].MinerName = "whirlpool";    // Needed for new tpruvot's ccminer
+            //tmp[GetAlgoIndex("whirlpoolx")].MinerName = "whirlpool";    // Needed for new tpruvot's ccminer
+            // name change => "whirlpoolx" => "whirlpool"
+            tmp[GetAlgoIndex("whirlpoolx")] = new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpool");     // Needed for new tpruvot's ccminer
             tmp.RemoveAt(GetAlgoIndex("neoscrypt"));   // Remove Neoscrypt
             SupportedAlgorithms = tmp.ToArray();
 

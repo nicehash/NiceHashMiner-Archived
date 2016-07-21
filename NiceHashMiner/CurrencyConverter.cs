@@ -55,6 +55,7 @@ namespace NiceHashMiner.CurrencyConverter
             }
             catch (Exception E)
             {
+                Helpers.ConsolePrint("CurrencyConverter", E.Message);
                 Helpers.ConsolePrint("CurrencyConverter", "Unable to update API: reverting to usd");
                 Config.ConfigData.DisplayCurrency = "USD";
             }

@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm.cs" />
     <Compile Include="Configs\BenchmarkConfig.cs" />
     <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
     <Compile Include="Configs\ComputeDevicesSettup.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Configs\NewMainConfig.cs" />
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
+    <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />

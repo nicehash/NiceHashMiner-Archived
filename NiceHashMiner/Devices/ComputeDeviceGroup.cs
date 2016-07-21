@@ -15,6 +15,7 @@ namespace NiceHashMiner.Devices
         private List<ComputeDevice> _devices;
 
         readonly public DeviceGroupType Type;
+        readonly public string Name;
 
         public bool IsEnabled
         {
@@ -32,6 +33,8 @@ namespace NiceHashMiner.Devices
         {
             _devices = new List<ComputeDevice>();
             Type = type;
+            // TODO will work for now different logic for CPU
+            Name = GroupNames.GetName(type);
         }
 
         public void AddNewDevice(ComputeDevice device)

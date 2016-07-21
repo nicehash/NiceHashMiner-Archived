@@ -289,7 +289,7 @@ namespace NiceHashMiner
         private void buttonCheckProfitability_Click(object sender, EventArgs e)
         {
             string url = "https://www.nicehash.com/?p=calc&name=CUSTOM";
-            int len = Globals.NiceHashData == null ? 23 : Globals.NiceHashData.Length;
+            int len = Globals.NiceHashData == null ? 23 : Globals.NiceHashData.Count;
             double[] total = new double[len];
 
             for (int i = 0; i < len; i++)
@@ -300,7 +300,7 @@ namespace NiceHashMiner
                 if (Globals.Miners[i].EnabledDeviceCount() < 1) continue;
                 for (int j = 0; j < Globals.Miners[i].SupportedAlgorithms.Length; j++)
                 {
-                    total[Globals.Miners[i].SupportedAlgorithms[j].NiceHashID] += Globals.Miners[i].SupportedAlgorithms[j].BenchmarkSpeed;
+                    total[(int)Globals.Miners[i].SupportedAlgorithms[j].NiceHashID] += Globals.Miners[i].SupportedAlgorithms[j].BenchmarkSpeed;
                 }
             }
 

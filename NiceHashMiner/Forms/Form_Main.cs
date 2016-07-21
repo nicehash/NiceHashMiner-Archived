@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Management;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -662,7 +663,7 @@ namespace NiceHashMiner
         {
             string worker = textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim();
             Helpers.ConsolePrint("NICEHASH", "SMA get");
-            NiceHashSMA[] t = NiceHashStats.GetAlgorithmRates(worker);
+            Dictionary<AlgorithmType, NiceHashSMA> t = NiceHashStats.GetAlgorithmRates(worker);
 
             for (int i = 0; i < 3; i++)
             {

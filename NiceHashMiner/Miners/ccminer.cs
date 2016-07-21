@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -16,21 +17,21 @@ namespace NiceHashMiner
         public ccminer()
         {
             SupportedAlgorithms = new Algorithm[] { 
-                new Algorithm(3, "x11", "x11"),
-                new Algorithm(4, "x13", "x13"),
-                new Algorithm(5, "keccak", "keccak"),
-                new Algorithm(6, "x15", "x15"),
-                new Algorithm(7, "nist5", "nist5"),
-                new Algorithm(8, "neoscrypt", "neoscrypt"),
-                new Algorithm(10, "whirlpoolx", "whirlpoolx"),
-                new Algorithm(11, "qubit", "qubit"),
-                new Algorithm(12, "quark", "quark"),
-                new Algorithm(14, "lyra2rev2", "lyra2v2"),
-                new Algorithm(16, "blake256r8", "blakecoin"),
-                new Algorithm(17, "blake256r14", "blake"),
-                new Algorithm(18, "blake256r8vnl", "vanilla"),
-                new Algorithm(20, "daggerhashimoto", "daggerhashimoto"),
-                new Algorithm(21, "decred", "decred")
+                new Algorithm(AlgorithmType.X11, "x11", "x11"),
+                new Algorithm(AlgorithmType.X13, "x13", "x13"),
+                new Algorithm(AlgorithmType.Keccak, "keccak", "keccak"),
+                new Algorithm(AlgorithmType.X15, "x15", "x15"),
+                new Algorithm(AlgorithmType.Nist5, "nist5", "nist5"),
+                new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt", "neoscrypt"),
+                new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpoolx"),
+                new Algorithm(AlgorithmType.Qubit, "qubit", "qubit"),
+                new Algorithm(AlgorithmType.Quark, "quark", "quark"),
+                new Algorithm(AlgorithmType.Lyra2REv2, "lyra2rev2", "lyra2v2"),
+                new Algorithm(AlgorithmType.Blake256r8, "blake256r8", "blakecoin"),
+                new Algorithm(AlgorithmType.Blake256r14, "blake256r14", "blake"),
+                new Algorithm(AlgorithmType.Blake256r8vnl, "blake256r8vnl", "vanilla"),
+                new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto", "daggerhashimoto"),
+                new Algorithm(AlgorithmType.Decred, "decred", "decred")
             };
         }
 
@@ -94,7 +95,7 @@ namespace NiceHashMiner
         }
 
 
-        public override void Start(int nhalgo, string url, string username)
+        public override void Start(AlgorithmType nhalgo, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 
 

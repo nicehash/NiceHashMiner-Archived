@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Management;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -25,21 +26,21 @@ namespace NiceHashMiner
         public sgminer()
         {
             SupportedAlgorithms = new Algorithm[] { 
-                new Algorithm( 3, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm( 4, "x13",        "x13",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm( 5, "keccak",     "keccak",     DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm( 6, "x15",        "x15",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm( 7, "nist5",      "nist5",      DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm( 8, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4"),
-                new Algorithm(10, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2"),
-                new Algorithm(11, "qubit",      "qubitcoin",  DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2"),
-                new Algorithm(12, "quark",      "quarkcoin",  DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm(14, "lyra2rev2",  "Lyra2REv2",  DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm(16, "blake256r8", "blakecoin",  DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
-                new Algorithm(17, "blake256r14",   "blake",   DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
-                new Algorithm(18, "blake256r8vnl", "vanilla", DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
-                new Algorithm(20, "daggerhashimoto", "daggerhashimoto"),
-                new Algorithm(21, "decred", "decred", "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64")
+                new Algorithm(AlgorithmType.X11, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm(AlgorithmType.X13, "x13",        "x13",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
+                new Algorithm(AlgorithmType.Keccak, "keccak",     "keccak",     DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm(AlgorithmType.X15, "x15",        "x15",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
+                new Algorithm(AlgorithmType.Nist5, "nist5",      "nist5",      DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
+                new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4"),
+                new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2"),
+                new Algorithm(AlgorithmType.Qubit, "qubit",      "qubitcoin",  DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2"),
+                new Algorithm(AlgorithmType.Quark, "quark",      "quarkcoin",  DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm(AlgorithmType.Lyra2REv2, "lyra2rev2",  "Lyra2REv2",  DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
+                new Algorithm(AlgorithmType.Blake256r8, "blake256r8", "blakecoin",  DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
+                new Algorithm(AlgorithmType.Blake256r14, "blake256r14",   "blake",   DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
+                new Algorithm(AlgorithmType.Blake256r8vnl, "blake256r8vnl", "vanilla", DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
+                new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto", "daggerhashimoto"),
+                new Algorithm(AlgorithmType.Decred, "decred", "decred", "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64")
             };
 
             MinerDeviceName = "AMD_OpenCL";
@@ -375,7 +376,7 @@ namespace NiceHashMiner
         }
 
 
-        public override void Start(int nhalgo, string url, string username)
+        public override void Start(AlgorithmType nhalgo, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 
 

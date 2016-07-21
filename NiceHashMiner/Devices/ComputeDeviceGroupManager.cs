@@ -88,6 +88,8 @@ namespace NiceHashMiner.Devices
             return isGetFound && selectedGroup.IsEnabled;
         }
 
+
+
         
     }
 }

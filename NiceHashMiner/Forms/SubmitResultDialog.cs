@@ -212,7 +212,7 @@ namespace NiceHashMiner
                 {
                     if (!mm.SupportedAlgorithms[i].Skip)
                     {
-                        int id = mm.SupportedAlgorithms[i].NiceHashID;
+                        int id = (int)mm.SupportedAlgorithms[i].NiceHashID;
                         url += "&speed" + id + "=" + (mm.SupportedAlgorithms[i].BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }

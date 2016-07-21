@@ -5,6 +5,7 @@ using System.Net;
 using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -21,14 +22,14 @@ namespace NiceHashMiner
     class NiceHashStats
     {
 #pragma warning disable 649
-        class nicehash_global_stats
-        {
-            public double profitability_above_ltc;
-            public double price;
-            public double profitability_ltc;
-            public int algo;
-            public double speed;
-        }
+        //class nicehash_global_stats
+        //{
+        //    public double profitability_above_ltc;
+        //    public double price;
+        //    public double profitability_ltc;
+        //    public int algo;
+        //    public double speed;
+        //}
 
         public class nicehash_stats
         {
@@ -76,7 +77,7 @@ namespace NiceHashMiner
 #pragma warning restore 649
 
 
-        public static NiceHashSMA[] GetAlgorithmRates(string worker)
+        public static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)
         {
             string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=simplemultialgo.info", worker);
             if (r1 == null) return null;
@@ -85,7 +86,15 @@ namespace NiceHashMiner
             try
             {
                 nhjson_current = JsonConvert.DeserializeObject<nicehash_json_2>(r1);
-                return nhjson_current.result.simplemultialgo;
+                Dictionary<AlgorithmType, NiceHashSMA> ret = new Dictionary<AlgorithmType, NiceHashSMA>();
+                NiceHashSMA[] temp = nhjson_current.result.simplemultialgo;
+                if (temp != null) {
+                    foreach (var sma in temp) {
+                        ret.Add((AlgorithmType)sma.algo, sma);
+                    }
+                    return ret;
+                }
+                return null;
             }
             catch
             {
