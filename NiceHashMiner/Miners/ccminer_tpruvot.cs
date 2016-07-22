@@ -16,8 +16,8 @@ namespace NiceHashMiner
             Path = "bin\\ccminer_tpruvot.exe";
             APIPort = 4049;
             
-            // name change => "whirlpoolx" => "whirlpool"
-            SupportedAlgorithms[AlgorithmType.WhirlpoolX] = new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpool");     // Needed for new tpruvot's ccminer
+            // minerName change => "whirlpoolx" => "whirlpool"
+            SupportedAlgorithms[AlgorithmType.WhirlpoolX] = new Algorithm(AlgorithmType.WhirlpoolX, "whirlpool");     // Needed for new tpruvot's ccminer
             // disable/remove neoscrypt
             SupportedAlgorithms.Remove(AlgorithmType.NeoScrypt);
 

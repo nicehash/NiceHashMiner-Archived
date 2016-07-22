@@ -19,21 +19,21 @@ namespace NiceHashMiner
         {
             SupportedAlgorithms = new Dictionary<AlgorithmType, Algorithm>
             {
-                { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11", "x11") },
-                { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13, "x13", "x13") },
-                { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak, "keccak", "keccak") },
-                { AlgorithmType.X15 , new Algorithm(AlgorithmType.X15, "x15", "x15") },
-                { AlgorithmType.Nist5 , new Algorithm(AlgorithmType.Nist5, "nist5", "nist5") },
-                { AlgorithmType.NeoScrypt , new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt", "neoscrypt") },
-                { AlgorithmType.WhirlpoolX , new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpoolx") },
-                { AlgorithmType.Qubit , new Algorithm(AlgorithmType.Qubit, "qubit", "qubit") },
-                { AlgorithmType.Quark , new Algorithm(AlgorithmType.Quark, "quark", "quark") },
-                { AlgorithmType.Lyra2REv2 , new Algorithm(AlgorithmType.Lyra2REv2, "lyra2rev2", "lyra2v2") },
-                { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blake256r8", "blakecoin") },
-                { AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake256r14", "blake") },
-                { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "blake256r8vnl", "vanilla") },
-                { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto", "daggerhashimoto") },
-                { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred", "decred") },
+                { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11") },
+                { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13, "x13") },
+                { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak, "keccak") },
+                { AlgorithmType.X15 , new Algorithm(AlgorithmType.X15, "x15") },
+                { AlgorithmType.Nist5 , new Algorithm(AlgorithmType.Nist5, "nist5") },
+                { AlgorithmType.NeoScrypt , new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt") },
+                { AlgorithmType.WhirlpoolX , new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx") },
+                { AlgorithmType.Qubit , new Algorithm(AlgorithmType.Qubit, "qubit") },
+                { AlgorithmType.Quark , new Algorithm(AlgorithmType.Quark, "quark") },
+                { AlgorithmType.Lyra2REv2 , new Algorithm(AlgorithmType.Lyra2REv2, "lyra2v2") },
+                { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blakecoin") },
+                { AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake") },
+                { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla") },
+                { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
+                { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred") },
             };
         }
 

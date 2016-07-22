@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
+    <Compile Include="AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\BenchmarkConfig.cs" />
     <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
     <Compile Include="Configs\ComputeDevicesSettup.cs" />

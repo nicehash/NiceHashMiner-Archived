@@ -25,10 +25,10 @@ namespace NiceHashMiner
 
             // ReadOnlyDictionary that would be great [ not avaliable in .NET 2.0, Available since 4.5 ]
             SupportedAlgorithms = new Dictionary<AlgorithmType, Algorithm>() {
-                { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2re", "lyra2") },
-                { AlgorithmType.Axiom, new Algorithm(AlgorithmType.Axiom, "axiom", "axiom") },
-                { AlgorithmType.ScryptJaneNf16, new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjanenf16", "scryptjane:16") },
-                { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl", "hodl", "--extranonce-subscribe") }
+                { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
+                { AlgorithmType.Axiom, new Algorithm(AlgorithmType.Axiom, "axiom") },
+                { AlgorithmType.ScryptJaneNf16, new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjane:16") },
+                { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") { ExtraLaunchParameters = "--extranonce-subscribe"} }
             };
 
             if (Config.ConfigData.ForceCPUExtension > 0)

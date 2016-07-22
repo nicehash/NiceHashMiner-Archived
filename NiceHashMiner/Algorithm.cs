@@ -9,21 +9,23 @@ namespace NiceHashMiner
     {
         readonly public AlgorithmType NiceHashID;
         readonly public string NiceHashName;
+        // Miner name is used for miner ALGO flag parameter
         readonly public string MinerName;
-        public double BenchmarkSpeed;
-        public double CurrentProfit;
-        public string ExtraLaunchParameters;
-        public string UsePassword;
-        public bool Skip;
+        public double BenchmarkSpeed { get; set; }
+        public double CurrentProfit { get; set; }
+        public string ExtraLaunchParameters { get; set; }
+        public string UsePassword { get; set; }
+        public bool Skip { get; set; }
         public bool[] DisabledDevice;
 
-        public Algorithm(AlgorithmType niceHashID, string niceHashName, string minerName, string extraLaunchParameters = "")
+        public Algorithm(AlgorithmType niceHashID, string minerName)
         {
             NiceHashID = niceHashID;
-            NiceHashName = niceHashName;
+            NiceHashName = AlgorithmNiceHashNames.GetName(niceHashID);
             MinerName = minerName;
+            // these defaults are kinda useless
             BenchmarkSpeed = 0;
-            ExtraLaunchParameters = extraLaunchParameters;
+            ExtraLaunchParameters = "";
             UsePassword = null;
             Skip = false;
         }
