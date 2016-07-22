@@ -6,6 +6,7 @@ using System.Globalization;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -31,53 +32,78 @@ namespace NiceHashMiner
                 { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") { ExtraLaunchParameters = "--extranonce-subscribe"} }
             };
 
-            if (Config.ConfigData.ForceCPUExtension > 0)
-            {
-                if (Config.ConfigData.ForceCPUExtension == 1)
-                {
-                    CPUMinerPath = "bin\\cpuminer_x64_SSE2.exe";
-                    HodlMinerPath = "bin\\hodlminer\\hodlminer_core2.exe";
-                }
-                else if (Config.ConfigData.ForceCPUExtension == 2)
-                {
-                    CPUMinerPath = "bin\\cpuminer_x64_AVX.exe";
-                    HodlMinerPath = "bin\\hodlminer\\hodlminer_corei7_avx.exe";
-                }
-                else
-                {
-                    CPUMinerPath = "bin\\cpuminer_x64_AVX2.exe";
-                    HodlMinerPath = "bin\\hodlminer\\hodlminer_core_avx2.exe";
-                }
-            }
-            else
-            {
-                // detect CPU capabilities
-                if (CPUID.SupportsAVX2() == 0)
-                {
-                    if (CPUID.SupportsAVX() == 0)
-                    {
-                        if (CPUID.SupportsSSE2() == 0)
-                            return;
+            // this is the order we check and initialize if automatic
+            CPUExtensionType[] detectOrder = new CPUExtensionType[] { CPUExtensionType.AVX2, CPUExtensionType.AVX, CPUExtensionType.SSE2 };
 
-                        CPUMinerPath = "bin\\cpuminer_x64_SSE2.exe";
-                        HodlMinerPath = "bin\\hodlminer\\hodlminer_core2.exe";
-                    }
-                    else
-                    {
-                        CPUMinerPath = "bin\\cpuminer_x64_AVX.exe";
-                        HodlMinerPath = "bin\\hodlminer\\hodlminer_corei7_avx.exe";
+            // #1 try to initialize with Configured extension
+            bool isInitialized = InitializeMinerPaths((CPUExtensionType)Config.ConfigData.ForceCPUExtension);
+            // #2 if automatic or does not support then initialize in order
+            if (isInitialized == false) {
+                Config.ConfigData.ForceCPUExtension = (int)CPUExtensionType.Automatic; // set to automatic if not supported
+                for (int i = 0; i < detectOrder.Length; ++i) {
+                    isInitialized = InitializeMinerPaths(detectOrder[i]);
+                    if (isInitialized) {
+                        break; // stop if initialized
                     }
                 }
-                else
-                {
-                    CPUMinerPath = "bin\\cpuminer_x64_AVX2.exe";
-                    HodlMinerPath = "bin\\hodlminer\\hodlminer_core_avx2.exe";
-                }
             }
-
-            CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), this, true));
+            // if our CPU is supported add it to devices
+            // TODO if Miner and ComputeDevice decoupling redo this this is going to be at detecting CPUs
+            if (isInitialized) {
+                CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), this, true));
+            }
         }
 
+        
+        /// <summary>
+        /// InitializeMinerPaths initializes cpuminer paths based on CPUExtensionType.
+        /// Make sure to check if extensions enabled. Currently using CPUID fo checking
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>Returns False if CPUExtensionType.Automatic, otherwise True and initializes paths</returns>
+        private bool InitializeMinerPaths(CPUExtensionType type) {
+            bool isInitialized = false;
+            // if type not automatic and has extension support set initialized
+            if (HasExtensionSupport(type)) {
+                isInitialized = true;
+                switch(type) {
+                    case CPUExtensionType.SSE2:
+                        CPUMinerPath = MinerPaths.cpuminer_x64_SSE2;
+                        HodlMinerPath = MinerPaths.hodlminer_core2;
+                        break;
+                    case CPUExtensionType.AVX:
+                        CPUMinerPath = MinerPaths.cpuminer_x64_AVX;
+                        HodlMinerPath = MinerPaths.hodlminer_corei7_avx;
+                        break;
+                    case CPUExtensionType.AVX2:
+                        CPUMinerPath = MinerPaths.cpuminer_x64_AVX2;
+                        HodlMinerPath = MinerPaths.hodlminer_core_avx2;
+                        break;
+                    default: // CPUExtensionType.Automatic
+                        break;
+                }
+            }
+            return isInitialized;
+        }
+
+        /// <summary>
+        /// HasExtensionSupport checks CPU extensions support, if type automatic just return false.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>False if type Automatic otherwise True if supported</returns>
+        private bool HasExtensionSupport(CPUExtensionType type) {
+            switch (type) {
+                case CPUExtensionType.SSE2:
+                    return CPUID.SupportsSSE2() == 1;
+                case CPUExtensionType.AVX:
+                    return CPUID.SupportsAVX() == 1;
+                case CPUExtensionType.AVX2:
+                    return CPUID.SupportsAVX2() == 1;
+                default: // CPUExtensionType.Automatic
+                    break;
+            }
+            return false;
+        }
 
         public override string PrintSpeed(double spd)
         {

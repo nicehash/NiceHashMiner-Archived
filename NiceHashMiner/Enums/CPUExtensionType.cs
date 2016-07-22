@@ -8,8 +8,8 @@ namespace NiceHashMiner.Enums
     {
         // 0 - automatic, 1 - SSE2, 2 - AVX, 3 - AVX2
         Automatic = 0,
-        SSE2,
-        AVX,
-        AVX2
+        SSE2 = 1,
+        AVX = 2,
+        AVX2 = 3
     }
 }

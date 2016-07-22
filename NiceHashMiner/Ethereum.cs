@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -139,7 +140,7 @@ namespace NiceHashMiner
 
         static Ethereum()
         {
-            EtherMinerPath = "bin\\ethminer.exe";
+            EtherMinerPath = MinerPaths.ethminer;
             CurrentBlockNum = "";
         }
 

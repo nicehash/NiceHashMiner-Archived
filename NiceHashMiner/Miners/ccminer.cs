@@ -10,6 +10,7 @@ using System.IO;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -82,15 +83,15 @@ namespace NiceHashMiner
                 CommandLine = CommandLine.Remove(CommandLine.Length - 1);
 
                 if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("decred"))
-                    Path = "bin\\ccminer_decred.exe";
+                    Path = MinerPaths.ccminer_decred;
                 else if (this is ccminer_sp && SupportedAlgorithms[algorithmType].NiceHashName.Equals("neoscrypt"))
-                    Path = "bin\\ccminer_neoscrypt.exe";
+                    Path = MinerPaths.ccminer_neoscrypt;
                 else if (this is ccminer_sp && SupportedAlgorithms[algorithmType].NiceHashName.Equals("lyra2rev2"))
-                    Path = "bin\\ccminer_nanashi_lyra2rev2.exe";
+                    Path = MinerPaths.ccminer_nanashi_lyra2rev2;
                 else if (this is ccminer_sp)
-                    Path = "bin\\ccminer_sp.exe";
+                    Path = MinerPaths.ccminer_sp;
                 else
-                    Path = "bin\\ccminer_tpruvot.exe";
+                    Path = MinerPaths.ccminer_tpruvot;
             }
 
             return CommandLine;
@@ -152,16 +153,17 @@ namespace NiceHashMiner
                     return; // no GPUs to start mining on
                 }
 
+                // TODO this is repeated and uses Type introspection, MAKE OO
                 if (Algo.NiceHashName.Equals("decred"))
-                    Path = "bin\\ccminer_decred.exe";
+                    Path = MinerPaths.ccminer_decred;
                 else if (this is ccminer_sp && Algo.NiceHashName.Equals("neoscrypt"))
-                    Path = "bin\\ccminer_neoscrypt.exe";
+                    Path = MinerPaths.ccminer_neoscrypt;
                 else if (this is ccminer_sp && Algo.NiceHashName.Equals("lyra2rev2"))
-                    Path = "bin\\ccminer_nanashi_lyra2rev2.exe";
+                    Path = MinerPaths.ccminer_nanashi_lyra2rev2;
                 else if (this is ccminer_sp)
-                    Path = "bin\\ccminer_sp.exe";
+                    Path = MinerPaths.ccminer_sp;
                 else
-                    Path = "bin\\ccminer_tpruvot.exe";
+                    Path = MinerPaths.ccminer_tpruvot;
             }
 
             ProcessHandle = _Start();

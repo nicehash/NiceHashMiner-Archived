@@ -11,6 +11,7 @@ using System.Management;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -56,9 +57,9 @@ namespace NiceHashMiner
                 { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred")
                     { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" } }
             };
-
+            
             MinerDeviceName = "AMD_OpenCL";
-            Path = "bin\\sgminer-5-4-0-general\\sgminer.exe";
+            Path = MinerPaths.sgminer_5_4_0_general;
             APIPort = 4050;
             EnableOptimizedVersion = true;
             PlatformDevices = 0;
@@ -355,7 +356,7 @@ namespace NiceHashMiner
             else
             {
                 Path = "cmd";
-                string DirName = GetMinerDirectory(Algo.NiceHashName);
+                string MinerPath = GetOptimizedMinerPath(Algo.NiceHashName);
 
                 string url = "stratum+tcp://" + Globals.NiceHashData[SupportedAlgorithms[algorithmType].NiceHashID].name + "." +
                              Globals.MiningLocation[Config.ConfigData.ServiceLocation] + ".nicehash.com:" +
@@ -365,7 +366,8 @@ namespace NiceHashMiner
                 if (Config.ConfigData.WorkerName.Length > 0)
                     username += "." + Config.ConfigData.WorkerName.Trim();
 
-                CommandLine = " /C \"cd /d " + DirName + " && sgminer.exe " +
+                // TODO not sure if this will work, why cd-ing to dir and running???
+                CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
                               " --gpu-platform " + GPUPlatformNumber +
                               " -k " + SupportedAlgorithms[algorithmType].MinerName +
                               " --url=" + url +
@@ -430,8 +432,7 @@ namespace NiceHashMiner
             {
                 StartingUpDelay = true;
 
-                WorkingDirectory = GetMinerDirectory(Algo.NiceHashName);
-                Path = WorkingDirectory + "sgminer.exe";
+                Path = GetOptimizedMinerPath(Algo.NiceHashName);
 
                 LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
                                   " -k " + Algo.MinerName +
@@ -462,10 +463,9 @@ namespace NiceHashMiner
             ProcessHandle = _Start();
         }
 
-        private string GetMinerDirectory(string algo)
+        // TODO change algo string to Enum AlgorithmType
+        private string GetOptimizedMinerPath(string algo)
         {
-            string dir = "bin\\";
-
             if (EnableOptimizedVersion)
             {
                 if (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2") || algo.Equals("qubit"))
@@ -475,20 +475,20 @@ namespace NiceHashMiner
                         if (!(GPUCodeName[i].Equals("Hawaii") || GPUCodeName[i].Equals("Pitcairn") || GPUCodeName[i].Equals("Tahiti")))
                         {
                             if (!Helpers.InternalCheckIsWow64())
-                                return dir + "sgminer-5-4-0-general\\";
+                                return MinerPaths.sgminer_5_4_0_general;
 
-                            return dir + "sgminer-5-4-0-tweaked\\";
+                            return MinerPaths.sgminer_5_4_0_tweaked;
                         }
                     }
 
                     if (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2"))
-                        return dir + "sgminer-5-1-0-optimized\\";
+                        return MinerPaths.sgminer_5_1_0_optimized;
                     else
-                        return dir + "sgminer-5-1-1-optimized\\";
+                        return MinerPaths.sgminer_5_1_1_optimized;
                 }
             }
 
-            return dir + "sgminer-5-4-0-general\\";
+            return MinerPaths.sgminer_5_4_0_general;
         }
     }
 }

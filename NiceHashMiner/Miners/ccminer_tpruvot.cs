@@ -4,6 +4,7 @@ using System.Text;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -13,7 +14,7 @@ namespace NiceHashMiner
             base()
         {
             MinerDeviceName = "NVIDIA3.x";
-            Path = "bin\\ccminer_tpruvot.exe";
+            Path = MinerPaths.ccminer_tpruvot;
             APIPort = 4049;
             
             // minerName change => "whirlpoolx" => "whirlpool"

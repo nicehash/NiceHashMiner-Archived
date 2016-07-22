@@ -4,6 +4,7 @@ using System.Text;
 using System.Diagnostics;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -13,7 +14,7 @@ namespace NiceHashMiner
             base()
         {
             MinerDeviceName = "NVIDIA5.x";
-            Path = "bin\\ccminer_sp.exe";
+            Path = MinerPaths.ccminer_sp;
             APIPort = 4048;
 
             if (!Config.ConfigData.DisableDetectionNVidia5X)
