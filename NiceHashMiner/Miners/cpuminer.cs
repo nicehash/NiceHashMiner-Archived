@@ -23,12 +23,13 @@ namespace NiceHashMiner
             Threads = threads;
             AffinityMask = affinity;
 
-            SupportedAlgorithms = new Algorithm[] { 
-                    new Algorithm(AlgorithmType.Lyra2RE, "lyra2re", "lyra2"),
-                    new Algorithm(AlgorithmType.Axiom, "axiom", "axiom"),
-                    new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjanenf16", "scryptjane:16"),
-                    new Algorithm(AlgorithmType.Hodl, "hodl", "hodl", "--extranonce-subscribe")
-                };
+            // ReadOnlyDictionary that would be great [ not avaliable in .NET 2.0, Available since 4.5 ]
+            SupportedAlgorithms = new Dictionary<AlgorithmType, Algorithm>() {
+                { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2re", "lyra2") },
+                { AlgorithmType.Axiom, new Algorithm(AlgorithmType.Axiom, "axiom", "axiom") },
+                { AlgorithmType.ScryptJaneNf16, new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjanenf16", "scryptjane:16") },
+                { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl", "hodl", "--extranonce-subscribe") }
+            };
 
             if (Config.ConfigData.ForceCPUExtension > 0)
             {
@@ -85,18 +86,18 @@ namespace NiceHashMiner
         }
 
 
-        protected override string BenchmarkCreateCommandLine(int index, int time)
+        protected override string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time)
         {
             Path = CPUMinerPath;
-            if (SupportedAlgorithms[index].NiceHashName.Equals("hodl")) Path = HodlMinerPath;
+            if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("hodl")) Path = HodlMinerPath;
 
-            string ret = "--algo=" + SupportedAlgorithms[index].MinerName + 
+            string ret = "--algo=" + SupportedAlgorithms[algorithmType].MinerName + 
                          " --benchmark" + 
                          " --threads=" + Threads.ToString() +
                          " " + ExtraLaunchParameters + 
-                         " " + SupportedAlgorithms[index].ExtraLaunchParameters;
+                         " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters;
 
-            if (!SupportedAlgorithms[index].NiceHashName.Equals("hodl"))
+            if (!SupportedAlgorithms[algorithmType].NiceHashName.Equals("hodl"))
                 ret += " --time-limit " + time.ToString();
 
             return ret;

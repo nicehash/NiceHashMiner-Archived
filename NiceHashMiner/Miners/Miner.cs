@@ -28,12 +28,16 @@ namespace NiceHashMiner
         public string MinerDeviceName;
         public int APIPort;
         public List<ComputeDevice> CDevs;
-        public Algorithm[] SupportedAlgorithms;
+        
+        // TODO use dictionary instead of Array
+        //public Algorithm[] SupportedAlgorithms;
+        public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
+        
         public string ExtraLaunchParameters;
         public string UsePassword;
         public double MinimumProfit;
         public int DaggerHashimotoGenerateDevice;
-        public int CurrentAlgo;
+        public AlgorithmType CurrentAlgo;
         public double CurrentRate;
         public bool NotProfitable;
         public bool IsRunning;
@@ -48,7 +52,7 @@ namespace NiceHashMiner
         protected NiceHashProcess ProcessHandle;
         protected BenchmarkComplete OnBenchmarkComplete;
         protected object BenchmarkTag;
-        protected int BenchmarkIndex;
+        protected AlgorithmType BenchmarkKey;
         protected int BenchmarkTime;
         protected string LastCommandLine;
         protected double PreviousTotalMH;
@@ -65,7 +69,7 @@ namespace NiceHashMiner
             UsePassword = null;
             StartingUpDelay = false;
 
-            CurrentAlgo = -1;
+            CurrentAlgo = AlgorithmType.NONE;
             CurrentRate = 0;
             NotProfitable = true;
             IsRunning = false;
@@ -121,20 +125,20 @@ namespace NiceHashMiner
             //CurrentAlgo = -1;
         }
 
-        abstract protected string BenchmarkCreateCommandLine(int index, int time);
+        abstract protected string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time);
 
 
-        virtual public void BenchmarkStart(int index, int time, BenchmarkComplete oncomplete, object tag)
+        virtual public void BenchmarkStart(AlgorithmType key, int time, BenchmarkComplete oncomplete, object tag)
         {
             OnBenchmarkComplete = oncomplete;
 
-            if (index >= SupportedAlgorithms.Length)
+            if (SupportedAlgorithms.ContainsKey(key) == false)
             {
                 OnBenchmarkComplete(false, "Unknown algorithm", tag);
                 return;
             }
 
-            if (EnabledDeviceCount() == 0 || EnabledDevicePerAlgoCount(index) < 1)
+            if (EnabledDeviceCount() == 0 || EnabledDevicePerAlgoCount(key) < 1)
             {
                 Helpers.ConsolePrint("BENCHMARK", "No device to benchmark..");
                 OnBenchmarkComplete(false, "Disabled", tag);
@@ -142,11 +146,11 @@ namespace NiceHashMiner
             }
 
             BenchmarkTag = tag;
-            BenchmarkIndex = index;
-            CurrentAlgo = index;
+            BenchmarkKey = key;
+            CurrentAlgo = key;
             BenchmarkTime = time;
 
-            string CommandLine = BenchmarkCreateCommandLine(index, time);
+            string CommandLine = BenchmarkCreateCommandLine(key, time);
 
             Thread BenchmarkThread = new Thread(BenchmarkThreadRoutine);
             BenchmarkThread.Start(CommandLine);
@@ -172,7 +176,7 @@ namespace NiceHashMiner
                     spd *= 1000000;
                 else if (hashspeed.Contains("GH/s"))
                     spd *= 1000000000;
-                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
+                SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = spd;
 
                 OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
                 return true;
@@ -194,7 +198,7 @@ namespace NiceHashMiner
                 else if (outdata.Contains("Megahash"))
                     speed *= 1000000;
                 
-                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = speed;
+                SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = speed;
 
                 OnBenchmarkComplete(true, PrintSpeed(speed), BenchmarkTag);
                 return true;
@@ -206,7 +210,7 @@ namespace NiceHashMiner
                 double avg_spd = Convert.ToDouble(splt[index + 2]);
                 Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + avg_spd + "H/s");
 
-                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = avg_spd;
+                SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = avg_spd;
 
                 OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
                 return true;
@@ -296,14 +300,14 @@ namespace NiceHashMiner
                     }
 
                     double spd = total / (BenchmarkTime / 5);
-                    SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = spd;
+                    SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = spd;
                     OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
                 }
                 else
                 {
                     if (MinerDeviceName.Equals("AMD_OpenCL"))
                     {
-                        AlgorithmType NHDataIndex = SupportedAlgorithms[BenchmarkIndex].NiceHashID;
+                        AlgorithmType NHDataIndex = SupportedAlgorithms[BenchmarkKey].NiceHashID;
 
                         if (Globals.NiceHashData == null)
                         {
@@ -316,7 +320,7 @@ namespace NiceHashMiner
                         if (Globals.NiceHashData[NHDataIndex].paying == 0)
                         {
                             Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
-                                "[algo: " + SupportedAlgorithms[BenchmarkIndex].NiceHashName + "(" + NHDataIndex + ")]");
+                                "[algo: " + SupportedAlgorithms[BenchmarkKey].NiceHashName + "(" + NHDataIndex + ")]");
 
                             throw new Exception("No work can be used for benchmarking");
                         }
@@ -368,7 +372,7 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = 0;
+                SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = 0;
 
                 Helpers.ConsolePrint(MinerDeviceName, "Benchmark Exception: " + ex.Message);
 
@@ -506,12 +510,12 @@ namespace NiceHashMiner
 
         protected void FillAlgorithm(string aname, ref APIData AD)
         {
-            for (int i = 0; i < SupportedAlgorithms.Length; i++)
+            foreach (var key in SupportedAlgorithms.Keys)
             {
-                if (SupportedAlgorithms[i].MinerName.Equals(aname))
+                if (SupportedAlgorithms[key].MinerName.Equals(aname))
                 {
-                    AD.AlgorithmID = SupportedAlgorithms[i].NiceHashID;
-                    AD.AlgorithmName = SupportedAlgorithms[i].NiceHashName;
+                    AD.AlgorithmID = SupportedAlgorithms[key].NiceHashID;
+                    AD.AlgorithmName = SupportedAlgorithms[key].NiceHashName;
                 }
             }
         }
@@ -519,12 +523,8 @@ namespace NiceHashMiner
 
         protected Algorithm GetMinerAlgorithm(AlgorithmType nhid)
         {
-            for (int i = 0; i < SupportedAlgorithms.Length; i++)
-            {
-                if (SupportedAlgorithms[i].NiceHashID == nhid)
-                {
-                    return SupportedAlgorithms[i];
-                }
+            if (SupportedAlgorithms.ContainsKey(nhid)) {
+                return SupportedAlgorithms[nhid];
             }
 
             return null;
@@ -694,26 +694,26 @@ namespace NiceHashMiner
         }
 
 
-        virtual public int GetMaxProfitIndex(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData)
+        virtual public AlgorithmType GetMaxProfitKey(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData)
         {
             double MaxProfit = -1;
-            int MaxProfitIndex = -1;
+            AlgorithmType MaxProfitIndex = AlgorithmType.NONE;
 
-            for (int i = 0; i < SupportedAlgorithms.Length; i++)
+            foreach (var key in SupportedAlgorithms.Keys)
             {
-                if (SupportedAlgorithms[i].Skip) continue;
-                if (EnabledDevicePerAlgoCount(i) == 0) continue;
+                if (SupportedAlgorithms[key].Skip) continue;
+                if (EnabledDevicePerAlgoCount(key) == 0) continue;
 
-                SupportedAlgorithms[i].CurrentProfit = SupportedAlgorithms[i].BenchmarkSpeed *
-                    NiceHashData[SupportedAlgorithms[i].NiceHashID].paying * 0.000000001;
+                SupportedAlgorithms[key].CurrentProfit = SupportedAlgorithms[key].BenchmarkSpeed *
+                    NiceHashData[SupportedAlgorithms[key].NiceHashID].paying * 0.000000001;
 
-                Helpers.ConsolePrint(MinerDeviceName, NiceHashData[SupportedAlgorithms[i].NiceHashID].name +
-                                     " paying " + SupportedAlgorithms[i].CurrentProfit.ToString("F8") + " BTC/Day");
+                Helpers.ConsolePrint(MinerDeviceName, NiceHashData[SupportedAlgorithms[key].NiceHashID].name +
+                                     " paying " + SupportedAlgorithms[key].CurrentProfit.ToString("F8") + " BTC/Day");
 
-                if (SupportedAlgorithms[i].CurrentProfit > MaxProfit)
+                if (SupportedAlgorithms[key].CurrentProfit > MaxProfit)
                 {
-                    MaxProfit = SupportedAlgorithms[i].CurrentProfit;
-                    MaxProfitIndex = i;
+                    MaxProfit = SupportedAlgorithms[key].CurrentProfit;
+                    MaxProfitIndex = key;
                 }
             }
 
@@ -726,17 +726,7 @@ namespace NiceHashMiner
             return MaxProfitIndex;
         }
 
-
-        public int GetAlgoIndex(string aname)
-        {
-            for (int i = 0; i < SupportedAlgorithms.Length; i++)
-                if (SupportedAlgorithms[i].NiceHashName.Equals(aname))
-                    return i;
-            
-            return 0;
-        }
-
-
+        // TODO check if this really has to be a string!!!???
         public bool AlgoNameIs(string algoname)
         {
             try
@@ -752,43 +742,42 @@ namespace NiceHashMiner
         public int CountBenchmarkedAlgos()
         {
             int count = 0;
-
-            for (int i = 0; i < SupportedAlgorithms.Length; i++)
-            {
-                if (SupportedAlgorithms[i].BenchmarkSpeed > 0)
-                    count++;
+            // key value pair [Value is Algorithm]
+            foreach (var kvp in SupportedAlgorithms) {
+                if(kvp.Value.BenchmarkSpeed > 0) {
+                    ++count;
+                }
             }
-
             return count;
         }
 
         public void GetDisabledDevicePerAlgo()
         {
-            for (int i = 0; i < SupportedAlgorithms.Length; i++)
+            foreach (var key in SupportedAlgorithms.Keys)
             {
-                SupportedAlgorithms[i].DisabledDevice = new bool[CDevs.Count];
+                SupportedAlgorithms[key].DisabledDevice = new bool[CDevs.Count];
                 for (int j = 0; j < CDevs.Count; j++)
                 {
-                    SupportedAlgorithms[i].DisabledDevice[j] = false;
+                    SupportedAlgorithms[key].DisabledDevice[j] = false;
                     if ((CDevs[j].Name.Contains("750") && CDevs[j].Name.Contains("Ti")) &&
-                        (SupportedAlgorithms[i].NiceHashName.Equals("daggerhashimoto")))
+                        (SupportedAlgorithms[key].NiceHashName.Equals("daggerhashimoto")))
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
-                        SupportedAlgorithms[i].DisabledDevice[j] = true;
+                        SupportedAlgorithms[key].DisabledDevice[j] = true;
                     }
                 }
             }
         }
 
-        public int EnabledDevicePerAlgoCount(int algoIndex)
+        public int EnabledDevicePerAlgoCount(AlgorithmType algorithmType)
         {
             int count = 0;
 
             for (int i = 0; i < CDevs.Count; i++)
             {
-                if (CDevs[i].Enabled && !SupportedAlgorithms[algoIndex].DisabledDevice[i])
+                if (CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i])
                 {
-                    if (SupportedAlgorithms[algoIndex].NiceHashName.Equals("daggerhashimoto"))
+                    if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("daggerhashimoto"))
                     {
                         if (EtherDevices[i] != -1)
                             count++;

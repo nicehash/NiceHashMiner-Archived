@@ -17,41 +17,42 @@ namespace NiceHashMiner
     {
         public ccminer()
         {
-            SupportedAlgorithms = new Algorithm[] { 
-                new Algorithm(AlgorithmType.X11, "x11", "x11"),
-                new Algorithm(AlgorithmType.X13, "x13", "x13"),
-                new Algorithm(AlgorithmType.Keccak, "keccak", "keccak"),
-                new Algorithm(AlgorithmType.X15, "x15", "x15"),
-                new Algorithm(AlgorithmType.Nist5, "nist5", "nist5"),
-                new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt", "neoscrypt"),
-                new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpoolx"),
-                new Algorithm(AlgorithmType.Qubit, "qubit", "qubit"),
-                new Algorithm(AlgorithmType.Quark, "quark", "quark"),
-                new Algorithm(AlgorithmType.Lyra2REv2, "lyra2rev2", "lyra2v2"),
-                new Algorithm(AlgorithmType.Blake256r8, "blake256r8", "blakecoin"),
-                new Algorithm(AlgorithmType.Blake256r14, "blake256r14", "blake"),
-                new Algorithm(AlgorithmType.Blake256r8vnl, "blake256r8vnl", "vanilla"),
-                new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto", "daggerhashimoto"),
-                new Algorithm(AlgorithmType.Decred, "decred", "decred")
+            SupportedAlgorithms = new Dictionary<AlgorithmType, Algorithm>
+            {
+                { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11", "x11") },
+                { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13, "x13", "x13") },
+                { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak, "keccak", "keccak") },
+                { AlgorithmType.X15 , new Algorithm(AlgorithmType.X15, "x15", "x15") },
+                { AlgorithmType.Nist5 , new Algorithm(AlgorithmType.Nist5, "nist5", "nist5") },
+                { AlgorithmType.NeoScrypt , new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt", "neoscrypt") },
+                { AlgorithmType.WhirlpoolX , new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpoolx") },
+                { AlgorithmType.Qubit , new Algorithm(AlgorithmType.Qubit, "qubit", "qubit") },
+                { AlgorithmType.Quark , new Algorithm(AlgorithmType.Quark, "quark", "quark") },
+                { AlgorithmType.Lyra2REv2 , new Algorithm(AlgorithmType.Lyra2REv2, "lyra2rev2", "lyra2v2") },
+                { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blake256r8", "blakecoin") },
+                { AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake256r14", "blake") },
+                { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "blake256r8vnl", "vanilla") },
+                { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto", "daggerhashimoto") },
+                { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred", "decred") },
             };
         }
 
 
-        protected override string BenchmarkCreateCommandLine(int index, int time)
+        protected override string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time)
         {
             string CommandLine = "";
 
-            if (SupportedAlgorithms[index].NiceHashName.Equals("daggerhashimoto"))
+            if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("daggerhashimoto"))
             {
                 CommandLine = " --benchmark-warmup 40 --benchmark-trial 20" +
                               " " + ExtraLaunchParameters +
-                              " " + SupportedAlgorithms[index].ExtraLaunchParameters +
+                              " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters +
                               " --cuda --cuda-devices ";
 
                 int dagdev = -1;
                 for (int i = 0; i < CDevs.Count; i++)
                 {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !SupportedAlgorithms[index].DisabledDevice[i])
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i])
                     {
                         CommandLine += i.ToString() + " ";
                         if (i == DaggerHashimotoGenerateDevice)
@@ -67,24 +68,24 @@ namespace NiceHashMiner
             }
             else
             {
-                CommandLine = " --algo=" + SupportedAlgorithms[index].MinerName +
+                CommandLine = " --algo=" + SupportedAlgorithms[algorithmType].MinerName +
                               " --benchmark" +
                               " --time-limit " + time.ToString() +
                               " " + ExtraLaunchParameters +
-                              " " + SupportedAlgorithms[index].ExtraLaunchParameters +
+                              " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters +
                               " --devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled && !SupportedAlgorithms[index].DisabledDevice[i])
+                    if (CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i])
                         CommandLine += CDevs[i].ID.ToString() + ",";
 
                 CommandLine = CommandLine.Remove(CommandLine.Length - 1);
 
-                if (SupportedAlgorithms[index].NiceHashName.Equals("decred"))
+                if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("decred"))
                     Path = "bin\\ccminer_decred.exe";
-                else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("neoscrypt"))
+                else if (this is ccminer_sp && SupportedAlgorithms[algorithmType].NiceHashName.Equals("neoscrypt"))
                     Path = "bin\\ccminer_neoscrypt.exe";
-                else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("lyra2rev2"))
+                else if (this is ccminer_sp && SupportedAlgorithms[algorithmType].NiceHashName.Equals("lyra2rev2"))
                     Path = "bin\\ccminer_nanashi_lyra2rev2.exe";
                 else if (this is ccminer_sp)
                     Path = "bin\\ccminer_sp.exe";
@@ -101,7 +102,7 @@ namespace NiceHashMiner
             //if (ProcessHandle != null) return; // ignore, already running 
 
             Algorithm Algo = GetMinerAlgorithm(nhalgo);
-            if (Algo == null || EnabledDevicePerAlgoCount(GetAlgoIndex(Algo.NiceHashName)) < 1) return;
+            if (Algo == null || EnabledDevicePerAlgoCount(nhalgo) < 1) return;
 
             if (Algo.NiceHashName.Equals("daggerhashimoto"))
             {

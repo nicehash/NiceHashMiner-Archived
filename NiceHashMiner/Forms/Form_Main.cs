@@ -189,32 +189,49 @@ namespace NiceHashMiner
                     Globals.Miners[i].DaggerHashimotoGenerateDevice = Config.ConfigData.Groups[i].DaggerHashimotoGenerateDevice;
                     if (Config.ConfigData.Groups[i].APIBindPort > 0)
                         Globals.Miners[i].APIPort = Config.ConfigData.Groups[i].APIBindPort;
-                    for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length && z < Globals.Miners[i].SupportedAlgorithms.Length; z++)
-                    {
-                        Globals.Miners[i].SupportedAlgorithms[z].BenchmarkSpeed = Config.ConfigData.Groups[i].Algorithms[z].BenchmarkSpeed;
-                        Globals.Miners[i].SupportedAlgorithms[z].ExtraLaunchParameters = Config.ConfigData.Groups[i].Algorithms[z].ExtraLaunchParameters;
-                        Globals.Miners[i].SupportedAlgorithms[z].UsePassword = Config.ConfigData.Groups[i].Algorithms[z].UsePassword;
-                        Globals.Miners[i].SupportedAlgorithms[z].Skip = Config.ConfigData.Groups[i].Algorithms[z].Skip;
 
-                        Globals.Miners[i].SupportedAlgorithms[z].DisabledDevice = new bool[Globals.Miners[i].CDevs.Count];
-                        if (Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices != null)
-                        {
-                            if (Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length < Globals.Miners[i].CDevs.Count)
+                    // Dictionary order is non deterministic, so find a way to merge this crap
+                    bool isSameSize = Config.ConfigData.Groups[i].Algorithms.Length == Globals.Miners[i].SupportedAlgorithms.Count;
+                    if (isSameSize == false) Helpers.ConsolePrint("Miner Algos settup", "SIZE IS NOT SAME");
+                    foreach (var key in Globals.Miners[i].SupportedAlgorithms.Keys) {
+                        var currentAlg = Globals.Miners[i].SupportedAlgorithms[key];
+                        Algo configAlgo = null;
+                        // find configAlgo
+                        for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length; z++) {
+                            Algo compareConfigAlgo = Config.ConfigData.Groups[i].Algorithms[z];
+                            if(currentAlg.NiceHashName == compareConfigAlgo.Name) {
+                                configAlgo = compareConfigAlgo;
+                                break;
+                            }
+                        }
+                        if(configAlgo != null) {
+                            currentAlg.BenchmarkSpeed = configAlgo.BenchmarkSpeed;
+                            currentAlg.ExtraLaunchParameters = configAlgo.ExtraLaunchParameters;
+                            currentAlg.UsePassword = configAlgo.UsePassword;
+                            currentAlg.Skip = configAlgo.Skip;
+
+                            currentAlg.DisabledDevice = new bool[Globals.Miners[i].CDevs.Count];
+                            if (configAlgo.DisabledDevices != null)
                             {
-                                for (int j = 0; j < Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length; j++)
-                                    Globals.Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices[j];
-                                for (int j = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices.Length; j < Globals.Miners[i].CDevs.Count; j++)
-                                    Globals.Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = false;
+                                if (configAlgo.DisabledDevices.Length < Globals.Miners[i].CDevs.Count)
+                                {
+                                    for (int j = 0; j < configAlgo.DisabledDevices.Length; j++)
+                                        currentAlg.DisabledDevice[j] = configAlgo.DisabledDevices[j];
+                                    for (int j = configAlgo.DisabledDevices.Length; j < Globals.Miners[i].CDevs.Count; j++)
+                                        currentAlg.DisabledDevice[j] = false;
+                                }
+                                else
+                                {
+                                    for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
+                                        currentAlg.DisabledDevice[j] = configAlgo.DisabledDevices[j];
+                                }
                             }
                             else
                             {
-                                for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
-                                    Globals.Miners[i].SupportedAlgorithms[z].DisabledDevice[j] = Config.ConfigData.Groups[i].Algorithms[z].DisabledDevices[j];
+                                Globals.Miners[i].GetDisabledDevicePerAlgo();
                             }
-                        }
-                        else
-                        {
-                            Globals.Miners[i].GetDisabledDevicePerAlgo();
+                        } else {
+                            Helpers.ConsolePrint("Miner Algos settup", "DIDN'T FIND configAlgo!!!");
                         }
                     }
                 }
@@ -344,18 +361,18 @@ namespace NiceHashMiner
             {
                 if (m.EnabledDeviceCount() == 0) continue;
 
-                int MaxProfitIndex = m.GetMaxProfitIndex(Globals.NiceHashData);
+                AlgorithmType MaxProfitKey = m.GetMaxProfitKey(Globals.NiceHashData);
 
-                if (m.NotProfitable || MaxProfitIndex == -1)
+                if (m.NotProfitable || MaxProfitKey == AlgorithmType.NONE)
                 {
                     Helpers.ConsolePrint(m.MinerDeviceName, "Miner is not profitable.. STOPPING..");
                     m.Stop(false);
                     continue;
                 }
                 
-                if (m.CurrentAlgo != MaxProfitIndex)
+                if (m.CurrentAlgo != MaxProfitKey)
                 {
-                    Helpers.ConsolePrint(m.MinerDeviceName, "Switching to most profitable algorithm: " + m.SupportedAlgorithms[MaxProfitIndex].NiceHashName);
+                    Helpers.ConsolePrint(m.MinerDeviceName, "Switching to most profitable algorithm: " + m.SupportedAlgorithms[MaxProfitKey].NiceHashName);
 
                     MinerStatsCheck.Stop();
                     if (m.CurrentAlgo >= 0)
@@ -364,10 +381,10 @@ namespace NiceHashMiner
                         // wait 0.5 seconds before going on
                         System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
                     }
-                    m.CurrentAlgo = MaxProfitIndex;
+                    m.CurrentAlgo = MaxProfitKey;
 
-                    m.Start(m.SupportedAlgorithms[MaxProfitIndex].NiceHashID,
-                        "stratum+tcp://" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].name + "." + Globals.MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitIndex].NiceHashID].port, Worker);
+                    m.Start(m.SupportedAlgorithms[MaxProfitKey].NiceHashID,
+                        "stratum+tcp://" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitKey].NiceHashID].name + "." + Globals.MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitKey].NiceHashID].port, Worker);
                     MinerStatsCheck.Start();
                 }
             }
@@ -401,7 +418,7 @@ namespace NiceHashMiner
                     if (processes.Length < CPUID.GetPhysicalProcessorCount())
                         m.Restart();
 
-                    int algoIndex = m.GetAlgoIndex("hodl");
+                    AlgorithmType algoIndex = AlgorithmType.Hodl; // m.GetAlgoIndex("hodl");
                     CPUAlgoName = "hodl";
                     CPUTotalSpeed = m.SupportedAlgorithms[algoIndex].BenchmarkSpeed;
                     CPUTotalRate = Globals.NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
@@ -819,8 +836,10 @@ namespace NiceHashMiner
                     {
                         if (!(m is cpuminer))
                         {
+                            // TODO this here MAKES NO SENSE cpuminer does not have X11 in SupportedAlgorithms
+                            // TODO most likelly hidden BUG, FIX IT!!!
                             // quick and ugly way to prevent GPUs from starting on extremely unprofitable x11
-                            m.SupportedAlgorithms[13].BenchmarkSpeed = 1;
+                            m.SupportedAlgorithms[AlgorithmType.X11].BenchmarkSpeed = 1;
                         }
                         break;
                     }
@@ -868,7 +887,7 @@ namespace NiceHashMiner
             {
                 m.Stop(false);
                 m.IsRunning = false;
-                m.CurrentAlgo = -1;
+                m.CurrentAlgo = AlgorithmType.NONE;
                 m.CurrentRate = 0;
             }
 

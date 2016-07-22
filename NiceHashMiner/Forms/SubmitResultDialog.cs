@@ -137,7 +137,7 @@ namespace NiceHashMiner
                     mm.CDevs[i].Enabled = true;
             }
 
-            BenchmarkProgressBar.Maximum = mm.SupportedAlgorithms.Length;
+            BenchmarkProgressBar.Maximum = mm.SupportedAlgorithms.Count;
 
             // Parse GPU name
             Helpers.ConsolePrint("SubmitResultDialog", "Old DeviceName: " + DeviceName);
@@ -173,67 +173,70 @@ namespace NiceHashMiner
         private int index;
         private string url;
 
+        // TODO
+        // TODO
+        // TODO BROKEN 
         private void InitiateBenchmark()
         {
-            int algoIndex = index;
-            index++;
+            //int algoIndex = index;
+            //index++;
 
-            if (algoIndex < mm.SupportedAlgorithms.Length)
-            {
-                if (!mm.SupportedAlgorithms[algoIndex].Skip)
-                {
-                    if (mm is cpuminer)
-                        Time = Config.ConfigData.BenchmarkTimeLimitsCPU[TimeIndex];
-                    else if (mm is ccminer)
-                        Time = Config.ConfigData.BenchmarkTimeLimitsNVIDIA[TimeIndex];
-                    else
-                    {
-                        Time = Config.ConfigData.BenchmarkTimeLimitsAMD[TimeIndex] / 60;
+            //if (algoIndex < mm.SupportedAlgorithms.Length)
+            //{
+            //    if (!mm.SupportedAlgorithms[algoIndex].Skip)
+            //    {
+            //        if (mm is cpuminer)
+            //            Time = Config.ConfigData.BenchmarkTimeLimitsCPU[TimeIndex];
+            //        else if (mm is ccminer)
+            //            Time = Config.ConfigData.BenchmarkTimeLimitsNVIDIA[TimeIndex];
+            //        else
+            //        {
+            //            Time = Config.ConfigData.BenchmarkTimeLimitsAMD[TimeIndex] / 60;
 
-                        // add an aditional minute if second is not 0
-                        if (DateTime.Now.Second != 0)
-                            Time += 1;
-                    }
+            //            // add an aditional minute if second is not 0
+            //            if (DateTime.Now.Second != 0)
+            //                Time += 1;
+            //        }
 
-                    CurrentAlgoName = mm.SupportedAlgorithms[algoIndex].NiceHashName;
-                    UpdateProgressBar(false);
-                    mm.BenchmarkStart(algoIndex, Time, BenchmarkCompleted, DevicesListView.Items[DeviceChecked_Index].Tag);
-                }
-                else
-                {
-                    UpdateProgressBar(true);
-                    InitiateBenchmark();
-                }
-            }
-            else
-            {
+            //        CurrentAlgoName = mm.SupportedAlgorithms[algoIndex].NiceHashName;
+            //        UpdateProgressBar(false);
+            //        mm.BenchmarkStart(algoIndex, Time, BenchmarkCompleted, DevicesListView.Items[DeviceChecked_Index].Tag);
+            //    }
+            //    else
+            //    {
+            //        UpdateProgressBar(true);
+            //        InitiateBenchmark();
+            //    }
+            //}
+            //else
+            //{
 
-                for (int i = 0; i < mm.SupportedAlgorithms.Length; i++)
-                {
-                    if (!mm.SupportedAlgorithms[i].Skip)
-                    {
-                        int id = (int)mm.SupportedAlgorithms[i].NiceHashID;
-                        url += "&speed" + id + "=" + (mm.SupportedAlgorithms[i].BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
-                    }
-                }
+            //    foreach (var key in mm.SupportedAlgorithms.Keys)
+            //    {
+            //        if (!mm.SupportedAlgorithms[key].Skip)
+            //        {
+            //            int id = (int)mm.SupportedAlgorithms[key].NiceHashID;
+            //            url += "&speed" + id + "=" + (mm.SupportedAlgorithms[key].BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+            //        }
+            //    }
 
-                InBenchmark = false;
-                DevicesListView.Enabled = true;
-                CloseBtn.Enabled = true;
-                StartStopBtn.Text = International.GetText("SubmitResultDialog_StartBtn");
-                BenchmarkProgressBar.Value = 0;
-                LabelProgressPercentage.Text = International.GetText("SubmitResultDialog_LabelProgressPercentageCompleted");
+            //    InBenchmark = false;
+            //    DevicesListView.Enabled = true;
+            //    CloseBtn.Enabled = true;
+            //    StartStopBtn.Text = International.GetText("SubmitResultDialog_StartBtn");
+            //    BenchmarkProgressBar.Value = 0;
+            //    LabelProgressPercentage.Text = International.GetText("SubmitResultDialog_LabelProgressPercentageCompleted");
 
-                if (mm.BenchmarkSignalQuit)
-                {
-                    LabelProgressPercentage.Text = International.GetText("SubmitResultDialog_LabelProgressPercentageStopped");
-                    return;
-                }
+            //    if (mm.BenchmarkSignalQuit)
+            //    {
+            //        LabelProgressPercentage.Text = International.GetText("SubmitResultDialog_LabelProgressPercentageStopped");
+            //        return;
+            //    }
 
-                url += "&nhmver=" + Application.ProductVersion.ToString();  // Add version info
-                url += "&cost=1&power=1"; // Set default power and cost to 1
-                System.Diagnostics.Process.Start(url);
-            }
+            //    url += "&nhmver=" + Application.ProductVersion.ToString();  // Add version info
+            //    url += "&cost=1&power=1"; // Set default power and cost to 1
+            //    System.Diagnostics.Process.Start(url);
+            //}
         }
 
         private void BenchmarkCompleted(bool success, string text, object tag)

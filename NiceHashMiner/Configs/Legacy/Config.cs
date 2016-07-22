@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Configs
 {
@@ -212,20 +213,31 @@ namespace NiceHashMiner.Configs
                 CG[i].UsePassword = Globals.Miners[i].UsePassword;
                 CG[i].MinimumProfit = Globals.Miners[i].MinimumProfit;
                 CG[i].DaggerHashimotoGenerateDevice = Globals.Miners[i].DaggerHashimotoGenerateDevice;
-                CG[i].Algorithms = new Algo[Globals.Miners[i].SupportedAlgorithms.Length];
-                for (int k = 0; k < Globals.Miners[i].SupportedAlgorithms.Length; k++)
+                // scope stuff here for PORTED
                 {
-                    CG[i].Algorithms[k] = new Algo();
-                    CG[i].Algorithms[k].Name = Globals.Miners[i].SupportedAlgorithms[k].NiceHashName;
-                    CG[i].Algorithms[k].BenchmarkSpeed = Globals.Miners[i].SupportedAlgorithms[k].BenchmarkSpeed;
-                    CG[i].Algorithms[k].ExtraLaunchParameters = Globals.Miners[i].SupportedAlgorithms[k].ExtraLaunchParameters;
-                    CG[i].Algorithms[k].UsePassword = Globals.Miners[i].SupportedAlgorithms[k].UsePassword;
-                    CG[i].Algorithms[k].Skip = Globals.Miners[i].SupportedAlgorithms[k].Skip;
-
-                    CG[i].Algorithms[k].DisabledDevices = new bool[Globals.Miners[i].CDevs.Count];
-                    for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
+                    // get keys
+                    var CurrentMinerKeys = Globals.Miners[i].SupportedAlgorithms.Keys;
+                    CG[i].Algorithms = new Algo[CurrentMinerKeys.Count];
+                    int k = 0;
+                    foreach (AlgorithmType algType in CurrentMinerKeys)
                     {
-                        CG[i].Algorithms[k].DisabledDevices[j] = Globals.Miners[i].SupportedAlgorithms[k].DisabledDevice[j];
+                        Algorithm curAlgo = Globals.Miners[i].SupportedAlgorithms[algType];
+                        // for ported START
+                        CG[i].Algorithms[k] = new Algo();
+                        CG[i].Algorithms[k].Name = curAlgo.NiceHashName;
+                        CG[i].Algorithms[k].BenchmarkSpeed = curAlgo.BenchmarkSpeed;
+                        CG[i].Algorithms[k].ExtraLaunchParameters = curAlgo.ExtraLaunchParameters;
+                        CG[i].Algorithms[k].UsePassword = curAlgo.UsePassword;
+                        CG[i].Algorithms[k].Skip = curAlgo.Skip;
+
+                        CG[i].Algorithms[k].DisabledDevices = new bool[Globals.Miners[i].CDevs.Count];
+                        for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
+                        {
+                            CG[i].Algorithms[k].DisabledDevices[j] = curAlgo.DisabledDevice[j];
+                        }
+                        // for ported END
+                        // increment k
+                        ++k;
                     }
                 }
                 List<int> DD = new List<int>();

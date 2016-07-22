@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Globalization;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -43,24 +44,34 @@ namespace NiceHashMiner
 
             foreach (Miner m in Globals.Miners)
             {
-                for (int i = 0; i < m.SupportedAlgorithms.Length; i++)
+                // TODO check List to Dict port
+                // get keys
+                var CurrentMinerKeys = m.SupportedAlgorithms.Keys;
+                int i = 0; // TODO remove this
+                foreach (AlgorithmType algType in CurrentMinerKeys)
                 {
+                    Algorithm curAlgo = m.SupportedAlgorithms[algType];
+                    // for ported START
                     ListViewItem lvi = new ListViewItem();
-                    lvi.Checked = !m.SupportedAlgorithms[i].Skip;
+                    lvi.Checked = !curAlgo.Skip;
                     if (m.EnabledDeviceCount() == 0)
                     {
                         lvi.Checked = false;
                         lvi.BackColor = Color.LightGray;
                     }
                     lvi.SubItems.Add(m.MinerDeviceName);
-                    ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(m.SupportedAlgorithms[i].NiceHashName);
-                    sub.Tag = i;
-                    if (m.SupportedAlgorithms[i].BenchmarkSpeed > 0)
-                        lvi.SubItems.Add(m.PrintSpeed(m.SupportedAlgorithms[i].BenchmarkSpeed));
+                    ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(curAlgo.NiceHashName);
+                    //sub.Tag = i; // TODO not sure if i here instead of algorithmType, it looks more like algorithmType
+                    sub.Tag = algType; // TODO not sure if i here instead of algorithmType, it looks more like algorithmType
+                    if (curAlgo.BenchmarkSpeed > 0)
+                        lvi.SubItems.Add(m.PrintSpeed(curAlgo.BenchmarkSpeed));
                     else
                         lvi.SubItems.Add("");
                     lvi.Tag = m;
                     listView1.Items.Add(lvi);
+                    // for ported END
+                    // increment i
+                    ++i;
                 }
             }
 
@@ -106,7 +117,7 @@ namespace NiceHashMiner
                 }
 
                 Miner m = lvi.Tag as Miner;
-                int i = (int)lvi.SubItems[2].Tag;
+                AlgorithmType key = (AlgorithmType)lvi.SubItems[2].Tag;
                 //lvi.SubItems[3].Text = "Please wait...";
                 inBenchmark = true;
                 CurrentlyBenchmarking = m;
@@ -139,7 +150,7 @@ namespace NiceHashMiner
                         lvi.SubItems[3].Text = String.Format(International.GetText("form2_listView_WaitMinutes"), Time);
                 }
 
-                m.BenchmarkStart(i, Time, BenchmarkCompleted, lvi);
+                m.BenchmarkStart(key, Time, BenchmarkCompleted, lvi);
             }
             else
             {
@@ -148,32 +159,37 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("BENCHMARK", "Calculating average CPU speeds:");
 
-                    double[] Speeds = new double[Globals.Miners[0].SupportedAlgorithms.Length];
-                    int[] MTaken = new int[Globals.Miners[0].SupportedAlgorithms.Length];
+                    Dictionary<AlgorithmType, double> Speeds = new Dictionary<AlgorithmType, double>(); //new double[Globals.Miners[0].SupportedAlgorithms.Count];
+                    Dictionary<AlgorithmType, int> MTaken = new Dictionary<AlgorithmType, int>(); // new int[Globals.Miners[0].SupportedAlgorithms.Count];
+                    // initialize/mirror keys
+                    foreach (var key in Globals.Miners[0].SupportedAlgorithms.Keys) {
+                        Speeds.Add(key, 0.0);
+                        MTaken.Add(key, 0);
+                    }
 
                     foreach (ListViewItem lvi in listView1.Items)
                     {
                         if (lvi.Tag is cpuminer)
                         {
                             Miner m = lvi.Tag as Miner;
-                            int i = (int)lvi.SubItems[2].Tag;
-                            if (m.SupportedAlgorithms[i].BenchmarkSpeed > 0)
+                            AlgorithmType key = (AlgorithmType)lvi.SubItems[2].Tag;
+                            if (m.SupportedAlgorithms[key].BenchmarkSpeed > 0)
                             {
-                                Speeds[i] += m.SupportedAlgorithms[i].BenchmarkSpeed;
-                                MTaken[i]++;
+                                Speeds[key] += m.SupportedAlgorithms[key].BenchmarkSpeed;
+                                MTaken[key]++;
                             }
                         }
                     }
 
-                    for (int i = 0; i < Speeds.Length; i++)
+                    foreach (var key in Speeds.Keys)
                     {
-                        if (MTaken[i] > 0) Speeds[i] /= MTaken[i];
-                        Helpers.ConsolePrint("BENCHMARK", Globals.Miners[0].SupportedAlgorithms[i].NiceHashName + " average speed: " + Globals.Miners[0].PrintSpeed(Speeds[i]));
+                        if (MTaken[key] > 0) Speeds[key] /= MTaken[key];
+                        Helpers.ConsolePrint("BENCHMARK", Globals.Miners[0].SupportedAlgorithms[key].NiceHashName + " average speed: " + Globals.Miners[0].PrintSpeed(Speeds[key]));
 
                         foreach (Miner m in Globals.Miners)
                         {
                             if (m is cpuminer)
-                                m.SupportedAlgorithms[i].BenchmarkSpeed = Speeds[i];
+                                m.SupportedAlgorithms[key].BenchmarkSpeed = Speeds[key];
                         }
                     }
                 }
@@ -181,8 +197,8 @@ namespace NiceHashMiner
                 foreach (ListViewItem lvi in listView1.Items)
                 {
                     Miner m = lvi.Tag as Miner;
-                    int i = (int)lvi.SubItems[2].Tag;
-                    lvi.SubItems[3].Text = m.PrintSpeed(m.SupportedAlgorithms[i].BenchmarkSpeed);
+                    AlgorithmType key = (AlgorithmType)lvi.SubItems[2].Tag;
+                    lvi.SubItems[3].Text = m.PrintSpeed(m.SupportedAlgorithms[key].BenchmarkSpeed);
                 }
                 
                 Config.RebuildGroups();
@@ -239,9 +255,9 @@ namespace NiceHashMiner
         {
             foreach (Miner m in Globals.Miners)
             {
-                for (int i = 0; i < m.SupportedAlgorithms.Length; i++)
+                foreach (var key in m.SupportedAlgorithms.Keys)
                 {
-                    m.SupportedAlgorithms[i].BenchmarkSpeed = 0;
+                    m.SupportedAlgorithms[key].BenchmarkSpeed = 0;
                 }
             }
 
@@ -260,8 +276,8 @@ namespace NiceHashMiner
                 e.Item.Checked = false;
             else
             {
-                int i = (int)e.Item.SubItems[2].Tag;
-                m.SupportedAlgorithms[i].Skip = !e.Item.Checked;
+                AlgorithmType key = (AlgorithmType)e.Item.SubItems[2].Tag;
+                m.SupportedAlgorithms[key].Skip = !e.Item.Checked;
                 Config.RebuildGroups();
             }
         }
@@ -298,9 +314,9 @@ namespace NiceHashMiner
             for (int i = 0; i < Globals.Miners.Length; i++)
             {
                 if (Globals.Miners[i].EnabledDeviceCount() < 1) continue;
-                for (int j = 0; j < Globals.Miners[i].SupportedAlgorithms.Length; j++)
+                foreach (var key in Globals.Miners[i].SupportedAlgorithms.Keys)
                 {
-                    total[(int)Globals.Miners[i].SupportedAlgorithms[j].NiceHashID] += Globals.Miners[i].SupportedAlgorithms[j].BenchmarkSpeed;
+                    total[(int)Globals.Miners[i].SupportedAlgorithms[key].NiceHashID] += Globals.Miners[i].SupportedAlgorithms[key].BenchmarkSpeed;
                 }
             }
 

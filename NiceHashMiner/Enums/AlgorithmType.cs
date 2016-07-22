@@ -10,6 +10,7 @@ namespace NiceHashMiner.Enums
     public enum AlgorithmType : int
     {
         NONE = -1,
+        #region NiceHashAPI
         Scrypt = 0,
         SHA256 = 1,
         ScryptNf = 2,
@@ -32,5 +33,8 @@ namespace NiceHashMiner.Enums
         Hodl = 19,
         DaggerHashimoto = 20,
         Decred = 21,
+        #endregion // NiceHashAPI
+        // ethereum not documented but it is returned from API value is 999
+        Ethereum = 999
     }
 }

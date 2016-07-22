@@ -15,14 +15,11 @@ namespace NiceHashMiner
             MinerDeviceName = "NVIDIA3.x";
             Path = "bin\\ccminer_tpruvot.exe";
             APIPort = 4049;
-
-            // disable neoscrypt
-            var tmp = new List<Algorithm>(SupportedAlgorithms);
-            //tmp[GetAlgoIndex("whirlpoolx")].MinerName = "whirlpool";    // Needed for new tpruvot's ccminer
+            
             // name change => "whirlpoolx" => "whirlpool"
-            tmp[GetAlgoIndex("whirlpoolx")] = new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpool");     // Needed for new tpruvot's ccminer
-            tmp.RemoveAt(GetAlgoIndex("neoscrypt"));   // Remove Neoscrypt
-            SupportedAlgorithms = tmp.ToArray();
+            SupportedAlgorithms[AlgorithmType.WhirlpoolX] = new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpool");     // Needed for new tpruvot's ccminer
+            // disable/remove neoscrypt
+            SupportedAlgorithms.Remove(AlgorithmType.NeoScrypt);
 
             if (!Config.ConfigData.DisableDetectionNVidia3X)
                 QueryCDevs();

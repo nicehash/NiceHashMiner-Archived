@@ -25,22 +25,22 @@ namespace NiceHashMiner
 
         public sgminer()
         {
-            SupportedAlgorithms = new Algorithm[] { 
-                new Algorithm(AlgorithmType.X11, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm(AlgorithmType.X13, "x13",        "x13",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm(AlgorithmType.Keccak, "keccak",     "keccak",     DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm(AlgorithmType.X15, "x15",        "x15",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm(AlgorithmType.Nist5, "nist5",      "nist5",      DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2"),
-                new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4"),
-                new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2"),
-                new Algorithm(AlgorithmType.Qubit, "qubit",      "qubitcoin",  DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2"),
-                new Algorithm(AlgorithmType.Quark, "quark",      "quarkcoin",  DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm(AlgorithmType.Lyra2REv2, "lyra2rev2",  "Lyra2REv2",  DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1"),
-                new Algorithm(AlgorithmType.Blake256r8, "blake256r8", "blakecoin",  DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
-                new Algorithm(AlgorithmType.Blake256r14, "blake256r14",   "blake",   DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
-                new Algorithm(AlgorithmType.Blake256r8vnl, "blake256r8vnl", "vanilla", DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2"),
-                new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto", "daggerhashimoto"),
-                new Algorithm(AlgorithmType.Decred, "decred", "decred", "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64")
+            SupportedAlgorithms = new Dictionary<AlgorithmType,Algorithm>() { 
+                { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11",        "x11",        DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1") },
+                { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13, "x13",        "x13",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2") },
+                { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak, "keccak",     "keccak",     DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1") },
+                { AlgorithmType.X15 , new Algorithm(AlgorithmType.X15, "x15",        "x15",        DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2") },
+                { AlgorithmType.Nist5 , new Algorithm(AlgorithmType.Nist5, "nist5",      "nist5",      DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2") },
+                { AlgorithmType.NeoScrypt , new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt",  "neoscrypt",  DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4") },
+                { AlgorithmType.WhirlpoolX , new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx", "whirlpoolx", DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2") },
+                { AlgorithmType.Qubit , new Algorithm(AlgorithmType.Qubit, "qubit",      "qubitcoin",  DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2") },
+                { AlgorithmType.Quark , new Algorithm(AlgorithmType.Quark, "quark",      "quarkcoin",  DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1") },
+                { AlgorithmType.Lyra2REv2 , new Algorithm(AlgorithmType.Lyra2REv2, "lyra2rev2",  "Lyra2REv2",  DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1") },
+                { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blake256r8", "blakecoin",  DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2") },
+                { AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake256r14",   "blake",   DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2") },
+                { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "blake256r8vnl", "vanilla", DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2") },
+                { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto", "daggerhashimoto") },
+                { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred", "decred", "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64") }
             };
 
             MinerDeviceName = "AMD_OpenCL";
@@ -176,15 +176,15 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    SupportedAlgorithms[GetAlgoIndex("x11")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
-                    SupportedAlgorithms[GetAlgoIndex("qubit")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
-                    SupportedAlgorithms[GetAlgoIndex("quark")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
-                    SupportedAlgorithms[GetAlgoIndex("lyra2rev2")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                    SupportedAlgorithms[AlgorithmType.X11].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                    SupportedAlgorithms[AlgorithmType.Qubit].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                    SupportedAlgorithms[AlgorithmType.Quark].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                    SupportedAlgorithms[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1";
                 }
 
                 if (!GPUCodeName[i].Equals("Tahiti"))
                 {
-                    SupportedAlgorithms[GetAlgoIndex("neoscrypt")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
+                    SupportedAlgorithms[AlgorithmType.NeoScrypt].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
                     Helpers.ConsolePrint(MinerDeviceName, "The GPU detected (" + GPUCodeName[i] + ") is not Tahiti. Changing default gpu-threads to 2.");
                 }
             }
@@ -230,10 +230,10 @@ namespace NiceHashMiner
 
             if (EnableOptimizedVersion == false)
             {
-                SupportedAlgorithms[GetAlgoIndex("x11")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
-                SupportedAlgorithms[GetAlgoIndex("qubit")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 128 --gpu-threads 4";
-                SupportedAlgorithms[GetAlgoIndex("quark")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 256 --gpu-threads 1";
-                SupportedAlgorithms[GetAlgoIndex("lyra2rev2")].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
+                SupportedAlgorithms[AlgorithmType.X11].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
+                SupportedAlgorithms[AlgorithmType.Qubit].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 128 --gpu-threads 4";
+                SupportedAlgorithms[AlgorithmType.Quark].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 256 --gpu-threads 1";
+                SupportedAlgorithms[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
             }
 
             if (ShowWarningDialog == true && Config.ConfigData.ShowDriverVersionWarning == true)
@@ -303,12 +303,12 @@ namespace NiceHashMiner
             }
         }
 
-        protected override string BenchmarkCreateCommandLine(int index, int time)
+        protected override string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time)
         {
-            Algorithm Algo = GetMinerAlgorithm(SupportedAlgorithms[index].NiceHashID);
+            Algorithm Algo = GetMinerAlgorithm(SupportedAlgorithms[algorithmType].NiceHashID);
             if (Algo == null)
             {
-                Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + index + "): Algo equals to null");
+                Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + algorithmType + "): Algo equals to null");
                 return "";
             }
 
@@ -343,9 +343,9 @@ namespace NiceHashMiner
                 Path = "cmd";
                 string DirName = GetMinerDirectory(Algo.NiceHashName);
 
-                string url = "stratum+tcp://" + Globals.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
+                string url = "stratum+tcp://" + Globals.NiceHashData[SupportedAlgorithms[algorithmType].NiceHashID].name + "." +
                              Globals.MiningLocation[Config.ConfigData.ServiceLocation] + ".nicehash.com:" +
-                             Globals.NiceHashData[SupportedAlgorithms[index].NiceHashID].port;
+                             Globals.NiceHashData[SupportedAlgorithms[algorithmType].NiceHashID].port;
 
                 string username = Config.ConfigData.BitcoinAddress.Trim();
                 if (Config.ConfigData.WorkerName.Length > 0)
@@ -353,13 +353,13 @@ namespace NiceHashMiner
 
                 CommandLine = " /C \"cd /d " + DirName + " && sgminer.exe " +
                               " --gpu-platform " + GPUPlatformNumber +
-                              " -k " + SupportedAlgorithms[index].MinerName +
+                              " -k " + SupportedAlgorithms[algorithmType].MinerName +
                               " --url=" + url +
                               " --userpass=" + username + ":" + GetPassword(Algo) +
                               " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
                               " -T --log 10 --log-file dump.txt" +
                               " " + ExtraLaunchParameters +
-                              " " + SupportedAlgorithms[index].ExtraLaunchParameters +
+                              " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters +
                               " --device ";
 
                 for (int i = 0; i < CDevs.Count; i++)
