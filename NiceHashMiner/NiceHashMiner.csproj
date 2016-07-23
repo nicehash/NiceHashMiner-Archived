@@ -83,6 +83,7 @@
     <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
+    <Compile Include="Enums\BenchmarkPerformanceType.cs" />
     <Compile Include="Enums\BenchmarkType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />

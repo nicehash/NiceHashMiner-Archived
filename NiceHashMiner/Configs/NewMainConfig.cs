@@ -169,25 +169,7 @@ namespace NiceHashMiner.Configs
                 // get LastDevicesSettup settings from groups
                 // we have a new settup
                 // get device configs settings from legacy config
-                for (int i = 0; i < Globals.Miners.Length; i++)
-                {
-                    for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++)
-                    {
-                        ComputeDevice D = Globals.Miners[i].CDevs[k];
-                        if (Config.ConfigData.Groups.Length > i)
-                        {
-                            D.Enabled = true;
-                            for (int z = 0; z < Config.ConfigData.Groups[i].DisabledDevices.Length; z++)
-                            {
-                                if (Config.ConfigData.Groups[i].DisabledDevices[z] == k)
-                                {
-                                    D.Enabled = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
+                Config.SetComputeDeviceConfig();
                 // TODO probablly not neded to check the configs settup here
                 // since we have config migration migration
                 ConfigData.LastDevicesSettup = new ComputeDevicesSettup(0, ComputeDevice.AllAvaliableDevices);

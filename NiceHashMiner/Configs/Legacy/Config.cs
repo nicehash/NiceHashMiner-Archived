@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Configs
 {
@@ -259,5 +260,81 @@ namespace NiceHashMiner.Configs
 
             return false;
         }
+
+        // old code new methods
+
+        // Call this after miners are initialized
+        public static void SetComputeDeviceConfig() {
+            for (int i = 0; i < Globals.Miners.Length; i++) {
+                for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++) {
+                    ComputeDevice D = Globals.Miners[i].CDevs[k];
+                    if (Config.ConfigData.Groups.Length > i) {
+                        D.Enabled = true;
+                        for (int z = 0; z < Config.ConfigData.Groups[i].DisabledDevices.Length; z++) {
+                            if (Config.ConfigData.Groups[i].DisabledDevices[z] == k) {
+                                D.Enabled = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void SetGroupAlgorithmSettup() {
+            // get algorithm settup from settings
+            for (int i = 0; i < Globals.Miners.Length; i++) {
+                if (Config.ConfigData.Groups.Length > i) {
+                    Globals.Miners[i].ExtraLaunchParameters = Config.ConfigData.Groups[i].ExtraLaunchParameters;
+                    Globals.Miners[i].UsePassword = Config.ConfigData.Groups[i].UsePassword;
+                    Globals.Miners[i].MinimumProfit = Config.ConfigData.Groups[i].MinimumProfit;
+                    Globals.Miners[i].DaggerHashimotoGenerateDevice = Config.ConfigData.Groups[i].DaggerHashimotoGenerateDevice;
+                    if (Config.ConfigData.Groups[i].APIBindPort > 0)
+                        Globals.Miners[i].APIPort = Config.ConfigData.Groups[i].APIBindPort;
+
+                    // Dictionary order is non deterministic, so find a way to merge this crap
+                    bool isSameSize = Config.ConfigData.Groups[i].Algorithms.Length == Globals.Miners[i].SupportedAlgorithms.Count;
+                    if (isSameSize == false) Helpers.ConsolePrint("Miner Algos settup", "SIZE IS NOT SAME");
+                    foreach (var key in Globals.Miners[i].SupportedAlgorithms.Keys) {
+                        var currentAlg = Globals.Miners[i].SupportedAlgorithms[key];
+                        Algo configAlgo = null;
+                        // find configAlgo
+                        for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length; z++) {
+                            Algo compareConfigAlgo = Config.ConfigData.Groups[i].Algorithms[z];
+                            if (currentAlg.NiceHashName == compareConfigAlgo.Name) {
+                                configAlgo = compareConfigAlgo;
+                                break;
+                            }
+                        }
+                        if (configAlgo != null) {
+                            currentAlg.BenchmarkSpeed = configAlgo.BenchmarkSpeed;
+                            currentAlg.ExtraLaunchParameters = configAlgo.ExtraLaunchParameters;
+                            currentAlg.UsePassword = configAlgo.UsePassword;
+                            currentAlg.Skip = configAlgo.Skip;
+
+                            currentAlg.DisabledDevice = new bool[Globals.Miners[i].CDevs.Count];
+                            if (configAlgo.DisabledDevices != null) {
+                                if (configAlgo.DisabledDevices.Length < Globals.Miners[i].CDevs.Count) {
+                                    for (int j = 0; j < configAlgo.DisabledDevices.Length; j++)
+                                        currentAlg.DisabledDevice[j] = configAlgo.DisabledDevices[j];
+                                    for (int j = configAlgo.DisabledDevices.Length; j < Globals.Miners[i].CDevs.Count; j++)
+                                        currentAlg.DisabledDevice[j] = false;
+                                } else {
+                                    for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
+                                        currentAlg.DisabledDevice[j] = configAlgo.DisabledDevices[j];
+                                }
+                            } else {
+                                Globals.Miners[i].GetDisabledDevicePerAlgo();
+                            }
+                        } else {
+                            Helpers.ConsolePrint("Miner Algos settup", "DIDN'T FIND configAlgo!!!");
+                        }
+                    }
+                } else {
+                    Globals.Miners[i].GetDisabledDevicePerAlgo();
+                }
+            }
+        }
+
     }
 }
