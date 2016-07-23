@@ -86,6 +86,13 @@ namespace NiceHashMiner
             return isInitialized;
         }
 
+        protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
+            if (algorithmType == AlgorithmType.Hodl) {
+                return HodlMinerPath;
+            }
+            return CPUMinerPath;
+        }
+
         /// <summary>
         /// HasExtensionSupport checks CPU extensions support, if type automatic just return false.
         /// </summary>
@@ -114,8 +121,7 @@ namespace NiceHashMiner
 
         protected override string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time)
         {
-            Path = CPUMinerPath;
-            if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("hodl")) Path = HodlMinerPath;
+            Path = GetOptimizedMinerPath(algorithmType);
 
             string ret = "--algo=" + SupportedAlgorithms[algorithmType].MinerName + 
                          " --benchmark" + 
@@ -123,7 +129,7 @@ namespace NiceHashMiner
                          " " + ExtraLaunchParameters + 
                          " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters;
 
-            if (!SupportedAlgorithms[algorithmType].NiceHashName.Equals("hodl"))
+            if (algorithmType != AlgorithmType.Hodl)
                 ret += " --time-limit " + time.ToString();
 
             return ret;
@@ -141,17 +147,16 @@ namespace NiceHashMiner
         }
 
 
-        public override void Start(AlgorithmType nhalgo, string url, string username)
+        public override void Start(AlgorithmType algorithmType, string url, string username)
         {
             if (ProcessHandle != null) return; // ignore, already running
 
             if (CDevs.Count == 0 || !CDevs[0].Enabled) return;
 
-            Algorithm Algo = GetMinerAlgorithm(nhalgo);
+            Algorithm Algo = GetMinerAlgorithm(algorithmType);
             if (Algo == null) return;
 
-            Path = CPUMinerPath;
-            if (Algo.NiceHashName.Equals("hodl")) Path = HodlMinerPath;
+            Path = GetOptimizedMinerPath(algorithmType);
 
             LastCommandLine = "--algo=" + Algo.MinerName + 
                               " --url=" + url + 
@@ -160,7 +165,7 @@ namespace NiceHashMiner
                               " " + ExtraLaunchParameters + 
                               " " + Algo.ExtraLaunchParameters;
 
-            if (!Algo.NiceHashName.Equals("hodl"))
+            if (algorithmType != AlgorithmType.Hodl)
                 LastCommandLine += " --api-bind=" + APIPort.ToString();
 
             ProcessHandle = _Start();

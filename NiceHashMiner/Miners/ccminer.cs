@@ -43,7 +43,7 @@ namespace NiceHashMiner
         {
             string CommandLine = "";
 
-            if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("daggerhashimoto"))
+            if (AlgorithmType.DaggerHashimoto == algorithmType)
             {
                 CommandLine = " --benchmark-warmup 40 --benchmark-trial 20" +
                               " " + ExtraLaunchParameters +
@@ -82,30 +82,21 @@ namespace NiceHashMiner
 
                 CommandLine = CommandLine.Remove(CommandLine.Length - 1);
 
-                if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("decred"))
-                    Path = MinerPaths.ccminer_decred;
-                else if (this is ccminer_sp && SupportedAlgorithms[algorithmType].NiceHashName.Equals("neoscrypt"))
-                    Path = MinerPaths.ccminer_neoscrypt;
-                else if (this is ccminer_sp && SupportedAlgorithms[algorithmType].NiceHashName.Equals("lyra2rev2"))
-                    Path = MinerPaths.ccminer_nanashi_lyra2rev2;
-                else if (this is ccminer_sp)
-                    Path = MinerPaths.ccminer_sp;
-                else
-                    Path = MinerPaths.ccminer_tpruvot;
+                Path = GetOptimizedMinerPath(algorithmType);
             }
 
             return CommandLine;
         }
 
 
-        public override void Start(AlgorithmType nhalgo, string url, string username)
+        public override void Start(AlgorithmType algorithmType, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 
 
-            Algorithm Algo = GetMinerAlgorithm(nhalgo);
-            if (Algo == null || EnabledDevicePerAlgoCount(nhalgo) < 1) return;
+            Algorithm Algo = GetMinerAlgorithm(algorithmType);
+            if (Algo == null || EnabledDevicePerAlgoCount(algorithmType) < 1) return;
 
-            if (Algo.NiceHashName.Equals("daggerhashimoto"))
+            if (AlgorithmType.DaggerHashimoto == algorithmType)
             {
                 LastCommandLine = " --cuda" +
                                   " " + ExtraLaunchParameters +
@@ -153,17 +144,7 @@ namespace NiceHashMiner
                     return; // no GPUs to start mining on
                 }
 
-                // TODO this is repeated and uses Type introspection, MAKE OO
-                if (Algo.NiceHashName.Equals("decred"))
-                    Path = MinerPaths.ccminer_decred;
-                else if (this is ccminer_sp && Algo.NiceHashName.Equals("neoscrypt"))
-                    Path = MinerPaths.ccminer_neoscrypt;
-                else if (this is ccminer_sp && Algo.NiceHashName.Equals("lyra2rev2"))
-                    Path = MinerPaths.ccminer_nanashi_lyra2rev2;
-                else if (this is ccminer_sp)
-                    Path = MinerPaths.ccminer_sp;
-                else
-                    Path = MinerPaths.ccminer_tpruvot;
+                Path = GetOptimizedMinerPath(algorithmType);
             }
 
             ProcessHandle = _Start();

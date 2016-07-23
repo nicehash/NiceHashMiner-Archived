@@ -76,6 +76,13 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
         }
 
+        /// <summary>
+        /// GetOptimizedMinerPath returns optimized miner path based on algorithm type
+        /// </summary>
+        /// <param name="algorithmType"></param>
+        /// <returns>Optimized or default string path</returns>
+        abstract protected string GetOptimizedMinerPath(AlgorithmType algorithmType);
+
         public void KillSGMiner()
         {
             foreach (Process process in Process.GetProcessesByName("sgminer"))

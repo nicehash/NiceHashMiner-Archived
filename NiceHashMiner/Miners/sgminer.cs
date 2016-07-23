@@ -463,6 +463,30 @@ namespace NiceHashMiner
             ProcessHandle = _Start();
         }
 
+        // TODO 
+        protected override string GetOptimizedMinerPath(AlgorithmType type) {
+            if (EnableOptimizedVersion) {
+                if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
+                    // this will not check all GPU code names
+                    for (int i = 0; i < GPUCodeName.Count; i++) {
+                        if (!(GPUCodeName[i].Equals("Hawaii") || GPUCodeName[i].Equals("Pitcairn") || GPUCodeName[i].Equals("Tahiti"))) {
+                            if (!Helpers.InternalCheckIsWow64())
+                                return MinerPaths.sgminer_5_4_0_general;
+
+                            return MinerPaths.sgminer_5_4_0_tweaked;
+                        }
+                    }
+
+                    if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
+                        return MinerPaths.sgminer_5_1_0_optimized;
+                    else
+                        return MinerPaths.sgminer_5_1_1_optimized;
+                }
+            }
+
+            return MinerPaths.sgminer_5_4_0_general;
+        }
+
         // TODO change algo string to Enum AlgorithmType
         private string GetOptimizedMinerPath(string algo)
         {

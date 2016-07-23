@@ -26,6 +26,13 @@ namespace NiceHashMiner
                 QueryCDevs();
         }
 
+        protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
+            if (AlgorithmType.Decred == algorithmType) {
+                return MinerPaths.ccminer_decred;
+            }
+            return MinerPaths.ccminer_tpruvot;
+        }
+
         protected override bool IsPotentialDevSM(string name) {
             // add only SM 2.1
             return name.Contains("SM 2.1");
