@@ -196,3 +196,4 @@ To report bugs and issues please use the GitHub issue reporting tool: https://gi
 - Optimized Lyra2REv2 ccminer developed by Nanashi Meiyo-Meijin: https://github.com/nicehash/ccminer-nanashi.
 - For AMD cards, sgminer has been used from here: https://github.com/nicehash/sgminer.
 - For Ethereum miner, Genoil's fork of ethminer has been used from here: https://github.com/nicehash/cpp-ethereum.
+- For HODL mining, used CPU miner: https://github.com/nicehash/hodlminer-wolf
