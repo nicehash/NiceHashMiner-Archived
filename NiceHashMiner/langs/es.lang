@@ -31,7 +31,7 @@
         "form1_settings": "&Configuración",
         "form1_start": "&Empezar",
         "form1_stop": "&Parar",
-        "form1_new_version_released": "¡Importante! La nueva versión v{0} ha\r\nsido liberada. Pincha aquí para descargarla.",
+        "form1_new_version_released": "¡Importante! La nueva versión v{0} ha\r\nsido lanzada. Pincha aquí para descargarla.",
         "form1_DemoModeLabel": "NiceHash Miner está en modo DEMO",
         "form1_DemoModeTitle": "¿Abrir NiceHash Miner en modo DEMO?",
         "form1_DemoModeMsg": "No has introducido una dirección Bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, puedes probar tu ordenador para ver cuántos Bitcoin podrías ganar. ¿Quieres continuar en modo DEMO? \n\n AVISO: ¡NO GANARÁS NADA EN MODO DEMO!",
@@ -110,7 +110,7 @@
 
 
         "Form_Settings_General_DebugConsole": "Consola de depuración",
-        "Form_Settings_General_AutoStartMining": "Autoempezar a minar",
+        "Form_Settings_General_AutoStartMining": "Empezar a minar automáticamente",
         "Form_Settings_General_HideMiningWindows": "Ocultar ventanas de minado",
         "Form_Settings_General_MinimizeToTray": "Minimizar a la bandeja",
         "Form_Settings_General_DisableDetection": "Desactivar detección de {0}",
