@@ -104,6 +104,14 @@ namespace NiceHashMiner
             toolTip1.SetToolTip(this.label_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
+
+            if (CurrencyConverter.CurrencyConverter.ConverterActive)
+                currencyConverterCombobox.SelectedItem = Config.ConfigData.DisplayCurrency;
+            else
+                currencyConverterCombobox.SelectedItem = "USD";
+
+
+            displayCurrencyLabel.Text = International.GetText("Form_Settings_DisplayCurrency");
         }
 
         private void SetupGeneralTab()
@@ -257,6 +265,8 @@ namespace NiceHashMiner
             // Add EventHandler for all the general tab's textboxes
             this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
             this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
+
+            currencyConverterCombobox.SelectedText = Config.ConfigData.DisplayCurrency;
         }
 
         // Currently it only supports for CPU0
@@ -301,7 +311,7 @@ namespace NiceHashMiner
         {
             int minerIndex = numCPUs;
             string minerName = Config.ConfigData.Groups[minerIndex].Name;
-            int numDevices = Form1.Miners[minerIndex].CDevs.Count;
+            int numDevices = Globals.Miners[minerIndex].CDevs.Count;
             int tabIndex = 3;
 
             label_NVIDIA5X_APIBindPort.Text = International.GetText("Form_Settings_General_APIBindPort") + ":";
@@ -362,7 +372,7 @@ namespace NiceHashMiner
         {
             int minerIndex = numCPUs + 1;
             string minerName = Config.ConfigData.Groups[minerIndex].Name;
-            int numDevices = Form1.Miners[minerIndex].CDevs.Count;
+            int numDevices = Globals.Miners[minerIndex].CDevs.Count;
             int tabIndex = 3;
 
             label_NVIDIA3X_APIBindPort.Text = International.GetText("Form_Settings_General_APIBindPort") + ":";
@@ -423,7 +433,7 @@ namespace NiceHashMiner
         {
             int minerIndex = numCPUs + 2;
             string minerName = Config.ConfigData.Groups[minerIndex].Name;
-            int numDevices = Form1.Miners[minerIndex].CDevs.Count;
+            int numDevices = Globals.Miners[minerIndex].CDevs.Count;
             int tabIndex = 3;
 
             label_NVIDIA2X_APIBindPort.Text = International.GetText("Form_Settings_General_APIBindPort") + ":";
@@ -485,7 +495,7 @@ namespace NiceHashMiner
         {
             int minerIndex = numCPUs + 3;
             string minerName = Config.ConfigData.Groups[minerIndex].Name;
-            int numDevices = Form1.Miners[minerIndex].CDevs.Count;
+            int numDevices = Globals.Miners[minerIndex].CDevs.Count;
             int tabIndex = 4;
 
             label_AMD_APIBindPort.Text = International.GetText("Form_Settings_General_APIBindPort") + ":";
@@ -1118,6 +1128,13 @@ namespace NiceHashMiner
                 if (result == System.Windows.Forms.DialogResult.No)
                     e.Cancel = true;
             }
+        }
+
+        private void currencyConverterCombobox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Helpers.ConsolePrint("CurrencyConverter", "Currency Set to: " + currencyConverterCombobox.SelectedItem);
+            var Selected = currencyConverterCombobox.SelectedItem.ToString();
+            Config.ConfigData.DisplayCurrency = Selected;
         }
     }
 }

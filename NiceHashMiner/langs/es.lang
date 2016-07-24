@@ -230,6 +230,7 @@
         "Form_Settings_ToolTip_AlgoUsePassword": "Usa esta contraseña al iniciar este minero y este algoritmo. Si no se establece, UsePassword del grupo se usará.",
         "Form_Settings_ToolTip_AlgoBenchmarkSpeed": "Personalización de los ratios de los algoritmos al cambiar manualmente las velocidades de los benchmark.",
         "Form_Settings_ToolTip_AlgoDisabledDevices": "Todos los dispositivos marcados serán ignorados por NiceHash Miner (solo para este algoritmo).",
-        "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Parámetros de inicio adicionales al lanzar el minero y este algoritmo."
+        "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Parámetros de inicio adicionales al lanzar el minero y este algoritmo.",
+        "Form_Settings_DisplayCurrency":  "Presentación de moneda"
     }
 }

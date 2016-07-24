@@ -340,9 +340,9 @@ namespace NiceHashMiner
                 Path = "cmd";
                 string DirName = GetMinerDirectory(Algo.NiceHashName);
 
-                string url = "stratum+tcp://" + Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
-                             Form1.MiningLocation[Config.ConfigData.ServiceLocation] + ".nicehash.com:" +
-                             Form1.NiceHashData[SupportedAlgorithms[index].NiceHashID].port;
+                string url = "stratum+tcp://" + Globals.NiceHashData[SupportedAlgorithms[index].NiceHashID].name + "." +
+                             Globals.MiningLocation[Config.ConfigData.ServiceLocation] + ".nicehash.com:" +
+                             Globals.NiceHashData[SupportedAlgorithms[index].NiceHashID].port;
 
                 string username = Config.ConfigData.BitcoinAddress.Trim();
                 if (Config.ConfigData.WorkerName.Length > 0)

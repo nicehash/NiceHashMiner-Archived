@@ -275,3 +275,6 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# VS2015 db files
+*.VC.db

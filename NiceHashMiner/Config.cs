@@ -46,6 +46,7 @@ namespace NiceHashMiner
 #pragma warning disable 649
         public Version ConfigFileVersion;
         public int Language;
+        public string DisplayCurrency;
         public bool DebugConsole;
         public string BitcoinAddress;
         public string WorkerName;
@@ -85,6 +86,7 @@ namespace NiceHashMiner
         public Group[] Groups;
 #pragma warning restore 649
 
+        // TODO split this into normal and benchmark settings
         public static Config ConfigData;
 
         public static void InitializeConfig()
@@ -143,6 +145,8 @@ namespace NiceHashMiner
                 ConfigData.MinIdleSeconds = 60;
             if (ConfigData.LogMaxFileSize <= 0)
                 ConfigData.LogMaxFileSize = 1048576;
+            if (ConfigData.DisplayCurrency == null)
+                ConfigData.DisplayCurrency = "USD";
         }
 
         public static void SetDefaults()
@@ -181,6 +185,7 @@ namespace NiceHashMiner
             ConfigData.SwitchMinSecondsDynamic = 30;
             ConfigData.SwitchMinSecondsAMD = 90;
             ConfigData.MinIdleSeconds = 60;
+            ConfigData.DisplayCurrency = "USD";
         }
 
         public static void Commit()
@@ -192,36 +197,36 @@ namespace NiceHashMiner
         public static void RebuildGroups()
         {
             // rebuild config groups
-            Group[] CG = new Group[Form1.Miners.Length];
-            for (int i = 0; i < Form1.Miners.Length; i++)
+            Group[] CG = new Group[Globals.Miners.Length];
+            for (int i = 0; i < Globals.Miners.Length; i++)
             {
                 CG[i] = new Group();
-                CG[i].Name = Form1.Miners[i].MinerDeviceName;
-                CG[i].APIBindPort = Form1.Miners[i].APIPort;
-                CG[i].ExtraLaunchParameters = Form1.Miners[i].ExtraLaunchParameters;
-                CG[i].UsePassword = Form1.Miners[i].UsePassword;
-                CG[i].MinimumProfit = Form1.Miners[i].MinimumProfit;
-                CG[i].DaggerHashimotoGenerateDevice = Form1.Miners[i].DaggerHashimotoGenerateDevice;
-                CG[i].Algorithms = new Algo[Form1.Miners[i].SupportedAlgorithms.Length];
-                for (int k = 0; k < Form1.Miners[i].SupportedAlgorithms.Length; k++)
+                CG[i].Name = Globals.Miners[i].MinerDeviceName;
+                CG[i].APIBindPort = Globals.Miners[i].APIPort;
+                CG[i].ExtraLaunchParameters = Globals.Miners[i].ExtraLaunchParameters;
+                CG[i].UsePassword = Globals.Miners[i].UsePassword;
+                CG[i].MinimumProfit = Globals.Miners[i].MinimumProfit;
+                CG[i].DaggerHashimotoGenerateDevice = Globals.Miners[i].DaggerHashimotoGenerateDevice;
+                CG[i].Algorithms = new Algo[Globals.Miners[i].SupportedAlgorithms.Length];
+                for (int k = 0; k < Globals.Miners[i].SupportedAlgorithms.Length; k++)
                 {
                     CG[i].Algorithms[k] = new Algo();
-                    CG[i].Algorithms[k].Name = Form1.Miners[i].SupportedAlgorithms[k].NiceHashName;
-                    CG[i].Algorithms[k].BenchmarkSpeed = Form1.Miners[i].SupportedAlgorithms[k].BenchmarkSpeed;
-                    CG[i].Algorithms[k].ExtraLaunchParameters = Form1.Miners[i].SupportedAlgorithms[k].ExtraLaunchParameters;
-                    CG[i].Algorithms[k].UsePassword = Form1.Miners[i].SupportedAlgorithms[k].UsePassword;
-                    CG[i].Algorithms[k].Skip = Form1.Miners[i].SupportedAlgorithms[k].Skip;
+                    CG[i].Algorithms[k].Name = Globals.Miners[i].SupportedAlgorithms[k].NiceHashName;
+                    CG[i].Algorithms[k].BenchmarkSpeed = Globals.Miners[i].SupportedAlgorithms[k].BenchmarkSpeed;
+                    CG[i].Algorithms[k].ExtraLaunchParameters = Globals.Miners[i].SupportedAlgorithms[k].ExtraLaunchParameters;
+                    CG[i].Algorithms[k].UsePassword = Globals.Miners[i].SupportedAlgorithms[k].UsePassword;
+                    CG[i].Algorithms[k].Skip = Globals.Miners[i].SupportedAlgorithms[k].Skip;
 
-                    CG[i].Algorithms[k].DisabledDevices = new bool[Form1.Miners[i].CDevs.Count];
-                    for (int j = 0; j < Form1.Miners[i].CDevs.Count; j++)
+                    CG[i].Algorithms[k].DisabledDevices = new bool[Globals.Miners[i].CDevs.Count];
+                    for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
                     {
-                        CG[i].Algorithms[k].DisabledDevices[j] = Form1.Miners[i].SupportedAlgorithms[k].DisabledDevice[j];
+                        CG[i].Algorithms[k].DisabledDevices[j] = Globals.Miners[i].SupportedAlgorithms[k].DisabledDevice[j];
                     }
                 }
                 List<int> DD = new List<int>();
-                for (int k = 0; k < Form1.Miners[i].CDevs.Count; k++)
+                for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++)
                 {
-                    if (!Form1.Miners[i].CDevs[k].Enabled)
+                    if (!Globals.Miners[i].CDevs[k].Enabled)
                         DD.Add(k);
                 }
                 CG[i].DisabledDevices = DD.ToArray();

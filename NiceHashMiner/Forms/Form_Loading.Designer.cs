@@ -1,6 +1,6 @@
 ﻿namespace NiceHashMiner
 {
-    partial class Form3
+    partial class Form_Loading
     {
         /// <summary>
         /// Required designer variable.
@@ -64,7 +64,7 @@
             this.label_LoadingText.TabIndex = 0;
             this.label_LoadingText.Text = "Loading, please wait...";
             // 
-            // Form3
+            // Form_Loading
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -77,11 +77,11 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form3";
+            this.Name = "Form_Loading";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Form3";
+            this.Text = "Form_Loading";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -89,8 +89,8 @@
 
         #endregion
 
-        public System.Windows.Forms.ProgressBar progressBar1;
-        public System.Windows.Forms.Label LoadText;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label LoadText;
         private System.Windows.Forms.Label label_LoadingText;
     }
 }

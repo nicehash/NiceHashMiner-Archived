@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace NiceHashMiner
 {
-    public partial class Form4 : Form
+    public partial class Form_ConfigSettings : Form
     {
         public class FieldLink
         {
@@ -29,7 +29,7 @@ namespace NiceHashMiner
         }
 
 
-        public Form4()
+        public Form_ConfigSettings()
         {
             InitializeComponent();
 
