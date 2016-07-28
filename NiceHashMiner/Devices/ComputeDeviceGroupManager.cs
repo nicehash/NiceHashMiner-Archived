@@ -10,36 +10,30 @@ namespace NiceHashMiner.Devices
     /// For now used only for the settings.
     /// TODO for now we do not detect SM 6.x, NVIDIA6x
     /// </summary>
-    public class ComputeDeviceGroupManager
+    public class ComputeDeviceGroupManager : SingletonTemplate<ComputeDeviceGroupManager>
     {
-        #region SINGLETON Stuff
-        private static ComputeDeviceGroupManager _instance = new ComputeDeviceGroupManager();
-
-        public static ComputeDeviceGroupManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new ComputeDeviceGroupManager();
-                }
-                return _instance;
-            }
-        }
-        #endregion
-
         /// <summary>
         /// Use enum types, we could use a list here but keep dict for now
         /// </summary>
         private Dictionary<DeviceGroupType, ComputeDeviceGroup> _groups;
 
-        private ComputeDeviceGroupManager()
-        {
+        // TODO for now string CPU are divided in diferent groups
+        private Dictionary<string, DeviceGroupSettings> _groupSettings;
+        public Dictionary<string, DeviceGroupSettings> GroupSettings {
+            get { return _groupSettings; }
+            set {
+                if (value == null) return;
+                _groupSettings = value;
+            }
+        }
+
+        // yea this kinda defeats the purpse, with .NET version update we'll fix this
+        public ComputeDeviceGroupManager()
+            : base() {
             // we create our groups
             _groups = new Dictionary<DeviceGroupType, ComputeDeviceGroup>();
             // TODO we have 5 used groups for now add NVIDIA_6_x later
-            for (int i = 0; i < 5; ++i)
-            {
+            for (int i = 0; i < 5; ++i) {
                 DeviceGroupType curType = (DeviceGroupType)i;
                 _groups.Add(curType, new ComputeDeviceGroup(curType));
             }
@@ -88,8 +82,55 @@ namespace NiceHashMiner.Devices
             return isGetFound && selectedGroup.IsEnabled;
         }
 
+        // group settings hardcoded maybe we won't need this in the future
+        public void InitializeGroupSettings() {
+            _groupSettings = new Dictionary<string, DeviceGroupSettings>();
+            foreach (var device in ComputeDevice.AllAvaliableDevices) {
+                if (_groupSettings.ContainsKey(device.Vendor) == false) {
+                    _groupSettings.Add(device.Vendor, CreateGroupSettings(device.Vendor, device.DeviceGroupType));
+                }
+            }
+        }
+
+        public DeviceGroupSettings GetDeviceGroupSettings(string vendor) {
+            if (_groupSettings.ContainsKey(vendor)) {
+                return _groupSettings[vendor];
+            }
+            return null;
+        }
 
 
-        
+        private static int cpuCount = 0;
+        private DeviceGroupSettings CreateGroupSettings(string vendor, DeviceGroupType groupType) {
+            bool isInitSuccess = true;
+            int APIBindPort = -1;
+            switch(groupType) {
+                case DeviceGroupType.CPU:
+                    APIBindPort = 4040 + cpuCount;
+                    ++cpuCount;
+                    break;
+                case DeviceGroupType.AMD_OpenCL:
+                    APIBindPort = 4050;
+                    break;
+                case DeviceGroupType.NVIDIA_2_1:
+                    APIBindPort = 4021;
+                    break;
+                case DeviceGroupType.NVIDIA_3_x:
+                    APIBindPort = 4049;
+                    break;
+                case DeviceGroupType.NVIDIA_5_x:
+                    APIBindPort = 4048;
+                    break;
+                default:
+                    isInitSuccess = false;
+                    break;
+            }
+            if (isInitSuccess && APIBindPort > 0) {
+                return new DeviceGroupSettings(vendor) {
+                    APIBindPort = APIBindPort
+                };
+            }
+            return null;
+        }
     }
 }

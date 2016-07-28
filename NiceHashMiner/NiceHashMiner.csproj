@@ -73,6 +73,7 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\BenchmarkConfig.cs" />
+    <Compile Include="Configs\BenchmarkConfigManager.cs" />
     <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
     <Compile Include="Configs\ComputeDevicesSettup.cs" />
     <Compile Include="Configs\DebugSettingsConfig.cs" />
@@ -81,14 +82,75 @@
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
+    <Compile Include="Devices\DeviceGroupSettings.cs" />
+    <Compile Include="Devices\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
-    <Compile Include="Enums\BenchmarkType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="ethminerAPI.cs" />
+    <Compile Include="Forms\Components\AlgorithmsListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\AlgorithmsListView.Designer.cs">
+      <DependentUpon>AlgorithmsListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\AmdSpecificSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\AmdSpecificSettings.Designer.cs">
+      <DependentUpon>AmdSpecificSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\BenchmarkAlgorithmSettup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\BenchmarkAlgorithmSettup.Designer.cs">
+      <DependentUpon>BenchmarkAlgorithmSettup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\BenchmarkOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\BenchmarkOptions.Designer.cs">
+      <DependentUpon>BenchmarkOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\CpuSpecificSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\CpuSpecificSettings.Designer.cs">
+      <DependentUpon>CpuSpecificSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\DeviceSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DeviceSettingsControl.Designer.cs">
+      <DependentUpon>DeviceSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListView.Designer.cs">
+      <DependentUpon>DevicesListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\Field.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\Field.Designer.cs">
+      <DependentUpon>Field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormBenchmark_New.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormBenchmark_New.Designer.cs">
+      <DependentUpon>FormBenchmark_New.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormSettings_New.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormSettings_New.Designer.cs">
+      <DependentUpon>FormSettings_New.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -161,7 +223,39 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Miners\sgminer.cs" />
+    <Compile Include="SingletonTemplate.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
+    <Compile Include="Utils\DictionaryUtil.cs" />
+    <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
+      <DependentUpon>AlgorithmsListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\AmdSpecificSettings.resx">
+      <DependentUpon>AmdSpecificSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\BenchmarkAlgorithmSettup.resx">
+      <DependentUpon>BenchmarkAlgorithmSettup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
+      <DependentUpon>BenchmarkOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\CpuSpecificSettings.resx">
+      <DependentUpon>CpuSpecificSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\DeviceSettingsControl.resx">
+      <DependentUpon>DeviceSettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\DevicesListView.resx">
+      <DependentUpon>DevicesListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\Field.resx">
+      <DependentUpon>Field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormBenchmark_New.resx">
+      <DependentUpon>FormBenchmark_New.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormSettings_New.resx">
+      <DependentUpon>FormSettings_New.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </EmbeddedResource>

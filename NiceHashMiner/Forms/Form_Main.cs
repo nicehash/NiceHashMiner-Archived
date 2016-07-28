@@ -11,6 +11,7 @@ using System.Management;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Forms;
 
 namespace NiceHashMiner
 {
@@ -34,7 +35,7 @@ namespace NiceHashMiner
         private Random R;
 
         private Form_Loading LoadingScreen;
-        private Form_Benchmark BenchmarkForm;
+        private Form BenchmarkForm;
 
 
         public Form_Main()
@@ -174,7 +175,7 @@ namespace NiceHashMiner
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SaveConfig"));
-            NewMainConfig.SetComputeDeviceConfig();
+            NewMainConfig.AfterDeviceQueryInitialization();
             Config.SetGroupAlgorithmSettup();
             
             // All devices settup should be initialized in AllDevices
@@ -345,7 +346,7 @@ namespace NiceHashMiner
             {
                 if (!m.IsRunning) continue;
 
-                if (m is cpuminer && m.AlgoNameIs("hodl"))
+                if (m is cpuminer && m.IsCurrentAlgo(AlgorithmType.Hodl))
                 {
                     string pname = m.Path.Split('\\')[2];
                     pname = pname.Substring(0, pname.Length - 4);
@@ -700,7 +701,10 @@ namespace NiceHashMiner
             }
 
             SMACheck.Stop();
-            BenchmarkForm = new Form_Benchmark(false);
+            new FormSettings_New().ShowDialog();
+            return;
+            //BenchmarkForm = new Form_Benchmark(false); //new FormBenchmark_New();
+            BenchmarkForm = new FormBenchmark_New();
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
             SMACheck.Start();
@@ -717,9 +721,11 @@ namespace NiceHashMiner
         private void buttonSettings_Click(object sender, EventArgs e)
         {
             Form_Settings Settings = new Form_Settings();
+            //FormSettings_New Settings = new FormSettings_New();
             Settings.ShowDialog();
 
-            if (Settings.ret == 1) return;
+            //if (Settings.ret == 1) return;
+            return;
 
             Process PHandle = new Process();
             PHandle.StartInfo.FileName = Application.ExecutablePath;

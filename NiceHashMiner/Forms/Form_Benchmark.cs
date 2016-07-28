@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {
@@ -20,6 +21,8 @@ namespace NiceHashMiner
         private int Time;
         private int TimeIndex = 1;
         private Miner CurrentlyBenchmarking;
+
+        List<BenchmarkConfig> benchmarkConfigs;
 
         public Form_Benchmark(bool autostart)
         {
@@ -76,6 +79,14 @@ namespace NiceHashMiner
             }
 
             inBenchmark = false;
+
+            benchmarkConfigs = new List<BenchmarkConfig>();
+            foreach (var CDev in ComputeDevice.AllAvaliableDevices) {
+                var benchConfig = BenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name, new int[] { CDev.ID });
+
+                benchmarkConfigs.Add(benchConfig);
+            }
+
 
             if (autostart)
                 buttonStartBenchmark_Click(null, null);
@@ -149,18 +160,21 @@ namespace NiceHashMiner
                     else
                         lvi.SubItems[3].Text = String.Format(International.GetText("form2_listView_WaitMinutes"), Time);
                 }
-
-                m.BenchmarkStart(key, Time, BenchmarkCompleted, lvi);
+                
+                // TEMP 0 is CPU
+                m.BenchmarkStart(benchmarkConfigs[0], benchmarkConfigs[0].BenchmarkSpeeds[key], Time, BenchmarkCompleted, lvi);
             }
             else
             {
+
+
                 // average all cpu benchmarks
                 if (Globals.Miners[0] is cpuminer)
                 {
                     Helpers.ConsolePrint("BENCHMARK", "Calculating average CPU speeds:");
 
-                    Dictionary<AlgorithmType, double> Speeds = new Dictionary<AlgorithmType, double>(); //new double[Globals.Miners[0].SupportedAlgorithms.Count];
-                    Dictionary<AlgorithmType, int> MTaken = new Dictionary<AlgorithmType, int>(); // new int[Globals.Miners[0].SupportedAlgorithms.Count];
+                    Dictionary<AlgorithmType, double> Speeds = new Dictionary<AlgorithmType, double>();
+                    Dictionary<AlgorithmType, int> MTaken = new Dictionary<AlgorithmType, int>();
                     // initialize/mirror keys
                     foreach (var key in Globals.Miners[0].SupportedAlgorithms.Keys) {
                         Speeds.Add(key, 0.0);

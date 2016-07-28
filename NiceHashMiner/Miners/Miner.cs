@@ -29,8 +29,7 @@ namespace NiceHashMiner
         public int APIPort;
         public List<ComputeDevice> CDevs;
         
-        // TODO use dictionary instead of Array
-        //public Algorithm[] SupportedAlgorithms;
+        // TODO remove
         public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
         
         public string ExtraLaunchParameters;
@@ -96,7 +95,7 @@ namespace NiceHashMiner
 
         virtual public void Stop(bool willswitch)
         {
-            if (willswitch && AlgoNameIs("daggerhashimoto"))
+            if (willswitch && IsCurrentAlgo(AlgorithmType.DaggerHashimoto))
             {
                 // TODO ethminerLink null ERROR
                 // daggerhashimoto - we only "pause" mining
@@ -132,113 +131,34 @@ namespace NiceHashMiner
             //CurrentAlgo = -1;
         }
 
-        abstract protected string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time);
+        #region BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
+        Algorithm BenchmarkAlgorithm = null;
 
-        virtual public void BenchmarkStart(AlgorithmType key, int time, BenchmarkComplete oncomplete, object tag)
-        {
+        abstract protected string BenchmarkCreateCommandLine(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time);
+
+        // The benchmark config and algorithm must guarantee that they are compatible with miner
+        // we guarantee algorithm is supported
+        // we will not have empty benchmark configs, all benchmark configs will have device list
+        virtual public void BenchmarkStart(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time, BenchmarkComplete oncomplete, object tag) {
             OnBenchmarkComplete = oncomplete;
 
-            if (SupportedAlgorithms.ContainsKey(key) == false)
-            {
-                OnBenchmarkComplete(false, "Unknown algorithm", tag);
-                return;
-            }
-
-            if (EnabledDeviceCount() == 0 || EnabledDevicePerAlgoCount(key) < 1)
-            {
-                Helpers.ConsolePrint("BENCHMARK", "No device to benchmark..");
-                OnBenchmarkComplete(false, "Disabled", tag);
-                return; // ignore, disabled device
-            }
-
             BenchmarkTag = tag;
-            BenchmarkKey = key;
-            CurrentAlgo = key;
+            BenchmarkAlgorithm = algorithm;
+            CurrentAlgo = algorithm.NiceHashID; // find a way to decouple this as well
             BenchmarkTime = time;
 
-            string CommandLine = BenchmarkCreateCommandLine(key, time);
+            string CommandLine = BenchmarkCreateCommandLine(benchmarkConfig, algorithm, time);
 
             Thread BenchmarkThread = new Thread(BenchmarkThreadRoutine);
             BenchmarkThread.Start(CommandLine);
         }
 
-
-        virtual protected bool BenchmarkParseLine(string outdata)
-        {
-            // parse line
-            if (outdata.Contains("Benchmark: ") && outdata.Contains("/s"))
-            {
-                int i = outdata.IndexOf("Benchmark:");
-                int k = outdata.IndexOf("/s");
-                string hashspeed = outdata.Substring(i + 11, k - i - 9);
-                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
-
-                // save speed
-                int b = hashspeed.IndexOf(" ");
-                double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
-                if (hashspeed.Contains("kH/s"))
-                    spd *= 1000;
-                else if (hashspeed.Contains("MH/s"))
-                    spd *= 1000000;
-                else if (hashspeed.Contains("GH/s"))
-                    spd *= 1000000000;
-                SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = spd;
-
-                OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
-                return true;
-            }
-            else if (outdata.Contains("Average hashrate:") && outdata.Contains("/s"))
-            {
-                int i = outdata.IndexOf(": ");
-                int k = outdata.IndexOf("/s");
-
-                // save speed
-                string hashSpeed = outdata.Substring(i + 2, k - i + 2);
-                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashSpeed);
-
-                hashSpeed = hashSpeed.Substring(0, hashSpeed.IndexOf(" "));
-                double speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-
-                if (outdata.Contains("Kilohash"))
-                    speed *= 1000;
-                else if (outdata.Contains("Megahash"))
-                    speed *= 1000000;
-                
-                SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = speed;
-
-                OnBenchmarkComplete(true, PrintSpeed(speed), BenchmarkTag);
-                return true;
-            }
-            else if (outdata.Contains("min/mean/max:"))
-            {
-                string[] splt = outdata.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                int index = Array.IndexOf(splt, "mean");
-                double avg_spd = Convert.ToDouble(splt[index + 2]);
-                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + avg_spd + "H/s");
-
-                SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = avg_spd;
-
-                OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
-                return true;
-            }
-
-            return false;
-        }
-
-
-        virtual protected string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)
-        {
-            return BenchmarkHandle.StandardOutput.ReadLine();
-        }
-
-
-        virtual protected Process BenchmarkStartProcess(string CommandLine)
-        {
+        virtual protected Process BenchmarkStartProcess(string CommandLine) {
             Helpers.ConsolePrint(MinerDeviceName, "Starting benchmark: " + CommandLine);
 
             Process BenchmarkHandle = new Process();
-            if (AlgoNameIs("daggerhashimoto"))
+            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
                 BenchmarkHandle.StartInfo.FileName = Ethereum.EtherMinerPath;
             else
                 BenchmarkHandle.StartInfo.FileName = Path;
@@ -252,9 +172,7 @@ namespace NiceHashMiner
             return BenchmarkHandle;
         }
 
-
-        virtual protected void BenchmarkThreadRoutine(object CommandLine)
-        {
+        virtual protected void BenchmarkThreadRoutine(object CommandLine) {
             Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
 
             bool once = true;
@@ -263,15 +181,12 @@ namespace NiceHashMiner
 
             Process BenchmarkHandle = null;
 
-            try
-            {
+            try {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
 
-                if (AlgoNameIs("daggerhashimoto"))
-                {
-                    while (true)
-                    {
+                if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto) {
+                    while (true) {
                         string outdata = BenchmarkHandle.StandardOutput.ReadLine();
 
                         if (outdata.Contains("No GPU device with sufficient memory was found"))
@@ -280,19 +195,14 @@ namespace NiceHashMiner
                         if (BenchmarkParseLine(outdata))
                             break;
                     }
-                }
-                else if (this is cpuminer && AlgoNameIs("hodl"))
-                {
+                } else if (this is cpuminer && BenchmarkAlgorithm.NiceHashID == AlgorithmType.Hodl) {
                     int count = BenchmarkTime / 5;
                     double total = 0, tmp;
 
-                    while (count > 0)
-                    {
+                    while (count > 0) {
                         string outdata = BenchmarkHandle.StandardError.ReadLine();
-                        if (outdata != null)
-                        {
-                            if (outdata.Contains("Total: "))
-                            {
+                        if (outdata != null) {
+                            if (outdata.Contains("Total: ")) {
                                 int st = outdata.IndexOf("Total:") + 7;
                                 int len = outdata.Length - 6 - st;
 
@@ -307,27 +217,22 @@ namespace NiceHashMiner
                     }
 
                     double spd = total / (BenchmarkTime / 5);
-                    SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = spd;
+                    BenchmarkAlgorithm.BenchmarkSpeed = spd;
                     OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
-                }
-                else
-                {
-                    if (MinerDeviceName.Equals("AMD_OpenCL"))
-                    {
-                        AlgorithmType NHDataIndex = SupportedAlgorithms[BenchmarkKey].NiceHashID;
+                } else {
+                    if (MinerDeviceName.Equals("AMD_OpenCL")) {
+                        AlgorithmType NHDataIndex = BenchmarkAlgorithm.NiceHashID;
 
-                        if (Globals.NiceHashData == null)
-                        {
+                        if (Globals.NiceHashData == null) {
                             Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
                                 "connection. Sgminer needs internet connection to do benchmarking.");
 
                             throw new Exception("No internet connection");
                         }
 
-                        if (Globals.NiceHashData[NHDataIndex].paying == 0)
-                        {
+                        if (Globals.NiceHashData[NHDataIndex].paying == 0) {
                             Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
-                                "[algo: " + SupportedAlgorithms[BenchmarkKey].NiceHashName + "(" + NHDataIndex + ")]");
+                                "[algo: " + BenchmarkAlgorithm.NiceHashName + "(" + NHDataIndex + ")]");
 
                             throw new Exception("No work can be used for benchmarking");
                         }
@@ -336,18 +241,14 @@ namespace NiceHashMiner
                         timer.Start();
                     }
 
-                    while (true)
-                    {
-                        if (MinerDeviceName.Equals("AMD_OpenCL"))
-                        {
-                            if (timer.Elapsed.Minutes >= BenchmarkTime + 1 && once == true)
-                            {
+                    while (true) {
+                        if (MinerDeviceName.Equals("AMD_OpenCL")) {
+                            if (timer.Elapsed.Minutes >= BenchmarkTime + 1 && once == true) {
                                 once = false;
                                 string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
                                 Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
                             }
-                            if (timer.Elapsed.Minutes >= BenchmarkTime + 2)
-                            {
+                            if (timer.Elapsed.Minutes >= BenchmarkTime + 2) {
                                 timer.Stop();
                                 KillSGMiner();
                                 BenchmarkSignalHanged = true;
@@ -355,8 +256,7 @@ namespace NiceHashMiner
                         }
 
                         string outdata = BenchmarkGetConsoleOutputLine(BenchmarkHandle);
-                        if (outdata != null)
-                        {
+                        if (outdata != null) {
                             if (outdata.Contains("Cuda error"))
                                 throw new Exception("CUDA error");
                             if (outdata.Contains("is not supported"))
@@ -376,26 +276,82 @@ namespace NiceHashMiner
                             throw new Exception("SGMiner is not responding");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                SupportedAlgorithms[BenchmarkKey].BenchmarkSpeed = 0;
+            } catch (Exception ex) {
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
 
                 Helpers.ConsolePrint(MinerDeviceName, "Benchmark Exception: " + ex.Message);
 
-                try { if (BenchmarkHandle != null) BenchmarkHandle.Kill(); }
-                catch { }
-                
-                OnBenchmarkComplete(false, "Terminated", BenchmarkTag);
+                try { if (BenchmarkHandle != null) BenchmarkHandle.Kill(); } catch { }
+                if (OnBenchmarkComplete != null) OnBenchmarkComplete(false, "Terminated", BenchmarkTag);
             }
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
 
-            if (BenchmarkHandle != null)
-            {
-                try { BenchmarkHandle.Kill(); BenchmarkHandle.Close(); }
-                catch { }
+            if (BenchmarkHandle != null) {
+                try { BenchmarkHandle.Kill(); BenchmarkHandle.Close(); } catch { }
             }
         }
+
+        virtual protected bool BenchmarkParseLine(string outdata) {
+            // parse line
+            if (outdata.Contains("Benchmark: ") && outdata.Contains("/s")) {
+                int i = outdata.IndexOf("Benchmark:");
+                int k = outdata.IndexOf("/s");
+                string hashspeed = outdata.Substring(i + 11, k - i - 9);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
+
+                // save speed
+                int b = hashspeed.IndexOf(" ");
+                double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
+                if (hashspeed.Contains("kH/s"))
+                    spd *= 1000;
+                else if (hashspeed.Contains("MH/s"))
+                    spd *= 1000000;
+                else if (hashspeed.Contains("GH/s"))
+                    spd *= 1000000000;
+                BenchmarkAlgorithm.BenchmarkSpeed = spd;
+
+                OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
+                return true;
+            } else if (outdata.Contains("Average hashrate:") && outdata.Contains("/s")) {
+                int i = outdata.IndexOf(": ");
+                int k = outdata.IndexOf("/s");
+
+                // save speed
+                string hashSpeed = outdata.Substring(i + 2, k - i + 2);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashSpeed);
+
+                hashSpeed = hashSpeed.Substring(0, hashSpeed.IndexOf(" "));
+                double speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
+
+                if (outdata.Contains("Kilohash"))
+                    speed *= 1000;
+                else if (outdata.Contains("Megahash"))
+                    speed *= 1000000;
+
+                BenchmarkAlgorithm.BenchmarkSpeed = speed;
+
+                OnBenchmarkComplete(true, PrintSpeed(speed), BenchmarkTag);
+                return true;
+            } else if (outdata.Contains("min/mean/max:")) {
+                string[] splt = outdata.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                int index = Array.IndexOf(splt, "mean");
+                double avg_spd = Convert.ToDouble(splt[index + 2]);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + avg_spd + "H/s");
+
+                BenchmarkAlgorithm.BenchmarkSpeed = avg_spd;
+
+                OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
+                return true;
+            }
+
+            return false;
+        }
+
+        virtual protected string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle) {
+            return BenchmarkHandle.StandardOutput.ReadLine();
+        }
+
+        #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
 
         virtual protected string GetPassword(Algorithm a)
@@ -413,7 +369,7 @@ namespace NiceHashMiner
         virtual protected NiceHashProcess _Start()
         {
             // check if dagger already running
-            if (AlgoNameIs("daggerhashimoto") && ethminerProcess != null)
+            if (IsCurrentAlgo(AlgorithmType.DaggerHashimoto) && ethminerProcess != null)
             {
                 Helpers.ConsolePrint(MinerDeviceName, "Resuming ethminer..");
                 ethminerLink.StartMining();
@@ -432,10 +388,10 @@ namespace NiceHashMiner
             }
 
             NumRetries = Config.ConfigData.MinerAPIGraceSeconds / Config.ConfigData.MinerAPIQueryInterval;
-            if (this is sgminer && !AlgoNameIs("daggerhashimoto"))
+            if (this is sgminer && !IsCurrentAlgo(AlgorithmType.DaggerHashimoto))
                 NumRetries = (Config.ConfigData.MinerAPIGraceSeconds + Config.ConfigData.MinerAPIGraceSecondsAMD) / Config.ConfigData.MinerAPIQueryInterval;
 
-            if (AlgoNameIs("daggerhashimoto"))
+            if (IsCurrentAlgo(AlgorithmType.DaggerHashimoto))
             {
                 ethminerLink = new ethminerAPI((this is sgminer) ? Config.ConfigData.ethminerAPIPortAMD : Config.ConfigData.ethminerAPIPortNvidia);
                 P.StartInfo.FileName = Ethereum.EtherMinerPath;
@@ -459,7 +415,7 @@ namespace NiceHashMiner
                 {
                     IsRunning = true;
 
-                    if (AlgoNameIs("daggerhashimoto"))
+                    if (IsCurrentAlgo(AlgorithmType.DaggerHashimoto))
                     {
                         ethminerProcess = P;
                         return null;
@@ -593,7 +549,7 @@ namespace NiceHashMiner
             string aname = null;
             APIData ad = new APIData();
 
-            if (AlgoNameIs("daggerhashimoto"))
+            if (IsCurrentAlgo(AlgorithmType.DaggerHashimoto))
             {
                 FillAlgorithm("daggerhashimoto", ref ad);
 
@@ -733,17 +689,9 @@ namespace NiceHashMiner
             return MaxProfitIndex;
         }
 
-        // TODO check if this really has to be a string!!!???
-        public bool AlgoNameIs(string algoname)
-        {
-            try
-            {
-                if (SupportedAlgorithms[CurrentAlgo].NiceHashName.Equals(algoname))
-                    return true;
-            }
-            catch { return false; }
-
-            return false;
+        
+        public bool IsCurrentAlgo(AlgorithmType algorithmType) {
+            return CurrentAlgo == algorithmType;
         }
 
         public int CountBenchmarkedAlgos()
@@ -767,7 +715,7 @@ namespace NiceHashMiner
                 {
                     SupportedAlgorithms[key].DisabledDevice[j] = false;
                     if ((CDevs[j].Name.Contains("750") && CDevs[j].Name.Contains("Ti")) &&
-                        (SupportedAlgorithms[key].NiceHashName.Equals("daggerhashimoto")))
+                        SupportedAlgorithms[key].NiceHashID == AlgorithmType.DaggerHashimoto)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
                         SupportedAlgorithms[key].DisabledDevice[j] = true;
@@ -784,7 +732,7 @@ namespace NiceHashMiner
             {
                 if (CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i])
                 {
-                    if (SupportedAlgorithms[algorithmType].NiceHashName.Equals("daggerhashimoto"))
+                    if (SupportedAlgorithms[algorithmType].NiceHashID == AlgorithmType.DaggerHashimoto)
                     {
                         if (EtherDevices[i] != -1)
                             count++;

@@ -15,25 +15,10 @@ namespace NiceHashMiner.Devices
     /// CPU query stays the same
     /// GPU querying should change
     /// </summary>
-    public class ComputeDeviceQueryManager
+    public class ComputeDeviceQueryManager : SingletonTemplate<ComputeDeviceQueryManager>
     {
-        #region SINGLETON Stuff
-        private static ComputeDeviceQueryManager _instance = new ComputeDeviceQueryManager();
-
-        public static ComputeDeviceQueryManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new ComputeDeviceQueryManager();
-                }
-                return _instance;
-            }
-        }
-        #endregion
-
-        private ComputeDeviceQueryManager() { }
+        // change to protected after .NET upgrade
+        public ComputeDeviceQueryManager() { }
 
 
         public int CPUs { get; private set; }
@@ -97,12 +82,13 @@ namespace NiceHashMiner.Devices
             // TODO bound to change
             Globals.Miners = new Miner[CPUs + 4];
 
-            if (CPUs == 1)
+            if (CPUs == 1) {
                 Globals.Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
-            else
-            {
-                for (int i = 0; i < CPUs; i++)
+            }
+            else {
+                for (int i = 0; i < CPUs; i++) {
                     Globals.Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
+                }
             }
         }
 

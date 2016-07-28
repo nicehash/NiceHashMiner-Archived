@@ -15,6 +15,15 @@ namespace NiceHashMiner.Devices
                                         "NVIDIA5.x",
                                         "NVIDIA6.x",
                                                   };
-        public static string GetName(DeviceGroupType type) { return _names[(int)type]; } 
+        public static string GetName(DeviceGroupType type) { return _names[(int)type]; }
+
+        public static DeviceGroupType GetType(string name) {
+            int i = 0;
+            for (; i < _names.Length; ++i) {
+                if (name.Contains(_names[i])) break;
+            }
+            return (DeviceGroupType)i;
+        }
+
     }
 }

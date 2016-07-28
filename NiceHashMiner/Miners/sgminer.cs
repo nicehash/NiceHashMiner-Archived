@@ -26,37 +26,7 @@ namespace NiceHashMiner
 
         public sgminer()
         {
-            SupportedAlgorithms = new Dictionary<AlgorithmType,Algorithm>() { 
-                { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },
-                { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13,  "x13")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2" } },
-                { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak,  "keccak")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },
-                { AlgorithmType.X15 , new Algorithm(AlgorithmType.X15,  "x15")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2" } },
-                { AlgorithmType.Nist5 , new Algorithm(AlgorithmType.Nist5,  "nist5")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2" } },
-                { AlgorithmType.NeoScrypt , new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4" } },
-                { AlgorithmType.WhirlpoolX , new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2" } },
-                { AlgorithmType.Qubit , new Algorithm(AlgorithmType.Qubit,  "qubitcoin")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2" } },
-                { AlgorithmType.Quark , new Algorithm(AlgorithmType.Quark,  "quarkcoin")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },
-                { AlgorithmType.Lyra2REv2 , new Algorithm(AlgorithmType.Lyra2REv2,  "Lyra2REv2")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },
-                { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blakecoin")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" } },
-                { AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" } },
-                { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" } },
-                { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
-                { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred")
-                    { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" } }
-            };
+            SupportedAlgorithms = GroupAlgorithms.CreateDefaultsForGroup(DeviceGroupType.AMD_OpenCL);
             
             MinerDeviceName = "AMD_OpenCL";
             Path = MinerPaths.sgminer_5_4_0_general;
@@ -318,80 +288,6 @@ namespace NiceHashMiner
             }
         }
 
-        protected override string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time)
-        {
-            Algorithm Algo = GetMinerAlgorithm(SupportedAlgorithms[algorithmType].NiceHashID);
-            if (Algo == null)
-            {
-                Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + algorithmType + "): Algo equals to null");
-                return "";
-            }
-
-            string CommandLine;
-            if (Algo.NiceHashName.Equals("daggerhashimoto"))
-            {
-                CommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
-                              " " + ExtraLaunchParameters +
-                              " " + Algo.ExtraLaunchParameters +
-                              " --benchmark-warmup 40 --benchmark-trial 20" +
-                              " --opencl-devices ";
-
-                int dagdev = -1;
-                for (int i = 0; i < CDevs.Count; i++)
-                {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
-                    {
-                        CommandLine += i + " ";
-                        if (i == DaggerHashimotoGenerateDevice)
-                            dagdev = DaggerHashimotoGenerateDevice;
-                        else if (dagdev == -1) dagdev = i;
-                    }
-                }
-
-                CommandLine += " --dag-load-mode single " + dagdev.ToString();
-
-                Ethereum.GetCurrentBlock(MinerDeviceName);
-                CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
-            }
-            else
-            {
-                Path = "cmd";
-                string MinerPath = GetOptimizedMinerPath(Algo.NiceHashName);
-
-                string url = "stratum+tcp://" + Globals.NiceHashData[SupportedAlgorithms[algorithmType].NiceHashID].name + "." +
-                             Globals.MiningLocation[Config.ConfigData.ServiceLocation] + ".nicehash.com:" +
-                             Globals.NiceHashData[SupportedAlgorithms[algorithmType].NiceHashID].port;
-
-                string username = Config.ConfigData.BitcoinAddress.Trim();
-                if (Config.ConfigData.WorkerName.Length > 0)
-                    username += "." + Config.ConfigData.WorkerName.Trim();
-
-                // TODO not sure if this will work, why cd-ing to dir and running???
-                CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
-                              " --gpu-platform " + GPUPlatformNumber +
-                              " -k " + SupportedAlgorithms[algorithmType].MinerName +
-                              " --url=" + url +
-                              " --userpass=" + username + ":" + GetPassword(Algo) +
-                              " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
-                              " -T --log 10 --log-file dump.txt" +
-                              " " + ExtraLaunchParameters +
-                              " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters +
-                              " --device ";
-
-                for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled && !Algo.DisabledDevice[i])
-                        CommandLine += CDevs[i].ID.ToString() + ",";
-
-                CommandLine = CommandLine.Remove(CommandLine.Length - 1);
-                if (Config.ConfigData.DisableAMDTempControl == false)
-                    CommandLine += TemperatureParam;
-                CommandLine += " && del dump.txt\"";
-            }
-
-            return CommandLine;
-        }
-
-
         public override void Start(AlgorithmType nhalgo, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 
@@ -403,7 +299,7 @@ namespace NiceHashMiner
                 return;
             }
 
-            if (Algo.NiceHashName.Equals("daggerhashimoto"))
+            if (Algo.NiceHashID == AlgorithmType.DaggerHashimoto)
             {
                 WorkingDirectory = "";
                 LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
@@ -432,7 +328,7 @@ namespace NiceHashMiner
             {
                 StartingUpDelay = true;
 
-                Path = GetOptimizedMinerPath(Algo.NiceHashName);
+                Path = GetOptimizedMinerPath(Algo.NiceHashID);
 
                 LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
                                   " -k " + Algo.MinerName +
@@ -487,32 +383,70 @@ namespace NiceHashMiner
             return MinerPaths.sgminer_5_4_0_general;
         }
 
-        // TODO change algo string to Enum AlgorithmType
-        private string GetOptimizedMinerPath(string algo)
-        {
-            if (EnableOptimizedVersion)
-            {
-                if (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2") || algo.Equals("qubit"))
-                {
-                    for (int i = 0; i < GPUCodeName.Count; i++)
-                    {
-                        if (!(GPUCodeName[i].Equals("Hawaii") || GPUCodeName[i].Equals("Pitcairn") || GPUCodeName[i].Equals("Tahiti")))
-                        {
-                            if (!Helpers.InternalCheckIsWow64())
-                                return MinerPaths.sgminer_5_4_0_general;
+        // new decoupled benchmarking routines
+        #region Decoupled benchmarking routines
+        // TODO decoupled benchmark routine
+        protected override string BenchmarkCreateCommandLine(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+            string CommandLine;
+            // TODO dagger
+            if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto) {
+                CommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
+                              " " + ExtraLaunchParameters +
+                              " " + algorithm.ExtraLaunchParameters +
+                              " --benchmark-warmup 40 --benchmark-trial 20" +
+                              " --opencl-devices ";
 
-                            return MinerPaths.sgminer_5_4_0_tweaked;
-                        }
+                int dagdev = -1;
+                for (int i = 0; i < CDevs.Count; i++) {
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !algorithm.DisabledDevice[i]) {
+                        CommandLine += i + " ";
+                        if (i == DaggerHashimotoGenerateDevice)
+                            dagdev = DaggerHashimotoGenerateDevice;
+                        else if (dagdev == -1) dagdev = i;
                     }
-
-                    if (algo.Equals("x11") || algo.Equals("quark") || algo.Equals("lyra2rev2"))
-                        return MinerPaths.sgminer_5_1_0_optimized;
-                    else
-                        return MinerPaths.sgminer_5_1_1_optimized;
                 }
+
+                CommandLine += " --dag-load-mode single " + dagdev.ToString();
+
+                Ethereum.GetCurrentBlock(MinerDeviceName);
+                CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
+            } else {
+                Path = "cmd";
+                string MinerPath = GetOptimizedMinerPath(algorithm.NiceHashID);
+
+                var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
+                string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
+                             Globals.MiningLocation[Config.ConfigData.ServiceLocation] + ".nicehash.com:" +
+                             nhAlgorithmData.port;
+
+                string username = Config.ConfigData.BitcoinAddress.Trim();
+                if (Config.ConfigData.WorkerName.Length > 0)
+                    username += "." + Config.ConfigData.WorkerName.Trim();
+
+                // TODO not sure if this will work, why cd-ing to dir and running???
+                CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
+                              " --gpu-platform " + GPUPlatformNumber +
+                              " -k " + algorithm.MinerName +
+                              " --url=" + url +
+                              " --userpass=" + username + ":" + GetPassword(algorithm) +
+                              " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
+                              " -T --log 10 --log-file dump.txt" +
+                              " " + ExtraLaunchParameters +
+                              " " + algorithm.ExtraLaunchParameters +
+                              " --device ";
+
+                for (int i = 0; i < CDevs.Count; i++)
+                    if (CDevs[i].Enabled && !algorithm.DisabledDevice[i])
+                        CommandLine += CDevs[i].ID.ToString() + ",";
+
+                CommandLine = CommandLine.Remove(CommandLine.Length - 1);
+                if (Config.ConfigData.DisableAMDTempControl == false)
+                    CommandLine += TemperatureParam;
+                CommandLine += " && del dump.txt\"";
             }
 
-            return MinerPaths.sgminer_5_4_0_general;
+            return CommandLine;
         }
+        #endregion // Decoupled benchmarking routines
     }
 }

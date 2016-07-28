@@ -18,6 +18,8 @@ namespace NiceHashMiner
             Path = MinerPaths.ccminer_sp;
             APIPort = 4048;
 
+            SupportedAlgorithms = GroupAlgorithms.CreateDefaultsForGroup(DeviceGroupType.NVIDIA_5_x);
+
             if (!Config.ConfigData.DisableDetectionNVidia5X)
                 QueryCDevs();
         }
@@ -44,7 +46,7 @@ namespace NiceHashMiner
 
         protected override string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)
         {
-            if (AlgoNameIs("lyra2rev2") || AlgoNameIs("decred"))
+            if (IsCurrentAlgo(AlgorithmType.Lyra2REv2) || IsCurrentAlgo(AlgorithmType.Decred))
                 return BenchmarkHandle.StandardOutput.ReadLine();
 
             return BenchmarkHandle.StandardError.ReadLine();

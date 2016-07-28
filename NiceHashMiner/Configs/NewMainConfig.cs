@@ -77,6 +77,8 @@ namespace NiceHashMiner.Configs
         /// </summary>
         public ComputeDevicesSettup LastDevicesSettup;
         //List<ComputeDevicesSettup> ComputeDevicesSettupList;
+        public Dictionary<string, BenchmarkConfig> BenchmarkConfigs;
+        public Dictionary<string, DeviceGroupSettings> GroupSettings;
         #endregion
 
         // TODO temporary 
@@ -153,6 +155,22 @@ namespace NiceHashMiner.Configs
                 ConfigData.LogMaxFileSize = 1048576;
             if (ConfigData.DisplayCurrency == null)
                 ConfigData.DisplayCurrency = "USD";
+
+
+        }
+
+
+        public static void AfterDeviceQueryInitialization() {
+            // initialize group settings
+            SetComputeDeviceConfig();
+            ComputeDeviceGroupManager.Instance.InitializeGroupSettings();
+            // new stuff
+            // set references
+            // C# can handle cyclic refs
+            BenchmarkConfigManager.Instance.BenchmarkConfigs = ConfigData.BenchmarkConfigs;
+            ConfigData.BenchmarkConfigs = BenchmarkConfigManager.Instance.BenchmarkConfigs;
+            ComputeDeviceGroupManager.Instance.GroupSettings = ConfigData.GroupSettings;
+            ConfigData.GroupSettings = ComputeDeviceGroupManager.Instance.GroupSettings;
         }
 
         

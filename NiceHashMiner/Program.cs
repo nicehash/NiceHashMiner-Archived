@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Forms;
 
 namespace NiceHashMiner
 {
@@ -50,6 +51,7 @@ namespace NiceHashMiner
             }
             
             Application.Run(new Form_Main());
+            //Application.Run(new FormSettings_New());
         }
 
     }

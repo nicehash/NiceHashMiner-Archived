@@ -24,14 +24,6 @@ namespace NiceHashMiner
             Threads = threads;
             AffinityMask = affinity;
 
-            // ReadOnlyDictionary that would be great [ not avaliable in .NET 2.0, Available since 4.5 ]
-            SupportedAlgorithms = new Dictionary<AlgorithmType, Algorithm>() {
-                { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
-                { AlgorithmType.Axiom, new Algorithm(AlgorithmType.Axiom, "axiom") },
-                { AlgorithmType.ScryptJaneNf16, new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjane:16") },
-                { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") { ExtraLaunchParameters = "--extranonce-subscribe"} }
-            };
-
             // this is the order we check and initialize if automatic
             CPUExtensionType[] detectOrder = new CPUExtensionType[] { CPUExtensionType.AVX2, CPUExtensionType.AVX, CPUExtensionType.SSE2 };
 
@@ -119,34 +111,6 @@ namespace NiceHashMiner
         }
 
 
-        protected override string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time)
-        {
-            Path = GetOptimizedMinerPath(algorithmType);
-
-            string ret = "--algo=" + SupportedAlgorithms[algorithmType].MinerName + 
-                         " --benchmark" + 
-                         " --threads=" + Threads.ToString() +
-                         " " + ExtraLaunchParameters + 
-                         " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters;
-
-            if (algorithmType != AlgorithmType.Hodl)
-                ret += " --time-limit " + time.ToString();
-
-            return ret;
-        }
-
-
-        protected override Process BenchmarkStartProcess(string CommandLine)
-        {
-            Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
-
-            if (AffinityMask != 0 && BenchmarkHandle != null)
-                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
-
-            return BenchmarkHandle;
-        }
-
-
         public override void Start(AlgorithmType algorithmType, string url, string username)
         {
             if (ProcessHandle != null) return; // ignore, already running
@@ -181,5 +145,34 @@ namespace NiceHashMiner
 
             return P;
         }
+
+        // new decoupled benchmarking routines
+        #region Decoupled benchmarking routines
+        // new decoupled benchmark, TODO fix the copy paste magic
+        // TODO recheck this
+        protected override string BenchmarkCreateCommandLine(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+            Path = GetOptimizedMinerPath(algorithm.NiceHashID);
+
+            string ret = "--algo=" + algorithm.MinerName +
+                         " --benchmark" +
+                         " --threads=" + Threads.ToString() +
+                         " " + benchmarkConfig.ExtraLaunchParameters +
+                         " " + algorithm.ExtraLaunchParameters;
+
+            if (algorithm.NiceHashID != AlgorithmType.Hodl)
+                ret += " --time-limit " + time.ToString();
+
+            return ret;
+        }
+
+        protected override Process BenchmarkStartProcess(string CommandLine) {
+            Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
+
+            if (AffinityMask != 0 && BenchmarkHandle != null)
+                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
+
+            return BenchmarkHandle;
+        }
+        #endregion // Decoupled benchmarking routines
     }
 }

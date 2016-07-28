@@ -16,78 +16,7 @@ namespace NiceHashMiner
 {
     abstract public class ccminer : Miner
     {
-        public ccminer()
-        {
-            SupportedAlgorithms = new Dictionary<AlgorithmType, Algorithm>
-            {
-                { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11") },
-                { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13, "x13") },
-                { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak, "keccak") },
-                { AlgorithmType.X15 , new Algorithm(AlgorithmType.X15, "x15") },
-                { AlgorithmType.Nist5 , new Algorithm(AlgorithmType.Nist5, "nist5") },
-                { AlgorithmType.NeoScrypt , new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt") },
-                { AlgorithmType.WhirlpoolX , new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx") },
-                { AlgorithmType.Qubit , new Algorithm(AlgorithmType.Qubit, "qubit") },
-                { AlgorithmType.Quark , new Algorithm(AlgorithmType.Quark, "quark") },
-                { AlgorithmType.Lyra2REv2 , new Algorithm(AlgorithmType.Lyra2REv2, "lyra2v2") },
-                { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blakecoin") },
-                { AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake") },
-                { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla") },
-                { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
-                { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred") },
-            };
-        }
-
-
-        protected override string BenchmarkCreateCommandLine(AlgorithmType algorithmType, int time)
-        {
-            string CommandLine = "";
-
-            if (AlgorithmType.DaggerHashimoto == algorithmType)
-            {
-                CommandLine = " --benchmark-warmup 40 --benchmark-trial 20" +
-                              " " + ExtraLaunchParameters +
-                              " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters +
-                              " --cuda --cuda-devices ";
-
-                int dagdev = -1;
-                for (int i = 0; i < CDevs.Count; i++)
-                {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i])
-                    {
-                        CommandLine += i.ToString() + " ";
-                        if (i == DaggerHashimotoGenerateDevice)
-                            dagdev = DaggerHashimotoGenerateDevice;
-                        else if (dagdev == -1) dagdev = i;
-                    }
-                }
-
-                CommandLine += " --dag-load-mode single " + dagdev.ToString();
-
-                Ethereum.GetCurrentBlock(MinerDeviceName);
-                CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
-            }
-            else
-            {
-                CommandLine = " --algo=" + SupportedAlgorithms[algorithmType].MinerName +
-                              " --benchmark" +
-                              " --time-limit " + time.ToString() +
-                              " " + ExtraLaunchParameters +
-                              " " + SupportedAlgorithms[algorithmType].ExtraLaunchParameters +
-                              " --devices ";
-
-                for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i])
-                        CommandLine += CDevs[i].ID.ToString() + ",";
-
-                CommandLine = CommandLine.Remove(CommandLine.Length - 1);
-
-                Path = GetOptimizedMinerPath(algorithmType);
-            }
-
-            return CommandLine;
-        }
-
+        public ccminer() { }
 
         public override void Start(AlgorithmType algorithmType, string url, string username)
         {
@@ -310,5 +239,54 @@ namespace NiceHashMiner
                 return;
             }
         }
+
+        // new decoupled benchmarking routines
+        #region Decoupled benchmarking routines
+        protected override string BenchmarkCreateCommandLine(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+            string CommandLine = "";
+
+            if (AlgorithmType.DaggerHashimoto == algorithm.NiceHashID) {
+                CommandLine = " --benchmark-warmup 40 --benchmark-trial 20" +
+                              " " + benchmarkConfig.ExtraLaunchParameters +
+                              " " + algorithm.ExtraLaunchParameters +
+                              " --cuda --cuda-devices ";
+
+                int dagdev = -1;
+                foreach (var id in benchmarkConfig.DevicesIDs) {
+                    // TODO for now we presume that all IDs in config are enabled devices
+                    if (EtherDevices[id] != -1 /*&& CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i]*/) {
+                        CommandLine += id.ToString() + " ";
+                        if (id == DaggerHashimotoGenerateDevice)
+                            dagdev = DaggerHashimotoGenerateDevice;
+                        else if (dagdev == -1) dagdev = id;
+                    }
+                }
+
+                CommandLine += " --dag-load-mode single " + dagdev.ToString();
+
+                Ethereum.GetCurrentBlock(MinerDeviceName);
+                CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
+            } else {
+                CommandLine = " --algo=" + algorithm.MinerName +
+                              " --benchmark" +
+                              " --time-limit " + time.ToString() +
+                              " " + ExtraLaunchParameters +
+                              " " + algorithm.ExtraLaunchParameters +
+                              " --devices ";
+
+                // TODO for now we presume that all IDs in config are enabled devices
+                foreach (var id in benchmarkConfig.DevicesIDs) {
+                    CommandLine += id.ToString() + ",";
+                }
+
+                CommandLine = CommandLine.Remove(CommandLine.Length - 1);
+
+                Path = GetOptimizedMinerPath(algorithm.NiceHashID);
+            }
+
+            return CommandLine;
+        }
+        #endregion // Decoupled benchmarking routines
+
     }
 }

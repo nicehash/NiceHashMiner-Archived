@@ -12,9 +12,9 @@ namespace NiceHashMiner
     {
         readonly static private Dictionary<AlgorithmType, string> _names = new Dictionary<AlgorithmType, string>()
         {
-            { AlgorithmType.Scrypt , "scrypt" },
-            { AlgorithmType.SHA256 , "sha256" },
-            { AlgorithmType.ScryptNf , "scryptnf" },
+            { AlgorithmType.Scrypt , "scrypt" }, // NOT used
+            { AlgorithmType.SHA256 , "sha256" }, // NOT used
+            { AlgorithmType.ScryptNf , "scryptnf" }, // NOT used
             { AlgorithmType.X11 , "x11" },
             { AlgorithmType.X13 , "x13" },
             { AlgorithmType.Keccak , "keccak" },
@@ -39,5 +39,19 @@ namespace NiceHashMiner
         };
 
         public static string GetName(AlgorithmType type) { return _names[type]; }
+
+        /// <summary>
+        /// GetKey is used for Algorithm initialization, from config files.
+        /// If algorithm name is invalid it will return INVALID
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static AlgorithmType GetKey(string name) {
+            foreach (var pair in _names) {
+                if (pair.Value == name) return pair.Key;
+            }
+
+            return AlgorithmType.INVALID;
+        }
     }
 }
