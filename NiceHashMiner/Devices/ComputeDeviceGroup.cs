@@ -16,16 +16,13 @@ namespace NiceHashMiner.Devices
         // references just for unique devices (like a set of different card types), will not save same card type more then once
         private List<ComputeDevice> _uniqueDevices;
 
-        private DeviceGroupSettings _deviceGroupSettings;
+        //private DeviceGroupSettings _deviceGroupSettings;
 
         readonly public DeviceGroupType Type;
         readonly public string Name;
-        readonly public List<AlgorithmType> SupportedAlgorithms;
 
-        public bool IsEnabled
-        {
-            get
-            {
+        public bool IsEnabled {
+            get {
                 int enabledCount = 0;
                 foreach (var device in _devices) {
                     enabledCount += device.Enabled ? 1 : 0;
@@ -34,8 +31,15 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public ComputeDeviceGroup(DeviceGroupType type)
-        {
+        public void DisableGroup() {
+            foreach (var device in _devices) {
+                device.Enabled = false;
+            }
+        }
+
+        public int Count { get { return _devices.Count; } }
+
+        public ComputeDeviceGroup(DeviceGroupType type) {
             _devices = new List<ComputeDevice>();
             _uniqueDevices = new List<ComputeDevice>();
             Type = type;
@@ -43,8 +47,7 @@ namespace NiceHashMiner.Devices
             Name = GroupNames.GetName(type);
         }
 
-        public void AddNewDevice(ComputeDevice device)
-        {
+        public void AddNewDevice(ComputeDevice device) {
             // TODO maybe check if already added or something
             _devices.Add(device);
             addUniqueDevice(device);

@@ -24,7 +24,8 @@ namespace NiceHashMiner
         const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90" +
                                         " --temp-target 75 --auto-fan --auto-gpu";
 
-        public sgminer()
+        public sgminer(bool queryComputeDevices)
+            : base(queryComputeDevices)
         {
             SupportedAlgorithms = GroupAlgorithms.CreateDefaultsForGroup(DeviceGroupType.AMD_OpenCL);
             
@@ -36,8 +37,11 @@ namespace NiceHashMiner
             GPUPlatformNumber = 0;
             GPUCodeName = new List<string>();
 
-            if (!Config.ConfigData.DisableDetectionAMD)
-                QueryCDevs();
+            TryQueryCDevs();
+        }
+
+        protected override bool IsGroupQueryEnabled() {
+            return !Config.ConfigData.DisableDetectionAMD;
         }
 
         protected void AddPotentialCDev(string text)
@@ -77,7 +81,7 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerDeviceName, "Added: " + name);
         }
 
-        protected void QueryCDevs()
+        protected override void QueryCDevs()
         {
             try
             {
@@ -313,7 +317,7 @@ namespace NiceHashMiner
                 int dagdev = -1;
                 for (int i = 0; i < CDevs.Count; i++)
                 {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
                     {
                         LastCommandLine += i.ToString() + " ";
                         if (i == DaggerHashimotoGenerateDevice)
@@ -341,7 +345,7 @@ namespace NiceHashMiner
                                   " --device ";
 
                 for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled && !Algo.DisabledDevice[i])
+                    if (CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
                         LastCommandLine += CDevs[i].ID.ToString() + ",";
 
                 if (LastCommandLine.EndsWith(","))
@@ -386,7 +390,7 @@ namespace NiceHashMiner
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
         // TODO decoupled benchmark routine
-        protected override string BenchmarkCreateCommandLine(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine;
             // TODO dagger
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto) {
@@ -398,7 +402,7 @@ namespace NiceHashMiner
 
                 int dagdev = -1;
                 for (int i = 0; i < CDevs.Count; i++) {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !algorithm.DisabledDevice[i]) {
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled /*&& !algorithm.DisabledDevice[i]*/) {
                         CommandLine += i + " ";
                         if (i == DaggerHashimotoGenerateDevice)
                             dagdev = DaggerHashimotoGenerateDevice;
@@ -436,7 +440,7 @@ namespace NiceHashMiner
                               " --device ";
 
                 for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled && !algorithm.DisabledDevice[i])
+                    if (CDevs[i].Enabled /*&& !algorithm.DisabledDevice[i]*/)
                         CommandLine += CDevs[i].ID.ToString() + ",";
 
                 CommandLine = CommandLine.Remove(CommandLine.Length - 1);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace NiceHashMiner.Devices {
+    [Serializable]
     public class DeviceGroupSettings {
         readonly public string Name;
         // TODO create port ranges and use those

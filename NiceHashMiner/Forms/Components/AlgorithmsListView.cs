@@ -9,6 +9,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner.Forms.Components {
     public partial class AlgorithmsListView : UserControl {
@@ -22,22 +23,23 @@ namespace NiceHashMiner.Forms.Components {
 
         public AlgorithmsListView() {
             InitializeComponent();
+            // callback initializations
+            listViewAlgorithms.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(listViewAlgorithms_ItemSelectionChanged);
+            listViewAlgorithms.ItemChecked += new ItemCheckedEventHandler(listViewAlgorithms_ItemChecked);
         }
 
         public IAlgorithmsListView ComunicationInterface { get; set; }
-        // makes sure initialization doesn't chech our boxes
-        bool _isSettup = true;
 
         private static Color DisabledColor = Color.DarkGray;
         private static Color BenchmarkingColor = Color.LightGreen;
 
-        List<BenchmarkConfig> _benchmarkConfigs;
+        List<DeviceBenchmarkConfig> _benchmarkConfigs;
 
-        public void SetAlgorithms(BenchmarkConfig benchmarkConfig) {
-            SetAlgorithms(new List<BenchmarkConfig>() { benchmarkConfig });
+        public void SetAlgorithms(DeviceBenchmarkConfig benchmarkConfig) {
+            SetAlgorithms(new List<DeviceBenchmarkConfig>() { benchmarkConfig });
         }
 
-        public void SetAlgorithms(List<BenchmarkConfig> benchmarkConfigs) {
+        public void SetAlgorithms(List<DeviceBenchmarkConfig> benchmarkConfigs) {
             listViewAlgorithms.Items.Clear();
             _benchmarkConfigs = benchmarkConfigs;
             bool switchColor = false;
@@ -48,7 +50,7 @@ namespace NiceHashMiner.Forms.Components {
                     if (switchColor) {
                         lvi.BackColor = Color.LightBlue;
                     }
-                    lvi.SubItems.Add(config.DeviceGroupName);
+                    lvi.SubItems.Add(config.DeviceName);
                     ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
 
                     //sub.Tag = alg.Value;
@@ -100,16 +102,11 @@ namespace NiceHashMiner.Forms.Components {
             var currentConfig = _benchmarkConfigs[benchConfigIndex];
             var lvi = listViewAlgorithms.Items[_bechmarkCurrentIndex];
             var benchAlgorithm = lvi.Tag as Algorithm;
-            Miner miner = null;
-            foreach (var m in Globals.Miners) {
-                if (m.MinerDeviceName.Contains(GroupNames.GetName(currentConfig.DeviceGroupType))) {
-                    miner = m;
-                }
-            }
+            CurrentlyBenchmarking = MinersManager.Instance.CreateBenchmarkMiner(currentConfig.DeviceGroupType);
             // TODO make skipp option for already benchmarked
-            if (miner != null && benchAlgorithm != null && !benchAlgorithm.Skip) {
+            if (CurrentlyBenchmarking != null && benchAlgorithm != null && !benchAlgorithm.Skip) {
                 // TODO time
-                miner.BenchmarkStart(currentConfig, benchAlgorithm, 5, BenchmarkCompleted, lvi);
+                CurrentlyBenchmarking.BenchmarkStart(currentConfig, benchAlgorithm, 5, BenchmarkCompleted, lvi);
             } else {
                 NextBenchmark();
             }
@@ -146,12 +143,14 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         private void MarkBenchColorComplete(int index) {
-            if (index < 0 || index > listViewAlgorithms.Items.Count) return;
-            listViewAlgorithms.Items[index].BackColor = Color.LightBlue;
+            if (index >= 0 && index < listViewAlgorithms.Items.Count) {
+                listViewAlgorithms.Items[index].BackColor = Color.LightBlue;
+            }
         }
         private void MarkBenchColorInProgress(int index) {
-            if (index < 0 || index > listViewAlgorithms.Items.Count) return;
-            listViewAlgorithms.Items[index].BackColor = Color.LightGreen;
+            if (index >= 0 && index < listViewAlgorithms.Items.Count) {
+                listViewAlgorithms.Items[index].BackColor = Color.LightGreen;
+            }
         }
 
         private void SplitGroupColors() {
@@ -187,30 +186,23 @@ namespace NiceHashMiner.Forms.Components {
             //listViewAlgorithms.Select();
         }
 
-        public void SetSetupComplete() {
-            listViewAlgorithms.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(listViewAlgorithms_ItemSelectionChanged);
-            listViewAlgorithms.ItemChecked += new ItemCheckedEventHandler(listViewAlgorithms_ItemChecked);
-            // select first and finish settup
-            if (listViewAlgorithms.Items.Count > 0) {
-                listViewAlgorithms.Items[0].Selected = true;
-                listViewAlgorithms.Select();
-            }
-            
-        }
-
+        #region Callbacks Events
         private void listViewAlgorithms_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
-            _isSettup = false;
             if (ComunicationInterface != null) {
                 ComunicationInterface.SetCurrentlySelected(e.Item);
             }
         }
 
         private void listViewAlgorithms_ItemChecked(object sender, ItemCheckedEventArgs e) {
-            // ListViewItem has no data binding so handle the logic at 
-            if (_isSettup == false && ComunicationInterface != null) {
+            if (ComunicationInterface != null) {
+                var algo = e.Item.Tag as Algorithm;
+                if(algo != null) {
+                    algo.Skip = !e.Item.Checked;
+                }
                 ComunicationInterface.HandleCheck(e.Item);
             }
         }
+        #endregion //Callbacks Events
 
     }
 }

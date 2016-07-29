@@ -12,6 +12,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Forms;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -174,14 +175,14 @@ namespace NiceHashMiner
 
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
+            ConfigManager.Instance.AfterDeviceQueryInitialization();
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SaveConfig"));
-            NewMainConfig.AfterDeviceQueryInitialization();
             Config.SetGroupAlgorithmSettup();
             
             // All devices settup should be initialized in AllDevices
             foreach (var computeDevice in ComputeDevice.AllAvaliableDevices) {
                 ListViewItem lvi = new ListViewItem();
-                lvi.SubItems.Add(computeDevice.Vendor);
+                lvi.SubItems.Add(computeDevice.Group);
                 lvi.SubItems.Add(computeDevice.Name);
                 lvi.Checked = computeDevice.Enabled;
                 lvi.Tag = computeDevice;
@@ -200,8 +201,10 @@ namespace NiceHashMiner
             SMAMinerCheck = new Timer();
             SMAMinerCheck.Tick += SMAMinerCheck_Tick;
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
-            if (Globals.Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
-            
+            if (ComputeDeviceGroupManager.Instance.GetGroupCount(DeviceGroupType.AMD_OpenCL) > 0) {
+                SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+            }
+
             UpdateCheck = new Timer();
             UpdateCheck.Tick += UpdateCheck_Tick;
             UpdateCheck.Interval = 1000 * 3600; // every 1 hour
@@ -287,7 +290,9 @@ namespace NiceHashMiner
         private void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
             SMAMinerCheck.Interval = Config.ConfigData.SwitchMinSecondsFixed * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
-            if (Globals.Miners[CPUs + 3].CDevs.Count > 0) SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+            if (ComputeDeviceGroupManager.Instance.GetGroupCount(DeviceGroupType.AMD_OpenCL) > 0) {
+                SMAMinerCheck.Interval = (Config.ConfigData.SwitchMinSecondsAMD + Config.ConfigData.SwitchMinSecondsFixed) * 1000 + R.Next(Config.ConfigData.SwitchMinSecondsDynamic * 1000);
+            }
 
             string Worker = textBoxWorkerName.Text.Trim();
             if (Worker.Length > 0)
@@ -295,37 +300,38 @@ namespace NiceHashMiner
             else
                 Worker = textBoxBTCAddress.Text.Trim();
 
-            foreach (Miner m in Globals.Miners)
-            {
-                if (m.EnabledDeviceCount() == 0) continue;
+            // switching logic
+            //foreach (Miner m in Globals.Miners)
+            //{
+            //    if (m.EnabledDeviceCount() == 0) continue;
 
-                AlgorithmType MaxProfitKey = m.GetMaxProfitKey(Globals.NiceHashData);
+            //    AlgorithmType MaxProfitKey = m.GetMaxProfitKey(Globals.NiceHashData);
 
-                if (m.NotProfitable || MaxProfitKey == AlgorithmType.NONE)
-                {
-                    Helpers.ConsolePrint(m.MinerDeviceName, "Miner is not profitable.. STOPPING..");
-                    m.Stop(false);
-                    continue;
-                }
+            //    if (m.NotProfitable || MaxProfitKey == AlgorithmType.NONE)
+            //    {
+            //        Helpers.ConsolePrint(m.MinerDeviceName, "Miner is not profitable.. STOPPING..");
+            //        m.Stop(false);
+            //        continue;
+            //    }
                 
-                if (m.CurrentAlgo != MaxProfitKey)
-                {
-                    Helpers.ConsolePrint(m.MinerDeviceName, "Switching to most profitable algorithm: " + m.SupportedAlgorithms[MaxProfitKey].NiceHashName);
+            //    if (m.CurrentAlgo != MaxProfitKey)
+            //    {
+            //        Helpers.ConsolePrint(m.MinerDeviceName, "Switching to most profitable algorithm: " + m.SupportedAlgorithms[MaxProfitKey].NiceHashName);
 
-                    MinerStatsCheck.Stop();
-                    if (m.CurrentAlgo >= 0)
-                    {
-                        m.Stop(true);
-                        // wait 0.5 seconds before going on
-                        System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
-                    }
-                    m.CurrentAlgo = MaxProfitKey;
+            //        MinerStatsCheck.Stop();
+            //        if (m.CurrentAlgo >= 0)
+            //        {
+            //            m.Stop(true);
+            //            // wait 0.5 seconds before going on
+            //            System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
+            //        }
+            //        m.CurrentAlgo = MaxProfitKey;
 
-                    m.Start(m.SupportedAlgorithms[MaxProfitKey].NiceHashID,
-                        "stratum+tcp://" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitKey].NiceHashID].name + "." + Globals.MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitKey].NiceHashID].port, Worker);
-                    MinerStatsCheck.Start();
-                }
-            }
+            //        m.Start(m.SupportedAlgorithms[MaxProfitKey].NiceHashID,
+            //            "stratum+tcp://" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitKey].NiceHashID].name + "." + Globals.MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitKey].NiceHashID].port, Worker);
+            //        MinerStatsCheck.Start();
+            //    }
+            //}
         }
 
 
@@ -342,79 +348,80 @@ namespace NiceHashMiner
             SetNVIDIAtpStats("", 0, 0);
             SetAMDOpenCLStats("", 0, 0);
 
-            foreach (Miner m in Globals.Miners)
-            {
-                if (!m.IsRunning) continue;
+            //// TODO stats check
+            //foreach (Miner m in Globals.Miners)
+            //{
+            //    if (!m.IsRunning) continue;
 
-                if (m is cpuminer && m.IsCurrentAlgo(AlgorithmType.Hodl))
-                {
-                    string pname = m.Path.Split('\\')[2];
-                    pname = pname.Substring(0, pname.Length - 4);
+            //    if (m is cpuminer && m.IsCurrentAlgo(AlgorithmType.Hodl))
+            //    {
+            //        string pname = m.Path.Split('\\')[2];
+            //        pname = pname.Substring(0, pname.Length - 4);
 
-                    Process[] processes = Process.GetProcessesByName(pname);
+            //        Process[] processes = Process.GetProcessesByName(pname);
 
-                    if (processes.Length < CPUID.GetPhysicalProcessorCount())
-                        m.Restart();
+            //        if (processes.Length < CPUID.GetPhysicalProcessorCount())
+            //            m.Restart();
 
-                    AlgorithmType algoIndex = AlgorithmType.Hodl; // m.GetAlgoIndex("hodl");
-                    CPUAlgoName = "hodl";
-                    CPUTotalSpeed = m.SupportedAlgorithms[algoIndex].BenchmarkSpeed;
-                    CPUTotalRate = Globals.NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
+            //        AlgorithmType algoIndex = AlgorithmType.Hodl; // m.GetAlgoIndex("hodl");
+            //        CPUAlgoName = "hodl";
+            //        CPUTotalSpeed = m.SupportedAlgorithms[algoIndex].BenchmarkSpeed;
+            //        CPUTotalRate = Globals.NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
 
-                    continue;
-                }
+            //        continue;
+            //    }
 
-                APIData AD = m.GetSummary();
-                if (AD == null)
-                {
-                    Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
+            //    APIData AD = m.GetSummary();
+            //    if (AD == null)
+            //    {
+            //        Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
 
-                    // Make sure sgminer has time to start
-                    // properly on slow CPU system
-                    if (m.StartingUpDelay && m.NumRetries > 0)
-                    {
-                        m.NumRetries--;
-                        if (m.NumRetries == 0) m.StartingUpDelay = false;
-                        Helpers.ConsolePrint(m.MinerDeviceName, "NumRetries: " + m.NumRetries);
-                        continue;
-                    }
+            //        // Make sure sgminer has time to start
+            //        // properly on slow CPU system
+            //        if (m.StartingUpDelay && m.NumRetries > 0)
+            //        {
+            //            m.NumRetries--;
+            //            if (m.NumRetries == 0) m.StartingUpDelay = false;
+            //            Helpers.ConsolePrint(m.MinerDeviceName, "NumRetries: " + m.NumRetries);
+            //            continue;
+            //        }
 
-                    // API is inaccessible, try to restart miner
-                    m.Restart();
+            //        // API is inaccessible, try to restart miner
+            //        m.Restart();
 
-                    continue;
-                }
-                else
-                    m.StartingUpDelay = false;
+            //        continue;
+            //    }
+            //    else
+            //        m.StartingUpDelay = false;
 
-                if (Globals.NiceHashData != null)
-                    m.CurrentRate = Globals.NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
-                else
-                    m.CurrentRate = 0;
+            //    if (Globals.NiceHashData != null)
+            //        m.CurrentRate = Globals.NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
+            //    else
+            //        m.CurrentRate = 0;
 
-                if (m is cpuminer)
-                {
-                    CPUAlgoName = AD.AlgorithmName;
-                    CPUTotalSpeed += AD.Speed;
-                    CPUTotalRate += m.CurrentRate;
-                }
-                else if (m is ccminer_tpruvot_sm21)
-                {
-                    SetNVIDIAtp21Stats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-                }
-                else if (m is ccminer_tpruvot)
-                {
-                    SetNVIDIAtpStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-                }
-                else if (m is ccminer_sp)
-                {
-                    SetNVIDIAspStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-                }
-                else if (m is sgminer)
-                {
-                    SetAMDOpenCLStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-                }
-            }
+            //    if (m is cpuminer)
+            //    {
+            //        CPUAlgoName = AD.AlgorithmName;
+            //        CPUTotalSpeed += AD.Speed;
+            //        CPUTotalRate += m.CurrentRate;
+            //    }
+            //    else if (m is ccminer_tpruvot_sm21)
+            //    {
+            //        SetNVIDIAtp21Stats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+            //    }
+            //    else if (m is ccminer_tpruvot)
+            //    {
+            //        SetNVIDIAtpStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+            //    }
+            //    else if (m is ccminer_sp)
+            //    {
+            //        SetNVIDIAspStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+            //    }
+            //    else if (m is sgminer)
+            //    {
+            //        SetAMDOpenCLStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+            //    }
+            //}
 
             if (CPUAlgoName != null && CPUAlgoName.Length > 0)
             {
@@ -473,8 +480,9 @@ namespace NiceHashMiner
         private void UpdateGlobalRate()
         {
             double TotalRate = 0;
-            foreach (Miner m in Globals.Miners)
-                TotalRate += m.CurrentRate;
+            //// TODO 
+            //foreach (Miner m in Globals.Miners)
+            //    TotalRate += m.CurrentRate;
 
             if (Config.ConfigData.AutoScaleBTCValues && TotalRate < 0.1)
             {
@@ -680,8 +688,7 @@ namespace NiceHashMiner
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach (Miner m in Globals.Miners)
-                m.Stop(false);
+            MinersManager.Instance.StopAllMiners();
 
             MessageBoxManager.Unregister();
         }
@@ -701,8 +708,6 @@ namespace NiceHashMiner
             }
 
             SMACheck.Stop();
-            new FormSettings_New().ShowDialog();
-            return;
             //BenchmarkForm = new Form_Benchmark(false); //new FormBenchmark_New();
             BenchmarkForm = new FormBenchmark_New();
             BenchmarkForm.ShowDialog();
@@ -720,18 +725,18 @@ namespace NiceHashMiner
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            Form_Settings Settings = new Form_Settings();
-            //FormSettings_New Settings = new FormSettings_New();
+            //Form_Settings Settings = new Form_Settings();
+            FormSettings_New Settings = new FormSettings_New();
             Settings.ShowDialog();
 
             //if (Settings.ret == 1) return;
             return;
 
-            Process PHandle = new Process();
-            PHandle.StartInfo.FileName = Application.ExecutablePath;
-            PHandle.Start();
+            //Process PHandle = new Process();
+            //PHandle.StartInfo.FileName = Application.ExecutablePath;
+            //PHandle.Start();
 
-            Close();
+            //Close();
         }
 
 
@@ -765,40 +770,41 @@ namespace NiceHashMiner
             }
 
             // Check if the user has run benchmark first
-            foreach (Miner m in Globals.Miners)
-            {
-                if (m.EnabledDeviceCount() == 0) continue;
+            // TODO
+            //foreach (Miner m in Globals.Miners)
+            //{
+            //    if (m.EnabledDeviceCount() == 0) continue;
 
-                if (m.CountBenchmarkedAlgos() == 0)
-                {
-                    DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_HaveNotBenchmarkedMsg"), m.MinerDeviceName),
-                                                          International.GetText("Warning_with_Exclamation"),
-                                                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            //    if (m.CountBenchmarkedAlgos() == 0)
+            //    {
+            //        DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_HaveNotBenchmarkedMsg"), m.MinerDeviceName),
+            //                                              International.GetText("Warning_with_Exclamation"),
+            //                                              MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                    if (result == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        if (!(m is cpuminer))
-                        {
-                            // TODO this here MAKES NO SENSE cpuminer does not have X11 in SupportedAlgorithms
-                            // TODO most likelly hidden BUG, FIX IT!!!
-                            // quick and ugly way to prevent GPUs from starting on extremely unprofitable x11
-                            m.SupportedAlgorithms[AlgorithmType.X11].BenchmarkSpeed = 1;
-                        }
-                        break;
-                    }
-                    if (result == System.Windows.Forms.DialogResult.No)
-                    {
-                        DemoMode = false;
-                        labelDemoMode.Visible = false;
+            //        if (result == System.Windows.Forms.DialogResult.Yes)
+            //        {
+            //            if (!(m is cpuminer))
+            //            {
+            //                // TODO this here MAKES NO SENSE cpuminer does not have X11 in SupportedAlgorithms
+            //                // TODO most likelly hidden BUG, FIX IT!!!
+            //                // quick and ugly way to prevent GPUs from starting on extremely unprofitable x11
+            //                m.SupportedAlgorithms[AlgorithmType.X11].BenchmarkSpeed = 1;
+            //            }
+            //            break;
+            //        }
+            //        if (result == System.Windows.Forms.DialogResult.No)
+            //        {
+            //            DemoMode = false;
+            //            labelDemoMode.Visible = false;
 
-                        textBoxBTCAddress.Text = "";
-                        Config.ConfigData.BitcoinAddress = "";
-                        Config.Commit();
+            //            textBoxBTCAddress.Text = "";
+            //            Config.ConfigData.BitcoinAddress = "";
+            //            Config.Commit();
 
-                        return;
-                    }
-                }
-            }
+            //            return;
+            //        }
+            //    }
+            //}
 
             textBoxBTCAddress.Enabled = false;
             textBoxWorkerName.Enabled = false;
@@ -826,13 +832,7 @@ namespace NiceHashMiner
             MinerStatsCheck.Stop();
             SMAMinerCheck.Stop();
 
-            foreach (Miner m in Globals.Miners)
-            {
-                m.Stop(false);
-                m.IsRunning = false;
-                m.CurrentAlgo = AlgorithmType.NONE;
-                m.CurrentRate = 0;
-            }
+            MinersManager.Instance.StopAllMiners();
 
             SetCPUStats("", 0, 0);
             SetNVIDIAtp21Stats("", 0, 0);

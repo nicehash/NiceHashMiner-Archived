@@ -21,9 +21,6 @@ namespace NiceHashMiner
             // #1 first initialize config
             bool ConfigExist = Config.ConfigFileExist();
             Config.InitializeConfig();
-            // TODO TEMP migration START
-            NewMainConfig.InitializeConfig();
-            // TODO TEMP migration END
             if (Config.ConfigData.LogToFile)
                 Logger.ConfigureWithFile();
 
@@ -51,7 +48,6 @@ namespace NiceHashMiner
             }
             
             Application.Run(new Form_Main());
-            //Application.Run(new FormSettings_New());
         }
 
     }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -180,11 +181,12 @@ namespace NiceHashMiner
             string ResponseFromServer;
             try
             {
-                string ActiveMinersGroup = "";
+                string ActiveMinersGroup = MinersManager.Instance.GetActiveMinersGroup();
                 
-                for (int i = 0; i < Globals.Miners.Length; i++)
-                    if (Globals.Miners[i].IsRunning)
-                        ActiveMinersGroup += Globals.Miners[i].MinerDeviceName + "/";
+                // TODO remove this
+                //for (int i = 0; i < Globals.Miners.Length; i++)
+                //    if (Globals.Miners[i].IsRunning)
+                //        ActiveMinersGroup += Globals.Miners[i].MinerDeviceName + "/";
 
                 if (ActiveMinersGroup.Length > 0)
                     ActiveMinersGroup = ActiveMinersGroup.Remove(ActiveMinersGroup.Length - 1);

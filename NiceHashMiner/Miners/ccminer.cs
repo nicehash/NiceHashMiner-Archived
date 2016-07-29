@@ -16,7 +16,7 @@ namespace NiceHashMiner
 {
     abstract public class ccminer : Miner
     {
-        public ccminer() { }
+        public ccminer(bool queryComputeDevices) : base(queryComputeDevices) { }
 
         public override void Start(AlgorithmType algorithmType, string url, string username)
         {
@@ -38,7 +38,7 @@ namespace NiceHashMiner
                 int dagdev = -1;
                 for (int i = 0; i < CDevs.Count; i++)
                 {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled && !Algo.DisabledDevice[i])
+                    if (EtherDevices[i] != -1 && CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
                     {
                         LastCommandLine += i.ToString() + " ";
                         if (i == DaggerHashimotoGenerateDevice)
@@ -60,7 +60,7 @@ namespace NiceHashMiner
                                   " --devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled && !Algo.DisabledDevice[i])
+                    if (CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
                         LastCommandLine += CDevs[i].ID.ToString() + ",";
 
                 if (LastCommandLine.EndsWith(","))
@@ -175,7 +175,7 @@ namespace NiceHashMiner
             }
         }
 
-        protected void QueryCDevs()
+        protected override void QueryCDevs()
         {
             try
             {
@@ -242,7 +242,7 @@ namespace NiceHashMiner
 
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
-        protected override string BenchmarkCreateCommandLine(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine = "";
 
             if (AlgorithmType.DaggerHashimoto == algorithm.NiceHashID) {

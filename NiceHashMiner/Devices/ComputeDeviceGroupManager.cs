@@ -10,7 +10,7 @@ namespace NiceHashMiner.Devices
     /// For now used only for the settings.
     /// TODO for now we do not detect SM 6.x, NVIDIA6x
     /// </summary>
-    public class ComputeDeviceGroupManager : SingletonTemplate<ComputeDeviceGroupManager>
+    public class ComputeDeviceGroupManager : BaseLazySingleton<ComputeDeviceGroupManager>
     {
         /// <summary>
         /// Use enum types, we could use a list here but keep dict for now
@@ -27,8 +27,15 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        // yea this kinda defeats the purpse, with .NET version update we'll fix this
-        public ComputeDeviceGroupManager()
+        DeviceGroupType[] _gpuGroups = new DeviceGroupType[] {
+            DeviceGroupType.AMD_OpenCL,
+            DeviceGroupType.NVIDIA_2_1,
+            DeviceGroupType.NVIDIA_3_x,
+            DeviceGroupType.NVIDIA_5_x
+        };
+
+
+        protected ComputeDeviceGroupManager()
             : base() {
             // we create our groups
             _groups = new Dictionary<DeviceGroupType, ComputeDeviceGroup>();
@@ -39,12 +46,21 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public int GetGroupCount(DeviceGroupType type) {
+            ComputeDeviceGroup group;
+            if (_groups.TryGetValue(type, out group)) {
+                return group.Count;
+            } 
+            return 0;
+            
+        }
+
         public void AddDevice(ComputeDevice computeDevice) {
             // TODO this is based on the current Miners implementation it is bound to change
             ComputeDeviceGroup selectedGroup = null;
             bool isGetFound = false;
             // check and get group for vendor
-            switch (computeDevice.Vendor)
+            switch (computeDevice.Group)
             {
                 case "NVIDIA5.x":
                     isGetFound = _groups.TryGetValue(DeviceGroupType.NVIDIA_5_x, out selectedGroup);
@@ -59,7 +75,7 @@ namespace NiceHashMiner.Devices
                     isGetFound = _groups.TryGetValue(DeviceGroupType.AMD_OpenCL, out selectedGroup);
                     break;
                 default:
-                    bool isCPU = computeDevice.Vendor.Contains("CPU");
+                    bool isCPU = computeDevice.Group.Contains("CPU");
                     if (isCPU) {
                         isGetFound = _groups.TryGetValue(DeviceGroupType.CPU, out selectedGroup);
                     } else {
@@ -71,7 +87,7 @@ namespace NiceHashMiner.Devices
                 selectedGroup.AddNewDevice(computeDevice);
             }
             else {
-                Helpers.ConsolePrint("ComputeDeviceGroupManager", computeDevice.Vendor + " group not found or null");
+                Helpers.ConsolePrint("ComputeDeviceGroupManager", computeDevice.Group + " group not found or null");
             }
         }
 
@@ -82,12 +98,26 @@ namespace NiceHashMiner.Devices
             return isGetFound && selectedGroup.IsEnabled;
         }
 
+        public void DisableCpuGroup() {
+            _groups[DeviceGroupType.CPU].DisableGroup();
+        }
+        public bool ContainsGPUs {
+            get {
+                foreach (var groupType in _gpuGroups) {
+                    if (_groups[groupType].Count > 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         // group settings hardcoded maybe we won't need this in the future
         public void InitializeGroupSettings() {
             _groupSettings = new Dictionary<string, DeviceGroupSettings>();
             foreach (var device in ComputeDevice.AllAvaliableDevices) {
-                if (_groupSettings.ContainsKey(device.Vendor) == false) {
-                    _groupSettings.Add(device.Vendor, CreateGroupSettings(device.Vendor, device.DeviceGroupType));
+                if (_groupSettings.ContainsKey(device.Group) == false) {
+                    _groupSettings.Add(device.Group, CreateGroupSettings(device.Group, device.DeviceGroupType));
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace NiceHashMiner.Forms.Components {
             set {
                 if (value != null) {
                     _selectedComputeDevice = value;
-                    _settings = ComputeDeviceGroupManager.Instance.GetDeviceGroupSettings(_selectedComputeDevice.Vendor);
+                    _settings = ComputeDeviceGroupManager.Instance.GetDeviceGroupSettings(_selectedComputeDevice.Group);
 
                     SetSelectedDeviceFields();
                 }
@@ -35,7 +35,7 @@ namespace NiceHashMiner.Forms.Components {
             if(_selectedComputeDevice == null) return;
             // TODO translation
             labelSelectedDeviceName.Text = "Name: " + _selectedComputeDevice.Name;
-            labelSelectedDeviceGroup.Text = "Group: " +  _selectedComputeDevice.Vendor;
+            labelSelectedDeviceGroup.Text = "Group: " +  _selectedComputeDevice.Group;
 
             if (_settings == null) return;
 

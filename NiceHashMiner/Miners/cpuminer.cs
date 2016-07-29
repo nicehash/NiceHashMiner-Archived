@@ -10,19 +10,21 @@ using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
-    class cpuminer : Miner
+    public class cpuminer : Miner
     {
         private int Threads;
         private ulong AffinityMask;
         private string CPUMinerPath;
         private string HodlMinerPath;
 
-        public cpuminer(int id, int threads, ulong affinity)
+        public cpuminer(int id, int threads, ulong affinity) : base(true)
         {
             MinerDeviceName = "CPU" + id.ToString();
             APIPort = 4040 + id;
             Threads = threads;
             AffinityMask = affinity;
+
+            SupportedAlgorithms = GroupAlgorithms.CreateDefaultsForGroup(DeviceGroupType.CPU);
 
             // this is the order we check and initialize if automatic
             CPUExtensionType[] detectOrder = new CPUExtensionType[] { CPUExtensionType.AVX2, CPUExtensionType.AVX, CPUExtensionType.SSE2 };
@@ -46,6 +48,13 @@ namespace NiceHashMiner
             }
         }
 
+        // always query CPU
+        protected override bool IsGroupQueryEnabled() {
+            return true;
+        }
+        // querying done in ComputeDeviceQueryManager
+        protected override void QueryCDevs() {
+        }
         
         /// <summary>
         /// InitializeMinerPaths initializes cpuminer paths based on CPUExtensionType.
@@ -150,7 +159,7 @@ namespace NiceHashMiner
         #region Decoupled benchmarking routines
         // new decoupled benchmark, TODO fix the copy paste magic
         // TODO recheck this
-        protected override string BenchmarkCreateCommandLine(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             Path = GetOptimizedMinerPath(algorithm.NiceHashID);
 
             string ret = "--algo=" + algorithm.MinerName +

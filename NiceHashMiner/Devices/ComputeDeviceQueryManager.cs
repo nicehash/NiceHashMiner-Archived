@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner.Devices
 {
@@ -15,10 +16,10 @@ namespace NiceHashMiner.Devices
     /// CPU query stays the same
     /// GPU querying should change
     /// </summary>
-    public class ComputeDeviceQueryManager : SingletonTemplate<ComputeDeviceQueryManager>
+    public class ComputeDeviceQueryManager : BaseLazySingleton<ComputeDeviceQueryManager>
     {
         // change to protected after .NET upgrade
-        public ComputeDeviceQueryManager() { }
+        protected ComputeDeviceQueryManager() { }
 
 
         public int CPUs { get; private set; }
@@ -77,51 +78,41 @@ namespace NiceHashMiner.Devices
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CPUs = 0;
             }
-
-            // TODO this is currently tightly couped with miners, who handle device querying
-            // TODO bound to change
-            Globals.Miners = new Miner[CPUs + 4];
-
+            
             if (CPUs == 1) {
-                Globals.Miners[0] = new cpuminer(0, ThreadsPerCPU, 0);
+                MinersManager.Instance.AddCpuMiner(new cpuminer(0, ThreadsPerCPU, 0), 0, CPUID.GetCPUName().Trim());
             }
             else {
                 for (int i = 0; i < CPUs; i++) {
-                    Globals.Miners[i] = new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask));
+                    MinersManager.Instance.AddCpuMiner(new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask)),
+                        i, CPUID.GetCPUName().Trim());
                 }
             }
         }
 
         private void QueryNVIDIA() {
+            List<ccminer> dump = new List<ccminer>();
             // NVIDIA5x
             showMessageAndStep(International.GetText("form1_loadtext_NVIDIA5X"));
-            Globals.Miners[CPUs] = new ccminer_sp();
+            dump.Add(new ccminer_sp(true));
             // NVIDIA3X
             showMessageAndStep(International.GetText("form1_loadtext_NVIDIA3X"));
-            Globals.Miners[CPUs + 1] = new ccminer_tpruvot();
+            dump.Add(new ccminer_tpruvot(true));
             // NVIDIA2X
             showMessageAndStep(International.GetText("form1_loadtext_NVIDIA2X"));
-            Globals.Miners[CPUs + 2] = new ccminer_tpruvot_sm21();
+            dump.Add(new ccminer_tpruvot_sm21(true));
+            dump = null;
         }
 
         private void QueryAMD() {
             showMessageAndStep(International.GetText("form1_loadtext_AMD"));
-            Globals.Miners[CPUs + 3] = new sgminer();
+            var dump = new sgminer(true);
         }
 
         private void UncheckedCPU() {
             // Auto uncheck CPU if any GPU is found
-            for (int i = 0; i < CPUs; i++)
-            {
-                try
-                {
-                    if ((Globals.Miners[CPUs + 0].CDevs.Count > 0 || Globals.Miners[CPUs + 1].CDevs.Count > 0 || Globals.Miners[CPUs + 2].CDevs.Count > 0 || Globals.Miners[CPUs + 3].CDevs.Count > 0) && i < CPUs)
-                    {
-                        Globals.Miners[i].CDevs[0].Enabled = false;
-                    }
-                }
-                catch { }
-            }
+            var cdgm = ComputeDeviceGroupManager.Instance;
+            if (cdgm.ContainsGPUs) cdgm.DisableCpuGroup();
         }
 
         #region NEW IMPLEMENTATION
@@ -166,8 +157,27 @@ namespace NiceHashMiner.Devices
         }
 
         private void QueryNVIDIA_ccminers() {
+            string[] ccminerPaths = new string[] {
+                MinerPaths.ccminer_decred,
+                MinerPaths.ccminer_nanashi_lyra2rev2,
+                MinerPaths.ccminer_neoscrypt,
+                MinerPaths.ccminer_sp,
+                MinerPaths.ccminer_tpruvot,
+            };
+            Dictionary<string, List<ComputeDevice>> QueryComputeDevices;
+
             // TODO rethnk this it makes sense to make one class to query and a miner factory that returns the correct miner for the device
         }
+
+        private List<ComputeDevice> ccminerQueryDev(string ccminerPath) {
+            List<ComputeDevice> retDevices = new List<ComputeDevice>();
+
+
+
+            return retDevices;
+        }
+
+
 
         #endregion // NVIDIA ccminer UNUSED
 

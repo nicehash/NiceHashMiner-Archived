@@ -30,8 +30,39 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        public void SetInputModeDoubleOnly() {
+            textBox.KeyPress += new KeyPressEventHandler(textBoxDoubleOnly_KeyPress);
+        }
+
+        public void SetInputModeIntOnly() {
+            textBox.KeyPress += new KeyPressEventHandler(textBoxIntOnly_KeyPress);
+        }
+
+        public void SetOnTextChanged(EventHandler textChanged) {
+            textBox.TextChanged += textChanged;
+        }
+
         public Field() {
             InitializeComponent();
+        }
+
+        private void textBoxDoubleOnly_KeyPress(object sender, KeyPressEventArgs e) {
+            if (!char.IsControl(e.KeyChar)
+                && !char.IsDigit(e.KeyChar)
+                && (e.KeyChar != '.')) {
+                e.Handled = true;
+            }
+
+            // only allow one decimal point
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1)) {
+                e.Handled = true;
+            }
+        }
+
+        private void textBoxIntOnly_KeyPress(object sender, KeyPressEventArgs e) {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) {
+                e.Handled = true;
+            }
         }
     }
 }

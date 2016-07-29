@@ -10,7 +10,8 @@ namespace NiceHashMiner
 {
     class ccminer_tpruvot_sm21 : ccminer
     {
-        public ccminer_tpruvot_sm21() : base()
+        public ccminer_tpruvot_sm21(bool queryComputeDevices)
+            : base(queryComputeDevices)
         {
             MinerDeviceName = "NVIDIA2.1";
             Path = MinerPaths.ccminer_tpruvot;
@@ -18,8 +19,11 @@ namespace NiceHashMiner
 
             SupportedAlgorithms = GroupAlgorithms.CreateDefaultsForGroup(DeviceGroupType.NVIDIA_2_1);
 
-            if (!Config.ConfigData.DisableDetectionNVidia2X)
-                QueryCDevs();
+            TryQueryCDevs();
+        }
+
+        protected override bool IsGroupQueryEnabled() {
+            return !Config.ConfigData.DisableDetectionNVidia2X;
         }
 
         protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {

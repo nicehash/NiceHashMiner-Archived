@@ -26,7 +26,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
-            this.benchmarkAlgorithmSettup1 = new NiceHashMiner.Forms.Components.BenchmarkAlgorithmSettup();
+            this.benchmarkAlgorithmSettup1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
             this.devicesListView1 = new NiceHashMiner.Forms.Components.DevicesListView();
@@ -118,6 +118,7 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "FormBenchmark_New";
             this.Text = "FormBenchmark_New";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBenchmark_New_FormClosing);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -128,7 +129,7 @@
 
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private Components.BenchmarkAlgorithmSettup benchmarkAlgorithmSettup1;
+        private Components.AlgorithmSettingsControl benchmarkAlgorithmSettup1;
         private Components.AlgorithmsListView algorithmsListView1;
         private Components.BenchmarkOptions benchmarkOptions1;
         private Components.DevicesListView devicesListView1;

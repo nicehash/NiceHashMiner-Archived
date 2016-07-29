@@ -6,16 +6,17 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Devices
 {
+    [Serializable]
     public class ComputeDevice
     {
         readonly public int ID;
-        readonly public string Vendor;
+        readonly public string Group;
         readonly public string Name;
         public bool Enabled;
         //TODO now we have a cyclic dependancy, redo and rethink this in the future
         // the miner we dont want to serialize
-        [JsonIgnore]
-        readonly public Miner Miner;
+        //[JsonIgnore]
+        //readonly public Miner Miner;
         [JsonIgnore]
         readonly public DeviceGroupType DeviceGroupType;
 
@@ -23,14 +24,14 @@ namespace NiceHashMiner.Devices
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
         readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
 
-        public ComputeDevice(int id, string vendor, string name, Miner miner, bool addToGlobalList = false, bool enabled = true)
+        public ComputeDevice(int id, string group, string name, Miner miner, bool addToGlobalList = false, bool enabled = true)
         {
             ID = id;
-            Vendor = vendor;
+            Group = group;
             Name = name;
             Enabled = enabled;
             // TODO temp solution
-            Miner = miner;
+            //Miner = miner;
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -49,7 +50,7 @@ namespace NiceHashMiner.Devices
                 }
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
-                DeviceGroupType = GroupNames.GetType(Vendor);
+                DeviceGroupType = GroupNames.GetType(Group);
             }
             
         }

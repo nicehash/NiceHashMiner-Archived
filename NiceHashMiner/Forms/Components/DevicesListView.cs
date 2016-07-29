@@ -20,7 +20,7 @@ namespace NiceHashMiner.Forms.Components {
         public void SetComputeDevices(List<ComputeDevice> computeDevices) {
             foreach (var computeDevice in computeDevices) {
                 ListViewItem lvi = new ListViewItem();
-                lvi.SubItems.Add(computeDevice.Vendor);
+                lvi.SubItems.Add(computeDevice.Group);
                 lvi.SubItems.Add(computeDevice.Name);
                 lvi.Checked = computeDevice.Enabled;
                 lvi.Tag = computeDevice;

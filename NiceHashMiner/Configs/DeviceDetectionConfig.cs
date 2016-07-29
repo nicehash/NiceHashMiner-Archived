@@ -7,6 +7,8 @@ namespace NiceHashMiner.Configs
     /// <summary>
     /// DeviceDetectionConfig is used to enable/disable detection of certain GPU type devices 
     /// </summary>
+    /// 
+    [Serializable]
     public class DeviceDetectionConfig
     {
         public bool DisableDetectionNVidia5X { get; set; }

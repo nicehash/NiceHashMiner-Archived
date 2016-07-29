@@ -59,7 +59,10 @@ namespace NiceHashMiner
         protected NiceHashProcess ethminerProcess;
         protected ethminerAPI ethminerLink;
 
-        public Miner()
+        private bool QueryComputeDevices;
+
+        // queryComputeDevices is a quickfix to decouple device querying, TODO move to dev query logic
+        public Miner(bool queryComputeDevices)
         {
             CDevs = new List<ComputeDevice>();
 
@@ -73,6 +76,19 @@ namespace NiceHashMiner
             NotProfitable = true;
             IsRunning = false;
             PreviousTotalMH = 0.0;
+
+            QueryComputeDevices = queryComputeDevices;
+
+            
+        }
+
+        abstract protected void QueryCDevs();
+        abstract protected bool IsGroupQueryEnabled();
+
+        protected void TryQueryCDevs() {
+            if (QueryComputeDevices && IsGroupQueryEnabled()) {
+                QueryCDevs();
+            }
         }
 
         /// <summary>
@@ -135,12 +151,12 @@ namespace NiceHashMiner
 
         Algorithm BenchmarkAlgorithm = null;
 
-        abstract protected string BenchmarkCreateCommandLine(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time);
+        abstract protected string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time);
 
         // The benchmark config and algorithm must guarantee that they are compatible with miner
         // we guarantee algorithm is supported
         // we will not have empty benchmark configs, all benchmark configs will have device list
-        virtual public void BenchmarkStart(BenchmarkConfig benchmarkConfig, Algorithm algorithm, int time, BenchmarkComplete oncomplete, object tag) {
+        virtual public void BenchmarkStart(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time, BenchmarkComplete oncomplete, object tag) {
             OnBenchmarkComplete = oncomplete;
 
             BenchmarkTag = tag;
@@ -706,19 +722,20 @@ namespace NiceHashMiner
             return count;
         }
 
+        // TODO replace this
         public void GetDisabledDevicePerAlgo()
         {
             foreach (var key in SupportedAlgorithms.Keys)
             {
-                SupportedAlgorithms[key].DisabledDevice = new bool[CDevs.Count];
+                //SupportedAlgorithms[key].DisabledDevice = new bool[CDevs.Count];
                 for (int j = 0; j < CDevs.Count; j++)
                 {
-                    SupportedAlgorithms[key].DisabledDevice[j] = false;
+                    //SupportedAlgorithms[key].DisabledDevice[j] = false;
                     if ((CDevs[j].Name.Contains("750") && CDevs[j].Name.Contains("Ti")) &&
                         SupportedAlgorithms[key].NiceHashID == AlgorithmType.DaggerHashimoto)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
-                        SupportedAlgorithms[key].DisabledDevice[j] = true;
+                        //SupportedAlgorithms[key].DisabledDevice[j] = true;
                     }
                 }
             }
@@ -730,7 +747,7 @@ namespace NiceHashMiner
 
             for (int i = 0; i < CDevs.Count; i++)
             {
-                if (CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i])
+                if (CDevs[i].Enabled /*&& !SupportedAlgorithms[algorithmType].DisabledDevice[i]*/)
                 {
                     if (SupportedAlgorithms[algorithmType].NiceHashID == AlgorithmType.DaggerHashimoto)
                     {

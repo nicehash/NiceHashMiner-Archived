@@ -7,25 +7,27 @@ using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Configs
 {
-    public class BenchmarkConfig {
+    [Serializable]
+    public class DeviceBenchmarkConfig : BaseConfigFile<DeviceBenchmarkConfig> {
         public string ID { get; private set; }
         public DeviceGroupType DeviceGroupType { get; private set; }
-        public string DeviceGroupName { get; private set; }
+        public string DeviceName { get; private set; }
         public int[] DevicesIDs { get; private set; }
         // TODO handle defaults for this
         public string ExtraLaunchParameters { get; private set; }
+        public int TimeLimit { get; private set; }
         public Dictionary<AlgorithmType, Algorithm> BenchmarkSpeeds { get; set; }
         
-        // quality check variables
-        public BenchmarkPerformanceType PerformanceType { get; private set; }
-        public int TimeLimit { get; private set; }
 
-        public BenchmarkConfig(DeviceGroupType deviceGroupType,
+        [field: NonSerialized]
+        readonly public static string BENCHMARK_PREFIX = "benchmark_";
+
+        public DeviceBenchmarkConfig(DeviceGroupType deviceGroupType,
             string deviceGroupName, int[] devicesIDs,
             Dictionary<AlgorithmType, Algorithm> benchmarkSpeeds = null) {
 
             DeviceGroupType = deviceGroupType;
-            DeviceGroupName = deviceGroupName;
+            DeviceName = deviceGroupName;
             DevicesIDs = devicesIDs;
             if (benchmarkSpeeds != null) {
                 BenchmarkSpeeds = benchmarkSpeeds;
@@ -53,7 +55,20 @@ namespace NiceHashMiner.Configs
         }
 
         private string GetId() {
-            return GetId(DeviceGroupType, DeviceGroupName, DevicesIDs);
+            return GetId(DeviceGroupType, DeviceName, DevicesIDs);
         }
+
+        protected override void InitializePaths() {
+            // make device name
+            char[] invalid = new char[] { '<', '>', ':', '"', '/', '\\', '|', '?', '*' };
+            string fileName = BENCHMARK_PREFIX + DeviceName.Replace(' ', '_');
+            foreach (var c in invalid) {
+                fileName = fileName.Replace(c.ToString(), String.Empty);
+            }
+            const string extension = ".json";
+            FilePath = fileName + extension;
+            FilePathOld = fileName + "_old" + extension;
+        }
+        protected override void InitializeObject() { }
     }
 }

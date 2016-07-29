@@ -5,10 +5,10 @@ using System.Text;
 
 namespace NiceHashMiner.Configs {
     
-    public class BenchmarkConfigManager : SingletonTemplate<BenchmarkConfigManager> {
+    public class BenchmarkConfigManager : BaseLazySingleton<BenchmarkConfigManager> {
 
-        private Dictionary<string, BenchmarkConfig> _benchmarkConfigs;
-        public Dictionary<string, BenchmarkConfig> BenchmarkConfigs {
+        private Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigs;
+        public Dictionary<string, DeviceBenchmarkConfig> BenchmarkConfigs {
             get { return _benchmarkConfigs; }
             set {
                 if (value != null) {
@@ -17,14 +17,14 @@ namespace NiceHashMiner.Configs {
             }
         }
 
-        public BenchmarkConfigManager() {
-            _benchmarkConfigs = new Dictionary<string, BenchmarkConfig>();
+        protected BenchmarkConfigManager() {
+            _benchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
         }
 
-        public BenchmarkConfig GetConfig(string hashKey) {
-            BenchmarkConfig retConfig = null;
+        public DeviceBenchmarkConfig GetConfig(string deviceName) {
+            DeviceBenchmarkConfig retConfig = null;
 
-            if (_benchmarkConfigs.TryGetValue(hashKey, out retConfig) == false) {
+            if (_benchmarkConfigs.TryGetValue(deviceName, out retConfig) == false) {
                 // TODO for now do nothing
                 retConfig = null;
             }
@@ -32,13 +32,12 @@ namespace NiceHashMiner.Configs {
             return retConfig;
         }
 
-        public BenchmarkConfig GetConfig(DeviceGroupType deviceGroupType,
-            string deviceGroupName, int[] devicesIDs) {
-            string hashKey = BenchmarkConfig.GetId(deviceGroupType, deviceGroupName, devicesIDs);
-            BenchmarkConfig retConfig = GetConfig(hashKey);
+        public DeviceBenchmarkConfig GetConfig(DeviceGroupType deviceGroupType,
+            string deviceName, int[] devicesIDs) {
+            DeviceBenchmarkConfig retConfig = GetConfig(deviceName);
             if (retConfig == null) {
-                retConfig = new BenchmarkConfig(deviceGroupType, deviceGroupName, devicesIDs, null);
-                _benchmarkConfigs.Add(hashKey, retConfig);
+                retConfig = new DeviceBenchmarkConfig(deviceGroupType, deviceName, devicesIDs, null);
+                _benchmarkConfigs.Add(deviceName, retConfig);
             }
 
             return retConfig;

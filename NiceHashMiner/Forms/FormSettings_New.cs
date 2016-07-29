@@ -13,8 +13,16 @@ namespace NiceHashMiner.Forms {
 
         bool ShowUniqueDeviceList = true;
 
+        // deep copy initial state if we want to discard changes
+        private GeneralConfig _generalConfigBackup;
+        private Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigsBackup;
+
+
         public FormSettings_New() {
             InitializeComponent();
+
+            _benchmarkConfigsBackup = MemoryHelper.DeepClone(ConfigManager.Instance.BenchmarkConfigs);
+            _generalConfigBackup = MemoryHelper.DeepClone(ConfigManager.Instance.GeneralConfig);
 
             // initialize device lists, unique or every single one
             if (ShowUniqueDeviceList) {
@@ -23,7 +31,13 @@ namespace NiceHashMiner.Forms {
                 devicesListView1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
             }
 
+            // initialization calls 
             InitializeCallbacks();
+            InitializeBenchmarkLimitSettings();
+            // link algorithm list with algorithm settings control
+            algorithmSettingsControl1.Enabled = false;
+            algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
+
         }
 
         private ComputeDevice GetCurrentlySelectedComputeDevice(int index) {
@@ -35,17 +49,28 @@ namespace NiceHashMiner.Forms {
             }
         }
 
-        #region Form Callbacks
-
+        #region Initializations
         private void InitializeCallbacks() {
             devicesListView1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
         }
+        private void InitializeBenchmarkLimitSettings() {
+            // set referances
+            benchmarkLimitControlCPU.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.CPU;
+            benchmarkLimitControlNVIDIA.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.NVIDIA;
+            benchmarkLimitControlAMD.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.AMD;
+        }
+
+        #endregion // Initializations
+
+
+        #region Form Callbacks
 
         private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
             // check if device settings enabled
             if (deviceSettingsControl1.Enabled == false) {
                 deviceSettingsControl1.Enabled = true;
             }
+            algorithmSettingsControl1.Deselect();
             // show algorithms
             var selectedComputeDevice = GetCurrentlySelectedComputeDevice(e.ItemIndex);
             deviceSettingsControl1.SelectedComputeDevice = selectedComputeDevice;
@@ -57,6 +82,10 @@ namespace NiceHashMiner.Forms {
                 );
         }
 
+
+        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e) {
+            ConfigManager.Instance.GeneralConfig.Commit();
+        }
 
         #endregion Form Callbacks
 

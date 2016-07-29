@@ -186,9 +186,6 @@ namespace NiceHashMiner.Configs
             ConfigData.MinIdleSeconds = 60;
             ConfigData.DisplayCurrency = "USD";
 
-            // TODO TEMP migration START
-            NewMainConfig.SetDefaults();
-            // TODO TEMP migration END
         }
 
         public static void Commit()
@@ -196,60 +193,57 @@ namespace NiceHashMiner.Configs
             try { File.WriteAllText("config.json", JsonConvert.SerializeObject(ConfigData, Formatting.Indented)); }
             catch { }
 
-            // TODO TEMP migration START
-            NewMainConfig.Commit();
-            // TODO TEMP migration END
         }
 
         public static void RebuildGroups()
         {
-            // rebuild config groups
-            Group[] CG = new Group[Globals.Miners.Length];
-            for (int i = 0; i < Globals.Miners.Length; i++)
-            {
-                CG[i] = new Group();
-                CG[i].Name = Globals.Miners[i].MinerDeviceName;
-                CG[i].APIBindPort = Globals.Miners[i].APIPort;
-                CG[i].ExtraLaunchParameters = Globals.Miners[i].ExtraLaunchParameters;
-                CG[i].UsePassword = Globals.Miners[i].UsePassword;
-                CG[i].MinimumProfit = Globals.Miners[i].MinimumProfit;
-                CG[i].DaggerHashimotoGenerateDevice = Globals.Miners[i].DaggerHashimotoGenerateDevice;
-                // scope stuff here for PORTED
-                {
-                    // get keys
-                    var CurrentMinerKeys = Globals.Miners[i].SupportedAlgorithms.Keys;
-                    CG[i].Algorithms = new Algo[CurrentMinerKeys.Count];
-                    int k = 0;
-                    foreach (AlgorithmType algType in CurrentMinerKeys)
-                    {
-                        Algorithm curAlgo = Globals.Miners[i].SupportedAlgorithms[algType];
-                        // for ported START
-                        CG[i].Algorithms[k] = new Algo();
-                        CG[i].Algorithms[k].Name = curAlgo.NiceHashName;
-                        CG[i].Algorithms[k].BenchmarkSpeed = curAlgo.BenchmarkSpeed;
-                        CG[i].Algorithms[k].ExtraLaunchParameters = curAlgo.ExtraLaunchParameters;
-                        CG[i].Algorithms[k].UsePassword = curAlgo.UsePassword;
-                        CG[i].Algorithms[k].Skip = curAlgo.Skip;
+            //// rebuild config groups
+            //Group[] CG = new Group[Globals.Miners.Length];
+            //for (int i = 0; i < Globals.Miners.Length; i++)
+            //{
+            //    CG[i] = new Group();
+            //    CG[i].Name = Globals.Miners[i].MinerDeviceName;
+            //    CG[i].APIBindPort = Globals.Miners[i].APIPort;
+            //    CG[i].ExtraLaunchParameters = Globals.Miners[i].ExtraLaunchParameters;
+            //    CG[i].UsePassword = Globals.Miners[i].UsePassword;
+            //    CG[i].MinimumProfit = Globals.Miners[i].MinimumProfit;
+            //    CG[i].DaggerHashimotoGenerateDevice = Globals.Miners[i].DaggerHashimotoGenerateDevice;
+            //    // scope stuff here for PORTED
+            //    {
+            //        // get keys
+            //        var CurrentMinerKeys = Globals.Miners[i].SupportedAlgorithms.Keys;
+            //        CG[i].Algorithms = new Algo[CurrentMinerKeys.Count];
+            //        int k = 0;
+            //        foreach (AlgorithmType algType in CurrentMinerKeys)
+            //        {
+            //            Algorithm curAlgo = Globals.Miners[i].SupportedAlgorithms[algType];
+            //            // for ported START
+            //            CG[i].Algorithms[k] = new Algo();
+            //            CG[i].Algorithms[k].Name = curAlgo.NiceHashName;
+            //            CG[i].Algorithms[k].BenchmarkSpeed = curAlgo.BenchmarkSpeed;
+            //            CG[i].Algorithms[k].ExtraLaunchParameters = curAlgo.ExtraLaunchParameters;
+            //            CG[i].Algorithms[k].UsePassword = curAlgo.UsePassword;
+            //            CG[i].Algorithms[k].Skip = curAlgo.Skip;
 
-                        CG[i].Algorithms[k].DisabledDevices = new bool[Globals.Miners[i].CDevs.Count];
-                        for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
-                        {
-                            CG[i].Algorithms[k].DisabledDevices[j] = curAlgo.DisabledDevice[j];
-                        }
-                        // for ported END
-                        // increment k
-                        ++k;
-                    }
-                }
-                List<int> DD = new List<int>();
-                for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++)
-                {
-                    if (!Globals.Miners[i].CDevs[k].Enabled)
-                        DD.Add(k);
-                }
-                CG[i].DisabledDevices = DD.ToArray();
-            }
-            ConfigData.Groups = CG;
+            //            CG[i].Algorithms[k].DisabledDevices = new bool[Globals.Miners[i].CDevs.Count];
+            //            for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
+            //            {
+            //                CG[i].Algorithms[k].DisabledDevices[j] = curAlgo.DisabledDevice[j];
+            //            }
+            //            // for ported END
+            //            // increment k
+            //            ++k;
+            //        }
+            //    }
+            //    List<int> DD = new List<int>();
+            //    for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++)
+            //    {
+            //        if (!Globals.Miners[i].CDevs[k].Enabled)
+            //            DD.Add(k);
+            //    }
+            //    CG[i].DisabledDevices = DD.ToArray();
+            //}
+            //ConfigData.Groups = CG;
             Config.Commit();
         }
 
@@ -265,75 +259,75 @@ namespace NiceHashMiner.Configs
 
         // Call this after miners are initialized
         public static void SetComputeDeviceConfig() {
-            for (int i = 0; i < Globals.Miners.Length; i++) {
-                for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++) {
-                    ComputeDevice D = Globals.Miners[i].CDevs[k];
-                    if (Config.ConfigData.Groups.Length > i) {
-                        D.Enabled = true;
-                        for (int z = 0; z < Config.ConfigData.Groups[i].DisabledDevices.Length; z++) {
-                            if (Config.ConfigData.Groups[i].DisabledDevices[z] == k) {
-                                D.Enabled = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            //for (int i = 0; i < Globals.Miners.Length; i++) {
+            //    for (int k = 0; k < Globals.Miners[i].CDevs.Count; k++) {
+            //        ComputeDevice D = Globals.Miners[i].CDevs[k];
+            //        if (Config.ConfigData.Groups.Length > i) {
+            //            D.Enabled = true;
+            //            for (int z = 0; z < Config.ConfigData.Groups[i].DisabledDevices.Length; z++) {
+            //                if (Config.ConfigData.Groups[i].DisabledDevices[z] == k) {
+            //                    D.Enabled = false;
+            //                    break;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         public static void SetGroupAlgorithmSettup() {
-            // get algorithm settup from settings
-            for (int i = 0; i < Globals.Miners.Length; i++) {
-                if (Config.ConfigData.Groups.Length > i) {
-                    Globals.Miners[i].ExtraLaunchParameters = Config.ConfigData.Groups[i].ExtraLaunchParameters;
-                    Globals.Miners[i].UsePassword = Config.ConfigData.Groups[i].UsePassword;
-                    Globals.Miners[i].MinimumProfit = Config.ConfigData.Groups[i].MinimumProfit;
-                    Globals.Miners[i].DaggerHashimotoGenerateDevice = Config.ConfigData.Groups[i].DaggerHashimotoGenerateDevice;
-                    if (Config.ConfigData.Groups[i].APIBindPort > 0)
-                        Globals.Miners[i].APIPort = Config.ConfigData.Groups[i].APIBindPort;
+            //// get algorithm settup from settings
+            //for (int i = 0; i < Globals.Miners.Length; i++) {
+            //    if (Config.ConfigData.Groups.Length > i) {
+            //        Globals.Miners[i].ExtraLaunchParameters = Config.ConfigData.Groups[i].ExtraLaunchParameters;
+            //        Globals.Miners[i].UsePassword = Config.ConfigData.Groups[i].UsePassword;
+            //        Globals.Miners[i].MinimumProfit = Config.ConfigData.Groups[i].MinimumProfit;
+            //        Globals.Miners[i].DaggerHashimotoGenerateDevice = Config.ConfigData.Groups[i].DaggerHashimotoGenerateDevice;
+            //        if (Config.ConfigData.Groups[i].APIBindPort > 0)
+            //            Globals.Miners[i].APIPort = Config.ConfigData.Groups[i].APIBindPort;
 
-                    // Dictionary order is non deterministic, so find a way to merge this crap
-                    bool isSameSize = Config.ConfigData.Groups[i].Algorithms.Length == Globals.Miners[i].SupportedAlgorithms.Count;
-                    if (isSameSize == false) Helpers.ConsolePrint("Miner Algos settup", "SIZE IS NOT SAME");
-                    foreach (var key in Globals.Miners[i].SupportedAlgorithms.Keys) {
-                        var currentAlg = Globals.Miners[i].SupportedAlgorithms[key];
-                        Algo configAlgo = null;
-                        // find configAlgo
-                        for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length; z++) {
-                            Algo compareConfigAlgo = Config.ConfigData.Groups[i].Algorithms[z];
-                            if (currentAlg.NiceHashName == compareConfigAlgo.Name) {
-                                configAlgo = compareConfigAlgo;
-                                break;
-                            }
-                        }
-                        if (configAlgo != null) {
-                            currentAlg.BenchmarkSpeed = configAlgo.BenchmarkSpeed;
-                            currentAlg.ExtraLaunchParameters = configAlgo.ExtraLaunchParameters;
-                            currentAlg.UsePassword = configAlgo.UsePassword;
-                            currentAlg.Skip = configAlgo.Skip;
+            //        // Dictionary order is non deterministic, so find a way to merge this crap
+            //        bool isSameSize = Config.ConfigData.Groups[i].Algorithms.Length == Globals.Miners[i].SupportedAlgorithms.Count;
+            //        if (isSameSize == false) Helpers.ConsolePrint("Miner Algos settup", "SIZE IS NOT SAME");
+            //        foreach (var key in Globals.Miners[i].SupportedAlgorithms.Keys) {
+            //            var currentAlg = Globals.Miners[i].SupportedAlgorithms[key];
+            //            Algo configAlgo = null;
+            //            // find configAlgo
+            //            for (int z = 0; z < Config.ConfigData.Groups[i].Algorithms.Length; z++) {
+            //                Algo compareConfigAlgo = Config.ConfigData.Groups[i].Algorithms[z];
+            //                if (currentAlg.NiceHashName == compareConfigAlgo.Name) {
+            //                    configAlgo = compareConfigAlgo;
+            //                    break;
+            //                }
+            //            }
+            //            if (configAlgo != null) {
+            //                currentAlg.BenchmarkSpeed = configAlgo.BenchmarkSpeed;
+            //                currentAlg.ExtraLaunchParameters = configAlgo.ExtraLaunchParameters;
+            //                currentAlg.UsePassword = configAlgo.UsePassword;
+            //                currentAlg.Skip = configAlgo.Skip;
 
-                            currentAlg.DisabledDevice = new bool[Globals.Miners[i].CDevs.Count];
-                            if (configAlgo.DisabledDevices != null) {
-                                if (configAlgo.DisabledDevices.Length < Globals.Miners[i].CDevs.Count) {
-                                    for (int j = 0; j < configAlgo.DisabledDevices.Length; j++)
-                                        currentAlg.DisabledDevice[j] = configAlgo.DisabledDevices[j];
-                                    for (int j = configAlgo.DisabledDevices.Length; j < Globals.Miners[i].CDevs.Count; j++)
-                                        currentAlg.DisabledDevice[j] = false;
-                                } else {
-                                    for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
-                                        currentAlg.DisabledDevice[j] = configAlgo.DisabledDevices[j];
-                                }
-                            } else {
-                                Globals.Miners[i].GetDisabledDevicePerAlgo();
-                            }
-                        } else {
-                            Helpers.ConsolePrint("Miner Algos settup", "DIDN'T FIND configAlgo!!!");
-                        }
-                    }
-                } else {
-                    Globals.Miners[i].GetDisabledDevicePerAlgo();
-                }
-            }
+            //                //currentAlg.DisabledDevice = new bool[Globals.Miners[i].CDevs.Count];
+            //                //if (configAlgo.DisabledDevices != null) {
+            //                //    if (configAlgo.DisabledDevices.Length < Globals.Miners[i].CDevs.Count) {
+            //                //        for (int j = 0; j < configAlgo.DisabledDevices.Length; j++)
+            //                //            currentAlg.DisabledDevice[j] = configAlgo.DisabledDevices[j];
+            //                //        for (int j = configAlgo.DisabledDevices.Length; j < Globals.Miners[i].CDevs.Count; j++)
+            //                //            currentAlg.DisabledDevice[j] = false;
+            //                //    } else {
+            //                //        for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
+            //                //            currentAlg.DisabledDevice[j] = configAlgo.DisabledDevices[j];
+            //                //    }
+            //                //} else {
+            //                //    Globals.Miners[i].GetDisabledDevicePerAlgo();
+            //                //}
+            //            } else {
+            //                Helpers.ConsolePrint("Miner Algos settup", "DIDN'T FIND configAlgo!!!");
+            //            }
+            //        }
+            //    } else {
+            //        Globals.Miners[i].GetDisabledDevicePerAlgo();
+            //    }
+            //}
         }
 
     }

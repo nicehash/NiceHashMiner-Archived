@@ -39,10 +39,10 @@ namespace NiceHashMiner
             // #new way // # TODO CPU hangs up NullReference Exception (old implementation same issue)
             foreach (var computeDevice in ComputeDevice.AllAvaliableDevices)
             {
-                ListViewItem lvi = new ListViewItem(computeDevice.Vendor);
+                ListViewItem lvi = new ListViewItem(computeDevice.Group);
                 lvi.SubItems.Add(computeDevice.Name);
                 lvi.SubItems.Add(computeDevice.ID.ToString());
-                lvi.Tag = computeDevice.Miner;
+                //lvi.Tag = computeDevice.Miner;
                 DevicesListView.Items.Add(lvi);
             }
         }

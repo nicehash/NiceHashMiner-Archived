@@ -18,7 +18,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void SettupDevicesTab() {
-            List<BenchmarkConfig> benchmarkConfigs = new List<BenchmarkConfig>();
+            List<DeviceBenchmarkConfig> benchmarkConfigs = new List<DeviceBenchmarkConfig>();
             foreach (var CDev in ComputeDevice.AllAvaliableDevices) {
                 var benchConfig = BenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name, new int[] { CDev.ID });
 
@@ -29,7 +29,6 @@ namespace NiceHashMiner.Forms {
 
             algorithmsListView1.SetAlgorithms(benchmarkConfigs);
             algorithmsListView1.ComunicationInterface = benchmarkAlgorithmSettup1;
-            algorithmsListView1.SetSetupComplete();
         }
 
         private void button1_Click(object sender, EventArgs e) {
@@ -38,6 +37,10 @@ namespace NiceHashMiner.Forms {
             benchmarkAlgorithmSettup1.Enabled = false;
             benchmarkOptions1.Enabled = false;
             algorithmsListView1.testMe();
+        }
+
+        private void FormBenchmark_New_FormClosing(object sender, FormClosingEventArgs e) {
+            ConfigManager.Instance.CommitBenchmarks();
         }
 
     }

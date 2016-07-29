@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NiceHashMiner</RootNamespace>
     <AssemblyName>NiceHashMiner</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -48,6 +49,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
@@ -72,13 +74,15 @@
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmNiceHashNames.cs" />
-    <Compile Include="Configs\BenchmarkConfig.cs" />
+    <Compile Include="BaseLazySingleton.cs" />
+    <Compile Include="Configs\DeviceBenchmarkConfig.cs" />
     <Compile Include="Configs\BenchmarkConfigManager.cs" />
     <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
-    <Compile Include="Configs\ComputeDevicesSettup.cs" />
+    <Compile Include="Configs\BaseConfigFile.cs" />
+    <Compile Include="Configs\ConfigManager.cs" />
     <Compile Include="Configs\DebugSettingsConfig.cs" />
     <Compile Include="Configs\DeviceDetectionConfig.cs" />
-    <Compile Include="Configs\NewMainConfig.cs" />
+    <Compile Include="Configs\GeneralConfig.cs" />
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
@@ -103,11 +107,17 @@
     <Compile Include="Forms\Components\AmdSpecificSettings.Designer.cs">
       <DependentUpon>AmdSpecificSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\BenchmarkAlgorithmSettup.cs">
+    <Compile Include="Forms\Components\AlgorithmSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Components\BenchmarkAlgorithmSettup.Designer.cs">
-      <DependentUpon>BenchmarkAlgorithmSettup.cs</DependentUpon>
+    <Compile Include="Forms\Components\AlgorithmSettingsControl.Designer.cs">
+      <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\BenchmarkLimitControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\BenchmarkLimitControl.Designer.cs">
+      <DependentUpon>BenchmarkLimitControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Components\BenchmarkOptions.cs">
       <SubType>UserControl</SubType>
@@ -157,18 +167,14 @@
     <Compile Include="Forms\Form_ChooseLanguage.Designer.cs">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Settings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Settings.Designer.cs">
-      <DependentUpon>Form_Settings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="International.cs" />
     <Compile Include="Devices\ComputeDeviceGroup.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
+    <Compile Include="MemoryHelper.cs" />
     <Compile Include="Miners\MinerPaths.cs" />
+    <Compile Include="Miners\MinersManager.cs" />
     <Compile Include="NiceHashProcess.cs" />
     <Compile Include="Forms\SubmitResultDialog.cs">
       <SubType>Form</SubType>
@@ -199,12 +205,6 @@
     <Compile Include="Forms\Form_Main.Designer.cs">
       <DependentUpon>Form_Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Benchmark.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Benchmark.Designer.cs">
-      <DependentUpon>Form_Benchmark.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Form_Loading.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -223,7 +223,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Miners\sgminer.cs" />
-    <Compile Include="SingletonTemplate.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
     <Compile Include="Utils\DictionaryUtil.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
@@ -232,8 +231,11 @@
     <EmbeddedResource Include="Forms\Components\AmdSpecificSettings.resx">
       <DependentUpon>AmdSpecificSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\BenchmarkAlgorithmSettup.resx">
-      <DependentUpon>BenchmarkAlgorithmSettup.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
+      <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\BenchmarkLimitControl.resx">
+      <DependentUpon>BenchmarkLimitControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
@@ -259,9 +261,6 @@
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Settings.resx">
-      <DependentUpon>Form_Settings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubmitResultDialog.resx">
       <DependentUpon>SubmitResultDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -270,9 +269,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Benchmark.resx">
-      <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Loading.resx">
       <DependentUpon>Form_Loading.cs</DependentUpon>
