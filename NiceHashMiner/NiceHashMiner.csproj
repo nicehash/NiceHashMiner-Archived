@@ -169,6 +169,7 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
+    <Compile Include="Interfaces\IPathsProperties.cs" />
     <Compile Include="International.cs" />
     <Compile Include="Devices\ComputeDeviceGroup.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />

@@ -1,4 +1,6 @@
-﻿using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,8 +56,8 @@ namespace NiceHashMiner.Miners {
         public string GetActiveMinersGroup() {
             string ActiveMinersGroup = "";
 
-            foreach (var kp in _allMiners) {
-                Miner m = kp.Value;
+            foreach (var kvp in _allMiners) {
+                Miner m = kvp.Value;
                 if (m.IsRunning) {
                     ActiveMinersGroup += m.MinerDeviceName + "/";
                 }
@@ -86,7 +88,49 @@ namespace NiceHashMiner.Miners {
             return null;
         }
 
-        
+        public double GetTotalRate() {
+            double TotalRate = 0;
+            // TODO 
+            foreach (var kvp in _allMiners) {
+                TotalRate += kvp.Value.CurrentRate;
+            }
+
+            return TotalRate;
+        }
+
+        /// <summary>
+        /// SwichMostProfitable should check the best combination for most profit.
+        /// #1 Calculate profit for each suported algorithm per single device.
+        /// #2 Calculate profit for each supported algorithm per device group.
+        /// 
+        /// #3 Device groups are CPU, AMD_OpenCL and NVIDIA CUDA SM.x.x.
+        /// NVIDIA SMx.x should be paired separately except for daggerhashimoto.
+        /// </summary>
+        /// <param name="NiceHashData"></param>
+        public void SwichMostProfitable(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
+            // TODO maybe allocate this only once
+            Dictionary<string, Dictionary<AlgorithmType, double>> perDeviceProfit = new Dictionary<string, Dictionary<AlgorithmType, double>>();
+            // calculate per device profit
+            foreach (var cdev in ComputeDevice.UniqueAvaliableDevices) {
+                Dictionary<AlgorithmType, double> profits = new Dictionary<AlgorithmType, double>();
+                var deviceConfig = BenchmarkConfigManager.Instance.GetConfig(cdev.Name);
+
+                foreach (var kvp in deviceConfig.BenchmarkSpeeds) {
+                    var key = kvp.Key;
+                    var algorithm = kvp.Value;
+                    // TODO what is the constant at the end?
+                    if (algorithm.Skip) {
+                        // for now set to negative value as not profitable
+                        profits.Add(key, -1);
+                    } else {
+                        profits.Add(key, algorithm.BenchmarkSpeed * NiceHashData[key].paying * 0.000000001);
+                    }
+                }
+                perDeviceProfit.Add(cdev.Name, profits);
+            }
+            Dictionary<string, Dictionary<AlgorithmType, double>> perGroupProfit = new Dictionary<string, Dictionary<AlgorithmType, double>>();
+
+        }
 
     }
 }

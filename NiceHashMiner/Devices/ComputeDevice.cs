@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NiceHashMiner.Enums;
+using System.Security.Cryptography;
 
 namespace NiceHashMiner.Devices
 {
@@ -19,6 +20,10 @@ namespace NiceHashMiner.Devices
         //readonly public Miner Miner;
         [JsonIgnore]
         readonly public DeviceGroupType DeviceGroupType;
+        // close to uuid, hash readonly members and we should be safe
+        // it is used only at runtime, do not save to configs
+        [JsonIgnore]
+        readonly public string UUID;
 
         // 
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
@@ -30,6 +35,7 @@ namespace NiceHashMiner.Devices
             Group = group;
             Name = name;
             Enabled = enabled;
+            DeviceGroupType = GroupNames.GetType(Group);
             // TODO temp solution
             //Miner = miner;
             if (addToGlobalList) {
@@ -50,9 +56,27 @@ namespace NiceHashMiner.Devices
                 }
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
-                DeviceGroupType = GroupNames.GetType(Group);
             }
-            
+            UUID = GetUUID(ID, Group, Name, DeviceGroupType);
         }
+
+        public static ComputeDevice GetDeviceWithUUID(string uuid) {
+            foreach (var dev in AllAvaliableDevices) {
+                if (uuid == dev.UUID) return dev;
+            }
+            return null;
+        }
+
+        public static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
+            var SHA256 = new SHA256Managed();
+            var hash = new StringBuilder();
+            string mixedAttr = id.ToString() + group + name + ((int)deviceGroupType).ToString();
+            byte[] hashedBytes = SHA256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0, Encoding.UTF8.GetByteCount(mixedAttr));
+            foreach (var b in hashedBytes) {
+                hash.Append(b.ToString("x2"));
+            }
+            return hash.ToString();
+        }
+
     }
 }
