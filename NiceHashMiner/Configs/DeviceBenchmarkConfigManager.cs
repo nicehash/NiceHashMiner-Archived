@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NiceHashMiner.Configs {
     
-    public class BenchmarkConfigManager : BaseLazySingleton<BenchmarkConfigManager> {
+    public class DeviceBenchmarkConfigManager : BaseLazySingleton<DeviceBenchmarkConfigManager> {
 
         private Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigs;
         public Dictionary<string, DeviceBenchmarkConfig> BenchmarkConfigs {
@@ -17,7 +17,7 @@ namespace NiceHashMiner.Configs {
             }
         }
 
-        protected BenchmarkConfigManager() {
+        protected DeviceBenchmarkConfigManager() {
             _benchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
         }
 

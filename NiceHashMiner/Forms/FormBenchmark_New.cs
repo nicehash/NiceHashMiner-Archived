@@ -20,7 +20,7 @@ namespace NiceHashMiner.Forms {
         private void SettupDevicesTab() {
             List<DeviceBenchmarkConfig> benchmarkConfigs = new List<DeviceBenchmarkConfig>();
             foreach (var CDev in ComputeDevice.AllAvaliableDevices) {
-                var benchConfig = BenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name, new int[] { CDev.ID });
+                var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name, new int[] { CDev.ID });
 
                 benchmarkConfigs.Add(benchConfig);
             }

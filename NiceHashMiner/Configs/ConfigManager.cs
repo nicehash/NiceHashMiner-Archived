@@ -29,7 +29,7 @@ namespace NiceHashMiner.Configs {
 
         private void LoadBenchmarks() {
             foreach (var CDev in ComputeDevice.UniqueAvaliableDevices) {
-                var benchConfig = BenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name, new int[] { CDev.ID });
+                var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name, new int[] { CDev.ID });
                 benchConfig.InitializeConfig();
                 if (benchConfig.FileLoaded != null) {
                     benchConfig = benchConfig.FileLoaded;
@@ -46,8 +46,8 @@ namespace NiceHashMiner.Configs {
             // set references
             // C# can handle cyclic refs
             LoadBenchmarks();
-            BenchmarkConfigManager.Instance.BenchmarkConfigs = BenchmarkConfigs;
-            BenchmarkConfigs = BenchmarkConfigManager.Instance.BenchmarkConfigs;
+            DeviceBenchmarkConfigManager.Instance.BenchmarkConfigs = BenchmarkConfigs;
+            BenchmarkConfigs = DeviceBenchmarkConfigManager.Instance.BenchmarkConfigs;
             GeneralConfig.AfterDeviceQueryInitialization();
         }
 

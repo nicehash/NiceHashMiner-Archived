@@ -75,7 +75,7 @@ namespace NiceHashMiner.Forms {
             var selectedComputeDevice = GetCurrentlySelectedComputeDevice(e.ItemIndex);
             deviceSettingsControl1.SelectedComputeDevice = selectedComputeDevice;
             algorithmsListView1.SetAlgorithms(
-                BenchmarkConfigManager.Instance.GetConfig(
+                DeviceBenchmarkConfigManager.Instance.GetConfig(
                 selectedComputeDevice.DeviceGroupType,
                 selectedComputeDevice.Name,
                 new int[] { selectedComputeDevice.ID })

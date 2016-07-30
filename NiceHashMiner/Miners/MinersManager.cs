@@ -113,7 +113,7 @@ namespace NiceHashMiner.Miners {
             // calculate per device profit
             foreach (var cdev in ComputeDevice.UniqueAvaliableDevices) {
                 Dictionary<AlgorithmType, double> profits = new Dictionary<AlgorithmType, double>();
-                var deviceConfig = BenchmarkConfigManager.Instance.GetConfig(cdev.Name);
+                var deviceConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.Name);
 
                 foreach (var kvp in deviceConfig.BenchmarkSpeeds) {
                     var key = kvp.Key;
