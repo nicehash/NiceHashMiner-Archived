@@ -162,5 +162,36 @@ namespace NiceHashMiner.Devices
             }
             return null;
         }
+
+
+        // this will be used for SMA
+        public HashSet<string> GetEnabledDevicesUUIDsForGroup(DeviceGroupType type, bool isDagger = false) {
+            HashSet<string> uuids = new HashSet<string>();
+            List<ComputeDevice> allGroupDevices = new List<ComputeDevice>();
+            // if not dagger and NVIDIA
+            if (isDagger
+                && type != DeviceGroupType.NVIDIA_2_1
+                && type != DeviceGroupType.NVIDIA_3_x
+                && type != DeviceGroupType.NVIDIA_5_x) {
+                    allGroupDevices = _groups[type].AllDevices;
+            } else {
+                // special case where we group all Nvidia devices
+                var sm21 = _groups[DeviceGroupType.NVIDIA_2_1].AllDevices;
+                var sm3x = _groups[DeviceGroupType.NVIDIA_3_x].AllDevices;
+                var sm5x = _groups[DeviceGroupType.NVIDIA_5_x].AllDevices;
+                allGroupDevices = new List<ComputeDevice>(sm21.Count + sm3x.Count + sm5x.Count);
+                allGroupDevices.AddRange(sm21);
+                allGroupDevices.AddRange(sm3x);
+                allGroupDevices.AddRange(sm5x);
+            }
+            foreach (var cd in allGroupDevices) {
+                if (cd.Enabled) {
+                    uuids.Add(cd.UUID);
+                }
+            }
+
+            return uuids;
+        }
+
     }
 }

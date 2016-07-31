@@ -76,7 +76,7 @@
     <Compile Include="AlgorithmNiceHashNames.cs" />
     <Compile Include="BaseLazySingleton.cs" />
     <Compile Include="Configs\DeviceBenchmarkConfig.cs" />
-    <Compile Include="Configs\BenchmarkConfigManager.cs" />
+    <Compile Include="Configs\DeviceBenchmarkConfigManager.cs" />
     <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
     <Compile Include="Configs\BaseConfigFile.cs" />
     <Compile Include="Configs\ConfigManager.cs" />

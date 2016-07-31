@@ -18,6 +18,8 @@ namespace NiceHashMiner.Devices
 
         //private DeviceGroupSettings _deviceGroupSettings;
 
+        public List<ComputeDevice> AllDevices { get { return _devices; } }
+
         readonly public DeviceGroupType Type;
         readonly public string Name;
 
