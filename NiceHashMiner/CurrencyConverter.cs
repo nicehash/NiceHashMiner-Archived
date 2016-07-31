@@ -28,17 +28,17 @@ namespace NiceHashMiner.CurrencyConverter
             // if we are still null after an update something went wrong. just use USD hopefully itll update next tick
             if (LastResponse == null)
             {
-                Helpers.ConsolePrint("CurrencyConverter", "Unable to retrieve update, Falling back to USD");
+                //Helpers.ConsolePrint("CurrencyConverter", "Unable to retrieve update, Falling back to USD");
                 return amount;
             }
 
-            Helpers.ConsolePrint("CurrencyConverter", "Current Currency: " + Config.ConfigData.DisplayCurrency);
+            //Helpers.ConsolePrint("CurrencyConverter", "Current Currency: " + Config.ConfigData.DisplayCurrency);
             double usdExchangeRate = 1.0;
             if (LastResponse.rates.TryGetValue(Config.ConfigData.DisplayCurrency, out usdExchangeRate))
                 return amount * usdExchangeRate;
             else
             {
-                Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + Config.ConfigData.DisplayCurrency + " falling back to USD rates");
+                //Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + Config.ConfigData.DisplayCurrency + " falling back to USD rates");
                 Config.ConfigData.DisplayCurrency = "USD";
                 return amount;
             }
@@ -54,7 +54,7 @@ namespace NiceHashMiner.CurrencyConverter
             }
             catch (Exception E)
             {
-                Helpers.ConsolePrint("CurrencyConverter", "Unable to update API: reverting to usd");
+                //Helpers.ConsolePrint("CurrencyConverter", "Unable to update API: reverting to usd");
                 Config.ConfigData.DisplayCurrency = "USD";
             }
         }
