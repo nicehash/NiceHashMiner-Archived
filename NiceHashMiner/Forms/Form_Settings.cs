@@ -105,10 +105,11 @@ namespace NiceHashMiner
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
 
-            if (CurrencyConverter.CurrencyConverter.ConverterActive)
-                currencyConverterCombobox.SelectedItem = Config.ConfigData.DisplayCurrency;
-            else
-                currencyConverterCombobox.SelectedItem = "USD";
+            //if (CurrencyConverter.CurrencyConverter.ConverterActive)
+            //    currencyConverterCombobox.SelectedItem = Config.ConfigData.DisplayCurrency;
+            //else
+            //    currencyConverterCombobox.SelectedItem = "USD";
+            currencyConverterCombobox.SelectedItem = Config.ConfigData.DisplayCurrency;
 
 
             displayCurrencyLabel.Text = International.GetText("Form_Settings_DisplayCurrency");
