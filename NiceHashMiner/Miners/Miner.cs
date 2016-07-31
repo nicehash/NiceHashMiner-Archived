@@ -204,6 +204,9 @@ namespace NiceHashMiner
 
         virtual protected bool BenchmarkParseLine(string outdata)
         {
+            // lyra2re nvidia fix
+            double lastSpeed = 0;
+
             // parse line
             if (outdata.Contains("Benchmark: ") && outdata.Contains("/s"))
             {
@@ -258,6 +261,11 @@ namespace NiceHashMiner
                 SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = avg_spd;
 
                 OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
+                return true;
+            }
+            else if (double.TryParse(outdata, out lastSpeed)) {
+                SupportedAlgorithms[BenchmarkIndex].BenchmarkSpeed = lastSpeed;
+                OnBenchmarkComplete(true, PrintSpeed(lastSpeed), BenchmarkTag);
                 return true;
             }
 
