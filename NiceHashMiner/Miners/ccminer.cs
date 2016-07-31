@@ -29,7 +29,9 @@ namespace NiceHashMiner
                 new Algorithm(17, "blake256r14", "blake"),
                 new Algorithm(18, "blake256r8vnl", "vanilla"),
                 new Algorithm(20, "daggerhashimoto", "daggerhashimoto"),
-                new Algorithm(21, "decred", "decred")
+                new Algorithm(21, "decred", "decred"),
+                // new added
+                new Algorithm(9, "lyra2re", "lyra2"),
             };
         }
 
@@ -81,7 +83,7 @@ namespace NiceHashMiner
                     Path = "bin\\ccminer_decred.exe";
                 else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("neoscrypt"))
                     Path = "bin\\ccminer_neoscrypt.exe";
-                else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("lyra2rev2"))
+                else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("lyra2rev2") && SupportedAlgorithms[index].NiceHashName.Equals("lyra2re") )
                     Path = "bin\\ccminer_nanashi_lyra2rev2.exe";
                 else if (this is ccminer_sp)
                     Path = "bin\\ccminer_sp.exe";

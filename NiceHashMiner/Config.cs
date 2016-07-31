@@ -220,6 +220,15 @@ namespace NiceHashMiner
                     CG[i].Algorithms[k].DisabledDevices = new bool[Globals.Miners[i].CDevs.Count];
                     for (int j = 0; j < Globals.Miners[i].CDevs.Count; j++)
                     {
+                        // quickfix new algo add
+                        if (Globals.Miners[i].SupportedAlgorithms[k].DisabledDevice == null) {
+                            bool[] newArray = new bool[Globals.Miners[i].CDevs.Count];
+                            // init to false
+                            for (int devIndex = 0; devIndex < newArray.Length; ++devIndex) {
+                                newArray[devIndex] = false;
+                            }
+                            Globals.Miners[i].SupportedAlgorithms[k].DisabledDevice = newArray;
+                        }
                         CG[i].Algorithms[k].DisabledDevices[j] = Globals.Miners[i].SupportedAlgorithms[k].DisabledDevice[j];
                     }
                 }
