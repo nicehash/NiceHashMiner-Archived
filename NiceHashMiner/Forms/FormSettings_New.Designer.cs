@@ -82,7 +82,6 @@
             this.checkBox_DebugConsole = new System.Windows.Forms.CheckBox();
             this.tabPageDevices = new System.Windows.Forms.TabPage();
             this.splitContainerDevicesSettings = new System.Windows.Forms.SplitContainer();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.devicesListView1 = new NiceHashMiner.Forms.Components.DevicesListView();
             this.deviceSettingsControl1 = new NiceHashMiner.Forms.Components.DeviceSettingsControl();
             this.label1 = new System.Windows.Forms.Label();
@@ -736,7 +735,6 @@
             // 
             // splitContainerDevicesSettings.Panel1
             // 
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.checkBox1);
             this.splitContainerDevicesSettings.Panel1.Controls.Add(this.devicesListView1);
             this.splitContainerDevicesSettings.Panel1.Controls.Add(this.deviceSettingsControl1);
             // 
@@ -748,18 +746,6 @@
             this.splitContainerDevicesSettings.Size = new System.Drawing.Size(960, 605);
             this.splitContainerDevicesSettings.SplitterDistance = 488;
             this.splitContainerDevicesSettings.TabIndex = 0;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(3, 11);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(195, 17);
-            this.checkBox1.TabIndex = 1;
-            this.checkBox1.Text = "Use same settings for same devices";
-            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // devicesListView1
             // 
@@ -854,7 +840,6 @@
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tabPageDevices.ResumeLayout(false);
             this.splitContainerDevicesSettings.Panel1.ResumeLayout(false);
-            this.splitContainerDevicesSettings.Panel1.PerformLayout();
             this.splitContainerDevicesSettings.Panel2.ResumeLayout(false);
             this.splitContainerDevicesSettings.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerDevicesSettings)).EndInit();
@@ -922,7 +907,6 @@
         private System.Windows.Forms.CheckBox checkBox_DebugConsole;
         private System.Windows.Forms.TabPage tabPageDevices;
         private System.Windows.Forms.SplitContainer splitContainerDevicesSettings;
-        private System.Windows.Forms.CheckBox checkBox1;
         private Components.DevicesListView devicesListView1;
         private Components.DeviceSettingsControl deviceSettingsControl1;
         private System.Windows.Forms.Label label1;

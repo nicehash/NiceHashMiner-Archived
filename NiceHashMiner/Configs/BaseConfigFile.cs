@@ -16,17 +16,20 @@ namespace NiceHashMiner.Configs {
 
         private string _filePath = "";
         private string _filePathOld = "";
+
+        [JsonIgnore]
         public string FilePath {
             get { return _filePath.Contains(CONF_FOLDER) ? _filePath : CONF_FOLDER + _filePath; }
             set { _filePath = value; }
         }
+        [JsonIgnore]
         public string FilePathOld {
             get { return _filePathOld.Contains(CONF_FOLDER) ? _filePathOld : CONF_FOLDER + _filePathOld; }
             set { _filePathOld = value; }
         }
 
         [JsonIgnore]
-        public T FileLoaded { get { return _self; } }
+        private bool FileLoaded { get { return _self != null; } }
 
         [field: NonSerialized]
         protected T _self;
@@ -36,14 +39,23 @@ namespace NiceHashMiner.Configs {
         public void InitializeConfig() {
             InitializePaths();
             ReadFile();
-            if (_self != null) {
+            if (FileLoaded) {
                 _self.FilePath = this.FilePath;
                 _self.FilePathOld = this.FilePathOld;
                 InitializeObject();
             }
         }
 
+        /// <summary>
+        /// InitializePaths should be overrided in the subclass to specify filepath(old) paths.
+        /// </summary>
         abstract protected void InitializePaths();
+        /// <summary>
+        /// InitializeObject must be overrided in the subclass to reinitialize values and references from the configuration files.
+        /// Use the _self member and reinitialize all non null references (use DeepCopy or plain reference it is up to the implementor).
+        /// IMPORTANT!!! Take extra care with arrays, lists and dictionaries, initialize them manually and not by DeepCopy or reference, the 
+        /// reason for this is to be future proof if new keys/values are added so reinitialize them one by one if they exist.
+        /// </summary>
         abstract protected void InitializeObject();
 
         private static void CheckAndCreateConfigsFolder () {
@@ -52,6 +64,24 @@ namespace NiceHashMiner.Configs {
                     Directory.CreateDirectory(CONF_FOLDER);
                 }
             } catch { }
+        }
+
+        protected void InitReferenceType<RefT>(ref RefT toInit, RefT fromInit) where RefT : IComparable<RefT> {
+            if (fromInit != null) {
+                toInit = fromInit;
+            }
+        }
+
+        protected void InitDictionaryType<TKey, TValue>(ref IDictionary<TKey, TValue> toInit, IDictionary<TKey, TValue> fromInit) {
+            if (fromInit != null) {
+                foreach (var key in fromInit.Keys) {
+                    if (toInit.ContainsKey(key)) {
+                        toInit[key] = fromInit[key];
+                    } else {
+                        // TODO think if we let tamnpered data
+                    }
+                }
+            }
         }
 
         protected void ReadFile() {

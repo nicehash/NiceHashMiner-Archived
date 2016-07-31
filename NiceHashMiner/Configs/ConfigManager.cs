@@ -16,9 +16,6 @@ namespace NiceHashMiner.Configs {
 
             // load configs that are device independant
             GeneralConfig.InitializeConfig();
-            if (GeneralConfig.FileLoaded != null) {
-                GeneralConfig = GeneralConfig.FileLoaded;
-            }
         }
 
         public void CommitBenchmarks() {
@@ -31,9 +28,6 @@ namespace NiceHashMiner.Configs {
             foreach (var CDev in ComputeDevice.UniqueAvaliableDevices) {
                 var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name, new int[] { CDev.ID });
                 benchConfig.InitializeConfig();
-                if (benchConfig.FileLoaded != null) {
-                    benchConfig = benchConfig.FileLoaded;
-                }
                 BenchmarkConfigs.Add(CDev.Name, benchConfig);
             }
         }

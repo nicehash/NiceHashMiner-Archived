@@ -10,6 +10,9 @@ namespace NiceHashMiner.Configs {
         #region Members
         public BenchmarkTimeLimitsConfig BenchmarkTimeLimits { get; set; }
         public DeviceDetectionConfig DeviceDetection { get; set; }
+
+
+        // After Device initialization
         public Dictionary<string, DeviceGroupSettings> GroupSettings { get; set; }
         /// <summary>
         /// LastDevicesSettup field should not be manually edited
@@ -31,7 +34,14 @@ namespace NiceHashMiner.Configs {
             FilePath = "General.json";
             FilePathOld = "General_old.json";
         }
-        protected override void InitializeObject() { }
+        protected override void InitializeObject() {
+            if (_self.BenchmarkTimeLimits != null) {
+                this.BenchmarkTimeLimits = _self.BenchmarkTimeLimits;
+            }
+            if (_self.DeviceDetection != null) {
+                this.DeviceDetection = _self.DeviceDetection;
+            }
+        }
 
         public void AfterDeviceQueryInitialization() {
             ComputeDeviceGroupManager.Instance.GroupSettings = GroupSettings;
@@ -43,6 +53,16 @@ namespace NiceHashMiner.Configs {
                     usedDevice.Enabled = configDevice.Enabled;
                 }
             }
+            if (_self.GroupSettings != null) {
+                foreach (var key in _self.GroupSettings.Keys) {
+                    if (this.GroupSettings.ContainsKey(key)) {
+                        this.GroupSettings[key] = _self.GroupSettings[key];
+                    } else {
+                        // TODO think if we let tamnpered data
+                    }
+                }
+            } 
+
             LastDevicesSettup = ComputeDevice.AllAvaliableDevices;
         }
     }

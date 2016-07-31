@@ -18,7 +18,7 @@ namespace NiceHashMiner.Configs
         [field: NonSerialized]
         readonly static private int[] DEFAULT_AMD = { 120, 180, 240 };
         [field: NonSerialized]
-        readonly static private int SIZE = 3;
+        readonly static public int SIZE = 3;
         #endregion CONSTANTS
 
         #region PRIVATES
@@ -27,41 +27,46 @@ namespace NiceHashMiner.Configs
         private int[] _benchmarkTimeLimitsAMD = MemoryHelper.DeepClone(DEFAULT_AMD);
 
         private bool isValid(int[] value) { return value != null && value.Length == SIZE; }
-        private bool notValid(int[] value) { return value == null || value.Length < SIZE; }
         #endregion PRIVATES
 
         #region PROPERTIES
         public int[] CPU {
             get { return _benchmarkTimeLimitsCPU; }
             set {
-                if (notValid(value)) {
-                    _benchmarkTimeLimitsCPU = MemoryHelper.DeepClone(DEFAULT_CPU_NVIDIA);
+                if (isValid(value)) {
+                    _benchmarkTimeLimitsCPU = MemoryHelper.DeepClone(value);
                 }
                 else {
-                    _benchmarkTimeLimitsCPU = MemoryHelper.DeepClone(value);
+                    _benchmarkTimeLimitsCPU = MemoryHelper.DeepClone(DEFAULT_CPU_NVIDIA);
                 }
             }
         }
         public int[] NVIDIA {
             get { return _benchmarkTimeLimitsNVIDIA; }
             set {
-                if (notValid(value)) {
-                    _benchmarkTimeLimitsNVIDIA = MemoryHelper.DeepClone(DEFAULT_CPU_NVIDIA);
-                } else {
+                if (isValid(value)) {
                     _benchmarkTimeLimitsNVIDIA = MemoryHelper.DeepClone(value);
+                } else {
+                    _benchmarkTimeLimitsNVIDIA = MemoryHelper.DeepClone(DEFAULT_CPU_NVIDIA);
                 }
             }
         }
         public int[] AMD {
             get { return _benchmarkTimeLimitsAMD; }
             set {
-                if (notValid(value)) {
-                    _benchmarkTimeLimitsAMD = MemoryHelper.DeepClone(DEFAULT_AMD);
-                } else {
+                if (isValid(value)) {
                     _benchmarkTimeLimitsAMD = MemoryHelper.DeepClone(value);
+                } else {
+                    _benchmarkTimeLimitsAMD = MemoryHelper.DeepClone(DEFAULT_AMD);
                 }
             }
         }
         #endregion PROPERTIES
+
+        //public void SetFromConfig(BenchmarkTimeLimitsConfig other) {
+        //    this.AMD = other.AMD;
+        //    this.CPU = other.CPU;
+        //    this.NVIDIA = other.NVIDIA;
+        //}
     }
 }
