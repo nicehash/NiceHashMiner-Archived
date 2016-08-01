@@ -42,7 +42,7 @@ namespace NiceHashMiner
 
         protected override string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)
         {
-            if (AlgoNameIs("lyra2rev2") || AlgoNameIs("decred"))
+            if (AlgoNameIs("lyra2re") || AlgoNameIs("lyra2rev2") || AlgoNameIs("decred"))
                 return BenchmarkHandle.StandardOutput.ReadLine();
 
             return BenchmarkHandle.StandardError.ReadLine();
