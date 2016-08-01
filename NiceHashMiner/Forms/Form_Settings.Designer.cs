@@ -483,6 +483,7 @@
             // 
             // currencyConverterCombobox
             // 
+            this.currencyConverterCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.currencyConverterCombobox.FormattingEnabled = true;
             this.currencyConverterCombobox.Items.AddRange(new object[] {
             "AUD",

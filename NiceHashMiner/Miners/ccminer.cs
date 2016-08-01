@@ -21,6 +21,7 @@ namespace NiceHashMiner
                 new Algorithm(6, "x15", "x15"),
                 new Algorithm(7, "nist5", "nist5"),
                 new Algorithm(8, "neoscrypt", "neoscrypt"),
+                new Algorithm(9, "lyra2re", "lyra2"),
                 new Algorithm(10, "whirlpoolx", "whirlpoolx"),
                 new Algorithm(11, "qubit", "qubit"),
                 new Algorithm(12, "quark", "quark"),
@@ -30,8 +31,6 @@ namespace NiceHashMiner
                 new Algorithm(18, "blake256r8vnl", "vanilla"),
                 new Algorithm(20, "daggerhashimoto", "daggerhashimoto"),
                 new Algorithm(21, "decred", "decred"),
-                // new added
-                new Algorithm(9, "lyra2re", "lyra2"),
             };
         }
 
@@ -81,12 +80,10 @@ namespace NiceHashMiner
 
                 if (SupportedAlgorithms[index].NiceHashName.Equals("decred"))
                     Path = "bin\\ccminer_decred.exe";
+                else if (SupportedAlgorithms[index].NiceHashName.Equals("lyra2re") || SupportedAlgorithms[index].NiceHashName.Equals("lyra2rev2"))
+                    Path = "bin\\ccminer_nanashi.exe";
                 else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("neoscrypt"))
                     Path = "bin\\ccminer_neoscrypt.exe";
-                else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("lyra2re") )
-                    Path = "bin\\ccminer_lyra2re.exe";
-                else if (this is ccminer_sp && SupportedAlgorithms[index].NiceHashName.Equals("lyra2rev2") )
-                    Path = "bin\\ccminer_nanashi_lyra2rev2.exe";
                 else if (this is ccminer_sp)
                     Path = "bin\\ccminer_sp.exe";
                 else
@@ -154,12 +151,10 @@ namespace NiceHashMiner
 
                 if (Algo.NiceHashName.Equals("decred"))
                     Path = "bin\\ccminer_decred.exe";
+                else if (Algo.NiceHashName.Equals("lyra2re") || Algo.NiceHashName.Equals("lyra2rev2"))
+                    Path = "bin\\ccminer_nanashi.exe";
                 else if (this is ccminer_sp && Algo.NiceHashName.Equals("neoscrypt"))
                     Path = "bin\\ccminer_neoscrypt.exe";
-                else if (this is ccminer_sp && Algo.NiceHashName.Equals("lyra2re"))
-                    Path = "bin\\ccminer_lyra2re.exe";
-                else if (this is ccminer_sp && Algo.NiceHashName.Equals("lyra2rev2"))
-                    Path = "bin\\ccminer_nanashi_lyra2rev2.exe";
                 else if (this is ccminer_sp)
                     Path = "bin\\ccminer_sp.exe";
                 else

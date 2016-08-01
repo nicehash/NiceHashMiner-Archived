@@ -897,7 +897,7 @@ namespace NiceHashMiner
                         if (!(m is cpuminer))
                         {
                             // quick and ugly way to prevent GPUs from starting on extremely unprofitable x11
-                            m.SupportedAlgorithms[13].BenchmarkSpeed = 1;
+                            m.SupportedAlgorithms[14].BenchmarkSpeed = 1;
                         }
                         break;
                     }

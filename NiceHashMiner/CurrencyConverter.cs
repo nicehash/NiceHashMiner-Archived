@@ -52,7 +52,7 @@ namespace NiceHashMiner.CurrencyConverter
                 LastResponse = JsonConvert.DeserializeObject<CurrencyAPIResponse>(Response);
                 LastUpdate = DateTime.Now;
             }
-            catch (Exception E)
+            catch
             {
                 //Helpers.ConsolePrint("CurrencyConverter", "Unable to update API: reverting to usd");
                 Config.ConfigData.DisplayCurrency = "USD";
