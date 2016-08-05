@@ -491,6 +491,7 @@ namespace NiceHashMiner.Forms {
         private void toolTip1_Popup(object sender, PopupEventArgs e) {
             toolTip1.ToolTipTitle = International.GetText("Form_Settings_ToolTip_Explaination");
         }
+
         #region Form Buttons
         private void buttonDefaults_Click(object sender, EventArgs e) {
             // TODO change translation NHM will not restart
@@ -502,7 +503,6 @@ namespace NiceHashMiner.Forms {
                 IsChange = true;
                 IsChangeSaved = true;
                 ConfigManager.Instance.GeneralConfig.SetDefaults();
-                ConfigManager.Instance.GeneralConfig.Commit();
 
                 // TODO reset International
                 International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
@@ -522,7 +522,7 @@ namespace NiceHashMiner.Forms {
                             International.GetText("Form_Settings_buttonSaveTitle"),
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
             IsChange = true;
-            IsChangeSaved = false;
+            IsChangeSaved = true;
 
             this.Close();
         }
@@ -546,8 +546,8 @@ namespace NiceHashMiner.Forms {
             }
 
             if (IsChangeSaved) {
-                ConfigManager.Instance.GeneralConfig.SetDefaults();
                 ConfigManager.Instance.GeneralConfig.Commit();
+                ConfigManager.Instance.CommitBenchmarks();
                 Config.Commit();
             } else if (IsChange) {
                 ConfigManager.Instance.GeneralConfig = _generalConfigBackup;
