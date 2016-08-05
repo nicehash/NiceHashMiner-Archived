@@ -85,6 +85,7 @@ namespace NiceHashMiner.Forms {
 
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e) {
             ConfigManager.Instance.GeneralConfig.Commit();
+            ConfigManager.Instance.CommitBenchmarks();
         }
 
         #endregion Form Callbacks

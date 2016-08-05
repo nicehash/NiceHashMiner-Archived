@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NiceHashMiner.Devices {
     [Serializable]
-    public class DeviceGroupSettings {
+    public class DeviceGroupConfig {
         readonly public string Name;
         // TODO create port ranges and use those
         public int APIBindPort { get; set; }
@@ -15,7 +15,7 @@ namespace NiceHashMiner.Devices {
         public double MinimumProfit { get; set; }
         // TODO add intensity per device/algorithm
 
-        public DeviceGroupSettings(string name) {
+        public DeviceGroupConfig(string name) {
             Name = name;
         }
     }

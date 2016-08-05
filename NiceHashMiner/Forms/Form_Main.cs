@@ -300,7 +300,7 @@ namespace NiceHashMiner
             else
                 Worker = textBoxBTCAddress.Text.Trim();
 
-            MinersManager.Instance.SwichMostProfitable(Globals.NiceHashData);
+            MinersManager.Instance.SwichMostProfitable(Globals.NiceHashData, Worker);
             // switching logic
             //foreach (Miner m in Globals.Miners) {
             //    if (m.EnabledDeviceCount() == 0) continue;
@@ -750,6 +750,7 @@ namespace NiceHashMiner
             }
 
             // Check if the user has run benchmark first
+            MinersManager.Instance.StartInitialize();
             // TODO
             //foreach (Miner m in Globals.Miners) {
             //    if (m.EnabledDeviceCount() == 0) continue;

@@ -17,7 +17,7 @@ namespace NiceHashMiner.Forms.Components {
             cpuSpecificSettings1.Visible = false;
         }
 
-        DeviceGroupSettings _settings;
+        DeviceGroupConfig _settings;
         ComputeDevice _selectedComputeDevice;
         public ComputeDevice SelectedComputeDevice {
             get { return _selectedComputeDevice; }

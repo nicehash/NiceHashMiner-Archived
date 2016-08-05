@@ -16,7 +16,7 @@ namespace NiceHashMiner.Devices
         // references just for unique devices (like a set of different card types), will not save same card type more then once
         private List<ComputeDevice> _uniqueDevices;
 
-        //private DeviceGroupSettings _deviceGroupSettings;
+        //private DeviceGroupConfig _deviceGroupSettings;
 
         public List<ComputeDevice> AllDevices { get { return _devices; } }
 

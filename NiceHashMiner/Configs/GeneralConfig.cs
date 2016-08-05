@@ -13,7 +13,7 @@ namespace NiceHashMiner.Configs {
 
 
         // After Device initialization
-        public Dictionary<string, DeviceGroupSettings> GroupSettings { get; set; }
+        public Dictionary<string, DeviceGroupConfig> GroupSettings { get; set; }
         /// <summary>
         /// LastDevicesSettup field should not be manually edited
         /// The changes can be of two scenarios:

@@ -18,8 +18,8 @@ namespace NiceHashMiner.Devices
         private Dictionary<DeviceGroupType, ComputeDeviceGroup> _groups;
 
         // TODO for now string CPU are divided in diferent groups
-        private Dictionary<string, DeviceGroupSettings> _groupSettings;
-        public Dictionary<string, DeviceGroupSettings> GroupSettings {
+        private Dictionary<string, DeviceGroupConfig> _groupSettings;
+        public Dictionary<string, DeviceGroupConfig> GroupSettings {
             get { return _groupSettings; }
             set {
                 if (value == null) return;
@@ -114,7 +114,7 @@ namespace NiceHashMiner.Devices
 
         // group settings hardcoded maybe we won't need this in the future
         public void InitializeGroupSettings() {
-            _groupSettings = new Dictionary<string, DeviceGroupSettings>();
+            _groupSettings = new Dictionary<string, DeviceGroupConfig>();
             foreach (var device in ComputeDevice.AllAvaliableDevices) {
                 if (_groupSettings.ContainsKey(device.Group) == false) {
                     _groupSettings.Add(device.Group, CreateGroupSettings(device.Group, device.DeviceGroupType));
@@ -122,7 +122,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public DeviceGroupSettings GetDeviceGroupSettings(string vendor) {
+        public DeviceGroupConfig GetDeviceGroupSettings(string vendor) {
             if (_groupSettings.ContainsKey(vendor)) {
                 return _groupSettings[vendor];
             }
@@ -131,7 +131,7 @@ namespace NiceHashMiner.Devices
 
 
         private static int cpuCount = 0;
-        private DeviceGroupSettings CreateGroupSettings(string vendor, DeviceGroupType groupType) {
+        private DeviceGroupConfig CreateGroupSettings(string vendor, DeviceGroupType groupType) {
             bool isInitSuccess = true;
             int APIBindPort = -1;
             switch(groupType) {
@@ -156,41 +156,11 @@ namespace NiceHashMiner.Devices
                     break;
             }
             if (isInitSuccess && APIBindPort > 0) {
-                return new DeviceGroupSettings(vendor) {
+                return new DeviceGroupConfig(vendor) {
                     APIBindPort = APIBindPort
                 };
             }
             return null;
-        }
-
-
-        // this will be used for SMA
-        public HashSet<string> GetEnabledDevicesUUIDsForGroup(DeviceGroupType type, bool isDagger = false) {
-            HashSet<string> uuids = new HashSet<string>();
-            List<ComputeDevice> allGroupDevices = new List<ComputeDevice>();
-            // if not dagger and NVIDIA
-            if (isDagger
-                && type != DeviceGroupType.NVIDIA_2_1
-                && type != DeviceGroupType.NVIDIA_3_x
-                && type != DeviceGroupType.NVIDIA_5_x) {
-                    allGroupDevices = _groups[type].AllDevices;
-            } else {
-                // special case where we group all Nvidia devices
-                var sm21 = _groups[DeviceGroupType.NVIDIA_2_1].AllDevices;
-                var sm3x = _groups[DeviceGroupType.NVIDIA_3_x].AllDevices;
-                var sm5x = _groups[DeviceGroupType.NVIDIA_5_x].AllDevices;
-                allGroupDevices = new List<ComputeDevice>(sm21.Count + sm3x.Count + sm5x.Count);
-                allGroupDevices.AddRange(sm21);
-                allGroupDevices.AddRange(sm3x);
-                allGroupDevices.AddRange(sm5x);
-            }
-            foreach (var cd in allGroupDevices) {
-                if (cd.Enabled) {
-                    uuids.Add(cd.UUID);
-                }
-            }
-
-            return uuids;
         }
 
     }

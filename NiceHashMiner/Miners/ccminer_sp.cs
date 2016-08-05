@@ -34,8 +34,8 @@ namespace NiceHashMiner
             if (AlgorithmType.NeoScrypt == algorithmType) {
                 return MinerPaths.ccminer_neoscrypt;
             }
-            if (AlgorithmType.Lyra2REv2 == algorithmType) {
-                return MinerPaths.ccminer_nanashi_lyra2rev2;
+            if (AlgorithmType.Lyra2RE == algorithmType || AlgorithmType.Lyra2REv2 == algorithmType) {
+                return MinerPaths.ccminer_nanashi;
             }
 
             return MinerPaths.ccminer_sp;

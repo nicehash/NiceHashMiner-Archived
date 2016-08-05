@@ -10,6 +10,8 @@ namespace NiceHashMiner.Devices {
     /// </summary>
     public static class GroupAlgorithms {
 
+        private static Dictionary<DeviceGroupType, List<AlgorithmType>> _keys = new Dictionary<DeviceGroupType, List<AlgorithmType>>();
+
         public static Dictionary<AlgorithmType, Algorithm> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<AlgorithmType, Algorithm>() {
@@ -88,6 +90,15 @@ namespace NiceHashMiner.Devices {
                 return ret;
             }
 
+            return null;
+        }
+
+        // TODO redo this make lazy loadig 
+        public static List<AlgorithmType> GetAlgorithmKeysForGroup(DeviceGroupType deviceGroupType) {
+            var ret = CreateDefaultsForGroup(deviceGroupType);
+            if (ret != null) {
+                return new List <AlgorithmType>(ret.Keys);
+            }
             return null;
         }
 

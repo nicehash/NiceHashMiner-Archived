@@ -159,7 +159,8 @@ namespace NiceHashMiner.Devices
         private void QueryNVIDIA_ccminers() {
             string[] ccminerPaths = new string[] {
                 MinerPaths.ccminer_decred,
-                MinerPaths.ccminer_nanashi_lyra2rev2,
+                //MinerPaths.ccminer_nanashi_lyra2rev2,
+                MinerPaths.ccminer_nanashi,
                 MinerPaths.ccminer_neoscrypt,
                 MinerPaths.ccminer_sp,
                 MinerPaths.ccminer_tpruvot,

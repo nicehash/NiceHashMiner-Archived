@@ -15,7 +15,8 @@ namespace NiceHashMiner.Miners
         /// ccminers
         /// </summary>
         public const string ccminer_decred =            _bin + @"\ccminer_decred.exe";
-        public const string ccminer_nanashi_lyra2rev2 = _bin + @"\ccminer_nanashi_lyra2rev2.exe";
+        public const string ccminer_nanashi =           _bin + @"\ccminer_nanashi.exe";
+        //public const string ccminer_nanashi_lyra2rev2 = _bin + @"\ccminer_nanashi_lyra2rev2.exe";
         public const string ccminer_neoscrypt =         _bin + @"\ccminer_neoscrypt.exe";
         public const string ccminer_sp =                _bin + @"\ccminer_sp.exe";
         public const string ccminer_tpruvot =           _bin + @"\ccminer_tpruvot.exe";

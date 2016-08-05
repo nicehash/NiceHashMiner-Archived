@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -41,6 +42,46 @@ namespace NiceHashMiner.Configs {
             }
 
             return retConfig;
+        }
+
+        /// <summary>
+        /// IsEnabledBenchmarksInitialized is to check if currently enabled devices have all enabled algorithms benchmarked.
+        /// </summary>
+        /// <returns>Returns tuple of boolean and dictionary of unbenchmarked algorithms per device</returns>
+        public Tuple<bool, Dictionary<string, List<AlgorithmType>> > IsEnabledBenchmarksInitialized() {
+            bool isEnabledBenchmarksInitialized = true;
+            // first get all enabled devices names
+            HashSet<string> enabledDevicesNames = new HashSet<string>();
+            foreach (var device in ComputeDevice.AllAvaliableDevices) {
+                if (device.Enabled) {
+                    enabledDevicesNames.Add(device.Name);
+                }
+            }
+            // get enabled unbenchmarked algorithms
+            Dictionary<string, List<AlgorithmType>> unbenchmarkedAlgorithmsPerDevice = new Dictionary<string, List<AlgorithmType>>();
+            // init unbenchmarkedAlgorithmsPerDevice
+            foreach (var deviceName in enabledDevicesNames) {
+                unbenchmarkedAlgorithmsPerDevice.Add(deviceName, new List<AlgorithmType>());
+            }
+            // check benchmarks
+            foreach (var deviceName in enabledDevicesNames) {
+                foreach (var benchmarkConfigPair in _benchmarkConfigs) {
+                    foreach (var kvpAlgorithm in benchmarkConfigPair.Value.BenchmarkSpeeds) {
+                        var algorithm = kvpAlgorithm.Value;
+                        if (!algorithm.Skip && algorithm.BenchmarkSpeed <= 0.0d) {
+                            isEnabledBenchmarksInitialized = false;
+                            // add for reference to bench
+                            unbenchmarkedAlgorithmsPerDevice[deviceName].Add(algorithm.NiceHashID);
+                        }
+                    }
+                }
+            }
+
+            return
+                new Tuple<bool,Dictionary<string,List<AlgorithmType>>>(
+                    isEnabledBenchmarksInitialized,
+                    unbenchmarkedAlgorithmsPerDevice
+                );
         }
 
     }

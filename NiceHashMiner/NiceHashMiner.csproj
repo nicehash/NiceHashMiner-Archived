@@ -86,7 +86,7 @@
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
-    <Compile Include="Devices\DeviceGroupSettings.cs" />
+    <Compile Include="Devices\DeviceGroupConfig.cs" />
     <Compile Include="Devices\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
@@ -174,8 +174,12 @@
     <Compile Include="Devices\ComputeDeviceGroup.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
     <Compile Include="MemoryHelper.cs" />
+    <Compile Include="Miners\ManagerPrivate\DeviceGroupSettupManager.cs" />
+    <Compile Include="Miners\ManagerPrivate\MinerSettupsSetCombinationsLogic.cs" />
     <Compile Include="Miners\MinerPaths.cs" />
     <Compile Include="Miners\MinersManager.cs" />
+    <Compile Include="Miners\ManagerPrivate\DeviceGroupSettup.cs" />
+    <Compile Include="Miners\ManagerPrivate\GroupProfit.cs" />
     <Compile Include="NiceHashProcess.cs" />
     <Compile Include="Forms\SubmitResultDialog.cs">
       <SubType>Form</SubType>

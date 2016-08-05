@@ -67,6 +67,28 @@ namespace NiceHashMiner.Devices
             return null;
         }
 
+        public static int GetDeviceNameCount(string name) {
+            int count = 0;
+            foreach (var dev in AllAvaliableDevices) {
+                if (name == dev.Name) ++count;
+            }
+            return count;
+        }
+
+        public static string[] GetEnabledDevicesUUUIDsForNames(string[] deviceNames) {
+            List<string> uuids = new List<string>();
+
+            foreach (var dev in AllAvaliableDevices) {
+                foreach (var devName in deviceNames) {
+                    if (dev.Name == devName) {
+                        uuids.Add(dev.UUID);
+                    }
+                }
+            }
+
+            return uuids.ToArray();
+        }
+
         public static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
             var SHA256 = new SHA256Managed();
             var hash = new StringBuilder();
@@ -76,6 +98,28 @@ namespace NiceHashMiner.Devices
                 hash.Append(b.ToString("x2"));
             }
             return hash.ToString();
+        }
+
+        public static List<ComputeDevice> GetEnabledDevices() {
+            List<ComputeDevice> enabledCDevs = new List<ComputeDevice>();
+
+            foreach (var dev in AllAvaliableDevices) {
+                if (dev.Enabled) enabledCDevs.Add(dev);
+            }
+
+            return enabledCDevs;
+        }
+
+        public static HashSet<string> GetUniqueEnabledDevicesUUIDsForGroup(DeviceGroupType type) {
+            HashSet<string> uuids = new HashSet<string>();
+
+            foreach (var cd in UniqueAvaliableDevices) {
+                if (cd.Enabled && cd.DeviceGroupType == type) {
+                    uuids.Add(cd.UUID);
+                }
+            }
+
+            return uuids;
         }
 
     }

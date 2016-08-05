@@ -8,14 +8,28 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
-    public class MinersManager : BaseLazySingleton<MinersManager> {
+    // typedefs
+    using DeviceSubsetList = List<SortedSet<string>>;
+    using PerDeviceProifitDictionary = Dictionary<string, Dictionary<AlgorithmType, double>>;
+    using PerDeviceSpeedDictionary = Dictionary<string, Dictionary<AlgorithmType, double>>;
 
+    public partial class MinersManager : BaseLazySingleton<MinersManager> {
+
+        // TODO make members private
         public class MinerKey {
-            public int DeviceID;
+            // TODO change id to uuid
+            public string[] DeviceUUIDs;
             public string Group;
-            public string DeviceName;
+            //public string DeviceName;
             public DeviceGroupType DeviceGroupType;
         }
+
+        // temporary varibales for current session
+        List<DeviceGroupSettupManager> _deviceGroupSettupManager;
+        PerDeviceSpeedDictionary _perDeviceSpeedDictionary;
+        Dictionary<string, int> _enabledDeviceCount;
+
+
         // we save cpu miners
         Dictionary<MinerKey, cpuminer> _cpuMiners = new Dictionary<MinerKey,cpuminer>();
 
@@ -29,11 +43,13 @@ namespace NiceHashMiner.Miners {
         }
 
 
+        // TODO CPU is broken
         public void AddCpuMiner(cpuminer miner, int deviceID, string deviceName) {
             MinerKey key = new MinerKey() {
-                DeviceID = deviceID,
+                // TODO fix this
+                //DeviceID = new int[] { deviceID },
                 Group = miner.MinerDeviceName,
-                DeviceName = deviceName,
+                //DeviceName = deviceName,
                 DeviceGroupType = DeviceGroupType.CPU
             };
             _cpuMiners.Add(key, miner);
@@ -67,7 +83,8 @@ namespace NiceHashMiner.Miners {
         }
 
         // TODO check how will it work for double CPU settup
-        public Miner CreateBenchmarkMiner(DeviceGroupType type) {
+        // TODO add ethimer for dagger separation
+        public Miner CreateMiner(DeviceGroupType type) {
             
             // return first cpuminer
             if (DeviceGroupType.CPU == type && _cpuMiners.Count > 0) {
@@ -98,22 +115,48 @@ namespace NiceHashMiner.Miners {
             return TotalRate;
         }
 
+        public void StartInitialize() {
+            DeviceGroupType[] groupTypes = new DeviceGroupType[] {
+                DeviceGroupType.CPU,
+                DeviceGroupType.AMD_OpenCL,
+                DeviceGroupType.NVIDIA_2_1,
+                DeviceGroupType.NVIDIA_3_x,
+                DeviceGroupType.NVIDIA_5_x
+            };
+            _deviceGroupSettupManager = new List<DeviceGroupSettupManager>();
+            foreach (var group in groupTypes) {
+                var uniqueCDevUUIDs = ComputeDevice.GetUniqueEnabledDevicesUUIDsForGroup(group);
+                if (uniqueCDevUUIDs.Count > 0) {
+                    _deviceGroupSettupManager.Add(new DeviceGroupSettupManager(group, uniqueCDevUUIDs));
+                }
+            }
+            _perDeviceSpeedDictionary = GetEnabledDeviceTypeSpeeds();
+        }
+
         /// <summary>
-        /// SwichMostProfitable should check the best combination for most profit.
-        /// #1 Calculate profit for each suported algorithm per single device.
-        /// #2 Calculate profit for each supported algorithm per device group.
-        /// 
-        /// #3 Device groups are CPU, AMD_OpenCL and NVIDIA CUDA SM.x.x.
-        /// NVIDIA SMx.x should be paired separately except for daggerhashimoto.
+        /// GetEnabledDeviceTypeBenchmarks calculates currently enabled ComputeDevice benchmark speeds.
+        /// If there are more cards of the same model it multiplies the speeds by it's count
         /// </summary>
-        /// <param name="NiceHashData"></param>
-        public void SwichMostProfitable(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
-            // TODO maybe allocate this only once
-            Dictionary<string, Dictionary<AlgorithmType, double>> perDeviceProfit = new Dictionary<string, Dictionary<AlgorithmType, double>>();
-            // calculate per device profit
-            foreach (var cdev in ComputeDevice.UniqueAvaliableDevices) {
-                Dictionary<AlgorithmType, double> profits = new Dictionary<AlgorithmType, double>();
-                var deviceConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.Name);
+        /// <returns></returns>
+        PerDeviceSpeedDictionary GetEnabledDeviceTypeSpeeds() {
+            PerDeviceSpeedDictionary perDeviceTypeBenchmarks = new PerDeviceSpeedDictionary();
+
+            // get enabled devices and their count
+            _enabledDeviceCount = new Dictionary<string, int>();
+            foreach (var enabledDevice in ComputeDevice.GetEnabledDevices()) {
+                if (_enabledDeviceCount.ContainsKey(enabledDevice.Name)) {
+                    _enabledDeviceCount[enabledDevice.Name]++;
+                } else {
+                    _enabledDeviceCount.Add(enabledDevice.Name, 1);
+                }
+            }
+
+            // calculate benchmarks
+            foreach (var cdevKvp in _enabledDeviceCount) {
+                var cdevName = cdevKvp.Key;
+                var cdevCount = cdevKvp.Value;
+                Dictionary<AlgorithmType, double> cumulativeSpeeds = new Dictionary<AlgorithmType, double>();
+                var deviceConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(cdevName);
 
                 foreach (var kvp in deviceConfig.BenchmarkSpeeds) {
                     var key = kvp.Key;
@@ -121,104 +164,126 @@ namespace NiceHashMiner.Miners {
                     // TODO what is the constant at the end?
                     if (algorithm.Skip) {
                         // for now set to negative value as not profitable
-                        profits.Add(key, -1);
+                        cumulativeSpeeds.Add(key, -1);
                     } else {
-                        profits.Add(key, algorithm.BenchmarkSpeed * NiceHashData[key].paying * 0.000000001);
+                        cumulativeSpeeds.Add(key, algorithm.BenchmarkSpeed * cdevCount);
                     }
                 }
-                perDeviceProfit.Add(cdev.Name, profits);
+                perDeviceTypeBenchmarks.Add(cdevName, cumulativeSpeeds);
             }
 
-            // group device combinations
-            // nvidia group set of uuids
-            var nvidiaGroup = ComputeDeviceGroupManager.Instance.GetEnabledDevicesUUIDsForGroup(DeviceGroupType.NVIDIA_5_x);
-            // group combinations
-            var groups = GetAllSubsets(nvidiaGroup);
-            // calculate per group
-            Dictionary<SortedSet<string>, Dictionary<AlgorithmType, double>> perGroupHashRate = new Dictionary<SortedSet<string>, Dictionary<AlgorithmType, double>>();
-            foreach (var group in groups) {
-                List<DeviceBenchmarkConfig> benchmarks = new List<DeviceBenchmarkConfig>();
-                bool areAllDevsEnabled = true;
-                foreach (var uuid in group) {
-                    var device = ComputeDevice.GetDeviceWithUUID(uuid);
-                    if (device.Enabled) {
-                        benchmarks.Add(DeviceBenchmarkConfigManager.Instance.GetConfig(device.Name));
-                    } else {
-                        areAllDevsEnabled = false;
-                        break;
-                    }
-                }
-                if (areAllDevsEnabled && benchmarks.Count > 0) {
-                    Dictionary<AlgorithmType, double> currentGroupHashRate = new Dictionary<AlgorithmType,double>();
-                    // firs add keys and initialize to 0
-                    foreach (var key in benchmarks.First().BenchmarkSpeeds.Keys) {
-                        currentGroupHashRate.Add(key, 0.0d);
-                    }
-                    foreach (var bench in benchmarks) {
-                        foreach (var kvp in bench.BenchmarkSpeeds) {
-                            currentGroupHashRate[kvp.Key] += kvp.Value.BenchmarkSpeed;
-                        }
-                    }
-
-                    perGroupHashRate.Add(group, currentGroupHashRate);
-                }
-            }
-            
-            // calculate most profitable
-            var currentProfit = MemoryHelper.DeepClone(perGroupHashRate);
-            foreach (var groupHashKvp in perGroupHashRate) {
-
-            }
+            return perDeviceTypeBenchmarks;
         }
 
-        // brute force method for getting all subsets from set
-        private List<SortedSet<string>> GetAllSubsets(HashSet<string> hashSet) {
-            List<SortedSet<string>> allSubsets = new List<SortedSet<string>>();
 
-            List<string> mainSet = hashSet.ToList();
-            // sort easier to debug
-            mainSet.Sort();
+        PerDeviceProifitDictionary GetEnabledDeviceProifitDictionary(PerDeviceSpeedDictionary speedDict, Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
+            PerDeviceProifitDictionary profitDict = new PerDeviceProifitDictionary();
 
-            var retVal = GetAllSubsets(new List<string>(), mainSet);
-            foreach (var l in retVal) {
-                // we don't want empty sets
-                if(l.Count != 0) {
-                    allSubsets.Add(new SortedSet<string>(l));
+            foreach (var nameBenchKvp in speedDict) {
+                var deviceName = nameBenchKvp.Key;
+                var curDevProfits = new Dictionary<AlgorithmType, double>();
+                foreach (var algoSpeedKvp in nameBenchKvp.Value) {
+                    if (algoSpeedKvp.Value < 0) {
+                        // if disabled make unprofitable
+                        curDevProfits.Add(algoSpeedKvp.Key, -1000000);
+                    } else {
+                        // TODO what is the constant at the end?
+                        curDevProfits.Add(algoSpeedKvp.Key, algoSpeedKvp.Value * NiceHashData[algoSpeedKvp.Key].paying * 0.000000001);
+                    }
                 }
+                // add profits
+                profitDict.Add(deviceName, curDevProfits);
             }
 
-            return allSubsets;
+            return profitDict;
         }
 
         /// <summary>
-        /// GetAllSubsets recursive function to get all subsetts from a set
-        /// usage GetAllSubsets(empty, all);
+        /// SwichMostProfitable should check the best combination for most profit.
+        /// Calculate profit for each supported algorithm per device group.
+        /// Get max profit GroupSetups and run miners
+        /// Device groups are CPU, AMD_OpenCL and NVIDIA CUDA SM.x.x.
+        /// NVIDIA SMx.x should be paired separately except for daggerhashimoto.
         /// </summary>
-        /// <param name="soFar"></param>
-        /// <param name="rest"></param>
-        /// <returns></returns>
-        private List<List<string>> GetAllSubsets(List<string> soFar, List<string> rest) {
-            if (rest.Count == 0) {
-                var ret = new List<List<string>>();
-                ret.Add(soFar);
-                return ret;
-            } else {
-                var ret1 = new List<List<string>>();
-                var ret2 = new List<List<string>>();
-                var newSofar = new List<string>(soFar);
-                newSofar.AddRange(rest.GetRange(0, 1));
-                ret1.AddRange(
-                    GetAllSubsets(newSofar,
-                    rest.GetRange(1, rest.Count-1) )
-                    );
-                ret2.AddRange(
-                    GetAllSubsets(soFar,
-                    rest.GetRange(1, rest.Count - 1))
-                    );
-                ret1.AddRange(ret2.GetRange(0, ret2.Count));
-                return ret1;
+        /// <param name="NiceHashData"></param>
+        public void SwichMostProfitable(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData, string Worker) {
+            var devProfits = GetEnabledDeviceProifitDictionary(_perDeviceSpeedDictionary, NiceHashData);
+            
+            // calculate most profitable
+            foreach (var groupSettupProfit in _deviceGroupSettupManager) {
+                groupSettupProfit.CalculateMostProfitable(devProfits);
             }
+
+            // start/stop miners
+            foreach (var groupSettupProfit in _deviceGroupSettupManager) {
+                var groupId = groupSettupProfit.GroupID;
+                // TODO ethminer refactor after ethminer implementation
+                // TODO group profitability check
+                if (groupSettupProfit.IsChange) {
+                    // check if device settup change
+                    if (groupSettupProfit.IsMostProfitableSettupChange) {
+                        Helpers.ConsolePrint("IsMostProfitableSettupChange", "Profitable change group");
+                        // stop group settups that are different
+                        foreach (var groupSettup in groupSettupProfit.LastMostProfitable.PerGroupProfit) {
+                            if (groupSettupProfit.MostProfitable.PerGroupProfit.Contains(groupSettup) == false) {
+                                Helpers.ConsolePrint("IsMostProfitableSettupChange",
+                                    "Stopping: " + groupSettup.DevicesInfoString
+                                    + " Algorithm: " + AlgorithmNiceHashNames.GetName(groupSettup.MostProfitAlgorithmType));
+                                // TODO Nvidia dagger special case
+
+                                // stop this settup (no need to check)
+                                _allMiners[groupSettup.MinerKey].Stop(false);
+                                // wait 0.5 seconds before going on
+                                System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
+                            }
+                        }
+                    }
+                    // switching
+                    foreach (var groupSettup in groupSettupProfit.MostProfitable.PerGroupProfit) {
+                        Miner m = null;
+                        // if miner doesn't exist create it
+                        if (_allMiners.TryGetValue(groupSettup.MinerKey, out m) == false) {
+                            m = CreateMiner(groupId);
+                            foreach (var uuid in groupSettup.MinerKey.DeviceUUIDs) {
+                                m.CDevs.Add(ComputeDevice.GetDeviceWithUUID(uuid));
+                            }
+                            _allMiners.Add(groupSettup.MinerKey, m);
+                        }
+                        if (m.CurrentAlgo != groupSettup.MostProfitAlgorithmType) {
+                            Helpers.ConsolePrint(m.MinerDeviceName, "Devices: "
+                                + groupSettup.DevicesInfoString
+                                + ". Switching to most profitable algorithm: " + AlgorithmNiceHashNames.GetName(groupSettup.MostProfitAlgorithmType));
+
+                            if (m.CurrentAlgo != AlgorithmType.NONE && m.CurrentAlgo != AlgorithmType.INVALID) {
+                                m.Stop(true);
+                                // wait 0.5 seconds before going on
+                                System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
+                            }
+
+                            m.CurrentAlgo = groupSettup.MostProfitAlgorithmType;
+                            var MaxProfitKey = groupSettup.MostProfitAlgorithmType;
+
+                            m.Start(MaxProfitKey,
+                                "stratum+tcp://"
+                                + Globals.NiceHashData[MaxProfitKey].name
+                                // TODO fix this combo box things
+                                + "." + Globals.MiningLocation[/*comboBoxLocation.SelectedIndex*/ 1]
+                                + ".nicehash.com:"
+                                + Globals.NiceHashData[MaxProfitKey].port, Worker);
+                        }
+                    }
+                }
+            }
+            
         }
+
+        public void MinerStatsCheck() {
+            // TODO
+            //foreach (var groupSettupProfit in _deviceGroupSettupManager) {
+            //    groupSettupProfit.CalculateMostProfitable(devProfits);
+            //}
+        }
+
 
     }
 }
