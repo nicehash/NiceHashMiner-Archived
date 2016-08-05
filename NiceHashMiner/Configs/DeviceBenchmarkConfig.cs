@@ -78,21 +78,21 @@ namespace NiceHashMiner.Configs
 
             // check if data tampered
             bool IsDataTampered = !(
-                this.ID == _self.ID
-                && this.DeviceGroupType == _self.DeviceGroupType
-                && this.DeviceName == _self.DeviceName
+                this.ID == _file.ID
+                && this.DeviceGroupType == _file.DeviceGroupType
+                && this.DeviceName == _file.DeviceName
                 );
 
             // set editable data
-            if (_self.ExtraLaunchParameters != null) {
-                this.ExtraLaunchParameters = _self.ExtraLaunchParameters;
+            if (_file.ExtraLaunchParameters != null) {
+                this.ExtraLaunchParameters = _file.ExtraLaunchParameters;
             }
-            this.TimeLimit = _self.TimeLimit;
+            this.TimeLimit = _file.TimeLimit;
 
-            if (_self.BenchmarkSpeeds != null) {
-                foreach (var key in _self.BenchmarkSpeeds.Keys) {
+            if (_file.BenchmarkSpeeds != null) {
+                foreach (var key in _file.BenchmarkSpeeds.Keys) {
                     if(this.BenchmarkSpeeds.ContainsKey(key)) {
-                        this.BenchmarkSpeeds[key] = _self.BenchmarkSpeeds[key];
+                        this.BenchmarkSpeeds[key] = _file.BenchmarkSpeeds[key];
                     } else {
                         // TODO think if we let tamnpered data
                     }

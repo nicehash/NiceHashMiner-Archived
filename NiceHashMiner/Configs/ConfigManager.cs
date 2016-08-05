@@ -11,11 +11,11 @@ namespace NiceHashMiner.Configs {
         
 
         protected ConfigManager() {
-            GeneralConfig = new GeneralConfig();
+            GeneralConfig = new GeneralConfig(true);
             BenchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
 
             // load configs that are device independant
-            GeneralConfig.InitializeConfig();
+            //GeneralConfig.InitializeConfig();
         }
 
         public void CommitBenchmarks() {

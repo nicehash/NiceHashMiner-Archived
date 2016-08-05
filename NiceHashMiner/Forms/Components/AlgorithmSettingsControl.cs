@@ -75,6 +75,10 @@ namespace NiceHashMiner.Forms.Components {
             double value;
             if (Double.TryParse(fieldBoxBenchmarkSpeed.EntryText, out value)) {
                 _currentlySelectedAlgorithm.BenchmarkSpeed = value;
+                // update lvi speed
+                if (_currentlySelectedLvi != null) {
+                    _currentlySelectedLvi.SubItems[3].Text = value.ToString();
+                }
             }
         }
         private void textChangedExtraLaunchParameters(object sender, EventArgs e) {

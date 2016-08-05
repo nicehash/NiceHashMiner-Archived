@@ -29,10 +29,10 @@ namespace NiceHashMiner.Configs {
         }
 
         [JsonIgnore]
-        private bool FileLoaded { get { return _self != null; } }
+        private bool FileLoaded { get { return _file != null; } }
 
         [field: NonSerialized]
-        protected T _self;
+        protected T _file;
 
         #endregion //Members
 
@@ -40,8 +40,8 @@ namespace NiceHashMiner.Configs {
             InitializePaths();
             ReadFile();
             if (FileLoaded) {
-                _self.FilePath = this.FilePath;
-                _self.FilePathOld = this.FilePathOld;
+                _file.FilePath = this.FilePath;
+                _file.FilePathOld = this.FilePathOld;
                 InitializeObject();
             }
         }
@@ -66,29 +66,29 @@ namespace NiceHashMiner.Configs {
             } catch { }
         }
 
-        protected void InitReferenceType<RefT>(ref RefT toInit, RefT fromInit) where RefT : IComparable<RefT> {
-            if (fromInit != null) {
-                toInit = fromInit;
-            }
-        }
+        //protected void InitReferenceType<RefT>(ref RefT toInit, RefT fromInit) where RefT : IComparable<RefT> {
+        //    if (fromInit != null) {
+        //        toInit = fromInit;
+        //    }
+        //}
 
-        protected void InitDictionaryType<TKey, TValue>(ref IDictionary<TKey, TValue> toInit, IDictionary<TKey, TValue> fromInit) {
-            if (fromInit != null) {
-                foreach (var key in fromInit.Keys) {
-                    if (toInit.ContainsKey(key)) {
-                        toInit[key] = fromInit[key];
-                    } else {
-                        // TODO think if we let tamnpered data
-                    }
-                }
-            }
-        }
+        //protected void InitDictionaryType<TKey, TValue>(ref IDictionary<TKey, TValue> toInit, IDictionary<TKey, TValue> fromInit) {
+        //    if (fromInit != null) {
+        //        foreach (var key in fromInit.Keys) {
+        //            if (toInit.ContainsKey(key)) {
+        //                toInit[key] = fromInit[key];
+        //            } else {
+        //                // TODO think if we let tamnpered data
+        //            }
+        //        }
+        //    }
+        //}
 
         protected void ReadFile() {
             CheckAndCreateConfigsFolder();
             try {
                 if (new FileInfo(FilePath).Exists) {
-                    _self = JsonConvert.DeserializeObject<T>(File.ReadAllText(FilePath));
+                    _file = JsonConvert.DeserializeObject<T>(File.ReadAllText(FilePath));
                 } else {
                     Commit();
                 }

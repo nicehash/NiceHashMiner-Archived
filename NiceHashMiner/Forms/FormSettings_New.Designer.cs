@@ -23,6 +23,8 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings_New));
             this.splitContainerTabControlButtons = new System.Windows.Forms.SplitContainer();
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
@@ -57,7 +59,6 @@
             this.comboBox_Language = new System.Windows.Forms.ComboBox();
             this.checkBox_NVIDIAP0State = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableWindowsErrorReporting = new System.Windows.Forms.CheckBox();
-            this.checkBox_UseNewSettingsPage = new System.Windows.Forms.CheckBox();
             this.label_LogMaxFileSize = new System.Windows.Forms.Label();
             this.label_MinIdleSeconds = new System.Windows.Forms.Label();
             this.label_MinerAPIGraceSeconds = new System.Windows.Forms.Label();
@@ -90,6 +91,7 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTabControlButtons)).BeginInit();
             this.splitContainerTabControlButtons.Panel1.SuspendLayout();
             this.splitContainerTabControlButtons.Panel2.SuspendLayout();
@@ -168,7 +170,6 @@
             this.tabPageGeneral.Controls.Add(this.comboBox_Language);
             this.tabPageGeneral.Controls.Add(this.checkBox_NVIDIAP0State);
             this.tabPageGeneral.Controls.Add(this.checkBox_DisableWindowsErrorReporting);
-            this.tabPageGeneral.Controls.Add(this.checkBox_UseNewSettingsPage);
             this.tabPageGeneral.Controls.Add(this.label_LogMaxFileSize);
             this.tabPageGeneral.Controls.Add(this.label_MinIdleSeconds);
             this.tabPageGeneral.Controls.Add(this.label_MinerAPIGraceSeconds);
@@ -489,16 +490,6 @@
             this.checkBox_DisableWindowsErrorReporting.Text = "DisableWindowsErrorReporting";
             this.checkBox_DisableWindowsErrorReporting.UseVisualStyleBackColor = true;
             // 
-            // checkBox_UseNewSettingsPage
-            // 
-            this.checkBox_UseNewSettingsPage.AutoSize = true;
-            this.checkBox_UseNewSettingsPage.Location = new System.Drawing.Point(24, 280);
-            this.checkBox_UseNewSettingsPage.Name = "checkBox_UseNewSettingsPage";
-            this.checkBox_UseNewSettingsPage.Size = new System.Drawing.Size(130, 17);
-            this.checkBox_UseNewSettingsPage.TabIndex = 325;
-            this.checkBox_UseNewSettingsPage.Text = "UseNewSettingsPage";
-            this.checkBox_UseNewSettingsPage.UseVisualStyleBackColor = true;
-            // 
             // label_LogMaxFileSize
             // 
             this.label_LogMaxFileSize.AutoSize = true;
@@ -796,6 +787,7 @@
             this.buttonSaveClose.TabIndex = 44;
             this.buttonSaveClose.Text = "&Save and Close";
             this.buttonSaveClose.UseVisualStyleBackColor = true;
+            this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
             // 
             // buttonDefaults
             // 
@@ -806,6 +798,7 @@
             this.buttonDefaults.TabIndex = 43;
             this.buttonDefaults.Text = "&Defaults";
             this.buttonDefaults.UseVisualStyleBackColor = true;
+            this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
             // 
             // buttonCloseNoSave
             // 
@@ -816,6 +809,12 @@
             this.buttonCloseNoSave.TabIndex = 45;
             this.buttonCloseNoSave.Text = "&Close without Saving";
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
+            this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
             // FormSettings_New
             // 
@@ -824,10 +823,11 @@
             this.ClientSize = new System.Drawing.Size(986, 698);
             this.Controls.Add(this.splitContainerTabControlButtons);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormSettings_New";
-            this.Text = "FormSettings_New";
+            this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             this.splitContainerTabControlButtons.Panel1.ResumeLayout(false);
             this.splitContainerTabControlButtons.Panel2.ResumeLayout(false);
@@ -882,7 +882,6 @@
         private System.Windows.Forms.ComboBox comboBox_Language;
         private System.Windows.Forms.CheckBox checkBox_NVIDIAP0State;
         private System.Windows.Forms.CheckBox checkBox_DisableWindowsErrorReporting;
-        private System.Windows.Forms.CheckBox checkBox_UseNewSettingsPage;
         private System.Windows.Forms.Label label_LogMaxFileSize;
         private System.Windows.Forms.Label label_MinIdleSeconds;
         private System.Windows.Forms.Label label_MinerAPIGraceSeconds;
@@ -917,6 +916,7 @@
         private Components.BenchmarkLimitControl benchmarkLimitControlCPU;
         private Components.BenchmarkLimitControl benchmarkLimitControlNVIDIA;
         private Components.BenchmarkLimitControl benchmarkLimitControlAMD;
+        private System.Windows.Forms.ToolTip toolTip1;
 
     }
 }

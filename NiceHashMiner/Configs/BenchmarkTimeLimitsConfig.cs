@@ -63,10 +63,5 @@ namespace NiceHashMiner.Configs
         }
         #endregion PROPERTIES
 
-        //public void SetFromConfig(BenchmarkTimeLimitsConfig other) {
-        //    this.AMD = other.AMD;
-        //    this.CPU = other.CPU;
-        //    this.NVIDIA = other.NVIDIA;
-        //}
     }
 }

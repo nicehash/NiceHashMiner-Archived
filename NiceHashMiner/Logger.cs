@@ -18,11 +18,11 @@ namespace NiceHashMiner
         {
             Hierarchy h = (Hierarchy)LogManager.GetRepository();
 
-            if (Config.ConfigData.LogToFile)
+            if (ConfigManager.Instance.GeneralConfig.LogToFile)
                 h.Root.Level = Level.Info;
-            //else if (Config.ConfigData.LogLevel == 2)
+            //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 2)
             //    h.Root.Level = Level.Warn;
-            //else if (Config.ConfigData.LogLevel == 3)
+            //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 3)
             //    h.Root.Level = Level.Error;
 
             h.Root.AddAppender(CreateFileAppender());
@@ -37,7 +37,7 @@ namespace NiceHashMiner
             appender.AppendToFile = true;
             appender.RollingStyle = RollingFileAppender.RollingMode.Size;
             appender.MaxSizeRollBackups = 1;
-            appender.MaxFileSize = Config.ConfigData.LogMaxFileSize;
+            appender.MaxFileSize = ConfigManager.Instance.GeneralConfig.LogMaxFileSize;
             appender.PreserveLogFileNameExtension = true;
 
             PatternLayout layout = new PatternLayout();

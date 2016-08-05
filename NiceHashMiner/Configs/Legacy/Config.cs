@@ -85,7 +85,6 @@ namespace NiceHashMiner.Configs
         public Group[] Groups;
 #pragma warning restore 649
 
-        // TODO split this into normal and benchmark settings
         public static Config ConfigData;
 
         public static void InitializeConfig()

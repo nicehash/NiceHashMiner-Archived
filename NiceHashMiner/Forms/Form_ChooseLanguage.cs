@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -16,12 +17,12 @@ namespace NiceHashMiner
             InitializeComponent();
 
             // Add language selections list
-            Dictionary<int, string> lang = International.GetAvailableLanguages();
+            Dictionary<LanguageType, string> lang = International.GetAvailableLanguages();
 
             comboBox_Languages.Items.Clear();
             for (int i = 0; i < lang.Count; i++)
             {
-                comboBox_Languages.Items.Add(lang[i]);
+                comboBox_Languages.Items.Add(lang[(LanguageType)i]);
             }
 
             comboBox_Languages.SelectedIndex = 0;
@@ -33,7 +34,7 @@ namespace NiceHashMiner
 
         private void button_OK_Click(object sender, EventArgs e)
         {
-            Config.ConfigData.Language = comboBox_Languages.SelectedIndex;
+            ConfigManager.Instance.GeneralConfig.Language = (LanguageType)comboBox_Languages.SelectedIndex;
             this.Close();
         }
     }

@@ -55,7 +55,7 @@ namespace NiceHashMiner
         {
             Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
 
-            if (Config.ConfigData.LogToFile)
+            if (ConfigManager.Instance.GeneralConfig.LogToFile)
                 Logger.log.Info("[" + grp + "] " + text);
         }
 

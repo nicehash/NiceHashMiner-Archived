@@ -234,7 +234,7 @@ namespace NiceHashMiner.Miners {
                                 // stop this settup (no need to check)
                                 _allMiners[groupSettup.MinerKey].Stop(false);
                                 // wait 0.5 seconds before going on
-                                System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
+                                System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                             }
                         }
                     }
@@ -257,7 +257,7 @@ namespace NiceHashMiner.Miners {
                             if (m.CurrentAlgo != AlgorithmType.NONE && m.CurrentAlgo != AlgorithmType.INVALID) {
                                 m.Stop(true);
                                 // wait 0.5 seconds before going on
-                                System.Threading.Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
+                                System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                             }
 
                             m.CurrentAlgo = groupSettup.MostProfitAlgorithmType;

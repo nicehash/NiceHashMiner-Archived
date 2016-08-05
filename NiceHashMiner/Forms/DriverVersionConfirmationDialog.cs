@@ -27,7 +27,7 @@ namespace NiceHashMiner
             if (chkBoxDontShowAgain.Checked)
             {
                 Helpers.ConsolePrint("NICEHASH", "Setting ShowDriverVersionWarning to false");
-                Config.ConfigData.ShowDriverVersionWarning = false;
+                ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning = false;
             }
 
             this.Close();

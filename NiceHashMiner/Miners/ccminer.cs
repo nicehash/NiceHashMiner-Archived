@@ -32,7 +32,7 @@ namespace NiceHashMiner
                                   " " + Algo.ExtraLaunchParameters +
                                   " -S " + url.Substring(14) +
                                   " -O " + username + ":" + GetPassword(Algo) +
-                                  " --api-port " + Config.ConfigData.ethminerAPIPortNvidia.ToString() +
+                                  " --api-port " + ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString() +
                                   " --cuda-devices ";
 
                 int dagdev = -1;
@@ -227,11 +227,11 @@ namespace NiceHashMiner
                 if (WarningDialog.DisableDetection)
                 {
                     if (this is ccminer_sp)
-                        Config.ConfigData.DisableDetectionNVidia5X = true;
+                        ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X = true;
                     else if (this is ccminer_tpruvot)
-                        Config.ConfigData.DisableDetectionNVidia3X = true;
+                        ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X = true;
                     else if (this is ccminer_tpruvot_sm21)
-                        Config.ConfigData.DisableDetectionNVidia2X = true;
+                        ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X = true;
                 }
 
                 WarningDialog = null;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -12,7 +13,7 @@ namespace NiceHashMiner
         {
 #pragma warning disable 649
             public string Name;
-            public int ID;
+            public LanguageType ID;
             public Dictionary<string, string> Entries;
 #pragma warning restore 649
         }
@@ -49,7 +50,7 @@ namespace NiceHashMiner
             return langs;
         }
 
-        public static void Initialize(int lid)
+        public static void Initialize(LanguageType lid)
         {
             List<Language> langs = GetLanguages();
 
@@ -70,10 +71,10 @@ namespace NiceHashMiner
         /// Call this method to obtain available languages. Used by Settings GUI.
         /// </summary>
         /// <returns>Each dictionary entry contains id of the language (int) and name of the language (string).</returns>
-        public static Dictionary<int, string> GetAvailableLanguages()
+        public static Dictionary<LanguageType, string> GetAvailableLanguages()
         {
             List<Language> langs = GetLanguages();
-            Dictionary<int, string> retdict = new Dictionary<int,string>();
+            Dictionary<LanguageType, string> retdict = new Dictionary<LanguageType, string>();
 
             foreach (Language lang in langs)
             {

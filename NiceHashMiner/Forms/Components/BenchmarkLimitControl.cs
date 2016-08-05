@@ -37,10 +37,24 @@ namespace NiceHashMiner.Forms.Components {
 
         public BenchmarkLimitControl() {
             InitializeComponent();
-            textBoxQuick.KeyPress += new KeyPressEventHandler(textBoxIntsOnly_KeyPress);
-            textBoxStandard.KeyPress += new KeyPressEventHandler(textBoxIntsOnly_KeyPress);
-            textBoxPrecise.KeyPress += new KeyPressEventHandler(textBoxIntsOnly_KeyPress);
+            textBoxQuick.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+            textBoxStandard.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+            textBoxPrecise.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
             _textBoxes = new TextBox[] { textBoxQuick, textBoxStandard, textBoxPrecise };
+            //InitLocale();
+        }
+
+        public void SetToolTip(ref ToolTip toolTip, string groupTypeName) {
+            // TODO old implementation has textBox tooltips that don't work
+            toolTip.SetToolTip(labelQuick, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Quick"), groupTypeName) + ".");
+            toolTip.SetToolTip(labelStandard, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Standard"), groupTypeName) + ".");
+            toolTip.SetToolTip(labelPrecise, String.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"), International.GetText("Standard"), groupTypeName) + ".");
+        }
+
+        public void InitLocale() {
+            labelQuick.Text = International.GetText("Quick") + ":";
+            labelStandard.Text = International.GetText("Standard") + ":";
+            labelPrecise.Text = International.GetText("Precise") + ":";
         }
 
         #region Events
@@ -54,12 +68,6 @@ namespace NiceHashMiner.Forms.Components {
 
         private void textBoxPrecise_TextChanged(object sender, EventArgs e) {
             setTimeLimit(BenchmarkPerformanceType.Precise, textBoxPrecise.Text);
-        }
-
-        private void textBoxIntsOnly_KeyPress(object sender, KeyPressEventArgs e) {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) {
-                e.Handled = true;
-            }
         }
         #endregion // Events
 

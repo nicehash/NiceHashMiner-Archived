@@ -24,7 +24,7 @@ namespace NiceHashMiner
         }
 
         protected override bool IsGroupQueryEnabled() {
-            return !Config.ConfigData.DisableDetectionNVidia5X;
+            return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
         }
 
         protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {

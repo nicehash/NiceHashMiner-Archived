@@ -189,7 +189,7 @@ namespace NiceHashMiner
         }
 
         virtual protected void BenchmarkThreadRoutine(object CommandLine) {
-            Thread.Sleep(Config.ConfigData.MinerRestartDelayMS);
+            Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
 
             bool once = true;
             Stopwatch timer = new Stopwatch();
@@ -403,13 +403,13 @@ namespace NiceHashMiner
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
             }
 
-            NumRetries = Config.ConfigData.MinerAPIGraceSeconds / Config.ConfigData.MinerAPIQueryInterval;
+            NumRetries = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
             if (this is sgminer && !IsCurrentAlgo(AlgorithmType.DaggerHashimoto))
-                NumRetries = (Config.ConfigData.MinerAPIGraceSeconds + Config.ConfigData.MinerAPIGraceSecondsAMD) / Config.ConfigData.MinerAPIQueryInterval;
+                NumRetries = (ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds + ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD) / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
 
             if (IsCurrentAlgo(AlgorithmType.DaggerHashimoto))
             {
-                ethminerLink = new ethminerAPI((this is sgminer) ? Config.ConfigData.ethminerAPIPortAMD : Config.ConfigData.ethminerAPIPortNvidia);
+                ethminerLink = new ethminerAPI((this is sgminer) ? ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD : ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia);
                 P.StartInfo.FileName = Ethereum.EtherMinerPath;
                 P.ExitEvent = ethMiner_Exited;
             }
@@ -420,7 +420,7 @@ namespace NiceHashMiner
             }
 
             P.StartInfo.Arguments = LastCommandLine;
-            P.StartInfo.CreateNoWindow = Config.ConfigData.HideMiningWindows;
+            P.StartInfo.CreateNoWindow = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
             P.StartInfo.UseShellExecute = false;
 
             Helpers.ConsolePrint(MinerDeviceName, "Starting miner (" + P.StartInfo.FileName + "): " + LastCommandLine);

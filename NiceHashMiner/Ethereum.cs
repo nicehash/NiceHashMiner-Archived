@@ -151,7 +151,7 @@ namespace NiceHashMiner
             if (ret == null)
             {
                 Helpers.ConsolePrint(worker, "Failed to obtain current block, using default 1700000.");
-                CurrentBlockNum = Config.ConfigData.ethminerDefaultBlockHeight.ToString();
+                CurrentBlockNum = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
             }
             else
             {

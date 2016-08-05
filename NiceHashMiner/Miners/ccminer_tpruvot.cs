@@ -23,7 +23,7 @@ namespace NiceHashMiner
         }
 
         protected override bool IsGroupQueryEnabled() {
-            return !Config.ConfigData.DisableDetectionNVidia3X;
+            return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X;
         }
 
         protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {

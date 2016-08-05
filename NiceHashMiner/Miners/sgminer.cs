@@ -41,7 +41,7 @@ namespace NiceHashMiner
         }
 
         protected override bool IsGroupQueryEnabled() {
-            return !Config.ConfigData.DisableDetectionAMD;
+            return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
         }
 
         protected void AddPotentialCDev(string text)
@@ -146,7 +146,7 @@ namespace NiceHashMiner
                 WarningDialog.ShowDialog();
                 
                 if (WarningDialog.DisableDetection)
-                    Config.ConfigData.DisableDetectionAMD = true;
+                    ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD = true;
                 
                 WarningDialog = null;
 
@@ -225,7 +225,7 @@ namespace NiceHashMiner
                 SupportedAlgorithms[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
             }
 
-            if (ShowWarningDialog == true && Config.ConfigData.ShowDriverVersionWarning == true)
+            if (ShowWarningDialog == true && ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning == true)
             {
                 Form WarningDialog = new DriverVersionConfirmationDialog();
                 WarningDialog.ShowDialog();
@@ -311,7 +311,7 @@ namespace NiceHashMiner
                                   " " + Algo.ExtraLaunchParameters +
                                   " -S " + url.Substring(14) +
                                   " -O " + username + ":" + GetPassword(Algo) +
-                                  " --api-port " + Config.ConfigData.ethminerAPIPortAMD.ToString() +
+                                  " --api-port " + ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString() +
                                   " --opencl-devices ";
 
                 int dagdev = -1;
@@ -356,7 +356,7 @@ namespace NiceHashMiner
                     return; // no GPUs to start mining on
                 }
 
-                if (Config.ConfigData.DisableAMDTempControl == false)
+                if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
                     LastCommandLine += TemperatureParam;
             }
 
@@ -420,12 +420,12 @@ namespace NiceHashMiner
 
                 var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
                 string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
-                             Globals.MiningLocation[Config.ConfigData.ServiceLocation] + ".nicehash.com:" +
+                             Globals.MiningLocation[ConfigManager.Instance.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
                              nhAlgorithmData.port;
 
-                string username = Config.ConfigData.BitcoinAddress.Trim();
-                if (Config.ConfigData.WorkerName.Length > 0)
-                    username += "." + Config.ConfigData.WorkerName.Trim();
+                string username = ConfigManager.Instance.GeneralConfig.BitcoinAddress.Trim();
+                if (ConfigManager.Instance.GeneralConfig.WorkerName.Length > 0)
+                    username += "." + ConfigManager.Instance.GeneralConfig.WorkerName.Trim();
 
                 // TODO not sure if this will work, why cd-ing to dir and running???
                 CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
@@ -444,7 +444,7 @@ namespace NiceHashMiner
                         CommandLine += CDevs[i].ID.ToString() + ",";
 
                 CommandLine = CommandLine.Remove(CommandLine.Length - 1);
-                if (Config.ConfigData.DisableAMDTempControl == false)
+                if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
                     CommandLine += TemperatureParam;
                 CommandLine += " && del dump.txt\"";
             }

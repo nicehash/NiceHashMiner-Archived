@@ -31,11 +31,11 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         public void SetInputModeDoubleOnly() {
-            textBox.KeyPress += new KeyPressEventHandler(textBoxDoubleOnly_KeyPress);
+            textBox.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxDoubleOnly_KeyPress);
         }
 
         public void SetInputModeIntOnly() {
-            textBox.KeyPress += new KeyPressEventHandler(textBoxIntOnly_KeyPress);
+            textBox.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
         }
 
         public void SetOnTextChanged(EventHandler textChanged) {
@@ -46,23 +46,5 @@ namespace NiceHashMiner.Forms.Components {
             InitializeComponent();
         }
 
-        private void textBoxDoubleOnly_KeyPress(object sender, KeyPressEventArgs e) {
-            if (!char.IsControl(e.KeyChar)
-                && !char.IsDigit(e.KeyChar)
-                && (e.KeyChar != '.')) {
-                e.Handled = true;
-            }
-
-            // only allow one decimal point
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1)) {
-                e.Handled = true;
-            }
-        }
-
-        private void textBoxIntOnly_KeyPress(object sender, KeyPressEventArgs e) {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) {
-                e.Handled = true;
-            }
-        }
     }
 }

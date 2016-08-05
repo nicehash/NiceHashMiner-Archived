@@ -30,10 +30,10 @@ namespace NiceHashMiner
             CPUExtensionType[] detectOrder = new CPUExtensionType[] { CPUExtensionType.AVX2, CPUExtensionType.AVX, CPUExtensionType.SSE2 };
 
             // #1 try to initialize with Configured extension
-            bool isInitialized = InitializeMinerPaths((CPUExtensionType)Config.ConfigData.ForceCPUExtension);
+            bool isInitialized = InitializeMinerPaths(ConfigManager.Instance.GeneralConfig.ForceCPUExtension);
             // #2 if automatic or does not support then initialize in order
             if (isInitialized == false) {
-                Config.ConfigData.ForceCPUExtension = (int)CPUExtensionType.Automatic; // set to automatic if not supported
+                ConfigManager.Instance.GeneralConfig.ForceCPUExtension = CPUExtensionType.Automatic; // set to automatic if not supported
                 for (int i = 0; i < detectOrder.Length; ++i) {
                     isInitialized = InitializeMinerPaths(detectOrder[i]);
                     if (isInitialized) {
