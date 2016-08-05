@@ -12,7 +12,20 @@ using System.Windows.Forms;
 namespace NiceHashMiner.Forms {
     public partial class FormSettings_New : Form {
 
-        public int ret;
+
+        private bool _isInitFinished = false;
+        private bool _isChange = false;
+        public bool IsChange {
+            get { return _isChange; }
+            private set {
+                if (_isInitFinished) {
+                    _isChange = value;
+                } else {
+                    _isChange = false;
+                }
+            }
+        }
+        public bool IsChangeSaved { get; private set; }
 
         // most likely we wil have settings only per unique devices
         bool ShowUniqueDeviceList = true;
@@ -25,7 +38,9 @@ namespace NiceHashMiner.Forms {
         public FormSettings_New() {
             InitializeComponent();
 
-            ret = 1;
+            //ret = 1; // default
+            IsChange = false;
+            IsChangeSaved = false;
 
             _benchmarkConfigsBackup = MemoryHelper.DeepClone(ConfigManager.Instance.BenchmarkConfigs);
             _generalConfigBackup = MemoryHelper.DeepClone(ConfigManager.Instance.GeneralConfig);
@@ -37,6 +52,9 @@ namespace NiceHashMiner.Forms {
                 devicesListView1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
             }
 
+            // initialize form
+            InitializeFormTranslations();
+
             // Initialize toolTip
             InitializeToolTip();
 
@@ -45,11 +63,13 @@ namespace NiceHashMiner.Forms {
 
             // initialization calls 
             InitializeCallbacks();
-            InitializeBenchmarkLimitSettings();
             // link algorithm list with algorithm settings control
             algorithmSettingsControl1.Enabled = false;
             algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
 
+
+            // At the very end set to true
+            _isInitFinished = true;
         }
 
         private ComputeDevice GetCurrentlySelectedComputeDevice(int index) {
@@ -124,119 +144,85 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
         }
 
+        #region Form this
+        private void InitializeFormTranslations() {
+            buttonDefaults.Text = International.GetText("Form_Settings_buttonDefaultsText");
+            buttonSaveClose.Text = International.GetText("Form_Settings_buttonSaveText");
+            buttonCloseNoSave.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
+        }
+        #endregion //Form this
+
         #region Tab General
 
-        private void InitializeGeneralTab() {
-            // Translation scope
-            {
-                checkBox_DebugConsole.Text = International.GetText("Form_Settings_General_DebugConsole");
-                checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
-                checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
-                checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
-                checkBox_DisableDetectionNVidia5X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA5.x");
-                checkBox_DisableDetectionNVidia3X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA3.x");
-                checkBox_DisableDetectionNVidia2X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA2.x");
-                checkBox_DisableDetectionAMD.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
-                checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
-                checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
-                checkBox_ShowDriverVersionWarning.Text = International.GetText("Form_Settings_General_ShowDriverVersionWarning");
-                checkBox_DisableWindowsErrorReporting.Text = International.GetText("Form_Settings_General_DisableWindowsErrorReporting");
-                //checkBox_UseNewSettingsPage.Text = International.GetText("Form_Settings_General_UseNewSettingsPage");
-                checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
-                checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
+        private void InitializeGeneralTabTranslations() {
+            checkBox_DebugConsole.Text = International.GetText("Form_Settings_General_DebugConsole");
+            checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
+            checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
+            checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
+            checkBox_DisableDetectionNVidia5X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA5.x");
+            checkBox_DisableDetectionNVidia3X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA3.x");
+            checkBox_DisableDetectionNVidia2X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA2.x");
+            checkBox_DisableDetectionAMD.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
+            checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
+            checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
+            checkBox_ShowDriverVersionWarning.Text = International.GetText("Form_Settings_General_ShowDriverVersionWarning");
+            checkBox_DisableWindowsErrorReporting.Text = International.GetText("Form_Settings_General_DisableWindowsErrorReporting");
+            //checkBox_UseNewSettingsPage.Text = International.GetText("Form_Settings_General_UseNewSettingsPage");
+            checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
+            checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
 
-                label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
-                label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
-                label_WorkerName.Text = International.GetText("WorkerName") + ":";
-                label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
-                label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
-                label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
-                label_MinerAPIGraceSeconds.Text = International.GetText("Form_Settings_General_MinerAPIGraceSeconds") + ":";
-                label_MinerAPIGraceSecondsAMD.Text = International.GetText("Form_Settings_General_MinerAPIGraceSecondsAMD") + ":";
-                label_MinerAPIQueryInterval.Text = International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";
-                label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
+            label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
+            label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
+            label_WorkerName.Text = International.GetText("WorkerName") + ":";
+            label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
+            label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
+            label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
+            label_MinerAPIGraceSeconds.Text = International.GetText("Form_Settings_General_MinerAPIGraceSeconds") + ":";
+            label_MinerAPIGraceSecondsAMD.Text = International.GetText("Form_Settings_General_MinerAPIGraceSecondsAMD") + ":";
+            label_MinerAPIQueryInterval.Text = International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";
+            label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
 
-                label_SwitchMinSecondsFixed.Text = International.GetText("Form_Settings_General_SwitchMinSecondsFixed") + ":";
-                label_SwitchMinSecondsDynamic.Text = International.GetText("Form_Settings_General_SwitchMinSecondsDynamic") + ":";
-                label_SwitchMinSecondsAMD.Text = International.GetText("Form_Settings_General_SwitchMinSecondsAMD") + ":";
+            label_SwitchMinSecondsFixed.Text = International.GetText("Form_Settings_General_SwitchMinSecondsFixed") + ":";
+            label_SwitchMinSecondsDynamic.Text = International.GetText("Form_Settings_General_SwitchMinSecondsDynamic") + ":";
+            label_SwitchMinSecondsAMD.Text = International.GetText("Form_Settings_General_SwitchMinSecondsAMD") + ":";
 
-                label_ethminerDefaultBlockHeight.Text = International.GetText("Form_Settings_General_ethminerDefaultBlockHeight") + ":";
-                label_ethminerAPIPortNvidia.Text = International.GetText("Form_Settings_General_ethminerAPIPortNVIDIA") + ":";
-                label_ethminerAPIPortAMD.Text = International.GetText("Form_Settings_General_ethminerAPIPortAMD") + ":";
+            label_ethminerDefaultBlockHeight.Text = International.GetText("Form_Settings_General_ethminerDefaultBlockHeight") + ":";
+            label_ethminerAPIPortNvidia.Text = International.GetText("Form_Settings_General_ethminerAPIPortNVIDIA") + ":";
+            label_ethminerAPIPortAMD.Text = International.GetText("Form_Settings_General_ethminerAPIPortAMD") + ":";
 
-                displayCurrencyLabel.Text = International.GetText("Form_Settings_DisplayCurrency");
+            displayCurrencyLabel.Text = International.GetText("Form_Settings_DisplayCurrency");
 
-                // Benchmark time limits
-                // TODO internationalization change
-                groupBoxBenchmarkTimeLimits.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
-                benchmarkLimitControlCPU.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
-                benchmarkLimitControlNVIDIA.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group") + ":";
-                benchmarkLimitControlAMD.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Group") + ":";
-                // moved from constructor because of editor
-                benchmarkLimitControlCPU.InitLocale();
-                benchmarkLimitControlNVIDIA.InitLocale();
-                benchmarkLimitControlAMD.InitLocale();
-            }
+            // Benchmark time limits
+            // TODO internationalization change
+            groupBoxBenchmarkTimeLimits.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
+            benchmarkLimitControlCPU.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
+            benchmarkLimitControlNVIDIA.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group") + ":";
+            benchmarkLimitControlAMD.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Group") + ":";
+            // moved from constructor because of editor
+            benchmarkLimitControlCPU.InitLocale();
+            benchmarkLimitControlNVIDIA.InitLocale();
+            benchmarkLimitControlAMD.InitLocale();
+        }
 
-            // Checkboxes set checked value
-            checkBox_DebugConsole.Checked = ConfigManager.Instance.GeneralConfig.DebugConsole;
-            checkBox_AutoStartMining.Checked = ConfigManager.Instance.GeneralConfig.AutoStartMining;
-            checkBox_HideMiningWindows.Checked = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
-            checkBox_MinimizeToTray.Checked = ConfigManager.Instance.GeneralConfig.MinimizeToTray;
-            checkBox_DisableDetectionNVidia5X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
-            checkBox_DisableDetectionNVidia3X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X;
-            checkBox_DisableDetectionNVidia2X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X;
-            checkBox_DisableDetectionAMD.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
-            checkBox_AutoScaleBTCValues.Checked = ConfigManager.Instance.GeneralConfig.AutoScaleBTCValues;
-            checkBox_StartMiningWhenIdle.Checked = ConfigManager.Instance.GeneralConfig.StartMiningWhenIdle;
-            checkBox_ShowDriverVersionWarning.Checked = ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning;
-            checkBox_DisableWindowsErrorReporting.Checked = ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting;
-            //checkBox_UseNewSettingsPage.Checked = ConfigManager.Instance.GeneralConfig.UseNewSettingsPage;
-            checkBox_NVIDIAP0State.Checked = ConfigManager.Instance.GeneralConfig.NVIDIAP0State;
-            checkBox_LogToFile.Checked = ConfigManager.Instance.GeneralConfig.LogToFile;
-
+        private void InitializeGeneralTabCallbacks() {
             // Add EventHandler for all the general tab's checkboxes
-            this.checkBox_AutoScaleBTCValues.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_DisableDetectionAMD.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_DisableDetectionNVidia2X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_DisableDetectionNVidia3X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_DisableDetectionNVidia5X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_MinimizeToTray.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_HideMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_DebugConsole.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_ShowDriverVersionWarning.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_DisableWindowsErrorReporting.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_StartMiningWhenIdle.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            //this.checkBox_UseNewSettingsPage.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_NVIDIAP0State.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-            this.checkBox_LogToFile.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-
-            // Textboxes
-            textBox_BitcoinAddress.Text = ConfigManager.Instance.GeneralConfig.BitcoinAddress;
-            textBox_WorkerName.Text = ConfigManager.Instance.GeneralConfig.WorkerName;
-            textBox_SwitchMinSecondsFixed.Text = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed.ToString();
-            textBox_SwitchMinSecondsDynamic.Text = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic.ToString();
-            textBox_SwitchMinSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD.ToString();
-            textBox_MinerAPIQueryInterval.Text = ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval.ToString();
-            textBox_MinerRestartDelayMS.Text = ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS.ToString();
-            textBox_MinerAPIGraceSeconds.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds.ToString();
-            textBox_MinerAPIGraceSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD.ToString();
-            textBox_MinIdleSeconds.Text = ConfigManager.Instance.GeneralConfig.MinIdleSeconds.ToString();
-            textBox_LogMaxFileSize.Text = ConfigManager.Instance.GeneralConfig.LogMaxFileSize.ToString();
-            //textBox_BenchmarkTimeLimitsCPU_Quick.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsCPU[0].ToString();
-            //textBox_BenchmarkTimeLimitsCPU_Standard.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsCPU[1].ToString();
-            //textBox_BenchmarkTimeLimitsCPU_Precise.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsCPU[2].ToString();
-            //textBox_BenchmarkTimeLimitsNVIDIA_Quick.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsNVIDIA[0].ToString();
-            //textBox_BenchmarkTimeLimitsNVIDIA_Standard.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsNVIDIA[1].ToString();
-            //textBox_BenchmarkTimeLimitsNVIDIA_Precise.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsNVIDIA[2].ToString();
-            //textBox_BenchmarkTimeLimitsAMD_Quick.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsAMD[0].ToString();
-            //textBox_BenchmarkTimeLimitsAMD_Standard.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsAMD[1].ToString();
-            //textBox_BenchmarkTimeLimitsAMD_Precise.Text = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimitsAMD[2].ToString();
-            textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
-            textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
-            textBox_ethminerDefaultBlockHeight.Text = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
-
+            {
+                this.checkBox_AutoScaleBTCValues.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_DisableDetectionAMD.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_DisableDetectionNVidia2X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_DisableDetectionNVidia3X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_DisableDetectionNVidia5X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_MinimizeToTray.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_HideMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_DebugConsole.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_ShowDriverVersionWarning.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_DisableWindowsErrorReporting.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_StartMiningWhenIdle.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                //this.checkBox_UseNewSettingsPage.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_NVIDIAP0State.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_LogToFile.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+            }
             // Add EventHandler for all the general tab's textboxes
             {
                 this.textBox_BitcoinAddress.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
@@ -277,38 +263,83 @@ namespace NiceHashMiner.Forms {
                 this.textBox_ethminerAPIPortAMD.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_ethminerDefaultBlockHeight.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
             }
-            
+            // Add EventHandler for all the general tab's textboxes
+            {
+                this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
+                this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
+            }
+        }
+
+        private void InitializeGeneralTabFieldValuesReferences() {
+            // Checkboxes set checked value
+            {
+                checkBox_DebugConsole.Checked = ConfigManager.Instance.GeneralConfig.DebugConsole;
+                checkBox_AutoStartMining.Checked = ConfigManager.Instance.GeneralConfig.AutoStartMining;
+                checkBox_HideMiningWindows.Checked = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
+                checkBox_MinimizeToTray.Checked = ConfigManager.Instance.GeneralConfig.MinimizeToTray;
+                checkBox_DisableDetectionNVidia5X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
+                checkBox_DisableDetectionNVidia3X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X;
+                checkBox_DisableDetectionNVidia2X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X;
+                checkBox_DisableDetectionAMD.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
+                checkBox_AutoScaleBTCValues.Checked = ConfigManager.Instance.GeneralConfig.AutoScaleBTCValues;
+                checkBox_StartMiningWhenIdle.Checked = ConfigManager.Instance.GeneralConfig.StartMiningWhenIdle;
+                checkBox_ShowDriverVersionWarning.Checked = ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning;
+                checkBox_DisableWindowsErrorReporting.Checked = ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting;
+                //checkBox_UseNewSettingsPage.Checked = ConfigManager.Instance.GeneralConfig.UseNewSettingsPage;
+                checkBox_NVIDIAP0State.Checked = ConfigManager.Instance.GeneralConfig.NVIDIAP0State;
+                checkBox_LogToFile.Checked = ConfigManager.Instance.GeneralConfig.LogToFile;
+            }
+
+            // Textboxes
+            {
+                textBox_BitcoinAddress.Text = ConfigManager.Instance.GeneralConfig.BitcoinAddress;
+                textBox_WorkerName.Text = ConfigManager.Instance.GeneralConfig.WorkerName;
+                textBox_SwitchMinSecondsFixed.Text = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed.ToString();
+                textBox_SwitchMinSecondsDynamic.Text = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic.ToString();
+                textBox_SwitchMinSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD.ToString();
+                textBox_MinerAPIQueryInterval.Text = ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval.ToString();
+                textBox_MinerRestartDelayMS.Text = ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS.ToString();
+                textBox_MinerAPIGraceSeconds.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds.ToString();
+                textBox_MinerAPIGraceSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD.ToString();
+                textBox_MinIdleSeconds.Text = ConfigManager.Instance.GeneralConfig.MinIdleSeconds.ToString();
+                textBox_LogMaxFileSize.Text = ConfigManager.Instance.GeneralConfig.LogMaxFileSize.ToString();
+                textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
+                textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
+                textBox_ethminerDefaultBlockHeight.Text = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
+            }
+
+            // set custom control referances
+            {
+                benchmarkLimitControlCPU.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.CPU;
+                benchmarkLimitControlNVIDIA.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.NVIDIA;
+                benchmarkLimitControlAMD.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.AMD;
+            }
 
             // Add language selections list
-            Dictionary<LanguageType, string> lang = International.GetAvailableLanguages();
+            {
+                Dictionary<LanguageType, string> lang = International.GetAvailableLanguages();
 
-            comboBox_Language.Items.Clear();
-            for (int i = 0; i < lang.Count; i++) {
-                comboBox_Language.Items.Add(lang[(LanguageType)i]);
+                comboBox_Language.Items.Clear();
+                for (int i = 0; i < lang.Count; i++) {
+                    comboBox_Language.Items.Add(lang[(LanguageType)i]);
+                }
             }
 
             // ComboBox
-            comboBox_Language.SelectedIndex = (int)ConfigManager.Instance.GeneralConfig.Language;
-            comboBox_ServiceLocation.SelectedIndex = ConfigManager.Instance.GeneralConfig.ServiceLocation;
+            {
+                comboBox_Language.SelectedIndex = (int)ConfigManager.Instance.GeneralConfig.Language;
+                comboBox_ServiceLocation.SelectedIndex = ConfigManager.Instance.GeneralConfig.ServiceLocation;
 
-            // Add EventHandler for all the general tab's textboxes
-            this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
-            this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
-
-            currencyConverterCombobox.SelectedText = ConfigManager.Instance.GeneralConfig.DisplayCurrency;
-
-            if (CurrencyConverter.CurrencyConverter.ConverterActive)
                 currencyConverterCombobox.SelectedItem = ConfigManager.Instance.GeneralConfig.DisplayCurrency;
-            else
-                currencyConverterCombobox.SelectedItem = "USD";
+            }
         }
 
-        private void InitializeBenchmarkLimitSettings() {
-            // set referances
-            benchmarkLimitControlCPU.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.CPU;
-            benchmarkLimitControlNVIDIA.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.NVIDIA;
-            benchmarkLimitControlAMD.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.AMD;
+        private void InitializeGeneralTab() {
+            InitializeGeneralTabTranslations();
+            InitializeGeneralTabCallbacks();
+            InitializeGeneralTabFieldValuesReferences();
         }
+
         #endregion //Tab General
 
         private void InitializeCallbacks() {
@@ -346,14 +377,12 @@ namespace NiceHashMiner.Forms {
         }
         #endregion // Evaluate to be removed
 
-        private bool IsNullOrEmpty(TextBox textBox) {
-            return String.IsNullOrEmpty(textBox.Text);
-        }
-
         #region Form Callbacks
 
         #region Tab General
         private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e) {
+            // indicate there has been a change
+            IsChange = true;
             ConfigManager.Instance.GeneralConfig.DebugConsole = checkBox_DebugConsole.Checked;
             ConfigManager.Instance.GeneralConfig.AutoStartMining = checkBox_AutoStartMining.Checked;
             ConfigManager.Instance.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
@@ -372,6 +401,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void GeneralTextBoxes_Leave(object sender, EventArgs e) {
+            IsChange = true;
             ConfigManager.Instance.GeneralConfig.BitcoinAddress = textBox_BitcoinAddress.Text.Trim();
             ConfigManager.Instance.GeneralConfig.WorkerName = textBox_WorkerName.Text.Trim();
             // TODO IMPORTANT fix this
@@ -428,6 +458,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e) {
+            IsChange = true;
             ConfigManager.Instance.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
         }
@@ -436,7 +467,7 @@ namespace NiceHashMiner.Forms {
 
 
         #region Tab Device
-
+        // TODO indicate change
         private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
             // check if device settings enabled
             if (deviceSettingsControl1.Enabled == false) {
@@ -462,47 +493,66 @@ namespace NiceHashMiner.Forms {
         }
         #region Form Buttons
         private void buttonDefaults_Click(object sender, EventArgs e) {
+            // TODO change translation NHM will not restart
             DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonDefaultsMsg"),
                                                   International.GetText("Form_Settings_buttonDefaultsTitle"),
                                                   MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (result == System.Windows.Forms.DialogResult.Yes) {
-                Config.SetDefaults();
-                Config.Commit();
-                ret = 2;
-                this.Close();
+                IsChange = true;
+                IsChangeSaved = true;
+                ConfigManager.Instance.GeneralConfig.SetDefaults();
+                ConfigManager.Instance.GeneralConfig.Commit();
+
+                // TODO reset International
+                International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
+                InitializeGeneralTabFieldValuesReferences();
+                InitializeGeneralTabTranslations();
+
+                //// old stuff
+                //Config.SetDefaults();
+                //Config.Commit();
+                //ret = 2;
+                //this.Close();
             }
         }
 
         private void buttonSaveClose_Click(object sender, EventArgs e) {
-            Config.Commit();
             MessageBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
                             International.GetText("Form_Settings_buttonSaveTitle"),
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
-            ret = 0;
+            IsChange = true;
+            IsChangeSaved = false;
+
             this.Close();
         }
 
         private void buttonCloseNoSave_Click(object sender, EventArgs e) {
-            ret = 1;
+            IsChangeSaved = false;
             this.Close();
         }
         #endregion // Form Buttons
 
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e) {
-            if (ret != 0 && ret != 2) {
+            if (IsChange && !IsChangeSaved) {
                 DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
                                                       International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                if (result == System.Windows.Forms.DialogResult.No)
+                if (result == DialogResult.No) {
                     e.Cancel = true;
+                    return;
+                }
             }
-            // TODO
-            ConfigManager.Instance.GeneralConfig.Commit();
-            ConfigManager.Instance.CommitBenchmarks();
-            // legacy
-            Config.Commit();
+
+            if (IsChangeSaved) {
+                ConfigManager.Instance.GeneralConfig.SetDefaults();
+                ConfigManager.Instance.GeneralConfig.Commit();
+                Config.Commit();
+            } else if (IsChange) {
+                ConfigManager.Instance.GeneralConfig = _generalConfigBackup;
+                ConfigManager.Instance.BenchmarkConfigs = _benchmarkConfigsBackup;
+            }
         }
 
         #endregion Form Callbacks

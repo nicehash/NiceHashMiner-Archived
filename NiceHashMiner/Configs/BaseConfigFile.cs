@@ -29,7 +29,7 @@ namespace NiceHashMiner.Configs {
         }
 
         [JsonIgnore]
-        private bool FileLoaded { get { return _file != null; } }
+        protected bool FileLoaded { get { return _file != null; } }
 
         [field: NonSerialized]
         protected T _file;

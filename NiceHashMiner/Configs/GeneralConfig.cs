@@ -116,9 +116,13 @@ namespace NiceHashMiner.Configs {
 
         #endregion //Members
 
+        public bool IsFileExist() {
+            return FileLoaded;
+        }
+
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            Language = LanguageType.NONE;
+            Language = LanguageType.En;
             BitcoinAddress = "";
             WorkerName = "worker1";
             ServiceLocation = 0;
