@@ -55,6 +55,7 @@ namespace NiceHashMiner.Devices {
                     { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" } }
                 };
             }
+            // NVIDIA
             if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType) {
                 var ret = new Dictionary<AlgorithmType, Algorithm> {
                 { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11") },

@@ -18,20 +18,20 @@ namespace NiceHashMiner
     {
         public ccminer(bool queryComputeDevices) : base(queryComputeDevices) { }
 
-        public override void Start(AlgorithmType algorithmType, string url, string username)
+        public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 
 
-            Algorithm Algo = GetMinerAlgorithm(algorithmType);
-            if (Algo == null || EnabledDevicePerAlgoCount(algorithmType) < 1) return;
+            //Algorithm miningAlgorithm = null;// GetMinerAlgorithm(algorithmType);
+            if (miningAlgorithm == null /*|| EnabledDevicePerAlgoCount(algorithmType) < 1*/) return;
 
-            if (AlgorithmType.DaggerHashimoto == algorithmType)
+            if (AlgorithmType.DaggerHashimoto == miningAlgorithm.NiceHashID)
             {
                 LastCommandLine = " --cuda" +
                                   " " + ExtraLaunchParameters +
-                                  " " + Algo.ExtraLaunchParameters +
+                                  " " + miningAlgorithm.ExtraLaunchParameters +
                                   " -S " + url.Substring(14) +
-                                  " -O " + username + ":" + GetPassword(Algo) +
+                                  " -O " + username + ":" + GetPassword(miningAlgorithm) +
                                   " --api-port " + ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString() +
                                   " --cuda-devices ";
 
@@ -51,12 +51,12 @@ namespace NiceHashMiner
             }
             else
             {
-                LastCommandLine = "--algo=" + Algo.MinerName +
+                LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
                                   " --url=" + url +
-                                  " --userpass=" + username + ":" + GetPassword(Algo) +
+                                  " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
                                   " --api-bind=" + APIPort.ToString() +
                                   " " + ExtraLaunchParameters +
-                                  " " + Algo.ExtraLaunchParameters +
+                                  " " + miningAlgorithm.ExtraLaunchParameters +
                                   " --devices ";
 
                 for (int i = 0; i < CDevs.Count; i++)
@@ -73,7 +73,7 @@ namespace NiceHashMiner
                     return; // no GPUs to start mining on
                 }
 
-                Path = GetOptimizedMinerPath(algorithmType);
+                Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
             }
 
             ProcessHandle = _Start();

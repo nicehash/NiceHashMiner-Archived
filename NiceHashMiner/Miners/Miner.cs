@@ -30,13 +30,14 @@ namespace NiceHashMiner
         public List<ComputeDevice> CDevs;
         
         // TODO remove
-        public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
+        //public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
         
         public string ExtraLaunchParameters;
         public string UsePassword;
         public double MinimumProfit;
         public int DaggerHashimotoGenerateDevice;
         public AlgorithmType CurrentAlgo;
+        public Algorithm CurrentMiningAlgorithm;
         public double CurrentRate;
         public bool NotProfitable;
         public bool IsRunning;
@@ -107,7 +108,7 @@ namespace NiceHashMiner
             }
         }
 
-        abstract public void Start(AlgorithmType nhalgo, string url, string username);
+        abstract public void Start(Algorithm miningAlgorithm, string url, string username);
 
         virtual public void Stop(bool willswitch)
         {
@@ -489,25 +490,26 @@ namespace NiceHashMiner
 
         protected void FillAlgorithm(string aname, ref APIData AD)
         {
-            foreach (var key in SupportedAlgorithms.Keys)
-            {
-                if (SupportedAlgorithms[key].MinerName.Equals(aname))
-                {
-                    AD.AlgorithmID = SupportedAlgorithms[key].NiceHashID;
-                    AD.AlgorithmName = SupportedAlgorithms[key].NiceHashName;
-                }
-            }
+            // TODO this is important
+            //foreach (var key in SupportedAlgorithms.Keys)
+            //{
+            //    if (SupportedAlgorithms[key].MinerName.Equals(aname))
+            //    {
+            //        AD.AlgorithmID = SupportedAlgorithms[key].NiceHashID;
+            //        AD.AlgorithmName = SupportedAlgorithms[key].NiceHashName;
+            //    }
+            //}
         }
 
 
-        protected Algorithm GetMinerAlgorithm(AlgorithmType nhid)
-        {
-            if (SupportedAlgorithms.ContainsKey(nhid)) {
-                return SupportedAlgorithms[nhid];
-            }
+        //protected Algorithm GetMinerAlgorithm(AlgorithmType nhid)
+        //{
+        //    if (SupportedAlgorithms.ContainsKey(nhid)) {
+        //        return SupportedAlgorithms[nhid];
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
 
         protected string GetAPIData(int port, string cmd)
@@ -559,6 +561,7 @@ namespace NiceHashMiner
         }
 
 
+        // TODO move this to the MinersManager class, used for stats
         public APIData GetSummary()
         {
             string resp;
@@ -644,7 +647,9 @@ namespace NiceHashMiner
 
                             ad.Speed = Double.Parse(speed[1]) * 1000;
 
-                            aname = SupportedAlgorithms[CurrentAlgo].MinerName;
+                            //aname = SupportedAlgorithms[CurrentAlgo].MinerName;
+                            aname = CurrentMiningAlgorithm.MinerName;
+
 
                             if (total_mh <= PreviousTotalMH)
                             {
@@ -673,95 +678,96 @@ namespace NiceHashMiner
         }
 
 
-        virtual public AlgorithmType GetMaxProfitKey(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData)
-        {
-            double MaxProfit = -1;
-            AlgorithmType MaxProfitIndex = AlgorithmType.NONE;
+        //virtual public AlgorithmType GetMaxProfitKey(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData)
+        //{
+        //    double MaxProfit = -1;
+        //    AlgorithmType MaxProfitIndex = AlgorithmType.NONE;
 
-            foreach (var key in SupportedAlgorithms.Keys)
-            {
-                if (SupportedAlgorithms[key].Skip) continue;
-                if (EnabledDevicePerAlgoCount(key) == 0) continue;
+        //    foreach (var key in SupportedAlgorithms.Keys)
+        //    {
+        //        if (SupportedAlgorithms[key].Skip) continue;
+        //        if (EnabledDevicePerAlgoCount(key) == 0) continue;
 
-                SupportedAlgorithms[key].CurrentProfit = SupportedAlgorithms[key].BenchmarkSpeed *
-                    NiceHashData[SupportedAlgorithms[key].NiceHashID].paying * 0.000000001;
+        //        SupportedAlgorithms[key].CurrentProfit = SupportedAlgorithms[key].BenchmarkSpeed *
+        //            NiceHashData[SupportedAlgorithms[key].NiceHashID].paying * 0.000000001;
 
-                Helpers.ConsolePrint(MinerDeviceName, NiceHashData[SupportedAlgorithms[key].NiceHashID].name +
-                                     " paying " + SupportedAlgorithms[key].CurrentProfit.ToString("F8") + " BTC/Day");
+        //        Helpers.ConsolePrint(MinerDeviceName, NiceHashData[SupportedAlgorithms[key].NiceHashID].name +
+        //                             " paying " + SupportedAlgorithms[key].CurrentProfit.ToString("F8") + " BTC/Day");
 
-                if (SupportedAlgorithms[key].CurrentProfit > MaxProfit)
-                {
-                    MaxProfit = SupportedAlgorithms[key].CurrentProfit;
-                    MaxProfitIndex = key;
-                }
-            }
+        //        if (SupportedAlgorithms[key].CurrentProfit > MaxProfit)
+        //        {
+        //            MaxProfit = SupportedAlgorithms[key].CurrentProfit;
+        //            MaxProfitIndex = key;
+        //        }
+        //    }
 
-            if ((MaxProfit * Globals.BitcoinRate) < MinimumProfit)
-                NotProfitable = true;
-            else
-                NotProfitable = false;
+        //    if ((MaxProfit * Globals.BitcoinRate) < MinimumProfit)
+        //        NotProfitable = true;
+        //    else
+        //        NotProfitable = false;
 
 
-            return MaxProfitIndex;
-        }
+        //    return MaxProfitIndex;
+        //}
 
         
         public bool IsCurrentAlgo(AlgorithmType algorithmType) {
             return CurrentAlgo == algorithmType;
         }
 
-        public int CountBenchmarkedAlgos()
-        {
-            int count = 0;
-            // key value pair [Value is Algorithm]
-            foreach (var kvp in SupportedAlgorithms) {
-                if(kvp.Value.BenchmarkSpeed > 0) {
-                    ++count;
-                }
-            }
-            return count;
-        }
+        //public int CountBenchmarkedAlgos()
+        //{
+        //    int count = 0;
+        //    // key value pair [Value is Algorithm]
+        //    foreach (var kvp in SupportedAlgorithms) {
+        //        if(kvp.Value.BenchmarkSpeed > 0) {
+        //            ++count;
+        //        }
+        //    }
+        //    return count;
+        //}
 
-        // TODO replace this
-        public void GetDisabledDevicePerAlgo()
-        {
-            foreach (var key in SupportedAlgorithms.Keys)
-            {
-                //SupportedAlgorithms[key].DisabledDevice = new bool[CDevs.Count];
-                for (int j = 0; j < CDevs.Count; j++)
-                {
-                    //SupportedAlgorithms[key].DisabledDevice[j] = false;
-                    if ((CDevs[j].Name.Contains("750") && CDevs[j].Name.Contains("Ti")) &&
-                        SupportedAlgorithms[key].NiceHashID == AlgorithmType.DaggerHashimoto)
-                    {
-                        Helpers.ConsolePrint(MinerDeviceName, "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
-                        //SupportedAlgorithms[key].DisabledDevice[j] = true;
-                    }
-                }
-            }
-        }
+        //// TODO replace this
+        // TODO IMPORTANT put this in the DeviceQuery Manager
+        //public void GetDisabledDevicePerAlgo()
+        //{
+        //    foreach (var key in SupportedAlgorithms.Keys)
+        //    {
+        //        //SupportedAlgorithms[key].DisabledDevice = new bool[CDevs.Count];
+        //        for (int j = 0; j < CDevs.Count; j++)
+        //        {
+        //            //SupportedAlgorithms[key].DisabledDevice[j] = false;
+        //            if ((CDevs[j].Name.Contains("750") && CDevs[j].Name.Contains("Ti")) &&
+        //                SupportedAlgorithms[key].NiceHashID == AlgorithmType.DaggerHashimoto)
+        //            {
+        //                Helpers.ConsolePrint(MinerDeviceName, "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
+        //                //SupportedAlgorithms[key].DisabledDevice[j] = true;
+        //            }
+        //        }
+        //    }
+        //}
 
-        public int EnabledDevicePerAlgoCount(AlgorithmType algorithmType)
-        {
-            int count = 0;
+        //public int EnabledDevicePerAlgoCount(AlgorithmType algorithmType)
+        //{
+        //    int count = 0;
 
-            for (int i = 0; i < CDevs.Count; i++)
-            {
-                if (CDevs[i].Enabled /*&& !SupportedAlgorithms[algorithmType].DisabledDevice[i]*/)
-                {
-                    if (SupportedAlgorithms[algorithmType].NiceHashID == AlgorithmType.DaggerHashimoto)
-                    {
-                        if (EtherDevices[i] != -1)
-                            count++;
-                    }
-                    else
-                    {
-                        count++;
-                    }
-                }
-            }
+        //    for (int i = 0; i < CDevs.Count; i++)
+        //    {
+        //        if (CDevs[i].Enabled /*&& !SupportedAlgorithms[algorithmType].DisabledDevice[i]*/)
+        //        {
+        //            if (SupportedAlgorithms[algorithmType].NiceHashID == AlgorithmType.DaggerHashimoto)
+        //            {
+        //                if (EtherDevices[i] != -1)
+        //                    count++;
+        //            }
+        //            else
+        //            {
+        //                count++;
+        //            }
+        //        }
+        //    }
 
-            return count;
-        }
+        //    return count;
+        //}
     }
 }

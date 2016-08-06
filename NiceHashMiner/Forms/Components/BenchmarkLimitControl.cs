@@ -57,6 +57,7 @@ namespace NiceHashMiner.Forms.Components {
             labelPrecise.Text = International.GetText("Precise") + ":";
         }
 
+        // TODO replace  TextChanged Events with TextBox exit events
         #region Events
         private void textBoxQuick_TextChanged(object sender, EventArgs e) {
             setTimeLimit(BenchmarkPerformanceType.Quick, textBoxQuick.Text);

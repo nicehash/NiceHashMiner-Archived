@@ -24,6 +24,9 @@ namespace NiceHashMiner
         const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90" +
                                         " --temp-target 75 --auto-fan --auto-gpu";
 
+        // TODO remove
+        public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
+
         public sgminer(bool queryComputeDevices)
             : base(queryComputeDevices)
         {
@@ -292,25 +295,25 @@ namespace NiceHashMiner
             }
         }
 
-        public override void Start(AlgorithmType nhalgo, string url, string username)
+        public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 
 
-            Algorithm Algo = GetMinerAlgorithm(nhalgo);
-            if (Algo == null)
+            //Algorithm miningAlgorithm = null;//GetMinerAlgorithm(nhalgo);
+            if (miningAlgorithm == null)
             {
-                Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + nhalgo + "): Algo equals to null");
+                Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + miningAlgorithm.NiceHashID + "): Algo equals to null");
                 return;
             }
 
-            if (Algo.NiceHashID == AlgorithmType.DaggerHashimoto)
+            if (miningAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
             {
                 WorkingDirectory = "";
                 LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
                                   " " + ExtraLaunchParameters +
-                                  " " + Algo.ExtraLaunchParameters +
+                                  " " + miningAlgorithm.ExtraLaunchParameters +
                                   " -S " + url.Substring(14) +
-                                  " -O " + username + ":" + GetPassword(Algo) +
+                                  " -O " + username + ":" + GetPassword(miningAlgorithm) +
                                   " --api-port " + ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString() +
                                   " --opencl-devices ";
 
@@ -332,16 +335,16 @@ namespace NiceHashMiner
             {
                 StartingUpDelay = true;
 
-                Path = GetOptimizedMinerPath(Algo.NiceHashID);
+                Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
 
                 LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
-                                  " -k " + Algo.MinerName +
+                                  " -k " + miningAlgorithm.MinerName +
                                   " --url=" + url +
-                                  " --userpass=" + username + ":" + GetPassword(Algo) +
+                                  " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
                                   " --api-listen" +
                                   " --api-port=" + APIPort.ToString() +
                                   " " + ExtraLaunchParameters +
-                                  " " + Algo.ExtraLaunchParameters +
+                                  " " + miningAlgorithm.ExtraLaunchParameters +
                                   " --device ";
 
                 for (int i = 0; i < CDevs.Count; i++)

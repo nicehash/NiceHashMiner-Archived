@@ -119,7 +119,7 @@ namespace NiceHashMiner
             index = 0;
 
             Helpers.ConsolePrint("SubmitResultDialog", "Number of Devices: " + mm.CDevs.Count);
-            if (mm.CDevs.Count == 1 && mm.CountBenchmarkedAlgos() != 0)
+            if (mm.CDevs.Count == 1 /*&& mm.CountBenchmarkedAlgos() != 0*/)
             {
                 DialogResult result = MessageBox.Show(International.GetText("SubmitResultDialog_UsePreviousBenchmarkedValueMsg"),
                                                       International.GetText("SubmitResultDialog_UsePreviousBenchmarkedValueTitle"),
@@ -137,7 +137,7 @@ namespace NiceHashMiner
                     mm.CDevs[i].Enabled = true;
             }
 
-            BenchmarkProgressBar.Maximum = mm.SupportedAlgorithms.Count;
+            //BenchmarkProgressBar.Maximum = mm.SupportedAlgorithms.Count;
 
             // Parse GPU name
             Helpers.ConsolePrint("SubmitResultDialog", "Old DeviceName: " + DeviceName);

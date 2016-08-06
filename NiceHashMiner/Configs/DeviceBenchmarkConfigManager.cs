@@ -66,7 +66,7 @@ namespace NiceHashMiner.Configs {
             // check benchmarks
             foreach (var deviceName in enabledDevicesNames) {
                 foreach (var benchmarkConfigPair in _benchmarkConfigs) {
-                    foreach (var kvpAlgorithm in benchmarkConfigPair.Value.BenchmarkSpeeds) {
+                    foreach (var kvpAlgorithm in benchmarkConfigPair.Value.AlgorithmSettings) {
                         var algorithm = kvpAlgorithm.Value;
                         if (!algorithm.Skip && algorithm.BenchmarkSpeed <= 0.0d) {
                             isEnabledBenchmarksInitialized = false;

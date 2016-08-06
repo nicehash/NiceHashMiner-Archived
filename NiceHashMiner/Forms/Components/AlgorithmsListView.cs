@@ -44,7 +44,7 @@ namespace NiceHashMiner.Forms.Components {
             _benchmarkConfigs = benchmarkConfigs;
             bool switchColor = false;
             foreach (var config in benchmarkConfigs) {
-                foreach (var alg in config.BenchmarkSpeeds) {
+                foreach (var alg in config.AlgorithmSettings) {
                     ListViewItem lvi = new ListViewItem();
                     lvi.Checked = !alg.Value.Skip;
                     if (switchColor) {
@@ -92,7 +92,7 @@ namespace NiceHashMiner.Forms.Components {
             {
                 int sum = 0;
                 foreach (var config in _benchmarkConfigs) {
-                    sum += config.BenchmarkSpeeds.Count;
+                    sum += config.AlgorithmSettings.Count;
                     if (sum > _bechmarkCurrentIndex) {
                         break;
                     }
@@ -157,7 +157,7 @@ namespace NiceHashMiner.Forms.Components {
             bool switchColor = false;
             int currentIndex = 0;
             foreach (var config in _benchmarkConfigs) {
-                foreach (var alg in config.BenchmarkSpeeds) {
+                foreach (var alg in config.AlgorithmSettings) {
 
                     if (switchColor) {
                         listViewAlgorithms.Items[currentIndex].BackColor = Color.LightBlue;

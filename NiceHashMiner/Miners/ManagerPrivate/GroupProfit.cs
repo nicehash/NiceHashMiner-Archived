@@ -7,12 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
+    using NiceHashMiner.Configs;
     using PerDeviceProifitDictionary = Dictionary<string, Dictionary<AlgorithmType, double>>;
     public partial class MinersManager {
         private class GroupProfit {
             private string[] _deviceNames;
             public double Profit { get; private set; }
             public AlgorithmType MostProfitAlgorithmType { get; private set; }
+            public Algorithm MostProfitAlgorithm { get; private set; }
 
             private AlgorithmType PrevMostProfitAlgorithmType = AlgorithmType.NONE;
             public bool IsChange { get { return PrevMostProfitAlgorithmType != MostProfitAlgorithmType; } }
@@ -27,11 +29,27 @@ namespace NiceHashMiner.Miners {
                     foreach (var devName in _deviceNames) {
                         newProfitValue += perDeviceProifit[devName][algoKey];
                     }
-                    if (newProfitValue > Profit) {
+                    if (IsAlgorithmSettingsSame(algoKey) && newProfitValue > Profit) {
                         Profit = newProfitValue;
                         MostProfitAlgorithmType = algoKey;
+                        MostProfitAlgorithm = DeviceBenchmarkConfigManager.Instance.GetConfig(_deviceNames.First()).AlgorithmSettings[algoKey];
                     }
                 }
+            }
+
+            private bool IsAlgorithmSettingsSame(AlgorithmType algorithmType) {
+                var deviceBCM = DeviceBenchmarkConfigManager.Instance;
+                Algorithm curAlgorithm = deviceBCM.GetConfig(_deviceNames.First()).AlgorithmSettings[algorithmType];
+                for (int i = 1; i < _deviceNames.Length; ++i) {
+                    Algorithm compareAlgorithm = deviceBCM.GetConfig(_deviceNames[i]).AlgorithmSettings[algorithmType];
+                    // TODO make sure these strings are Trimmed
+                    if (curAlgorithm.UsePassword != compareAlgorithm.UsePassword) return false;
+                    // TODO make sure these strings are Trimmed and sorted the same way
+                    if (curAlgorithm.ExtraLaunchParameters != compareAlgorithm.ExtraLaunchParameters) return false;
+                    //if (curAlgorithm.Intensity != compareAlgorithm.Intensity) return false;
+                }
+
+                return true;
             }
 
             public GroupProfit(SortedSet<string> deviceUUIDSet, DeviceGroupType deviceGroupType) {

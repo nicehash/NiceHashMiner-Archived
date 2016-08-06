@@ -158,7 +158,7 @@ namespace NiceHashMiner.Miners {
                 Dictionary<AlgorithmType, double> cumulativeSpeeds = new Dictionary<AlgorithmType, double>();
                 var deviceConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(cdevName);
 
-                foreach (var kvp in deviceConfig.BenchmarkSpeeds) {
+                foreach (var kvp in deviceConfig.AlgorithmSettings) {
                     var key = kvp.Key;
                     var algorithm = kvp.Value;
                     // TODO what is the constant at the end?
@@ -263,7 +263,7 @@ namespace NiceHashMiner.Miners {
                             m.CurrentAlgo = groupSettup.MostProfitAlgorithmType;
                             var MaxProfitKey = groupSettup.MostProfitAlgorithmType;
 
-                            m.Start(MaxProfitKey,
+                            m.Start(groupSettup.MostProfitAlgorithm,
                                 "stratum+tcp://"
                                 + Globals.NiceHashData[MaxProfitKey].name
                                 // TODO fix this combo box things

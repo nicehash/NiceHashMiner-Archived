@@ -18,8 +18,6 @@ namespace NiceHashMiner
             Path = MinerPaths.ccminer_sp;
             APIPort = 4048;
 
-            SupportedAlgorithms = GroupAlgorithms.CreateDefaultsForGroup(DeviceGroupType.NVIDIA_5_x);
-
             TryQueryCDevs();
         }
 

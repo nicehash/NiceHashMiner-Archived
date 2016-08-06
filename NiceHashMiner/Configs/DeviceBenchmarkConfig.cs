@@ -19,7 +19,7 @@ namespace NiceHashMiner.Configs
         // TODO handle defaults for this
         public string ExtraLaunchParameters { get; set; }
         public int TimeLimit { get; set; }
-        public Dictionary<AlgorithmType, Algorithm> BenchmarkSpeeds { get; set; }
+        public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
         
 
         [field: NonSerialized]
@@ -33,9 +33,9 @@ namespace NiceHashMiner.Configs
             DeviceName = deviceGroupName;
             DevicesIDs = devicesIDs;
             if (benchmarkSpeeds != null) {
-                BenchmarkSpeeds = benchmarkSpeeds;
+                AlgorithmSettings = benchmarkSpeeds;
             } else {
-                BenchmarkSpeeds = GroupAlgorithms.CreateDefaultsForGroup(deviceGroupType);
+                AlgorithmSettings = GroupAlgorithms.CreateDefaultsForGroup(deviceGroupType);
             }
 
             // calculate ID
@@ -74,7 +74,7 @@ namespace NiceHashMiner.Configs
         }
         protected override void InitializeObject() {
         //public int[] DevicesIDs { get; private set; }
-        //public Dictionary<AlgorithmType, Algorithm> BenchmarkSpeeds { get; set; }
+        //public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
 
             // check if data tampered
             bool IsDataTampered = !(
@@ -89,10 +89,10 @@ namespace NiceHashMiner.Configs
             }
             this.TimeLimit = _file.TimeLimit;
 
-            if (_file.BenchmarkSpeeds != null) {
-                foreach (var key in _file.BenchmarkSpeeds.Keys) {
-                    if(this.BenchmarkSpeeds.ContainsKey(key)) {
-                        this.BenchmarkSpeeds[key] = _file.BenchmarkSpeeds[key];
+            if (_file.AlgorithmSettings != null) {
+                foreach (var key in _file.AlgorithmSettings.Keys) {
+                    if(this.AlgorithmSettings.ContainsKey(key)) {
+                        this.AlgorithmSettings[key] = _file.AlgorithmSettings[key];
                     } else {
                         // TODO think if we let tamnpered data
                     }

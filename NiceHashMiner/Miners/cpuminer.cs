@@ -24,8 +24,6 @@ namespace NiceHashMiner
             Threads = threads;
             AffinityMask = affinity;
 
-            SupportedAlgorithms = GroupAlgorithms.CreateDefaultsForGroup(DeviceGroupType.CPU);
-
             // this is the order we check and initialize if automatic
             CPUExtensionType[] detectOrder = new CPUExtensionType[] { CPUExtensionType.AVX2, CPUExtensionType.AVX, CPUExtensionType.SSE2 };
 
@@ -120,25 +118,25 @@ namespace NiceHashMiner
         }
 
 
-        public override void Start(AlgorithmType algorithmType, string url, string username)
+        public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
             if (ProcessHandle != null) return; // ignore, already running
 
             if (CDevs.Count == 0 || !CDevs[0].Enabled) return;
 
-            Algorithm Algo = GetMinerAlgorithm(algorithmType);
-            if (Algo == null) return;
+            //Algorithm miningAlgorithm = null;//GetMinerAlgorithm(algorithmType);
+            if (miningAlgorithm == null) return;
 
-            Path = GetOptimizedMinerPath(algorithmType);
+            Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
 
-            LastCommandLine = "--algo=" + Algo.MinerName + 
+            LastCommandLine = "--algo=" + miningAlgorithm.MinerName + 
                               " --url=" + url + 
-                              " --userpass=" + username + ":" + GetPassword(Algo) + 
+                              " --userpass=" + username + ":" + GetPassword(miningAlgorithm) + 
                               " --threads=" + Threads.ToString() + 
                               " " + ExtraLaunchParameters + 
-                              " " + Algo.ExtraLaunchParameters;
+                              " " + miningAlgorithm.ExtraLaunchParameters;
 
-            if (algorithmType != AlgorithmType.Hodl)
+            if (miningAlgorithm.NiceHashID != AlgorithmType.Hodl)
                 LastCommandLine += " --api-bind=" + APIPort.ToString();
 
             ProcessHandle = _Start();
