@@ -6,9 +6,8 @@ using System.Globalization;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
-using NiceHashMiner.Miners;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Miners
 {
     public class cpuminer : Miner
     {
@@ -120,6 +119,7 @@ namespace NiceHashMiner
 
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
+            CurrentMiningAlgorithm = miningAlgorithm;
             if (ProcessHandle != null) return; // ignore, already running
 
             if (CDevs.Count == 0 || !CDevs[0].Enabled) return;
@@ -142,6 +142,13 @@ namespace NiceHashMiner
             ProcessHandle = _Start();
         }
 
+        public override APIData GetSummary() {
+            return GetSummaryCPU_CCMINER();
+        }
+
+        protected override void _Stop(bool willswitch) {
+            Stop_cpu_ccminer_sgminer(willswitch);
+        }
 
         protected override NiceHashProcess _Start()
         {

@@ -176,6 +176,9 @@
     <Compile Include="MemoryHelper.cs" />
     <Compile Include="Miners\ManagerPrivate\DeviceGroupSettupManager.cs" />
     <Compile Include="Miners\ManagerPrivate\MinerSettupsSetCombinationsLogic.cs" />
+    <Compile Include="Miners\MinerEtherum.cs" />
+    <Compile Include="Miners\MinerEtherumCUDA.cs" />
+    <Compile Include="Miners\MinerEtherumOCL.cs" />
     <Compile Include="Miners\MinerPaths.cs" />
     <Compile Include="Miners\MinersManager.cs" />
     <Compile Include="Miners\ManagerPrivate\DeviceGroupSettup.cs" />

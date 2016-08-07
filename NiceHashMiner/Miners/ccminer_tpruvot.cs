@@ -4,9 +4,8 @@ using System.Text;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
-using NiceHashMiner.Miners;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Miners
 {
     class ccminer_tpruvot : ccminer
     {

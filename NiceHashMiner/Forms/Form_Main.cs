@@ -330,84 +330,8 @@ namespace NiceHashMiner
         }
 
 
-        private void MinerStatsCheck_Tick(object sender, EventArgs e)
-        {
-            string CPUAlgoName = "";
-            double CPUTotalSpeed = 0;
-            double CPUTotalRate = 0;
-
-            // Reset all stats
-            SetCPUStats("", 0, 0);
-            SetNVIDIAtp21Stats("", 0, 0);
-            SetNVIDIAspStats("", 0, 0);
-            SetNVIDIAtpStats("", 0, 0);
-            SetAMDOpenCLStats("", 0, 0);
-
-            //// TODO stats check
-            //foreach (Miner m in Globals.Miners) {
-            //    if (!m.IsRunning) continue;
-
-            //    if (m is cpuminer && m.IsCurrentAlgo(AlgorithmType.Hodl)) {
-            //        string pname = m.Path.Split('\\')[2];
-            //        pname = pname.Substring(0, pname.Length - 4);
-
-            //        Process[] processes = Process.GetProcessesByName(pname);
-
-            //        if (processes.Length < CPUID.GetPhysicalProcessorCount())
-            //            m.Restart();
-
-            //        AlgorithmType algoIndex = AlgorithmType.Hodl; // m.GetAlgoIndex("hodl");
-            //        CPUAlgoName = "hodl";
-            //        CPUTotalSpeed = m.SupportedAlgorithms[algoIndex].BenchmarkSpeed;
-            //        CPUTotalRate = Globals.NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
-
-            //        continue;
-            //    }
-
-            //    APIData AD = m.GetSummary();
-            //    if (AD == null) {
-            //        Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
-
-            //        // Make sure sgminer has time to start
-            //        // properly on slow CPU system
-            //        if (m.StartingUpDelay && m.NumRetries > 0) {
-            //            m.NumRetries--;
-            //            if (m.NumRetries == 0) m.StartingUpDelay = false;
-            //            Helpers.ConsolePrint(m.MinerDeviceName, "NumRetries: " + m.NumRetries);
-            //            continue;
-            //        }
-
-            //        // API is inaccessible, try to restart miner
-            //        m.Restart();
-
-            //        continue;
-            //    } else
-            //        m.StartingUpDelay = false;
-
-            //    if (Globals.NiceHashData != null)
-            //        m.CurrentRate = Globals.NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
-            //    else
-            //        m.CurrentRate = 0;
-
-            //    if (m is cpuminer) {
-            //        CPUAlgoName = AD.AlgorithmName;
-            //        CPUTotalSpeed += AD.Speed;
-            //        CPUTotalRate += m.CurrentRate;
-            //    } else if (m is ccminer_tpruvot_sm21) {
-            //        SetNVIDIAtp21Stats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-            //    } else if (m is ccminer_tpruvot) {
-            //        SetNVIDIAtpStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-            //    } else if (m is ccminer_sp) {
-            //        SetNVIDIAspStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-            //    } else if (m is sgminer) {
-            //        SetAMDOpenCLStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-            //    }
-            //}
-
-            if (CPUAlgoName != null && CPUAlgoName.Length > 0)
-            {
-                SetCPUStats(CPUAlgoName, CPUTotalSpeed, CPUTotalRate);
-            }
+        private void MinerStatsCheck_Tick(object sender, EventArgs e) {
+            MinersManager.Instance.MinerStatsCheck(Globals.NiceHashData);
         }
 
         private void SetDeviceGroupStats(
@@ -747,38 +671,46 @@ namespace NiceHashMiner
                 return;
             }
 
+            // first value is a boolean if initialized or not
+            var tuplePair = DeviceBenchmarkConfigManager.Instance.IsEnabledBenchmarksInitialized();
+            bool isBenchInit = tuplePair.Item1;
+            Dictionary<string, List<AlgorithmType>> nonBenchmarkedPerDevice = tuplePair.Item2;
             // Check if the user has run benchmark first
-            MinersManager.Instance.StartInitialize();
-            // TODO
-            //foreach (Miner m in Globals.Miners) {
-            //    if (m.EnabledDeviceCount() == 0) continue;
+            if (isBenchInit) {
+                MinersManager.Instance.StartInitialize();
+            } else {
+                // first benchmark and start mining
 
-            //    if (m.CountBenchmarkedAlgos() == 0) {
-            //        DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_HaveNotBenchmarkedMsg"), m.MinerDeviceName),
-            //                                              International.GetText("Warning_with_Exclamation"),
-            //                                              MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                // TODO translation or change warning, something like not benchmark 
+                string warningMsg = "Unbenchmarked enabled algorithms for enabled devices:" + Environment.NewLine; ;
+                foreach (var kvp in nonBenchmarkedPerDevice) {
+                    if (kvp.Value.Count != 0) {
+                        warningMsg += kvp.Key + ": " + string.Join(", ", kvp.Value) + Environment.NewLine;
+                    }
+                }
+                warningMsg += "Benchmark and start mining?";
+                DialogResult result = MessageBox.Show(String.Format("{0}", warningMsg),
+                                                          International.GetText("Warning_with_Exclamation"),
+                                                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                //DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_HaveNotBenchmarkedMsg"), "warningMsg"),
+                //                          International.GetText("Warning_with_Exclamation"),
+                //                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-            //        if (result == System.Windows.Forms.DialogResult.Yes) {
-            //            if (!(m is cpuminer)) {
-            //                // TODO this here MAKES NO SENSE cpuminer does not have X11 in SupportedAlgorithms
-            //                // TODO most likelly hidden BUG, FIX IT!!!
-            //                // quick and ugly way to prevent GPUs from starting on extremely unprofitable x11
-            //                m.SupportedAlgorithms[AlgorithmType.X11].BenchmarkSpeed = 1;
-            //            }
-            //            break;
-            //        }
-            //        if (result == System.Windows.Forms.DialogResult.No) {
-            //            DemoMode = false;
-            //            labelDemoMode.Visible = false;
+                // OLD
+                //DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_HaveNotBenchmarkedMsg"), m.MinerDeviceName),
+                //                                          International.GetText("Warning_with_Exclamation"),
+                //                                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                //if (result == System.Windows.Forms.DialogResult.No) {
+                //    DemoMode = false;
+                //    labelDemoMode.Visible = false;
 
-            //            textBoxBTCAddress.Text = "";
-            //            ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
-            //            Config.Commit();
+                //    textBoxBTCAddress.Text = "";
+                //    ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
+                //    Config.Commit();
 
-            //            return;
-            //        }
-            //    }
-            //}
+                //    return;
+                //}
+            }
 
             textBoxBTCAddress.Enabled = false;
             textBoxWorkerName.Enabled = false;

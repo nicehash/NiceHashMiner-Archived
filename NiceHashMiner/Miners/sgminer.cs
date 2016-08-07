@@ -11,9 +11,8 @@ using System.Management;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
-using NiceHashMiner.Miners;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Miners
 {
     class sgminer : Miner
     {
@@ -295,73 +294,49 @@ namespace NiceHashMiner
             }
         }
 
+        protected override void _Stop(bool willswitch) {
+            Stop_cpu_ccminer_sgminer(willswitch);
+        }
+
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 
 
             //Algorithm miningAlgorithm = null;//GetMinerAlgorithm(nhalgo);
+            CurrentMiningAlgorithm = miningAlgorithm;
             if (miningAlgorithm == null)
             {
                 Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + miningAlgorithm.NiceHashID + "): Algo equals to null");
                 return;
             }
 
-            if (miningAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
-            {
-                WorkingDirectory = "";
-                LastCommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
-                                  " " + ExtraLaunchParameters +
-                                  " " + miningAlgorithm.ExtraLaunchParameters +
-                                  " -S " + url.Substring(14) +
-                                  " -O " + username + ":" + GetPassword(miningAlgorithm) +
-                                  " --api-port " + ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString() +
-                                  " --opencl-devices ";
+            StartingUpDelay = true;
 
-                int dagdev = -1;
-                for (int i = 0; i < CDevs.Count; i++)
-                {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
-                    {
-                        LastCommandLine += i.ToString() + " ";
-                        if (i == DaggerHashimotoGenerateDevice)
-                            dagdev = DaggerHashimotoGenerateDevice;
-                        else if (dagdev == -1) dagdev = i;
-                    }
-                }
+            Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
 
-                LastCommandLine += " --dag-load-mode singlekeep " + dagdev.ToString();
+            LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
+                              " -k " + miningAlgorithm.MinerName +
+                              " --url=" + url +
+                              " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
+                              " --api-listen" +
+                              " --api-port=" + APIPort.ToString() +
+                              " " + ExtraLaunchParameters +
+                              " " + miningAlgorithm.ExtraLaunchParameters +
+                              " --device ";
+
+            for (int i = 0; i < CDevs.Count; i++)
+                if (CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
+                    LastCommandLine += CDevs[i].ID.ToString() + ",";
+
+            if (LastCommandLine.EndsWith(","))
+                LastCommandLine = LastCommandLine.Remove(LastCommandLine.Length - 1);
+            else {
+                LastCommandLine = "";
+                return; // no GPUs to start mining on
             }
-            else
-            {
-                StartingUpDelay = true;
 
-                Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
-
-                LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
-                                  " -k " + miningAlgorithm.MinerName +
-                                  " --url=" + url +
-                                  " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
-                                  " --api-listen" +
-                                  " --api-port=" + APIPort.ToString() +
-                                  " " + ExtraLaunchParameters +
-                                  " " + miningAlgorithm.ExtraLaunchParameters +
-                                  " --device ";
-
-                for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
-                        LastCommandLine += CDevs[i].ID.ToString() + ",";
-
-                if (LastCommandLine.EndsWith(","))
-                    LastCommandLine = LastCommandLine.Remove(LastCommandLine.Length - 1);
-                else
-                {
-                    LastCommandLine = "";
-                    return; // no GPUs to start mining on
-                }
-
-                if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
-                    LastCommandLine += TemperatureParam;
-            }
+            if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
+                LastCommandLine += TemperatureParam;
 
             ProcessHandle = _Start();
         }
@@ -395,65 +370,110 @@ namespace NiceHashMiner
         // TODO decoupled benchmark routine
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine;
-            // TODO dagger
-            if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto) {
-                CommandLine = " --opencl --opencl-platform " + GPUPlatformNumber +
-                              " " + ExtraLaunchParameters +
-                              " " + algorithm.ExtraLaunchParameters +
-                              " --benchmark-warmup 40 --benchmark-trial 20" +
-                              " --opencl-devices ";
+            Path = "cmd";
+            string MinerPath = GetOptimizedMinerPath(algorithm.NiceHashID);
 
-                int dagdev = -1;
-                for (int i = 0; i < CDevs.Count; i++) {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled /*&& !algorithm.DisabledDevice[i]*/) {
-                        CommandLine += i + " ";
-                        if (i == DaggerHashimotoGenerateDevice)
-                            dagdev = DaggerHashimotoGenerateDevice;
-                        else if (dagdev == -1) dagdev = i;
-                    }
-                }
+            var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
+            string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
+                         Globals.MiningLocation[ConfigManager.Instance.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
+                         nhAlgorithmData.port;
 
-                CommandLine += " --dag-load-mode single " + dagdev.ToString();
+            string username = ConfigManager.Instance.GeneralConfig.BitcoinAddress.Trim();
+            if (ConfigManager.Instance.GeneralConfig.WorkerName.Length > 0)
+                username += "." + ConfigManager.Instance.GeneralConfig.WorkerName.Trim();
 
-                Ethereum.GetCurrentBlock(MinerDeviceName);
-                CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
-            } else {
-                Path = "cmd";
-                string MinerPath = GetOptimizedMinerPath(algorithm.NiceHashID);
+            // TODO not sure if this will work, why cd-ing to dir and running???
+            CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
+                          " --gpu-platform " + GPUPlatformNumber +
+                          " -k " + algorithm.MinerName +
+                          " --url=" + url +
+                          " --userpass=" + username + ":" + GetPassword(algorithm) +
+                          " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
+                          " -T --log 10 --log-file dump.txt" +
+                          " " + ExtraLaunchParameters +
+                          " " + algorithm.ExtraLaunchParameters +
+                          " --device ";
 
-                var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
-                string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
-                             Globals.MiningLocation[ConfigManager.Instance.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
-                             nhAlgorithmData.port;
+            CommandLine += GetDevicesCommandString();
 
-                string username = ConfigManager.Instance.GeneralConfig.BitcoinAddress.Trim();
-                if (ConfigManager.Instance.GeneralConfig.WorkerName.Length > 0)
-                    username += "." + ConfigManager.Instance.GeneralConfig.WorkerName.Trim();
-
-                // TODO not sure if this will work, why cd-ing to dir and running???
-                CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
-                              " --gpu-platform " + GPUPlatformNumber +
-                              " -k " + algorithm.MinerName +
-                              " --url=" + url +
-                              " --userpass=" + username + ":" + GetPassword(algorithm) +
-                              " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
-                              " -T --log 10 --log-file dump.txt" +
-                              " " + ExtraLaunchParameters +
-                              " " + algorithm.ExtraLaunchParameters +
-                              " --device ";
-
-                for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled /*&& !algorithm.DisabledDevice[i]*/)
-                        CommandLine += CDevs[i].ID.ToString() + ",";
-
-                CommandLine = CommandLine.Remove(CommandLine.Length - 1);
-                if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
-                    CommandLine += TemperatureParam;
-                CommandLine += " && del dump.txt\"";
-            }
+            if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
+                CommandLine += TemperatureParam;
+            CommandLine += " && del dump.txt\"";
 
             return CommandLine;
         }
         #endregion // Decoupled benchmarking routines
+
+        public override APIData GetSummary() {
+            string resp;
+            string aname = null;
+            APIData ad = new APIData();
+
+            resp = GetAPIData(APIPort, "summary");
+            if (resp == null) return null;
+
+            try {
+                string[] resps;
+
+                if (!MinerDeviceName.Equals("AMD_OpenCL")) {
+                    resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < resps.Length; i++) {
+                        string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (optval.Length != 2) continue;
+                        if (optval[0] == "ALGO")
+                            aname = optval[1];
+                        else if (optval[0] == "KHS")
+                            ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                    }
+                } else {
+                    // Checks if all the GPUs are Alive first
+                    string resp2 = GetAPIData(APIPort, "devs");
+                    if (resp2 == null) return null;
+
+                    string[] checkGPUStatus = resp2.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
+                        if (!checkGPUStatus[i].Contains("Status=Alive")) {
+                            Helpers.ConsolePrint(MinerDeviceName, "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
+                            return null;
+                        }
+                    }
+
+                    resps = resp.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (resps[1].Contains("SUMMARY")) {
+                        string[] data = resps[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        // Get miner's current total speed
+                        string[] speed = data[4].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        // Get miner's current total MH
+                        double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1], new CultureInfo("en-US"));
+
+                        ad.Speed = Double.Parse(speed[1]) * 1000;
+
+                        //aname = SupportedAlgorithms[CurrentAlgo].MinerName;
+                        aname = CurrentMiningAlgorithm.MinerName;
+
+
+                        if (total_mh <= PreviousTotalMH) {
+                            Helpers.ConsolePrint(MinerDeviceName, "SGMiner might be stuck as no new hashes are being produced");
+                            Helpers.ConsolePrint(MinerDeviceName, "Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
+                            return null;
+                        }
+
+                        PreviousTotalMH = total_mh;
+                    } else {
+                        ad.Speed = 0;
+                    }
+                }
+            } catch {
+                return null;
+            }
+
+            FillAlgorithm(aname, ref ad);
+
+            Helpers.ConsolePrint("GetSummary", String.Format("Algorithm : {0}\tSpeed : {1}", ad.AlgorithmName, ad.Speed));
+            return ad;
+        }
     }
 }

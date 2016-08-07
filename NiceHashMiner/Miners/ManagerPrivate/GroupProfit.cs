@@ -43,9 +43,9 @@ namespace NiceHashMiner.Miners {
                 for (int i = 1; i < _deviceNames.Length; ++i) {
                     Algorithm compareAlgorithm = deviceBCM.GetConfig(_deviceNames[i]).AlgorithmSettings[algorithmType];
                     // TODO make sure these strings are Trimmed
-                    if (curAlgorithm.UsePassword != compareAlgorithm.UsePassword) return false;
+                    if (string.IsNullOrEmpty(curAlgorithm.UsePassword) != string.IsNullOrEmpty(compareAlgorithm.UsePassword)) return false;
                     // TODO make sure these strings are Trimmed and sorted the same way
-                    if (curAlgorithm.ExtraLaunchParameters != compareAlgorithm.ExtraLaunchParameters) return false;
+                    if (string.IsNullOrEmpty(curAlgorithm.ExtraLaunchParameters) != string.IsNullOrEmpty(compareAlgorithm.ExtraLaunchParameters)) return false;
                     //if (curAlgorithm.Intensity != compareAlgorithm.Intensity) return false;
                 }
 

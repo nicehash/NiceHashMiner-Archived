@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
+    using System.Diagnostics;
     // typedefs
     using DeviceSubsetList = List<SortedSet<string>>;
     using PerDeviceProifitDictionary = Dictionary<string, Dictionary<AlgorithmType, double>>;
@@ -28,6 +29,7 @@ namespace NiceHashMiner.Miners {
         List<DeviceGroupSettupManager> _deviceGroupSettupManager;
         PerDeviceSpeedDictionary _perDeviceSpeedDictionary;
         Dictionary<string, int> _enabledDeviceCount;
+        string _miningLocation;
 
 
         // we save cpu miners
@@ -69,6 +71,7 @@ namespace NiceHashMiner.Miners {
             _allMiners.Clear();
         }
 
+
         public string GetActiveMinersGroup() {
             string ActiveMinersGroup = "";
 
@@ -84,23 +87,32 @@ namespace NiceHashMiner.Miners {
 
         // TODO check how will it work for double CPU settup
         // TODO add ethimer for dagger separation
-        public Miner CreateMiner(DeviceGroupType type) {
+        public Miner CreateMiner(DeviceGroupType deviceGroupType, AlgorithmType algorithmType) {
             
             // return first cpuminer
-            if (DeviceGroupType.CPU == type && _cpuMiners.Count > 0) {
+            if (DeviceGroupType.CPU == deviceGroupType && _cpuMiners.Count > 0) {
                 return _cpuMiners[_cpuMiners.Keys.First()];
             }
 
-            switch (type) {
-                case DeviceGroupType.AMD_OpenCL:
-                    return new sgminer(false);
-                case DeviceGroupType.NVIDIA_2_1:
-                    return new ccminer_tpruvot_sm21(false);
-                case DeviceGroupType.NVIDIA_3_x:
-                    return new ccminer_tpruvot(false);
-                case DeviceGroupType.NVIDIA_5_x:
-                    return new ccminer_sp(false);
+            if (AlgorithmType.DaggerHashimoto == algorithmType) {
+                if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
+                    return new MinerEtherumOCL();
+                } else {
+                    return new MinerEtherumCUDA();
+                }
+            } else {
+                switch (deviceGroupType) {
+                    case DeviceGroupType.AMD_OpenCL:
+                        return new sgminer(false);
+                    case DeviceGroupType.NVIDIA_2_1:
+                        return new ccminer_tpruvot_sm21(false);
+                    case DeviceGroupType.NVIDIA_3_x:
+                        return new ccminer_tpruvot(false);
+                    case DeviceGroupType.NVIDIA_5_x:
+                        return new ccminer_sp(false);
+                }
             }
+            
 
             return null;
         }
@@ -243,10 +255,8 @@ namespace NiceHashMiner.Miners {
                         Miner m = null;
                         // if miner doesn't exist create it
                         if (_allMiners.TryGetValue(groupSettup.MinerKey, out m) == false) {
-                            m = CreateMiner(groupId);
-                            foreach (var uuid in groupSettup.MinerKey.DeviceUUIDs) {
-                                m.CDevs.Add(ComputeDevice.GetDeviceWithUUID(uuid));
-                            }
+                            m = CreateMiner(groupId, groupSettup.MostProfitAlgorithmType);
+                            m.SetCDevs(groupSettup.MinerKey.DeviceUUIDs);
                             _allMiners.Add(groupSettup.MinerKey, m);
                         }
                         if (m.CurrentAlgo != groupSettup.MostProfitAlgorithmType) {
@@ -277,11 +287,83 @@ namespace NiceHashMiner.Miners {
             
         }
 
-        public void MinerStatsCheck() {
-            // TODO
-            //foreach (var groupSettupProfit in _deviceGroupSettupManager) {
-            //    groupSettupProfit.CalculateMostProfitable(devProfits);
-            //}
+        public void MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
+            // TODO replace with new switching logic and set gui comunication interfaces
+            string CPUAlgoName = "";
+            double CPUTotalSpeed = 0;
+            double CPUTotalRate = 0;
+
+            //// Reset all stats
+            //SetCPUStats("", 0, 0);
+            //SetNVIDIAtp21Stats("", 0, 0);
+            //SetNVIDIAspStats("", 0, 0);
+            //SetNVIDIAtpStats("", 0, 0);
+            //SetAMDOpenCLStats("", 0, 0);
+
+            foreach (var kvp in _allMiners) {
+                Miner m = kvp.Value;
+                // skip if not running
+                if (!m.IsRunning) continue;
+
+                if (m is cpuminer && m.IsCurrentAlgo(AlgorithmType.Hodl)) {
+                    string pname = m.Path.Split('\\')[2];
+                    pname = pname.Substring(0, pname.Length - 4);
+
+                    Process[] processes = Process.GetProcessesByName(pname);
+
+                    if (processes.Length < CPUID.GetPhysicalProcessorCount())
+                        m.Restart();
+
+                    AlgorithmType algoIndex = AlgorithmType.Hodl; // m.GetAlgoIndex("hodl");
+                    CPUAlgoName = "hodl";
+                    //CPUTotalSpeed = m.SupportedAlgorithms[algoIndex].BenchmarkSpeed;
+                    //CPUTotalRate = Globals.NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
+
+                    continue;
+                }
+
+                APIData AD = m.GetSummary();
+                if (AD == null) {
+                    Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
+
+                    // Make sure sgminer has time to start
+                    // properly on slow CPU system
+                    if (m.StartingUpDelay && m.NumRetries > 0) {
+                        m.NumRetries--;
+                        if (m.NumRetries == 0) m.StartingUpDelay = false;
+                        Helpers.ConsolePrint(m.MinerDeviceName, "NumRetries: " + m.NumRetries);
+                        continue;
+                    }
+
+                    // API is inaccessible, try to restart miner
+                    m.Restart();
+
+                    continue;
+                } else
+                    m.StartingUpDelay = false;
+
+                if (NiceHashData != null)
+                    m.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
+                else
+                    m.CurrentRate = 0;
+
+                if (m is cpuminer) {
+                    CPUAlgoName = AD.AlgorithmName;
+                    CPUTotalSpeed += AD.Speed;
+                    CPUTotalRate += m.CurrentRate;
+                } else if (m is ccminer_tpruvot_sm21) {
+                    //SetNVIDIAtp21Stats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+                } else if (m is ccminer_tpruvot) {
+                    //SetNVIDIAtpStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+                } else if (m is ccminer_sp) {
+                    //SetNVIDIAspStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+                } else if (m is sgminer) {
+                    //SetAMDOpenCLStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
+                }
+            }
+            if (CPUAlgoName != null && CPUAlgoName.Length > 0) {
+                //SetCPUStats(CPUAlgoName, CPUTotalSpeed, CPUTotalRate);
+            }
         }
 
 

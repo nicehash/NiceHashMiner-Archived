@@ -102,9 +102,15 @@ namespace NiceHashMiner.Forms.Components {
             var currentConfig = _benchmarkConfigs[benchConfigIndex];
             var lvi = listViewAlgorithms.Items[_bechmarkCurrentIndex];
             var benchAlgorithm = lvi.Tag as Algorithm;
-            CurrentlyBenchmarking = MinersManager.Instance.CreateMiner(currentConfig.DeviceGroupType);
+            CurrentlyBenchmarking = MinersManager.Instance.CreateMiner(currentConfig.DeviceGroupType, benchAlgorithm.NiceHashID);
             // TODO make skipp option for already benchmarked
             if (CurrentlyBenchmarking != null && benchAlgorithm != null && !benchAlgorithm.Skip) {
+                // TODO refactor this mess
+                CurrentlyBenchmarking.SetCDevs(
+                    new string[] { ComputeDevice.GetEnabledDevicesUUUIDsForNames(
+                        new string[] { currentConfig.DeviceName }
+                        )[0] }
+                );
                 // TODO time
                 CurrentlyBenchmarking.BenchmarkStart(currentConfig, benchAlgorithm, 5, BenchmarkCompleted, lvi);
             } else {

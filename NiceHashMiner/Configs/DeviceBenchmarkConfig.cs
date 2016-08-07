@@ -14,8 +14,6 @@ namespace NiceHashMiner.Configs
         public DeviceGroupType DeviceGroupType { get; private set; }
         public string DeviceName { get; private set; }
 
-        // TODO remove devices ids
-        public int[] DevicesIDs { get; private set; }
         // TODO handle defaults for this
         public string ExtraLaunchParameters { get; set; }
         public int TimeLimit { get; set; }
@@ -26,12 +24,11 @@ namespace NiceHashMiner.Configs
         readonly public static string BENCHMARK_PREFIX = "benchmark_";
 
         public DeviceBenchmarkConfig(DeviceGroupType deviceGroupType,
-            string deviceGroupName, int[] devicesIDs,
+            string deviceGroupName,
             Dictionary<AlgorithmType, Algorithm> benchmarkSpeeds = null) {
 
             DeviceGroupType = deviceGroupType;
             DeviceName = deviceGroupName;
-            DevicesIDs = devicesIDs;
             if (benchmarkSpeeds != null) {
                 AlgorithmSettings = benchmarkSpeeds;
             } else {
@@ -43,13 +40,13 @@ namespace NiceHashMiner.Configs
         }
 
         public static string GetId(DeviceGroupType deviceGroupType,
-            string deviceGroupName, int[] devicesIDs) {
+            string deviceGroupName) {
             var SHA256 = new SHA256Managed();
             var hash = new StringBuilder();
             string mixedAttr = ((int)deviceGroupType).ToString() + deviceGroupName;
-            foreach (var devId in devicesIDs) {
-                mixedAttr += devId.ToString();
-            }
+            //foreach (var devId in devicesIDs) {
+            //    mixedAttr += devId.ToString();
+            //}
             byte[] hashedBytes = SHA256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0, Encoding.UTF8.GetByteCount(mixedAttr));
             foreach (var b in hashedBytes) {
                 hash.Append(b.ToString("x2"));
@@ -58,7 +55,7 @@ namespace NiceHashMiner.Configs
         }
 
         private string GetId() {
-            return GetId(DeviceGroupType, DeviceName, DevicesIDs);
+            return GetId(DeviceGroupType, DeviceName);
         }
 
         protected override void InitializePaths() {

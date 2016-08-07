@@ -67,6 +67,13 @@ namespace NiceHashMiner.Devices
             return null;
         }
 
+        public static ComputeDevice GetDeviceWithName(string name) {
+            foreach (var dev in AllAvaliableDevices) {
+                if (name == dev.Name) return dev;
+            }
+            return null;
+        }
+
         public static int GetDeviceNameCount(string name) {
             int count = 0;
             foreach (var dev in AllAvaliableDevices) {

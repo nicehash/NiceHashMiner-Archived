@@ -10,9 +10,8 @@ using System.IO;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Miners
 {
     abstract public class ccminer : Miner
     {
@@ -23,35 +22,10 @@ namespace NiceHashMiner
             //if (ProcessHandle != null) return; // ignore, already running 
 
             //Algorithm miningAlgorithm = null;// GetMinerAlgorithm(algorithmType);
-            if (miningAlgorithm == null /*|| EnabledDevicePerAlgoCount(algorithmType) < 1*/) return;
+            CurrentMiningAlgorithm = miningAlgorithm;
+            if (miningAlgorithm == null) return;
 
-            if (AlgorithmType.DaggerHashimoto == miningAlgorithm.NiceHashID)
-            {
-                LastCommandLine = " --cuda" +
-                                  " " + ExtraLaunchParameters +
-                                  " " + miningAlgorithm.ExtraLaunchParameters +
-                                  " -S " + url.Substring(14) +
-                                  " -O " + username + ":" + GetPassword(miningAlgorithm) +
-                                  " --api-port " + ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString() +
-                                  " --cuda-devices ";
-
-                int dagdev = -1;
-                for (int i = 0; i < CDevs.Count; i++)
-                {
-                    if (EtherDevices[i] != -1 && CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
-                    {
-                        LastCommandLine += i.ToString() + " ";
-                        if (i == DaggerHashimotoGenerateDevice)
-                            dagdev = DaggerHashimotoGenerateDevice;
-                        else if (dagdev == -1) dagdev = i;
-                    }
-                }
-
-                LastCommandLine += " --dag-load-mode singlekeep " + dagdev.ToString();
-            }
-            else
-            {
-                LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
+            LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
                                   " --url=" + url +
                                   " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
                                   " --api-bind=" + APIPort.ToString() +
@@ -59,24 +33,15 @@ namespace NiceHashMiner
                                   " " + miningAlgorithm.ExtraLaunchParameters +
                                   " --devices ";
 
-                for (int i = 0; i < CDevs.Count; i++)
-                    if (CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
-                        LastCommandLine += CDevs[i].ID.ToString() + ",";
+            LastCommandLine += GetDevicesCommandString();
 
-                if (LastCommandLine.EndsWith(","))
-                {
-                    LastCommandLine = LastCommandLine.Remove(LastCommandLine.Length - 1);
-                }
-                else
-                {
-                    LastCommandLine = "";
-                    return; // no GPUs to start mining on
-                }
-
-                Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
-            }
+            Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
 
             ProcessHandle = _Start();
+        }
+
+        protected override void _Stop(bool willswitch) {
+            Stop_cpu_ccminer_sgminer(willswitch);
         }
 
         // this method checks SM versions
@@ -243,50 +208,24 @@ namespace NiceHashMiner
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
-            string CommandLine = "";
-
-            if (AlgorithmType.DaggerHashimoto == algorithm.NiceHashID) {
-                CommandLine = " --benchmark-warmup 40 --benchmark-trial 20" +
-                              " " + benchmarkConfig.ExtraLaunchParameters +
-                              " " + algorithm.ExtraLaunchParameters +
-                              " --cuda --cuda-devices ";
-
-                int dagdev = -1;
-                foreach (var id in benchmarkConfig.DevicesIDs) {
-                    // TODO for now we presume that all IDs in config are enabled devices
-                    if (EtherDevices[id] != -1 /*&& CDevs[i].Enabled && !SupportedAlgorithms[algorithmType].DisabledDevice[i]*/) {
-                        CommandLine += id.ToString() + " ";
-                        if (id == DaggerHashimotoGenerateDevice)
-                            dagdev = DaggerHashimotoGenerateDevice;
-                        else if (dagdev == -1) dagdev = id;
-                    }
-                }
-
-                CommandLine += " --dag-load-mode single " + dagdev.ToString();
-
-                Ethereum.GetCurrentBlock(MinerDeviceName);
-                CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
-            } else {
-                CommandLine = " --algo=" + algorithm.MinerName +
+            string CommandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
                               " --time-limit " + time.ToString() +
                               " " + ExtraLaunchParameters +
                               " " + algorithm.ExtraLaunchParameters +
                               " --devices ";
 
-                // TODO for now we presume that all IDs in config are enabled devices
-                foreach (var id in benchmarkConfig.DevicesIDs) {
-                    CommandLine += id.ToString() + ",";
-                }
+            CommandLine += GetDevicesCommandString();
 
-                CommandLine = CommandLine.Remove(CommandLine.Length - 1);
-
-                Path = GetOptimizedMinerPath(algorithm.NiceHashID);
-            }
+            Path = GetOptimizedMinerPath(algorithm.NiceHashID);
 
             return CommandLine;
         }
         #endregion // Decoupled benchmarking routines
+
+        public override APIData GetSummary() {
+            return GetSummaryCPU_CCMINER();
+        }
 
     }
 }

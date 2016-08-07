@@ -480,8 +480,7 @@ namespace NiceHashMiner.Forms {
             algorithmsListView1.SetAlgorithms(
                 DeviceBenchmarkConfigManager.Instance.GetConfig(
                 selectedComputeDevice.DeviceGroupType,
-                selectedComputeDevice.Name,
-                new int[] { selectedComputeDevice.ID })
+                selectedComputeDevice.Name)
                 );
         }
 

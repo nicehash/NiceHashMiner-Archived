@@ -4,10 +4,9 @@ using System.Text;
 using System.Diagnostics;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners;
 using NiceHashMiner.Enums;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Miners
 {
     class ccminer_sp : ccminer
     {

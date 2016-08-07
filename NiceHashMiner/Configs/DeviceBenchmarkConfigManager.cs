@@ -26,7 +26,8 @@ namespace NiceHashMiner.Configs {
             DeviceBenchmarkConfig retConfig = null;
 
             if (_benchmarkConfigs.TryGetValue(deviceName, out retConfig) == false) {
-                // TODO for now do nothing
+                // TODO if it does not exist create new
+                // but this should never happen
                 retConfig = null;
             }
 
@@ -34,10 +35,10 @@ namespace NiceHashMiner.Configs {
         }
 
         public DeviceBenchmarkConfig GetConfig(DeviceGroupType deviceGroupType,
-            string deviceName, int[] devicesIDs) {
+            string deviceName) {
             DeviceBenchmarkConfig retConfig = GetConfig(deviceName);
             if (retConfig == null) {
-                retConfig = new DeviceBenchmarkConfig(deviceGroupType, deviceName, devicesIDs, null);
+                retConfig = new DeviceBenchmarkConfig(deviceGroupType, deviceName, null);
                 _benchmarkConfigs.Add(deviceName, retConfig);
             }
 
@@ -65,8 +66,8 @@ namespace NiceHashMiner.Configs {
             }
             // check benchmarks
             foreach (var deviceName in enabledDevicesNames) {
-                foreach (var benchmarkConfigPair in _benchmarkConfigs) {
-                    foreach (var kvpAlgorithm in benchmarkConfigPair.Value.AlgorithmSettings) {
+                if (_benchmarkConfigs.ContainsKey(deviceName)) {
+                    foreach (var kvpAlgorithm in _benchmarkConfigs[deviceName].AlgorithmSettings) {
                         var algorithm = kvpAlgorithm.Value;
                         if (!algorithm.Skip && algorithm.BenchmarkSpeed <= 0.0d) {
                             isEnabledBenchmarksInitialized = false;

@@ -118,24 +118,24 @@ namespace NiceHashMiner
             LabelProgressPercentage.Text = "0.00%";
             index = 0;
 
-            Helpers.ConsolePrint("SubmitResultDialog", "Number of Devices: " + mm.CDevs.Count);
-            if (mm.CDevs.Count == 1 /*&& mm.CountBenchmarkedAlgos() != 0*/)
-            {
-                DialogResult result = MessageBox.Show(International.GetText("SubmitResultDialog_UsePreviousBenchmarkedValueMsg"),
-                                                      International.GetText("SubmitResultDialog_UsePreviousBenchmarkedValueTitle"),
-                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //Helpers.ConsolePrint("SubmitResultDialog", "Number of Devices: " + mm.CDevs.Count);
+            //if (mm.CDevs.Count == 1 /*&& mm.CountBenchmarkedAlgos() != 0*/)
+            //{
+            //    DialogResult result = MessageBox.Show(International.GetText("SubmitResultDialog_UsePreviousBenchmarkedValueMsg"),
+            //                                          International.GetText("SubmitResultDialog_UsePreviousBenchmarkedValueTitle"),
+            //                                          MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                if (result == System.Windows.Forms.DialogResult.Yes) index = 9999;
-            }
+            //    if (result == System.Windows.Forms.DialogResult.Yes) index = 9999;
+            //}
 
-            // Temporarily disable the other ComputeDevices in the same Group
-            for (int i = 0; i < mm.CDevs.Count; i++)
-            {
-                if (mm.CDevs[i].ID != DeviceChecked_Index)
-                    mm.CDevs[i].Enabled = false;
-                else
-                    mm.CDevs[i].Enabled = true;
-            }
+            //// Temporarily disable the other ComputeDevices in the same Group
+            //for (int i = 0; i < mm.CDevs.Count; i++)
+            //{
+            //    if (mm.CDevs[i].ID != DeviceChecked_Index)
+            //        mm.CDevs[i].Enabled = false;
+            //    else
+            //        mm.CDevs[i].Enabled = true;
+            //}
 
             //BenchmarkProgressBar.Maximum = mm.SupportedAlgorithms.Count;
 

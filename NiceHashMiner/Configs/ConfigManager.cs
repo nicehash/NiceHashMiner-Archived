@@ -26,7 +26,7 @@ namespace NiceHashMiner.Configs {
 
         private void LoadBenchmarks() {
             foreach (var CDev in ComputeDevice.UniqueAvaliableDevices) {
-                var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name, new int[] { CDev.ID });
+                var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name);
                 benchConfig.InitializeConfig();
                 BenchmarkConfigs.Add(CDev.Name, benchConfig);
             }

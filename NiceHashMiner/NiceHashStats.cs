@@ -181,6 +181,7 @@ namespace NiceHashMiner
             string ResponseFromServer;
             try
             {
+                // TODO revisit this 
                 string ActiveMinersGroup = MinersManager.Instance.GetActiveMinersGroup();
                 
                 // TODO remove this

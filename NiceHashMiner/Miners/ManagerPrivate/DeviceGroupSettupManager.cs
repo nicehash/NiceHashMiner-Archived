@@ -44,9 +44,21 @@ namespace NiceHashMiner.Miners {
             public DeviceGroupSettupManager(DeviceGroupType deviceGroupType, HashSet<string> uniqueDeviceModelsUuids) {
                 GroupID = deviceGroupType;
 
-                // TODO implement fallback option if set bigger then 7
-                // TODO IMPORTANT
-                _deviceGroupSettupList = GetDeviceGroupSettups(uniqueDeviceModelsUuids);
+                if (uniqueDeviceModelsUuids.Count < 7) {
+                    _deviceGroupSettupList = GetDeviceGroupSettups(uniqueDeviceModelsUuids);
+                } else {
+                    // only two options all grouped and all separated
+                    DeviceGroupSettup allGrouped = new DeviceGroupSettup(uniqueDeviceModelsUuids);
+                    allGrouped.AddSet(new SortedSet<string>(uniqueDeviceModelsUuids));
+                    DeviceGroupSettup allSeparated = new DeviceGroupSettup(uniqueDeviceModelsUuids);
+                    foreach (var uuid in uniqueDeviceModelsUuids) {
+                        allSeparated.AddSet(new SortedSet<string>(new string[] { uuid }));
+                    }
+
+                    _deviceGroupSettupList = new List<DeviceGroupSettup>();
+                    _deviceGroupSettupList.Add(allGrouped);
+                    _deviceGroupSettupList.Add(allSeparated);
+                }
                 _algorithmKeys = GroupAlgorithms.GetAlgorithmKeysForGroup(deviceGroupType);
                 // initialize GroupProfits
                 foreach (var settup in _deviceGroupSettupList) {
