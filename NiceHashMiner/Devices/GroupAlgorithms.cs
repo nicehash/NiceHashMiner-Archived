@@ -18,7 +18,8 @@ namespace NiceHashMiner.Devices {
                 { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
                 { AlgorithmType.Axiom, new Algorithm(AlgorithmType.Axiom, "axiom") },
                 { AlgorithmType.ScryptJaneNf16, new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjane:16") },
-                { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") { ExtraLaunchParameters = "--extranonce-subscribe"} }
+                { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") { ExtraLaunchParameters = "--extranonce-subscribe"} },
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") }
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {

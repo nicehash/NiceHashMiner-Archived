@@ -70,7 +70,7 @@ namespace NiceHashMiner
             label_RateAMDBTC.Text = ratesBTCInitialString;
 
 
-            string ratesDollarInitialString = String.Format("0.00 {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
+            string ratesDollarInitialString = String.Format("0.00 {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
             label_RateCPUDollar.Text = ratesDollarInitialString;
             label_RateNVIDIA5XDollar.Text = ratesDollarInitialString;
             label_RateNVIDIA3XDollar.Text = ratesDollarInitialString;
@@ -79,7 +79,7 @@ namespace NiceHashMiner
 
             toolStripStatusLabelGlobalRateText.Text = International.GetText("form1_global_rate") + ":";
             toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
-            toolStripStatusLabelBalanceText.Text = (CurrencyConverter.CurrencyConverter.ConverterActive == false ? "$/" : ConfigManager.Instance.GeneralConfig.DisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("form1_balance") + ":";
+            toolStripStatusLabelBalanceText.Text = (ConfigManager.Instance.GeneralConfig.DisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("form1_balance") + ":";
 
             listViewDevices.Columns[0].Text = International.GetText("ListView_Enabled");
             listViewDevices.Columns[1].Text = International.GetText("ListView_Group");
@@ -114,8 +114,7 @@ namespace NiceHashMiner
             ShowWarningNiceHashData = true;
             DemoMode = false;
 
-            if (CurrencyConverter.CurrencyConverter.ConverterActive)
-                toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager.Instance.GeneralConfig.DisplayCurrency + ")";
+            toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager.Instance.GeneralConfig.DisplayCurrency + ")";
         }
 
 
@@ -343,7 +342,7 @@ namespace NiceHashMiner
             labelSpeed.Text = FormatSpeedOutput(speed) + aname;
             labelRateBTC.Text = FormatPayingOutput(paying);
             labelRateCurrency.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
-                + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
+                + String.Format(" {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
             UpdateGlobalRate();
         }
 
@@ -353,7 +352,7 @@ namespace NiceHashMiner
             if (aname.Equals("hodl")) labelCPU_Mining_Speed.Text += "**";
             label_RateCPUBTC.Text = FormatPayingOutput(paying);
             label_RateCPUDollar.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
-                + String.Format(" {0}/", !CurrencyConverter.CurrencyConverter.ConverterActive ? "$" : ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
+                + String.Format(" {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
             UpdateGlobalRate();
         }
 
@@ -397,14 +396,7 @@ namespace NiceHashMiner
                 toolStripStatusLabelGlobalRateValue.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
             }
 
-
-
-
-            if(CurrencyConverter.CurrencyConverter.ConverterActive == false)
-                toolStripStatusLabelBTCDayValue.Text = (TotalRate *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
-            else
-
-                toolStripStatusLabelBTCDayValue.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency((TotalRate *Globals.BitcoinRate)).ToString("F2", CultureInfo.InvariantCulture);
+            toolStripStatusLabelBTCDayValue.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency((TotalRate * Globals.BitcoinRate)).ToString("F2", CultureInfo.InvariantCulture);
         }
 
 
@@ -426,17 +418,11 @@ namespace NiceHashMiner
                         toolStripStatusLabelBalanceBTCCode.Text = "BTC";
                         toolStripStatusLabelBalanceBTCValue.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
                     }
-                    
-                    Helpers.ConsolePrint("CurrencyConverter", "IsActive: " + CurrencyConverter.CurrencyConverter.ConverterActive);
-                    if(CurrencyConverter.CurrencyConverter.ConverterActive == false)
-                        toolStripStatusLabelBalanceDollarText.Text = (Balance *Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture);
-                    else
-                    {
-                        Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
-                        double Amount = (Balance *Globals.BitcoinRate);
-                        Amount = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(Amount);
-                        toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
-                    }
+
+                    //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
+                    double Amount = (Balance * Globals.BitcoinRate);
+                    Amount = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(Amount);
+                    toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
                 }
             }
         }

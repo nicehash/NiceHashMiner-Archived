@@ -22,15 +22,6 @@ namespace NiceHashMiner.Miners {
 
     public partial class MinersManager : BaseLazySingleton<MinersManager> {
 
-        // TODO make members private
-        public class MinerKey {
-            // TODO change id to uuid
-            public string[] DeviceUUIDs;
-            public string Group;
-            //public string DeviceName;
-            public DeviceGroupType DeviceGroupType;
-        }
-
         // temporary varibales for current session
         PerDeviceSpeedDictionary _perDeviceSpeedDictionary;
         Dictionary<string, int> _enabledDeviceCount;
@@ -53,28 +44,21 @@ namespace NiceHashMiner.Miners {
         AllGroupedDevices _currentAllGroupedDevices;
 
 
-        // we save cpu miners
-        Dictionary<MinerKey, cpuminer> _cpuMiners = new Dictionary<MinerKey,cpuminer>();
+        // we save cpu miners string group name
+        protected Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
 
         protected MinersManager() {
         }
 
-
-        // TODO CPU is broken
         public void AddCpuMiner(cpuminer miner, int deviceID, string deviceName) {
-            MinerKey key = new MinerKey() {
-                // TODO fix this
-                //DeviceID = new int[] { deviceID },
-                Group = miner.MinerDeviceName,
-                //DeviceName = deviceName,
-                DeviceGroupType = DeviceGroupType.CPU
-            };
-            _cpuMiners.Add(key, miner);
+            _cpuMiners.Add(miner.MinerDeviceName, miner);
         }
 
         public void StopAllMiners() {
-            foreach (var kv in _groupedDevicesMiners) {
-                kv.Value.End();
+            if (_groupedDevicesMiners != null) {
+                foreach (var kv in _groupedDevicesMiners) {
+                    kv.Value.End();
+                }
             }
         }
 
@@ -93,16 +77,14 @@ namespace NiceHashMiner.Miners {
             return ActiveMinersGroup;
         }
 
-        // TODO check how will it work for double CPU settup
-        // TODO add ethimer for dagger separation
+        public static Miner GetCpuMiner(string groupName) {
+            if (Instance._cpuMiners.Count > 0) {
+                return Instance._cpuMiners[groupName];
+            }
+            return null;
+        }
+        // create miner creates new miners, except cpuminer, those are saves and called from GetCpuMiner()
         public static Miner CreateMiner(DeviceGroupType deviceGroupType, AlgorithmType algorithmType) {
-
-            //// TODO fix this CPU stuff
-            //// return first cpuminer
-            //if (DeviceGroupType.CPU == deviceGroupType && _cpuMiners.Count > 0) {
-            //    return _cpuMiners[_cpuMiners.Keys.First()];
-            //}
-
             if (AlgorithmType.DaggerHashimoto == algorithmType) {
                 if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
                     return new MinerEtherumOCL();

@@ -16,11 +16,12 @@ namespace NiceHashMiner.Miners {
         // for switching different miners for different algorithms
         private class GroupMiners {
             public Miner CurrentWorkingMiner { get; private set; }
-            List<Miner> _miners;
+            public string DevicesInfoString { get; private set; }
+
+            private List<Miner> _miners;
             private string[] _deviceNames;
             private string[] _deviceUUIDs;
             private DeviceGroupType _deviceGroupType = DeviceGroupType.NONE;
-            public string DevicesInfoString { get; private set; }
 
             public GroupMiners(GroupedDevices deviceUUIDSet) {
                 _miners = new List<Miner>();
@@ -71,7 +72,7 @@ namespace NiceHashMiner.Miners {
                 }
             }
 
-            public void StartAlgorihtm(Algorithm algorithm, string Worker) {
+            public void StartAlgorihtm(Algorithm algorithm, string worker) {
                 bool containsSupportedMiner = false;
                 Miner startSwitchMiner = null;
                 var algorithmType = algorithm.NiceHashID;
@@ -96,10 +97,10 @@ namespace NiceHashMiner.Miners {
                 } else {
                     CurrentWorkingMiner = startSwitchMiner;
                 }
-                SwitchMinerAlgorithm(ref startSwitchMiner, algorithm, Worker);
+                SwitchMinerAlgorithm(ref startSwitchMiner, algorithm, worker);
             }
 
-            private void SwitchMinerAlgorithm(ref Miner m, Algorithm algorithm, string Worker) {
+            private void SwitchMinerAlgorithm(ref Miner m, Algorithm algorithm, string worker) {
                 // if is running and the current algorithm is the same skip
                 if (m.IsRunning && m.CurrentAlgo == algorithm.NiceHashID) {
                     return;
@@ -120,7 +121,7 @@ namespace NiceHashMiner.Miners {
                     // TODO fix this combo box things
                     + "." + Globals.MiningLocation[/*comboBoxLocation.SelectedIndex*/ 1]
                     + ".nicehash.com:"
-                    + Globals.NiceHashData[MaxProfitKey].port, Worker);
+                    + Globals.NiceHashData[MaxProfitKey].port, worker);
             }
 
         }

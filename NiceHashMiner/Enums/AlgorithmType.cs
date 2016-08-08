@@ -34,8 +34,8 @@ namespace NiceHashMiner.Enums
         Hodl = 19,
         DaggerHashimoto = 20,
         Decred = 21,
+        // TODO check CryptoNight
+        CryptoNight = 22,
         #endregion // NiceHashAPI
-        // ethereum not documented but it is returned from API value is 999
-        Ethereum = 999
     }
 }

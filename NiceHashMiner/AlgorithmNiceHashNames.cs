@@ -34,8 +34,8 @@ namespace NiceHashMiner
             { AlgorithmType.Hodl , "hodl" },
             { AlgorithmType.DaggerHashimoto , "daggerhashimoto" },
             { AlgorithmType.Decred , "decred" },
-            // etherum is not documented, BUT is exists in API
-            { AlgorithmType.Ethereum , "ethereum" },
+            // TODO check
+            { AlgorithmType.CryptoNight , "cryptonight" },
         };
 
         public static string GetName(AlgorithmType type) { return _names[type]; }

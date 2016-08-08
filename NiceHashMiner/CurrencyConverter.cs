@@ -11,7 +11,7 @@ namespace NiceHashMiner.CurrencyConverter
         private static DateTime LastUpdate = DateTime.Now;
         private static CurrencyAPIResponse LastResponse;
 
-        public static bool ConverterActive  {
+        private static bool ConverterActive  {
             get { return ConfigManager.Instance.GeneralConfig.DisplayCurrency != "USD"; }
         }
 
