@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,10 @@ namespace NiceHashMiner.Miners {
 
         public MinerEtherumOCL() {
             isOCL = true;
+        }
+
+        protected override MinerType GetMinerType() {
+            return MinerType.MinerEtherumOCL;
         }
 
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {

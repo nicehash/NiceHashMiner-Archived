@@ -14,16 +14,17 @@ namespace NiceHashMiner.Devices
         readonly public string Group;
         readonly public string Name;
         public bool Enabled;
-        //TODO now we have a cyclic dependancy, redo and rethink this in the future
-        // the miner we dont want to serialize
-        //[JsonIgnore]
-        //readonly public Miner Miner;
+        
         [JsonIgnore]
         readonly public DeviceGroupType DeviceGroupType;
         // close to uuid, hash readonly members and we should be safe
         // it is used only at runtime, do not save to configs
         [JsonIgnore]
         readonly public string UUID;
+
+        // temp value for grouping new profits
+        [JsonIgnore]
+        public Algorithm MostProfitableAlgorithm { get; set; }
 
         // 
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
@@ -67,8 +68,8 @@ namespace NiceHashMiner.Devices
             return null;
         }
 
-        public static ComputeDevice GetDeviceWithName(string name) {
-            foreach (var dev in AllAvaliableDevices) {
+        public static ComputeDevice GetUniqueDeviceWithName(string name) {
+            foreach (var dev in UniqueAvaliableDevices) {
                 if (name == dev.Name) return dev;
             }
             return null;
@@ -94,6 +95,16 @@ namespace NiceHashMiner.Devices
             }
 
             return uuids.ToArray();
+        }
+
+        public static string[] GetEnabledDevicesUUUIDsForNames(SortedSet<string> uuidsSet) {
+            string[] deviceNames = new string[uuidsSet.Count];
+                int devNamesIndex = 0;
+                foreach (var uuid in uuidsSet) {
+                    deviceNames[devNamesIndex++] = ComputeDevice.GetDeviceWithUUID(uuid).Name;
+                }
+
+            return GetEnabledDevicesUUUIDsForNames(deviceNames);
         }
 
         public static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
@@ -127,6 +138,18 @@ namespace NiceHashMiner.Devices
             }
 
             return uuids;
+        }
+
+        public static HashSet<string> GetUniqueEnabledDevicesNamesForGroup(DeviceGroupType type) {
+            HashSet<string> names = new HashSet<string>();
+
+            foreach (var cd in UniqueAvaliableDevices) {
+                if (cd.Enabled && cd.DeviceGroupType == type) {
+                    names.Add(cd.Name);
+                }
+            }
+
+            return names;
         }
 
     }

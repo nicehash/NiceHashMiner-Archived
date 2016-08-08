@@ -27,7 +27,7 @@ namespace NiceHashMiner
     public abstract class Miner
     {
         public string MinerDeviceName;
-        public int APIPort;
+        protected int APIPort { get; private set; }
         protected List<ComputeDevice> CDevs;
         
         // TODO remove
@@ -62,6 +62,7 @@ namespace NiceHashMiner
 
         private bool QueryComputeDevices;
         protected bool _isEthMinerExit = false;
+        protected AlgorithmType[] _supportedMinerAlgorithms;
 
         // queryComputeDevices is a quickfix to decouple device querying, TODO move to dev query logic
         public Miner(bool queryComputeDevices)
@@ -81,7 +82,14 @@ namespace NiceHashMiner
 
             QueryComputeDevices = queryComputeDevices;
 
-            
+            InitSupportedMinerAlgorithms();
+
+            APIPort = MinersApiPortsManager.Instance.GetAvaliablePort(GetMinerType());
+        }
+
+        ~Miner() {
+            // free the port
+            MinersApiPortsManager.Instance.RemovePort(APIPort);
         }
 
         abstract protected void QueryCDevs();
@@ -98,6 +106,17 @@ namespace NiceHashMiner
                 CDevs.Add(ComputeDevice.GetDeviceWithUUID(uuid));
             }
         }
+
+        public bool IsSupportedMinerAlgorithms(AlgorithmType algorithmType) {
+            foreach (var supportedType in _supportedMinerAlgorithms) {
+                if (supportedType == algorithmType) return true;
+            }
+            return false;
+        }
+
+        protected abstract MinerType GetMinerType();
+
+        protected abstract void InitSupportedMinerAlgorithms();
 
         /// <summary>
         /// GetOptimizedMinerPath returns optimized miner path based on algorithm type
@@ -151,7 +170,7 @@ namespace NiceHashMiner
             foreach (var cdev in CDevs) {
                 ids.Add(cdev.ID.ToString());
             }
-            deviceStringCommand += string.Join(", ", ids);
+            deviceStringCommand += string.Join(",", ids);
 
             return deviceStringCommand;
         }
@@ -537,7 +556,6 @@ namespace NiceHashMiner
             }
 
             FillAlgorithm(aname, ref ad);
-            Helpers.ConsolePrint("GetSummary", String.Format("Algorithm : {0}\tSpeed : {1}", ad.AlgorithmName, ad.Speed));
             return ad;
         }
 

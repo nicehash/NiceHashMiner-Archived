@@ -168,14 +168,14 @@ namespace NiceHashMiner.Miners
                 {
                     EtherDevices = new int[CDevs.Count];
 
-                    if (this is ccminer_sp)
+                    if (this is ccminer_sm5x)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
                         //AddEthereum("Compute version: 6.0");
                         AddEthereum("Compute version: 5.2", true);
                         AddEthereum("Compute version: 5.0", false);
                     }
-                    else if (this is ccminer_tpruvot)
+                    else if (this is ccminer_sm3x)
                     {
                         Helpers.ConsolePrint(MinerDeviceName, "Adding Ethereum..");
                         AddEthereum("Compute version: 3.0", true);
@@ -191,11 +191,11 @@ namespace NiceHashMiner.Miners
 
                 if (WarningDialog.DisableDetection)
                 {
-                    if (this is ccminer_sp)
+                    if (this is ccminer_sm5x)
                         ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X = true;
-                    else if (this is ccminer_tpruvot)
+                    else if (this is ccminer_sm3x)
                         ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X = true;
-                    else if (this is ccminer_tpruvot_sm21)
+                    else if (this is ccminer_sm21)
                         ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X = true;
                 }
 

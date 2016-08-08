@@ -94,13 +94,13 @@ namespace NiceHashMiner.Devices
             List<ccminer> dump = new List<ccminer>();
             // NVIDIA5x
             showMessageAndStep(International.GetText("form1_loadtext_NVIDIA5X"));
-            dump.Add(new ccminer_sp(true));
+            dump.Add(new ccminer_sm5x(true));
             // NVIDIA3X
             showMessageAndStep(International.GetText("form1_loadtext_NVIDIA3X"));
-            dump.Add(new ccminer_tpruvot(true));
+            dump.Add(new ccminer_sm3x(true));
             // NVIDIA2X
             showMessageAndStep(International.GetText("form1_loadtext_NVIDIA2X"));
-            dump.Add(new ccminer_tpruvot_sm21(true));
+            dump.Add(new ccminer_sm21(true));
             dump = null;
         }
 

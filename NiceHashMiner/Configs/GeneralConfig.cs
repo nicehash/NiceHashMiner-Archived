@@ -96,6 +96,7 @@ namespace NiceHashMiner.Configs {
         public bool ShowDriverVersionWarning { get; set; }
         public bool DisableWindowsErrorReporting { get; set; }
         public bool NVIDIAP0State { get; set; }
+        // check these settings
         public int ethminerAPIPortNvidia { get; set; }
         public int ethminerAPIPortAMD { get; set; }
         public int ethminerDefaultBlockHeight { get; set; }

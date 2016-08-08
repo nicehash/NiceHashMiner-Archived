@@ -66,24 +66,6 @@ namespace NiceHashMiner.Configs {
             } catch { }
         }
 
-        //protected void InitReferenceType<RefT>(ref RefT toInit, RefT fromInit) where RefT : IComparable<RefT> {
-        //    if (fromInit != null) {
-        //        toInit = fromInit;
-        //    }
-        //}
-
-        //protected void InitDictionaryType<TKey, TValue>(ref IDictionary<TKey, TValue> toInit, IDictionary<TKey, TValue> fromInit) {
-        //    if (fromInit != null) {
-        //        foreach (var key in fromInit.Keys) {
-        //            if (toInit.ContainsKey(key)) {
-        //                toInit[key] = fromInit[key];
-        //            } else {
-        //                // TODO think if we let tamnpered data
-        //            }
-        //        }
-        //    }
-        //}
-
         protected void ReadFile() {
             CheckAndCreateConfigsFolder();
             try {

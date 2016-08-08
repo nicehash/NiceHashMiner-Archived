@@ -19,7 +19,6 @@ namespace NiceHashMiner.Miners
         public cpuminer(int id, int threads, ulong affinity) : base(true)
         {
             MinerDeviceName = "CPU" + id.ToString();
-            APIPort = 4040 + id;
             Threads = threads;
             AffinityMask = affinity;
 
@@ -43,6 +42,15 @@ namespace NiceHashMiner.Miners
             if (isInitialized) {
                 CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), this, true));
             }
+        }
+
+        protected override MinerType GetMinerType() {
+            return MinerType.cpuminer;
+        }
+
+        protected override void InitSupportedMinerAlgorithms() {
+            var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.CPU);
+            _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
         }
 
         // always query CPU

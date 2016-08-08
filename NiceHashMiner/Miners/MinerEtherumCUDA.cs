@@ -13,6 +13,11 @@ namespace NiceHashMiner.Miners {
             isOCL = false;
         }
 
+        protected override MinerType GetMinerType() {
+            return MinerType.MinerEtherumCUDA;
+        }
+
+
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {
             return " --cuda"
                 + " " + ExtraLaunchParameters

@@ -13,9 +13,7 @@ namespace NiceHashMiner.Miners {
     /// For now used only for daggerhashimoto
     /// </summary>
     public abstract class MinerEtherum : Miner {
-
-        // TODO remove ethminerProcces and use ProcessHandle
-        //protected NiceHashProcess ethminerProcess;
+        
         protected ethminerAPI ethminerLink;
 
         protected bool isOCL = false;
@@ -26,6 +24,10 @@ namespace NiceHashMiner.Miners {
         public MinerEtherum() : base(true) {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
+        }
+
+        protected override void InitSupportedMinerAlgorithms() {
+            _supportedMinerAlgorithms = new AlgorithmType[] { AlgorithmType.DaggerHashimoto };
         }
 
         protected abstract string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username);
@@ -97,8 +99,6 @@ namespace NiceHashMiner.Miners {
                 ethminerLink.StartMining();
             }
             ad.Speed *= 1000 * 1000;
-
-            Helpers.ConsolePrint("GetSummary", String.Format("Algorithm : {0}\tSpeed : {1}", ad.AlgorithmName, ad.Speed));
             return ad;
         }
 

@@ -94,6 +94,7 @@
     <Compile Include="Enums\CPUExtensionType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
+    <Compile Include="Enums\MinerType.cs" />
     <Compile Include="ethminerAPI.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
@@ -174,15 +175,13 @@
     <Compile Include="Devices\ComputeDeviceGroup.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
     <Compile Include="MemoryHelper.cs" />
-    <Compile Include="Miners\ManagerPrivate\DeviceGroupSettupManager.cs" />
-    <Compile Include="Miners\ManagerPrivate\MinerSettupsSetCombinationsLogic.cs" />
+    <Compile Include="Miners\ManagerPrivate\GroupMiners.cs" />
     <Compile Include="Miners\MinerEtherum.cs" />
     <Compile Include="Miners\MinerEtherumCUDA.cs" />
     <Compile Include="Miners\MinerEtherumOCL.cs" />
     <Compile Include="Miners\MinerPaths.cs" />
+    <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager.cs" />
-    <Compile Include="Miners\ManagerPrivate\DeviceGroupSettup.cs" />
-    <Compile Include="Miners\ManagerPrivate\GroupProfit.cs" />
     <Compile Include="NiceHashProcess.cs" />
     <Compile Include="Forms\SubmitResultDialog.cs">
       <SubType>Form</SubType>
@@ -192,10 +191,10 @@
     </Compile>
     <Compile Include="BitcoinAddress.cs" />
     <Compile Include="Bitcoin.cs" />
-    <Compile Include="Miners\ccminer_sp.cs" />
+    <Compile Include="Miners\ccminer_sm5x.cs" />
     <Compile Include="Miners\ccminer.cs" />
-    <Compile Include="Miners\ccminer_tpruvot_sm21.cs" />
-    <Compile Include="Miners\ccminer_tpruvot.cs" />
+    <Compile Include="Miners\ccminer_sm21.cs" />
+    <Compile Include="Miners\ccminer_sm3x.cs" />
     <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -233,7 +232,6 @@
     <Compile Include="Miners\sgminer.cs" />
     <Compile Include="TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
-    <Compile Include="Utils\DictionaryUtil.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
     </EmbeddedResource>
@@ -242,6 +240,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
       <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\BenchmarkLimitControl.resx">
       <DependentUpon>BenchmarkLimitControl.cs</DependentUpon>

@@ -298,7 +298,7 @@ namespace NiceHashMiner
             else
                 Worker = textBoxBTCAddress.Text.Trim();
 
-            MinersManager.Instance.SwichMostProfitable(Globals.NiceHashData, Worker);
+            MinersManager.Instance.SwichMostProfitableGroupUpMethod(Globals.NiceHashData, Worker);
             // switching logic
             //foreach (Miner m in Globals.Miners) {
             //    if (m.EnabledDeviceCount() == 0) continue;

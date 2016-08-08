@@ -33,13 +33,22 @@ namespace NiceHashMiner.Miners
             
             MinerDeviceName = "AMD_OpenCL";
             Path = MinerPaths.sgminer_5_4_0_general;
-            APIPort = 4050;
             EnableOptimizedVersion = true;
             PlatformDevices = 0;
             GPUPlatformNumber = 0;
             GPUCodeName = new List<string>();
 
             TryQueryCDevs();
+        }
+
+        protected override MinerType GetMinerType() {
+            return MinerType.sgminer;
+        }
+
+        protected override void InitSupportedMinerAlgorithms() {
+            var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.AMD_OpenCL);
+            allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);
+            _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
         }
 
         protected override bool IsGroupQueryEnabled() {
@@ -471,8 +480,6 @@ namespace NiceHashMiner.Miners
             }
 
             FillAlgorithm(aname, ref ad);
-
-            Helpers.ConsolePrint("GetSummary", String.Format("Algorithm : {0}\tSpeed : {1}", ad.AlgorithmName, ad.Speed));
             return ad;
         }
     }

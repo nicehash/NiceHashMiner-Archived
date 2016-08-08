@@ -7,16 +7,25 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Miners
 {
-    class ccminer_tpruvot : ccminer
+    class ccminer_sm3x : ccminer
     {
-        public ccminer_tpruvot(bool queryComputeDevices) :
+        public ccminer_sm3x(bool queryComputeDevices) :
             base(queryComputeDevices)
         {
             MinerDeviceName = "NVIDIA3.x";
             Path = MinerPaths.ccminer_tpruvot;
-            APIPort = 4049;
 
             TryQueryCDevs();
+        }
+
+        protected override MinerType GetMinerType() {
+            return MinerType.ccminer_sm3x;
+        }
+
+        protected override void InitSupportedMinerAlgorithms() {
+            var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.NVIDIA_3_x);
+            allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);
+            _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
         }
 
         protected override bool IsGroupQueryEnabled() {
