@@ -175,6 +175,7 @@
     <Compile Include="Devices\ComputeDeviceGroup.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
     <Compile Include="MemoryHelper.cs" />
+    <Compile Include="Miners\ManagerPrivate\CpuGroupMiner.cs" />
     <Compile Include="Miners\ManagerPrivate\GroupMiners.cs" />
     <Compile Include="Miners\MinerEtherum.cs" />
     <Compile Include="Miners\MinerEtherumCUDA.cs" />

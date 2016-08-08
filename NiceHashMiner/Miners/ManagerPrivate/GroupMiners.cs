@@ -15,13 +15,13 @@ namespace NiceHashMiner.Miners {
     public partial class MinersManager {
         // for switching different miners for different algorithms
         private class GroupMiners {
-            public Miner CurrentWorkingMiner { get; private set; }
+            public Miner CurrentWorkingMiner { get; protected set; }
             public string DevicesInfoString { get; private set; }
 
-            private List<Miner> _miners;
-            private string[] _deviceNames;
-            private string[] _deviceUUIDs;
-            private DeviceGroupType _deviceGroupType = DeviceGroupType.NONE;
+            protected List<Miner> _miners;
+            protected string[] _deviceNames;
+            protected string[] _deviceUUIDs;
+            protected DeviceGroupType _deviceGroupType = DeviceGroupType.NONE;
 
             public GroupMiners(GroupedDevices deviceUUIDSet) {
                 _miners = new List<Miner>();
@@ -84,7 +84,7 @@ namespace NiceHashMiner.Miners {
                     }
                 }
                 // check if contains miner if not create one
-                if (!containsSupportedMiner) {
+                if (!containsSupportedMiner && _deviceGroupType != DeviceGroupType.CPU) {
                     startSwitchMiner = CreateMiner(_deviceGroupType, algorithmType);
                     startSwitchMiner.SetCDevs(_deviceUUIDs);
                     _miners.Add(startSwitchMiner);

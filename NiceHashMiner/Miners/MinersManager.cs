@@ -45,7 +45,7 @@ namespace NiceHashMiner.Miners {
 
 
         // we save cpu miners string group name
-        protected Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
+        Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
 
         protected MinersManager() {
         }
@@ -132,6 +132,14 @@ namespace NiceHashMiner.Miners {
             foreach (var cdev in ComputeDevice.UniqueAvaliableDevices) {
                 if (cdev.Enabled) {
                     _enabledUniqueDevices.Add(cdev);
+                    // check if in CPU group and add the saved CPU miners
+                    if (cdev.DeviceGroupType == DeviceGroupType.CPU) {
+                        GroupedDevices gdevs = new GroupedDevices();
+                        gdevs.Add(cdev.UUID);
+                        cpuminer miner = _cpuMiners[cdev.Group];
+                        CpuGroupMiner cpuGroupMiner = new CpuGroupMiner(gdevs, miner);
+                        _groupedDevicesMiners.Add(CalcGroupedDevicesKey(gdevs), cpuGroupMiner);
+                    }
                 }
             }
         }
@@ -220,8 +228,13 @@ namespace NiceHashMiner.Miners {
                 && IsNvidiaDevice(a) && IsNvidiaDevice(b);
         }
 
+        private bool IsNotCpuGroups(ComputeDevice a, ComputeDevice b) {
+            return a.DeviceGroupType != DeviceGroupType.CPU && b.DeviceGroupType != DeviceGroupType.CPU;
+        }
+
+        // we don't want to group CPU devices
         private bool IsGroupAndAlgorithmSame(ComputeDevice a, ComputeDevice b) {
-            return a.DeviceGroupType == b.DeviceGroupType
+            return IsNotCpuGroups(a,b) && a.DeviceGroupType == b.DeviceGroupType
                 && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm);
         }
         #endregion //Groupping logic

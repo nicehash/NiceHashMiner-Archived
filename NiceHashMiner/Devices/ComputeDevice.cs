@@ -68,13 +68,6 @@ namespace NiceHashMiner.Devices
             return null;
         }
 
-        public static ComputeDevice GetUniqueDeviceWithName(string name) {
-            foreach (var dev in UniqueAvaliableDevices) {
-                if (name == dev.Name) return dev;
-            }
-            return null;
-        }
-
         public static int GetDeviceNameCount(string name) {
             int count = 0;
             foreach (var dev in AllAvaliableDevices) {
@@ -97,16 +90,6 @@ namespace NiceHashMiner.Devices
             return uuids.ToArray();
         }
 
-        public static string[] GetEnabledDevicesUUUIDsForNames(SortedSet<string> uuidsSet) {
-            string[] deviceNames = new string[uuidsSet.Count];
-                int devNamesIndex = 0;
-                foreach (var uuid in uuidsSet) {
-                    deviceNames[devNamesIndex++] = ComputeDevice.GetDeviceWithUUID(uuid).Name;
-                }
-
-            return GetEnabledDevicesUUUIDsForNames(deviceNames);
-        }
-
         public static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
             var SHA256 = new SHA256Managed();
             var hash = new StringBuilder();
@@ -126,30 +109,6 @@ namespace NiceHashMiner.Devices
             }
 
             return enabledCDevs;
-        }
-
-        public static HashSet<string> GetUniqueEnabledDevicesUUIDsForGroup(DeviceGroupType type) {
-            HashSet<string> uuids = new HashSet<string>();
-
-            foreach (var cd in UniqueAvaliableDevices) {
-                if (cd.Enabled && cd.DeviceGroupType == type) {
-                    uuids.Add(cd.UUID);
-                }
-            }
-
-            return uuids;
-        }
-
-        public static HashSet<string> GetUniqueEnabledDevicesNamesForGroup(DeviceGroupType type) {
-            HashSet<string> names = new HashSet<string>();
-
-            foreach (var cd in UniqueAvaliableDevices) {
-                if (cd.Enabled && cd.DeviceGroupType == type) {
-                    names.Add(cd.Name);
-                }
-            }
-
-            return names;
         }
 
     }
