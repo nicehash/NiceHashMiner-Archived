@@ -50,6 +50,5 @@ namespace NiceHashMiner.Miners {
         protected override bool IsPotentialDevSM(string name) {
             return name.Contains("SM 6.");
         }
-
     }
 }
