@@ -460,7 +460,7 @@ namespace NiceHashMiner.Miners
 
                         ad.Speed = Double.Parse(speed[1]) * 1000;
 
-                        //aname = SupportedAlgorithms[CurrentAlgo].MinerName;
+                        //aname = SupportedAlgorithms[CurrentAlgorithmType].MinerName;
                         aname = CurrentMiningAlgorithm.MinerName;
 
 

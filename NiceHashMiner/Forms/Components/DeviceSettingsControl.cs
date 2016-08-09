@@ -39,7 +39,7 @@ namespace NiceHashMiner.Forms.Components {
 
             if (_settings == null) return;
 
-            fieldAPIBindPort.EntryText = _settings.APIBindPort.ToString();
+            //fieldAPIBindPort.EntryText = _settings.APIBindPort.ToString();
             fieldUsePassword.EntryText = _settings.UsePassword;
             fieldMinimumProfit.EntryText = _settings.MinimumProfit.ToString();
 

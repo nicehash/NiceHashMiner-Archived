@@ -6,8 +6,6 @@ namespace NiceHashMiner.Devices {
     [Serializable]
     public class DeviceGroupConfig {
         readonly public string Name;
-        // TODO create port ranges and use those
-        public int APIBindPort { get; set; }
         public string ExtraLaunchParameters { get; set; }
         // TODO will bew removed
         public string UsePassword { get; set; }

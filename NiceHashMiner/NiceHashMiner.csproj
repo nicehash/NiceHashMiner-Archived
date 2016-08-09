@@ -150,17 +150,23 @@
     <Compile Include="Forms\Components\Field.Designer.cs">
       <DependentUpon>Field.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Components\GroupProfitControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
+      <DependentUpon>GroupProfitControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormBenchmark_New.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormBenchmark_New.Designer.cs">
       <DependentUpon>FormBenchmark_New.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormSettings_New.cs">
+    <Compile Include="Forms\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormSettings_New.Designer.cs">
-      <DependentUpon>FormSettings_New.cs</DependentUpon>
+    <Compile Include="Forms\FormSettings.Designer.cs">
+      <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
@@ -169,10 +175,10 @@
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IPathsProperties.cs" />
     <Compile Include="International.cs" />
-    <Compile Include="Devices\ComputeDeviceGroup.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
     <Compile Include="MemoryHelper.cs" />
     <Compile Include="Miners\ManagerPrivate\CpuGroupMiner.cs" />
@@ -261,11 +267,14 @@
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
+      <DependentUpon>GroupProfitControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormBenchmark_New.resx">
       <DependentUpon>FormBenchmark_New.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormSettings_New.resx">
-      <DependentUpon>FormSettings_New.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormSettings.resx">
+      <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>

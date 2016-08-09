@@ -63,16 +63,11 @@ namespace NiceHashMiner.Miners {
 
             public void End() {
                 foreach (var miner in _miners) {
-                    if (miner.IsRunning) {
-                        miner.Stop(false);
-                        miner.IsRunning = false;
-                        miner.CurrentAlgo = AlgorithmType.NONE;
-                        miner.CurrentRate = 0;
-                    }
+                    miner.End();
                 }
             }
 
-            public void StartAlgorihtm(Algorithm algorithm, string worker) {
+            public void StartAlgorihtm(Algorithm algorithm, string miningLocation, string worker) {
                 bool containsSupportedMiner = false;
                 Miner startSwitchMiner = null;
                 var algorithmType = algorithm.NiceHashID;
@@ -97,29 +92,27 @@ namespace NiceHashMiner.Miners {
                 } else {
                     CurrentWorkingMiner = startSwitchMiner;
                 }
-                SwitchMinerAlgorithm(ref startSwitchMiner, algorithm, worker);
+                SwitchMinerAlgorithm(ref startSwitchMiner, algorithm, miningLocation, worker);
             }
 
-            private void SwitchMinerAlgorithm(ref Miner m, Algorithm algorithm, string worker) {
+            private void SwitchMinerAlgorithm(ref Miner m, Algorithm algorithm, string miningLocation, string worker) {
                 // if is running and the current algorithm is the same skip
-                if (m.IsRunning && m.CurrentAlgo == algorithm.NiceHashID) {
+                if (m.IsRunning && m.CurrentAlgorithmType == algorithm.NiceHashID) {
                     return;
                 }
 
-                if (m.CurrentAlgo != AlgorithmType.NONE && m.CurrentAlgo != AlgorithmType.INVALID) {
+                if (m.CurrentAlgorithmType != AlgorithmType.NONE && m.CurrentAlgorithmType != AlgorithmType.INVALID) {
                     m.Stop(true);
                     // wait 0.5 seconds before going on
                     System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                 }
 
-                m.CurrentAlgo = algorithm.NiceHashID;
                 var MaxProfitKey = algorithm.NiceHashID;
 
                 m.Start(algorithm,
                     "stratum+tcp://"
                     + Globals.NiceHashData[MaxProfitKey].name
-                    // TODO fix this combo box things
-                    + "." + Globals.MiningLocation[/*comboBoxLocation.SelectedIndex*/ 1]
+                    + "." + miningLocation
                     + ".nicehash.com:"
                     + Globals.NiceHashData[MaxProfitKey].port, worker);
             }

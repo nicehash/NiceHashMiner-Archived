@@ -12,10 +12,8 @@ namespace NiceHashMiner.Devices
     /// </summary>
     public class ComputeDeviceGroupManager : BaseLazySingleton<ComputeDeviceGroupManager>
     {
-        /// <summary>
-        /// Use enum types, we could use a list here but keep dict for now
-        /// </summary>
-        private Dictionary<DeviceGroupType, ComputeDeviceGroup> _groups;
+
+        private Dictionary<DeviceGroupType, int> _groupCount;
 
         // TODO for now string CPU are divided in diferent groups
         private Dictionary<string, DeviceGroupConfig> _groupSettings;
@@ -31,80 +29,38 @@ namespace NiceHashMiner.Devices
             DeviceGroupType.AMD_OpenCL,
             DeviceGroupType.NVIDIA_2_1,
             DeviceGroupType.NVIDIA_3_x,
-            DeviceGroupType.NVIDIA_5_x
+            DeviceGroupType.NVIDIA_5_x,
+            DeviceGroupType.NVIDIA_6_x
         };
-
 
         protected ComputeDeviceGroupManager()
             : base() {
-            // we create our groups
-            _groups = new Dictionary<DeviceGroupType, ComputeDeviceGroup>();
-            // TODO we have 5 used groups for now add NVIDIA_6_x later
-            for (int i = 0; i < 5; ++i) {
-                DeviceGroupType curType = (DeviceGroupType)i;
-                _groups.Add(curType, new ComputeDeviceGroup(curType));
+
+            _groupCount = new Dictionary<DeviceGroupType, int>();
+            for (DeviceGroupType type = 0; type < DeviceGroupType.LAST; ++type) {
+                _groupCount.Add(type, 0);
             }
         }
 
         public int GetGroupCount(DeviceGroupType type) {
-            ComputeDeviceGroup group;
-            if (_groups.TryGetValue(type, out group)) {
-                return group.Count;
-            } 
-            return 0;
-            
+            return _groupCount[type];
         }
 
         public void AddDevice(ComputeDevice computeDevice) {
-            // TODO this is based on the current Miners implementation it is bound to change
-            ComputeDeviceGroup selectedGroup = null;
-            bool isGetFound = false;
-            // check and get group for vendor
-            switch (computeDevice.Group)
-            {
-                case "NVIDIA5.x":
-                    isGetFound = _groups.TryGetValue(DeviceGroupType.NVIDIA_5_x, out selectedGroup);
-                    break;
-                case "NVIDIA3.x":
-                    isGetFound = _groups.TryGetValue(DeviceGroupType.NVIDIA_3_x, out selectedGroup);
-                    break;
-                case "NVIDIA2.1":
-                    isGetFound = _groups.TryGetValue(DeviceGroupType.NVIDIA_2_1, out selectedGroup);
-                    break;
-                case "AMD_OpenCL":
-                    isGetFound = _groups.TryGetValue(DeviceGroupType.AMD_OpenCL, out selectedGroup);
-                    break;
-                default:
-                    bool isCPU = computeDevice.Group.Contains("CPU");
-                    if (isCPU) {
-                        isGetFound = _groups.TryGetValue(DeviceGroupType.CPU, out selectedGroup);
-                    } else {
-                        Helpers.ConsolePrint("ComputeDeviceGroupManager", "ComputeDevice Vendor not recognized");
-                    }
-                    break;
-            }
-            if (isGetFound && selectedGroup != null) {
-                selectedGroup.AddNewDevice(computeDevice);
-            }
-            else {
-                Helpers.ConsolePrint("ComputeDeviceGroupManager", computeDevice.Group + " group not found or null");
-            }
-        }
-
-        public bool IsGroupEnabled(DeviceGroupType deviceGroupType)
-        {
-            ComputeDeviceGroup selectedGroup = null;
-            bool isGetFound = _groups.TryGetValue(deviceGroupType, out selectedGroup);
-            return isGetFound && selectedGroup.IsEnabled;
+            _groupCount[computeDevice.DeviceGroupType]++;
         }
 
         public void DisableCpuGroup() {
-            _groups[DeviceGroupType.CPU].DisableGroup();
+            foreach (var device in ComputeDevice.AllAvaliableDevices) {
+                if (device.DeviceGroupType == DeviceGroupType.CPU) {
+                    device.Enabled = false;
+                }
+            }
         }
         public bool ContainsGPUs {
             get {
                 foreach (var groupType in _gpuGroups) {
-                    if (_groups[groupType].Count > 0) {
+                    if (_groupCount[groupType] > 0) {
                         return true;
                     }
                 }
@@ -130,37 +86,8 @@ namespace NiceHashMiner.Devices
         }
 
 
-        private static int cpuCount = 0;
         private DeviceGroupConfig CreateGroupSettings(string vendor, DeviceGroupType groupType) {
-            bool isInitSuccess = true;
-            int APIBindPort = -1;
-            switch(groupType) {
-                case DeviceGroupType.CPU:
-                    APIBindPort = 4040 + cpuCount;
-                    ++cpuCount;
-                    break;
-                case DeviceGroupType.AMD_OpenCL:
-                    APIBindPort = 4050;
-                    break;
-                case DeviceGroupType.NVIDIA_2_1:
-                    APIBindPort = 4021;
-                    break;
-                case DeviceGroupType.NVIDIA_3_x:
-                    APIBindPort = 4049;
-                    break;
-                case DeviceGroupType.NVIDIA_5_x:
-                    APIBindPort = 4048;
-                    break;
-                default:
-                    isInitSuccess = false;
-                    break;
-            }
-            if (isInitSuccess && APIBindPort > 0) {
-                return new DeviceGroupConfig(vendor) {
-                    APIBindPort = APIBindPort
-                };
-            }
-            return null;
+            return new DeviceGroupConfig(vendor);
         }
 
     }

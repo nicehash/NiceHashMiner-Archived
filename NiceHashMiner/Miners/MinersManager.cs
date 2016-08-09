@@ -17,6 +17,7 @@ namespace NiceHashMiner.Miners {
 
     using GroupedDevices = SortedSet<string>;
     using AllGroupedDevices = List<SortedSet<string>>;
+    using NiceHashMiner.Interfaces;
     
     
 
@@ -43,6 +44,8 @@ namespace NiceHashMiner.Miners {
         AllGroupedDevices _previousAllGroupedDevices;
         AllGroupedDevices _currentAllGroupedDevices;
 
+        IMainFormRatesComunication _mainFormRatesComunication;
+
 
         // we save cpu miners string group name
         Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
@@ -60,13 +63,16 @@ namespace NiceHashMiner.Miners {
                     kv.Value.End();
                 }
             }
+            if (_mainFormRatesComunication != null) {
+                _mainFormRatesComunication.ClearRates(-1);
+            }
         }
 
 
         public string GetActiveMinersGroup() {
             string ActiveMinersGroup = "";
 
-            // TODO enable, change a set of devices CPU, NVIDIA, AMD
+            //// TODO enable, change a set of devices CPU, NVIDIA, AMD
             //foreach (var kvp in _allMiners) {
             //    Miner m = kvp.Value;
             //    if (m.IsRunning) {
@@ -122,7 +128,12 @@ namespace NiceHashMiner.Miners {
             return TotalRate;
         }
 
-        public void StartInitialize() {
+        public void StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
+            string miningLocation, string worker) {
+            _mainFormRatesComunication = mainFormRatesComunication;
+            _miningLocation = miningLocation;
+            _worker = worker;
+
             _perDeviceSpeedDictionary = GetEnabledDeviceTypeSpeeds();
             //_groupedDevicesMiners = new Dictionary<GroupedDevices, GroupMiners>();
             _groupedDevicesMiners = new Dictionary<string, GroupMiners>();
@@ -335,23 +346,17 @@ namespace NiceHashMiner.Miners {
                     currentGroupMiners = new GroupMiners(group);
                     _groupedDevicesMiners.Add(groupStringKey, currentGroupMiners);
                 }
-                currentGroupMiners.StartAlgorihtm(algorithm, Worker);
+                currentGroupMiners.StartAlgorihtm(algorithm, _miningLocation, Worker);
+            }
+
+            // stats quick fix code
+            if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
+                MinerStatsCheck(NiceHashData);
             }
         }
 
         public void MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
-            // TODO replace with new switching logic and set gui comunication interfaces
-            string CPUAlgoName = "";
-            double CPUTotalSpeed = 0;
-            double CPUTotalRate = 0;
-
-            //// Reset all stats
-            //SetCPUStats("", 0, 0);
-            //SetNVIDIAtp21Stats("", 0, 0);
-            //SetNVIDIAspStats("", 0, 0);
-            //SetNVIDIAtpStats("", 0, 0);
-            //SetAMDOpenCLStats("", 0, 0);
-
+            _mainFormRatesComunication.ClearRates(_currentAllGroupedDevices.Count);
             foreach (var group in _currentAllGroupedDevices) {
                 var groupMiners = _groupedDevicesMiners[CalcGroupedDevicesKey(group)];
                 Miner m = groupMiners.CurrentWorkingMiner;
@@ -380,28 +385,14 @@ namespace NiceHashMiner.Miners {
                     Helpers.ConsolePrint("GetSummary", String.Format("Devices {0}\tAlgorithm : {1}\tSpeed : {2}", groupMiners.DevicesInfoString, AD.AlgorithmName, AD.Speed));
                     m.StartingUpDelay = false;
                 }
-
-                if (NiceHashData != null)
+                // set rates
+                if (NiceHashData != null) {
                     m.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
-                else
+                } else {
                     m.CurrentRate = 0;
-
-                if (m is cpuminer) {
-                    CPUAlgoName = AD.AlgorithmName;
-                    CPUTotalSpeed += AD.Speed;
-                    CPUTotalRate += m.CurrentRate;
-                } else if (m is ccminer_sm21) {
-                    //SetNVIDIAtp21Stats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-                } else if (m is ccminer_sm3x) {
-                    //SetNVIDIAtpStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-                } else if (m is ccminer_sm5x) {
-                    //SetNVIDIAspStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
-                } else if (m is sgminer) {
-                    //SetAMDOpenCLStats(AD.AlgorithmName, AD.Speed, m.CurrentRate);
                 }
-            }
-            if (CPUAlgoName != null && CPUAlgoName.Length > 0) {
-                //SetCPUStats(CPUAlgoName, CPUTotalSpeed, CPUTotalRate);
+                // Update GUI
+                _mainFormRatesComunication.AddRateInfo(m.MinerDeviceName, groupMiners.DevicesInfoString, AD, m.CurrentRate);
             }
         }
 

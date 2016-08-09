@@ -152,7 +152,7 @@ namespace NiceHashMiner.Miners
 
         public override APIData GetSummary() {
             // for now hodl doesn't have api bind port
-            if (CurrentAlgo == AlgorithmType.Hodl) {
+            if (CurrentAlgorithmType == AlgorithmType.Hodl) {
                 // check if running
                 string pname = Path.Split('\\')[2];
                 pname = pname.Substring(0, pname.Length - 4);

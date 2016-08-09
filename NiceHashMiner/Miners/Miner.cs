@@ -26,21 +26,34 @@ namespace NiceHashMiner
 
     public abstract class Miner
     {
-        public string MinerDeviceName;
+        public string MinerDeviceName { get; protected set; }
         protected int APIPort { get; private set; }
         protected List<ComputeDevice> CDevs;
         
         // TODO remove
         //public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
         
+        // this is now related to devices
         public string ExtraLaunchParameters;
         public string UsePassword;
         public double MinimumProfit;
-        public AlgorithmType CurrentAlgo;
-        public Algorithm CurrentMiningAlgorithm;
+        
+        public AlgorithmType CurrentAlgorithmType { get; protected set; }
+        private Algorithm _currentMiningAlgorithm;
+        public Algorithm CurrentMiningAlgorithm {
+            get { return _currentMiningAlgorithm; }
+            protected set {
+                if (value == null) {
+                    CurrentAlgorithmType = AlgorithmType.NONE;
+                } else {
+                    CurrentAlgorithmType = value.NiceHashID;
+                }
+                _currentMiningAlgorithm = value;
+            }
+        }
         public double CurrentRate;
         public bool NotProfitable;
-        public bool IsRunning;
+        public bool IsRunning { get; protected set; }
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
         public int NumRetries;
@@ -74,7 +87,7 @@ namespace NiceHashMiner
             UsePassword = null;
             StartingUpDelay = false;
 
-            CurrentAlgo = AlgorithmType.NONE;
+            CurrentAlgorithmType = AlgorithmType.NONE;
             CurrentRate = 0;
             NotProfitable = true;
             IsRunning = false;
@@ -146,7 +159,16 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             NotProfitable = true;
             //IsRunning = false;
-            //CurrentAlgo = -1;
+            //CurrentAlgorithmType = -1;
+        }
+
+        public void End() {
+            if (IsRunning) {
+                Stop(false);
+                IsRunning = false;
+                CurrentAlgorithmType = AlgorithmType.NONE;
+                CurrentRate = 0;
+            }
         }
 
         protected void Stop_cpu_ccminer_sgminer(bool willswitch) {
@@ -185,7 +207,7 @@ namespace NiceHashMiner
 
             BenchmarkTag = tag;
             BenchmarkAlgorithm = algorithm;
-            CurrentAlgo = algorithm.NiceHashID; // find a way to decouple this as well
+            CurrentAlgorithmType = algorithm.NiceHashID; // find a way to decouple this as well
             BenchmarkTime = time;
 
             string CommandLine = BenchmarkCreateCommandLine(benchmarkConfig, algorithm, time);
@@ -530,7 +552,6 @@ namespace NiceHashMiner
         }
 
 
-        // TODO move this to the MinersManager class, used for stats
         public abstract APIData GetSummary();
 
         protected APIData GetSummaryCPU_CCMINER() {
@@ -593,9 +614,9 @@ namespace NiceHashMiner
         //    return MaxProfitIndex;
         //}
 
-        
+        // todo remove
         public bool IsCurrentAlgo(AlgorithmType algorithmType) {
-            return CurrentAlgo == algorithmType;
+            return CurrentAlgorithmType == algorithmType;
         }
 
         //// TODO replace this

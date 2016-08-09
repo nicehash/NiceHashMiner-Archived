@@ -15,6 +15,9 @@ namespace NiceHashMiner.Miners {
 
         public MinerEtherumOCL() {
             isOCL = true;
+
+            // AMD or TODO it could be something else
+            MinerDeviceName = "AMD OpenCL";
         }
 
         protected override MinerType GetMinerType() {

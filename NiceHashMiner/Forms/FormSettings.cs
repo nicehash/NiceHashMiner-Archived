@@ -10,7 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms {
-    public partial class FormSettings_New : Form {
+    public partial class FormSettings : Form {
 
 
         private bool _isInitFinished = false;
@@ -35,7 +35,7 @@ namespace NiceHashMiner.Forms {
         private Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigsBackup;
 
 
-        public FormSettings_New() {
+        public FormSettings() {
             InitializeComponent();
 
             //ret = 1; // default
@@ -548,6 +548,7 @@ namespace NiceHashMiner.Forms {
                 ConfigManager.Instance.GeneralConfig.Commit();
                 ConfigManager.Instance.CommitBenchmarks();
                 Config.Commit();
+                International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
             } else if (IsChange) {
                 ConfigManager.Instance.GeneralConfig = _generalConfigBackup;
                 ConfigManager.Instance.BenchmarkConfigs = _benchmarkConfigsBackup;

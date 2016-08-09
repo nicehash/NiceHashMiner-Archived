@@ -11,6 +11,8 @@ namespace NiceHashMiner.Miners {
 
         public MinerEtherumCUDA() {
             isOCL = false;
+
+            MinerDeviceName = "NVIDIA";
         }
 
         protected override MinerType GetMinerType() {
