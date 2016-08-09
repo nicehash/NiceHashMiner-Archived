@@ -34,7 +34,13 @@ namespace NiceHashMiner.Miners {
         protected abstract string GetBenchmarkCommandStringPart(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm);
 
         protected override string GetDevicesCommandString() {
-            string deviceStringCommand = base.GetDevicesCommandString();
+            string deviceStringCommand = " ";
+
+            List<string> ids = new List<string>();
+            foreach (var cdev in CDevs) {
+                ids.Add(cdev.ID.ToString());
+            }
+            deviceStringCommand += string.Join(" ", ids);
             deviceStringCommand += " --dag-load-mode singlekeep " + DaggerHashimotoGenerateDevice.ID.ToString();
             return deviceStringCommand;
         }
