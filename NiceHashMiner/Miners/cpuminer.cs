@@ -151,6 +151,27 @@ namespace NiceHashMiner.Miners
         }
 
         public override APIData GetSummary() {
+            // for now hodl doesn't have api bind port
+            if (CurrentAlgo == AlgorithmType.Hodl) {
+                // check if running
+                string pname = Path.Split('\\')[2];
+                pname = pname.Substring(0, pname.Length - 4);
+                Process[] processes = Process.GetProcessesByName(pname);
+                if (processes.Length < CPUID.GetPhysicalProcessorCount()) {
+                    //Restart();
+                    return null; // will restart outside
+                }
+                // extra check
+                if (CurrentMiningAlgorithm == null) {
+                    return null;
+                }
+
+                APIData hodlData = new APIData();
+                hodlData.AlgorithmID = AlgorithmType.Hodl;
+                hodlData.AlgorithmName = "hodl";
+                hodlData.Speed = CurrentMiningAlgorithm.BenchmarkSpeed;
+                return hodlData;
+            }
             return GetSummaryCPU_CCMINER();
         }
 

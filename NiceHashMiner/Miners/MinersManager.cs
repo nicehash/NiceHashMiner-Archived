@@ -359,23 +359,6 @@ namespace NiceHashMiner.Miners {
                 // skip if not running
                 if (!m.IsRunning) continue;
 
-                if (m is cpuminer && m.IsCurrentAlgo(AlgorithmType.Hodl)) {
-                    string pname = m.Path.Split('\\')[2];
-                    pname = pname.Substring(0, pname.Length - 4);
-
-                    Process[] processes = Process.GetProcessesByName(pname);
-
-                    if (processes.Length < CPUID.GetPhysicalProcessorCount())
-                        m.Restart();
-
-                    AlgorithmType algoIndex = AlgorithmType.Hodl; // m.GetAlgoIndex("hodl");
-                    CPUAlgoName = "hodl";
-                    //CPUTotalSpeed = m.SupportedAlgorithms[algoIndex].BenchmarkSpeed;
-                    //CPUTotalRate = Globals.NiceHashData[m.SupportedAlgorithms[algoIndex].NiceHashID].paying * CPUTotalSpeed * 0.000000001;
-
-                    continue;
-                }
-
                 APIData AD = m.GetSummary();
                 if (AD == null) {
                     Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");

@@ -45,7 +45,7 @@ namespace NiceHashMiner
         public bool BenchmarkSignalHanged;
         public int NumRetries;
         public bool StartingUpDelay;
-        public string Path;
+        protected string Path;
 
         protected int[] EtherDevices;
         protected string WorkingDirectory;
