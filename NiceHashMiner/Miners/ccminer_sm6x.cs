@@ -51,9 +51,8 @@ namespace NiceHashMiner.Miners {
             return name.Contains("SM 6.");
         }
 
-        protected override string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)
-        {
-            if (IsCurrentAlgo(AlgorithmType.Lyra2REv2) || IsCurrentAlgo(AlgorithmType.Decred))
+        protected override string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle) {
+            if (IsCurrentAlgo(AlgorithmType.Lyra2RE) || IsCurrentAlgo(AlgorithmType.Lyra2REv2) || IsCurrentAlgo(AlgorithmType.Decred))
                 return BenchmarkHandle.StandardOutput.ReadLine();
 
             return BenchmarkHandle.StandardError.ReadLine();

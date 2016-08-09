@@ -32,7 +32,8 @@ namespace NiceHashMiner.Miners {
         readonly DeviceGroupType[] _nvidiaTypes = new DeviceGroupType[] {
             DeviceGroupType.NVIDIA_2_1,
             DeviceGroupType.NVIDIA_3_x,
-            DeviceGroupType.NVIDIA_5_x
+            DeviceGroupType.NVIDIA_5_x,
+            DeviceGroupType.NVIDIA_6_x
         };
 
         
@@ -107,6 +108,8 @@ namespace NiceHashMiner.Miners {
                         return new ccminer_sm3x(false);
                     case DeviceGroupType.NVIDIA_5_x:
                         return new ccminer_sm5x(false);
+                    case DeviceGroupType.NVIDIA_6_x:
+                        return new ccminer_sm6x(false);
                 }
             }
             
