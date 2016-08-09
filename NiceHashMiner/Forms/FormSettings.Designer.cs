@@ -298,6 +298,7 @@
             this.currencyConverterCombobox.Size = new System.Drawing.Size(121, 21);
             this.currencyConverterCombobox.Sorted = true;
             this.currencyConverterCombobox.TabIndex = 381;
+            this.currencyConverterCombobox.SelectedIndexChanged += new System.EventHandler(this.currencyConverterCombobox_SelectedIndexChanged);
             // 
             // textBox_MinerAPIGraceSecondsAMD
             // 
@@ -816,7 +817,7 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
-            // FormSettings_New
+            // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -826,7 +827,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormSettings_New";
+            this.Name = "FormSettings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             this.splitContainerTabControlButtons.Panel1.ResumeLayout(false);

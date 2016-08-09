@@ -42,6 +42,8 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
+        
+        const string BetaAlphaPostfixString = " BETA";
 
         public Form_Main()
         {
@@ -61,19 +63,9 @@ namespace NiceHashMiner
 
             R = new Random((int)DateTime.Now.Ticks);
 
-            Text += " v" + Application.ProductVersion;
+            Text += " v" + Application.ProductVersion + BetaAlphaPostfixString;
 
-            if (ConfigManager.Instance.GeneralConfig.ServiceLocation >= 0 && ConfigManager.Instance.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
-                comboBoxLocation.SelectedIndex = ConfigManager.Instance.GeneralConfig.ServiceLocation;
-            else
-                comboBoxLocation.SelectedIndex = 0;
-
-            textBoxBTCAddress.Text = ConfigManager.Instance.GeneralConfig.BitcoinAddress;
-            textBoxWorkerName.Text = ConfigManager.Instance.GeneralConfig.WorkerName;
-            ShowWarningNiceHashData = true;
-            DemoMode = false;
-
-            toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager.Instance.GeneralConfig.DisplayCurrency + ")";
+            InitMainConfigGUIData();
         }
 
         private void InitLocalization() {
@@ -108,6 +100,20 @@ namespace NiceHashMiner
             buttonSettings.Text = International.GetText("form1_settings");
             buttonStartMining.Text = International.GetText("form1_start");
             buttonStopMining.Text = International.GetText("form1_stop");
+        }
+
+        private void InitMainConfigGUIData() {
+            if (ConfigManager.Instance.GeneralConfig.ServiceLocation >= 0 && ConfigManager.Instance.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
+                comboBoxLocation.SelectedIndex = ConfigManager.Instance.GeneralConfig.ServiceLocation;
+            else
+                comboBoxLocation.SelectedIndex = 0;
+
+            textBoxBTCAddress.Text = ConfigManager.Instance.GeneralConfig.BitcoinAddress;
+            textBoxWorkerName.Text = ConfigManager.Instance.GeneralConfig.WorkerName;
+            ShowWarningNiceHashData = true;
+            DemoMode = false;
+
+            toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager.Instance.GeneralConfig.DisplayCurrency + ")";
         }
 
         public void AfterLoadComplete()
@@ -610,10 +616,7 @@ namespace NiceHashMiner
 
             if (Settings.IsChange && Settings.IsChangeSaved) {
                 InitLocalization();
-                // refill editable fields
-                textBoxBTCAddress.Text = ConfigManager.Instance.GeneralConfig.BitcoinAddress;
-                textBoxWorkerName.Text = ConfigManager.Instance.GeneralConfig.WorkerName;
-                comboBoxLocation.SelectedIndex = ConfigManager.Instance.GeneralConfig.ServiceLocation;
+                InitMainConfigGUIData();
             }
         }
 

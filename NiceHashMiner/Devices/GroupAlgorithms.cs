@@ -57,7 +57,7 @@ namespace NiceHashMiner.Devices {
                 };
             }
             // NVIDIA
-            if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType) {
+            if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                 var ret = new Dictionary<AlgorithmType, Algorithm> {
                 { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11") },
                 { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13, "x13") },

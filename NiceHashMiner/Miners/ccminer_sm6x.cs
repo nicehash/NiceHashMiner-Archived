@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace NiceHashMiner.Miners
-{
-    class ccminer_sm5x : ccminer
-    {
-        public ccminer_sm5x(bool queryComputeDevices) :
+namespace NiceHashMiner.Miners {
+    class ccminer_sm6x : ccminer {
+        public ccminer_sm6x(bool queryComputeDevices) :
             base(queryComputeDevices)
         {
-            MinerDeviceName = "NVIDIA5.x";
-            Path = MinerPaths.ccminer_sp;
+            MinerDeviceName = "NVIDIA6.x";
+            Path = MinerPaths.ccminer_nanashi;
 
             TryQueryCDevs();
         }
 
         protected override MinerType GetMinerType() {
-            return MinerType.ccminer_sm5x;
+            return MinerType.ccminer_sm6x;
         }
 
         protected override void InitSupportedMinerAlgorithms() {
@@ -48,7 +48,7 @@ namespace NiceHashMiner.Miners
         }
 
         protected override bool IsPotentialDevSM(string name) {
-            return name.Contains("SM 5.");
+            return name.Contains("SM 6.");
         }
 
         protected override string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)

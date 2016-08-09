@@ -92,6 +92,10 @@ namespace NiceHashMiner.Devices
 
         private void QueryNVIDIA() {
             List<ccminer> dump = new List<ccminer>();
+            // TODO International
+            // NVIDIA6x
+            showMessageAndStep(International.GetText("form1_loadtext_NVIDIA5X"));
+            dump.Add(new ccminer_sm6x(true));
             // NVIDIA5x
             showMessageAndStep(International.GetText("form1_loadtext_NVIDIA5X"));
             dump.Add(new ccminer_sm5x(true));
@@ -128,8 +132,11 @@ namespace NiceHashMiner.Devices
             if(name.Contains("SM 3.")) {
                 return DeviceGroupType.NVIDIA_3_x;
             }
-            if (name.Contains("SM 5.") || name.Contains("SM 6.")) { // TEMP until support for SM 6.x
+            if (name.Contains("SM 5.")) {
                 return DeviceGroupType.NVIDIA_5_x;
+            }
+            if (name.Contains("SM 6.")) {
+                return DeviceGroupType.NVIDIA_6_x;
             }
             return DeviceGroupType.NONE;
         }

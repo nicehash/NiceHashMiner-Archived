@@ -10,6 +10,7 @@ namespace NiceHashMiner.Enums {
         ccminer_sm21,
         ccminer_sm3x,
         ccminer_sm5x,
+        ccminer_sm6x,
         MinerEtherumCUDA,
         MinerEtherumOCL,
         sgminer,

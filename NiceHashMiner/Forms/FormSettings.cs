@@ -555,8 +555,12 @@ namespace NiceHashMiner.Forms {
             }
         }
 
+        private void currencyConverterCombobox_SelectedIndexChanged(object sender, EventArgs e) {
+            //Helpers.ConsolePrint("CurrencyConverter", "Currency Set to: " + currencyConverterCombobox.SelectedItem);
+            var Selected = currencyConverterCombobox.SelectedItem.ToString();
+            ConfigManager.Instance.GeneralConfig.DisplayCurrency = Selected;
+        }
+
         #endregion Form Callbacks
-
-
     }
 }

@@ -11,6 +11,7 @@ namespace NiceHashMiner.Configs
     [Serializable]
     public class DeviceDetectionConfig
     {
+        public bool DisableDetectionNVidia6X { get; set; }
         public bool DisableDetectionNVidia5X { get; set; }
         public bool DisableDetectionNVidia3X { get; set; }
         public bool DisableDetectionNVidia2X { get; set; }
@@ -19,6 +20,7 @@ namespace NiceHashMiner.Configs
         // TODO no need to initialize to false but just mirroring legacy for now
         public DeviceDetectionConfig()
         {
+            DisableDetectionNVidia6X = false;
             DisableDetectionNVidia5X = false;
             DisableDetectionNVidia3X = false;
             DisableDetectionNVidia2X = false;
