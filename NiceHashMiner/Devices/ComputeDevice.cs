@@ -80,9 +80,11 @@ namespace NiceHashMiner.Devices
             List<string> uuids = new List<string>();
 
             foreach (var dev in AllAvaliableDevices) {
-                foreach (var devName in deviceNames) {
-                    if (dev.Name == devName) {
-                        uuids.Add(dev.UUID);
+                if (dev.Enabled) {
+                    foreach (var devName in deviceNames) {
+                        if (dev.Name == devName) {
+                            uuids.Add(dev.UUID);
+                        }
                     }
                 }
             }
