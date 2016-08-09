@@ -50,13 +50,5 @@ namespace NiceHashMiner.Miners
         protected override bool IsPotentialDevSM(string name) {
             return name.Contains("SM 5.");
         }
-
-        protected override string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle)
-        {
-            if (IsCurrentAlgo(AlgorithmType.Lyra2REv2) || IsCurrentAlgo(AlgorithmType.Decred))
-                return BenchmarkHandle.StandardOutput.ReadLine();
-
-            return BenchmarkHandle.StandardError.ReadLine();
-        }
     }
 }

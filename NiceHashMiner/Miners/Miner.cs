@@ -183,8 +183,6 @@ namespace NiceHashMiner
             }
         }
 
-        #region BENCHMARK DE-COUPLED Decoupled benchmarking routines
-
         virtual protected string GetDevicesCommandString() {
             string deviceStringCommand = " ";
 
@@ -196,6 +194,9 @@ namespace NiceHashMiner
 
             return deviceStringCommand;
         }
+
+
+        #region BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
         abstract protected string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time);
 
@@ -317,21 +318,27 @@ namespace NiceHashMiner
                             }
                         }
 
-                        string outdata = BenchmarkGetConsoleOutputLine(BenchmarkHandle);
-                        if (outdata != null) {
-                            if (outdata.Contains("Cuda error"))
-                                throw new Exception("CUDA error");
-                            if (outdata.Contains("is not supported"))
-                                throw new Exception("N/A");
-                            if (outdata.Contains("illegal memory access"))
-                                throw new Exception("CUDA error");
-                            if (outdata.Contains("unknown error"))
-                                throw new Exception("Unknown error");
-                            if (outdata.Contains("No servers could be used! Exiting."))
-                                throw new Exception("No pools or work can be used for benchmarking");
-                            if (BenchmarkParseLine(outdata))
-                                break;
+                        var outdataStd_out_err = BenchmarkGetConsoleOutputLine(BenchmarkHandle);
+                        bool whileBreak = false;
+                        foreach (var outdata in outdataStd_out_err) {
+                            if (outdata != null) {
+                                if (outdata.Contains("Cuda error"))
+                                    throw new Exception("CUDA error");
+                                if (outdata.Contains("is not supported"))
+                                    throw new Exception("N/A");
+                                if (outdata.Contains("illegal memory access"))
+                                    throw new Exception("CUDA error");
+                                if (outdata.Contains("unknown error"))
+                                    throw new Exception("Unknown error");
+                                if (outdata.Contains("No servers could be used! Exiting."))
+                                    throw new Exception("No pools or work can be used for benchmarking");
+                                if (BenchmarkParseLine(outdata)) {
+                                    whileBreak = true;
+                                    break;
+                                }
+                            }
                         }
+                        if (whileBreak) break;
                         if (BenchmarkSignalQuit)
                             throw new Exception("Termined by user request");
                         if (BenchmarkSignalHanged)
@@ -409,8 +416,12 @@ namespace NiceHashMiner
             return false;
         }
 
-        virtual protected string BenchmarkGetConsoleOutputLine(Process BenchmarkHandle) {
-            return BenchmarkHandle.StandardOutput.ReadLine();
+        // returns stdout and stderr
+        private string[] BenchmarkGetConsoleOutputLine(Process BenchmarkHandle) {
+            return new string[] {
+                BenchmarkHandle.StandardOutput.ReadLine(),
+                BenchmarkHandle.StandardError.ReadLine()
+            };
         }
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
