@@ -224,7 +224,7 @@ namespace NiceHashMiner.Configs {
                     usedDevice.Enabled = configDevice.Enabled;
                 }
             }
-            if (_file.GroupSettings != null) {
+            if (_file != null && _file.GroupSettings != null) {
                 foreach (var key in _file.GroupSettings.Keys) {
                     if (this.GroupSettings.ContainsKey(key)) {
                         this.GroupSettings[key] = _file.GroupSettings[key];
@@ -232,7 +232,7 @@ namespace NiceHashMiner.Configs {
                         // TODO think if we let tamnpered data
                     }
                 }
-            } 
+            }
 
             LastDevicesSettup = ComputeDevice.AllAvaliableDevices;
         }
