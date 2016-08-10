@@ -74,10 +74,10 @@ namespace NiceHashMiner.Devices
             return null;
         }
 
-        public static int GetDeviceNameCount(string name) {
+        public static int GetEnabledDeviceNameCount(string name) {
             int count = 0;
             foreach (var dev in AllAvaliableDevices) {
-                if (name == dev.Name) ++count;
+                if (dev.Enabled && name == dev.Name) ++count;
             }
             return count;
         }

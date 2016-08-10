@@ -19,17 +19,17 @@ namespace NiceHashMiner.Miners {
             public string DevicesInfoString { get; private set; }
 
             protected List<Miner> _miners;
-            protected string[] _deviceNames;
+            protected SortedSet<string> _deviceNames;
             protected string[] _deviceUUIDs;
             protected DeviceGroupType _deviceGroupType = DeviceGroupType.NONE;
 
             public GroupMiners(GroupedDevices deviceUUIDSet) {
                 _miners = new List<Miner>();
-                _deviceNames = new string[deviceUUIDSet.Count];
+                _deviceNames = new SortedSet<string>();
                 int devNamesIndex = 0;
                 foreach (var uuid in deviceUUIDSet) {
                     var tmpCdev = ComputeDevice.GetDeviceWithUUID(uuid);
-                    _deviceNames[devNamesIndex++] = tmpCdev.Name;
+                    _deviceNames.Add(tmpCdev.Name);
                     if (_deviceGroupType == DeviceGroupType.NONE) {
                         _deviceGroupType = tmpCdev.DeviceGroupType;
                     }
@@ -37,13 +37,16 @@ namespace NiceHashMiner.Miners {
                 // init device uuids
                 _deviceUUIDs = deviceUUIDSet.ToArray();
                 // init DevicesInfoString
-                string[] _deviceNamesCount = new string[_deviceNames.Length];
-                for (int i = 0; i < _deviceNames.Length; ++i ) {
-                    var devName = _deviceNames[i];
-                    _deviceNamesCount[i] =
-                        ComputeDevice.GetDeviceNameCount(devName).ToString()
-                        + " * " + devName;
+                string[] _deviceNamesCount = new string[_deviceNames.Count];
+                {
+                    int i = 0;
+                    foreach (var devName in _deviceNames) {
+                        _deviceNamesCount[i++] =
+                            ComputeDevice.GetEnabledDeviceNameCount(devName).ToString()
+                            + " * " + devName;
+                    }
                 }
+                
                 DevicesInfoString = "{ " + string.Join(", ", _deviceNamesCount) + " }";
             }
 
