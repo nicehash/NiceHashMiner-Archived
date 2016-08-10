@@ -43,6 +43,12 @@ namespace NiceHashMiner.Configs {
             DeviceBenchmarkConfigManager.Instance.BenchmarkConfigs = BenchmarkConfigs;
             BenchmarkConfigs = DeviceBenchmarkConfigManager.Instance.BenchmarkConfigs;
             GeneralConfig.AfterDeviceQueryInitialization();
+
+            // set Benchmarks for devices
+            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+                cdev.SetDeviceBenchmarkConfig(DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.Name));
+            }
+
         }
 
     }

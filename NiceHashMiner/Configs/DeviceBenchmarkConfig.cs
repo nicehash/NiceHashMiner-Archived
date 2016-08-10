@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
+using Newtonsoft.Json;
 
 namespace NiceHashMiner.Configs
 {
@@ -13,11 +14,14 @@ namespace NiceHashMiner.Configs
         public string ID { get; private set; }
         public DeviceGroupType DeviceGroupType { get; private set; }
         public string DeviceName { get; private set; }
-
         // TODO handle defaults for this
         public string ExtraLaunchParameters { get; set; }
         public int TimeLimit { get; set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
+
+        // TODO add cdev UUIDs???
+        //[JsonIgnore]
+
         
 
         [field: NonSerialized]
@@ -44,9 +48,6 @@ namespace NiceHashMiner.Configs
             var SHA256 = new SHA256Managed();
             var hash = new StringBuilder();
             string mixedAttr = ((int)deviceGroupType).ToString() + deviceGroupName;
-            //foreach (var devId in devicesIDs) {
-            //    mixedAttr += devId.ToString();
-            //}
             byte[] hashedBytes = SHA256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0, Encoding.UTF8.GetByteCount(mixedAttr));
             foreach (var b in hashedBytes) {
                 hash.Append(b.ToString("x2"));
@@ -70,9 +71,6 @@ namespace NiceHashMiner.Configs
             FilePathOld = fileName + "_old" + extension;
         }
         protected override void InitializeObject() {
-        //public int[] DevicesIDs { get; private set; }
-        //public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
-
             // check if data tampered
             bool IsDataTampered = !(
                 this.ID == _file.ID

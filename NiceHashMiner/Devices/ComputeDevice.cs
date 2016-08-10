@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using NiceHashMiner.Enums;
 using System.Security.Cryptography;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Devices
 {
@@ -26,6 +27,9 @@ namespace NiceHashMiner.Devices
         [JsonIgnore]
         public Algorithm MostProfitableAlgorithm { get; set; }
 
+        [JsonIgnore]
+        public DeviceBenchmarkConfig DeviceBenchmarkConfig { get; private set; }
+
         // 
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
         readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
@@ -37,8 +41,6 @@ namespace NiceHashMiner.Devices
             Name = name;
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
-            // TODO temp solution
-            //Miner = miner;
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -61,6 +63,10 @@ namespace NiceHashMiner.Devices
             UUID = GetUUID(ID, Group, Name, DeviceGroupType);
         }
 
+        public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig) {
+            DeviceBenchmarkConfig = deviceBenchmarkConfig;
+        }
+
         public static ComputeDevice GetDeviceWithUUID(string uuid) {
             foreach (var dev in AllAvaliableDevices) {
                 if (uuid == dev.UUID) return dev;
@@ -74,22 +80,6 @@ namespace NiceHashMiner.Devices
                 if (name == dev.Name) ++count;
             }
             return count;
-        }
-
-        public static string[] GetEnabledDevicesUUUIDsForNames(string[] deviceNames) {
-            List<string> uuids = new List<string>();
-
-            foreach (var dev in AllAvaliableDevices) {
-                if (dev.Enabled) {
-                    foreach (var devName in deviceNames) {
-                        if (dev.Name == devName) {
-                            uuids.Add(dev.UUID);
-                        }
-                    }
-                }
-            }
-
-            return uuids.ToArray();
         }
 
         public static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
@@ -111,6 +101,13 @@ namespace NiceHashMiner.Devices
             }
 
             return enabledCDevs;
+        }
+
+        public static string GetEnabledDeviceUUIDForName(string name) {
+            foreach (var dev in AllAvaliableDevices) {
+                if (dev.Name == name) return dev.UUID;
+            }
+            return null;
         }
 
     }

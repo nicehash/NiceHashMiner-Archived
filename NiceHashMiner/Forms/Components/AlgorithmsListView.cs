@@ -108,9 +108,7 @@ namespace NiceHashMiner.Forms.Components {
             if (CurrentlyBenchmarking != null && benchAlgorithm != null && !benchAlgorithm.Skip) {
                 // TODO refactor this mess
                 CurrentlyBenchmarking.SetCDevs(
-                    new string[] { ComputeDevice.GetEnabledDevicesUUUIDsForNames(
-                        new string[] { currentConfig.DeviceName }
-                        )[0] }
+                    new string[] { ComputeDevice.GetEnabledDeviceUUIDForName(currentConfig.DeviceName) }
                 );
                 // TODO time
                 CurrentlyBenchmarking.BenchmarkStart(currentConfig, benchAlgorithm, 5, BenchmarkCompleted, lvi);

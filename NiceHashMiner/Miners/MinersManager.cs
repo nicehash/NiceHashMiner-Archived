@@ -41,7 +41,7 @@ namespace NiceHashMiner.Miners {
         // GroupDevices hash code doesn't work correctly use string instead
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;
         Dictionary<string, GroupMiners> _groupedDevicesMiners;
-        List<ComputeDevice> _enabledUniqueDevices;
+        List<ComputeDevice> _enabledDevices;
         AllGroupedDevices _previousAllGroupedDevices;
         AllGroupedDevices _currentAllGroupedDevices;
 
@@ -140,12 +140,12 @@ namespace NiceHashMiner.Miners {
             _perDeviceSpeedDictionary = GetEnabledDeviceTypeSpeeds();
             //_groupedDevicesMiners = new Dictionary<GroupedDevices, GroupMiners>();
             _groupedDevicesMiners = new Dictionary<string, GroupMiners>();
-            _enabledUniqueDevices = new List<ComputeDevice>();
+            _enabledDevices = new List<ComputeDevice>();
             _currentAllGroupedDevices = new AllGroupedDevices();
 
-            foreach (var cdev in ComputeDevice.UniqueAvaliableDevices) {
+            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
                 if (cdev.Enabled) {
-                    _enabledUniqueDevices.Add(cdev);
+                    _enabledDevices.Add(cdev);
                     // check if in CPU group and add the saved CPU miners
                     if (cdev.DeviceGroupType == DeviceGroupType.CPU) {
                         GroupedDevices gdevs = new GroupedDevices();
@@ -266,12 +266,12 @@ namespace NiceHashMiner.Miners {
         public void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData, string Worker) {
             var devProfits = GetEnabledDeviceProifitDictionary(_perDeviceSpeedDictionary, NiceHashData);
 
-            // calculate most profitable algorithm per unique device
-            foreach (var cdev in _enabledUniqueDevices) {
+            // calculate most profitable algorithm per enabled device
+            foreach (var cdev in _enabledDevices) {
                 var curDevProfits = devProfits[cdev.Name];
                 double maxProfit = double.MinValue;
                 AlgorithmType maxAlgorithmTypeKey = AlgorithmType.NONE;
-                var algorithmSettings = DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.Name).AlgorithmSettings;
+                var algorithmSettings = cdev.DeviceBenchmarkConfig.AlgorithmSettings;
 
                 foreach (var kvpTypeProfit in curDevProfits) {
                     if (!algorithmSettings[kvpTypeProfit.Key].Skip && kvpTypeProfit.Value > 0.0d && maxProfit < kvpTypeProfit.Value) {
@@ -290,8 +290,8 @@ namespace NiceHashMiner.Miners {
             _previousAllGroupedDevices = _currentAllGroupedDevices;
             _currentAllGroupedDevices = new AllGroupedDevices();
             Dictionary<GroupedDevices, Algorithm> newGroupAndAlgorithm = new Dictionary<GroupedDevices,Algorithm>();
-            for (int first = 0; first < _enabledUniqueDevices.Count; ++first) {
-                var firstDev = _enabledUniqueDevices[first];
+            for (int first = 0; first < _enabledDevices.Count; ++first) {
+                var firstDev = _enabledDevices[first];
                 // skip if no algorithm is profitable
                 if (firstDev.MostProfitableAlgorithm == null) {
                     // TODO maybe print that algorithm is missing should not come to this
@@ -309,8 +309,8 @@ namespace NiceHashMiner.Miners {
 
                 var newGroup = new GroupedDevices();
                 newGroup.Add(firstDev.UUID);
-                for (int second = first + 1; second < _enabledUniqueDevices.Count; ++second) {
-                    var secondDev = _enabledUniqueDevices[second];
+                for (int second = first + 1; second < _enabledDevices.Count; ++second) {
+                    var secondDev = _enabledDevices[second];
                     // check if we should group
                     if(IsNvidiaAndDagger(firstDev, secondDev)
                         || IsGroupAndAlgorithmSame(firstDev, secondDev)) {

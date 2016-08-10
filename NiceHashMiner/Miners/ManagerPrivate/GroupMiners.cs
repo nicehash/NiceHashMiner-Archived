@@ -35,7 +35,7 @@ namespace NiceHashMiner.Miners {
                     }
                 }
                 // init device uuids
-                _deviceUUIDs = ComputeDevice.GetEnabledDevicesUUUIDsForNames(_deviceNames);
+                _deviceUUIDs = deviceUUIDSet.ToArray();
                 // init DevicesInfoString
                 string[] _deviceNamesCount = new string[_deviceNames.Length];
                 for (int i = 0; i < _deviceNames.Length; ++i ) {
