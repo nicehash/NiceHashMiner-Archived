@@ -181,6 +181,9 @@ namespace NiceHashMiner
             
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDevice.AllAvaliableDevices);
+            // set properties after
+            devicesListViewEnableControl1.AutoSaveChange = true;
+            devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
             Config.RebuildGroups(); // this is gonna go
 
@@ -557,17 +560,6 @@ namespace NiceHashMiner
         private void linkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
-        }
-
-
-        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            ComputeDevice G = e.Item.Tag as ComputeDevice;
-            G.Enabled = e.Item.Checked;
-            if (LoadingScreen == null) {
-                Config.RebuildGroups();
-                ConfigManager.Instance.GeneralConfig.Commit();
-            }
         }
 
 

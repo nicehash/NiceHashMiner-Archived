@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Forms.Components {
     public partial class DevicesListViewEnableControl : UserControl {
@@ -14,7 +15,7 @@ namespace NiceHashMiner.Forms.Components {
         private const int GROUP = 1;
         private const int DEVICE = 2;
 
-        private class ComputeDeviceEnabledOption {
+        public class ComputeDeviceEnabledOption {
             public bool IsEnabled { get; set; }
             public ComputeDevice CDevice { get; set; }
             public void SaveOption() {
@@ -22,22 +23,30 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
-        private List<ComputeDeviceEnabledOption> _options;
+        public List<ComputeDeviceEnabledOption> Options { get; private set; }
 
         // to automatically save on enabled click or not
         public bool AutoSaveChange { get; set; }
+        public bool SaveToGeneralConfig { get; set; }
 
         public DevicesListViewEnableControl() {
             InitializeComponent();
 
-            AutoSaveChange = true;
-            _options = new List<ComputeDeviceEnabledOption>();
+            AutoSaveChange = false;
+            SaveToGeneralConfig = false;
+            Options = new List<ComputeDeviceEnabledOption>();
             // intialize ListView callbacks
             listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
         }
 
 
         public void SetComputeDevices(List<ComputeDevice> computeDevices) {
+            // to not run callbacks when setting new
+            bool tmp_AutoSaveChange = AutoSaveChange;
+            bool tmp_SaveToGeneralConfig = SaveToGeneralConfig;
+            AutoSaveChange = false;
+            SaveToGeneralConfig = false;
+            // set devices
             foreach (var computeDevice in computeDevices) {
                 ListViewItem lvi = new ListViewItem();
                 lvi.SubItems.Add(computeDevice.Group);
@@ -47,14 +56,17 @@ namespace NiceHashMiner.Forms.Components {
                     IsEnabled = computeDevice.Enabled,
                     CDevice = computeDevice
                 };
-                _options.Add(newTag);
+                Options.Add(newTag);
                 lvi.Tag = newTag;
                 listViewDevices.Items.Add(lvi);
             }
+            // reset properties
+            AutoSaveChange = tmp_AutoSaveChange;
+            SaveToGeneralConfig = tmp_SaveToGeneralConfig;
         }
 
         public void ResetComputeDevices(List<ComputeDevice> computeDevices) {
-            _options.Clear();
+            Options.Clear();
             listViewDevices.Items.Clear();
             SetComputeDevices(computeDevices);
         }
@@ -71,10 +83,13 @@ namespace NiceHashMiner.Forms.Components {
             if (AutoSaveChange) {
                 G.SaveOption();
             }
+            if (SaveToGeneralConfig) {
+                ConfigManager.Instance.GeneralConfig.Commit();
+            }
         }
 
         public void SaveOptions() {
-            foreach (var option in _options) {
+            foreach (var option in Options) {
                 option.SaveOption();
             }
         }

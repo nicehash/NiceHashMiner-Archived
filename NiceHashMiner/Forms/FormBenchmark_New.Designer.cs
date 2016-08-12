@@ -43,7 +43,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(938, 632);
+            this.tabControl1.Size = new System.Drawing.Size(921, 511);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -56,7 +56,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(930, 606);
+            this.tabPage1.Size = new System.Drawing.Size(913, 485);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Device Benchmark";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -95,6 +95,7 @@
             // 
             // devicesListView1
             // 
+            this.devicesListView1.AutoSaveChange = false;
             this.devicesListView1.Location = new System.Drawing.Point(25, 26);
             this.devicesListView1.Name = "devicesListView1";
             this.devicesListView1.Size = new System.Drawing.Size(429, 108);
@@ -114,7 +115,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(938, 632);
+            this.ClientSize = new System.Drawing.Size(921, 511);
             this.Controls.Add(this.tabControl1);
             this.Name = "FormBenchmark_New";
             this.Text = "FormBenchmark_New";

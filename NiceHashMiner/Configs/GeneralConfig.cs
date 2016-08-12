@@ -217,12 +217,17 @@ namespace NiceHashMiner.Configs {
         public void AfterDeviceQueryInitialization() {
             ComputeDeviceGroupManager.Instance.GroupSettings = GroupSettings;
             GroupSettings = ComputeDeviceGroupManager.Instance.GroupSettings;
-            if (LastDevicesSettup != null) {
-                for (int i = 0; i < ComputeDevice.AllAvaliableDevices.Count; ++i) {
-                    var usedDevice = ComputeDevice.AllAvaliableDevices[i];
-                    var configDevice = LastDevicesSettup[i];
-                    usedDevice.Enabled = configDevice.Enabled;
+            if (_file != null && _file.LastDevicesSettup != null) {
+                // TODO reinit devices this is going to need serials upgrade
+                foreach (var configDevice in _file.LastDevicesSettup) {
+                    foreach (var usedDevice in ComputeDevice.AllAvaliableDevices) {
+                        if (configDevice.UUID == usedDevice.UUID) {
+                            usedDevice.Enabled = configDevice.Enabled;
+                            continue;
+                        }
+                    }
                 }
+                
             }
             if (_file != null && _file.GroupSettings != null) {
                 foreach (var key in _file.GroupSettings.Keys) {
