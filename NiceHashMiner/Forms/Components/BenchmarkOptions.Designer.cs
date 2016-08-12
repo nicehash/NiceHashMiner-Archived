@@ -37,7 +37,7 @@
             this.groupBox1.Controls.Add(this.radioButton_QuickBenchmark);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(276, 103);
+            this.groupBox1.Size = new System.Drawing.Size(198, 103);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Benchmark Type";
@@ -47,9 +47,9 @@
             this.radioButton_PreciseBenchmark.AutoSize = true;
             this.radioButton_PreciseBenchmark.Location = new System.Drawing.Point(6, 77);
             this.radioButton_PreciseBenchmark.Name = "radioButton_PreciseBenchmark";
-            this.radioButton_PreciseBenchmark.Size = new System.Drawing.Size(195, 17);
+            this.radioButton_PreciseBenchmark.Size = new System.Drawing.Size(139, 17);
             this.radioButton_PreciseBenchmark.TabIndex = 14;
-            this.radioButton_PreciseBenchmark.Text = "&Precise benchmark (will take longer)";
+            this.radioButton_PreciseBenchmark.Text = "&Precise (will take longer)";
             this.radioButton_PreciseBenchmark.UseVisualStyleBackColor = true;
             this.radioButton_PreciseBenchmark.CheckedChanged += new System.EventHandler(this.radioButton_PreciseBenchmark_CheckedChanged);
             // 
@@ -59,10 +59,10 @@
             this.radioButton_StandardBenchmark.Checked = true;
             this.radioButton_StandardBenchmark.Location = new System.Drawing.Point(6, 48);
             this.radioButton_StandardBenchmark.Name = "radioButton_StandardBenchmark";
-            this.radioButton_StandardBenchmark.Size = new System.Drawing.Size(124, 17);
+            this.radioButton_StandardBenchmark.Size = new System.Drawing.Size(68, 17);
             this.radioButton_StandardBenchmark.TabIndex = 13;
             this.radioButton_StandardBenchmark.TabStop = true;
-            this.radioButton_StandardBenchmark.Text = "&Standard benchmark";
+            this.radioButton_StandardBenchmark.Text = "&Standard";
             this.radioButton_StandardBenchmark.UseVisualStyleBackColor = true;
             this.radioButton_StandardBenchmark.CheckedChanged += new System.EventHandler(this.radioButton_StandardBenchmark_CheckedChanged);
             // 
@@ -71,9 +71,9 @@
             this.radioButton_QuickBenchmark.AutoSize = true;
             this.radioButton_QuickBenchmark.Location = new System.Drawing.Point(6, 19);
             this.radioButton_QuickBenchmark.Name = "radioButton_QuickBenchmark";
-            this.radioButton_QuickBenchmark.Size = new System.Drawing.Size(204, 17);
+            this.radioButton_QuickBenchmark.Size = new System.Drawing.Size(148, 17);
             this.radioButton_QuickBenchmark.TabIndex = 12;
-            this.radioButton_QuickBenchmark.Text = "&Quick benchmark (can be inaccurate)";
+            this.radioButton_QuickBenchmark.Text = "&Quick (can be inaccurate)";
             this.radioButton_QuickBenchmark.UseVisualStyleBackColor = true;
             this.radioButton_QuickBenchmark.CheckedChanged += new System.EventHandler(this.radioButton_QuickBenchmark_CheckedChanged);
             // 
@@ -83,7 +83,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
             this.Name = "BenchmarkOptions";
-            this.Size = new System.Drawing.Size(286, 108);
+            this.Size = new System.Drawing.Size(208, 108);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

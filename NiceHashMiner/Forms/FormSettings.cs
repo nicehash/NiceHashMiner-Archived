@@ -202,6 +202,9 @@ namespace NiceHashMiner.Forms {
             benchmarkLimitControlCPU.InitLocale();
             benchmarkLimitControlNVIDIA.InitLocale();
             benchmarkLimitControlAMD.InitLocale();
+
+            // device enabled listview translation
+            devicesListViewEnableControl1.InitLocale();
         }
 
         private void InitializeGeneralTabCallbacks() {
@@ -313,6 +316,10 @@ namespace NiceHashMiner.Forms {
                 benchmarkLimitControlCPU.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.CPU;
                 benchmarkLimitControlNVIDIA.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.NVIDIA;
                 benchmarkLimitControlAMD.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.AMD;
+
+                // here we want all devices
+                devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
+                devicesListViewEnableControl1.AutoSaveChange = false;
             }
 
             // Add language selections list
@@ -547,6 +554,7 @@ namespace NiceHashMiner.Forms {
             if (IsChangeSaved) {
                 ConfigManager.Instance.GeneralConfig.Commit();
                 ConfigManager.Instance.CommitBenchmarks();
+                devicesListViewEnableControl1.SaveOptions();
                 Config.Commit();
                 International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
             } else if (IsChange) {

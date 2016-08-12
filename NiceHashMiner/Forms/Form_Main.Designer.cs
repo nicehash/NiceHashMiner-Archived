@@ -50,10 +50,6 @@
             this.labelWorkerName = new System.Windows.Forms.Label();
             this.textBoxWorkerName = new System.Windows.Forms.TextBox();
             this.linkLabelVisitUs = new System.Windows.Forms.LinkLabel();
-            this.listViewDevices = new System.Windows.Forms.ListView();
-            this.columnHeader0 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonStopMining = new System.Windows.Forms.Button();
             this.buttonBenchmark = new System.Windows.Forms.Button();
             this.buttonSettings = new System.Windows.Forms.Button();
@@ -63,6 +59,7 @@
             this.labelDemoMode = new System.Windows.Forms.Label();
             this.flowLayoutPanelRates = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -244,38 +241,6 @@
             this.linkLabelVisitUs.Text = "Visit us @ www.nicehash.com";
             this.linkLabelVisitUs.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelVisitUs_LinkClicked);
             // 
-            // listViewDevices
-            // 
-            this.listViewDevices.CheckBoxes = true;
-            this.listViewDevices.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader0,
-            this.columnHeader2,
-            this.columnHeader3});
-            this.listViewDevices.FullRowSelect = true;
-            this.listViewDevices.GridLines = true;
-            this.listViewDevices.Location = new System.Drawing.Point(11, 91);
-            this.listViewDevices.Name = "listViewDevices";
-            this.listViewDevices.Size = new System.Drawing.Size(427, 105);
-            this.listViewDevices.TabIndex = 3;
-            this.listViewDevices.UseCompatibleStateImageBehavior = false;
-            this.listViewDevices.View = System.Windows.Forms.View.Details;
-            this.listViewDevices.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listView1_ItemChecked);
-            // 
-            // columnHeader0
-            // 
-            this.columnHeader0.Text = "Enabled";
-            this.columnHeader0.Width = 63;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Group";
-            this.columnHeader2.Width = 97;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Device";
-            this.columnHeader3.Width = 245;
-            // 
             // buttonStopMining
             // 
             this.buttonStopMining.Enabled = false;
@@ -371,11 +336,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Group/Device Rates:";
             // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(11, 91);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 105);
+            this.devicesListViewEnableControl1.TabIndex = 109;
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 423);
+            this.Controls.Add(this.devicesListViewEnableControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);
             this.Controls.Add(this.linkLabelChooseBTCWallet);
@@ -383,7 +356,6 @@
             this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.buttonBenchmark);
             this.Controls.Add(this.buttonStopMining);
-            this.Controls.Add(this.listViewDevices);
             this.Controls.Add(this.linkLabelVisitUs);
             this.Controls.Add(this.labelWorkerName);
             this.Controls.Add(this.textBoxWorkerName);
@@ -426,9 +398,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceBTCCode;
         private System.Windows.Forms.LinkLabel linkLabelVisitUs;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGlobalRateText;
-        private System.Windows.Forms.ColumnHeader columnHeader0;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.Button buttonStopMining;
         private System.Windows.Forms.Button buttonBenchmark;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBTCDayText;
@@ -442,11 +411,11 @@
         private System.Windows.Forms.TextBox textBoxBTCAddress;
         private System.Windows.Forms.ComboBox comboBoxLocation;
         private System.Windows.Forms.TextBox textBoxWorkerName;
-        private System.Windows.Forms.ListView listViewDevices;
         private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         private System.Windows.Forms.GroupBox groupBox1;
+        private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
     }
 }
 

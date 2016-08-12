@@ -28,13 +28,13 @@
             this.labelSelectedDeviceGroup = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.fieldUsePassword = new NiceHashMiner.Forms.Components.Field();
-            this.fieldMinimumProfit = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
             this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.RichTextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.amdSpecificSettings1 = new NiceHashMiner.Forms.Components.AmdSpecificSettings();
             this.cpuSpecificSettings1 = new NiceHashMiner.Forms.Components.CpuSpecificSettings();
+            this.fieldUsePassword = new NiceHashMiner.Forms.Components.Field();
+            this.fieldMinimumProfit = new NiceHashMiner.Forms.Components.Field();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -45,7 +45,7 @@
             // labelSelectedDeviceName
             // 
             this.labelSelectedDeviceName.AutoSize = true;
-            this.labelSelectedDeviceName.Location = new System.Drawing.Point(6, 28);
+            this.labelSelectedDeviceName.Location = new System.Drawing.Point(21, 20);
             this.labelSelectedDeviceName.Name = "labelSelectedDeviceName";
             this.labelSelectedDeviceName.Size = new System.Drawing.Size(151, 13);
             this.labelSelectedDeviceName.TabIndex = 1;
@@ -58,7 +58,7 @@
             this.groupBox1.Controls.Add(this.labelSelectedDeviceName);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(439, 81);
+            this.groupBox1.Size = new System.Drawing.Size(439, 67);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Selected Device Info";
@@ -66,7 +66,7 @@
             // labelSelectedDeviceGroup
             // 
             this.labelSelectedDeviceGroup.AutoSize = true;
-            this.labelSelectedDeviceGroup.Location = new System.Drawing.Point(6, 52);
+            this.labelSelectedDeviceGroup.Location = new System.Drawing.Point(21, 38);
             this.labelSelectedDeviceGroup.Name = "labelSelectedDeviceGroup";
             this.labelSelectedDeviceGroup.Size = new System.Drawing.Size(153, 13);
             this.labelSelectedDeviceGroup.TabIndex = 2;
@@ -75,9 +75,9 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.flowLayoutPanel1);
-            this.groupBox2.Location = new System.Drawing.Point(3, 90);
+            this.groupBox2.Location = new System.Drawing.Point(3, 76);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(439, 220);
+            this.groupBox2.Size = new System.Drawing.Size(439, 154);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Common Device Group Settings";
@@ -91,8 +91,52 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(433, 201);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(433, 135);
             this.flowLayoutPanel1.TabIndex = 0;
+            // 
+            // groupBoxExtraLaunchParameters
+            // 
+            this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
+            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 65);
+            this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
+            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(427, 64);
+            this.groupBoxExtraLaunchParameters.TabIndex = 5;
+            this.groupBoxExtraLaunchParameters.TabStop = false;
+            this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
+            // 
+            // richTextBoxExtraLaunchParameters
+            // 
+            this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
+            this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
+            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(421, 45);
+            this.richTextBoxExtraLaunchParameters.TabIndex = 0;
+            this.richTextBoxExtraLaunchParameters.Text = "";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.amdSpecificSettings1);
+            this.groupBox3.Controls.Add(this.cpuSpecificSettings1);
+            this.groupBox3.Location = new System.Drawing.Point(3, 236);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(439, 76);
+            this.groupBox3.TabIndex = 4;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Specific Device Group Settings";
+            // 
+            // amdSpecificSettings1
+            // 
+            this.amdSpecificSettings1.Location = new System.Drawing.Point(9, 19);
+            this.amdSpecificSettings1.Name = "amdSpecificSettings1";
+            this.amdSpecificSettings1.Size = new System.Drawing.Size(435, 40);
+            this.amdSpecificSettings1.TabIndex = 5;
+            // 
+            // cpuSpecificSettings1
+            // 
+            this.cpuSpecificSettings1.Location = new System.Drawing.Point(9, 13);
+            this.cpuSpecificSettings1.Name = "cpuSpecificSettings1";
+            this.cpuSpecificSettings1.Size = new System.Drawing.Size(430, 57);
+            this.cpuSpecificSettings1.TabIndex = 0;
             // 
             // fieldUsePassword
             // 
@@ -118,50 +162,6 @@
             this.fieldMinimumProfit.Size = new System.Drawing.Size(389, 31);
             this.fieldMinimumProfit.TabIndex = 2;
             // 
-            // groupBoxExtraLaunchParameters
-            // 
-            this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
-            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 65);
-            this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
-            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(427, 99);
-            this.groupBoxExtraLaunchParameters.TabIndex = 5;
-            this.groupBoxExtraLaunchParameters.TabStop = false;
-            this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
-            // 
-            // richTextBoxExtraLaunchParameters
-            // 
-            this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
-            this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
-            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(421, 80);
-            this.richTextBoxExtraLaunchParameters.TabIndex = 0;
-            this.richTextBoxExtraLaunchParameters.Text = "";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.amdSpecificSettings1);
-            this.groupBox3.Controls.Add(this.cpuSpecificSettings1);
-            this.groupBox3.Location = new System.Drawing.Point(3, 316);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(439, 76);
-            this.groupBox3.TabIndex = 4;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Specific Device Group Settings";
-            // 
-            // amdSpecificSettings1
-            // 
-            this.amdSpecificSettings1.Location = new System.Drawing.Point(9, 19);
-            this.amdSpecificSettings1.Name = "amdSpecificSettings1";
-            this.amdSpecificSettings1.Size = new System.Drawing.Size(435, 40);
-            this.amdSpecificSettings1.TabIndex = 5;
-            // 
-            // cpuSpecificSettings1
-            // 
-            this.cpuSpecificSettings1.Location = new System.Drawing.Point(9, 13);
-            this.cpuSpecificSettings1.Name = "cpuSpecificSettings1";
-            this.cpuSpecificSettings1.Size = new System.Drawing.Size(430, 57);
-            this.cpuSpecificSettings1.TabIndex = 0;
-            // 
             // DeviceSettingsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -170,7 +170,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "DeviceSettingsControl";
-            this.Size = new System.Drawing.Size(447, 417);
+            this.Size = new System.Drawing.Size(447, 317);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

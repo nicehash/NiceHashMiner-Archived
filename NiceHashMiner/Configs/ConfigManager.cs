@@ -8,7 +8,6 @@ namespace NiceHashMiner.Configs {
     public class ConfigManager : BaseLazySingleton<ConfigManager> {
         public GeneralConfig GeneralConfig { get; set; }
         public Dictionary<string, DeviceBenchmarkConfig> BenchmarkConfigs { get; set; }
-        
 
         protected ConfigManager() {
             GeneralConfig = new GeneralConfig(true);

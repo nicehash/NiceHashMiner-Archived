@@ -43,7 +43,9 @@ namespace NiceHashMiner
         int flowLayoutPanelRatesIndex = 0;
 
         
-        const string BetaAlphaPostfixString = " BETA";
+        const string _betaAlphaPostfixString = " BETA";
+
+        private bool _isDeviceDetectionInitialized = false;
 
         public Form_Main()
         {
@@ -63,7 +65,7 @@ namespace NiceHashMiner
 
             R = new Random((int)DateTime.Now.Ticks);
 
-            Text += " v" + Application.ProductVersion + BetaAlphaPostfixString;
+            Text += " v" + Application.ProductVersion + _betaAlphaPostfixString;
 
             InitMainConfigGUIData();
         }
@@ -92,9 +94,7 @@ namespace NiceHashMiner
             toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
             toolStripStatusLabelBalanceText.Text = (ConfigManager.Instance.GeneralConfig.DisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("form1_balance") + ":";
 
-            listViewDevices.Columns[0].Text = International.GetText("ListView_Enabled");
-            listViewDevices.Columns[1].Text = International.GetText("ListView_Group");
-            listViewDevices.Columns[2].Text = International.GetText("ListView_Device");
+            devicesListViewEnableControl1.InitLocale();
 
             buttonBenchmark.Text = International.GetText("form1_benchmark");
             buttonSettings.Text = International.GetText("form1_settings");
@@ -114,6 +114,10 @@ namespace NiceHashMiner
             DemoMode = false;
 
             toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager.Instance.GeneralConfig.DisplayCurrency + ")";
+
+            if (_isDeviceDetectionInitialized) {
+                devicesListViewEnableControl1.ResetComputeDevices(ComputeDevice.AllAvaliableDevices);
+            }
         }
 
         public void AfterLoadComplete()
@@ -167,6 +171,7 @@ namespace NiceHashMiner
 
             // Query Avaliable ComputeDevices
             ComputeDeviceQueryManager.Instance.QueryDevices(LoadingScreen);
+            _isDeviceDetectionInitialized = true;
 
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
@@ -175,16 +180,9 @@ namespace NiceHashMiner
             Config.SetGroupAlgorithmSettup();
             
             // All devices settup should be initialized in AllDevices
-            foreach (var computeDevice in ComputeDevice.AllAvaliableDevices) {
-                ListViewItem lvi = new ListViewItem();
-                lvi.SubItems.Add(computeDevice.Group);
-                lvi.SubItems.Add(computeDevice.Name);
-                lvi.Checked = computeDevice.Enabled;
-                lvi.Tag = computeDevice;
-                listViewDevices.Items.Add(lvi);
-            }
+            devicesListViewEnableControl1.ResetComputeDevices(ComputeDevice.AllAvaliableDevices);
 
-            Config.RebuildGroups();
+            Config.RebuildGroups(); // this is gonna go
 
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_CheckLatestVersion"));
@@ -699,7 +697,7 @@ namespace NiceHashMiner
             buttonBenchmark.Enabled = false;
             buttonStartMining.Enabled = false;
             buttonSettings.Enabled = false;
-            listViewDevices.Enabled = false;
+            devicesListViewEnableControl1.Enabled = false;
             buttonStopMining.Enabled = true;
 
             ConfigManager.Instance.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
@@ -727,7 +725,7 @@ namespace NiceHashMiner
             buttonBenchmark.Enabled = true;
             buttonStartMining.Enabled = true;
             buttonSettings.Enabled = true;
-            listViewDevices.Enabled = true;
+            devicesListViewEnableControl1.Enabled = true;
             buttonStopMining.Enabled = false;
 
             if (DemoMode)
