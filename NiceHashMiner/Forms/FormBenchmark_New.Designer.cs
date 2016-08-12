@@ -29,7 +29,7 @@
             this.benchmarkAlgorithmSettup1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
-            this.devicesListView1 = new NiceHashMiner.Forms.Components.DevicesListView();
+            this.devicesListView1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -132,7 +132,7 @@
         private Components.AlgorithmSettingsControl benchmarkAlgorithmSettup1;
         private Components.AlgorithmsListView algorithmsListView1;
         private Components.BenchmarkOptions benchmarkOptions1;
-        private Components.DevicesListView devicesListView1;
+        private Components.DevicesListViewEnableControl devicesListView1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button1;
 

@@ -28,7 +28,6 @@
             this.labelSelectedDeviceGroup = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.fieldAPIBindPort = new NiceHashMiner.Forms.Components.Field();
             this.fieldUsePassword = new NiceHashMiner.Forms.Components.Field();
             this.fieldMinimumProfit = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
@@ -85,7 +84,6 @@
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.fieldAPIBindPort);
             this.flowLayoutPanel1.Controls.Add(this.fieldUsePassword);
             this.flowLayoutPanel1.Controls.Add(this.fieldMinimumProfit);
             this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
@@ -96,25 +94,13 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(433, 201);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
-            // fieldAPIBindPort
-            // 
-            this.fieldAPIBindPort.AutoSize = true;
-            this.fieldAPIBindPort.BackColor = System.Drawing.Color.Transparent;
-            this.fieldAPIBindPort.EntryText = "";
-            this.fieldAPIBindPort.LabelText = "API Bind Port:";
-            this.fieldAPIBindPort.Location = new System.Drawing.Point(0, 3);
-            this.fieldAPIBindPort.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.fieldAPIBindPort.Name = "fieldAPIBindPort";
-            this.fieldAPIBindPort.Size = new System.Drawing.Size(389, 31);
-            this.fieldAPIBindPort.TabIndex = 0;
-            // 
             // fieldUsePassword
             // 
             this.fieldUsePassword.AutoSize = true;
             this.fieldUsePassword.BackColor = System.Drawing.Color.Transparent;
             this.fieldUsePassword.EntryText = "";
             this.fieldUsePassword.LabelText = "Use Password:";
-            this.fieldUsePassword.Location = new System.Drawing.Point(0, 34);
+            this.fieldUsePassword.Location = new System.Drawing.Point(0, 0);
             this.fieldUsePassword.Margin = new System.Windows.Forms.Padding(0);
             this.fieldUsePassword.Name = "fieldUsePassword";
             this.fieldUsePassword.Size = new System.Drawing.Size(389, 31);
@@ -126,7 +112,7 @@
             this.fieldMinimumProfit.BackColor = System.Drawing.Color.Transparent;
             this.fieldMinimumProfit.EntryText = "";
             this.fieldMinimumProfit.LabelText = "Minimum Profit ($/day):";
-            this.fieldMinimumProfit.Location = new System.Drawing.Point(0, 65);
+            this.fieldMinimumProfit.Location = new System.Drawing.Point(0, 31);
             this.fieldMinimumProfit.Margin = new System.Windows.Forms.Padding(0);
             this.fieldMinimumProfit.Name = "fieldMinimumProfit";
             this.fieldMinimumProfit.Size = new System.Drawing.Size(389, 31);
@@ -135,7 +121,7 @@
             // groupBoxExtraLaunchParameters
             // 
             this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
-            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 99);
+            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 65);
             this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
             this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(427, 99);
             this.groupBoxExtraLaunchParameters.TabIndex = 5;
@@ -206,7 +192,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBoxExtraLaunchParameters;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private Field fieldAPIBindPort;
         private Field fieldUsePassword;
         private Field fieldMinimumProfit;
         private System.Windows.Forms.RichTextBox richTextBoxExtraLaunchParameters;

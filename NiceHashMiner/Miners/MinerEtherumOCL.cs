@@ -13,9 +13,7 @@ namespace NiceHashMiner.Miners {
 
         int GPUPlatformNumber;
 
-        public MinerEtherumOCL() {
-            isOCL = true;
-
+        public MinerEtherumOCL() : base() {
             // AMD or TODO it could be something else
             MinerDeviceName = "AMD OpenCL";
         }
@@ -32,7 +30,7 @@ namespace NiceHashMiner.Miners {
                 + " " + miningAlgorithm.ExtraLaunchParameters
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":" + GetPassword(miningAlgorithm)
-                + " --api-port " + ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString()
+                + " --api-port " + APIPort.ToString()
                 + " --opencl-devices ";
         }
 

@@ -38,8 +38,6 @@
             this.textBox_MinerAPIGraceSecondsAMD = new System.Windows.Forms.TextBox();
             this.textBox_SwitchMinSecondsAMD = new System.Windows.Forms.TextBox();
             this.textBox_ethminerDefaultBlockHeight = new System.Windows.Forms.TextBox();
-            this.textBox_ethminerAPIPortAMD = new System.Windows.Forms.TextBox();
-            this.textBox_ethminerAPIPortNvidia = new System.Windows.Forms.TextBox();
             this.textBox_LogMaxFileSize = new System.Windows.Forms.TextBox();
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.textBox_MinerAPIGraceSeconds = new System.Windows.Forms.TextBox();
@@ -53,8 +51,6 @@
             this.label_SwitchMinSecondsAMD = new System.Windows.Forms.Label();
             this.checkBox_LogToFile = new System.Windows.Forms.CheckBox();
             this.label_ethminerDefaultBlockHeight = new System.Windows.Forms.Label();
-            this.label_ethminerAPIPortAMD = new System.Windows.Forms.Label();
-            this.label_ethminerAPIPortNvidia = new System.Windows.Forms.Label();
             this.label_Language = new System.Windows.Forms.Label();
             this.comboBox_Language = new System.Windows.Forms.ComboBox();
             this.checkBox_NVIDIAP0State = new System.Windows.Forms.CheckBox();
@@ -149,8 +145,6 @@
             this.tabPageGeneral.Controls.Add(this.textBox_MinerAPIGraceSecondsAMD);
             this.tabPageGeneral.Controls.Add(this.textBox_SwitchMinSecondsAMD);
             this.tabPageGeneral.Controls.Add(this.textBox_ethminerDefaultBlockHeight);
-            this.tabPageGeneral.Controls.Add(this.textBox_ethminerAPIPortAMD);
-            this.tabPageGeneral.Controls.Add(this.textBox_ethminerAPIPortNvidia);
             this.tabPageGeneral.Controls.Add(this.textBox_LogMaxFileSize);
             this.tabPageGeneral.Controls.Add(this.textBox_MinIdleSeconds);
             this.tabPageGeneral.Controls.Add(this.textBox_MinerAPIGraceSeconds);
@@ -164,8 +158,6 @@
             this.tabPageGeneral.Controls.Add(this.label_SwitchMinSecondsAMD);
             this.tabPageGeneral.Controls.Add(this.checkBox_LogToFile);
             this.tabPageGeneral.Controls.Add(this.label_ethminerDefaultBlockHeight);
-            this.tabPageGeneral.Controls.Add(this.label_ethminerAPIPortAMD);
-            this.tabPageGeneral.Controls.Add(this.label_ethminerAPIPortNvidia);
             this.tabPageGeneral.Controls.Add(this.label_Language);
             this.tabPageGeneral.Controls.Add(this.comboBox_Language);
             this.tabPageGeneral.Controls.Add(this.checkBox_NVIDIAP0State);
@@ -321,20 +313,6 @@
             this.textBox_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(160, 20);
             this.textBox_ethminerDefaultBlockHeight.TabIndex = 333;
             // 
-            // textBox_ethminerAPIPortAMD
-            // 
-            this.textBox_ethminerAPIPortAMD.Location = new System.Drawing.Point(568, 283);
-            this.textBox_ethminerAPIPortAMD.Name = "textBox_ethminerAPIPortAMD";
-            this.textBox_ethminerAPIPortAMD.Size = new System.Drawing.Size(139, 20);
-            this.textBox_ethminerAPIPortAMD.TabIndex = 343;
-            // 
-            // textBox_ethminerAPIPortNvidia
-            // 
-            this.textBox_ethminerAPIPortNvidia.Location = new System.Drawing.Point(397, 283);
-            this.textBox_ethminerAPIPortNvidia.Name = "textBox_ethminerAPIPortNvidia";
-            this.textBox_ethminerAPIPortNvidia.Size = new System.Drawing.Size(140, 20);
-            this.textBox_ethminerAPIPortNvidia.TabIndex = 338;
-            // 
             // textBox_LogMaxFileSize
             // 
             this.textBox_LogMaxFileSize.Location = new System.Drawing.Point(221, 332);
@@ -434,24 +412,6 @@
             this.label_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(142, 13);
             this.label_ethminerDefaultBlockHeight.TabIndex = 361;
             this.label_ethminerDefaultBlockHeight.Text = "ethminerDefaultBlockHeight:";
-            // 
-            // label_ethminerAPIPortAMD
-            // 
-            this.label_ethminerAPIPortAMD.AutoSize = true;
-            this.label_ethminerAPIPortAMD.Location = new System.Drawing.Point(565, 262);
-            this.label_ethminerAPIPortAMD.Name = "label_ethminerAPIPortAMD";
-            this.label_ethminerAPIPortAMD.Size = new System.Drawing.Size(110, 13);
-            this.label_ethminerAPIPortAMD.TabIndex = 360;
-            this.label_ethminerAPIPortAMD.Text = "ethminerAPIPortAMD:";
-            // 
-            // label_ethminerAPIPortNvidia
-            // 
-            this.label_ethminerAPIPortNvidia.AutoSize = true;
-            this.label_ethminerAPIPortNvidia.Location = new System.Drawing.Point(394, 262);
-            this.label_ethminerAPIPortNvidia.Name = "label_ethminerAPIPortNvidia";
-            this.label_ethminerAPIPortNvidia.Size = new System.Drawing.Size(122, 13);
-            this.label_ethminerAPIPortNvidia.TabIndex = 359;
-            this.label_ethminerAPIPortNvidia.Text = "ethminerAPIPortNVIDIA:";
             // 
             // label_Language
             // 
@@ -741,10 +701,10 @@
             // 
             // devicesListView1
             // 
-            this.devicesListView1.Location = new System.Drawing.Point(3, 34);
+            this.devicesListView1.Location = new System.Drawing.Point(3, 40);
             this.devicesListView1.Name = "devicesListView1";
-            this.devicesListView1.Size = new System.Drawing.Size(452, 132);
-            this.devicesListView1.TabIndex = 0;
+            this.devicesListView1.Size = new System.Drawing.Size(452, 126);
+            this.devicesListView1.TabIndex = 1;
             // 
             // deviceSettingsControl1
             // 
@@ -862,8 +822,6 @@
         private System.Windows.Forms.TextBox textBox_MinerAPIGraceSecondsAMD;
         private System.Windows.Forms.TextBox textBox_SwitchMinSecondsAMD;
         private System.Windows.Forms.TextBox textBox_ethminerDefaultBlockHeight;
-        private System.Windows.Forms.TextBox textBox_ethminerAPIPortAMD;
-        private System.Windows.Forms.TextBox textBox_ethminerAPIPortNvidia;
         private System.Windows.Forms.TextBox textBox_LogMaxFileSize;
         private System.Windows.Forms.TextBox textBox_MinIdleSeconds;
         private System.Windows.Forms.TextBox textBox_MinerAPIGraceSeconds;
@@ -877,8 +835,6 @@
         private System.Windows.Forms.Label label_SwitchMinSecondsAMD;
         private System.Windows.Forms.CheckBox checkBox_LogToFile;
         private System.Windows.Forms.Label label_ethminerDefaultBlockHeight;
-        private System.Windows.Forms.Label label_ethminerAPIPortAMD;
-        private System.Windows.Forms.Label label_ethminerAPIPortNvidia;
         private System.Windows.Forms.Label label_Language;
         private System.Windows.Forms.ComboBox comboBox_Language;
         private System.Windows.Forms.CheckBox checkBox_NVIDIAP0State;
@@ -907,7 +863,6 @@
         private System.Windows.Forms.CheckBox checkBox_DebugConsole;
         private System.Windows.Forms.TabPage tabPageDevices;
         private System.Windows.Forms.SplitContainer splitContainerDevicesSettings;
-        private Components.DevicesListView devicesListView1;
         private Components.DeviceSettingsControl deviceSettingsControl1;
         private System.Windows.Forms.Label label1;
         private Components.AlgorithmsListView algorithmsListView1;
@@ -918,6 +873,7 @@
         private Components.BenchmarkLimitControl benchmarkLimitControlNVIDIA;
         private Components.BenchmarkLimitControl benchmarkLimitControlAMD;
         private System.Windows.Forms.ToolTip toolTip1;
+        private Components.DevicesListView devicesListView1;
 
     }
 }

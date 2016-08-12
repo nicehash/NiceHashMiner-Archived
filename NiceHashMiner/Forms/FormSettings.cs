@@ -136,10 +136,10 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.checkBox_DisableWindowsErrorReporting, International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
             //toolTip1.SetToolTip(this.checkBox_UseNewSettingsPage, International.GetText("Form_Settings_ToolTip_checkBox_UseNewSettingsPage"));
             toolTip1.SetToolTip(this.checkBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
-            toolTip1.SetToolTip(this.textBox_ethminerAPIPortNvidia, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "NVIDIA"));
-            toolTip1.SetToolTip(this.label_ethminerAPIPortNvidia, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "NVIDIA"));
-            toolTip1.SetToolTip(this.textBox_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
-            toolTip1.SetToolTip(this.label_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
+            //toolTip1.SetToolTip(this.textBox_ethminerAPIPortNvidia, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "NVIDIA"));
+            //toolTip1.SetToolTip(this.label_ethminerAPIPortNvidia, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "NVIDIA"));
+            //toolTip1.SetToolTip(this.textBox_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
+            //toolTip1.SetToolTip(this.label_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
         }
@@ -187,8 +187,8 @@ namespace NiceHashMiner.Forms {
             label_SwitchMinSecondsAMD.Text = International.GetText("Form_Settings_General_SwitchMinSecondsAMD") + ":";
 
             label_ethminerDefaultBlockHeight.Text = International.GetText("Form_Settings_General_ethminerDefaultBlockHeight") + ":";
-            label_ethminerAPIPortNvidia.Text = International.GetText("Form_Settings_General_ethminerAPIPortNVIDIA") + ":";
-            label_ethminerAPIPortAMD.Text = International.GetText("Form_Settings_General_ethminerAPIPortAMD") + ":";
+            //label_ethminerAPIPortNvidia.Text = International.GetText("Form_Settings_General_ethminerAPIPortNVIDIA") + ":";
+            //label_ethminerAPIPortAMD.Text = International.GetText("Form_Settings_General_ethminerAPIPortAMD") + ":";
 
             displayCurrencyLabel.Text = International.GetText("Form_Settings_DisplayCurrency");
 
@@ -246,8 +246,8 @@ namespace NiceHashMiner.Forms {
                 //this.textBox_BenchmarkTimeLimitsAMD_Quick.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 //this.textBox_BenchmarkTimeLimitsAMD_Standard.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 //this.textBox_BenchmarkTimeLimitsAMD_Precise.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                this.textBox_ethminerAPIPortNvidia.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                this.textBox_ethminerAPIPortAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                //this.textBox_ethminerAPIPortNvidia.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                //this.textBox_ethminerAPIPortAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_ethminerDefaultBlockHeight.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 // set int only keypress
                 this.textBox_SwitchMinSecondsFixed.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
@@ -259,8 +259,8 @@ namespace NiceHashMiner.Forms {
                 this.textBox_MinerAPIGraceSecondsAMD.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_MinIdleSeconds.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_LogMaxFileSize.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
-                this.textBox_ethminerAPIPortNvidia.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
-                this.textBox_ethminerAPIPortAMD.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+                //this.textBox_ethminerAPIPortNvidia.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+                //this.textBox_ethminerAPIPortAMD.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_ethminerDefaultBlockHeight.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
             }
             // Add EventHandler for all the general tab's textboxes
@@ -303,8 +303,8 @@ namespace NiceHashMiner.Forms {
                 textBox_MinerAPIGraceSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD.ToString();
                 textBox_MinIdleSeconds.Text = ConfigManager.Instance.GeneralConfig.MinIdleSeconds.ToString();
                 textBox_LogMaxFileSize.Text = ConfigManager.Instance.GeneralConfig.LogMaxFileSize.ToString();
-                textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
-                textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
+                //textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
+                //textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
                 textBox_ethminerDefaultBlockHeight.Text = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
             }
 
@@ -444,13 +444,13 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.LogMaxFileSize = Int64.Parse(textBox_LogMaxFileSize.Text);
             textBox_LogMaxFileSize.Text = ConfigManager.Instance.GeneralConfig.LogMaxFileSize.ToString();
 
-            if (!ParseStringToInt32(ref textBox_ethminerAPIPortNvidia)) return;
-            ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia = Int32.Parse(textBox_ethminerAPIPortNvidia.Text);
-            textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
+            //if (!ParseStringToInt32(ref textBox_ethminerAPIPortNvidia)) return;
+            //ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia = Int32.Parse(textBox_ethminerAPIPortNvidia.Text);
+            //textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
 
-            if (!ParseStringToInt32(ref textBox_ethminerAPIPortAMD)) return;
-            ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD = Int32.Parse(textBox_ethminerAPIPortAMD.Text);
-            textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
+            //if (!ParseStringToInt32(ref textBox_ethminerAPIPortAMD)) return;
+            //ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD = Int32.Parse(textBox_ethminerAPIPortAMD.Text);
+            //textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
             
             if (!ParseStringToInt32(ref textBox_ethminerDefaultBlockHeight)) return;
             ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight = Int32.Parse(textBox_ethminerDefaultBlockHeight.Text);

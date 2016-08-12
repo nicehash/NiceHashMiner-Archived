@@ -16,8 +16,6 @@ namespace NiceHashMiner.Miners {
         
         protected ethminerAPI ethminerLink;
 
-        protected bool isOCL = false;
-
         //ComputeDevice
         public ComputeDevice DaggerHashimotoGenerateDevice;
 
@@ -116,7 +114,7 @@ namespace NiceHashMiner.Miners {
                 IsRunning = true;
                 return null;
             }
-            ethminerLink = new ethminerAPI(isOCL ? ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD : ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia);
+            ethminerLink = new ethminerAPI(APIPort);
             var P = base._Start();
             ProcessHandle = P;
             return P;

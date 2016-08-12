@@ -144,6 +144,12 @@
     <Compile Include="Forms\Components\DevicesListView.Designer.cs">
       <DependentUpon>DevicesListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewEnableControl.Designer.cs">
+      <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Components\Field.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -264,6 +270,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\DevicesListView.resx">
       <DependentUpon>DevicesListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl.resx">
+      <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>

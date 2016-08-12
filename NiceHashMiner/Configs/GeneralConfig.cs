@@ -96,9 +96,9 @@ namespace NiceHashMiner.Configs {
         public bool ShowDriverVersionWarning { get; set; }
         public bool DisableWindowsErrorReporting { get; set; }
         public bool NVIDIAP0State { get; set; }
-        // check these settings
-        public int ethminerAPIPortNvidia { get; set; }
-        public int ethminerAPIPortAMD { get; set; }
+        // check these settings, API ports are no longer needed
+        //public int ethminerAPIPortNvidia { get; set; }
+        //public int ethminerAPIPortAMD { get; set; }
         public int ethminerDefaultBlockHeight { get; set; }
         
         
@@ -143,8 +143,8 @@ namespace NiceHashMiner.Configs {
             DisableWindowsErrorReporting = true;
             NVIDIAP0State = false;
             MinerRestartDelayMS = 500;
-            ethminerAPIPortNvidia = 34561;
-            ethminerAPIPortAMD = 34562;
+            //ethminerAPIPortNvidia = 34561;
+            //ethminerAPIPortAMD = 34562;
             ethminerDefaultBlockHeight = 1700000;
             MinerAPIGraceSeconds = 30;
             MinerAPIGraceSecondsAMD = 60;
@@ -209,8 +209,8 @@ namespace NiceHashMiner.Configs {
             ShowDriverVersionWarning  = _file.ShowDriverVersionWarning;
             DisableWindowsErrorReporting  = _file.DisableWindowsErrorReporting;
             NVIDIAP0State = _file.NVIDIAP0State;
-            ethminerAPIPortNvidia  = _file.ethminerAPIPortNvidia;
-            ethminerAPIPortAMD = _file.ethminerAPIPortAMD;
+            //ethminerAPIPortNvidia  = _file.ethminerAPIPortNvidia;
+            //ethminerAPIPortAMD = _file.ethminerAPIPortAMD;
             ethminerDefaultBlockHeight = _file.ethminerDefaultBlockHeight;
         }
 

@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 namespace NiceHashMiner.Miners {
     public class MinerEtherumCUDA : MinerEtherum {
 
-        public MinerEtherumCUDA() {
-            isOCL = false;
-
+        public MinerEtherumCUDA() : base() {
             MinerDeviceName = "NVIDIA";
         }
 
@@ -26,7 +24,7 @@ namespace NiceHashMiner.Miners {
                 + " " + miningAlgorithm.ExtraLaunchParameters
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":" + GetPassword(miningAlgorithm)
-                + " --api-port " + ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString()
+                + " --api-port " + APIPort.ToString()
                 + " --cuda-devices ";
         }
 
