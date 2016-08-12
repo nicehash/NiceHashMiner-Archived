@@ -34,6 +34,7 @@
             this.radioButton_All = new System.Windows.Forms.RadioButton();
             this.radioButton_ReOnlySelected = new System.Windows.Forms.RadioButton();
             this.radioButton_Unbenchmarked = new System.Windows.Forms.RadioButton();
+            this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -117,7 +118,7 @@
             this.groupBox1.Controls.Add(this.radioButton_SelectedUnbenchmarked);
             this.groupBox1.Location = new System.Drawing.Point(12, 219);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(531, 146);
+            this.groupBox1.Size = new System.Drawing.Size(325, 146);
             this.groupBox1.TabIndex = 105;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Benchmark Algoruthms Settings:";
@@ -157,11 +158,19 @@
             this.radioButton_Unbenchmarked.UseVisualStyleBackColor = true;
             this.radioButton_Unbenchmarked.CheckedChanged += new System.EventHandler(this.radioButton_Unbenchmarked_CheckedChanged);
             // 
+            // benchmarkOptions1
+            // 
+            this.benchmarkOptions1.Location = new System.Drawing.Point(343, 219);
+            this.benchmarkOptions1.Name = "benchmarkOptions1";
+            this.benchmarkOptions1.Size = new System.Drawing.Size(208, 106);
+            this.benchmarkOptions1.TabIndex = 106;
+            // 
             // FormBenchmark_New
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(555, 494);
+            this.Controls.Add(this.benchmarkOptions1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.LabelProgressPercentage);
             this.Controls.Add(this.StartStopBtn);
@@ -194,6 +203,7 @@
         private System.Windows.Forms.RadioButton radioButton_All;
         private System.Windows.Forms.RadioButton radioButton_ReOnlySelected;
         private System.Windows.Forms.RadioButton radioButton_Unbenchmarked;
+        private Components.BenchmarkOptions benchmarkOptions1;
 
 
     }

@@ -647,7 +647,7 @@ namespace NiceHashMiner
             // Check if the user has run benchmark first
             if (isBenchInit) {
                 // TODO add worker
-                MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], "TODO worker");
+                var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], "TODO worker");
                 InitFlowPanelStart();
             } else {
                 // first benchmark and start mining

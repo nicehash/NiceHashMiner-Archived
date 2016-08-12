@@ -196,7 +196,7 @@
     <Compile Include="Miners\MinerPaths.cs" />
     <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager.cs" />
-    <Compile Include="NiceHashProcess.cs" />
+    <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Forms\SubmitResultDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,7 +218,7 @@
     <Compile Include="Ethereum.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Configs\Legacy\Config.cs" />
-    <Compile Include="CPUID.cs" />
+    <Compile Include="PInvoke\CPUID.cs" />
     <Compile Include="Miners\cpuminer.cs" />
     <Compile Include="Forms\Form_Main.cs">
       <SubType>Form</SubType>
@@ -241,6 +241,7 @@
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="NiceHashStats.cs" />
+    <Compile Include="PInvoke\PInvokeHelpers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Miners\sgminer.cs" />

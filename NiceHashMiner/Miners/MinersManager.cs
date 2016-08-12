@@ -18,6 +18,7 @@ namespace NiceHashMiner.Miners {
     using GroupedDevices = SortedSet<string>;
     using AllGroupedDevices = List<SortedSet<string>>;
     using NiceHashMiner.Interfaces;
+    using System.Windows.Forms;
     
     
 
@@ -47,11 +48,21 @@ namespace NiceHashMiner.Miners {
 
         IMainFormRatesComunication _mainFormRatesComunication;
 
+        private Timer _preventSleepTimer;
 
         // we save cpu miners string group name
         Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
 
         protected MinersManager() {
+            _preventSleepTimer = new Timer();
+            _preventSleepTimer.Tick += PreventSleepTimer_Tick;
+             // sleep time is minimal 1 minute
+            _preventSleepTimer.Interval = 20 * 1000; // leave this interval, it works
+        }
+
+        private void PreventSleepTimer_Tick(object sender, EventArgs e) {
+            // when mining keep system awake, prevent sleep
+            Helpers.PreventSleep();
         }
 
         public void AddCpuMiner(cpuminer miner, int deviceID, string deviceName) {
@@ -67,6 +78,9 @@ namespace NiceHashMiner.Miners {
             if (_mainFormRatesComunication != null) {
                 _mainFormRatesComunication.ClearRates(-1);
             }
+            // restroe/enable sleep
+            _preventSleepTimer.Stop();
+            Helpers.AllowMonitorPowerdownAndSleep();
         }
 
 
@@ -131,7 +145,7 @@ namespace NiceHashMiner.Miners {
             return TotalRate;
         }
 
-        public void StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
+        public bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
             string miningLocation, string worker) {
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
@@ -142,6 +156,10 @@ namespace NiceHashMiner.Miners {
             _groupedDevicesMiners = new Dictionary<string, GroupMiners>();
             _enabledDevices = new List<ComputeDevice>();
             _currentAllGroupedDevices = new AllGroupedDevices();
+
+
+            // this checks if there are enabled devices and enabled algorithms
+            bool isMiningEnabled = false;
 
             foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
                 if (cdev.Enabled) {
@@ -154,8 +172,24 @@ namespace NiceHashMiner.Miners {
                         CpuGroupMiner cpuGroupMiner = new CpuGroupMiner(gdevs, miner);
                         _groupedDevicesMiners.Add(CalcGroupedDevicesKey(gdevs), cpuGroupMiner);
                     }
+                    // check if any algorithm enabled
+                    if(!isMiningEnabled) {
+                        foreach (var algorithm in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                            if (!algorithm.Value.Skip) {
+                                isMiningEnabled = true;
+                                break;
+                            }
+                        }
+                    }
+
                 }
             }
+
+            if (isMiningEnabled) {
+                _preventSleepTimer.Start();
+            }
+
+            return isMiningEnabled;
         }
 
         /// <summary>

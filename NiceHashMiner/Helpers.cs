@@ -6,30 +6,16 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using NiceHashMiner.Configs;
 using System.Globalization;
+using NiceHashMiner.PInvoke;
 
 namespace NiceHashMiner
 {
-    class Helpers
+    class Helpers : PInvokeHelpers
     {
-        internal struct LASTINPUTINFO
-        {
-            public uint cbSize;
-            public uint dwTime;
-        }
+        
 
         static bool is64BitProcess = (IntPtr.Size == 8);
         static bool is64BitOperatingSystem = is64BitProcess || InternalCheckIsWow64();
-
-        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool IsWow64Process(
-            [In] IntPtr hProcess,
-            [Out] out bool wow64Process
-        );
-
-        [DllImportAttribute("kernel32.dll", EntryPoint = "AllocConsole")]
-        [return: MarshalAsAttribute(UnmanagedType.Bool)]
-        public static extern bool AllocConsole();
 
         public static bool InternalCheckIsWow64()
         {
@@ -78,10 +64,7 @@ namespace NiceHashMiner
         public static void ConsolePrint(string grp, string text, object arg0, object arg1, object arg2)
         {
             ConsolePrint(grp, String.Format(text, arg0, arg1, arg2));
-        }
-
-        [DllImport("User32.dll")]
-        private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);        
+        }    
 
         public static uint GetIdleTime()
         {
