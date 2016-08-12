@@ -49,7 +49,7 @@
             // columnHeader0
             // 
             this.columnHeader0.Text = "Enabled";
-            this.columnHeader0.Width = 63;
+            this.columnHeader0.Width = 98;
             // 
             // columnHeader2
             // 
@@ -61,12 +61,12 @@
             this.columnHeader3.Text = "Device";
             this.columnHeader3.Width = 270;
             // 
-            // DevicesListView
+            // DevicesListViewEnableControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.listViewDevices);
-            this.Name = "DevicesListView";
+            this.Name = "DevicesListViewEnableControl";
             this.Size = new System.Drawing.Size(504, 226);
             this.ResumeLayout(false);
 

@@ -77,7 +77,7 @@ namespace NiceHashMiner.Forms.Components {
                 _currentlySelectedAlgorithm.BenchmarkSpeed = value;
                 // update lvi speed
                 if (_currentlySelectedLvi != null) {
-                    _currentlySelectedLvi.SubItems[3].Text = value.ToString();
+                    _currentlySelectedLvi.SubItems[3].Text = Helpers.FormatSpeedOutput(value);
                 }
             }
         }

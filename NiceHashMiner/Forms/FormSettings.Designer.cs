@@ -80,21 +80,21 @@
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.splitContainerDevicesSettings = new System.Windows.Forms.SplitContainer();
+            this.buttonSubmitHardware = new System.Windows.Forms.Button();
+            this.buttonCheckProfitability = new System.Windows.Forms.Button();
+            this.buttonStopBenchmark = new System.Windows.Forms.Button();
+            this.buttonStartBenchmark = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.splitContainerDevicesSettings = new System.Windows.Forms.SplitContainer();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
             this.devicesListView1 = new NiceHashMiner.Forms.Components.DevicesListView();
             this.deviceSettingsControl1 = new NiceHashMiner.Forms.Components.DeviceSettingsControl();
-            this.label1 = new System.Windows.Forms.Label();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.buttonStartBenchmark = new System.Windows.Forms.Button();
-            this.buttonStopBenchmark = new System.Windows.Forms.Button();
-            this.buttonCheckProfitability = new System.Windows.Forms.Button();
-            this.buttonSubmitHardware = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTabControlButtons)).BeginInit();
             this.splitContainerTabControlButtons.Panel1.SuspendLayout();
             this.splitContainerTabControlButtons.Panel2.SuspendLayout();
@@ -706,10 +706,85 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "All Avaliable devices:";
             // 
+            // splitContainerDevicesSettings
+            // 
+            this.splitContainerDevicesSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.splitContainerDevicesSettings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerDevicesSettings.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainerDevicesSettings.IsSplitterFixed = true;
+            this.splitContainerDevicesSettings.Location = new System.Drawing.Point(3, 3);
+            this.splitContainerDevicesSettings.Name = "splitContainerDevicesSettings";
+            // 
+            // splitContainerDevicesSettings.Panel1
+            // 
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonSubmitHardware);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonCheckProfitability);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonStopBenchmark);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonStartBenchmark);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.benchmarkOptions1);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.devicesListView1);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.deviceSettingsControl1);
+            // 
+            // splitContainerDevicesSettings.Panel2
+            // 
+            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.label1);
+            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.algorithmsListView1);
+            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.algorithmSettingsControl1);
+            this.splitContainerDevicesSettings.Size = new System.Drawing.Size(960, 605);
+            this.splitContainerDevicesSettings.SplitterDistance = 488;
+            this.splitContainerDevicesSettings.TabIndex = 0;
+            // 
+            // buttonSubmitHardware
+            // 
+            this.buttonSubmitHardware.Location = new System.Drawing.Point(214, 98);
+            this.buttonSubmitHardware.Name = "buttonSubmitHardware";
+            this.buttonSubmitHardware.Size = new System.Drawing.Size(132, 23);
+            this.buttonSubmitHardware.TabIndex = 3;
+            this.buttonSubmitHardware.Text = "Submit Hardware";
+            this.buttonSubmitHardware.UseVisualStyleBackColor = true;
+            // 
+            // buttonCheckProfitability
+            // 
+            this.buttonCheckProfitability.Location = new System.Drawing.Point(214, 69);
+            this.buttonCheckProfitability.Name = "buttonCheckProfitability";
+            this.buttonCheckProfitability.Size = new System.Drawing.Size(132, 23);
+            this.buttonCheckProfitability.TabIndex = 3;
+            this.buttonCheckProfitability.Text = "Check Profitability";
+            this.buttonCheckProfitability.UseVisualStyleBackColor = true;
+            // 
+            // buttonStopBenchmark
+            // 
+            this.buttonStopBenchmark.Location = new System.Drawing.Point(214, 40);
+            this.buttonStopBenchmark.Name = "buttonStopBenchmark";
+            this.buttonStopBenchmark.Size = new System.Drawing.Size(132, 23);
+            this.buttonStopBenchmark.TabIndex = 3;
+            this.buttonStopBenchmark.Text = "Stop Benchmark";
+            this.buttonStopBenchmark.UseVisualStyleBackColor = true;
+            // 
+            // buttonStartBenchmark
+            // 
+            this.buttonStartBenchmark.Location = new System.Drawing.Point(214, 11);
+            this.buttonStartBenchmark.Name = "buttonStartBenchmark";
+            this.buttonStartBenchmark.Size = new System.Drawing.Size(132, 23);
+            this.buttonStartBenchmark.TabIndex = 3;
+            this.buttonStartBenchmark.Text = "Start Benchmark";
+            this.buttonStartBenchmark.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(185, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Algorithm settings for selected device:";
+            // 
             // devicesListViewEnableControl1
             // 
+            this.devicesListViewEnableControl1.AutoSaveChange = true;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 19);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(498, 256);
             this.devicesListViewEnableControl1.TabIndex = 0;
             // 
@@ -740,34 +815,6 @@
             this.benchmarkLimitControlAMD.TabIndex = 2;
             this.benchmarkLimitControlAMD.TimeLimits = null;
             // 
-            // splitContainerDevicesSettings
-            // 
-            this.splitContainerDevicesSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.splitContainerDevicesSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerDevicesSettings.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainerDevicesSettings.IsSplitterFixed = true;
-            this.splitContainerDevicesSettings.Location = new System.Drawing.Point(3, 3);
-            this.splitContainerDevicesSettings.Name = "splitContainerDevicesSettings";
-            // 
-            // splitContainerDevicesSettings.Panel1
-            // 
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonSubmitHardware);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonCheckProfitability);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonStopBenchmark);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonStartBenchmark);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.benchmarkOptions1);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.devicesListView1);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.deviceSettingsControl1);
-            // 
-            // splitContainerDevicesSettings.Panel2
-            // 
-            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.label1);
-            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.algorithmsListView1);
-            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.algorithmSettingsControl1);
-            this.splitContainerDevicesSettings.Size = new System.Drawing.Size(960, 605);
-            this.splitContainerDevicesSettings.SplitterDistance = 488;
-            this.splitContainerDevicesSettings.TabIndex = 0;
-            // 
             // benchmarkOptions1
             // 
             this.benchmarkOptions1.Location = new System.Drawing.Point(3, 11);
@@ -791,65 +838,20 @@
             this.deviceSettingsControl1.Size = new System.Drawing.Size(452, 320);
             this.deviceSettingsControl1.TabIndex = 0;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(185, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Algorithm settings for selected device:";
-            // 
             // algorithmsListView1
             // 
             this.algorithmsListView1.ComunicationInterface = null;
             this.algorithmsListView1.Location = new System.Drawing.Point(6, 34);
             this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(455, 287);
+            this.algorithmsListView1.Size = new System.Drawing.Size(455, 313);
             this.algorithmsListView1.TabIndex = 2;
             // 
             // algorithmSettingsControl1
             // 
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(48, 327);
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(48, 353);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
             this.algorithmSettingsControl1.Size = new System.Drawing.Size(413, 245);
             this.algorithmSettingsControl1.TabIndex = 1;
-            // 
-            // buttonStartBenchmark
-            // 
-            this.buttonStartBenchmark.Location = new System.Drawing.Point(214, 11);
-            this.buttonStartBenchmark.Name = "buttonStartBenchmark";
-            this.buttonStartBenchmark.Size = new System.Drawing.Size(132, 23);
-            this.buttonStartBenchmark.TabIndex = 3;
-            this.buttonStartBenchmark.Text = "Start Benchmark";
-            this.buttonStartBenchmark.UseVisualStyleBackColor = true;
-            // 
-            // buttonStopBenchmark
-            // 
-            this.buttonStopBenchmark.Location = new System.Drawing.Point(214, 40);
-            this.buttonStopBenchmark.Name = "buttonStopBenchmark";
-            this.buttonStopBenchmark.Size = new System.Drawing.Size(132, 23);
-            this.buttonStopBenchmark.TabIndex = 3;
-            this.buttonStopBenchmark.Text = "Stop Benchmark";
-            this.buttonStopBenchmark.UseVisualStyleBackColor = true;
-            // 
-            // buttonCheckProfitability
-            // 
-            this.buttonCheckProfitability.Location = new System.Drawing.Point(214, 69);
-            this.buttonCheckProfitability.Name = "buttonCheckProfitability";
-            this.buttonCheckProfitability.Size = new System.Drawing.Size(132, 23);
-            this.buttonCheckProfitability.TabIndex = 3;
-            this.buttonCheckProfitability.Text = "Check Profitability";
-            this.buttonCheckProfitability.UseVisualStyleBackColor = true;
-            // 
-            // buttonSubmitHardware
-            // 
-            this.buttonSubmitHardware.Location = new System.Drawing.Point(214, 98);
-            this.buttonSubmitHardware.Name = "buttonSubmitHardware";
-            this.buttonSubmitHardware.Size = new System.Drawing.Size(132, 23);
-            this.buttonSubmitHardware.TabIndex = 3;
-            this.buttonSubmitHardware.Text = "Submit Hardware";
-            this.buttonSubmitHardware.UseVisualStyleBackColor = true;
             // 
             // FormSettings
             // 

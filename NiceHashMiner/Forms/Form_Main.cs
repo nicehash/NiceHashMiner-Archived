@@ -334,7 +334,7 @@ namespace NiceHashMiner
             ref Label labelRateCurrency,
             string aname, double speed, double paying)
         {
-            labelSpeed.Text = FormatSpeedOutput(speed) + aname;
+            labelSpeed.Text = Helpers.FormatSpeedOutput(speed) + aname;
             labelRateBTC.Text = FormatPayingOutput(paying);
             labelRateCurrency.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
@@ -368,7 +368,7 @@ namespace NiceHashMiner
 
         public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying) {
             string HodlExceptionPostfix = iAPIData.AlgorithmID == AlgorithmType.Hodl ? "**" : "";
-            string speedString = FormatSpeedOutput(iAPIData.Speed) + iAPIData.AlgorithmName + HodlExceptionPostfix;
+            string speedString = Helpers.FormatSpeedOutput(iAPIData.Speed) + iAPIData.AlgorithmName + HodlExceptionPostfix;
             string rateBTCString = FormatPayingOutput(paying);
             string rateCurrencyString = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
@@ -734,21 +734,7 @@ namespace NiceHashMiner
         }
 
 
-        private string FormatSpeedOutput(double speed)
-        {
-            string ret = "";
-
-            if (speed < 1000)
-                ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + " H/s ";
-            else if (speed < 100000)
-                ret = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + " kH/s ";
-            else if (speed < 100000000)
-                ret = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s ";
-            else
-                ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + " GH/s ";
-
-            return ret;
-        }
+        
 
         private string FormatPayingOutput(double paying)
         {

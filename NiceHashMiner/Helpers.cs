@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Microsoft.Win32;
 using NiceHashMiner.Configs;
+using System.Globalization;
 
 namespace NiceHashMiner
 {
@@ -137,6 +138,21 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
             }
+        }
+
+        public static string FormatSpeedOutput(double speed) {
+            string ret = "";
+
+            if (speed < 1000)
+                ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + " H/s ";
+            else if (speed < 100000)
+                ret = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + " kH/s ";
+            else if (speed < 100000000)
+                ret = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s ";
+            else
+                ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + " GH/s ";
+
+            return ret;
         }
     }
 }

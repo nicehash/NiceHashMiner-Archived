@@ -23,17 +23,24 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        public string FirstColumnText {
+            get { return listViewDevices.Columns[ENABLED].Text; }
+            set { if (value != null) listViewDevices.Columns[ENABLED].Text = value; }
+        }
+
         public List<ComputeDeviceEnabledOption> Options { get; private set; }
 
         // to automatically save on enabled click or not
         public bool AutoSaveChange { get; set; }
         public bool SaveToGeneralConfig { get; set; }
+        public bool SetAllEnabled { get; set; }
 
         public DevicesListViewEnableControl() {
             InitializeComponent();
 
             AutoSaveChange = false;
             SaveToGeneralConfig = false;
+            SetAllEnabled = false;
             Options = new List<ComputeDeviceEnabledOption>();
             // intialize ListView callbacks
             listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
@@ -51,9 +58,9 @@ namespace NiceHashMiner.Forms.Components {
                 ListViewItem lvi = new ListViewItem();
                 lvi.SubItems.Add(computeDevice.Group);
                 lvi.SubItems.Add(computeDevice.Name);
-                lvi.Checked = computeDevice.Enabled;
+                lvi.Checked = computeDevice.Enabled || SetAllEnabled;
                 ComputeDeviceEnabledOption newTag = new ComputeDeviceEnabledOption() {
-                    IsEnabled = computeDevice.Enabled,
+                    IsEnabled = computeDevice.Enabled || SetAllEnabled,
                     CDevice = computeDevice
                 };
                 Options.Add(newTag);

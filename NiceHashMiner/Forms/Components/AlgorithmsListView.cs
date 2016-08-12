@@ -14,8 +14,6 @@ using NiceHashMiner.Miners;
 namespace NiceHashMiner.Forms.Components {
     public partial class AlgorithmsListView : UserControl {
 
-        private Miner CurrentlyBenchmarking;
-
         public interface IAlgorithmsListView {
             void SetCurrentlySelected(ListViewItem lvi);
             void HandleCheck(ListViewItem lvi);
@@ -30,10 +28,9 @@ namespace NiceHashMiner.Forms.Components {
 
         public IAlgorithmsListView ComunicationInterface { get; set; }
 
-        private static Color DisabledColor = Color.DarkGray;
-        private static Color BenchmarkingColor = Color.LightGreen;
-
-        List<DeviceBenchmarkConfig> _benchmarkConfigs;
+        private static Color _disabledColor = Color.DarkGray;
+        private static Color _benchmarkedColor = Color.LightGreen;
+        private static Color _unbenchmarkedColor = Color.LightBlue;
 
         public void SetAlgorithms(DeviceBenchmarkConfig benchmarkConfig) {
             SetAlgorithms(new List<DeviceBenchmarkConfig>() { benchmarkConfig });
@@ -41,154 +38,40 @@ namespace NiceHashMiner.Forms.Components {
 
         public void SetAlgorithms(List<DeviceBenchmarkConfig> benchmarkConfigs) {
             listViewAlgorithms.Items.Clear();
-            _benchmarkConfigs = benchmarkConfigs;
             bool switchColor = false;
             foreach (var config in benchmarkConfigs) {
                 foreach (var alg in config.AlgorithmSettings) {
                     ListViewItem lvi = new ListViewItem();
                     lvi.Checked = !alg.Value.Skip;
-                    if (switchColor) {
-                        lvi.BackColor = Color.LightBlue;
-                    }
                     lvi.SubItems.Add(config.DeviceName);
                     ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
 
                     //sub.Tag = alg.Value;
                     if (alg.Value.BenchmarkSpeed > 0) {
-                        //lvi.SubItems.Add(m.PrintSpeed(alg.Value.BenchmarkSpeed));
-                        lvi.SubItems.Add(alg.Value.BenchmarkSpeed.ToString());
+                        lvi.SubItems.Add(Helpers.FormatSpeedOutput(alg.Value.BenchmarkSpeed));
+
                     } else {
                         lvi.SubItems.Add("none");
                     }
                     lvi.Tag = alg.Value;
+                    LviSetColor(ref lvi);
                     listViewAlgorithms.Items.Add(lvi);
                 }
                 switchColor = !switchColor;
             }
         }
 
-        
-        public void testMe() {
-            StartBenchmark();
-        }
-
-        int _bechmarkCurrentIndex = 0;
-
-        void StartBenchmark() {
-            _bechmarkCurrentIndex = -1;
-            GreyAll();
-            NextBenchmark();
-        }
-
-        void NextBenchmark() {
-            ++_bechmarkCurrentIndex;
-            if (_bechmarkCurrentIndex >= listViewAlgorithms.Items.Count) {
-                EndBenchmark();
-                return;
-            }
-
-            int benchConfigIndex = 0;
-            // get benchConfigIndex scope
-            {
-                int sum = 0;
-                foreach (var config in _benchmarkConfigs) {
-                    sum += config.AlgorithmSettings.Count;
-                    if (sum > _bechmarkCurrentIndex) {
-                        break;
-                    }
-                    ++benchConfigIndex;
-                }
-            }
-            var currentConfig = _benchmarkConfigs[benchConfigIndex];
-            var lvi = listViewAlgorithms.Items[_bechmarkCurrentIndex];
-            var benchAlgorithm = lvi.Tag as Algorithm;
-            //CurrentlyBenchmarking = MinersManager.Instance.CreateMiner(currentConfig.DeviceGroupType, benchAlgorithm.NiceHashID);
-            CurrentlyBenchmarking = MinersManager.CreateMiner(currentConfig.DeviceGroupType, benchAlgorithm.NiceHashID);
-            // TODO make skipp option for already benchmarked
-            if (CurrentlyBenchmarking != null && benchAlgorithm != null && !benchAlgorithm.Skip) {
-                // TODO refactor this mess
-                CurrentlyBenchmarking.SetCDevs(
-                    new string[] { ComputeDevice.GetEnabledDeviceUUIDForName(currentConfig.DeviceName) }
-                );
-                // TODO time
-                CurrentlyBenchmarking.BenchmarkStart(currentConfig, benchAlgorithm, 5, BenchmarkCompleted, lvi);
-            } else {
-                NextBenchmark();
-            }
-
-            MarkBenchColorComplete(_bechmarkCurrentIndex - 1);
-            MarkBenchColorInProgress(_bechmarkCurrentIndex);
-        }
-
-        void EndBenchmark() {
-            SplitGroupColors();
-        }
-
-        private void BenchmarkCompleted(bool success, string text, object tag) {
-            if (this.InvokeRequired) {
-                BenchmarkComplete d = new BenchmarkComplete(BenchmarkCompleted);
-                this.Invoke(d, new object[] { success, text, tag });
-            } else {
-                //inBenchmark = false;
-                //CurrentlyBenchmarking = null;
-
-                ListViewItem lvi = tag as ListViewItem;
-                lvi.SubItems[3].Text = text;
-
-                // initiate new benchmark
-                //InitiateBenchmark();
-                NextBenchmark();
-            }
-        }
-
-        private void GreyAll() {
-            for (int i = 0; i < listViewAlgorithms.Items.Count; ++i) {
-                listViewAlgorithms.Items[i].BackColor = DisabledColor;
-            }
-        }
-
-        private void MarkBenchColorComplete(int index) {
-            if (index >= 0 && index < listViewAlgorithms.Items.Count) {
-                listViewAlgorithms.Items[index].BackColor = Color.LightBlue;
-            }
-        }
-        private void MarkBenchColorInProgress(int index) {
-            if (index >= 0 && index < listViewAlgorithms.Items.Count) {
-                listViewAlgorithms.Items[index].BackColor = Color.LightGreen;
-            }
-        }
-
-        private void SplitGroupColors() {
-            bool switchColor = false;
-            int currentIndex = 0;
-            foreach (var config in _benchmarkConfigs) {
-                foreach (var alg in config.AlgorithmSettings) {
-
-                    if (switchColor) {
-                        listViewAlgorithms.Items[currentIndex].BackColor = Color.LightBlue;
-                    } else {
-                        listViewAlgorithms.Items[currentIndex].BackColor = Color.White;
-                    }
-                    ++currentIndex;
-                }
-                switchColor = !switchColor;
-            }
-        }
-
-        private void disableAllBut(int index) {
-            for (int i = 0; i < listViewAlgorithms.Items.Count; ++i) {
-                if (i != index) {
-                    listViewAlgorithms.Items[i].BackColor = DisabledColor;
-                    //listViewAlgorithms.Items[i].Selected = false;
+        private void LviSetColor(ref ListViewItem lvi) {
+            Algorithm algorithm = lvi.Tag as Algorithm;
+            if (algorithm != null) {
+                if (algorithm.Skip) {
+                    lvi.BackColor = _disabledColor;
+                } else if (algorithm.BenchmarkSpeed > 0) {
+                    lvi.BackColor = _benchmarkedColor;
                 } else {
-                    listViewAlgorithms.Items[i].BackColor = BenchmarkingColor;
-                    if (ComunicationInterface != null) {
-                        ComunicationInterface.SetCurrentlySelected(listViewAlgorithms.Items[i]);
-                    }
-                    //listViewAlgorithms.Items[i].Selected = true;
+                    lvi.BackColor = _unbenchmarkedColor;
                 }
             }
-            //listViewAlgorithms.Select();
         }
 
         #region Callbacks Events
@@ -206,6 +89,8 @@ namespace NiceHashMiner.Forms.Components {
                 }
                 ComunicationInterface.HandleCheck(e.Item);
             }
+            var lvi = e.Item as ListViewItem;
+            LviSetColor(ref lvi);
         }
         #endregion //Callbacks Events
 

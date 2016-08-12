@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -62,6 +63,17 @@ namespace NiceHashMiner.Configs
             }
         }
         #endregion PROPERTIES
+
+        public int GetBenchamrktime(BenchmarkPerformanceType benchmarkPerformanceType, DeviceGroupType deviceGroupType) {
+            if (deviceGroupType == DeviceGroupType.CPU) {
+                return CPU[(int)benchmarkPerformanceType];
+            }
+            if (deviceGroupType == DeviceGroupType.AMD_OpenCL) {
+                return AMD[(int)benchmarkPerformanceType];
+            }
+
+            return NVIDIA[(int)benchmarkPerformanceType];
+        }
 
     }
 }
