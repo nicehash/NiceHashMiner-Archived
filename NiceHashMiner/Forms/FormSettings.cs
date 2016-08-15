@@ -555,7 +555,6 @@ namespace NiceHashMiner.Forms {
                 ConfigManager.Instance.GeneralConfig.Commit();
                 ConfigManager.Instance.CommitBenchmarks();
                 devicesListViewEnableControl1.SaveOptions();
-                Config.Commit();
                 International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
             } else if (IsChange) {
                 ConfigManager.Instance.GeneralConfig = _generalConfigBackup;

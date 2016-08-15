@@ -40,9 +40,9 @@ namespace NiceHashMiner
         
         public AlgorithmType CurrentAlgorithmType { get; protected set; }
         private Algorithm _currentMiningAlgorithm;
-        public Algorithm CurrentMiningAlgorithm {
+        protected Algorithm CurrentMiningAlgorithm {
             get { return _currentMiningAlgorithm; }
-            protected set {
+            set {
                 if (value == null) {
                     CurrentAlgorithmType = AlgorithmType.NONE;
                 } else {
@@ -60,15 +60,27 @@ namespace NiceHashMiner
         public bool StartingUpDelay;
         protected string Path;
 
+        // remove ether devices
         protected int[] EtherDevices;
         protected string WorkingDirectory;
         protected NiceHashProcess ProcessHandle;
         protected BenchmarkComplete OnBenchmarkComplete;
         protected object BenchmarkTag;
-        protected AlgorithmType BenchmarkKey;
-        Algorithm BenchmarkAlgorithm = null;
+        protected AlgorithmType CurrentBenchmarkAlgorithmType { get; private set; }
+        private Algorithm _benchmarkAlgorithm;
+        protected Algorithm BenchmarkAlgorithm {
+            get { return _benchmarkAlgorithm; }
+            set {
+                if (value == null) {
+                    CurrentBenchmarkAlgorithmType = AlgorithmType.NONE;
+                } else {
+                    CurrentBenchmarkAlgorithmType = value.NiceHashID;
+                }
+                _benchmarkAlgorithm = value;
+            }
+        }
         protected int BenchmarkTime;
-        protected string LastCommandLine;
+        protected string LastCommandLine { get; set; }
         protected double PreviousTotalMH;
 
         
@@ -208,7 +220,6 @@ namespace NiceHashMiner
 
             BenchmarkTag = tag;
             BenchmarkAlgorithm = algorithm;
-            CurrentAlgorithmType = algorithm.NiceHashID; // find a way to decouple this as well
             BenchmarkTime = time;
 
             string CommandLine = BenchmarkCreateCommandLine(benchmarkConfig, algorithm, time);
@@ -221,10 +232,9 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerDeviceName, "Starting benchmark: " + CommandLine);
 
             Process BenchmarkHandle = new Process();
-            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
-                BenchmarkHandle.StartInfo.FileName = Ethereum.EtherMinerPath;
-            else
-                BenchmarkHandle.StartInfo.FileName = Path;
+            
+            BenchmarkHandle.StartInfo.FileName = GetOptimizedMinerPath(BenchmarkAlgorithm.NiceHashID);
+
             BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;
             BenchmarkHandle.StartInfo.UseShellExecute = false;
             BenchmarkHandle.StartInfo.RedirectStandardError = true;
@@ -360,28 +370,85 @@ namespace NiceHashMiner
             }
         }
 
+        //virtual protected bool BenchmarkParseLine(string outdata) {
+        //    // parse line
+        //    if (outdata.Contains("Benchmark: ") && outdata.Contains("/s")) {
+        //        int i = outdata.IndexOf("Benchmark:");
+        //        int k = outdata.IndexOf("/s");
+        //        string hashspeed = outdata.Substring(i + 11, k - i - 9);
+        //        Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
+
+        //        // save speed
+        //        int b = hashspeed.IndexOf(" ");
+        //        double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
+        //        if (hashspeed.Contains("kH/s"))
+        //            spd *= 1000;
+        //        else if (hashspeed.Contains("MH/s"))
+        //            spd *= 1000000;
+        //        else if (hashspeed.Contains("GH/s"))
+        //            spd *= 1000000000;
+        //        BenchmarkAlgorithm.BenchmarkSpeed = spd;
+
+        //        OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
+        //        return true;
+        //    } else if (outdata.Contains("Average hashrate:") && outdata.Contains("/s")) {
+        //        int i = outdata.IndexOf(": ");
+        //        int k = outdata.IndexOf("/s");
+
+        //        // save speed
+        //        string hashSpeed = outdata.Substring(i + 2, k - i + 2);
+        //        Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashSpeed);
+
+        //        hashSpeed = hashSpeed.Substring(0, hashSpeed.IndexOf(" "));
+        //        double speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
+
+        //        if (outdata.Contains("Kilohash"))
+        //            speed *= 1000;
+        //        else if (outdata.Contains("Megahash"))
+        //            speed *= 1000000;
+
+        //        BenchmarkAlgorithm.BenchmarkSpeed = speed;
+
+        //        OnBenchmarkComplete(true, PrintSpeed(speed), BenchmarkTag);
+        //        return true;
+        //    } else if (outdata.Contains("min/mean/max:")) {
+        //        string[] splt = outdata.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+        //        int index = Array.IndexOf(splt, "mean");
+        //        double avg_spd = Convert.ToDouble(splt[index + 2]);
+        //        Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + avg_spd + "H/s");
+
+        //        BenchmarkAlgorithm.BenchmarkSpeed = avg_spd;
+
+        //        OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+
         virtual protected bool BenchmarkParseLine(string outdata) {
-            // parse line
-            if (outdata.Contains("Benchmark: ") && outdata.Contains("/s")) {
-                int i = outdata.IndexOf("Benchmark:");
-                int k = outdata.IndexOf("/s");
-                string hashspeed = outdata.Substring(i + 11, k - i - 9);
-                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
+            //// parse line
+            //if (outdata.Contains("Benchmark: ") && outdata.Contains("/s")) {
+            //    int i = outdata.IndexOf("Benchmark:");
+            //    int k = outdata.IndexOf("/s");
+            //    string hashspeed = outdata.Substring(i + 11, k - i - 9);
+            //    Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
 
-                // save speed
-                int b = hashspeed.IndexOf(" ");
-                double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
-                if (hashspeed.Contains("kH/s"))
-                    spd *= 1000;
-                else if (hashspeed.Contains("MH/s"))
-                    spd *= 1000000;
-                else if (hashspeed.Contains("GH/s"))
-                    spd *= 1000000000;
-                BenchmarkAlgorithm.BenchmarkSpeed = spd;
+            //    // save speed
+            //    int b = hashspeed.IndexOf(" ");
+            //    double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
+            //    if (hashspeed.Contains("kH/s"))
+            //        spd *= 1000;
+            //    else if (hashspeed.Contains("MH/s"))
+            //        spd *= 1000000;
+            //    else if (hashspeed.Contains("GH/s"))
+            //        spd *= 1000000000;
+            //    BenchmarkAlgorithm.BenchmarkSpeed = spd;
 
-                OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
-                return true;
-            } else if (outdata.Contains("Average hashrate:") && outdata.Contains("/s")) {
+            //    OnBenchmarkComplete(true, PrintSpeed(spd), BenchmarkTag);
+            //    return true;
+            //} else 
+            if (outdata.Contains("Average hashrate:") && outdata.Contains("/s")) {
                 int i = outdata.IndexOf(": ");
                 int k = outdata.IndexOf("/s");
 
@@ -401,20 +468,13 @@ namespace NiceHashMiner
 
                 OnBenchmarkComplete(true, PrintSpeed(speed), BenchmarkTag);
                 return true;
-            } else if (outdata.Contains("min/mean/max:")) {
-                string[] splt = outdata.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                int index = Array.IndexOf(splt, "mean");
-                double avg_spd = Convert.ToDouble(splt[index + 2]);
-                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + avg_spd + "H/s");
-
-                BenchmarkAlgorithm.BenchmarkSpeed = avg_spd;
-
-                OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
-                return true;
             }
 
-            return false;
+
+            return BenchmarkParseLineImpl(outdata);
         }
+
+        abstract protected bool BenchmarkParseLineImpl(string outdata);
 
         // returns stdout and stderr
         private string[] BenchmarkGetConsoleOutputLine(Process BenchmarkHandle) {
@@ -438,6 +498,10 @@ namespace NiceHashMiner
             return "x";
         }
 
+        virtual protected int CalculateNumRetries() {
+            return ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
+        }
+
         virtual protected NiceHashProcess _Start()
         {
             PreviousTotalMH = 0.0;
@@ -450,9 +514,7 @@ namespace NiceHashMiner
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
             }
 
-            NumRetries = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
-            if (this is sgminer && !IsCurrentAlgo(AlgorithmType.DaggerHashimoto))
-                NumRetries = (ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds + ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD) / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
+            NumRetries = CalculateNumRetries();
 
             P.StartInfo.FileName = Path;
             P.ExitEvent = Miner_Exited;
@@ -491,11 +553,9 @@ namespace NiceHashMiner
         //}
 
 
-        virtual public void Restart()
-        {
+        virtual public void Restart() {
             Helpers.ConsolePrint(MinerDeviceName, "Restarting miner..");
             Stop(true); // stop miner first
-            if (this is sgminer) StartingUpDelay = true;
             ProcessHandle = _Start(); // start with old command line
         }
 
@@ -624,11 +684,6 @@ namespace NiceHashMiner
 
         //    return MaxProfitIndex;
         //}
-
-        // todo remove
-        public bool IsCurrentAlgo(AlgorithmType algorithmType) {
-            return CurrentAlgorithmType == algorithmType;
-        }
 
         //// TODO replace this
         // TODO IMPORTANT put this in the DeviceQuery Manager

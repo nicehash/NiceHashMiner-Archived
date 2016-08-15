@@ -10,6 +10,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms.Components {
     public partial class AlgorithmsListView : UserControl {
@@ -19,18 +20,34 @@ namespace NiceHashMiner.Forms.Components {
             void HandleCheck(ListViewItem lvi);
         }
 
+        public IAlgorithmsListView ComunicationInterface { get; set; }
+
+        private class DefaultAlgorithmColorSeter : IListItemCheckColorSetter {
+            private static Color DISABLED_COLOR = Color.DarkGray;
+            private static Color BENCHMARKED_COLOR = Color.LightGreen;
+            private static Color UNBENCHMARKED_COLOR = Color.LightBlue;
+            public void LviSetColor(ref ListViewItem lvi) {
+                Algorithm algorithm = lvi.Tag as Algorithm;
+                if (algorithm != null) {
+                    if (algorithm.Skip) {
+                        lvi.BackColor = DISABLED_COLOR;
+                    } else if (algorithm.BenchmarkSpeed > 0) {
+                        lvi.BackColor = BENCHMARKED_COLOR;
+                    } else {
+                        lvi.BackColor = UNBENCHMARKED_COLOR;
+                    }
+                }
+            }
+        }
+
+        IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultAlgorithmColorSeter();
+
         public AlgorithmsListView() {
             InitializeComponent();
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(listViewAlgorithms_ItemSelectionChanged);
             listViewAlgorithms.ItemChecked += new ItemCheckedEventHandler(listViewAlgorithms_ItemChecked);
         }
-
-        public IAlgorithmsListView ComunicationInterface { get; set; }
-
-        private static Color _disabledColor = Color.DarkGray;
-        private static Color _benchmarkedColor = Color.LightGreen;
-        private static Color _unbenchmarkedColor = Color.LightBlue;
 
         public void SetAlgorithms(DeviceBenchmarkConfig benchmarkConfig) {
             SetAlgorithms(new List<DeviceBenchmarkConfig>() { benchmarkConfig });
@@ -54,23 +71,10 @@ namespace NiceHashMiner.Forms.Components {
                         lvi.SubItems.Add("none");
                     }
                     lvi.Tag = alg.Value;
-                    LviSetColor(ref lvi);
+                    _listItemCheckColorSetter.LviSetColor(ref lvi);
                     listViewAlgorithms.Items.Add(lvi);
                 }
                 switchColor = !switchColor;
-            }
-        }
-
-        private void LviSetColor(ref ListViewItem lvi) {
-            Algorithm algorithm = lvi.Tag as Algorithm;
-            if (algorithm != null) {
-                if (algorithm.Skip) {
-                    lvi.BackColor = _disabledColor;
-                } else if (algorithm.BenchmarkSpeed > 0) {
-                    lvi.BackColor = _benchmarkedColor;
-                } else {
-                    lvi.BackColor = _unbenchmarkedColor;
-                }
             }
         }
 
@@ -90,7 +94,7 @@ namespace NiceHashMiner.Forms.Components {
                 ComunicationInterface.HandleCheck(e.Item);
             }
             var lvi = e.Item as ListViewItem;
-            LviSetColor(ref lvi);
+            _listItemCheckColorSetter.LviSetColor(ref lvi);
         }
         #endregion //Callbacks Events
 

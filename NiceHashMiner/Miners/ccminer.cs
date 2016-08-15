@@ -21,7 +21,6 @@ namespace NiceHashMiner.Miners
         {
             //if (ProcessHandle != null) return; // ignore, already running 
 
-            //Algorithm miningAlgorithm = null;// GetMinerAlgorithm(algorithmType);
             CurrentMiningAlgorithm = miningAlgorithm;
             if (miningAlgorithm == null) return;
 
@@ -221,6 +220,17 @@ namespace NiceHashMiner.Miners
 
             return CommandLine;
         }
+
+        protected override bool BenchmarkParseLineImpl(string outdata) {
+            double lastSpeed = 0;
+            if (double.TryParse(outdata, out lastSpeed)) {
+                BenchmarkAlgorithm.BenchmarkSpeed = lastSpeed;
+                OnBenchmarkComplete(true, PrintSpeed(lastSpeed), BenchmarkTag);
+                return true;
+            }
+            return false;
+        }
+
         #endregion // Decoupled benchmarking routines
 
         public override APIData GetSummary() {

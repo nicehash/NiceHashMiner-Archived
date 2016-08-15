@@ -22,6 +22,7 @@ namespace NiceHashMiner.Forms {
         private List<Tuple<ComputeDevice, Queue<Algorithm>>> _benchmarkDevicesAlgorithmQueue;
         private ComputeDevice _currentDevice;
         private Algorithm _currentAlgorithm;
+        private bool _isNothingToBenchmark = false;
 
         BenchmarkPerformanceType _benchmarkPerformanceType;
 
@@ -42,6 +43,8 @@ namespace NiceHashMiner.Forms {
             // benchmark only unique devices
             devicesListViewEnableControl1.SetAllEnabled = true;
             devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.UniqueAvaliableDevices);
+
+            InitLocale();
         }
 
         private void InitLocale() {
@@ -52,39 +55,55 @@ namespace NiceHashMiner.Forms {
 
             // TODO fix locale for benchmark enabled label
             devicesListViewEnableControl1.InitLocale();
+            benchmarkOptions1.InitLocale();
         }
 
         private void StartStopBtn_Click(object sender, EventArgs e) {
 
             if (_inBenchmark) {
-                _inBenchmark = false;
-            } else {
-                _benchmarkAlgorithmsCount = 0;
-                bool noneSelected = true;
-                _benchmarkDevicesAlgorithmQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
-                foreach (var option in devicesListViewEnableControl1.Options) {
-                    if (option.IsEnabled) {
-                        noneSelected = false;
-                        var algorithmQueue = new Queue<Algorithm>();
-                        foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
-                            if(ShoulBenchmark(kvpAlgorithm.Value)) {
-                                ++_benchmarkAlgorithmsCount;
-                                algorithmQueue.Enqueue(kvpAlgorithm.Value);
-                            }
-                        }
-                        _benchmarkDevicesAlgorithmQueue.Add(
-                            new Tuple<ComputeDevice, Queue<Algorithm>>(option.CDevice, algorithmQueue)
-                            );
-                    }
-                }
-                if (noneSelected && _benchmarkAlgorithmsCount != 0) {
-                    // TODO msg box none selected
-                    return;
-                }
-
-                BenchmarkProgressBar.Maximum = _benchmarkAlgorithmsCount;
-                StartBenchmark();
+                StopButonClick();
+                StartStopBtn.Text = International.GetText("form2_buttonStartBenchmark");
+            } else if (StartButonClick()) {
+                StartStopBtn.Text = International.GetText("form2_buttonStopBenchmark");
             }
+        }
+
+        private void StopButonClick() {
+            _inBenchmark = false;
+            if (_currentMiner != null) {
+                _currentMiner.BenchmarkSignalQuit = true;
+            }
+
+        }
+
+        private bool StartButonClick() {
+            _benchmarkAlgorithmsCount = 0;
+            bool noneSelected = true;
+            _benchmarkDevicesAlgorithmQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
+            foreach (var option in devicesListViewEnableControl1.Options) {
+                if (option.IsEnabled) {
+                    noneSelected = false;
+                    var algorithmQueue = new Queue<Algorithm>();
+                    foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
+                        if (ShoulBenchmark(kvpAlgorithm.Value)) {
+                            ++_benchmarkAlgorithmsCount;
+                            algorithmQueue.Enqueue(kvpAlgorithm.Value);
+                        }
+                    }
+                    _benchmarkDevicesAlgorithmQueue.Add(
+                        new Tuple<ComputeDevice, Queue<Algorithm>>(option.CDevice, algorithmQueue)
+                        );
+                }
+            }
+            if (noneSelected && _benchmarkAlgorithmsCount != 0) {
+                // TODO msg box none selected
+                return false;
+            }
+
+            BenchmarkProgressBar.Maximum = _benchmarkAlgorithmsCount;
+            StartBenchmark();
+
+            return true;
         }
 
         private bool ShoulBenchmark(Algorithm algorithm) {
@@ -159,7 +178,6 @@ namespace NiceHashMiner.Forms {
 
         void EndBenchmark() {
             _inBenchmark = false;
-            //SplitGroupColors();
         }
 
         private void BenchmarkCompleted(bool success, string text, object tag) {

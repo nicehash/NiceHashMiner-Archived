@@ -181,6 +181,7 @@
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IPathsProperties.cs" />

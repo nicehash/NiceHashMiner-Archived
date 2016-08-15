@@ -216,6 +216,11 @@ namespace NiceHashMiner.Miners
 
             return BenchmarkHandle;
         }
+
+        protected override bool BenchmarkParseLineImpl(string outdata) {
+            throw new NotImplementedException();
+        }
+
         #endregion // Decoupled benchmarking routines
     }
 }

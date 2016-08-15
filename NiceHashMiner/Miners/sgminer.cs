@@ -55,6 +55,15 @@ namespace NiceHashMiner.Miners
             return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
         }
 
+        protected override int CalculateNumRetries() {
+            return (ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds + ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD) / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
+        }
+
+        public override void Restart() {
+            StartingUpDelay = true;
+            base.Restart();
+        }
+
         protected void AddPotentialCDev(string text)
         {
             // get number of platform devices to be used to detect card's code name
@@ -411,6 +420,11 @@ namespace NiceHashMiner.Miners
 
             return CommandLine;
         }
+
+        protected override bool BenchmarkParseLineImpl(string outdata) {
+            throw new NotImplementedException();
+        }
+
         #endregion // Decoupled benchmarking routines
 
         public override APIData GetSummary() {

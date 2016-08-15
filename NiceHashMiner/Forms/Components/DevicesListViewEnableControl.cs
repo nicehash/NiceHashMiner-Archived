@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms.Components {
     public partial class DevicesListViewEnableControl : UserControl {
@@ -14,6 +15,23 @@ namespace NiceHashMiner.Forms.Components {
         private const int ENABLED = 0;
         private const int GROUP = 1;
         private const int DEVICE = 2;
+
+        private class DefaultDevicesColorSeter : IListItemCheckColorSetter {
+            private static Color ENABLED_COLOR = Color.White;
+            private static Color DISABLED_COLOR = Color.DarkGray;
+            public void LviSetColor(ref ListViewItem lvi) {
+                ComputeDeviceEnabledOption cdvo = lvi.Tag as ComputeDeviceEnabledOption;
+                if (cdvo != null) {
+                    if(cdvo.IsEnabled) {
+                        lvi.BackColor = ENABLED_COLOR;
+                    } else {
+                        lvi.BackColor = DISABLED_COLOR;
+                    }
+                }
+            }
+        }
+
+        IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultDevicesColorSeter();
 
         public class ComputeDeviceEnabledOption {
             public bool IsEnabled { get; set; }
@@ -66,6 +84,7 @@ namespace NiceHashMiner.Forms.Components {
                 Options.Add(newTag);
                 lvi.Tag = newTag;
                 listViewDevices.Items.Add(lvi);
+                _listItemCheckColorSetter.LviSetColor(ref lvi);
             }
             // reset properties
             AutoSaveChange = tmp_AutoSaveChange;
@@ -93,6 +112,8 @@ namespace NiceHashMiner.Forms.Components {
             if (SaveToGeneralConfig) {
                 ConfigManager.Instance.GeneralConfig.Commit();
             }
+            var lvi = e.Item as ListViewItem;
+            if (lvi != null) _listItemCheckColorSetter.LviSetColor(ref lvi);
         }
 
         public void SaveOptions() {

@@ -108,7 +108,7 @@ namespace NiceHashMiner.Miners {
 
         protected override NiceHashProcess _Start() {
             // check if dagger already running
-            if (IsCurrentAlgo(AlgorithmType.DaggerHashimoto) && ProcessHandle != null) {
+            if (AlgorithmType.DaggerHashimoto == CurrentAlgorithmType && ProcessHandle != null) {
                 Helpers.ConsolePrint(MinerDeviceName, "Resuming ethminer..");
                 ethminerLink.StartMining();
                 IsRunning = true;
@@ -148,6 +148,22 @@ namespace NiceHashMiner.Miners {
         protected override bool IsGroupQueryEnabled() {
             // stub
             return true;
+        }
+
+        protected override bool BenchmarkParseLineImpl(string outdata) {
+            if (outdata.Contains("min/mean/max:")) {
+                string[] splt = outdata.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                int index = Array.IndexOf(splt, "mean");
+                double avg_spd = Convert.ToDouble(splt[index + 2]);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + avg_spd + "H/s");
+
+                BenchmarkAlgorithm.BenchmarkSpeed = avg_spd;
+
+                OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
+                return true;
+            }
+
+            return false;
         }
 
     }
