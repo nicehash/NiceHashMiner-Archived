@@ -138,7 +138,7 @@ namespace NiceHashMiner.Miners {
         }
 
         // methods not really used just as stub to satisfy 
-        protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
+        public override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
             return Ethereum.EtherMinerPath;
         }
         // stubs
@@ -150,7 +150,7 @@ namespace NiceHashMiner.Miners {
             return true;
         }
 
-        protected override bool BenchmarkParseLineImpl(string outdata) {
+        protected override bool BenchmarkParseLine(string outdata) {
             if (outdata.Contains("min/mean/max:")) {
                 string[] splt = outdata.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                 int index = Array.IndexOf(splt, "mean");
@@ -158,12 +158,14 @@ namespace NiceHashMiner.Miners {
                 Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + avg_spd + "H/s");
 
                 BenchmarkAlgorithm.BenchmarkSpeed = avg_spd;
-
-                OnBenchmarkComplete(true, PrintSpeed(avg_spd), BenchmarkTag);
                 return true;
             }
 
             return false;
+        }
+
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+            CheckOutdata(outdata);
         }
 
     }

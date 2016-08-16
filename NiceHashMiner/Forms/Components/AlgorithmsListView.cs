@@ -26,7 +26,7 @@ namespace NiceHashMiner.Forms.Components {
             private static Color DISABLED_COLOR = Color.DarkGray;
             private static Color BENCHMARKED_COLOR = Color.LightGreen;
             private static Color UNBENCHMARKED_COLOR = Color.LightBlue;
-            public void LviSetColor(ref ListViewItem lvi) {
+            public void LviSetColor(ListViewItem lvi) {
                 Algorithm algorithm = lvi.Tag as Algorithm;
                 if (algorithm != null) {
                     if (algorithm.Skip) {
@@ -71,7 +71,7 @@ namespace NiceHashMiner.Forms.Components {
                         lvi.SubItems.Add("none");
                     }
                     lvi.Tag = alg.Value;
-                    _listItemCheckColorSetter.LviSetColor(ref lvi);
+                    _listItemCheckColorSetter.LviSetColor(lvi);
                     listViewAlgorithms.Items.Add(lvi);
                 }
                 switchColor = !switchColor;
@@ -94,7 +94,7 @@ namespace NiceHashMiner.Forms.Components {
                 ComunicationInterface.HandleCheck(e.Item);
             }
             var lvi = e.Item as ListViewItem;
-            _listItemCheckColorSetter.LviSetColor(ref lvi);
+            _listItemCheckColorSetter.LviSetColor(lvi);
         }
         #endregion //Callbacks Events
 

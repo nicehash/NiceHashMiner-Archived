@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Interfaces {
-    interface IListItemCheckColorSetter {
-        void LviSetColor(ref ListViewItem lvi);
+    public interface IListItemCheckColorSetter {
+        void LviSetColor(ListViewItem lvi);
     }
 }

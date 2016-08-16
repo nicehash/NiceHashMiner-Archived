@@ -9,9 +9,10 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms {
-    public partial class FormBenchmark_New : Form {
+    public partial class FormBenchmark_New : Form, IListItemCheckColorSetter {
 
         private bool _inBenchmark = false;
         private int _bechmarkCurrentIndex = 0;
@@ -20,11 +21,16 @@ namespace NiceHashMiner.Forms {
         private AlgorithmBenchmarkSettings _algorithmOption = AlgorithmBenchmarkSettings.SelectedUnbenchmarkedAlgorithms;
         private Miner _currentMiner;
         private List<Tuple<ComputeDevice, Queue<Algorithm>>> _benchmarkDevicesAlgorithmQueue;
+
+        private enum BenchmarkSettingsStatus : int {
+            NONE = 0,
+            TODO,
+            DISABLED_NONE,
+            DISABLED_TODO
+        }
+        private Dictionary<string, BenchmarkSettingsStatus> _benchmarkDevicesAlgorithmStatus;
         private ComputeDevice _currentDevice;
         private Algorithm _currentAlgorithm;
-        private bool _isNothingToBenchmark = false;
-
-        BenchmarkPerformanceType _benchmarkPerformanceType;
 
         private string CurrentAlgoName;
 
@@ -35,14 +41,48 @@ namespace NiceHashMiner.Forms {
             AllAlgorithms
         }
 
+        private static Color DISABLED_COLOR = Color.DarkGray;
+        private static Color BENCHMARKED_COLOR = Color.LightGreen;
+        private static Color UNBENCHMARKED_COLOR = Color.LightBlue;
+        public void LviSetColor(ListViewItem lvi) {
+            var cdvo = lvi.Tag as NiceHashMiner.Forms.Components.DevicesListViewEnableControl.ComputeDeviceEnabledOption;
+            if (cdvo != null && _benchmarkDevicesAlgorithmStatus != null) {
+                var uuid = cdvo.CDevice.UUID;
+                if (!cdvo.IsEnabled) {
+                    lvi.BackColor = DISABLED_COLOR;
+                } else {
+                    switch (_benchmarkDevicesAlgorithmStatus[uuid]) {
+                        case BenchmarkSettingsStatus.TODO:
+                        case BenchmarkSettingsStatus.DISABLED_TODO:
+                            lvi.BackColor = UNBENCHMARKED_COLOR;
+                            break;
+                        case BenchmarkSettingsStatus.NONE:
+                        case BenchmarkSettingsStatus.DISABLED_NONE:
+                            lvi.BackColor = BENCHMARKED_COLOR;
+                            break;
+                    }
+                }
+                //// enable disable status, NOT needed
+                //if (cdvo.IsEnabled && _benchmarkDevicesAlgorithmStatus[uuid] >= BenchmarkSettingsStatus.DISABLED_NONE) {
+                //    _benchmarkDevicesAlgorithmStatus[uuid] -= 2;
+                //} else if (!cdvo.IsEnabled && _benchmarkDevicesAlgorithmStatus[uuid] <= BenchmarkSettingsStatus.TODO) {
+                //    _benchmarkDevicesAlgorithmStatus[uuid] += 2;
+                //}
+            }
+        }
+
         public FormBenchmark_New(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard) {
             InitializeComponent();
 
-            _benchmarkPerformanceType = benchmarkPerformanceType;
+            benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
 
             // benchmark only unique devices
+            devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
             devicesListViewEnableControl1.SetAllEnabled = true;
             devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.UniqueAvaliableDevices);
+
+            CalcBenchmarkDevicesAlgorithmQueue();
+            devicesListViewEnableControl1.ResetListItemColors();
 
             InitLocale();
         }
@@ -59,7 +99,6 @@ namespace NiceHashMiner.Forms {
         }
 
         private void StartStopBtn_Click(object sender, EventArgs e) {
-
             if (_inBenchmark) {
                 StopButonClick();
                 StartStopBtn.Text = International.GetText("form2_buttonStartBenchmark");
@@ -73,37 +112,70 @@ namespace NiceHashMiner.Forms {
             if (_currentMiner != null) {
                 _currentMiner.BenchmarkSignalQuit = true;
             }
-
         }
 
         private bool StartButonClick() {
-            _benchmarkAlgorithmsCount = 0;
-            bool noneSelected = true;
-            _benchmarkDevicesAlgorithmQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
-            foreach (var option in devicesListViewEnableControl1.Options) {
-                if (option.IsEnabled) {
-                    noneSelected = false;
-                    var algorithmQueue = new Queue<Algorithm>();
-                    foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
-                        if (ShoulBenchmark(kvpAlgorithm.Value)) {
-                            ++_benchmarkAlgorithmsCount;
-                            algorithmQueue.Enqueue(kvpAlgorithm.Value);
-                        }
+            CalcBenchmarkDevicesAlgorithmQueue();
+            // device selection check scope
+            {
+                bool noneSelected = true;
+                foreach (var option in devicesListViewEnableControl1.Options) {
+                    if (option.IsEnabled) {
+                        noneSelected = false;
+                        break;
                     }
-                    _benchmarkDevicesAlgorithmQueue.Add(
-                        new Tuple<ComputeDevice, Queue<Algorithm>>(option.CDevice, algorithmQueue)
-                        );
+                }
+                if (noneSelected) {
+                    MessageBox.Show("No device has been selected there is nothing to benchmark", "No device selected", MessageBoxButtons.OK);
+                    return false;
                 }
             }
-            if (noneSelected && _benchmarkAlgorithmsCount != 0) {
-                // TODO msg box none selected
-                return false;
+            // device todo benchmark check scope
+            {
+                bool nothingToBench = true;
+                foreach (var statusKpv in _benchmarkDevicesAlgorithmStatus) {
+                    if (statusKpv.Value == BenchmarkSettingsStatus.TODO) {
+                        nothingToBench = false;
+                        break;
+                    }
+                }
+                if (nothingToBench) {
+                    MessageBox.Show("Current benchmark settings are already executed. There is nothing to do.", "Nothing to benchmark", MessageBoxButtons.OK);
+                    return false;
+                }
             }
+
 
             BenchmarkProgressBar.Maximum = _benchmarkAlgorithmsCount;
             StartBenchmark();
 
             return true;
+        }
+
+        private void CalcBenchmarkDevicesAlgorithmQueue() {
+            _benchmarkAlgorithmsCount = 0;
+            _benchmarkDevicesAlgorithmStatus = new Dictionary<string, BenchmarkSettingsStatus>();
+            _benchmarkDevicesAlgorithmQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
+            foreach (var option in devicesListViewEnableControl1.Options) {
+                var algorithmQueue = new Queue<Algorithm>();
+                foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
+                    if (ShoulBenchmark(kvpAlgorithm.Value)) {
+                        ++_benchmarkAlgorithmsCount;
+                        algorithmQueue.Enqueue(kvpAlgorithm.Value);
+                    }
+                }
+
+                BenchmarkSettingsStatus status;
+                if (option.IsEnabled) {
+                    status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.NONE : BenchmarkSettingsStatus.TODO;
+                    _benchmarkDevicesAlgorithmQueue.Add(
+                    new Tuple<ComputeDevice, Queue<Algorithm>>(option.CDevice, algorithmQueue)
+                    );
+                } else {
+                    status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.DISABLED_NONE : BenchmarkSettingsStatus.DISABLED_TODO;
+                }
+                _benchmarkDevicesAlgorithmStatus.Add(option.CDevice.UUID, status);
+            }
         }
 
         private bool ShoulBenchmark(Algorithm algorithm) {
@@ -166,8 +238,8 @@ namespace NiceHashMiner.Forms {
                 _currentMiner.SetCDevs(new string[] { _currentDevice.UUID });
 
                 var time = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits
-                    .GetBenchamrktime(_benchmarkPerformanceType, _currentDevice.DeviceGroupType);
-                time = 5;
+                    .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
+                //time = 5;
                 // TODO tmp
                 _currentMiner.BenchmarkStart(currentConfig, _currentAlgorithm, time, BenchmarkCompleted, null);
             } else {
@@ -181,6 +253,8 @@ namespace NiceHashMiner.Forms {
         }
 
         private void BenchmarkCompleted(bool success, string text, object tag) {
+            if (!_inBenchmark) return;
+
             if (this.InvokeRequired) {
                 BenchmarkComplete d = new BenchmarkComplete(BenchmarkCompleted);
                 this.Invoke(d, new object[] { success, text, tag });
@@ -203,18 +277,26 @@ namespace NiceHashMiner.Forms {
 
         private void radioButton_SelectedUnbenchmarked_CheckedChanged(object sender, EventArgs e) {
             _algorithmOption = AlgorithmBenchmarkSettings.SelectedUnbenchmarkedAlgorithms;
+            CalcBenchmarkDevicesAlgorithmQueue();
+            devicesListViewEnableControl1.ResetListItemColors();
         }
 
         private void radioButton_Unbenchmarked_CheckedChanged(object sender, EventArgs e) {
             _algorithmOption = AlgorithmBenchmarkSettings.UnbenchmarkedAlgorithms;
+            CalcBenchmarkDevicesAlgorithmQueue();
+            devicesListViewEnableControl1.ResetListItemColors();
         }
 
         private void radioButton_ReOnlySelected_CheckedChanged(object sender, EventArgs e) {
             _algorithmOption = AlgorithmBenchmarkSettings.ReBecnhSelectedAlgorithms;
+            CalcBenchmarkDevicesAlgorithmQueue();
+            devicesListViewEnableControl1.ResetListItemColors();
         }
 
         private void radioButton_All_CheckedChanged(object sender, EventArgs e) {
             _algorithmOption = AlgorithmBenchmarkSettings.AllAlgorithms;
+            CalcBenchmarkDevicesAlgorithmQueue();
+            devicesListViewEnableControl1.ResetListItemColors();
         }
 
 

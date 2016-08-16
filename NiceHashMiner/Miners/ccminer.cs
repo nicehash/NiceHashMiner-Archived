@@ -221,14 +221,17 @@ namespace NiceHashMiner.Miners
             return CommandLine;
         }
 
-        protected override bool BenchmarkParseLineImpl(string outdata) {
+        protected override bool BenchmarkParseLine(string outdata) {
             double lastSpeed = 0;
             if (double.TryParse(outdata, out lastSpeed)) {
                 BenchmarkAlgorithm.BenchmarkSpeed = lastSpeed;
-                OnBenchmarkComplete(true, PrintSpeed(lastSpeed), BenchmarkTag);
                 return true;
             }
             return false;
+        }
+
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+            CheckOutdata(outdata);
         }
 
         #endregion // Decoupled benchmarking routines

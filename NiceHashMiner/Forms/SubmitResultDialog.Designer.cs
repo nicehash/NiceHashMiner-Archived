@@ -100,7 +100,7 @@
             this.labelInstruction.Name = "labelInstruction";
             this.labelInstruction.Size = new System.Drawing.Size(447, 26);
             this.labelInstruction.TabIndex = 99;
-            this.labelInstruction.Text = "Please select a device to be benchmarked and once it is done, it will automatiall" +
+            this.labelInstruction.Text = "Please select a device to be benchmarked and _benchmarkOnce it is done, it will automatiall" +
     "y open a new\r\nweb page to display the profitability calculator on the NiceHash\'s" +
     " website.";
             // 

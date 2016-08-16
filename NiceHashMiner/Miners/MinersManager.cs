@@ -37,7 +37,16 @@ namespace NiceHashMiner.Miners {
             DeviceGroupType.NVIDIA_6_x
         };
 
-        
+        readonly DeviceGroupType[] _gpuTypes = new DeviceGroupType[] {
+            DeviceGroupType.AMD_OpenCL,
+            DeviceGroupType.NVIDIA_2_1,
+            DeviceGroupType.NVIDIA_3_x,
+            DeviceGroupType.NVIDIA_5_x,
+            DeviceGroupType.NVIDIA_6_x
+        };
+
+        // these miners are just used for binary path checking
+        readonly Dictionary<DeviceGroupType, Miner> _minerPathChecker;
 
         // GroupDevices hash code doesn't work correctly use string instead
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;
@@ -58,6 +67,12 @@ namespace NiceHashMiner.Miners {
             _preventSleepTimer.Tick += PreventSleepTimer_Tick;
              // sleep time is minimal 1 minute
             _preventSleepTimer.Interval = 20 * 1000; // leave this interval, it works
+
+            // path checker
+            _minerPathChecker = new Dictionary<DeviceGroupType, Miner>();
+            foreach (var gpuGroup in _gpuTypes) {
+                _minerPathChecker.Add(gpuGroup, CreateMiner(gpuGroup, AlgorithmType.NONE));
+            }
         }
 
         private void PreventSleepTimer_Tick(object sender, EventArgs e) {
@@ -270,20 +285,38 @@ namespace NiceHashMiner.Miners {
             return false;
         }
 
-        private bool IsNvidiaAndDagger(ComputeDevice a, ComputeDevice b) {
+        // checks if dagger algo, same settings and if compute platform is same
+        private bool IsDaggerAndSameComputePlatform(ComputeDevice a, ComputeDevice b) {
             return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto
                 && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
-                && IsNvidiaDevice(a) && IsNvidiaDevice(b);
+                // compute platforms must be same
+                && (IsNvidiaDevice(a) == IsNvidiaDevice(b));
         }
 
         private bool IsNotCpuGroups(ComputeDevice a, ComputeDevice b) {
             return a.DeviceGroupType != DeviceGroupType.CPU && b.DeviceGroupType != DeviceGroupType.CPU;
         }
 
+        // this will not check Ethminer path
+        private bool IsSameBinPath(ComputeDevice a, ComputeDevice b) {
+            // same group uses same Miner class and therefore same binary path for same algorithm
+            bool sameGroup = a.DeviceGroupType == b.DeviceGroupType;
+            if (!sameGroup) {
+                var a_algoType = a.MostProfitableAlgorithm.NiceHashID;
+                var b_algoType = b.MostProfitableAlgorithm.NiceHashID;
+                // a and b algorithm settings should be the same if we call this function
+                return _minerPathChecker[a.DeviceGroupType].GetOptimizedMinerPath(a_algoType)
+                    == _minerPathChecker[b.DeviceGroupType].GetOptimizedMinerPath(b_algoType);
+            }
+
+            return true;
+        }
+
         // we don't want to group CPU devices
-        private bool IsGroupAndAlgorithmSame(ComputeDevice a, ComputeDevice b) {
-            return IsNotCpuGroups(a,b) && a.DeviceGroupType == b.DeviceGroupType
-                && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm);
+        private bool IsGroupBinaryAndAlgorithmSame(ComputeDevice a, ComputeDevice b) {
+            return IsNotCpuGroups(a, b)
+                && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
+                && IsSameBinPath(a, b);
         }
         #endregion //Groupping logic
 
@@ -346,8 +379,8 @@ namespace NiceHashMiner.Miners {
                 for (int second = first + 1; second < _enabledDevices.Count; ++second) {
                     var secondDev = _enabledDevices[second];
                     // check if we should group
-                    if(IsNvidiaAndDagger(firstDev, secondDev)
-                        || IsGroupAndAlgorithmSame(firstDev, secondDev)) {
+                    if(IsDaggerAndSameComputePlatform(firstDev, secondDev)
+                        || IsGroupBinaryAndAlgorithmSame(firstDev, secondDev)) {
                         newGroup.Add(secondDev.UUID);
                     }
                 }

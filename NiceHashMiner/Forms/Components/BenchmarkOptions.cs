@@ -17,6 +17,23 @@ namespace NiceHashMiner.Forms.Components {
             InitializeComponent();
         }
 
+        public void SetPerformanceType(BenchmarkPerformanceType performanceType) {
+            switch (performanceType) {
+                case BenchmarkPerformanceType.Quick:
+                    radioButton_QuickBenchmark.Checked = true;
+                    break;
+                case BenchmarkPerformanceType.Standard:
+                    radioButton_StandardBenchmark.Checked = true;
+                    break;
+                case BenchmarkPerformanceType.Precise:
+                    radioButton_PreciseBenchmark.Checked = true;
+                    break;
+                default:
+                    radioButton_StandardBenchmark.Checked = true;
+                    break;
+            }
+        }
+
         public void InitLocale() {
             radioButton_QuickBenchmark.Text = International.GetText("form2_radioButton_QuickBenchmark");
             radioButton_StandardBenchmark.Text = International.GetText("form2_radioButton_StandardBenchmark");

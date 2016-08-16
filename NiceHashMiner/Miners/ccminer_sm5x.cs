@@ -33,7 +33,7 @@ namespace NiceHashMiner.Miners
             return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
         }
 
-        protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
+        public override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
             if (AlgorithmType.Decred == algorithmType) {
                 return MinerPaths.ccminer_decred;
             }

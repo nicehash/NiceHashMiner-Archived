@@ -23,6 +23,10 @@ namespace NiceHashMiner.Miners
         const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90" +
                                         " --temp-target 75 --auto-fan --auto-gpu";
 
+        // benchmark helper variables
+        bool _benchmarkOnce = true;
+        Stopwatch _benchmarkTimer = new Stopwatch();
+
         // TODO remove
         public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
 
@@ -360,7 +364,7 @@ namespace NiceHashMiner.Miners
         }
 
         // TODO 
-        protected override string GetOptimizedMinerPath(AlgorithmType type) {
+        public override string GetOptimizedMinerPath(AlgorithmType type) {
             if (EnableOptimizedVersion) {
                 if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
                     // this will not check all GPU code names
@@ -421,8 +425,71 @@ namespace NiceHashMiner.Miners
             return CommandLine;
         }
 
-        protected override bool BenchmarkParseLineImpl(string outdata) {
-            throw new NotImplementedException();
+        protected override bool BenchmarkParseLine(string outdata) {
+            if (outdata.Contains("Average hashrate:") && outdata.Contains("/s")) {
+                int i = outdata.IndexOf(": ");
+                int k = outdata.IndexOf("/s");
+
+                // save speed
+                string hashSpeed = outdata.Substring(i + 2, k - i + 2);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashSpeed);
+
+                hashSpeed = hashSpeed.Substring(0, hashSpeed.IndexOf(" "));
+                double speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
+
+                if (outdata.Contains("Kilohash"))
+                    speed *= 1000;
+                else if (outdata.Contains("Megahash"))
+                    speed *= 1000000;
+
+                BenchmarkAlgorithm.BenchmarkSpeed = speed;
+                return true;
+            }
+            return false;
+        }
+
+        // TODO check this
+        protected override void BenchmarkThreadRoutineStartSettup() {
+            if (MinerDeviceName.Equals("AMD_OpenCL")) {
+                AlgorithmType NHDataIndex = BenchmarkAlgorithm.NiceHashID;
+
+                if (Globals.NiceHashData == null) {
+                    Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
+                        "connection. Sgminer needs internet connection to do benchmarking.");
+
+                    throw new Exception("No internet connection");
+                }
+
+                if (Globals.NiceHashData[NHDataIndex].paying == 0) {
+                    Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
+                        "[algo: " + BenchmarkAlgorithm.NiceHashName + "(" + NHDataIndex + ")]");
+
+                    throw new Exception("No work can be used for benchmarking");
+                }
+
+                _benchmarkTimer.Reset();
+                _benchmarkTimer.Start();
+            }
+            base.BenchmarkThreadRoutineStartSettup();
+        }
+
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+            // TODO check this
+            //// sgminer read output
+            //while (true) {
+            //}
+            if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTime + 1 && _benchmarkOnce == true) {
+                _benchmarkOnce = false;
+                string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
+                Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
+            }
+            if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTime + 2) {
+                _benchmarkTimer.Stop();
+                KillSGMiner();
+                BenchmarkSignalHanged = true;
+            }
+
+            CheckOutdata(outdata);
         }
 
         #endregion // Decoupled benchmarking routines

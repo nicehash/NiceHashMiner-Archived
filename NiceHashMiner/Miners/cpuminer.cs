@@ -16,6 +16,10 @@ namespace NiceHashMiner.Miners
         private string CPUMinerPath;
         private string HodlMinerPath;
 
+        // hodl benchmark exception
+        int _hodlTotalCount = 0;
+        double _hodlTotal = 0;
+
         public cpuminer(int id, int threads, ulong affinity) : base(true)
         {
             MinerDeviceName = "CPU" + id.ToString();
@@ -92,7 +96,7 @@ namespace NiceHashMiner.Miners
             return isInitialized;
         }
 
-        protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
+        public override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
             if (algorithmType == AlgorithmType.Hodl) {
                 return HodlMinerPath;
             }
@@ -214,11 +218,43 @@ namespace NiceHashMiner.Miners
             if (AffinityMask != 0 && BenchmarkHandle != null)
                 CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
 
+            // hodl exception helper variables
+            _hodlTotalCount = BenchmarkTime / 5;
+            _hodlTotal = 0.0d;
+
             return BenchmarkHandle;
         }
 
-        protected override bool BenchmarkParseLineImpl(string outdata) {
-            throw new NotImplementedException();
+        protected override bool BenchmarkParseLine(string outdata) {
+            double lastSpeed = 0;
+            if (double.TryParse(outdata, out lastSpeed)) {
+                BenchmarkAlgorithm.BenchmarkSpeed = lastSpeed;
+                return true;
+            }
+            return false;
+        }
+
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+            // Hodl exception
+            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.Hodl) {
+                if (outdata.Contains("Total: ")) {
+                    int st = outdata.IndexOf("Total:") + 7;
+                    int len = outdata.Length - 6 - st;
+
+                    string parse = outdata.Substring(st, len).Trim();
+                    double tmp;
+                    Double.TryParse(parse, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp);
+                    _hodlTotal += tmp;
+                    _hodlTotalCount--;
+                }
+                if (_hodlTotalCount <= 0) {
+                    double spd = _hodlTotal / (BenchmarkTime / 5);
+                    BenchmarkAlgorithm.BenchmarkSpeed = spd;
+                    BenchmarkSignalFinnished = true;
+                }
+            } else {
+                CheckOutdata(outdata);
+            }
         }
 
         #endregion // Decoupled benchmarking routines

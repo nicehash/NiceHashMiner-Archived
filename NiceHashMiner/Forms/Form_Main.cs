@@ -163,7 +163,7 @@ namespace NiceHashMiner
             }
         }
 
-        // This is a single shot timer
+        // This is a single shot _benchmarkTimer
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             StartupTimer.Stop();

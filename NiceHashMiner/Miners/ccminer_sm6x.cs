@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
-    class ccminer_sm6x : ccminer {
+    class ccminer_sm6x : ccminer_sm5x {
         public ccminer_sm6x(bool queryComputeDevices) :
             base(queryComputeDevices)
         {
@@ -23,28 +23,8 @@ namespace NiceHashMiner.Miners {
             return MinerType.ccminer_sm6x;
         }
 
-        protected override void InitSupportedMinerAlgorithms() {
-            var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.NVIDIA_5_x);
-            allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);
-            _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
-        }
-
         protected override bool IsGroupQueryEnabled() {
-            return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
-        }
-
-        protected override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
-            if (AlgorithmType.Decred == algorithmType) {
-                return MinerPaths.ccminer_decred;
-            }
-            if (AlgorithmType.NeoScrypt == algorithmType) {
-                return MinerPaths.ccminer_neoscrypt;
-            }
-            if (AlgorithmType.Lyra2RE == algorithmType || AlgorithmType.Lyra2REv2 == algorithmType) {
-                return MinerPaths.ccminer_nanashi;
-            }
-
-            return MinerPaths.ccminer_sp;
+            return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
         }
 
         protected override bool IsPotentialDevSM(string name) {

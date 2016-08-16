@@ -19,7 +19,7 @@ namespace NiceHashMiner.Forms.Components {
         private class DefaultDevicesColorSeter : IListItemCheckColorSetter {
             private static Color ENABLED_COLOR = Color.White;
             private static Color DISABLED_COLOR = Color.DarkGray;
-            public void LviSetColor(ref ListViewItem lvi) {
+            public void LviSetColor(ListViewItem lvi) {
                 ComputeDeviceEnabledOption cdvo = lvi.Tag as ComputeDeviceEnabledOption;
                 if (cdvo != null) {
                     if(cdvo.IsEnabled) {
@@ -64,6 +64,17 @@ namespace NiceHashMiner.Forms.Components {
             listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
         }
 
+        public void SetIListItemCheckColorSetter(IListItemCheckColorSetter listItemCheckColorSetter) {
+            _listItemCheckColorSetter = listItemCheckColorSetter;
+        }
+
+        public void ResetListItemColors() {
+            foreach (ListViewItem lvi in listViewDevices.Items) {
+                if (_listItemCheckColorSetter != null) {
+                    _listItemCheckColorSetter.LviSetColor(lvi);
+                }
+            }
+        }
 
         public void SetComputeDevices(List<ComputeDevice> computeDevices) {
             // to not run callbacks when setting new
@@ -84,7 +95,7 @@ namespace NiceHashMiner.Forms.Components {
                 Options.Add(newTag);
                 lvi.Tag = newTag;
                 listViewDevices.Items.Add(lvi);
-                _listItemCheckColorSetter.LviSetColor(ref lvi);
+                _listItemCheckColorSetter.LviSetColor(lvi);
             }
             // reset properties
             AutoSaveChange = tmp_AutoSaveChange;
@@ -113,7 +124,7 @@ namespace NiceHashMiner.Forms.Components {
                 ConfigManager.Instance.GeneralConfig.Commit();
             }
             var lvi = e.Item as ListViewItem;
-            if (lvi != null) _listItemCheckColorSetter.LviSetColor(ref lvi);
+            if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
         }
 
         public void SaveOptions() {
