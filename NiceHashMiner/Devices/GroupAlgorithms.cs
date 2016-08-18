@@ -88,6 +88,8 @@ namespace NiceHashMiner.Devices {
                     ret[AlgorithmType.WhirlpoolX] = new Algorithm(AlgorithmType.WhirlpoolX, "whirlpool");     // Needed for new tpruvot's ccminer
                     // disable/remove neoscrypt
                     ret.Remove(AlgorithmType.NeoScrypt);
+                    ret.Remove(AlgorithmType.Lyra2RE);
+                    ret.Remove(AlgorithmType.Lyra2REv2);
                 }
                 return ret;
             }

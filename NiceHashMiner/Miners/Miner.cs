@@ -30,9 +30,6 @@ namespace NiceHashMiner
         protected int APIPort { get; private set; }
         protected List<ComputeDevice> CDevs;
         
-        // TODO remove
-        //public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
-        
         // this is now related to devices
         public string ExtraLaunchParameters;
         public string UsePassword;

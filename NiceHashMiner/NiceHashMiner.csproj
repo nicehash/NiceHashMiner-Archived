@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmNiceHashNames.cs" />
     <Compile Include="BaseLazySingleton.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Configs\DeviceDetectionConfig.cs" />
     <Compile Include="Configs\GeneralConfig.cs" />
     <Compile Include="CurrencyConverter.cs" />
+    <Compile Include="Devices\AmdGpuDevice.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
     <Compile Include="Devices\CudaDevice.cs" />
