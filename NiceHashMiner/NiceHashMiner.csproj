@@ -86,6 +86,7 @@
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
+    <Compile Include="Devices\CudaDevice.cs" />
     <Compile Include="Devices\DeviceGroupConfig.cs" />
     <Compile Include="Devices\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />

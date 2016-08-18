@@ -38,10 +38,5 @@ namespace NiceHashMiner.Miners
             }
             return MinerPaths.ccminer_tpruvot;
         }
-
-        protected override bool IsPotentialDevSM(string name) {
-            // add only SM 3.x
-            return name.Contains("SM 3.");
-        }
     }
 }

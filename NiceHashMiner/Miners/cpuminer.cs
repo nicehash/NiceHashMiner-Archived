@@ -44,7 +44,7 @@ namespace NiceHashMiner.Miners
             // if our CPU is supported add it to devices
             // TODO if Miner and ComputeDevice decoupling redo this this is going to be at detecting CPUs
             if (isInitialized) {
-                CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), this, true));
+                CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), true));
             }
         }
 

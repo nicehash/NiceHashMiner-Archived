@@ -46,9 +46,5 @@ namespace NiceHashMiner.Miners
 
             return MinerPaths.ccminer_sp;
         }
-
-        protected override bool IsPotentialDevSM(string name) {
-            return name.Contains("SM 5.");
-        }
     }
 }

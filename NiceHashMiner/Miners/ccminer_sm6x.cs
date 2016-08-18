@@ -26,9 +26,5 @@ namespace NiceHashMiner.Miners {
         protected override bool IsGroupQueryEnabled() {
             return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
         }
-
-        protected override bool IsPotentialDevSM(string name) {
-            return name.Contains("SM 6.");
-        }
     }
 }

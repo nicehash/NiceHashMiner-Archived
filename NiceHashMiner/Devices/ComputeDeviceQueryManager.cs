@@ -6,6 +6,8 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
+using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace NiceHashMiner.Devices
 {
@@ -18,8 +20,11 @@ namespace NiceHashMiner.Devices
     /// </summary>
     public class ComputeDeviceQueryManager : BaseLazySingleton<ComputeDeviceQueryManager>
     {
+        readonly string TAG;
         // change to protected after .NET upgrade
-        protected ComputeDeviceQueryManager() { }
+        protected ComputeDeviceQueryManager() {
+            TAG = typeof(ComputeDeviceQueryManager).Name;
+        }
 
 
         public int CPUs { get; private set; }
@@ -91,21 +96,9 @@ namespace NiceHashMiner.Devices
         }
 
         private void QueryNVIDIA() {
-            List<ccminer> dump = new List<ccminer>();
-            // TODO International
-            // NVIDIA6x
-            showMessageAndStep(International.GetText("form1_loadtext_NVIDIA5X"));
-            dump.Add(new ccminer_sm6x(true));
-            // NVIDIA5x
-            showMessageAndStep(International.GetText("form1_loadtext_NVIDIA5X"));
-            dump.Add(new ccminer_sm5x(true));
-            // NVIDIA3X
-            showMessageAndStep(International.GetText("form1_loadtext_NVIDIA3X"));
-            dump.Add(new ccminer_sm3x(true));
-            // NVIDIA2X
-            showMessageAndStep(International.GetText("form1_loadtext_NVIDIA2X"));
-            dump.Add(new ccminer_sm21(true));
-            dump = null;
+            // TODO international
+            showMessageAndStep("Querying CUDA devices");
+            QueryCudaDevices();
         }
 
         private void QueryAMD() {
@@ -121,73 +114,95 @@ namespace NiceHashMiner.Devices
 
         #region NEW IMPLEMENTATION
 
-        // TODO add new GPU guery methods
-        /// The new query methods will be based on ccminer and sgminer
+        #region NVIDIA Query
 
-        #region NVIDIA ccminer UNUSED
-        private DeviceGroupType getNvidiaGroupType(string name) {
-            if(name.Contains("SM 2.1")) {
-                return DeviceGroupType.NVIDIA_2_1;
-            }
-            if(name.Contains("SM 3.")) {
-                return DeviceGroupType.NVIDIA_3_x;
-            }
-            if (name.Contains("SM 5.")) {
-                return DeviceGroupType.NVIDIA_5_x;
-            }
-            if (name.Contains("SM 6.")) {
-                return DeviceGroupType.NVIDIA_6_x;
-            }
-            return DeviceGroupType.NONE;
-        }
-
-        private void AddPotentialNvidiaCDev(string text)
-        {
-            if (!text.Contains("GPU")) return;
-            string[] splt = text.Split(':');
-
-            int id = int.Parse(splt[0].Split('#')[1]);
-            string name = splt[1];
-
-            DeviceGroupType groupType = getNvidiaGroupType(name);
-
-            if (groupType != DeviceGroupType.NONE) {
-                string DeviceGroupName = GroupNames.GetName(groupType);
-                Helpers.ConsolePrint(DeviceGroupName, "Detected: " + text);
-                
-                string saveName = name.Substring(8);
-                // TODO will be added to global
-                // TODO this is NO GOOD
-                new ComputeDevice(id, DeviceGroupName, saveName, null, true);
-                Helpers.ConsolePrint(DeviceGroupName, "Added: " + saveName);
+        string QueryCudaDevicesString = "";
+        List<CudaDevice> CudaDevices = new List<CudaDevice>();
+        private void QueryCudaDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
+            if (e.Data != null) {
+                QueryCudaDevicesString += e.Data;
             }
         }
 
-        private void QueryNVIDIA_ccminers() {
-            string[] ccminerPaths = new string[] {
-                MinerPaths.ccminer_decred,
-                //MinerPaths.ccminer_nanashi_lyra2rev2,
-                MinerPaths.ccminer_nanashi,
-                MinerPaths.ccminer_neoscrypt,
-                MinerPaths.ccminer_sp,
-                MinerPaths.ccminer_tpruvot,
-            };
-            Dictionary<string, List<ComputeDevice>> QueryComputeDevices;
+        private void QueryCudaDevices() {
+            Process CudaDevicesDetection = new Process();
+            CudaDevicesDetection.StartInfo.FileName = "CudaDeviceDetection.exe";
+            CudaDevicesDetection.StartInfo.UseShellExecute = false;
+            CudaDevicesDetection.StartInfo.RedirectStandardError = true;
+            CudaDevicesDetection.StartInfo.RedirectStandardOutput = true;
+            CudaDevicesDetection.StartInfo.CreateNoWindow = true;
+            CudaDevicesDetection.OutputDataReceived += QueryCudaDevicesOutputErrorDataReceived;
+            CudaDevicesDetection.ErrorDataReceived += QueryCudaDevicesOutputErrorDataReceived;
 
-            // TODO rethnk this it makes sense to make one class to query and a miner factory that returns the correct miner for the device
+            const int waitTime = 5 * 1000; // 5seconds
+            try {
+                if (!CudaDevicesDetection.Start()) {
+                    Helpers.ConsolePrint(TAG, "CudaDevicesDetection process could not start");
+                } else {
+                    CudaDevicesDetection.BeginErrorReadLine();
+                    CudaDevicesDetection.BeginOutputReadLine();
+                    if (CudaDevicesDetection.WaitForExit(waitTime)) {
+                        CudaDevicesDetection.Kill();
+                    }
+                }
+            } catch {
+                // TODO
+                Helpers.ConsolePrint(TAG, "CudaDevicesDetection threw Exception");
+            } finally {
+                if (QueryCudaDevicesString != "") {
+                    var settings = new JsonSerializerSettings {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore
+                    };
+                    try {
+                        CudaDevices = JsonConvert.DeserializeObject<List<CudaDevice>>(QueryCudaDevicesString, settings);
+                    } catch { }
+                }
+            }
+            if (CudaDevices != null && CudaDevices.Count != 0) {
+                foreach (var cudaDev in CudaDevices) {
+                    // check sm vesrions
+                    bool isUnderSM2 = cudaDev.SM_major < 2;
+                    bool isOverSM6 = cudaDev.SM_major > 6;
+                    bool skip = isUnderSM2;
+                    string skipOrAdd = skip ? "SKIPED" : "ADDED";
+                    string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO"; 
+                    string logMessage = String.Format("CudaDevicesDetection {0} device: {1}",
+                        skipOrAdd,
+                        String.Format("ID: {0}, NAME: {1}, UUID: {2}, SM: {3}, MEMORY: {4}, ETHEREUM: {5}",
+                        cudaDev.DeviceID.ToString(), cudaDev.DeviceName, cudaDev.UUID, cudaDev.SMVersionString,
+                        cudaDev.DeviceGlobalMemory.ToString(), etherumCapableStr)
+                        );
+                    
+                    if (!skip) {
+                        string group;
+                        switch (cudaDev.SM_major) {
+                            case 2:
+                                group = GroupNames.GetName(DeviceGroupType.NVIDIA_2_1);
+                                break;
+                            case 3:
+                                group = GroupNames.GetName(DeviceGroupType.NVIDIA_3_x);
+                                break;
+                            case 5:
+                                group = GroupNames.GetName(DeviceGroupType.NVIDIA_5_x);
+                                break;
+                            case 6:
+                                group = GroupNames.GetName(DeviceGroupType.NVIDIA_6_x);
+                                break;
+                            default:
+                                group = GroupNames.GetName(DeviceGroupType.NVIDIA_6_x);
+                                break;
+                        }
+                        new ComputeDevice(cudaDev, group, true);
+                    }
+                    Helpers.ConsolePrint(TAG, logMessage);
+                }
+            } else {
+                Helpers.ConsolePrint(TAG, "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " + QueryCudaDevicesString);
+            }
         }
 
-        private List<ComputeDevice> ccminerQueryDev(string ccminerPath) {
-            List<ComputeDevice> retDevices = new List<ComputeDevice>();
-
-
-
-            return retDevices;
-        }
-
-
-
-        #endregion // NVIDIA ccminer UNUSED
+        #endregion // NVIDIA Query
 
 
 
