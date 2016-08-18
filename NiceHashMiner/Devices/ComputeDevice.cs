@@ -137,7 +137,8 @@ namespace NiceHashMiner.Devices
             foreach (var b in hashedBytes) {
                 hash.Append(b.ToString("x2"));
             }
-            return hash.ToString();
+            // GEN indicates the UUID has been generated and cannot be presumed to be immutable
+            return "GEN-" + hash.ToString();
         }
 
         public static List<ComputeDevice> GetEnabledDevices() {

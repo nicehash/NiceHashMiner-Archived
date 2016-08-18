@@ -26,7 +26,6 @@ namespace NiceHashMiner.Devices
             TAG = typeof(ComputeDeviceQueryManager).Name;
         }
 
-
         public int CPUs { get; private set; }
 
         public IMessageNotifier MessageNotifier { get; private set; }
@@ -37,13 +36,17 @@ namespace NiceHashMiner.Devices
             // Order important CPU Query must be first
             // #1 CPU
             QueryCPUs();
-            // #2 NVIDIA
-            QueryNVIDIA();
-            // #3 AMD
+            // #2 CUDA
+            showMessageAndStep("Querying CUDA devices");
+            QueryCudaDevices();
+            // #3 OpenCL
+            showMessageAndStep("Querying OpenCL devices");
+            QueryOpenCLDevices();
+            // #4 AMD query AMD from OpenCL devices, get serial and add devices
             QueryAMD();
-            // #4 uncheck CPU if GPUs present, call it after we Query all devices
+            // #5 uncheck CPU if GPUs present, call it after we Query all devices
             UncheckedCPU();
-            // #5 remove reference
+            // #6 remove reference
             MessageNotifier = null;
         }
 
@@ -95,12 +98,6 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        private void QueryNVIDIA() {
-            // TODO international
-            showMessageAndStep("Querying CUDA devices");
-            QueryCudaDevices();
-        }
-
         private void QueryAMD() {
             showMessageAndStep(International.GetText("form1_loadtext_AMD"));
             var dump = new sgminer(true);
@@ -114,7 +111,7 @@ namespace NiceHashMiner.Devices
 
         #region NEW IMPLEMENTATION
 
-        #region NVIDIA Query
+        #region CUDA, NVIDIA Query
 
         string QueryCudaDevicesString = "";
         List<CudaDevice> CudaDevices = new List<CudaDevice>();
@@ -145,9 +142,9 @@ namespace NiceHashMiner.Devices
                         CudaDevicesDetection.Kill();
                     }
                 }
-            } catch {
+            } catch (Exception ex) {
                 // TODO
-                Helpers.ConsolePrint(TAG, "CudaDevicesDetection threw Exception");
+                Helpers.ConsolePrint(TAG, "CudaDevicesDetection threw Exception: " + ex.Message);
             } finally {
                 if (QueryCudaDevicesString != "") {
                     var settings = new JsonSerializerSettings {
@@ -202,8 +199,65 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        #endregion // NVIDIA Query
+        #endregion // CUDA, NVIDIA Query
 
+
+        #region OpenCL Query
+        class OpenCLJSON {
+            public Dictionary<string, int> OCLPlatforms = new Dictionary<string,int>();
+            public Dictionary<string, List<OpenCLDevice>> OCLPlatformDevices = new Dictionary<string,List<OpenCLDevice>>();
+        }
+        string QueryOpenCLDevicesString = "";
+        OpenCLJSON OpenCLJSONData = new OpenCLJSON();
+        private void QueryOpenCLDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
+            if (e.Data != null) {
+                QueryOpenCLDevicesString += e.Data;
+            }
+        }
+
+        private void QueryOpenCLDevices() {
+            Process OpenCLDevicesDetection = new Process();
+            OpenCLDevicesDetection.StartInfo.FileName = "OpenCLDeviceDetection.exe";
+            OpenCLDevicesDetection.StartInfo.UseShellExecute = false;
+            OpenCLDevicesDetection.StartInfo.RedirectStandardError = true;
+            OpenCLDevicesDetection.StartInfo.RedirectStandardOutput = true;
+            OpenCLDevicesDetection.StartInfo.CreateNoWindow = true;
+            OpenCLDevicesDetection.OutputDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
+            OpenCLDevicesDetection.ErrorDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
+
+            const int waitTime = 5 * 1000; // 5seconds
+            try {
+                if (!OpenCLDevicesDetection.Start()) {
+                    Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection process could not start");
+                } else {
+                    OpenCLDevicesDetection.BeginErrorReadLine();
+                    OpenCLDevicesDetection.BeginOutputReadLine();
+                    if (OpenCLDevicesDetection.WaitForExit(waitTime)) {
+                        OpenCLDevicesDetection.Kill();
+                    }
+                }
+            } catch(Exception ex) {
+                // TODO
+                Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection threw Exception: " + ex.Message);
+            } finally {
+                if (QueryOpenCLDevicesString != "") {
+                    var settings = new JsonSerializerSettings {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore
+                    };
+                    OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString, settings);
+                    try {
+                        OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString, settings);
+                    } catch { }
+                }
+            }
+            // TODO
+            if (OpenCLJSONData == null) {
+                Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection found no devices. OpenCLDeviceDetection returned: " + QueryOpenCLDevicesString);
+            }
+        }
+
+        #endregion OpenCL Query
 
 
         #endregion // NEW IMPLEMENTATION

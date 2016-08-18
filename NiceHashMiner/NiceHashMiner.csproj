@@ -90,6 +90,7 @@
     <Compile Include="Devices\DeviceGroupConfig.cs" />
     <Compile Include="Devices\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
+    <Compile Include="Devices\OpenCLDevice.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
