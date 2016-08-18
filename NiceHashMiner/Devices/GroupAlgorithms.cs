@@ -82,6 +82,9 @@ namespace NiceHashMiner.Devices {
                     // disable/remove neoscrypt, daggerhashimoto
                     ret.Remove(AlgorithmType.NeoScrypt);
                     ret.Remove(AlgorithmType.DaggerHashimoto);
+                    // TODO check if remove needed
+                    ret.Remove(AlgorithmType.Lyra2RE);
+                    ret.Remove(AlgorithmType.Lyra2REv2);
                 }
                 if (DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     // minerName change => "whirlpoolx" => "whirlpool"

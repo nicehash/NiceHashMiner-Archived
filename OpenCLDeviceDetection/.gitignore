@@ -21,6 +21,10 @@ x64/Release/
 .cproject
 .buildpath
 
+# OpenCL lib exception
+!.ocl_lib/Win32/OpenCl.lib
+!.ocl_lib/x64/OpenCl.lib
+
 *.cer
 *.zip
 *.obj
