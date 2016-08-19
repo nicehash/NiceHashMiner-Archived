@@ -19,7 +19,7 @@ namespace NiceHashMiner.Miners {
         //ComputeDevice
         public ComputeDevice DaggerHashimotoGenerateDevice;
 
-        public MinerEtherum() : base(true) {
+        public MinerEtherum() : base() {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
         }
@@ -137,17 +137,8 @@ namespace NiceHashMiner.Miners {
             }
         }
 
-        // methods not really used just as stub to satisfy 
         public override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
             return Ethereum.EtherMinerPath;
-        }
-        // stubs
-        protected override void QueryCDevs() {
-            // stub
-        }
-        protected override bool IsGroupQueryEnabled() {
-            // stub
-            return true;
         }
 
         protected override bool BenchmarkParseLine(string outdata) {

@@ -20,7 +20,7 @@ namespace NiceHashMiner.Miners
         int _hodlTotalCount = 0;
         double _hodlTotal = 0;
 
-        public cpuminer(int id, int threads, ulong affinity) : base(true)
+        public cpuminer(int id, int threads, ulong affinity) : base()
         {
             MinerDeviceName = "CPU" + id.ToString();
             Threads = threads;
@@ -55,14 +55,6 @@ namespace NiceHashMiner.Miners
         protected override void InitSupportedMinerAlgorithms() {
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.CPU);
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
-        }
-
-        // always query CPU
-        protected override bool IsGroupQueryEnabled() {
-            return true;
-        }
-        // querying done in ComputeDeviceQueryManager
-        protected override void QueryCDevs() {
         }
         
         /// <summary>

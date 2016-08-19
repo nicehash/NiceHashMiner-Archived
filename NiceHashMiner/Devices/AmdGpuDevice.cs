@@ -13,12 +13,15 @@ namespace NiceHashMiner.Devices {
         public ulong DeviceGlobalMemory { get { return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE; } }
         public bool UseOptimizedVersion { get; private set; }
         private OpenCLDevice _openClSubset;
-        public AmdGpuDevice(OpenCLDevice openClSubset) {
+        public AmdGpuDevice(OpenCLDevice openClSubset, bool isOldDriver) {
             _openClSubset = openClSubset;
             // Check for optimized version
             // first if not optimized
             Helpers.ConsolePrint("AmdGpuDevice", "List: " + _openClSubset._CL_DEVICE_NAME);
-            if (!( _openClSubset._CL_DEVICE_NAME.Contains("Bonaire")
+            if (isOldDriver) {
+                UseOptimizedVersion = false;
+                Helpers.ConsolePrint("AmdGpuDevice", "GPU (" + _openClSubset._CL_DEVICE_NAME + ") is optimized => NOO! OLD DRIVER.");
+            } else if (!( _openClSubset._CL_DEVICE_NAME.Contains("Bonaire")
                 || _openClSubset._CL_DEVICE_NAME.Contains("Fiji")
                 || _openClSubset._CL_DEVICE_NAME.Contains("Hawaii")
                 || _openClSubset._CL_DEVICE_NAME.Contains("Pitcairn")

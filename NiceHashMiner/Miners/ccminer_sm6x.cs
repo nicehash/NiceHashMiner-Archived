@@ -15,16 +15,10 @@ namespace NiceHashMiner.Miners {
         {
             MinerDeviceName = "NVIDIA6.x";
             Path = MinerPaths.ccminer_nanashi;
-
-            TryQueryCDevs();
         }
 
         protected override MinerType GetMinerType() {
             return MinerType.ccminer_sm6x;
-        }
-
-        protected override bool IsGroupQueryEnabled() {
-            return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
         }
     }
 }

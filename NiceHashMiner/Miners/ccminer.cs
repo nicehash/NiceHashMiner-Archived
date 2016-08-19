@@ -15,7 +15,7 @@ namespace NiceHashMiner.Miners
 {
     abstract public class ccminer : Miner
     {
-        public ccminer(bool queryComputeDevices) : base(queryComputeDevices) { }
+        public ccminer(bool queryComputeDevices) : base() { }
 
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
@@ -41,28 +41,6 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(bool willswitch) {
             Stop_cpu_ccminer_sgminer(willswitch);
-        }
-
-        protected override void QueryCDevs() {
-            //catch (Exception e) {
-            //    Helpers.ConsolePrint(MinerDeviceName, "Exception: " + e.ToString());
-
-            //    MinerFileNotFoundDialog WarningDialog = new MinerFileNotFoundDialog(MinerDeviceName, Path);
-            //    WarningDialog.ShowDialog();
-
-            //    if (WarningDialog.DisableDetection) {
-            //        if (this is ccminer_sm5x)
-            //            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X = true;
-            //        else if (this is ccminer_sm3x)
-            //            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X = true;
-            //        else if (this is ccminer_sm21)
-            //            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X = true;
-            //    }
-
-            //    WarningDialog = null;
-
-            //    return;
-            //}
         }
 
         // new decoupled benchmarking routines

@@ -10,6 +10,8 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using ATI.ADL;
 using System.Runtime.InteropServices;
+using System.Management;
+using System.IO;
 
 namespace NiceHashMiner.Devices
 {
@@ -106,6 +108,45 @@ namespace NiceHashMiner.Devices
         private void QueryAMD() {
             //showMessageAndStep(International.GetText("form1_loadtext_AMD"));
             //var dump = new sgminer(true);
+
+            #region AMD driver check, ADL returns 0
+            // check the driver version bool EnableOptimizedVersion = true;
+            Dictionary<string, bool> deviceDriverOld = new Dictionary<string, bool>();
+            string minerPath = MinerPaths.sgminer_5_4_0_general;
+            bool ShowWarningDialog = false;
+            ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get();
+
+            foreach (var manObj in moc) {
+                Helpers.ConsolePrint(TAG, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
+
+                deviceDriverOld[manObj["Name"].ToString()] = false;
+
+                if ((manObj["Name"].ToString().Contains("AMD") || manObj["Name"].ToString().Contains("Radeon")) && ShowWarningDialog == false) {
+                    Version AMDDriverVersion = new Version(manObj["DriverVersion"].ToString());
+
+                    if (AMDDriverVersion.Major < 15) {
+                        ShowWarningDialog = true;
+                        deviceDriverOld[manObj["Name"].ToString()] = true;
+                        Helpers.ConsolePrint(TAG, "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
+                            "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
+                    } else if (AMDDriverVersion.Major == 16 && AMDDriverVersion.Minor >= 150) {
+                        // TODO why this copy?
+                        string src = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\" +
+                                     minerPath.Split('\\')[0] + "\\" + minerPath.Split('\\')[1] + "\\kernel";
+
+                        foreach (var file in Directory.GetFiles(src)) {
+                            string dest = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\" + System.IO.Path.GetFileName(file);
+                            if (!File.Exists(dest)) File.Copy(file, dest, false);
+                        }
+                    }
+                }
+            }
+            if (ShowWarningDialog == true && ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning == true) {
+                Form WarningDialog = new DriverVersionConfirmationDialog();
+                WarningDialog.ShowDialog();
+                WarningDialog = null;
+            }
+            #endregion // AMD driver check
 
             // get platform version
             showMessageAndStep("Checking AMD OpenCL GPUs");
@@ -221,8 +262,9 @@ namespace NiceHashMiner.Devices
                                 Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS DIFFERENT/BAD");
                             }
                             for (int i_id = 0; i_id < amdGpus.Count; ++i_id) {
-                                var newAmdDev = new AmdGpuDevice(amdGpus[i_id]);
-                                newAmdDev.DeviceName = _amdDeviceName[i_id];
+                                var deviceName = _amdDeviceName[i_id];
+                                var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName]);
+                                newAmdDev.DeviceName = deviceName;
                                 newAmdDev.UUID = _amdDeviceUUID[i_id];
                                 string skipOrAdd = true ? "SKIPED" : "ADDED";
                                 string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";

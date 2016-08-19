@@ -14,8 +14,6 @@ namespace NiceHashMiner.Miners
         {
             MinerDeviceName = "NVIDIA3.x";
             Path = MinerPaths.ccminer_tpruvot;
-
-            TryQueryCDevs();
         }
 
         protected override MinerType GetMinerType() {
@@ -26,10 +24,6 @@ namespace NiceHashMiner.Miners
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.NVIDIA_3_x);
             allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
-        }
-
-        protected override bool IsGroupQueryEnabled() {
-            return !ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X;
         }
 
         public override string GetOptimizedMinerPath(AlgorithmType algorithmType) {

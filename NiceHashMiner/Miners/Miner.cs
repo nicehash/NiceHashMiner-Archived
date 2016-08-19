@@ -58,8 +58,6 @@ namespace NiceHashMiner
         public bool StartingUpDelay;
         protected string Path;
 
-        // remove ether devices
-        protected int[] EtherDevices;
         protected string WorkingDirectory;
         protected NiceHashProcess ProcessHandle;
 
@@ -86,13 +84,11 @@ namespace NiceHashMiner
         protected double PreviousTotalMH;
 
         
-
-        private bool QueryComputeDevices;
         protected bool _isEthMinerExit = false;
         protected AlgorithmType[] _supportedMinerAlgorithms;
 
         // queryComputeDevices is a quickfix to decouple device querying, TODO move to dev query logic
-        public Miner(bool queryComputeDevices)
+        public Miner()
         {
             CDevs = new List<ComputeDevice>();
 
@@ -107,8 +103,6 @@ namespace NiceHashMiner
             IsRunning = false;
             PreviousTotalMH = 0.0;
 
-            QueryComputeDevices = queryComputeDevices;
-
             InitSupportedMinerAlgorithms();
 
             APIPort = MinersApiPortsManager.Instance.GetAvaliablePort(GetMinerType());
@@ -117,15 +111,6 @@ namespace NiceHashMiner
         ~Miner() {
             // free the port
             MinersApiPortsManager.Instance.RemovePort(APIPort);
-        }
-
-        abstract protected void QueryCDevs();
-        abstract protected bool IsGroupQueryEnabled();
-
-        protected void TryQueryCDevs() {
-            if (QueryComputeDevices && IsGroupQueryEnabled()) {
-                QueryCDevs();
-            }
         }
 
         virtual public void SetCDevs(string[] deviceUUIDs) {
