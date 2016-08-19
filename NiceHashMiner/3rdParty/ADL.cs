@@ -214,31 +214,31 @@ namespace ATI.ADL {
             #endregion Internal Constant
 
             #region DLLImport
-            [DllImport(Kernel32_FileName)]
+            [DllImport(Kernel32_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern HMODULE GetModuleHandle(string moduleName);
 
-            [DllImport(Atiadlxx_FileName)]
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Main_Control_Create(ADL_Main_Memory_Alloc callback, int enumConnectedAdapters);
 
-            [DllImport(Atiadlxx_FileName)]
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Main_Control_Destroy();
 
-            [DllImport(Atiadlxx_FileName)]
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Main_Control_IsFunctionValid(HMODULE module, string procName);
 
-            [DllImport(Atiadlxx_FileName)]
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern FARPROC ADL_Main_Control_GetProcAddress(HMODULE module, string procName);
 
-            [DllImport(Atiadlxx_FileName)]
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Adapter_NumberOfAdapters_Get(ref int numAdapters);
 
-            [DllImport(Atiadlxx_FileName)]
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Adapter_AdapterInfo_Get(IntPtr info, int inputSize);
 
-            [DllImport(Atiadlxx_FileName)]
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Adapter_Active_Get(int adapterIndex, ref int status);
 
-            [DllImport(Atiadlxx_FileName)]
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Display_DisplayInfo_Get(int adapterIndex, ref int numDisplays, out IntPtr displayInfoArray, int forceDetect);
 
             #endregion DLLImport
