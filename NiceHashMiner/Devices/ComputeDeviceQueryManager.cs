@@ -8,6 +8,8 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using ATI.ADL;
+using System.Runtime.InteropServices;
 
 namespace NiceHashMiner.Devices
 {
@@ -27,6 +29,9 @@ namespace NiceHashMiner.Devices
         }
 
         public int CPUs { get; private set; }
+
+        public int AMDOpenCLPlatformNum { get; private set; }
+        public string AMDOpenCLPlatformStringKey { get; private set; }
 
         public IMessageNotifier MessageNotifier { get; private set; }
 
@@ -99,8 +104,122 @@ namespace NiceHashMiner.Devices
         }
 
         private void QueryAMD() {
-            showMessageAndStep(International.GetText("form1_loadtext_AMD"));
-            var dump = new sgminer(true);
+            //showMessageAndStep(International.GetText("form1_loadtext_AMD"));
+            //var dump = new sgminer(true);
+
+            // get platform version
+            showMessageAndStep("Checking AMD OpenCL GPUs");
+            if (IsOpenCLQuerrySuccess) {
+                bool amdPlatformNumFound = false;
+                foreach (var kvp in OpenCLJSONData.OCLPlatforms) {
+                    if (kvp.Key.Contains("AMD") || kvp.Key.Contains("amd")) {
+                        amdPlatformNumFound = true;
+                        AMDOpenCLPlatformStringKey = kvp.Key;
+                        AMDOpenCLPlatformNum = kvp.Value;
+                        Helpers.ConsolePrint(TAG, String.Format("AMD platform found: Key: {0}, Num: {1}",
+                            AMDOpenCLPlatformStringKey,
+                            AMDOpenCLPlatformNum.ToString()));
+                        break;
+                    }
+                }
+                if (amdPlatformNumFound) {
+                    var amdOCLDevices = OpenCLJSONData.OCLPlatformDevices[AMDOpenCLPlatformStringKey];
+                    if (amdOCLDevices.Count == 0) {
+                        Helpers.ConsolePrint(TAG, "AMD GPUs count is 0");
+                    } else {
+                        Helpers.ConsolePrint(TAG, "AMD GPUs count : " + amdOCLDevices.Count.ToString());
+                        Helpers.ConsolePrint(TAG, "AMD Getting device name and serial from ADL");
+                        // ADL
+                        bool isAdlInit = true;
+                        // ADL should get our devices in order
+                        HashSet<int> _busIds = new HashSet<int>();
+                        List<string> _amdDeviceName = new List<string>();
+                        List<string> _amdDeviceUUID = new List<string>();
+                        try {
+                            int ADLRet = -1;
+                            int NumberOfAdapters = 0;
+                            if (null != ADL.ADL_Main_Control_Create)
+                                // Second parameter is 1: Get only the present adapters
+                                ADLRet = ADL.ADL_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 1);
+                            if (ADL.ADL_SUCCESS == ADLRet) {
+                                if (null != ADL.ADL_Adapter_NumberOfAdapters_Get) {
+                                    ADL.ADL_Adapter_NumberOfAdapters_Get(ref NumberOfAdapters);
+                                }
+                                Helpers.ConsolePrint(TAG, "Number Of Adapters: " + NumberOfAdapters.ToString());
+
+                                if (0 < NumberOfAdapters) {
+                                    // Get OS adpater info from ADL
+                                    ADLAdapterInfoArray OSAdapterInfoData;
+                                    OSAdapterInfoData = new ADLAdapterInfoArray();
+
+                                    if (null != ADL.ADL_Adapter_AdapterInfo_Get) {
+                                        IntPtr AdapterBuffer = IntPtr.Zero;
+                                        int size = Marshal.SizeOf(OSAdapterInfoData);
+                                        AdapterBuffer = Marshal.AllocCoTaskMem((int)size);
+                                        Marshal.StructureToPtr(OSAdapterInfoData, AdapterBuffer, false);
+
+                                        if (null != ADL.ADL_Adapter_AdapterInfo_Get) {
+                                            ADLRet = ADL.ADL_Adapter_AdapterInfo_Get(AdapterBuffer, size);
+                                            if (ADL.ADL_SUCCESS == ADLRet) {
+                                                OSAdapterInfoData = (ADLAdapterInfoArray)Marshal.PtrToStructure(AdapterBuffer, OSAdapterInfoData.GetType());
+                                                int IsActive = 0;
+
+                                                for (int i = 0; i < NumberOfAdapters; i++) {
+                                                    // Check if the adapter is active
+                                                    if (null != ADL.ADL_Adapter_Active_Get)
+                                                        ADLRet = ADL.ADL_Adapter_Active_Get(OSAdapterInfoData.ADLAdapterInfo[i].AdapterIndex, ref IsActive);
+
+                                                    if (ADL.ADL_SUCCESS == ADLRet) {
+                                                        if (!_busIds.Contains(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber)) {
+                                                            // we are looking for amd
+                                                            // TODO For now Radeon only no FirePro
+                                                            var devName = OSAdapterInfoData.ADLAdapterInfo[i].AdapterName;
+                                                            if (devName.Contains("AMD")
+                                                                && devName.Contains("Radeon")) {
+                                                                _busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
+                                                                _amdDeviceName.Add(devName);
+                                                                var udid = OSAdapterInfoData.ADLAdapterInfo[i].UDID;
+                                                                var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
+                                                                _amdDeviceUUID.Add(udid.Substring(0, pciVen_id_strSize));
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                Helpers.ConsolePrint(TAG, "ADL_Adapter_AdapterInfo_Get() returned error code " + ADLRet.ToString());
+                                            }
+                                        }
+                                        // Release the memory for the AdapterInfo structure
+                                        if (IntPtr.Zero != AdapterBuffer)
+                                            Marshal.FreeCoTaskMem(AdapterBuffer);
+                                    }
+                                }
+                                if (null != ADL.ADL_Main_Control_Destroy)
+                                    ADL.ADL_Main_Control_Destroy();
+                            } else {
+                                // TODO
+                                Helpers.ConsolePrint(TAG, "ADL_Main_Control_Create() returned error code " + ADLRet.ToString());
+                                Helpers.ConsolePrint(TAG, "Check if ADL is properly installed!");
+                            }
+                        } catch (Exception ex) {
+                            Helpers.ConsolePrint(TAG, "AMD ADL exception: " + ex.Message);
+                            isAdlInit = false;
+                        }
+                        if(isAdlInit) {
+                            if (amdOCLDevices.Count == _amdDeviceUUID.Count) {
+                                Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS GOOD/SAME");
+                                for (int i_id = 0; i_id < amdOCLDevices.Count; ++i_id) {
+                                    var newAmdDev = new AmdGpuDevice(amdOCLDevices[i_id]);
+                                    newAmdDev.DeviceName = _amdDeviceName[i_id];
+                                    newAmdDev.UUID = _amdDeviceUUID[i_id];
+                                }
+                            } else {
+                                Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS DIFFERENT/BAD");
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void UncheckedCPU() {
@@ -209,6 +328,7 @@ namespace NiceHashMiner.Devices
         }
         string QueryOpenCLDevicesString = "";
         OpenCLJSON OpenCLJSONData = new OpenCLJSON();
+        bool IsOpenCLQuerrySuccess = false;
         private void QueryOpenCLDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
             if (e.Data != null) {
                 QueryOpenCLDevicesString += e.Data;
@@ -254,6 +374,9 @@ namespace NiceHashMiner.Devices
             // TODO
             if (OpenCLJSONData == null) {
                 Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection found no devices. OpenCLDeviceDetection returned: " + QueryOpenCLDevicesString);
+            } else {
+                IsOpenCLQuerrySuccess = true;
+                Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection found devices success.");
             }
         }
 

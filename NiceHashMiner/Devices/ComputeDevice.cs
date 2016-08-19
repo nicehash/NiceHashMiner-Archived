@@ -30,6 +30,8 @@ namespace NiceHashMiner.Devices
 
         [JsonIgnore]
         CudaDevice _cudaDevice;
+        [JsonIgnore]
+        AmdGpuDevice _amdDevice;
 
         // temp value for grouping new profits
         [JsonIgnore]
@@ -108,6 +110,35 @@ namespace NiceHashMiner.Devices
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
             UUID = cudaDevice.UUID;
+        }
+
+        public ComputeDevice(AmdGpuDevice amdDevice, bool addToGlobalList = false, bool enabled = true) {
+            _amdDevice = amdDevice;
+            ID = amdDevice.DeviceID;
+            DeviceGroupType = DeviceGroupType.AMD_OpenCL;
+            Group = GroupNames.GetName(DeviceGroupType.AMD_OpenCL);
+            Name = amdDevice.DeviceName;
+            Enabled = enabled;
+            if (addToGlobalList) {
+                // add to all devices
+                AllAvaliableDevices.Add(this);
+                // compare new device with unique list scope
+                {
+                    bool isNewUnique = true;
+                    foreach (var d in UniqueAvaliableDevices) {
+                        if (this.Name == d.Name) {
+                            isNewUnique = false;
+                            break;
+                        }
+                    }
+                    if (isNewUnique) {
+                        UniqueAvaliableDevices.Add(this);
+                    }
+                }
+                // add to group manager
+                ComputeDeviceGroupManager.Instance.AddDevice(this);
+            }
+            UUID = amdDevice.UUID;
         }
 
         public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig) {
