@@ -123,11 +123,20 @@ namespace NiceHashMiner.Devices
                     }
                 }
                 if (amdPlatformNumFound) {
-                    var amdOCLDevices = OpenCLJSONData.OCLPlatformDevices[AMDOpenCLPlatformStringKey];
-                    if (amdOCLDevices.Count == 0) {
+                    // get only AMD gpus
+                    List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
+                    {
+                        var amdOCLDevices = OpenCLJSONData.OCLPlatformDevices[AMDOpenCLPlatformStringKey];
+                        foreach (var oclDev in amdOCLDevices) {
+                            if (oclDev._CL_DEVICE_TYPE.Contains("GPU")) {
+                                amdGpus.Add(oclDev);
+                            } 
+                        }
+                    }
+                    if (amdGpus.Count == 0) {
                         Helpers.ConsolePrint(TAG, "AMD GPUs count is 0");
                     } else {
-                        Helpers.ConsolePrint(TAG, "AMD GPUs count : " + amdOCLDevices.Count.ToString());
+                        Helpers.ConsolePrint(TAG, "AMD GPUs count : " + amdGpus.Count.ToString());
                         Helpers.ConsolePrint(TAG, "AMD Getting device name and serial from ADL");
                         // ADL
                         bool isAdlInit = true;
@@ -172,10 +181,10 @@ namespace NiceHashMiner.Devices
                                                     if (ADL.ADL_SUCCESS == ADLRet) {
                                                         if (!_busIds.Contains(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber)) {
                                                             // we are looking for amd
-                                                            // TODO For now Radeon only no FirePro
+                                                            // TODO check discrete and integrated GPU separation
                                                             var devName = OSAdapterInfoData.ADLAdapterInfo[i].AdapterName;
                                                             if (devName.Contains("AMD")
-                                                                && devName.Contains("Radeon")) {
+                                                                /*&& devName.Contains("Radeon")*/) {
                                                                 _busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                 _amdDeviceName.Add(devName);
                                                                 var udid = OSAdapterInfoData.ADLAdapterInfo[i].UDID;
@@ -206,15 +215,25 @@ namespace NiceHashMiner.Devices
                             isAdlInit = false;
                         }
                         if(isAdlInit) {
-                            if (amdOCLDevices.Count == _amdDeviceUUID.Count) {
+                            if (amdGpus.Count == _amdDeviceUUID.Count) {
                                 Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS GOOD/SAME");
-                                for (int i_id = 0; i_id < amdOCLDevices.Count; ++i_id) {
-                                    var newAmdDev = new AmdGpuDevice(amdOCLDevices[i_id]);
-                                    newAmdDev.DeviceName = _amdDeviceName[i_id];
-                                    newAmdDev.UUID = _amdDeviceUUID[i_id];
-                                }
                             } else {
                                 Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS DIFFERENT/BAD");
+                            }
+                            for (int i_id = 0; i_id < amdGpus.Count; ++i_id) {
+                                var newAmdDev = new AmdGpuDevice(amdGpus[i_id]);
+                                newAmdDev.DeviceName = _amdDeviceName[i_id];
+                                newAmdDev.UUID = _amdDeviceUUID[i_id];
+                                string skipOrAdd = true ? "SKIPED" : "ADDED";
+                                string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
+                                string logMessage = String.Format("AMD OpenCL {0} device: {1}",
+                                    skipOrAdd,
+                                    String.Format("ID: {0}, NAME: {1}, UUID: {2}, MEMORY: {3}, ETHEREUM: {4}",
+                                    newAmdDev.DeviceID.ToString(), newAmdDev.DeviceName, newAmdDev.UUID, 
+                                    newAmdDev.DeviceGlobalMemory.ToString(), etherumCapableStr)
+                                    );
+                                new ComputeDevice(newAmdDev, true, true);
+                                Helpers.ConsolePrint(TAG, logMessage);
                             }
                         }
                     }

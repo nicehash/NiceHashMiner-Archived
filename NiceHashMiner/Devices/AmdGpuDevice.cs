@@ -10,6 +10,7 @@ namespace NiceHashMiner.Devices {
         public int DeviceID { get { return (int)_openClSubset.DeviceID; } }
         public string DeviceName; // init this with the ADL
         public string UUID; // init this with the ADL, use PCI_VEN & DEV IDs
+        public ulong DeviceGlobalMemory { get { return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE; } }
         public bool UseOptimizedVersion { get; private set; }
         private OpenCLDevice _openClSubset;
         public AmdGpuDevice(OpenCLDevice openClSubset) {
@@ -39,12 +40,6 @@ namespace NiceHashMiner.Devices {
                 _isEtherumCapableInit = true;
                 // check if 2GB device memory
                 _isEtherumCapable = _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE >= ComputeDevice.MEMORY_2GB;
-
-                // exception devices
-                if (DeviceName.Contains("750") && DeviceName.Contains("Ti")) {
-                    Helpers.ConsolePrint("CudaDevice", "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
-                    _isEtherumCapable = false;
-                }
             }
             return _isEtherumCapable;
         }

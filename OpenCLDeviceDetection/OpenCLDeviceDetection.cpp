@@ -33,7 +33,7 @@ vector<Platform> OpenCLDeviceDetection::getPlatforms() {
 vector<Device> OpenCLDeviceDetection::getDevices(vector<Platform> const& _platforms, unsigned _platformId) {
 	vector<Device> devices;
 	try {
-		_platforms[_platformId].getDevices(CL_DEVICE_TYPE_CPU| CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR, &devices);
+		_platforms[_platformId].getDevices(/*CL_DEVICE_TYPE_CPU| */CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_ACCELERATOR, &devices);
 	} catch (Error const& err) {
 		// if simply no devices found return empty vector
 		if (err.err() != CL_DEVICE_NOT_FOUND)
