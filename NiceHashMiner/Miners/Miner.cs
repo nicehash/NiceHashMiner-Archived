@@ -140,6 +140,8 @@ namespace NiceHashMiner
         /// <returns></returns>
         abstract public string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = true);
 
+
+
         public void KillSGMiner()
         {
             foreach (Process process in Process.GetProcessesByName("sgminer"))
@@ -229,6 +231,11 @@ namespace NiceHashMiner
             BenchmarkHandle.StartInfo.FileName = GetOptimizedMinerPath(BenchmarkAlgorithm.NiceHashID);
 
             Helpers.ConsolePrint(MinerDeviceName, "Using miner: " + BenchmarkHandle.StartInfo.FileName);
+
+            // TODO sgminer quickfix
+            if (this is sgminer) {
+                BenchmarkHandle.StartInfo.FileName = "cmd";
+            } 
 
             BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;
             BenchmarkHandle.StartInfo.UseShellExecute = false;
