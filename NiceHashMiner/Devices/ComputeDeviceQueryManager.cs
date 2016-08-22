@@ -266,7 +266,7 @@ namespace NiceHashMiner.Devices
                                 var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName]);
                                 newAmdDev.DeviceName = deviceName;
                                 newAmdDev.UUID = _amdDeviceUUID[i_id];
-                                string skipOrAdd = true ? "SKIPED" : "ADDED";
+                                string skipOrAdd = false ? "SKIPED" : "ADDED";
                                 string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
                                 string logMessage = String.Format("AMD OpenCL {0} device: {1}",
                                     skipOrAdd,
