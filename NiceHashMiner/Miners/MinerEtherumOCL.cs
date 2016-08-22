@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,15 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
 
-    // NOT TESTED broken 
+    // TODO for NOW ONLY AMD
     public class MinerEtherumOCL : MinerEtherum {
 
-        int GPUPlatformNumber;
+        private readonly int GPUPlatformNumber;
 
         public MinerEtherumOCL() : base() {
             // AMD or TODO it could be something else
             MinerDeviceName = "AMD OpenCL";
+            GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
         }
 
         protected override MinerType GetMinerType() {
