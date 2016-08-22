@@ -109,6 +109,7 @@ namespace NiceHashMiner.Forms {
 
         private void StopButonClick() {
             _inBenchmark = false;
+            Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
             if (_currentMiner != null) {
                 _currentMiner.BenchmarkSignalQuit = true;
             }
@@ -250,6 +251,7 @@ namespace NiceHashMiner.Forms {
 
         void EndBenchmark() {
             _inBenchmark = false;
+            Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
         }
 
         private void BenchmarkCompleted(bool success, string text, object tag) {
