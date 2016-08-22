@@ -156,7 +156,7 @@ namespace NiceHashMiner.Miners
                           " -k " + algorithm.MinerName +
                           " --url=" + url +
                           " --userpass=" + username + ":" + GetPassword(algorithm) +
-                          " --sched-stop " + DateTime.Now.AddMinutes(time).ToString("HH:mm") +
+                          " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
                           " -T --log 10 --log-file dump.txt" +
                           " " + ExtraLaunchParameters +
                           " " + algorithm.ExtraLaunchParameters +
