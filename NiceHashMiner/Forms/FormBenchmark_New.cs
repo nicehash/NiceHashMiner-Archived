@@ -161,13 +161,13 @@ namespace NiceHashMiner.Forms {
                 var algorithmQueue = new Queue<Algorithm>();
                 foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
                     if (ShoulBenchmark(kvpAlgorithm.Value)) {
-                        ++_benchmarkAlgorithmsCount;
                         algorithmQueue.Enqueue(kvpAlgorithm.Value);
                     }
                 }
 
                 BenchmarkSettingsStatus status;
                 if (option.IsEnabled) {
+                    _benchmarkAlgorithmsCount += algorithmQueue.Count;
                     status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.NONE : BenchmarkSettingsStatus.TODO;
                     _benchmarkDevicesAlgorithmQueue.Add(
                     new Tuple<ComputeDevice, Queue<Algorithm>>(option.CDevice, algorithmQueue)
