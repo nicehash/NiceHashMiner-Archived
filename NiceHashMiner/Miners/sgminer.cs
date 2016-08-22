@@ -220,10 +220,6 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
-            // TODO check this
-            //// sgminer read output
-            //while (true) {
-            //}
             if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTime + 1 && _benchmarkOnce == true) {
                 _benchmarkOnce = false;
                 string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
@@ -234,8 +230,9 @@ namespace NiceHashMiner.Miners
                 KillSGMiner();
                 BenchmarkSignalHanged = true;
             }
-
-            CheckOutdata(outdata);
+            if (!BenchmarkSignalFinnished) {
+                CheckOutdata(outdata);
+            }
         }
 
         #endregion // Decoupled benchmarking routines
