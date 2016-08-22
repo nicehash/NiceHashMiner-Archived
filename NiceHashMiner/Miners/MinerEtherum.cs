@@ -137,7 +137,7 @@ namespace NiceHashMiner.Miners {
             }
         }
 
-        public override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
+        public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename, bool isOptimized) {
             return Ethereum.EtherMinerPath;
         }
 

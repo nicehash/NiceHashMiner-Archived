@@ -12,6 +12,7 @@ namespace NiceHashMiner.Devices
     public class ComputeDevice
     {
         //[JsonIgnore]
+        // TODO IMPORTANT fix this Ids for CUDA, OpenCL, sgminer, ccminer and ethminer have different grouping logics
         readonly public int ID;
         readonly public string Group;
         readonly public string Name;
@@ -19,9 +20,6 @@ namespace NiceHashMiner.Devices
         
         [JsonIgnore]
         readonly public DeviceGroupType DeviceGroupType;
-        // close to uuid, hash readonly members and we should be safe
-        // it is used only at runtime, do not save to configs
-        //[JsonIgnore]
         // UUID now used for saving
         readonly public string UUID;
 
@@ -32,6 +30,11 @@ namespace NiceHashMiner.Devices
         CudaDevice _cudaDevice;
         [JsonIgnore]
         AmdGpuDevice _amdDevice;
+        // sgminer extra quickfix
+        [JsonIgnore]
+        public bool IsOptimizedVersion { get; private set; }
+        [JsonIgnore]
+        public string Codename { get; private set; }
 
         // temp value for grouping new profits
         [JsonIgnore]
@@ -52,7 +55,6 @@ namespace NiceHashMiner.Devices
             UUID = uuid;
             Enabled = enabled;
         }
-
 
         public ComputeDevice(int id, string group, string name, bool addToGlobalList = false, bool enabled = true)
         {
@@ -139,12 +141,43 @@ namespace NiceHashMiner.Devices
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
             UUID = amdDevice.UUID;
+            // sgminer extra
+            IsOptimizedVersion = amdDevice.UseOptimizedVersion;
+            Codename = amdDevice.Codename;
         }
 
+        // TODO update this for specific device stuff for optimizations especially for AMD
+        // TODO set algorithm optimization settings
         public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig) {
             DeviceBenchmarkConfig = deviceBenchmarkConfig;
+            // check initialization
+            if (!DeviceBenchmarkConfig.IsAlgorithmSettingsInit) {
+                DeviceBenchmarkConfig.IsAlgorithmSettingsInit = true;
+                // only AMD has extra initialization
+                if (_amdDevice != null) {
+                    // Check for optimized version
+                    if (_amdDevice.UseOptimizedVersion) {
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.X11].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Qubit].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Quark].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1";
+                    } else {
+                        // this is not the same as the constructor values?? check!
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.X11].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Qubit].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 128 --gpu-threads 4";
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Quark].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 256 --gpu-threads 1";
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
+                    }
+                    if (!_amdDevice.Codename.Contains("Tahiti")) {
+                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.NeoScrypt].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
+                        Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + _amdDevice.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
+                    }
+                }
+            }
         }
 
+
+        // static methods
         public static ComputeDevice GetDeviceWithUUID(string uuid) {
             foreach (var dev in AllAvaliableDevices) {
                 if (uuid == dev.UUID) return dev;
@@ -160,7 +193,7 @@ namespace NiceHashMiner.Devices
             return count;
         }
 
-        public static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
+        private static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
             var SHA256 = new SHA256Managed();
             var hash = new StringBuilder();
             string mixedAttr = id.ToString() + group + name + ((int)deviceGroupType).ToString();
@@ -182,12 +215,9 @@ namespace NiceHashMiner.Devices
             return enabledCDevs;
         }
 
-        public static string GetEnabledDeviceUUIDForName(string name) {
-            foreach (var dev in AllAvaliableDevices) {
-                if (dev.Name == name) return dev.UUID;
-            }
-            return null;
-        }
+        //// this checks if device is same
+        //public static bool IsSameDeviceType() {
 
+        //}
     }
 }

@@ -5,14 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices {
+    // TODO trim strings
     [Serializable]
     public class AmdGpuDevice {
+
+        public static readonly string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 ";
+
         public int DeviceID { get { return (int)_openClSubset.DeviceID; } }
         public string DeviceName; // init this with the ADL
         public string UUID; // init this with the ADL, use PCI_VEN & DEV IDs
         public ulong DeviceGlobalMemory { get { return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE; } }
         public bool UseOptimizedVersion { get; private set; }
         private OpenCLDevice _openClSubset;
+
+        public string Codename { get { return _openClSubset._CL_DEVICE_NAME; } }
+
         public AmdGpuDevice(OpenCLDevice openClSubset, bool isOldDriver) {
             _openClSubset = openClSubset;
             // Check for optimized version
@@ -33,7 +40,6 @@ namespace NiceHashMiner.Devices {
                 UseOptimizedVersion = true;
                 Helpers.ConsolePrint("AmdGpuDevice", "GPU (" + _openClSubset._CL_DEVICE_NAME + ") is optimized => YES!");
             }
-            // TODO set algorithm optimization settings
         }
 
         private bool _isEtherumCapable = false;

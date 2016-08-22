@@ -130,15 +130,15 @@ namespace NiceHashMiner.Miners {
             } else {
                 switch (deviceGroupType) {
                     case DeviceGroupType.AMD_OpenCL:
-                        return new sgminer(false);
+                        return new sgminer();
                     case DeviceGroupType.NVIDIA_2_1:
-                        return new ccminer_sm21(false);
+                        return new ccminer_sm21();
                     case DeviceGroupType.NVIDIA_3_x:
-                        return new ccminer_sm3x(false);
+                        return new ccminer_sm3x();
                     case DeviceGroupType.NVIDIA_5_x:
-                        return new ccminer_sm5x(false);
+                        return new ccminer_sm5x();
                     case DeviceGroupType.NVIDIA_6_x:
-                        return new ccminer_sm6x(false);
+                        return new ccminer_sm6x();
                 }
             }
             
@@ -228,6 +228,7 @@ namespace NiceHashMiner.Miners {
             // calculate benchmarks
             foreach (var cdevKvp in _enabledDeviceCount) {
                 var cdevName = cdevKvp.Key;
+                // TODO check if should remove this count because we might have different RAM SIZE
                 var cdevCount = cdevKvp.Value;
                 Dictionary<AlgorithmType, double> cumulativeSpeeds = new Dictionary<AlgorithmType, double>();
                 var deviceConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(cdevName);
@@ -305,8 +306,8 @@ namespace NiceHashMiner.Miners {
                 var a_algoType = a.MostProfitableAlgorithm.NiceHashID;
                 var b_algoType = b.MostProfitableAlgorithm.NiceHashID;
                 // a and b algorithm settings should be the same if we call this function
-                return _minerPathChecker[a.DeviceGroupType].GetOptimizedMinerPath(a_algoType)
-                    == _minerPathChecker[b.DeviceGroupType].GetOptimizedMinerPath(b_algoType);
+                return _minerPathChecker[a.DeviceGroupType].GetOptimizedMinerPath(a_algoType, a.Codename, a.IsOptimizedVersion)
+                    == _minerPathChecker[b.DeviceGroupType].GetOptimizedMinerPath(b_algoType, b.Codename, b.IsOptimizedVersion);
             }
 
             return true;

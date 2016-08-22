@@ -9,8 +9,8 @@ namespace NiceHashMiner.Miners
 {
     class ccminer_sm3x : ccminer
     {
-        public ccminer_sm3x(bool queryComputeDevices) :
-            base(queryComputeDevices)
+        public ccminer_sm3x() :
+            base()
         {
             MinerDeviceName = "NVIDIA3.x";
             Path = MinerPaths.ccminer_tpruvot;
@@ -26,7 +26,7 @@ namespace NiceHashMiner.Miners
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
         }
 
-        public override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
+        public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename, bool isOptimized) {
             if (AlgorithmType.Decred == algorithmType) {
                 return MinerPaths.ccminer_decred;
             }

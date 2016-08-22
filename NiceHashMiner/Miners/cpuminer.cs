@@ -88,7 +88,7 @@ namespace NiceHashMiner.Miners
             return isInitialized;
         }
 
-        public override string GetOptimizedMinerPath(AlgorithmType algorithmType) {
+        public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = false) {
             if (algorithmType == AlgorithmType.Hodl) {
                 return HodlMinerPath;
             }

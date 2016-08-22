@@ -15,7 +15,7 @@ namespace NiceHashMiner.Miners
 {
     abstract public class ccminer : Miner
     {
-        public ccminer(bool queryComputeDevices) : base() { }
+        public ccminer() : base() { }
 
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {

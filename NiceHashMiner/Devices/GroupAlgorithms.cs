@@ -23,7 +23,7 @@ namespace NiceHashMiner.Devices {
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
-                const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 ";
+                string DefaultParam = AmdGpuDevice.DefaultParam;
                 return new Dictionary<AlgorithmType, Algorithm>() { 
                 { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11")
                     { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },

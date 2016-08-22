@@ -131,11 +131,14 @@ namespace NiceHashMiner
         protected abstract void InitSupportedMinerAlgorithms();
 
         /// <summary>
-        /// GetOptimizedMinerPath returns optimized miner path based on algorithm type
+        /// GetOptimizedMinerPath returns optimized miner path based on algorithm type and device codename.
+        /// Device codename is a quickfix for sgminer, other miners don't use it
         /// </summary>
-        /// <param name="algorithmType"></param>
-        /// <returns>Optimized or default string path</returns>
-        abstract public string GetOptimizedMinerPath(AlgorithmType algorithmType);
+        /// <param name="algorithmType">determines what miner path to return</param>
+        /// <param name="devCodename">sgminer extra</param>
+        /// <param name="isOptimized">sgminer extra</param>
+        /// <returns></returns>
+        abstract public string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = true);
 
         public void KillSGMiner()
         {

@@ -14,33 +14,28 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Miners
 {
+    // for now AMD only
     class sgminer : Miner
     {
-        bool EnableOptimizedVersion;
-        int PlatformDevices, tmpPlatformDevices, GPUPlatformNumber;
-        List<string> GPUCodeName;
-        const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 ";
+        private readonly int GPUPlatformNumber;
         const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90" +
                                         " --temp-target 75 --auto-fan --auto-gpu";
+        
+        // we only group devices that are compatible. for sgminer we have gpucodename and enabled optimized vesrion as mandatory extra parameters
+        private string CommonGpuCodenameSetting = "";
+        private bool EnableOptimizedVersion = true;
 
         // benchmark helper variables
         bool _benchmarkOnce = true;
         Stopwatch _benchmarkTimer = new Stopwatch();
 
-        // TODO remove
-        public Dictionary<AlgorithmType, Algorithm> SupportedAlgorithms;
-
-        public sgminer(bool queryComputeDevices)
+        public sgminer()
             : base()
-        {
-            SupportedAlgorithms = GroupAlgorithms.CreateDefaultsForGroup(DeviceGroupType.AMD_OpenCL);
-            
+        {            
             MinerDeviceName = "AMD_OpenCL";
             Path = MinerPaths.sgminer_5_4_0_general;
             EnableOptimizedVersion = true;
-            PlatformDevices = 0;
-            GPUPlatformNumber = 0;
-            GPUCodeName = new List<string>();
+            GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
         }
 
         protected override MinerType GetMinerType() {
@@ -53,6 +48,15 @@ namespace NiceHashMiner.Miners
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
         }
 
+        public override void SetCDevs(string[] deviceUUIDs) {
+            base.SetCDevs(deviceUUIDs);
+            // now set extra sgminer settings, first dev is enough because of grouping logic
+            if(CDevs.Count != 0) {
+                CommonGpuCodenameSetting = CDevs[0].Codename;
+                EnableOptimizedVersion = CDevs[0].IsOptimizedVersion;
+            }
+        }
+
         protected override int CalculateNumRetries() {
             return (ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds + ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD) / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
         }
@@ -60,43 +64,6 @@ namespace NiceHashMiner.Miners
         public override void Restart() {
             StartingUpDelay = true;
             base.Restart();
-        }
-
-        protected void AddPotentialCDev(string text)
-        {
-            // get number of platform devices to be used to detect card's code name
-            if (text.Contains("Platform devices:"))
-            {
-                try {
-                    PlatformDevices = Int32.Parse(text.Split(' ')[3]);
-                    tmpPlatformDevices = Int32.Parse(text.Split(' ')[3]);
-                    Helpers.ConsolePrint(MinerDeviceName, "Platform Devices: " + PlatformDevices);
-                }
-                catch { PlatformDevices = 0; }
-
-                return;
-            }
-
-            // gets all the card's code name
-            if (PlatformDevices > 0)
-            {
-                PlatformDevices--;
-                GPUCodeName.Add(text.Substring(14).Trim());
-            }
-
-            // skip useless lines
-            if (!text.Contains("GPU") || !text.Contains("assigned") || GPUCodeName.Count == 0) return;
-
-            string[] splt = text.Split(':');
-
-            int id = (int)Char.GetNumericValue(splt[2][8]);
-            string name = splt[splt.Length - 1];
-
-            Helpers.ConsolePrint(MinerDeviceName, "Detected: " + name);
-
-            // add AMD OpenCL devices
-            CDevs.Add(new ComputeDevice(id, MinerDeviceName, name, true));
-            Helpers.ConsolePrint(MinerDeviceName, "Added: " + name);
         }
 
         protected override void _Stop(bool willswitch) {
@@ -117,7 +84,7 @@ namespace NiceHashMiner.Miners
 
             StartingUpDelay = true;
 
-            Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
+            Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID, CommonGpuCodenameSetting, EnableOptimizedVersion);
 
             LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
                               " -k " + miningAlgorithm.MinerName +
@@ -146,18 +113,14 @@ namespace NiceHashMiner.Miners
             ProcessHandle = _Start();
         }
 
-        // TODO 
-        public override string GetOptimizedMinerPath(AlgorithmType type) {
+        public override string GetOptimizedMinerPath(AlgorithmType type, string gpuCodename, bool isOptimized) {
             if (EnableOptimizedVersion) {
                 if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
-                    // this will not check all GPU code names
-                    for (int i = 0; i < GPUCodeName.Count; i++) {
-                        if (!(GPUCodeName[i].Equals("Hawaii") || GPUCodeName[i].Equals("Pitcairn") || GPUCodeName[i].Equals("Tahiti"))) {
-                            if (!Helpers.InternalCheckIsWow64())
-                                return MinerPaths.sgminer_5_4_0_general;
+                    if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
+                        if (!Helpers.InternalCheckIsWow64())
+                            return MinerPaths.sgminer_5_4_0_general;
 
-                            return MinerPaths.sgminer_5_4_0_tweaked;
-                        }
+                        return MinerPaths.sgminer_5_4_0_tweaked;
                     }
 
                     if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
@@ -176,7 +139,7 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine;
             Path = "cmd";
-            string MinerPath = GetOptimizedMinerPath(algorithm.NiceHashID);
+            string MinerPath = GetOptimizedMinerPath(algorithm.NiceHashID, CommonGpuCodenameSetting, EnableOptimizedVersion);
 
             var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
             string url = "stratum+tcp://" + nhAlgorithmData.name + "." +

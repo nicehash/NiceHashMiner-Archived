@@ -11,7 +11,7 @@ namespace NiceHashMiner.Configs
     [Serializable]
     public class DeviceBenchmarkConfig : BaseConfigFile<DeviceBenchmarkConfig> {
         // TODO remove id if only unique benchmarks enabled
-        public string ID { get; private set; }
+        //public string ID { get; private set; }
         public DeviceGroupType DeviceGroupType { get; private set; }
         public string DeviceName { get; private set; }
         // TODO handle defaults for this
@@ -20,12 +20,13 @@ namespace NiceHashMiner.Configs
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
 
         // TODO add cdev UUIDs???
-        //[JsonIgnore]
-
-        
+        List<string> deviceUUIDs;
 
         [field: NonSerialized]
         readonly public static string BENCHMARK_PREFIX = "benchmark_";
+
+        [JsonIgnore]
+        public bool IsAlgorithmSettingsInit { get; set; }
 
         public DeviceBenchmarkConfig(DeviceGroupType deviceGroupType,
             string deviceGroupName,
@@ -39,8 +40,11 @@ namespace NiceHashMiner.Configs
                 AlgorithmSettings = GroupAlgorithms.CreateDefaultsForGroup(deviceGroupType);
             }
 
+            deviceUUIDs = new List<string>();
+            IsAlgorithmSettingsInit = false;
+
             // calculate ID
-            ID = GetId();
+            //ID = GetId();
         }
 
         public static string GetId(DeviceGroupType deviceGroupType,
@@ -73,8 +77,8 @@ namespace NiceHashMiner.Configs
         protected override void InitializeObject() {
             // check if data tampered
             bool IsDataTampered = !(
-                this.ID == _file.ID
-                && this.DeviceGroupType == _file.DeviceGroupType
+                /*this.ID == _file.ID
+                &&*/ this.DeviceGroupType == _file.DeviceGroupType
                 && this.DeviceName == _file.DeviceName
                 );
 
@@ -85,6 +89,8 @@ namespace NiceHashMiner.Configs
             this.TimeLimit = _file.TimeLimit;
 
             if (_file.AlgorithmSettings != null) {
+                // settings from files are initialized
+                IsAlgorithmSettingsInit = true;
                 foreach (var key in _file.AlgorithmSettings.Keys) {
                     if(this.AlgorithmSettings.ContainsKey(key)) {
                         this.AlgorithmSettings[key] = _file.AlgorithmSettings[key];
