@@ -28,8 +28,13 @@
             this.splitContainerTabControlButtons = new System.Windows.Forms.SplitContainer();
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.groupBoxBenchmarkTimeLimits = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.displayCurrencyLabel = new System.Windows.Forms.Label();
             this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
             this.textBox_MinerAPIGraceSecondsAMD = new System.Windows.Forms.TextBox();
@@ -75,36 +80,28 @@
             this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.checkBox_DebugConsole = new System.Windows.Forms.CheckBox();
             this.tabPageDevices = new System.Windows.Forms.TabPage();
+            this.splitContainerDevicesSettings = new System.Windows.Forms.SplitContainer();
+            this.buttonSubmitHardware = new System.Windows.Forms.Button();
+            this.buttonCheckProfitability = new System.Windows.Forms.Button();
+            this.devicesListView1 = new NiceHashMiner.Forms.Components.DevicesListView();
+            this.deviceSettingsControl1 = new NiceHashMiner.Forms.Components.DeviceSettingsControl();
+            this.label1 = new System.Windows.Forms.Label();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.splitContainerDevicesSettings = new System.Windows.Forms.SplitContainer();
-            this.buttonSubmitHardware = new System.Windows.Forms.Button();
-            this.buttonCheckProfitability = new System.Windows.Forms.Button();
-            this.buttonStopBenchmark = new System.Windows.Forms.Button();
-            this.buttonStartBenchmark = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
-            this.devicesListView1 = new NiceHashMiner.Forms.Components.DevicesListView();
-            this.deviceSettingsControl1 = new NiceHashMiner.Forms.Components.DeviceSettingsControl();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTabControlButtons)).BeginInit();
             this.splitContainerTabControlButtons.Panel1.SuspendLayout();
             this.splitContainerTabControlButtons.Panel2.SuspendLayout();
             this.splitContainerTabControlButtons.SuspendLayout();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tabPageDevices.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerDevicesSettings)).BeginInit();
             this.splitContainerDevicesSettings.Panel1.SuspendLayout();
             this.splitContainerDevicesSettings.Panel2.SuspendLayout();
@@ -130,8 +127,8 @@
             this.splitContainerTabControlButtons.Panel2.Controls.Add(this.buttonSaveClose);
             this.splitContainerTabControlButtons.Panel2.Controls.Add(this.buttonDefaults);
             this.splitContainerTabControlButtons.Panel2.Controls.Add(this.buttonCloseNoSave);
-            this.splitContainerTabControlButtons.Size = new System.Drawing.Size(986, 698);
-            this.splitContainerTabControlButtons.SplitterDistance = 649;
+            this.splitContainerTabControlButtons.Size = new System.Drawing.Size(986, 654);
+            this.splitContainerTabControlButtons.SplitterDistance = 605;
             this.splitContainerTabControlButtons.TabIndex = 1;
             // 
             // tabControlGeneral
@@ -142,7 +139,7 @@
             this.tabControlGeneral.Location = new System.Drawing.Point(6, 6);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
-            this.tabControlGeneral.Size = new System.Drawing.Size(974, 637);
+            this.tabControlGeneral.Size = new System.Drawing.Size(974, 593);
             this.tabControlGeneral.TabIndex = 0;
             // 
             // tabPageGeneral
@@ -196,10 +193,31 @@
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(966, 611);
+            this.tabPageGeneral.Size = new System.Drawing.Size(966, 567);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.devicesListViewEnableControl1);
+            this.groupBox1.Location = new System.Drawing.Point(6, 331);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(510, 230);
+            this.groupBox1.TabIndex = 384;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "All Avaliable devices:";
+            // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.AutoSaveChange = true;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 19);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.SetAllEnabled = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(498, 206);
+            this.devicesListViewEnableControl1.TabIndex = 0;
             // 
             // groupBoxBenchmarkTimeLimits
             // 
@@ -221,6 +239,33 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(217, 385);
             this.flowLayoutPanel1.TabIndex = 0;
+            // 
+            // benchmarkLimitControlCPU
+            // 
+            this.benchmarkLimitControlCPU.GroupName = "CPU";
+            this.benchmarkLimitControlCPU.Location = new System.Drawing.Point(3, 3);
+            this.benchmarkLimitControlCPU.Name = "benchmarkLimitControlCPU";
+            this.benchmarkLimitControlCPU.Size = new System.Drawing.Size(213, 121);
+            this.benchmarkLimitControlCPU.TabIndex = 0;
+            this.benchmarkLimitControlCPU.TimeLimits = null;
+            // 
+            // benchmarkLimitControlNVIDIA
+            // 
+            this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
+            this.benchmarkLimitControlNVIDIA.Location = new System.Drawing.Point(3, 130);
+            this.benchmarkLimitControlNVIDIA.Name = "benchmarkLimitControlNVIDIA";
+            this.benchmarkLimitControlNVIDIA.Size = new System.Drawing.Size(213, 121);
+            this.benchmarkLimitControlNVIDIA.TabIndex = 1;
+            this.benchmarkLimitControlNVIDIA.TimeLimits = null;
+            // 
+            // benchmarkLimitControlAMD
+            // 
+            this.benchmarkLimitControlAMD.GroupName = "AMD";
+            this.benchmarkLimitControlAMD.Location = new System.Drawing.Point(3, 257);
+            this.benchmarkLimitControlAMD.Name = "benchmarkLimitControlAMD";
+            this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(213, 121);
+            this.benchmarkLimitControlAMD.TabIndex = 2;
+            this.benchmarkLimitControlAMD.TimeLimits = null;
             // 
             // displayCurrencyLabel
             // 
@@ -379,7 +424,7 @@
             // checkBox_LogToFile
             // 
             this.checkBox_LogToFile.AutoSize = true;
-            this.checkBox_LogToFile.Location = new System.Drawing.Point(24, 324);
+            this.checkBox_LogToFile.Location = new System.Drawing.Point(24, 308);
             this.checkBox_LogToFile.Name = "checkBox_LogToFile";
             this.checkBox_LogToFile.Size = new System.Drawing.Size(72, 17);
             this.checkBox_LogToFile.TabIndex = 327;
@@ -416,7 +461,7 @@
             // checkBox_NVIDIAP0State
             // 
             this.checkBox_NVIDIAP0State.AutoSize = true;
-            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(24, 302);
+            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(24, 286);
             this.checkBox_NVIDIAP0State.Name = "checkBox_NVIDIAP0State";
             this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(100, 17);
             this.checkBox_NVIDIAP0State.TabIndex = 326;
@@ -653,10 +698,93 @@
             this.tabPageDevices.Location = new System.Drawing.Point(4, 22);
             this.tabPageDevices.Name = "tabPageDevices";
             this.tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDevices.Size = new System.Drawing.Size(966, 611);
+            this.tabPageDevices.Size = new System.Drawing.Size(966, 567);
             this.tabPageDevices.TabIndex = 1;
             this.tabPageDevices.Text = "Devices";
             this.tabPageDevices.UseVisualStyleBackColor = true;
+            // 
+            // splitContainerDevicesSettings
+            // 
+            this.splitContainerDevicesSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.splitContainerDevicesSettings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerDevicesSettings.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainerDevicesSettings.IsSplitterFixed = true;
+            this.splitContainerDevicesSettings.Location = new System.Drawing.Point(3, 3);
+            this.splitContainerDevicesSettings.Name = "splitContainerDevicesSettings";
+            // 
+            // splitContainerDevicesSettings.Panel1
+            // 
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonSubmitHardware);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonCheckProfitability);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.devicesListView1);
+            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.deviceSettingsControl1);
+            // 
+            // splitContainerDevicesSettings.Panel2
+            // 
+            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.label1);
+            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.algorithmsListView1);
+            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.algorithmSettingsControl1);
+            this.splitContainerDevicesSettings.Size = new System.Drawing.Size(960, 561);
+            this.splitContainerDevicesSettings.SplitterDistance = 488;
+            this.splitContainerDevicesSettings.TabIndex = 0;
+            // 
+            // buttonSubmitHardware
+            // 
+            this.buttonSubmitHardware.Location = new System.Drawing.Point(186, 5);
+            this.buttonSubmitHardware.Name = "buttonSubmitHardware";
+            this.buttonSubmitHardware.Size = new System.Drawing.Size(132, 23);
+            this.buttonSubmitHardware.TabIndex = 3;
+            this.buttonSubmitHardware.Text = "Submit Hardware";
+            this.buttonSubmitHardware.UseVisualStyleBackColor = true;
+            // 
+            // buttonCheckProfitability
+            // 
+            this.buttonCheckProfitability.Location = new System.Drawing.Point(324, 5);
+            this.buttonCheckProfitability.Name = "buttonCheckProfitability";
+            this.buttonCheckProfitability.Size = new System.Drawing.Size(132, 23);
+            this.buttonCheckProfitability.TabIndex = 3;
+            this.buttonCheckProfitability.Text = "Check Profitability";
+            this.buttonCheckProfitability.UseVisualStyleBackColor = true;
+            // 
+            // devicesListView1
+            // 
+            this.devicesListView1.Location = new System.Drawing.Point(3, 34);
+            this.devicesListView1.Name = "devicesListView1";
+            this.devicesListView1.Size = new System.Drawing.Size(452, 121);
+            this.devicesListView1.TabIndex = 1;
+            // 
+            // deviceSettingsControl1
+            // 
+            this.deviceSettingsControl1.Enabled = false;
+            this.deviceSettingsControl1.Location = new System.Drawing.Point(3, 161);
+            this.deviceSettingsControl1.Name = "deviceSettingsControl1";
+            this.deviceSettingsControl1.SelectedComputeDevice = null;
+            this.deviceSettingsControl1.Size = new System.Drawing.Size(452, 320);
+            this.deviceSettingsControl1.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(185, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Algorithm settings for selected device:";
+            // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 34);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(455, 282);
+            this.algorithmsListView1.TabIndex = 2;
+            // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(6, 322);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(413, 245);
+            this.algorithmSettingsControl1.TabIndex = 1;
             // 
             // buttonSaveClose
             // 
@@ -696,168 +824,11 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.devicesListViewEnableControl1);
-            this.groupBox1.Location = new System.Drawing.Point(221, 324);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(510, 281);
-            this.groupBox1.TabIndex = 384;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "All Avaliable devices:";
-            // 
-            // splitContainerDevicesSettings
-            // 
-            this.splitContainerDevicesSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.splitContainerDevicesSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerDevicesSettings.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainerDevicesSettings.IsSplitterFixed = true;
-            this.splitContainerDevicesSettings.Location = new System.Drawing.Point(3, 3);
-            this.splitContainerDevicesSettings.Name = "splitContainerDevicesSettings";
-            // 
-            // splitContainerDevicesSettings.Panel1
-            // 
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonSubmitHardware);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonCheckProfitability);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonStopBenchmark);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.buttonStartBenchmark);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.benchmarkOptions1);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.devicesListView1);
-            this.splitContainerDevicesSettings.Panel1.Controls.Add(this.deviceSettingsControl1);
-            // 
-            // splitContainerDevicesSettings.Panel2
-            // 
-            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.label1);
-            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.algorithmsListView1);
-            this.splitContainerDevicesSettings.Panel2.Controls.Add(this.algorithmSettingsControl1);
-            this.splitContainerDevicesSettings.Size = new System.Drawing.Size(960, 605);
-            this.splitContainerDevicesSettings.SplitterDistance = 488;
-            this.splitContainerDevicesSettings.TabIndex = 0;
-            // 
-            // buttonSubmitHardware
-            // 
-            this.buttonSubmitHardware.Location = new System.Drawing.Point(214, 98);
-            this.buttonSubmitHardware.Name = "buttonSubmitHardware";
-            this.buttonSubmitHardware.Size = new System.Drawing.Size(132, 23);
-            this.buttonSubmitHardware.TabIndex = 3;
-            this.buttonSubmitHardware.Text = "Submit Hardware";
-            this.buttonSubmitHardware.UseVisualStyleBackColor = true;
-            // 
-            // buttonCheckProfitability
-            // 
-            this.buttonCheckProfitability.Location = new System.Drawing.Point(214, 69);
-            this.buttonCheckProfitability.Name = "buttonCheckProfitability";
-            this.buttonCheckProfitability.Size = new System.Drawing.Size(132, 23);
-            this.buttonCheckProfitability.TabIndex = 3;
-            this.buttonCheckProfitability.Text = "Check Profitability";
-            this.buttonCheckProfitability.UseVisualStyleBackColor = true;
-            // 
-            // buttonStopBenchmark
-            // 
-            this.buttonStopBenchmark.Location = new System.Drawing.Point(214, 40);
-            this.buttonStopBenchmark.Name = "buttonStopBenchmark";
-            this.buttonStopBenchmark.Size = new System.Drawing.Size(132, 23);
-            this.buttonStopBenchmark.TabIndex = 3;
-            this.buttonStopBenchmark.Text = "Stop Benchmark";
-            this.buttonStopBenchmark.UseVisualStyleBackColor = true;
-            // 
-            // buttonStartBenchmark
-            // 
-            this.buttonStartBenchmark.Location = new System.Drawing.Point(214, 11);
-            this.buttonStartBenchmark.Name = "buttonStartBenchmark";
-            this.buttonStartBenchmark.Size = new System.Drawing.Size(132, 23);
-            this.buttonStartBenchmark.TabIndex = 3;
-            this.buttonStartBenchmark.Text = "Start Benchmark";
-            this.buttonStartBenchmark.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(185, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Algorithm settings for selected device:";
-            // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.AutoSaveChange = true;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 19);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(498, 256);
-            this.devicesListViewEnableControl1.TabIndex = 0;
-            // 
-            // benchmarkLimitControlCPU
-            // 
-            this.benchmarkLimitControlCPU.GroupName = "CPU";
-            this.benchmarkLimitControlCPU.Location = new System.Drawing.Point(3, 3);
-            this.benchmarkLimitControlCPU.Name = "benchmarkLimitControlCPU";
-            this.benchmarkLimitControlCPU.Size = new System.Drawing.Size(213, 121);
-            this.benchmarkLimitControlCPU.TabIndex = 0;
-            this.benchmarkLimitControlCPU.TimeLimits = null;
-            // 
-            // benchmarkLimitControlNVIDIA
-            // 
-            this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
-            this.benchmarkLimitControlNVIDIA.Location = new System.Drawing.Point(3, 130);
-            this.benchmarkLimitControlNVIDIA.Name = "benchmarkLimitControlNVIDIA";
-            this.benchmarkLimitControlNVIDIA.Size = new System.Drawing.Size(213, 121);
-            this.benchmarkLimitControlNVIDIA.TabIndex = 1;
-            this.benchmarkLimitControlNVIDIA.TimeLimits = null;
-            // 
-            // benchmarkLimitControlAMD
-            // 
-            this.benchmarkLimitControlAMD.GroupName = "AMD";
-            this.benchmarkLimitControlAMD.Location = new System.Drawing.Point(3, 257);
-            this.benchmarkLimitControlAMD.Name = "benchmarkLimitControlAMD";
-            this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(213, 121);
-            this.benchmarkLimitControlAMD.TabIndex = 2;
-            this.benchmarkLimitControlAMD.TimeLimits = null;
-            // 
-            // benchmarkOptions1
-            // 
-            this.benchmarkOptions1.Location = new System.Drawing.Point(3, 11);
-            this.benchmarkOptions1.Name = "benchmarkOptions1";
-            this.benchmarkOptions1.Size = new System.Drawing.Size(205, 108);
-            this.benchmarkOptions1.TabIndex = 2;
-            // 
-            // devicesListView1
-            // 
-            this.devicesListView1.Location = new System.Drawing.Point(3, 156);
-            this.devicesListView1.Name = "devicesListView1";
-            this.devicesListView1.Size = new System.Drawing.Size(452, 121);
-            this.devicesListView1.TabIndex = 1;
-            // 
-            // deviceSettingsControl1
-            // 
-            this.deviceSettingsControl1.Enabled = false;
-            this.deviceSettingsControl1.Location = new System.Drawing.Point(3, 283);
-            this.deviceSettingsControl1.Name = "deviceSettingsControl1";
-            this.deviceSettingsControl1.SelectedComputeDevice = null;
-            this.deviceSettingsControl1.Size = new System.Drawing.Size(452, 320);
-            this.deviceSettingsControl1.TabIndex = 0;
-            // 
-            // algorithmsListView1
-            // 
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 34);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(455, 313);
-            this.algorithmsListView1.TabIndex = 2;
-            // 
-            // algorithmSettingsControl1
-            // 
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(48, 353);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(413, 245);
-            this.algorithmSettingsControl1.TabIndex = 1;
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(986, 698);
+            this.ClientSize = new System.Drawing.Size(986, 654);
             this.Controls.Add(this.splitContainerTabControlButtons);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -873,10 +844,10 @@
             this.tabControlGeneral.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tabPageDevices.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
             this.splitContainerDevicesSettings.Panel1.ResumeLayout(false);
             this.splitContainerDevicesSettings.Panel2.ResumeLayout(false);
             this.splitContainerDevicesSettings.Panel2.PerformLayout();
@@ -953,11 +924,8 @@
         private Components.DevicesListView devicesListView1;
         private System.Windows.Forms.GroupBox groupBox1;
         private Components.DevicesListViewEnableControl devicesListViewEnableControl1;
-        private Components.BenchmarkOptions benchmarkOptions1;
         private System.Windows.Forms.Button buttonSubmitHardware;
         private System.Windows.Forms.Button buttonCheckProfitability;
-        private System.Windows.Forms.Button buttonStopBenchmark;
-        private System.Windows.Forms.Button buttonStartBenchmark;
 
     }
 }

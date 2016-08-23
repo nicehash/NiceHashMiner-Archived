@@ -67,6 +67,8 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -93,8 +95,10 @@
     <Compile Include="Devices\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\OpenCLDevice.cs" />
+    <Compile Include="Enums\AlgorithmBenchmarkSettingsType.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
+    <Compile Include="Enums\BenchmarkProcessStatus.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
@@ -185,6 +189,7 @@
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Interfaces\IBenchmarkComunicator.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
@@ -252,6 +257,7 @@
     <Compile Include="Miners\sgminer.cs" />
     <Compile Include="TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
+    <Compile Include="Utils\MinersDownloadManager.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
     </EmbeddedResource>

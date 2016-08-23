@@ -20,16 +20,17 @@ namespace NiceHashMiner
         private int TotalLoadSteps = 12;
         private readonly IAfterInitializationCaller AfterInitCaller;
 
-        public Form_Loading(IAfterInitializationCaller initCaller, string startInfoMsg)
+        public Form_Loading(IAfterInitializationCaller initCaller, string loadFormTitle, string startInfoMsg, int totalLoadSteps)
         {
             InitializeComponent();
 
-            label_LoadingText.Text = International.GetText("form3_label_LoadingText");
+            label_LoadingText.Text = loadFormTitle;
             label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
 
             // TODO assert that this is never null
             AfterInitCaller = initCaller;
 
+            TotalLoadSteps = totalLoadSteps;
             this.progressBar1.Maximum = TotalLoadSteps;
             this.progressBar1.Value = 0;
 
@@ -55,6 +56,16 @@ namespace NiceHashMiner
             this.Update();
             if (LoadCounter >= TotalLoadSteps) {
                 AfterInitCaller.AfterLoadComplete();
+                this.Close();
+                this.Dispose();
+            }
+        }
+
+        public void SetValueAndMsg(int setValue, string infoMsg) {
+            SetInfoMsg(infoMsg);
+            progressBar1.Value = setValue;
+            this.Update();
+            if (progressBar1.Value >= progressBar1.Maximum) {
                 this.Close();
                 this.Dispose();
             }

@@ -21,12 +21,15 @@ namespace NiceHashMiner.Forms.Components {
             switch (performanceType) {
                 case BenchmarkPerformanceType.Quick:
                     radioButton_QuickBenchmark.Checked = true;
+                    PerformanceType = BenchmarkPerformanceType.Quick;
                     break;
                 case BenchmarkPerformanceType.Standard:
                     radioButton_StandardBenchmark.Checked = true;
+                    PerformanceType = BenchmarkPerformanceType.Standard;
                     break;
                 case BenchmarkPerformanceType.Precise:
                     radioButton_PreciseBenchmark.Checked = true;
+                    PerformanceType = BenchmarkPerformanceType.Precise;
                     break;
                 default:
                     radioButton_StandardBenchmark.Checked = true;

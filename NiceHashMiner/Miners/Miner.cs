@@ -12,6 +12,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner
 {
@@ -22,7 +23,7 @@ namespace NiceHashMiner
         public double Speed;
     }
 
-    public delegate void BenchmarkComplete(bool success, string text, object tag);
+    //public delegate void BenchmarkComplete(bool success, string text);
 
     public abstract class Miner
     {
@@ -53,6 +54,8 @@ namespace NiceHashMiner
         public bool IsRunning { get; protected set; }
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
+        Stopwatch TimeOutStopWatch = null;
+        public bool BenchmarkSignalTimedout = false;
         protected bool BenchmarkSignalFinnished;
         public int NumRetries;
         public bool StartingUpDelay;
@@ -62,8 +65,8 @@ namespace NiceHashMiner
         protected NiceHashProcess ProcessHandle;
 
         // Benchmark stuff
-        private BenchmarkComplete OnBenchmarkComplete;
-        protected object BenchmarkTag;
+        IBenchmarkComunicator BenchmarkComunicator;
+        private bool OnBenchmarkCompleteCalled = false; 
         protected AlgorithmType CurrentBenchmarkAlgorithmType { get; private set; }
         private Algorithm _benchmarkAlgorithm;
         protected Algorithm BenchmarkAlgorithm {
@@ -77,9 +80,11 @@ namespace NiceHashMiner
                 _benchmarkAlgorithm = value;
             }
         }
-        protected Process BenchmarkHandle = null;
+        public BenchmarkProcessStatus BenchmarkProcessStatus { get; private set; }
+        private string BenchmarkProcessPath;
+        private Process BenchmarkHandle = null;
         protected Exception BenchmarkException = null;
-        protected int BenchmarkTime;
+        protected int BenchmarkTimeInSeconds;
         protected string LastCommandLine { get; set; }
         protected double PreviousTotalMH;
 
@@ -87,7 +92,6 @@ namespace NiceHashMiner
         protected bool _isEthMinerExit = false;
         protected AlgorithmType[] _supportedMinerAlgorithms;
 
-        // queryComputeDevices is a quickfix to decouple device querying, TODO move to dev query logic
         public Miner()
         {
             CDevs = new List<ComputeDevice>();
@@ -199,23 +203,30 @@ namespace NiceHashMiner
             return deviceStringCommand;
         }
 
-
         #region BENCHMARK DE-COUPLED Decoupled benchmarking routines
+
+        public int BenchmarkTimeoutInSeconds(int timeInSeconds) {
+            if (CurrentBenchmarkAlgorithmType == AlgorithmType.DaggerHashimoto) {
+                return 4 * 60 + 120; // 4 minutes plus two minutes
+            } 
+            return timeInSeconds + 120; // wait time plus two minutes
+        }
 
         abstract protected string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time);
 
         // The benchmark config and algorithm must guarantee that they are compatible with miner
         // we guarantee algorithm is supported
         // we will not have empty benchmark configs, all benchmark configs will have device list
-        virtual public void BenchmarkStart(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time, BenchmarkComplete oncomplete, object tag) {
-            OnBenchmarkComplete = oncomplete;
-
-            BenchmarkTag = tag;
+        virtual public void BenchmarkStart(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time, IBenchmarkComunicator benchmarkComunicator) {
+            
+            BenchmarkComunicator = benchmarkComunicator;
             BenchmarkAlgorithm = algorithm;
-            BenchmarkTime = time;
+            BenchmarkTimeInSeconds = time;
             BenchmarkSignalFinnished = true;
             // check and kill 
             BenchmarkHandle = null;
+            OnBenchmarkCompleteCalled = false;
+            TimeOutStopWatch = null;
 
             string CommandLine = BenchmarkCreateCommandLine(benchmarkConfig, algorithm, time);
 
@@ -230,12 +241,14 @@ namespace NiceHashMiner
             
             BenchmarkHandle.StartInfo.FileName = GetOptimizedMinerPath(BenchmarkAlgorithm.NiceHashID);
 
-            Helpers.ConsolePrint(MinerDeviceName, "Using miner: " + BenchmarkHandle.StartInfo.FileName);
-
             // TODO sgminer quickfix
             if (this is sgminer) {
                 BenchmarkHandle.StartInfo.FileName = "cmd";
-            } 
+                BenchmarkProcessPath = "cmd / " + BenchmarkHandle.StartInfo.FileName;
+            } else {
+                BenchmarkProcessPath = BenchmarkHandle.StartInfo.FileName;
+                Helpers.ConsolePrint(MinerDeviceName, "Using miner: " + BenchmarkHandle.StartInfo.FileName);
+            }
 
             BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;
             BenchmarkHandle.StartInfo.UseShellExecute = false;
@@ -250,13 +263,35 @@ namespace NiceHashMiner
             return BenchmarkHandle;
         }
 
+
+        private string ElapsedTimeString(long timeMillies) {
+            if (timeMillies < 1000) {
+                return timeMillies.ToString() + " milliseconds";
+            } else if (timeMillies < 60 * 1000) {
+                return (timeMillies / 1000).ToString() + " seconds";
+            }
+            return (timeMillies / (60 * 1000)).ToString() + " minutes";
+        }
+
         private void BenchmarkOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
+            if (TimeOutStopWatch == null) {
+                TimeOutStopWatch = new Stopwatch();
+                TimeOutStopWatch.Start();
+            } else if (TimeOutStopWatch.ElapsedMilliseconds > BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds) * 1000) {
+                TimeOutStopWatch.Stop();
+                BenchmarkSignalTimedout = true;
+            }
+
             string outdata = e.Data;
             if (e.Data != null) {
                 BenchmarkOutputErrorDataReceivedImpl(outdata);
             }
             // terminate process situations
-            if (BenchmarkSignalQuit || BenchmarkSignalFinnished || BenchmarkSignalHanged || BenchmarkException != null) {
+            if (BenchmarkSignalQuit
+                || BenchmarkSignalFinnished
+                || BenchmarkSignalHanged
+                || BenchmarkSignalTimedout
+                || BenchmarkException != null) {
                 EndBenchmarkProcces();
             }
         }
@@ -287,10 +322,20 @@ namespace NiceHashMiner
             }
         }
 
-        private void EndBenchmarkProcces() {
-            if (BenchmarkHandle != null) {
-                try { BenchmarkHandle.Kill(); BenchmarkHandle.Close(); } catch { }
-                BenchmarkHandle = null;
+        // killing proccesses can take time
+        public void EndBenchmarkProcces() {
+            if (BenchmarkHandle != null && BenchmarkProcessStatus != BenchmarkProcessStatus.Killing) {
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
+                try {
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));
+                    BenchmarkHandle.Kill();
+                    BenchmarkHandle.Close();
+                } catch { }
+                finally {
+                    BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));
+                    //BenchmarkHandle = null;
+                }
             }
         }
 
@@ -313,12 +358,15 @@ namespace NiceHashMiner
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
 
                 BenchmarkThreadRoutineStartSettup();
-                // TODO
-                // take care of timeout
+                // wait a little longer then the benchmark routine if exit false throw
+                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
+                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
+                // don't use wait for it breaks everything
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 BenchmarkHandle.WaitForExit();
-                //if (BenchmarkHandle.WaitForExit(WAIT_BENCH_TIME)) {
-                //    throw new Exception("Benchmark timedout");
-                //}
+                if (BenchmarkSignalTimedout) {
+                    throw new Exception("Benchmark timedout");
+                }
                 if (BenchmarkException != null) {
                     throw BenchmarkException;
                 }
@@ -335,14 +383,18 @@ namespace NiceHashMiner
                 BenchmarkAlgorithm.BenchmarkSpeed = 0;
 
                 Helpers.ConsolePrint(MinerDeviceName, "Benchmark Exception: " + ex.Message);
-
-                EndBenchmarkProcces();
-                if (OnBenchmarkComplete != null) OnBenchmarkComplete(false, "Terminated", BenchmarkTag);
+                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
+                    OnBenchmarkCompleteCalled = true;
+                    BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? "Timedout" : "Terminated");
+                }
             } finally {
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Success;
                 Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
-                EndBenchmarkProcces();
-                OnBenchmarkComplete(true, PrintSpeed(BenchmarkAlgorithm.BenchmarkSpeed), BenchmarkTag);
+                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
+                    OnBenchmarkCompleteCalled = true;
+                    BenchmarkComunicator.OnBenchmarkComplete(true, "Success");
+                }
             }
         }
 
@@ -421,13 +473,6 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerDeviceName, "Restarting miner..");
             Stop(true); // stop miner first
             ProcessHandle = _Start(); // start with old command line
-        }
-
-
-        virtual public string PrintSpeed(double spd)
-        {
-            // print in MH/s
-            return (spd * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s";
         }
 
         protected void FillAlgorithm(string aname, ref APIData AD) {
@@ -547,26 +592,6 @@ namespace NiceHashMiner
 
 
         //    return MaxProfitIndex;
-        //}
-
-        //// TODO replace this
-        // TODO IMPORTANT put this in the DeviceQuery Manager
-        //public void GetDisabledDevicePerAlgo()
-        //{
-        //    foreach (var key in SupportedAlgorithms.Keys)
-        //    {
-        //        //SupportedAlgorithms[key].DisabledDevice = new bool[CDevs.Count];
-        //        for (int j = 0; j < CDevs.Count; j++)
-        //        {
-        //            //SupportedAlgorithms[key].DisabledDevice[j] = false;
-        //            if ((CDevs[j].Name.Contains("750") && CDevs[j].Name.Contains("Ti")) &&
-        //                SupportedAlgorithms[key].NiceHashID == AlgorithmType.DaggerHashimoto)
-        //            {
-        //                Helpers.ConsolePrint(MinerDeviceName, "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
-        //                //SupportedAlgorithms[key].DisabledDevice[j] = true;
-        //            }
-        //        }
-        //    }
         //}
     }
 }

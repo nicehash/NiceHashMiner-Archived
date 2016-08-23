@@ -122,7 +122,7 @@ namespace NiceHashMiner.Miners
 
                         return MinerPaths.sgminer_5_4_0_tweaked;
                     }
-
+                    // TODO these segfault
                     if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
                         return MinerPaths.sgminer_5_1_0_optimized;
                     else
@@ -135,6 +135,7 @@ namespace NiceHashMiner.Miners
 
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
+
         // TODO decoupled benchmark routine
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine;
@@ -220,12 +221,12 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
-            if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTime + 1 && _benchmarkOnce == true) {
+            if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTimeInSeconds + 1 && _benchmarkOnce == true) {
                 _benchmarkOnce = false;
                 string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
                 Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
             }
-            if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTime + 2) {
+            if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTimeInSeconds + 2) {
                 _benchmarkTimer.Stop();
                 KillSGMiner();
                 BenchmarkSignalHanged = true;

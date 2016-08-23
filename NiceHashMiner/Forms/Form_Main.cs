@@ -15,6 +15,7 @@ using NiceHashMiner.Forms;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Forms.Components;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner
 {
@@ -36,6 +37,8 @@ namespace NiceHashMiner
 
         private Random R;
 
+        private Form_Loading _downloadForm;
+        private Form_Loading _unzipForm;
         private Form_Loading LoadingScreen;
         private Form BenchmarkForm;
 
@@ -169,6 +172,8 @@ namespace NiceHashMiner
             StartupTimer.Stop();
             StartupTimer = null;
 
+            
+
             // Query Avaliable ComputeDevices
             ComputeDeviceQueryManager.Instance.QueryDevices(LoadingScreen);
             _isDeviceDetectionInitialized = true;
@@ -267,9 +272,14 @@ namespace NiceHashMiner
         }
 
 
-        private void Form1_Shown(object sender, EventArgs e)
+        private void Form_Main_Shown(object sender, EventArgs e)
         {
-            LoadingScreen = new Form_Loading(this, International.GetText("form1_loadtext_CPU"));
+            // general loading indicator
+            // TODO find out what are the 13 loading steps, think if this should really be hardcoded
+            int TotalLoadSteps = 12;
+            LoadingScreen = new Form_Loading(this,
+                International.GetText("form3_label_LoadingText"),
+                International.GetText("form1_loadtext_CPU"), TotalLoadSteps);
             LoadingScreen.Location = new Point(this.Location.X + (this.Width - LoadingScreen.Width) / 2, this.Location.Y + (this.Height - LoadingScreen.Height) / 2);
             LoadingScreen.Show();
 
@@ -568,8 +578,7 @@ namespace NiceHashMiner
             MinersManager.Instance.StopAllMiners();
 
             MessageBoxManager.Unregister();
-        }
-
+        }        
 
         private void buttonBenchmark_Click(object sender, EventArgs e)
         {
@@ -645,13 +654,8 @@ namespace NiceHashMiner
             bool isBenchInit = tuplePair.Item1;
             Dictionary<string, List<AlgorithmType>> nonBenchmarkedPerDevice = tuplePair.Item2;
             // Check if the user has run benchmark first
-            if (isBenchInit) {
-                // TODO add worker
-                var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], "TODO worker");
-                InitFlowPanelStart();
-            } else {
+            if (!isBenchInit) {
                 // first benchmark and start mining
-
                 // TODO translation or change warning, something like not benchmark 
                 string warningMsg = "Unbenchmarked enabled algorithms for enabled devices:" + Environment.NewLine; ;
                 foreach (var kvp in nonBenchmarkedPerDevice) {
@@ -663,25 +667,22 @@ namespace NiceHashMiner
                 DialogResult result = MessageBox.Show(String.Format("{0}", warningMsg),
                                                           International.GetText("Warning_with_Exclamation"),
                                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                //DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_HaveNotBenchmarkedMsg"), "warningMsg"),
-                //                          International.GetText("Warning_with_Exclamation"),
-                //                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                // OLD
-                //DialogResult result = MessageBox.Show(String.Format(International.GetText("form1_msgbox_HaveNotBenchmarkedMsg"), m.MinerDeviceName),
-                //                                          International.GetText("Warning_with_Exclamation"),
-                //                                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                //if (result == System.Windows.Forms.DialogResult.No) {
-                //    DemoMode = false;
-                //    labelDemoMode.Visible = false;
-
-                //    textBoxBTCAddress.Text = "";
-                //    ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
-                //    Config.Commit();
-
-                //    return;
-                //}
+                if (result == System.Windows.Forms.DialogResult.Yes) {
+                    SMACheck.Stop();
+                    BenchmarkForm = new FormBenchmark_New(
+                        BenchmarkPerformanceType.Standard,
+                        true);
+                    BenchmarkForm.ShowDialog();
+                    BenchmarkForm = null;
+                    SMACheck.Start();
+                } else {
+                    return;
+                }
             }
+
+            // TODO add worker
+            var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], "TODO worker");
+            InitFlowPanelStart();
 
             textBoxBTCAddress.Enabled = false;
             textBoxWorkerName.Enabled = false;

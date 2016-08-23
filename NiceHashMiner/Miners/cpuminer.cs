@@ -114,13 +114,6 @@ namespace NiceHashMiner.Miners
             return false;
         }
 
-        public override string PrintSpeed(double spd)
-        {
-            // print in kH/s
-            return (spd * 0.001).ToString("F3", CultureInfo.InvariantCulture) + " kH/s";
-        }
-
-
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
             CurrentMiningAlgorithm = miningAlgorithm;
@@ -187,6 +180,7 @@ namespace NiceHashMiner.Miners
 
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
+
         // new decoupled benchmark, TODO fix the copy paste magic
         // TODO recheck this
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
@@ -211,7 +205,7 @@ namespace NiceHashMiner.Miners
                 CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
 
             // hodl exception helper variables
-            _hodlTotalCount = BenchmarkTime / 5;
+            _hodlTotalCount = BenchmarkTimeInSeconds / 5;
             _hodlTotal = 0.0d;
 
             return BenchmarkHandle;
@@ -240,7 +234,7 @@ namespace NiceHashMiner.Miners
                     _hodlTotalCount--;
                 }
                 if (_hodlTotalCount <= 0) {
-                    double spd = _hodlTotal / (BenchmarkTime / 5);
+                    double spd = _hodlTotal / (BenchmarkTimeInSeconds / 5);
                     BenchmarkAlgorithm.BenchmarkSpeed = spd;
                     BenchmarkSignalFinnished = true;
                 }

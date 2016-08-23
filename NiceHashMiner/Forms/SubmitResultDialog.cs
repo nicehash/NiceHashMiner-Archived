@@ -244,8 +244,8 @@ namespace NiceHashMiner
             if (this.InvokeRequired)
             {
                 UpdateProgressBar(true);
-                BenchmarkComplete d = new BenchmarkComplete(BenchmarkCompleted);
-                this.Invoke(d, new object[] { success, text, tag });
+                //BenchmarkComplete d = new BenchmarkComplete(BenchmarkCompleted);
+                //this.Invoke(d, new object[] { success, text, tag });
             }
             else
             {

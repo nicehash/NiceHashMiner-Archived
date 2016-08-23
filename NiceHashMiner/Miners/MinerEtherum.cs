@@ -141,6 +141,8 @@ namespace NiceHashMiner.Miners {
             return Ethereum.EtherMinerPath;
         }
 
+
+        // benchmark stuff
         protected override bool BenchmarkParseLine(string outdata) {
             if (outdata.Contains("min/mean/max:")) {
                 string[] splt = outdata.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);

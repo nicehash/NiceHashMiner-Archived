@@ -45,6 +45,7 @@ namespace NiceHashMiner.Miners
 
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
+
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
