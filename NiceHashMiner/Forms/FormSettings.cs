@@ -484,11 +484,7 @@ namespace NiceHashMiner.Forms {
             // show algorithms
             var selectedComputeDevice = GetCurrentlySelectedComputeDevice(e.ItemIndex);
             deviceSettingsControl1.SelectedComputeDevice = selectedComputeDevice;
-            algorithmsListView1.SetAlgorithms(
-                DeviceBenchmarkConfigManager.Instance.GetConfig(
-                selectedComputeDevice.DeviceGroupType,
-                selectedComputeDevice.Name)
-                );
+            algorithmsListView1.SetAlgorithms(selectedComputeDevice);
         }
 
         #endregion //Tab Device

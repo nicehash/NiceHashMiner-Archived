@@ -16,11 +16,13 @@ namespace NiceHashMiner.Forms.Components {
     public partial class AlgorithmsListView : UserControl {
 
         public interface IAlgorithmsListView {
-            void SetCurrentlySelected(ListViewItem lvi);
+            void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
             void HandleCheck(ListViewItem lvi);
         }
 
         public IAlgorithmsListView ComunicationInterface { get; set; }
+
+        ComputeDevice _computeDevice;
 
         private class DefaultAlgorithmColorSeter : IListItemCheckColorSetter {
             private static Color DISABLED_COLOR = Color.DarkGray;
@@ -49,8 +51,9 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.ItemChecked += new ItemCheckedEventHandler(listViewAlgorithms_ItemChecked);
         }
 
-        public void SetAlgorithms(DeviceBenchmarkConfig benchmarkConfig) {
-            SetAlgorithms(new List<DeviceBenchmarkConfig>() { benchmarkConfig });
+        public void SetAlgorithms(ComputeDevice computeDevice) {
+            _computeDevice = computeDevice;
+            SetAlgorithms(new List<DeviceBenchmarkConfig>() { computeDevice.DeviceBenchmarkConfig });
         }
 
         public void SetAlgorithms(List<DeviceBenchmarkConfig> benchmarkConfigs) {
@@ -81,7 +84,7 @@ namespace NiceHashMiner.Forms.Components {
         #region Callbacks Events
         private void listViewAlgorithms_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
             if (ComunicationInterface != null) {
-                ComunicationInterface.SetCurrentlySelected(e.Item);
+                ComunicationInterface.SetCurrentlySelected(e.Item, _computeDevice);
             }
         }
 

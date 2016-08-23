@@ -669,9 +669,18 @@ namespace NiceHashMiner
                                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == System.Windows.Forms.DialogResult.Yes) {
                     SMACheck.Stop();
+                    List<ComputeDevice> enabledDevices = new List<ComputeDevice>();
+                    HashSet<string> deviceNames = new HashSet<string>();
+                    foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+                        if (cdev.Enabled && !deviceNames.Contains(cdev.Name)) {
+                            deviceNames.Add(cdev.Name);
+                            enabledDevices.Add(cdev);
+                        }
+                    }
                     BenchmarkForm = new FormBenchmark_New(
                         BenchmarkPerformanceType.Standard,
-                        true);
+                        true,
+                        enabledDevices);
                     BenchmarkForm.ShowDialog();
                     BenchmarkForm = null;
                     SMACheck.Start();

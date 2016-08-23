@@ -25,6 +25,7 @@ namespace NiceHashMiner.Forms {
         private List<Tuple<ComputeDevice, Queue<Algorithm>>> _benchmarkDevicesAlgorithmQueue;
 
         private bool ExitWhenFinished = false;
+        private AlgorithmType _singleBenchmarkType = AlgorithmType.NONE;
 
         private struct DeviceAlgo {
             public string Device { get; set; }
@@ -78,15 +79,26 @@ namespace NiceHashMiner.Forms {
             }
         }
 
-        public FormBenchmark_New(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard, bool autostart = false) {
+        public FormBenchmark_New(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+            bool autostart = false,
+            List<ComputeDevice> enabledDevices = null,
+            AlgorithmType singleBenchmarkType = AlgorithmType.NONE) {
             InitializeComponent();
 
-            benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
+            _singleBenchmarkType = singleBenchmarkType;
 
+            benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
+            
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
             devicesListViewEnableControl1.SetAllEnabled = true;
-            devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.UniqueAvaliableDevices);
+            if (enabledDevices == null) {
+                devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.UniqueAvaliableDevices);
+            } else {
+                devicesListViewEnableControl1.SetComputeDevices(enabledDevices);
+            }
+
+            groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
 
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
@@ -103,7 +115,7 @@ namespace NiceHashMiner.Forms {
 
             InitLocale();
 
-            if(autostart) {
+            if (autostart) {
                 ExitWhenFinished = true;
                 StartStopBtn_Click(null, null);
             }
@@ -133,7 +145,7 @@ namespace NiceHashMiner.Forms {
             StartStopBtn.Text = International.GetText("form2_buttonStartBenchmark");
             ResetBenchmarkProgressStatus();
             CalcBenchmarkDevicesAlgorithmQueue();
-            groupBoxAlgorithmBenchmarkSettings.Enabled = true;
+            groupBoxAlgorithmBenchmarkSettings.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
             benchmarkOptions1.Enabled = true;
             devicesListViewEnableControl1.Enabled = true;
             CloseBtn.Enabled = true;
@@ -192,16 +204,23 @@ namespace NiceHashMiner.Forms {
         }
 
         private void CalcBenchmarkDevicesAlgorithmQueue() {
+
             _benchmarkAlgorithmsCount = 0;
             _benchmarkDevicesAlgorithmStatus = new Dictionary<string, BenchmarkSettingsStatus>();
             _benchmarkDevicesAlgorithmQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
             foreach (var option in devicesListViewEnableControl1.Options) {
                 var algorithmQueue = new Queue<Algorithm>();
-                foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
-                    if (ShoulBenchmark(kvpAlgorithm.Value)) {
-                        algorithmQueue.Enqueue(kvpAlgorithm.Value);
+                if (_singleBenchmarkType == AlgorithmType.NONE) {
+                    foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
+                        if (ShoulBenchmark(kvpAlgorithm.Value)) {
+                            algorithmQueue.Enqueue(kvpAlgorithm.Value);
+                        }
                     }
+                } else { // single bench
+                    var algo = option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings[_singleBenchmarkType];
+                    algorithmQueue.Enqueue(algo);
                 }
+                
 
                 BenchmarkSettingsStatus status;
                 if (option.IsEnabled) {

@@ -5,10 +5,13 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Forms.Components {
     public partial class AlgorithmSettingsControl : UserControl, AlgorithmsListView.IAlgorithmsListView {
 
+        ComputeDevice _computeDevice = null;
         Algorithm _currentlySelectedAlgorithm = null;
         ListViewItem _currentlySelectedLvi = null;
 
@@ -38,10 +41,11 @@ namespace NiceHashMiner.Forms.Components {
             return value <= 0 ? "" : value.ToString();
         }
 
-        public void SetCurrentlySelected(ListViewItem lvi) {
+        public void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice) {
             // should not happen ever
             if (lvi == null) return;
 
+            _computeDevice = computeDevice;
             var algorithm = lvi.Tag as Algorithm;
             if (algorithm != null) {
                 _currentlySelectedAlgorithm = algorithm;
@@ -83,9 +87,23 @@ namespace NiceHashMiner.Forms.Components {
         }
         private void textChangedExtraLaunchParameters(object sender, EventArgs e) {
             if (_currentlySelectedAlgorithm == null) return;
-            _currentlySelectedAlgorithm.ExtraLaunchParameters = richTextBoxExtraLaunchParameters.Text;
+            _currentlySelectedAlgorithm.ExtraLaunchParameters = richTextBoxExtraLaunchParameters.Text.Trim();
         }
         #endregion
+
+        private void buttonBenchmark_Click(object sender, EventArgs e) {
+            var device = new List<ComputeDevice>();
+            device.Add(_computeDevice);
+            var BenchmarkForm = new FormBenchmark_New(
+                        BenchmarkPerformanceType.Standard,
+                        false, device, _currentlySelectedAlgorithm.NiceHashID);
+            BenchmarkForm.ShowDialog();
+            fieldBoxBenchmarkSpeed.EntryText = _currentlySelectedAlgorithm.BenchmarkSpeed.ToString();
+            // update lvi speed
+            if (_currentlySelectedLvi != null) {
+                _currentlySelectedLvi.SubItems[3].Text = Helpers.FormatSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed);
+            }
+        }
 
     }
 }

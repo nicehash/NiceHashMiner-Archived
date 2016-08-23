@@ -783,7 +783,7 @@
             // 
             this.algorithmSettingsControl1.Location = new System.Drawing.Point(6, 322);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(413, 245);
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(455, 245);
             this.algorithmSettingsControl1.TabIndex = 1;
             // 
             // buttonSaveClose
