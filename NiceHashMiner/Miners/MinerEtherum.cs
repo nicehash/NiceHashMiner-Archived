@@ -71,8 +71,7 @@ namespace NiceHashMiner.Miners {
             // now find the fastest for DAG generation
             double fastestSpeed = double.MinValue;
             foreach (var cdev in CDevs) {
-                double compareSpeed = DeviceBenchmarkConfigManager.Instance
-                    .GetConfig(cdev.Name).AlgorithmSettings[AlgorithmType.DaggerHashimoto].BenchmarkSpeed;
+                double compareSpeed = cdev.DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.DaggerHashimoto].BenchmarkSpeed;
                 if (fastestSpeed < compareSpeed) {
                     DaggerHashimotoGenerateDevice = cdev;
                     fastestSpeed = compareSpeed;

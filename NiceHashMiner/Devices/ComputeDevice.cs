@@ -17,6 +17,8 @@ namespace NiceHashMiner.Devices
         readonly public string Group;
         readonly public string Name;
         public bool Enabled;
+
+        public readonly bool IsEtherumCapale;
         
         [JsonIgnore]
         readonly public DeviceGroupType DeviceGroupType;
@@ -92,6 +94,7 @@ namespace NiceHashMiner.Devices
             Name = cudaDevice.DeviceName;
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
+            IsEtherumCapale = cudaDevice.IsEtherumCapable();
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -121,6 +124,7 @@ namespace NiceHashMiner.Devices
             Group = GroupNames.GetName(DeviceGroupType.AMD_OpenCL);
             Name = amdDevice.DeviceName;
             Enabled = enabled;
+            IsEtherumCapale = amdDevice.IsEtherumCapable();
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -205,15 +209,15 @@ namespace NiceHashMiner.Devices
             return "GEN-" + hash.ToString();
         }
 
-        public static List<ComputeDevice> GetEnabledDevices() {
-            List<ComputeDevice> enabledCDevs = new List<ComputeDevice>();
+        //public static List<ComputeDevice> GetEnabledDevices() {
+        //    List<ComputeDevice> enabledCDevs = new List<ComputeDevice>();
 
-            foreach (var dev in AllAvaliableDevices) {
-                if (dev.Enabled) enabledCDevs.Add(dev);
-            }
+        //    foreach (var dev in AllAvaliableDevices) {
+        //        if (dev.Enabled) enabledCDevs.Add(dev);
+        //    }
 
-            return enabledCDevs;
-        }
+        //    return enabledCDevs;
+        //}
 
         //// this checks if device is same
         //public static bool IsSameDeviceType() {

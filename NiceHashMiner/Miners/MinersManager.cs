@@ -215,35 +215,51 @@ namespace NiceHashMiner.Miners {
         PerDeviceSpeedDictionary GetEnabledDeviceTypeSpeeds() {
             PerDeviceSpeedDictionary perDeviceTypeBenchmarks = new PerDeviceSpeedDictionary();
 
-            // get enabled devices and their count
-            _enabledDeviceCount = new Dictionary<string, int>();
-            foreach (var enabledDevice in ComputeDevice.GetEnabledDevices()) {
-                if (_enabledDeviceCount.ContainsKey(enabledDevice.Name)) {
-                    _enabledDeviceCount[enabledDevice.Name]++;
-                } else {
-                    _enabledDeviceCount.Add(enabledDevice.Name, 1);
+            // init algorithms count 0
+            foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
+                if (curCDev.Enabled) {
+                    var cdevName = curCDev.Name;
+                    Dictionary<AlgorithmType, double> cumulativeSpeeds = new Dictionary<AlgorithmType, double>();
+                    var deviceConfig = curCDev.DeviceBenchmarkConfig;
+                    foreach (var kvp in deviceConfig.AlgorithmSettings) {
+                        var key = kvp.Key;
+                        cumulativeSpeeds[key] = 0;
+                    }
+                    perDeviceTypeBenchmarks[cdevName] = cumulativeSpeeds;
                 }
             }
-
-            // calculate benchmarks
-            foreach (var cdevKvp in _enabledDeviceCount) {
-                var cdevName = cdevKvp.Key;
-                // TODO check if should remove this count because we might have different RAM SIZE
-                var cdevCount = cdevKvp.Value;
-                Dictionary<AlgorithmType, double> cumulativeSpeeds = new Dictionary<AlgorithmType, double>();
-                var deviceConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(cdevName);
-
-                foreach (var kvp in deviceConfig.AlgorithmSettings) {
-                    var key = kvp.Key;
-                    var algorithm = kvp.Value;
-                    if (algorithm.Skip) {
-                        // for now set to negative value as not profitable
-                        cumulativeSpeeds.Add(key, -1);
-                    } else {
-                        cumulativeSpeeds.Add(key, algorithm.BenchmarkSpeed * cdevCount);
+            // set enabled algorithm count per device counts
+            foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
+                if (curCDev.Enabled) {
+                    var cdevName = curCDev.Name;
+                    Dictionary<AlgorithmType, double> cumulativeSpeeds = perDeviceTypeBenchmarks[cdevName];
+                    var deviceConfig = curCDev.DeviceBenchmarkConfig;
+                    foreach (var kvp in deviceConfig.AlgorithmSettings) {
+                        var key = kvp.Key;
+                        var algorithm = kvp.Value;
+                        // check dagger RAM SIZE
+                        if (algorithm.Skip
+                            || (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto && !curCDev.IsEtherumCapale)) {
+                            // for now set to negative value as not profitable
+                            cumulativeSpeeds[key]--;
+                        } else {
+                            cumulativeSpeeds[key]++;
+                        }
                     }
                 }
-                perDeviceTypeBenchmarks.Add(cdevName, cumulativeSpeeds);
+            }
+            // calculate benchmarks
+            foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
+                if (curCDev.Enabled) {
+                    var cdevName = curCDev.Name;
+                    Dictionary<AlgorithmType, double> cumulativeSpeeds = perDeviceTypeBenchmarks[cdevName];
+                    var deviceConfig = curCDev.DeviceBenchmarkConfig;
+                    foreach (var kvp in deviceConfig.AlgorithmSettings) {
+                        var key = kvp.Key;
+                        var algorithm = kvp.Value;
+                        cumulativeSpeeds[key] *= algorithm.BenchmarkSpeed;
+                    }
+                }
             }
 
             return perDeviceTypeBenchmarks;
@@ -290,6 +306,8 @@ namespace NiceHashMiner.Miners {
         private bool IsDaggerAndSameComputePlatform(ComputeDevice a, ComputeDevice b) {
             return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto
                 && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
+                // check if both etherum capable
+                && a.IsEtherumCapale && b.IsEtherumCapale
                 // compute platforms must be same
                 && (IsNvidiaDevice(a) == IsNvidiaDevice(b));
         }
