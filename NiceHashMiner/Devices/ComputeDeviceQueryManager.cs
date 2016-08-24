@@ -220,7 +220,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        List<OpenCLDevice> amdGpus;
+        List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
         private void QueryAMD() {
             //showMessageAndStep(International.GetText("form1_loadtext_AMD"));
             //var dump = new sgminer(true);
@@ -280,7 +280,6 @@ namespace NiceHashMiner.Devices
                 }
                 if (amdPlatformNumFound) {
                     // get only AMD gpus
-                    amdGpus = new List<OpenCLDevice>();
                     {
                         var amdOCLDevices = OpenCLJSONData.OCLPlatformDevices[AMDOpenCLPlatformStringKey];
                         foreach (var oclDev in amdOCLDevices) {
