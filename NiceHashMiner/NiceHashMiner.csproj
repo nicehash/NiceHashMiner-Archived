@@ -99,6 +99,7 @@
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
     <Compile Include="Enums\BenchmarkProcessStatus.cs" />
+    <Compile Include="Enums\ComputePlatformType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\LanguageType.cs" />

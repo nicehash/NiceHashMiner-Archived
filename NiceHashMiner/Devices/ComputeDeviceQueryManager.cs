@@ -40,6 +40,8 @@ namespace NiceHashMiner.Devices
         public void QueryDevices(IMessageNotifier messageNotifier)
         {
             MessageNotifier = messageNotifier;
+            // #0 get video controllers, used for cross checking
+            QueryVideoControllers();
             // Order important CPU Query must be first
             // #1 CPU
             QueryCPUs();
@@ -53,13 +55,126 @@ namespace NiceHashMiner.Devices
             QueryAMD();
             // #5 uncheck CPU if GPUs present, call it after we Query all devices
             UncheckedCPU();
-            // #6 remove reference
+            // TODO update this to report undetected hardware
+            // #6 check NVIDIA, AMD devices count
+            {
+                int NVIDIA_count = 0;
+                int AMD_count = 0;
+                foreach (var vidCtrl in AvaliableVideoControllers) {
+                    NVIDIA_count += (vidCtrl.Name.Contains("Nvidia") || vidCtrl.Name.Contains("NVIDIA")) ? 1 : 0;
+                    AMD_count += (vidCtrl.Name.Contains("Amd") || vidCtrl.Name.Contains("AMD")) ? 1 : 0;
+                }
+                if (NVIDIA_count == CudaDevices.Count) {
+                    Helpers.ConsolePrint(TAG, "Cuda Nvidia/CUDA device count GOOD");
+                } else {
+                    Helpers.ConsolePrint(TAG, "Cuda Nvidia/CUDA device count BAD!!!");
+                }
+                if (AMD_count == amdGpus.Count) {
+                    Helpers.ConsolePrint(TAG, "AMD GPU device count GOOD");
+                } else {
+                    Helpers.ConsolePrint(TAG, "AMD GPU device count BAD!!!");
+                }
+            }
+            // #7 init ethminer ID mappings offset
+            {
+                // helper vars
+                Dictionary<ComputePlatformType, int> openCLGpuCount = new Dictionary<ComputePlatformType,int>();
+                Dictionary<ComputePlatformType, int> openCLPlatformIds = new Dictionary<ComputePlatformType,int>();
+                foreach (var oclPlatform in OpenCLJSONData.OCLPlatforms) {
+                    ComputePlatformType current = GetPlatformType(oclPlatform.Key);
+                    if(current != ComputePlatformType.NONE) {
+                        openCLPlatformIds[current] = oclPlatform.Value;
+                    } else {
+                        Helpers.ConsolePrint(TAG, "ethminer platforms mapping NONE");
+                    }
+                }
+                foreach (var oclDevs in OpenCLJSONData.OCLPlatformDevices) {
+                    ComputePlatformType current = GetPlatformType(oclDevs.Key);
+                    if (current != ComputePlatformType.NONE) {
+                        foreach (var oclDev in oclDevs.Value) {
+                            if (oclDev._CL_DEVICE_TYPE.Contains("GPU")) {
+                                if (openCLGpuCount.ContainsKey(current)) {
+                                    openCLGpuCount[current]++;
+                                } else {
+                                    openCLGpuCount[current] = 1;
+                                }
+                            }
+                        }
+                    } else {
+                        Helpers.ConsolePrint(TAG, "ethminer platforms mapping NONE");
+                    }
+                }
+                // sort platforms by platform values
+                Dictionary<int, ComputePlatformType> openCLPlatformIdsRev = new Dictionary<int,ComputePlatformType>();
+                List<int> platformIds = new List<int>();
+                foreach (var platId in openCLPlatformIds) {
+                    openCLPlatformIdsRev[platId.Value] = platId.Key;
+                    platformIds.Add(platId.Value);
+                }
+                platformIds.Sort();
+                // set mappings
+                int cumulativeCount = 0;
+                foreach (var curId in platformIds) {
+                    var key = openCLPlatformIdsRev[curId];
+                    if (openCLGpuCount.ContainsKey(key)) {
+                        _ethminerIdsOffet[key] = cumulativeCount;
+                        cumulativeCount += openCLGpuCount[key]; 
+                    }
+                }
+            }
+
+            // #x remove reference
             MessageNotifier = null;
+        }
+
+        private Dictionary<ComputePlatformType, int> _ethminerIdsOffet = new Dictionary<ComputePlatformType,int>();
+        public int GetEthminerOpenCLID(ComputePlatformType platformType, int id) {
+            return _ethminerIdsOffet[platformType] + id;
+        }
+
+        private ComputePlatformType GetPlatformType(string name) {
+            if (name.Contains("Intel")) {
+                return ComputePlatformType.Intel;
+            }
+            if (name.Contains("AMD")) {
+                return ComputePlatformType.AMD;
+            }
+            if (name.Contains("NVIDIA")) {
+                return ComputePlatformType.NVIDIA;
+            }
+            return ComputePlatformType.NONE;
         }
 
         private void showMessageAndStep(string infoMsg) {
             if (MessageNotifier != null) MessageNotifier.SetMessageAndIncrementStep(infoMsg);
-        } 
+        }
+
+        #region Video controllers, driver versions
+
+        private class VideoControllerData {
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string PNPDeviceID { get; set; }
+            public string DriverVersion { get; set; }
+        }
+
+        private List<VideoControllerData> AvaliableVideoControllers = new List<VideoControllerData>();
+
+        private void QueryVideoControllers() {
+            ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get();
+            foreach (var manObj in moc) {
+                Helpers.ConsolePrint(TAG, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
+                AvaliableVideoControllers.Add(
+                    new VideoControllerData() {
+                        Name = manObj["Name"] as string,
+                        Description = manObj["Description"] as string,
+                        PNPDeviceID = manObj["PNPDeviceID"] as string,
+                        DriverVersion = manObj["DriverVersion"] as string
+                    });
+            }
+        }
+
+        #endregion // Video controllers, driver versions
 
         private void QueryCPUs() {
             // get all CPUs
@@ -105,6 +220,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        List<OpenCLDevice> amdGpus;
         private void QueryAMD() {
             //showMessageAndStep(International.GetText("form1_loadtext_AMD"));
             //var dump = new sgminer(true);
@@ -114,19 +230,18 @@ namespace NiceHashMiner.Devices
             Dictionary<string, bool> deviceDriverOld = new Dictionary<string, bool>();
             string minerPath = MinerPaths.sgminer_5_4_0_general;
             bool ShowWarningDialog = false;
-            ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get();
 
-            foreach (var manObj in moc) {
-                Helpers.ConsolePrint(TAG, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
+            foreach (var vidContrllr in AvaliableVideoControllers) {
+                Helpers.ConsolePrint(TAG, String.Format("Checking AMD device (driver): {0} ({1})", vidContrllr.Name, vidContrllr.DriverVersion));
 
-                deviceDriverOld[manObj["Name"].ToString()] = false;
-
-                if ((manObj["Name"].ToString().Contains("AMD") || manObj["Name"].ToString().Contains("Radeon")) && ShowWarningDialog == false) {
-                    Version AMDDriverVersion = new Version(manObj["DriverVersion"].ToString());
+                deviceDriverOld[vidContrllr.Name] = false;
+                // TODO checking radeon drivers only?
+                if ((vidContrllr.Name.Contains("AMD") || vidContrllr.Name.Contains("Radeon")) && ShowWarningDialog == false) {
+                    Version AMDDriverVersion = new Version(vidContrllr.DriverVersion);
 
                     if (AMDDriverVersion.Major < 15) {
                         ShowWarningDialog = true;
-                        deviceDriverOld[manObj["Name"].ToString()] = true;
+                        deviceDriverOld[vidContrllr.Name] = true;
                         Helpers.ConsolePrint(TAG, "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
                             "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
                     } else if (AMDDriverVersion.Major == 16 && AMDDriverVersion.Minor >= 150) {
@@ -165,7 +280,7 @@ namespace NiceHashMiner.Devices
                 }
                 if (amdPlatformNumFound) {
                     // get only AMD gpus
-                    List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
+                    amdGpus = new List<OpenCLDevice>();
                     {
                         var amdOCLDevices = OpenCLJSONData.OCLPlatformDevices[AMDOpenCLPlatformStringKey];
                         foreach (var oclDev in amdOCLDevices) {
