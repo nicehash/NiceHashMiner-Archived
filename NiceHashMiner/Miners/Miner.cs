@@ -243,8 +243,8 @@ namespace NiceHashMiner
 
             // TODO sgminer quickfix
             if (this is sgminer) {
-                BenchmarkHandle.StartInfo.FileName = "cmd";
                 BenchmarkProcessPath = "cmd / " + BenchmarkHandle.StartInfo.FileName;
+                BenchmarkHandle.StartInfo.FileName = "cmd";
             } else {
                 BenchmarkProcessPath = BenchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerDeviceName, "Using miner: " + BenchmarkHandle.StartInfo.FileName);

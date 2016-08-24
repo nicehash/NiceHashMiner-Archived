@@ -99,6 +99,7 @@ namespace NiceHashMiner.Forms {
             }
 
             groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
+            devicesListViewEnableControl1.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
 
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
@@ -147,7 +148,7 @@ namespace NiceHashMiner.Forms {
             CalcBenchmarkDevicesAlgorithmQueue();
             groupBoxAlgorithmBenchmarkSettings.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
             benchmarkOptions1.Enabled = true;
-            devicesListViewEnableControl1.Enabled = true;
+            devicesListViewEnableControl1.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
             CloseBtn.Enabled = true;
         }
 
