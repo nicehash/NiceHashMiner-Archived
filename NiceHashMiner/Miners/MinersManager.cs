@@ -26,7 +26,6 @@ namespace NiceHashMiner.Miners {
 
         // temporary varibales for current session
         PerDeviceSpeedDictionary _perDeviceSpeedDictionary;
-        Dictionary<string, int> _enabledDeviceCount;
         string _miningLocation;
         string _worker;
 
@@ -360,7 +359,13 @@ namespace NiceHashMiner.Miners {
                 var algorithmSettings = cdev.DeviceBenchmarkConfig.AlgorithmSettings;
 
                 foreach (var kvpTypeProfit in curDevProfits) {
-                    if (!algorithmSettings[kvpTypeProfit.Key].Skip && kvpTypeProfit.Value > 0.0d && maxProfit < kvpTypeProfit.Value) {
+                    if (!algorithmSettings[kvpTypeProfit.Key].Skip
+                        && kvpTypeProfit.Value > 0.0d
+                        && maxProfit < kvpTypeProfit.Value) {
+                        // extra check if current device can't handle dagger
+                        if (AlgorithmType.DaggerHashimoto == kvpTypeProfit.Key && !cdev.IsEtherumCapale) {
+                            continue;
+                        }
                         maxProfit = kvpTypeProfit.Value;
                         maxAlgorithmTypeKey = kvpTypeProfit.Key;
                     }
@@ -380,7 +385,7 @@ namespace NiceHashMiner.Miners {
                 var firstDev = _enabledDevices[first];
                 // skip if no algorithm is profitable
                 if (firstDev.MostProfitableAlgorithm == null) {
-                    // TODO maybe print that algorithm is missing should not come to this
+                    Helpers.ConsolePrint("SwichMostProfitableGroupUpMethod", String.Format("Device {0}, MostProfitableAlgorithm == null", firstDev.Name));
                     continue;
                 }
                 // check if is in group

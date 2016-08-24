@@ -339,8 +339,9 @@ namespace NiceHashMiner.Devices
                                                             // we are looking for amd
                                                             // TODO check discrete and integrated GPU separation
                                                             var devName = OSAdapterInfoData.ADLAdapterInfo[i].AdapterName;
-                                                            if (devName.Contains("AMD")
-                                                                /*&& devName.Contains("Radeon")*/) {
+                                                            if (devName.ToLower().Contains("amd")
+                                                                || devName.ToLower().Contains("radeon")
+                                                                || devName.ToLower().Contains("firepro")) {
                                                                 _busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                 _amdDeviceName.Add(devName);
                                                                 var udid = OSAdapterInfoData.ADLAdapterInfo[i].UDID;
