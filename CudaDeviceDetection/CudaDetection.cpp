@@ -37,6 +37,7 @@ bool CudaDetection::QueryDevices() {
 			cudaDevice.DeviceGlobalMemory = props.totalGlobalMem;
 			cudaDevice.pciDeviceId = pciInfo.pciDeviceId;
 			cudaDevice.pciSubSystemId = pciInfo.pciSubSystemId;
+			cudaDevice.SMX = props.multiProcessorCount;
 
 			_cudaDevices.push_back(cudaDevice);
 		}
@@ -79,6 +80,7 @@ void CudaDetection::json_print(CudaDevice &dev) {
 	cout << "\t\t\"UUID\" : \"" << dev.UUID << "\"," << endl;  // string
 	cout << "\t\t\"DeviceGlobalMemory\" : " << dev.DeviceGlobalMemory << "," << endl; // num
 	cout << "\t\t\"pciDeviceId\" : " << dev.pciDeviceId << "," << endl; // num
-	cout << "\t\t\"pciSubSystemId\" : " << dev.pciSubSystemId << endl; // num
+	cout << "\t\t\"pciSubSystemId\" : " << dev.pciSubSystemId << "," << endl; // num
+	cout << "\t\t\"SMX\" : " << dev.SMX << endl; // num
 	cout << "\t}";
 }

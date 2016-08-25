@@ -16,6 +16,7 @@ namespace NiceHashMiner.Devices {
         public ulong DeviceGlobalMemory;
         public uint pciDeviceId;    //!< The combined 16-bit device id and 16-bit vendor id
         public uint pciSubSystemId; //!< The 32-bit Sub System Device ID
+        public int SMX;
 
 
         private bool _isEtherumCapable = false;

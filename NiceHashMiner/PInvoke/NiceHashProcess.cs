@@ -83,6 +83,13 @@ namespace NiceHashMiner
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr GetStdHandle(int nStdHandle);
+
+        [DllImport("kernel32.dll")]
+        static extern bool CreatePipe(out IntPtr hReadPipe, out IntPtr hWritePipe,
+           ref SECURITY_ATTRIBUTES lpPipeAttributes, uint nSize);
+
         public delegate void ExitEventDelegate();
 
         public ProcessStartInfo StartInfo;

@@ -17,6 +17,10 @@ namespace NiceHashMiner.Miners
     {
         public ccminer() : base() { }
 
+        // cryptonight benchmark exception
+        int _cryptonightTotalCount = 0;
+        double _cryptonightTotal = 0;
+
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 
@@ -24,10 +28,17 @@ namespace NiceHashMiner.Miners
             CurrentMiningAlgorithm = miningAlgorithm;
             if (miningAlgorithm == null) return;
 
-            LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
+            string algo = "";
+            string apiBind = "";
+            if (CurrentMiningAlgorithm.NiceHashID != AlgorithmType.CryptoNight) {
+                algo = "--algo=" + miningAlgorithm.MinerName;
+                apiBind = " --api-bind=" + APIPort.ToString();
+            }
+
+            LastCommandLine = algo +
                                   " --url=" + url +
                                   " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
-                                  " --api-bind=" + APIPort.ToString() +
+                                  apiBind +
                                   " " + ExtraLaunchParameters +
                                   " " + miningAlgorithm.ExtraLaunchParameters +
                                   " --devices ";
@@ -59,13 +70,31 @@ namespace NiceHashMiner.Miners
 
             Path = GetOptimizedMinerPath(algorithm.NiceHashID);
 
+            // cryptonight exception helper variables
+            _cryptonightTotalCount = BenchmarkTimeInSeconds / 2;
+            _cryptonightTotal = 0.0d;
+
             return CommandLine;
         }
 
         protected override bool BenchmarkParseLine(string outdata) {
-            // TODO cryptonight custom logic
+            // cryptonight exception
             if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight) {
+                if (outdata.Contains("Total: ")) {
+                    int st = outdata.IndexOf("Total:") + 7;
+                    int len = outdata.Length - 6 - st;
 
+                    string parse = outdata.Substring(st, len).Trim();
+                    double tmp;
+                    Double.TryParse(parse, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp);
+                    _cryptonightTotal += tmp;
+                    _cryptonightTotalCount--;
+                }
+                if (_cryptonightTotalCount <= 0) {
+                    double spd = _cryptonightTotal / (BenchmarkTimeInSeconds / 2);
+                    BenchmarkAlgorithm.BenchmarkSpeed = spd;
+                    BenchmarkSignalFinnished = true;
+                }
             }
 
             double lastSpeed = 0;
@@ -83,6 +112,34 @@ namespace NiceHashMiner.Miners
         #endregion // Decoupled benchmarking routines
 
         public override APIData GetSummary() {
+            // CryptoNight does not have api bind port
+            if (CurrentAlgorithmType == AlgorithmType.CryptoNight) {
+                // check if running
+                try {
+                    var runningProcess = Process.GetProcessById(ProcessHandle.Id);
+                } catch (ArgumentException ex) {
+                    //Restart();
+                    return null; // will restart outside
+                } catch (InvalidOperationException ex) {
+                    //Restart();
+                    return null; // will restart outside
+                }
+                // extra check
+                if (CurrentMiningAlgorithm == null) {
+                    return null;
+                }
+
+                var totalSpeed = 0.0d;
+                foreach (var cdev in CDevs) {
+                    totalSpeed += cdev.DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.CryptoNight].BenchmarkSpeed;
+                }
+
+                APIData CryptoNightData = new APIData();
+                CryptoNightData.AlgorithmID = AlgorithmType.CryptoNight;
+                CryptoNightData.AlgorithmName = "cryptonight";
+                CryptoNightData.Speed = totalSpeed;
+                return CryptoNightData;
+            }
             return GetSummaryCPU_CCMINER();
         }
 

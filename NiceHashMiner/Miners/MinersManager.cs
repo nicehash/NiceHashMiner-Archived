@@ -300,7 +300,9 @@ namespace NiceHashMiner.Miners {
         private bool IsAlgorithmSettingsSame(Algorithm a, Algorithm b) {
             return a.NiceHashID == b.NiceHashID
                 && string.IsNullOrEmpty(a.UsePassword) == string.IsNullOrEmpty(b.UsePassword)
-                && string.IsNullOrEmpty(a.ExtraLaunchParameters) == string.IsNullOrEmpty(b.ExtraLaunchParameters);
+                && a.UsePassword == b.UsePassword
+                && string.IsNullOrEmpty(a.ExtraLaunchParameters) == string.IsNullOrEmpty(b.ExtraLaunchParameters)
+                && a.ExtraLaunchParameters == b.ExtraLaunchParameters;
         }
 
         private bool IsNvidiaDevice(ComputeDevice a) {
