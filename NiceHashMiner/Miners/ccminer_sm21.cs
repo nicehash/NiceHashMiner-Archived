@@ -9,8 +9,7 @@ namespace NiceHashMiner.Miners
 {
     class ccminer_sm21 : ccminer
     {
-        public ccminer_sm21()
-            : base()
+        public ccminer_sm21() : base()
         {
             MinerDeviceName = "NVIDIA2.1";
             Path = MinerPaths.ccminer_tpruvot;
@@ -30,6 +29,9 @@ namespace NiceHashMiner.Miners
             if (AlgorithmType.Decred == algorithmType) {
                 return MinerPaths.ccminer_decred;
             }
+            if (AlgorithmType.CryptoNight == algorithmType) {
+                return MinerPaths.ccminer_cryptonight;
+            } 
             return MinerPaths.ccminer_tpruvot;
         }
     }

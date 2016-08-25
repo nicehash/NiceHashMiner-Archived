@@ -101,13 +101,14 @@ namespace NiceHashMiner.Miners {
         public string GetActiveMinersGroup() {
             string ActiveMinersGroup = "";
 
-            //// TODO enable, change a set of devices CPU, NVIDIA, AMD
-            //foreach (var kvp in _allMiners) {
-            //    Miner m = kvp.Value;
-            //    if (m.IsRunning) {
-            //        ActiveMinersGroup += m.MinerDeviceName + "/";
-            //    }
-            //}
+            //get unique miner groups like CPU, NVIDIA, AMD,...
+            HashSet<string> UniqueMinerGroups = new HashSet<string>();
+            foreach (var curDevice in ComputeDevice.AllAvaliableDevices) {
+                if (curDevice.Enabled) {
+                    UniqueMinerGroups.Add(curDevice.Group);
+                }
+            }
+            ActiveMinersGroup = string.Join("/", UniqueMinerGroups);
 
             return ActiveMinersGroup;
         }

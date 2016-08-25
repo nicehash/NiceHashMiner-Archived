@@ -172,7 +172,14 @@ namespace NiceHashMiner
             StartupTimer.Stop();
             StartupTimer = null;
 
-            
+            if (!Helpers.InternalCheckIsWow64()) {
+                MessageBox.Show("NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86",
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK);
+
+                this.Close();
+                return;
+            }
 
             // Query Avaliable ComputeDevices
             ComputeDeviceQueryManager.Instance.QueryDevices(LoadingScreen);
@@ -182,16 +189,12 @@ namespace NiceHashMiner
             /////// from here on we have our devices and Miners initialized
             ConfigManager.Instance.AfterDeviceQueryInitialization();
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SaveConfig"));
-            Config.SetGroupAlgorithmSettup();
             
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDevice.AllAvaliableDevices);
             // set properties after
             devicesListViewEnableControl1.AutoSaveChange = true;
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
-
-            Config.RebuildGroups(); // this is gonna go
-
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_CheckLatestVersion"));
 
@@ -275,7 +278,7 @@ namespace NiceHashMiner
         private void Form_Main_Shown(object sender, EventArgs e)
         {
             // general loading indicator
-            // TODO find out what are the 13 loading steps, think if this should really be hardcoded
+            // TODO fix loading steps
             int TotalLoadSteps = 12;
             LoadingScreen = new Form_Loading(this,
                 International.GetText("form3_label_LoadingText"),
@@ -656,7 +659,6 @@ namespace NiceHashMiner
             // Check if the user has run benchmark first
             if (!isBenchInit) {
                 // first benchmark and start mining
-                // TODO translation or change warning, something like not benchmark 
                 string warningMsg = "Unbenchmarked enabled algorithms for enabled devices:" + Environment.NewLine; ;
                 foreach (var kvp in nonBenchmarkedPerDevice) {
                     if (kvp.Value.Count != 0) {
@@ -689,10 +691,6 @@ namespace NiceHashMiner
                 }
             }
 
-            // TODO add worker
-            var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], "TODO worker");
-            InitFlowPanelStart();
-
             textBoxBTCAddress.Enabled = false;
             textBoxWorkerName.Enabled = false;
             comboBoxLocation.Enabled = false;
@@ -705,7 +703,11 @@ namespace NiceHashMiner
             ConfigManager.Instance.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             ConfigManager.Instance.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-            if (!DemoMode) Config.Commit();
+
+            var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim());
+            InitFlowPanelStart();
+
+            if (!DemoMode) ConfigManager.Instance.GeneralConfig.Commit();
 
             SMAMinerCheck.Interval = 100;
             SMAMinerCheck.Start();
@@ -737,7 +739,7 @@ namespace NiceHashMiner
 
                 textBoxBTCAddress.Text = "";
                 ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
-                Config.Commit();
+                //Config.Commit();
             }
 
             UpdateGlobalRate();
@@ -788,7 +790,6 @@ namespace NiceHashMiner
                 ConfigManager.Instance.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
                 ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
                 ConfigManager.Instance.GeneralConfig.Commit();
-                Config.Commit();
             }
         }
 

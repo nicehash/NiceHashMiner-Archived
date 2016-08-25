@@ -28,17 +28,17 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.textBoxQuick = new System.Windows.Forms.TextBox();
             this.labelQuick = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.textBoxPrecise = new System.Windows.Forms.TextBox();
-            this.labelPrecise = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.textBoxStandard = new System.Windows.Forms.TextBox();
             this.labelStandard = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.textBoxPrecise = new System.Windows.Forms.TextBox();
+            this.labelPrecise = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -90,33 +90,6 @@
             this.labelQuick.TabIndex = 384;
             this.labelQuick.Text = "Quick";
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.textBoxPrecise);
-            this.panel2.Controls.Add(this.labelPrecise);
-            this.panel2.Location = new System.Drawing.Point(0, 64);
-            this.panel2.Margin = new System.Windows.Forms.Padding(0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(200, 32);
-            this.panel2.TabIndex = 384;
-            // 
-            // textBoxPrecise
-            // 
-            this.textBoxPrecise.Location = new System.Drawing.Point(82, 6);
-            this.textBoxPrecise.Name = "textBoxPrecise";
-            this.textBoxPrecise.Size = new System.Drawing.Size(100, 20);
-            this.textBoxPrecise.TabIndex = 383;
-            this.textBoxPrecise.TextChanged += new System.EventHandler(this.textBoxPrecise_TextChanged);
-            // 
-            // labelPrecise
-            // 
-            this.labelPrecise.AutoSize = true;
-            this.labelPrecise.Location = new System.Drawing.Point(19, 9);
-            this.labelPrecise.Name = "labelPrecise";
-            this.labelPrecise.Size = new System.Drawing.Size(42, 13);
-            this.labelPrecise.TabIndex = 384;
-            this.labelPrecise.Text = "Precise";
-            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.textBoxStandard);
@@ -144,21 +117,48 @@
             this.labelStandard.TabIndex = 384;
             this.labelStandard.Text = "Standard";
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.textBoxPrecise);
+            this.panel2.Controls.Add(this.labelPrecise);
+            this.panel2.Location = new System.Drawing.Point(0, 64);
+            this.panel2.Margin = new System.Windows.Forms.Padding(0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(200, 32);
+            this.panel2.TabIndex = 384;
+            // 
+            // textBoxPrecise
+            // 
+            this.textBoxPrecise.Location = new System.Drawing.Point(82, 6);
+            this.textBoxPrecise.Name = "textBoxPrecise";
+            this.textBoxPrecise.Size = new System.Drawing.Size(100, 20);
+            this.textBoxPrecise.TabIndex = 383;
+            this.textBoxPrecise.TextChanged += new System.EventHandler(this.textBoxPrecise_TextChanged);
+            // 
+            // labelPrecise
+            // 
+            this.labelPrecise.AutoSize = true;
+            this.labelPrecise.Location = new System.Drawing.Point(19, 9);
+            this.labelPrecise.Name = "labelPrecise";
+            this.labelPrecise.Size = new System.Drawing.Size(42, 13);
+            this.labelPrecise.TabIndex = 384;
+            this.labelPrecise.Text = "Precise";
+            // 
             // BenchmarkLimitControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
             this.Name = "BenchmarkLimitControl";
-            this.Size = new System.Drawing.Size(213, 121);
+            this.Size = new System.Drawing.Size(213, 117);
             this.groupBox1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }

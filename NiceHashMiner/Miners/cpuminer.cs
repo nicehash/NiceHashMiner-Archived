@@ -181,8 +181,6 @@ namespace NiceHashMiner.Miners
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        // new decoupled benchmark, TODO fix the copy paste magic
-        // TODO recheck this
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             Path = GetOptimizedMinerPath(algorithm.NiceHashID);
 

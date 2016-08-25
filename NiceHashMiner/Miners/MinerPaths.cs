@@ -20,6 +20,7 @@ namespace NiceHashMiner.Miners
         public const string ccminer_neoscrypt =         _bin + @"\ccminer_neoscrypt.exe";
         public const string ccminer_sp =                _bin + @"\ccminer_sp.exe";
         public const string ccminer_tpruvot =           _bin + @"\ccminer_tpruvot.exe";
+        public const string ccminer_cryptonight =       _bin + @"\ccminer_cryptonight.exe";
         /// <summary>
         /// cpuminers
         /// </summary>

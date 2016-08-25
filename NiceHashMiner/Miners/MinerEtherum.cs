@@ -59,7 +59,6 @@ namespace NiceHashMiner.Miners {
 
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine = GetBenchmarkCommandStringPart(benchmarkConfig, algorithm) + GetDevicesCommandString();
-            // TODO fix miner block
             Ethereum.GetCurrentBlock(MinerDeviceName);
             CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
 

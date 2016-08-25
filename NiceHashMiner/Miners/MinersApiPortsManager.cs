@@ -1,31 +1,53 @@
-﻿using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
     public class MinersApiPortsManager : BaseLazySingleton<MinersApiPortsManager> {
-        private const int _base_START = 4000;
-        private const int _base_JUMP = 100;
-
         private HashSet<int> _usedPorts;
         
         protected MinersApiPortsManager() {
             _usedPorts = new HashSet<int>();
         }
 
-        private int GetStartPort(int minerTypeInt) {
-            return _base_START + (minerTypeInt + 1) * _base_JUMP;
+        private bool IsPortAvaliable(int port) {
+            bool isAvailable = true;
+
+            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            // check TCP
+            {
+                var tcpIpEndpoints = ipGlobalProperties.GetActiveTcpListeners();
+                foreach (var tcp in tcpIpEndpoints) {
+                    if (tcp.Port == port) {
+                        isAvailable = false;
+                        break;
+                    }
+                }
+            }
+            // check UDP
+            if (isAvailable) {
+                var udpIpEndpoints = ipGlobalProperties.GetActiveUdpListeners();
+                foreach (var udp in udpIpEndpoints) {
+                    if (udp.Port == port) {
+                        isAvailable = false;
+                        break;
+                    }
+                }
+            }
+            return isAvailable;
         }
 
+        // remove miner type not used anymore
         public int GetAvaliablePort(MinerType minerType) {
-            int newPortStart = GetStartPort((int)minerType);
-            int newPortEnd = GetStartPort((int)minerType + 1);
-            int port = newPortStart;
+            int port = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart;
+            int newPortEnd = port + 1000;
             for (; port < newPortEnd; ++port) {
-                if (_usedPorts.Add(port)) {
+                if (IsPortAvaliable(port) && _usedPorts.Add(port)) {
                     break;
                 }
             }

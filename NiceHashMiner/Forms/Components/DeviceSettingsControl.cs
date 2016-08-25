@@ -31,6 +31,10 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        public void InitLocale(ToolTip toolTip) {
+            cpuSpecificSettings1.InitLocale(toolTip);
+        }
+
         private void SetSelectedDeviceFields() {
             if(_selectedComputeDevice == null) return;
             // TODO translation

@@ -12,7 +12,7 @@ namespace NiceHashMiner.Devices
     public class ComputeDevice
     {
         //[JsonIgnore]
-        // TODO IMPORTANT fix this Ids for CUDA, OpenCL, sgminer, ccminer and ethminer have different grouping logics
+        //readonly public int PlatformId;
         readonly public int ID;
         readonly public string Group;
         readonly public string Name;
@@ -150,8 +150,6 @@ namespace NiceHashMiner.Devices
             Codename = amdDevice.Codename;
         }
 
-        // TODO update this for specific device stuff for optimizations especially for AMD
-        // TODO set algorithm optimization settings
         public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig) {
             DeviceBenchmarkConfig = deviceBenchmarkConfig;
             // check initialization
@@ -175,6 +173,26 @@ namespace NiceHashMiner.Devices
                     if (!_amdDevice.Codename.Contains("Tahiti")) {
                         DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.NeoScrypt].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
                         Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + _amdDevice.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
+                    }
+                }
+                if (_cudaDevice != null) {
+                    if (DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(AlgorithmType.CryptoNight)) {
+                        var CryptoNightAlgo = DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.CryptoNight];
+                        if (CryptoNightAlgo.ExtraLaunchParameters == "") {
+                            // comon popular cards settings
+                            if (Name.Contains("GTX 980")) {
+                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x16";
+                            } else if (Name.Contains("GTX 970")) {
+                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x13";
+                            } else if (Name.Contains("GTX 960")) {
+                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x8";
+                            } else if (Name.Contains("GTX 950")) {
+                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x6";
+                            } else {
+                                // TODO 
+                                //CryptoNightAlgo.ExtraLaunchParameters = "";
+                            }
+                        }
                     }
                 }
             }
@@ -208,20 +226,5 @@ namespace NiceHashMiner.Devices
             // GEN indicates the UUID has been generated and cannot be presumed to be immutable
             return "GEN-" + hash.ToString();
         }
-
-        //public static List<ComputeDevice> GetEnabledDevices() {
-        //    List<ComputeDevice> enabledCDevs = new List<ComputeDevice>();
-
-        //    foreach (var dev in AllAvaliableDevices) {
-        //        if (dev.Enabled) enabledCDevs.Add(dev);
-        //    }
-
-        //    return enabledCDevs;
-        //}
-
-        //// this checks if device is same
-        //public static bool IsSameDeviceType() {
-
-        //}
     }
 }

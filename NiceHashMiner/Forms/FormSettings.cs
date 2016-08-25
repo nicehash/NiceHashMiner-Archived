@@ -34,7 +34,6 @@ namespace NiceHashMiner.Forms {
         private GeneralConfig _generalConfigBackup;
         private Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigsBackup;
 
-
         public FormSettings() {
             InitializeComponent();
 
@@ -62,7 +61,7 @@ namespace NiceHashMiner.Forms {
             InitializeGeneralTab();
 
             // initialization calls 
-            InitializeCallbacks();
+            InitializeDevicesTab();
             // link algorithm list with algorithm settings control
             algorithmSettingsControl1.Enabled = false;
             algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
@@ -222,7 +221,6 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_ShowDriverVersionWarning.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_DisableWindowsErrorReporting.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_StartMiningWhenIdle.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-                //this.checkBox_UseNewSettingsPage.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_NVIDIAP0State.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_LogToFile.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             }
@@ -240,18 +238,8 @@ namespace NiceHashMiner.Forms {
                 this.textBox_MinerAPIGraceSecondsAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_MinIdleSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_LogMaxFileSize.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsCPU_Quick.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsCPU_Standard.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsCPU_Precise.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsNVIDIA_Quick.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsNVIDIA_Standard.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsNVIDIA_Precise.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsAMD_Quick.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsAMD_Standard.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_BenchmarkTimeLimitsAMD_Precise.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_ethminerAPIPortNvidia.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                //this.textBox_ethminerAPIPortAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_ethminerDefaultBlockHeight.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                this.textBox_APIBindPortStart.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 // set int only keypress
                 this.textBox_SwitchMinSecondsFixed.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_SwitchMinSecondsDynamic.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
@@ -262,9 +250,8 @@ namespace NiceHashMiner.Forms {
                 this.textBox_MinerAPIGraceSecondsAMD.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_MinIdleSeconds.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_LogMaxFileSize.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
-                //this.textBox_ethminerAPIPortNvidia.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
-                //this.textBox_ethminerAPIPortAMD.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_ethminerDefaultBlockHeight.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+                this.textBox_APIBindPortStart.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -309,6 +296,7 @@ namespace NiceHashMiner.Forms {
                 //textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
                 //textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
                 textBox_ethminerDefaultBlockHeight.Text = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
+                textBox_APIBindPortStart.Text = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart.ToString();
             }
 
             // set custom control referances
@@ -349,9 +337,24 @@ namespace NiceHashMiner.Forms {
 
         #endregion //Tab General
 
-        private void InitializeCallbacks() {
+        #region Tab Devices
+
+        private void InitializeDevicesTab() {
+            InitializeDevicesTabTranslations();
+            InitializeDevicesCallbacks();
+        }
+
+        private void InitializeDevicesTabTranslations() {
+            deviceSettingsControl1.InitLocale(toolTip1);
+        }
+
+
+        private void InitializeDevicesCallbacks() {
             devicesListView1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
         }
+
+        #endregion //Tab Devices
+
 
         #endregion // Initializations
 
@@ -450,18 +453,14 @@ namespace NiceHashMiner.Forms {
             if (!ParseStringToInt64(ref textBox_LogMaxFileSize)) return;
             ConfigManager.Instance.GeneralConfig.LogMaxFileSize = Int64.Parse(textBox_LogMaxFileSize.Text);
             textBox_LogMaxFileSize.Text = ConfigManager.Instance.GeneralConfig.LogMaxFileSize.ToString();
-
-            //if (!ParseStringToInt32(ref textBox_ethminerAPIPortNvidia)) return;
-            //ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia = Int32.Parse(textBox_ethminerAPIPortNvidia.Text);
-            //textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
-
-            //if (!ParseStringToInt32(ref textBox_ethminerAPIPortAMD)) return;
-            //ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD = Int32.Parse(textBox_ethminerAPIPortAMD.Text);
-            //textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
             
             if (!ParseStringToInt32(ref textBox_ethminerDefaultBlockHeight)) return;
             ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight = Int32.Parse(textBox_ethminerDefaultBlockHeight.Text);
             textBox_ethminerDefaultBlockHeight.Text = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
+
+            if (!ParseStringToInt32(ref textBox_APIBindPortStart)) return;
+            ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart = Int32.Parse(textBox_APIBindPortStart.Text);
+            textBox_APIBindPortStart.Text = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart.ToString();
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e) {
@@ -485,6 +484,72 @@ namespace NiceHashMiner.Forms {
             var selectedComputeDevice = GetCurrentlySelectedComputeDevice(e.ItemIndex);
             deviceSettingsControl1.SelectedComputeDevice = selectedComputeDevice;
             algorithmsListView1.SetAlgorithms(selectedComputeDevice);
+        }
+
+        // TODO IMPORTANT get back to this div thing
+        static double[] div = new double[] {
+                                 1000000,       //   0 (MH/s) Scrypt
+                                 1000000000000, //   1 (TH/s) SHA256
+                                 1000000,       //   2 (MH/s) ScryptNf
+                                 1000000,       //   3 (MH/s) X11
+                                 1000000,       //   4 (MH/s) X13
+                                 1000000,       //   5 (MH/s) Keccak
+                                 1000000,       //   6 (MH/s) X15
+                                 1000000,       //   7 (MH/s) Nist5
+                                 1000000,       //   8 (MH/s) NeoScrypt
+                                 1000000,       //   9 (MH/s) Lyra2RE
+                                 1000000,       //  10 (MH/s) WhirlpoolX
+                                 1000000,       //  11 (MH/s) Qubit
+                                 1000000,       //  12 (MH/s) Quark
+                                 1000,          //  13 (kH/s) Axiom
+                                 1000000,       //  14 (MH/s) Lyra2REv2
+                                 1000,          //  15 (kH/s) ScryptJaneNf16
+                                 1000000000,    //  16 (GH/s) Blake256r8
+                                 1000000000,    //  17 (GH/s) Blake256r14
+                                 1000000000,    //  18 (GH/s) Blake256r8vnl
+                                 1000,          //  19 (kH/s) Hodl
+                                 1000000,       //  20 (MH/s) Daggerhashimoto
+                                 1000000000,    //  21 (GH/s) Decred
+                                 1000000 }; // 999 (MH/s) Ethereum
+
+        private void buttonSelectedProfit_Click(object sender, EventArgs e) {
+            var selectedCDev = deviceSettingsControl1.SelectedComputeDevice;
+            if (selectedCDev == null) {
+                MessageBox.Show("Select device first",
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK);
+                return;
+            }
+            var url = "https://www.nicehash.com/?p=calc&name=" + selectedCDev.Name;
+            foreach (var algorithm in selectedCDev.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
+                var id = (int)algorithm.NiceHashID;
+                url += "&speed" + id + "=" + (algorithm.BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            url += "&nhmver=" + Application.ProductVersion.ToString();  // Add version info
+            url += "&cost=1&power=1"; // Set default power and cost to 1
+            System.Diagnostics.Process.Start(url);
+        }
+
+        private void buttonAllProfit_Click(object sender, EventArgs e) {
+            var url = "https://www.nicehash.com/?p=calc&name=CUSTOM";
+            Dictionary<AlgorithmType, double> total = new Dictionary<AlgorithmType,double>();
+
+            foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
+                foreach (var algorithm in curCDev.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
+                    if (total.ContainsKey(algorithm.NiceHashID)) {
+                        total[algorithm.NiceHashID] += algorithm.BenchmarkSpeed;
+                    } else {
+                        total[algorithm.NiceHashID] = algorithm.BenchmarkSpeed;
+                    }
+                }
+            }
+            foreach (var algorithm in total) {
+                var id = (int)algorithm.Key;
+                url += "&speed" + id + "=" + (algorithm.Value / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            url += "&nhmver=" + Application.ProductVersion.ToString();  // Add version info
+            url += "&cost=1&power=1"; // Set default power and cost to 1
+            System.Diagnostics.Process.Start(url);
         }
 
         #endregion //Tab Device
@@ -565,5 +630,11 @@ namespace NiceHashMiner.Forms {
         }
 
         #endregion Form Callbacks
+
+        private void buttonSubmitHardware_Click(object sender, EventArgs e) {
+
+        }
+
+        
     }
 }

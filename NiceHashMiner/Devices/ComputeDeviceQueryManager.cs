@@ -18,12 +18,11 @@ namespace NiceHashMiner.Devices
     /// <summary>
     /// ComputeDeviceQueryManager class is used to query ComputeDevices avaliable on the system.
     /// Query CPUs, GPUs [Nvidia, AMD]
-    /// TODO For now it depends on current Miners implementation, bound to change
-    /// CPU query stays the same
-    /// GPU querying should change
     /// </summary>
     public class ComputeDeviceQueryManager : BaseLazySingleton<ComputeDeviceQueryManager>
     {
+
+        const int AMD_VENDOR_ID = 1002;
         readonly string TAG;
         // change to protected after .NET upgrade
         protected ComputeDeviceQueryManager() {
@@ -337,8 +336,10 @@ namespace NiceHashMiner.Devices
                                                         if (!_busIds.Contains(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber)) {
                                                             // we are looking for amd
                                                             // TODO check discrete and integrated GPU separation
+                                                            var vendorID = OSAdapterInfoData.ADLAdapterInfo[i].VendorID;
                                                             var devName = OSAdapterInfoData.ADLAdapterInfo[i].AdapterName;
-                                                            if (devName.ToLower().Contains("amd")
+                                                            if (vendorID == AMD_VENDOR_ID
+                                                                || devName.ToLower().Contains("amd")
                                                                 || devName.ToLower().Contains("radeon")
                                                                 || devName.ToLower().Contains("firepro")) {
                                                                 _busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);

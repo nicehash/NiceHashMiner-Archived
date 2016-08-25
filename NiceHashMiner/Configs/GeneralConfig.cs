@@ -100,7 +100,7 @@ namespace NiceHashMiner.Configs {
         //public int ethminerAPIPortNvidia { get; set; }
         //public int ethminerAPIPortAMD { get; set; }
         public int ethminerDefaultBlockHeight { get; set; }
-        
+        public int ApiBindPortPoolStart { get; set; }
         
 
 
@@ -152,7 +152,8 @@ namespace NiceHashMiner.Configs {
             SwitchMinSecondsDynamic = 30;
             SwitchMinSecondsAMD = 90;
             MinIdleSeconds = 60;
-            DisplayCurrency = "USD"; 
+            DisplayCurrency = "USD";
+            ApiBindPortPoolStart = 4000;
         }
 
         public GeneralConfig(bool initDefaults = false) {

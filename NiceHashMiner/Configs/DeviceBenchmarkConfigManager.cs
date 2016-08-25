@@ -22,15 +22,11 @@ namespace NiceHashMiner.Configs {
             _benchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
         }
 
-        public DeviceBenchmarkConfig GetConfig(string deviceName) {
+        private DeviceBenchmarkConfig GetConfig(string deviceName) {
             DeviceBenchmarkConfig retConfig = null;
-
             if (_benchmarkConfigs.TryGetValue(deviceName, out retConfig) == false) {
-                // TODO if it does not exist create new
-                // but this should never happen
                 retConfig = null;
             }
-
             return retConfig;
         }
 

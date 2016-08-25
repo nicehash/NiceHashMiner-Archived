@@ -476,7 +476,6 @@ namespace NiceHashMiner
         }
 
         protected void FillAlgorithm(string aname, ref APIData AD) {
-            // TODO this check is not really needed
             if (CurrentMiningAlgorithm.MinerName.Equals(aname)) {
                 AD.AlgorithmID = CurrentMiningAlgorithm.NiceHashID;
                 AD.AlgorithmName = CurrentMiningAlgorithm.NiceHashName;

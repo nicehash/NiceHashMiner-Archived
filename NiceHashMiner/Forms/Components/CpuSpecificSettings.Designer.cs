@@ -58,6 +58,7 @@
             this.comboBox_CPU0_ForceCPUExtension.Name = "comboBox_CPU0_ForceCPUExtension";
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(121, 21);
             this.comboBox_CPU0_ForceCPUExtension.TabIndex = 100;
+            this.comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += new System.EventHandler(this.comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged);
             // 
             // label_CPU0_ForceCPUExtension
             // 

@@ -90,7 +90,6 @@ namespace NiceHashMiner.Configs
 
             if (_file.AlgorithmSettings != null) {
                 // settings from files are initialized
-                IsAlgorithmSettingsInit = true;
                 foreach (var key in _file.AlgorithmSettings.Keys) {
                     if(this.AlgorithmSettings.ContainsKey(key)) {
                         this.AlgorithmSettings[key] = _file.AlgorithmSettings[key];

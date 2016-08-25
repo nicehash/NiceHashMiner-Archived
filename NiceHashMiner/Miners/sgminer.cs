@@ -122,7 +122,7 @@ namespace NiceHashMiner.Miners
 
                         return MinerPaths.sgminer_5_4_0_tweaked;
                     }
-                    // TODO these segfault
+                    // TODO CRITICAL IMPORTANT these segfault
                     if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
                         return MinerPaths.sgminer_5_1_0_optimized;
                     else
@@ -136,7 +136,6 @@ namespace NiceHashMiner.Miners
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        // TODO decoupled benchmark routine
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine;
             Path = "cmd";
@@ -151,7 +150,6 @@ namespace NiceHashMiner.Miners
             if (ConfigManager.Instance.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.Instance.GeneralConfig.WorkerName.Trim();
 
-            // TODO not sure if this will work, why cd-ing to dir and running???
             CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
                           " --gpu-platform " + GPUPlatformNumber +
                           " -k " + algorithm.MinerName +
@@ -195,7 +193,6 @@ namespace NiceHashMiner.Miners
             return false;
         }
 
-        // TODO check this
         protected override void BenchmarkThreadRoutineStartSettup() {
             if (MinerDeviceName.Equals("AMD_OpenCL")) {
                 AlgorithmType NHDataIndex = BenchmarkAlgorithm.NiceHashID;

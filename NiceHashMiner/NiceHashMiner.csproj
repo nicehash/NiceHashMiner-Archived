@@ -208,12 +208,6 @@
     <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
-    <Compile Include="Forms\SubmitResultDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SubmitResultDialog.Designer.cs">
-      <DependentUpon>SubmitResultDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="BitcoinAddress.cs" />
     <Compile Include="Bitcoin.cs" />
     <Compile Include="Miners\ccminer_sm5x.cs" />
@@ -301,9 +295,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SubmitResultDialog.resx">
-      <DependentUpon>SubmitResultDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DriverVersionConfirmationDialog.resx">
       <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>

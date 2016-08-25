@@ -47,9 +47,10 @@ namespace NiceHashMiner.Miners
         #region Decoupled benchmarking routines
 
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+            string timeLimit = algorithm.NiceHashID == AlgorithmType.CryptoNight ? "" : " --time-limit " + time.ToString();
             string CommandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
-                              " --time-limit " + time.ToString() +
+                              timeLimit +
                               " " + ExtraLaunchParameters +
                               " " + algorithm.ExtraLaunchParameters +
                               " --devices ";
@@ -62,6 +63,11 @@ namespace NiceHashMiner.Miners
         }
 
         protected override bool BenchmarkParseLine(string outdata) {
+            // TODO cryptonight custom logic
+            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight) {
+
+            }
+
             double lastSpeed = 0;
             if (double.TryParse(outdata, out lastSpeed)) {
                 BenchmarkAlgorithm.BenchmarkSpeed = lastSpeed;

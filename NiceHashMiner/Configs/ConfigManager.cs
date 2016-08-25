@@ -5,16 +5,13 @@ using System.IO;
 using System.Text;
 
 namespace NiceHashMiner.Configs {
-    public class ConfigManager : BaseLazySingleton<ConfigManager> {
+    public partial class ConfigManager : BaseLazySingleton<ConfigManager> {
         public GeneralConfig GeneralConfig { get; set; }
         public Dictionary<string, DeviceBenchmarkConfig> BenchmarkConfigs { get; set; }
 
         protected ConfigManager() {
             GeneralConfig = new GeneralConfig(true);
             BenchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
-
-            // load configs that are device independant
-            //GeneralConfig.InitializeConfig();
         }
 
         public void CommitBenchmarks() {
@@ -33,7 +30,6 @@ namespace NiceHashMiner.Configs {
 
         public void AfterDeviceQueryInitialization() {
             // initialize group settings
-            //SetComputeDeviceConfig();
             ComputeDeviceGroupManager.Instance.InitializeGroupSettings();
             // new stuff
             // set references
@@ -45,9 +41,9 @@ namespace NiceHashMiner.Configs {
 
             // set Benchmarks for devices
             foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
-                cdev.SetDeviceBenchmarkConfig(DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.Name));
+                cdev.SetDeviceBenchmarkConfig(DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.DeviceGroupType, cdev.Name));
             }
-
+            CommitBenchmarks();
         }
 
     }
