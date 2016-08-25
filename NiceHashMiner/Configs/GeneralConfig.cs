@@ -96,12 +96,23 @@ namespace NiceHashMiner.Configs {
         public bool ShowDriverVersionWarning { get; set; }
         public bool DisableWindowsErrorReporting { get; set; }
         public bool NVIDIAP0State { get; set; }
-        // check these settings, API ports are no longer needed
-        //public int ethminerAPIPortNvidia { get; set; }
-        //public int ethminerAPIPortAMD { get; set; }
+
         public int ethminerDefaultBlockHeight { get; set; }
-        public int ApiBindPortPoolStart { get; set; }
-        
+
+        private int _apiBindPortPoolStart = 4000;
+        public int ApiBindPortPoolStart {
+            get { return _apiBindPortPoolStart; }
+            set {
+                // check port start number, leave about 2000 ports pool size, huge yea!
+                if (value < (65535 - 2000)) {
+                    _apiBindPortPoolStart = value;
+                } else {
+                    // set default
+                    _apiBindPortPoolStart = 4000;
+                }
+            }
+        }
+        public double MinimumProfit { get; set; }
 
 
         // After Device initialization
@@ -143,8 +154,6 @@ namespace NiceHashMiner.Configs {
             DisableWindowsErrorReporting = true;
             NVIDIAP0State = false;
             MinerRestartDelayMS = 500;
-            //ethminerAPIPortNvidia = 34561;
-            //ethminerAPIPortAMD = 34562;
             ethminerDefaultBlockHeight = 1700000;
             MinerAPIGraceSeconds = 30;
             MinerAPIGraceSecondsAMD = 60;
@@ -154,6 +163,7 @@ namespace NiceHashMiner.Configs {
             MinIdleSeconds = 60;
             DisplayCurrency = "USD";
             ApiBindPortPoolStart = 4000;
+            MinimumProfit = 0;
         }
 
         public GeneralConfig(bool initDefaults = false) {
@@ -210,9 +220,9 @@ namespace NiceHashMiner.Configs {
             ShowDriverVersionWarning  = _file.ShowDriverVersionWarning;
             DisableWindowsErrorReporting  = _file.DisableWindowsErrorReporting;
             NVIDIAP0State = _file.NVIDIAP0State;
-            //ethminerAPIPortNvidia  = _file.ethminerAPIPortNvidia;
-            //ethminerAPIPortAMD = _file.ethminerAPIPortAMD;
             ethminerDefaultBlockHeight = _file.ethminerDefaultBlockHeight;
+            ApiBindPortPoolStart = _file.ApiBindPortPoolStart;
+            MinimumProfit = _file.MinimumProfit;
         }
 
         public void AfterDeviceQueryInitialization() {

@@ -29,12 +29,13 @@
             // checkBox_AMD_DisableAMDTempControl
             // 
             this.checkBox_AMD_DisableAMDTempControl.AutoSize = true;
-            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(3, 12);
+            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(13, 12);
             this.checkBox_AMD_DisableAMDTempControl.Name = "checkBox_AMD_DisableAMDTempControl";
             this.checkBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(145, 17);
             this.checkBox_AMD_DisableAMDTempControl.TabIndex = 5;
             this.checkBox_AMD_DisableAMDTempControl.Text = "DisableAMDTempControl";
             this.checkBox_AMD_DisableAMDTempControl.UseVisualStyleBackColor = true;
+            this.checkBox_AMD_DisableAMDTempControl.CheckedChanged += new System.EventHandler(this.checkBox_AMD_DisableAMDTempControl_CheckedChanged);
             // 
             // AmdSpecificSettings
             // 
@@ -42,7 +43,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.checkBox_AMD_DisableAMDTempControl);
             this.Name = "AmdSpecificSettings";
-            this.Size = new System.Drawing.Size(435, 40);
+            this.Size = new System.Drawing.Size(377, 71);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -31,15 +31,15 @@
             // 
             // textBox_CPU0_LessThreads
             // 
-            this.textBox_CPU0_LessThreads.Location = new System.Drawing.Point(324, 9);
+            this.textBox_CPU0_LessThreads.Location = new System.Drawing.Point(130, 41);
             this.textBox_CPU0_LessThreads.Name = "textBox_CPU0_LessThreads";
-            this.textBox_CPU0_LessThreads.Size = new System.Drawing.Size(100, 20);
+            this.textBox_CPU0_LessThreads.Size = new System.Drawing.Size(121, 20);
             this.textBox_CPU0_LessThreads.TabIndex = 101;
             // 
             // label_CPU0_LessThreads
             // 
             this.label_CPU0_LessThreads.AutoSize = true;
-            this.label_CPU0_LessThreads.Location = new System.Drawing.Point(250, 12);
+            this.label_CPU0_LessThreads.Location = new System.Drawing.Point(13, 44);
             this.label_CPU0_LessThreads.Name = "label_CPU0_LessThreads";
             this.label_CPU0_LessThreads.Size = new System.Drawing.Size(71, 13);
             this.label_CPU0_LessThreads.TabIndex = 102;
@@ -54,7 +54,7 @@
             "SSE2",
             "AVX",
             "AVX2"});
-            this.comboBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(120, 9);
+            this.comboBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(130, 8);
             this.comboBox_CPU0_ForceCPUExtension.Name = "comboBox_CPU0_ForceCPUExtension";
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(121, 21);
             this.comboBox_CPU0_ForceCPUExtension.TabIndex = 100;
@@ -63,7 +63,7 @@
             // label_CPU0_ForceCPUExtension
             // 
             this.label_CPU0_ForceCPUExtension.AutoSize = true;
-            this.label_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(3, 12);
+            this.label_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(13, 11);
             this.label_CPU0_ForceCPUExtension.Name = "label_CPU0_ForceCPUExtension";
             this.label_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(105, 13);
             this.label_CPU0_ForceCPUExtension.TabIndex = 103;
@@ -78,7 +78,7 @@
             this.Controls.Add(this.comboBox_CPU0_ForceCPUExtension);
             this.Controls.Add(this.label_CPU0_ForceCPUExtension);
             this.Name = "CpuSpecificSettings";
-            this.Size = new System.Drawing.Size(435, 40);
+            this.Size = new System.Drawing.Size(377, 71);
             this.ResumeLayout(false);
             this.PerformLayout();
 

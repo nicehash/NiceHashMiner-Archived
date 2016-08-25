@@ -3,9 +3,9 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 
@@ -240,6 +240,7 @@ namespace NiceHashMiner.Forms {
                 this.textBox_LogMaxFileSize.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_ethminerDefaultBlockHeight.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_APIBindPortStart.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                this.textBox_MinProfit.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 // set int only keypress
                 this.textBox_SwitchMinSecondsFixed.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_SwitchMinSecondsDynamic.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
@@ -252,6 +253,8 @@ namespace NiceHashMiner.Forms {
                 this.textBox_LogMaxFileSize.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_ethminerDefaultBlockHeight.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_APIBindPortStart.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+                // set double only keypress
+                this.textBox_MinProfit.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxDoubleOnly_KeyPress);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -275,7 +278,6 @@ namespace NiceHashMiner.Forms {
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.Instance.GeneralConfig.StartMiningWhenIdle;
                 checkBox_ShowDriverVersionWarning.Checked = ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning;
                 checkBox_DisableWindowsErrorReporting.Checked = ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting;
-                //checkBox_UseNewSettingsPage.Checked = ConfigManager.Instance.GeneralConfig.UseNewSettingsPage;
                 checkBox_NVIDIAP0State.Checked = ConfigManager.Instance.GeneralConfig.NVIDIAP0State;
                 checkBox_LogToFile.Checked = ConfigManager.Instance.GeneralConfig.LogToFile;
             }
@@ -293,10 +295,9 @@ namespace NiceHashMiner.Forms {
                 textBox_MinerAPIGraceSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD.ToString();
                 textBox_MinIdleSeconds.Text = ConfigManager.Instance.GeneralConfig.MinIdleSeconds.ToString();
                 textBox_LogMaxFileSize.Text = ConfigManager.Instance.GeneralConfig.LogMaxFileSize.ToString();
-                //textBox_ethminerAPIPortNvidia.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortNvidia.ToString();
-                //textBox_ethminerAPIPortAMD.Text = ConfigManager.Instance.GeneralConfig.ethminerAPIPortAMD.ToString();
                 textBox_ethminerDefaultBlockHeight.Text = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
                 textBox_APIBindPortStart.Text = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart.ToString();
+                textBox_MinProfit.Text = ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString().Replace(',', '.'); // force comma;
             }
 
             // set custom control referances
@@ -461,6 +462,10 @@ namespace NiceHashMiner.Forms {
             if (!ParseStringToInt32(ref textBox_APIBindPortStart)) return;
             ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart = Int32.Parse(textBox_APIBindPortStart.Text);
             textBox_APIBindPortStart.Text = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart.ToString();
+
+            // TODO maybe make to parse double check
+            ConfigManager.Instance.GeneralConfig.MinimumProfit = Double.Parse(textBox_MinProfit.Text, CultureInfo.InvariantCulture);
+            textBox_MinProfit.Text = ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F16").Replace(',', '.'); // force comma
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e) {
@@ -484,6 +489,7 @@ namespace NiceHashMiner.Forms {
             var selectedComputeDevice = GetCurrentlySelectedComputeDevice(e.ItemIndex);
             deviceSettingsControl1.SelectedComputeDevice = selectedComputeDevice;
             algorithmsListView1.SetAlgorithms(selectedComputeDevice);
+            groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", selectedComputeDevice.Name);
         }
 
         // TODO IMPORTANT get back to this div thing

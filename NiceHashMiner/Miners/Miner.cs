@@ -23,8 +23,6 @@ namespace NiceHashMiner
         public double Speed;
     }
 
-    //public delegate void BenchmarkComplete(bool success, string text);
-
     public abstract class Miner
     {
         public string MinerDeviceName { get; protected set; }

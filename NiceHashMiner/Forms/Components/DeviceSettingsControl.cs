@@ -33,6 +33,7 @@ namespace NiceHashMiner.Forms.Components {
 
         public void InitLocale(ToolTip toolTip) {
             cpuSpecificSettings1.InitLocale(toolTip);
+            amdSpecificSettings1.InitLocale(toolTip);
         }
 
         private void SetSelectedDeviceFields() {
@@ -45,7 +46,6 @@ namespace NiceHashMiner.Forms.Components {
 
             //fieldAPIBindPort.EntryText = _settings.APIBindPort.ToString();
             fieldUsePassword.EntryText = _settings.UsePassword;
-            fieldMinimumProfit.EntryText = _settings.MinimumProfit.ToString();
 
             richTextBoxExtraLaunchParameters.Text = _settings.ExtraLaunchParameters;
             

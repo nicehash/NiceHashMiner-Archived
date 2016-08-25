@@ -26,7 +26,7 @@ namespace NiceHashMiner.Devices
         readonly string TAG;
         // change to protected after .NET upgrade
         protected ComputeDeviceQueryManager() {
-            TAG = typeof(ComputeDeviceQueryManager).Name;
+            TAG = this.GetType().Name;
         }
 
         public int CPUs { get; private set; }

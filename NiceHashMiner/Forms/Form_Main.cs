@@ -306,34 +306,6 @@ namespace NiceHashMiner
                 Worker = textBoxBTCAddress.Text.Trim();
 
             MinersManager.Instance.SwichMostProfitableGroupUpMethod(Globals.NiceHashData, Worker);
-            // switching logic
-            //foreach (Miner m in Globals.Miners) {
-            //    if (m.EnabledDeviceCount() == 0) continue;
-
-            //    AlgorithmType MaxProfitKey = m.GetMaxProfitKey(Globals.NiceHashData);
-
-            //    if (m.NotProfitable || MaxProfitKey == AlgorithmType.NONE) {
-            //        Helpers.ConsolePrint(m.MinerDeviceName, "Miner is not profitable.. STOPPING..");
-            //        m.Stop(false);
-            //        continue;
-            //    }
-
-            //    if (m.CurrentAlgorithmType != MaxProfitKey) {
-            //        Helpers.ConsolePrint(m.MinerDeviceName, "Switching to most profitable algorithm: " + m.SupportedAlgorithms[MaxProfitKey].NiceHashName);
-
-            //        MinerStatsCheck.Stop();
-            //        if (m.CurrentAlgorithmType >= 0) {
-            //            m.Stop(true);
-            //            // wait 0.5 seconds before going on
-            //            System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
-            //        }
-            //        m.CurrentAlgorithmType = MaxProfitKey;
-
-            //        m.Start(m.SupportedAlgorithms[MaxProfitKey].NiceHashID,
-            //            "stratum+tcp://" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitKey].NiceHashID].name + "." + Globals.MiningLocation[comboBoxLocation.SelectedIndex] + ".nicehash.com:" + Globals.NiceHashData[m.SupportedAlgorithms[MaxProfitKey].NiceHashID].port, Worker);
-            //        MinerStatsCheck.Start();
-            //    }
-            //}
         }
 
 
@@ -390,6 +362,13 @@ namespace NiceHashMiner
                 .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBTCString, rateCurrencyString);
 
             UpdateGlobalRate();
+        }
+
+        public void ShowNotProfitable() {
+            label_MiningProfitabilityStatus.Text = "MININGRPOTIFABILITY STATUS: MINING NOT PROFITABLE";
+        }
+        public void HideNotProfitable() {
+            label_MiningProfitabilityStatus.Text = "MININGRPOTIFABILITY STATUS: PROFITABLE";
         }
 
         private void UpdateGlobalRate()
@@ -744,9 +723,6 @@ namespace NiceHashMiner
 
             UpdateGlobalRate();
         }
-
-
-        
 
         private string FormatPayingOutput(double paying)
         {

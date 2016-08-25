@@ -61,7 +61,12 @@ namespace NiceHashMiner.Miners {
         // we save cpu miners string group name
         Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
 
+        private bool IsProfitable = true;
+
+        readonly string TAG;
+
         protected MinersManager() {
+            TAG = this.GetType().Name;
             _preventSleepTimer = new Timer();
             _preventSleepTimer.Tick += PreventSleepTimer_Tick;
              // sleep time is minimal 1 minute
@@ -171,6 +176,9 @@ namespace NiceHashMiner.Miners {
             _groupedDevicesMiners = new Dictionary<string, GroupMiners>();
             _enabledDevices = new List<ComputeDevice>();
             _currentAllGroupedDevices = new AllGroupedDevices();
+
+            // assume profitable
+            IsProfitable = true;
 
 
             // this checks if there are enabled devices and enabled algorithms
@@ -351,7 +359,7 @@ namespace NiceHashMiner.Miners {
         /// <param name="NiceHashData"></param>
         public void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData, string Worker) {
             var devProfits = GetEnabledDeviceProifitDictionary(_perDeviceSpeedDictionary, NiceHashData);
-
+            double CurrentProfit = 0.0;
             // calculate most profitable algorithm per enabled device
             foreach (var cdev in _enabledDevices) {
                 var curDevProfits = devProfits[cdev.Name];
@@ -376,8 +384,29 @@ namespace NiceHashMiner.Miners {
                 } else {
                     cdev.MostProfitableAlgorithm
                         = algorithmSettings[maxAlgorithmTypeKey];
+                    // add most profitable to cumulative profit
+                    CurrentProfit += maxProfit;
                 }
             }
+
+            // now if profitable check
+            // TODO FOR NOW USD ONLY
+            var currentProfitUSD = (CurrentProfit * Globals.BitcoinRate);
+            Helpers.ConsolePrint(TAG,  "Current Global profit: " + currentProfitUSD.ToString("F8") + " BTC/Day");
+            if (ConfigManager.Instance.GeneralConfig.MinimumProfit > 0
+                    && currentProfitUSD < ConfigManager.Instance.GeneralConfig.MinimumProfit) {
+                IsProfitable = false;
+                _mainFormRatesComunication.ShowNotProfitable();
+                // return don't group
+                StopAllMiners();
+                Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " BTC/Day");
+                return;
+            } else {
+                IsProfitable = true;
+                _mainFormRatesComunication.HideNotProfitable();
+                Helpers.ConsolePrint(TAG, "Current Global profit: IS PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " BTC/Day");
+            }
+
             // group devices with same supported algorithms
             _previousAllGroupedDevices = _currentAllGroupedDevices;
             _currentAllGroupedDevices = new AllGroupedDevices();
@@ -486,6 +515,7 @@ namespace NiceHashMiner.Miners {
                 } else {
                     m.CurrentRate = 0;
                 }
+
                 // Update GUI
                 _mainFormRatesComunication.AddRateInfo(m.MinerDeviceName, groupMiners.DevicesInfoString, AD, m.CurrentRate);
             }

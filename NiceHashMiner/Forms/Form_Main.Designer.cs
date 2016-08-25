@@ -60,6 +60,7 @@
             this.flowLayoutPanelRates = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.label_MiningProfitabilityStatus = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -128,7 +129,7 @@
             this.toolStripStatusLabelBalanceDollarText,
             this.toolStripStatusLabelBalanceDollarValue,
             this.toolStripStatusLabel10});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 398);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(565, 25);
             this.statusStrip1.TabIndex = 8;
@@ -338,16 +339,30 @@
             // 
             // devicesListViewEnableControl1
             // 
+            this.devicesListViewEnableControl1.AutoSaveChange = false;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(11, 91);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.SetAllEnabled = false;
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 105);
             this.devicesListViewEnableControl1.TabIndex = 109;
+            // 
+            // label_MiningProfitabilityStatus
+            // 
+            this.label_MiningProfitabilityStatus.AutoSize = true;
+            this.label_MiningProfitabilityStatus.Location = new System.Drawing.Point(14, 394);
+            this.label_MiningProfitabilityStatus.Name = "label_MiningProfitabilityStatus";
+            this.label_MiningProfitabilityStatus.Size = new System.Drawing.Size(125, 13);
+            this.label_MiningProfitabilityStatus.TabIndex = 110;
+            this.label_MiningProfitabilityStatus.Text = "Profitability status: NONE";
             // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 423);
+            this.ClientSize = new System.Drawing.Size(565, 453);
+            this.Controls.Add(this.label_MiningProfitabilityStatus);
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);
@@ -416,6 +431,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         private System.Windows.Forms.GroupBox groupBox1;
         private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
+        private System.Windows.Forms.Label label_MiningProfitabilityStatus;
     }
 }
 

@@ -72,7 +72,7 @@ namespace NiceHashMiner.Forms.Components {
         #region Callbacks Events
         private void textChangedPassword(object sender, EventArgs e) {
             if (_currentlySelectedAlgorithm == null) return;
-            _currentlySelectedAlgorithm.UsePassword = fieldBoxPassword.EntryText;
+            _currentlySelectedAlgorithm.UsePassword = fieldBoxPassword.EntryText.Trim();
         }
         private void textChangedBenchmarkSpeed(object sender, EventArgs e) {
             if (_currentlySelectedAlgorithm == null) return;
@@ -81,7 +81,7 @@ namespace NiceHashMiner.Forms.Components {
                 _currentlySelectedAlgorithm.BenchmarkSpeed = value;
                 // update lvi speed
                 if (_currentlySelectedLvi != null) {
-                    _currentlySelectedLvi.SubItems[3].Text = Helpers.FormatSpeedOutput(value);
+                    _currentlySelectedLvi.SubItems[2].Text = Helpers.FormatSpeedOutput(value);
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace NiceHashMiner.Forms.Components {
             fieldBoxBenchmarkSpeed.EntryText = _currentlySelectedAlgorithm.BenchmarkSpeed.ToString();
             // update lvi speed
             if (_currentlySelectedLvi != null) {
-                _currentlySelectedLvi.SubItems[3].Text = Helpers.FormatSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed);
+                _currentlySelectedLvi.SubItems[2].Text = Helpers.FormatSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed);
             }
         }
 

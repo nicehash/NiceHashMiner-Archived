@@ -150,6 +150,7 @@ namespace NiceHashMiner.Devices
             Codename = amdDevice.Codename;
         }
 
+        // TODO add file check and stuff like that
         public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig) {
             DeviceBenchmarkConfig = deviceBenchmarkConfig;
             // check initialization

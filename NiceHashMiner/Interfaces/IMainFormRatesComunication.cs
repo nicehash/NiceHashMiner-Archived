@@ -9,5 +9,7 @@ namespace NiceHashMiner.Interfaces {
 
         void ClearRates(int groupCount);
         void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying);
+        void ShowNotProfitable();
+        void HideNotProfitable();
     }
 }
