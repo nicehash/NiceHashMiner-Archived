@@ -115,6 +115,9 @@ namespace NiceHashMiner.Miners
             // CryptoNight does not have api bind port
             if (CurrentAlgorithmType == AlgorithmType.CryptoNight) {
                 // check if running
+                if (ProcessHandle == null) {
+                    return null;
+                }
                 try {
                     var runningProcess = Process.GetProcessById(ProcessHandle.Id);
                 } catch (ArgumentException ex) {

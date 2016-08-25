@@ -508,7 +508,7 @@ namespace NiceHashMiner.Miners {
 
                     continue;
                 } else {
-                    Helpers.ConsolePrint("GetSummary", String.Format("Devices {0}\tAlgorithm : {1}\tSpeed : {2}", groupMiners.DevicesInfoString, AD.AlgorithmName, AD.Speed));
+                    //Helpers.ConsolePrint("GetSummary", String.Format("Devices {0}\tAlgorithm : {1}\tSpeed : {2}", groupMiners.DevicesInfoString, AD.AlgorithmName, AD.Speed));
                     m.StartingUpDelay = false;
                 }
                 // set rates

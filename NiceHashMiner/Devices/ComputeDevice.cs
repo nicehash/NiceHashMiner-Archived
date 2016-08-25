@@ -189,7 +189,7 @@ namespace NiceHashMiner.Devices
                             //    CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x8";
                             //} else if (Name.Contains("GTX 950")) {
                             //    CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x6";
-                            } else if (_cudaDevice.SM_major == 5) {
+                            } else if (_cudaDevice.SM_major >= 5) {
                                 CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x" + _cudaDevice.SMX.ToString();
                             } else {
                                 // TODO 
