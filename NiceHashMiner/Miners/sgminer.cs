@@ -97,7 +97,7 @@ namespace NiceHashMiner.Miners
                               " --device ";
 
             for (int i = 0; i < CDevs.Count; i++)
-                if (CDevs[i].Enabled /*&& !Algo.DisabledDevice[i]*/)
+                if (CDevs[i].Enabled)
                     LastCommandLine += CDevs[i].ID.ToString() + ",";
 
             if (LastCommandLine.EndsWith(","))
@@ -111,6 +111,16 @@ namespace NiceHashMiner.Miners
                 LastCommandLine += TemperatureParam;
 
             ProcessHandle = _Start();
+        }
+
+        protected override void UpdateBindPortCommand(int oldPort, int newPort) {
+            // --api-port=
+            const string MASK = "--api-port={0}";
+            var oldApiBindStr = String.Format(MASK, oldPort);
+            var newApiBindStr = String.Format(MASK, newPort);
+            if (LastCommandLine.Contains(oldApiBindStr)) {
+                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
+            }
         }
 
         public override string GetOptimizedMinerPath(AlgorithmType type, string gpuCodename, bool isOptimized) {

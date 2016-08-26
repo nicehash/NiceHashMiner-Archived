@@ -272,6 +272,10 @@ namespace NiceHashMiner
             }
 
             LoadingScreen.IncreaseLoadCounter();
+
+            // check if download needed
+            var downloadForm = new DownloadMinersForm();
+            downloadForm.ShowDialog();
         }
 
 
@@ -352,7 +356,10 @@ namespace NiceHashMiner
         }
 
         public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying) {
-            string HodlExceptionPostfix = iAPIData.AlgorithmID == AlgorithmType.Hodl ? "**" : "";
+            string HodlExceptionPostfix =
+                (iAPIData.AlgorithmID == AlgorithmType.Hodl
+                || iAPIData.AlgorithmID == AlgorithmType.CryptoNight)
+                ? "**" : "";
             string speedString = Helpers.FormatSpeedOutput(iAPIData.Speed) + iAPIData.AlgorithmName + HodlExceptionPostfix;
             string rateBTCString = FormatPayingOutput(paying);
             string rateCurrencyString = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)

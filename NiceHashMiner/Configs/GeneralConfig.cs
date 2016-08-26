@@ -99,7 +99,7 @@ namespace NiceHashMiner.Configs {
 
         public int ethminerDefaultBlockHeight { get; set; }
 
-        private int _apiBindPortPoolStart = 4000;
+        private int _apiBindPortPoolStart = 4100;
         public int ApiBindPortPoolStart {
             get { return _apiBindPortPoolStart; }
             set {
@@ -108,7 +108,7 @@ namespace NiceHashMiner.Configs {
                     _apiBindPortPoolStart = value;
                 } else {
                     // set default
-                    _apiBindPortPoolStart = 4000;
+                    _apiBindPortPoolStart = 4100;
                 }
             }
         }

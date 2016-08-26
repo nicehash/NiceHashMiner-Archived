@@ -45,7 +45,7 @@ namespace NiceHashMiner.Miners {
         // remove miner type not used anymore
         public int GetAvaliablePort(MinerType minerType) {
             int port = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart;
-            int newPortEnd = port + 1000;
+            int newPortEnd = port + 3000;
             for (; port < newPortEnd; ++port) {
                 if (IsPortAvaliable(port) && _usedPorts.Add(port)) {
                     break;

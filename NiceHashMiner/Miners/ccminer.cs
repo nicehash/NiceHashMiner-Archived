@@ -54,6 +54,10 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer(willswitch);
         }
 
+        protected override void UpdateBindPortCommand(int oldPort, int newPort) {
+            UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
+        }
+
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 

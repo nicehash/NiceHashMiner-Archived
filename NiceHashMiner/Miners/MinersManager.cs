@@ -299,10 +299,13 @@ namespace NiceHashMiner.Miners {
         #region Groupping logic
         private bool IsAlgorithmSettingsSame(Algorithm a, Algorithm b) {
             return a.NiceHashID == b.NiceHashID
-                && string.IsNullOrEmpty(a.UsePassword) == string.IsNullOrEmpty(b.UsePassword)
-                && a.UsePassword == b.UsePassword
-                && string.IsNullOrEmpty(a.ExtraLaunchParameters) == string.IsNullOrEmpty(b.ExtraLaunchParameters)
-                && a.ExtraLaunchParameters == b.ExtraLaunchParameters;
+                && SafeStrCompare(a.UsePassword, b.UsePassword)
+                && SafeStrCompare(a.ExtraLaunchParameters, b.ExtraLaunchParameters);
+        }
+
+        private bool SafeStrCompare(string a, string b) {
+            if (string.IsNullOrEmpty(a) == string.IsNullOrEmpty(b)) return true;
+            return a == b;
         }
 
         private bool IsNvidiaDevice(ComputeDevice a) {
@@ -504,7 +507,10 @@ namespace NiceHashMiner.Miners {
                     }
 
                     // API is inaccessible, try to restart miner
+                    // wait 0.5 seconds before going on
+                    System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                     m.Restart();
+                    System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
 
                     continue;
                 } else {

@@ -118,6 +118,9 @@ namespace NiceHashMiner.Miners {
                     + "." + miningLocation
                     + ".nicehash.com:"
                     + Globals.NiceHashData[MaxProfitKey].port, worker);
+
+                // wait 0.5 seconds before going on
+                System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
             }
 
         }

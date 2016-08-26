@@ -8,6 +8,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
+using System.Windows.Forms;
+using NiceHashMiner.Interfaces;
+using System.Threading;
 
 namespace NiceHashMiner.Utils {
     public class MinersDownloadManager : BaseLazySingleton<MinersDownloadManager> {
@@ -17,27 +20,27 @@ namespace NiceHashMiner.Utils {
         private WebClient _webClient;
         private Stopwatch _stopwatch;
 
-        const string d_01 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.6.1.2/NiceHashMiner_v1.6.1.2.zip";
+        const string d_01 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.6.1.2/bins.zip";
         public string BinsDownloadURL = d_01;
-        public string BinsZipLocation = "bin.zip";
+        public string BinsZipLocation = "bins.zip";
 
         bool isDownloadSizeInit = false;
-        Form_Loading _downloadForm;
-        Form_Loading _unzipForm;
+
+        IMinerUpdateIndicator _minerUpdateIndicator;
 
         protected MinersDownloadManager() {
             TAG = this.GetType().Name;
         }
 
-        public void Start(ref Form_Loading downloadForm, Form_Loading unzipForm) {
-            _downloadForm = downloadForm;
-            _unzipForm = unzipForm;
-            _downloadForm.Show();
+        public void Start(IMinerUpdateIndicator minerUpdateIndicator) {
+            _minerUpdateIndicator = minerUpdateIndicator;
             // #1 check bin folder
-            if (!IsMinerBinFolder()) {
+            if (!IsMinerBinFolder() && !IsMinerBinZip()) {
                 Helpers.ConsolePrint(TAG, "miner bin folder NOT found");
                 Helpers.ConsolePrint(TAG, "Downloading " + BinsDownloadURL);
                 Downlaod();
+            } else if (!IsMinerBinFolder()) {
+                UnzipStart();
             }
         }
 
@@ -45,6 +48,10 @@ namespace NiceHashMiner.Utils {
         // TODO
         bool IsMinerBinFolder() {
             return Directory.Exists("bin");
+        }
+
+        bool IsMinerBinZip() {
+            return File.Exists(BinsZipLocation);
         }
 
         // #2 download the file
@@ -71,7 +78,7 @@ namespace NiceHashMiner.Utils {
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
             if (!isDownloadSizeInit) {
                 isDownloadSizeInit = true;
-                _downloadForm.SetProgressMaxValue((int)(e.TotalBytesToReceive / 1024));
+                _minerUpdateIndicator.SetMaxProgressValue((int)(e.TotalBytesToReceive / 1024));
             }
 
             // Calculate download speed and output it to labelSpeed.
@@ -88,10 +95,10 @@ namespace NiceHashMiner.Utils {
                 (e.BytesReceived / 1024d / 1024d).ToString("0.00"),
                 (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
 
-            _downloadForm.SetValueAndMsg((int)(e.BytesReceived / 1024d),
-                speedString + "   " + percString + "   " + labelDownloaded);
-
-            Helpers.ConsolePrint(TAG, speedString + "   " + percString + "   " + labelDownloaded);
+            _minerUpdateIndicator.SetProgressValueAndMsg(
+                (int)(e.BytesReceived / 1024d),
+                String.Format("{0}   {1}   {2}", speedString, percString,labelDownloaded));
+            //Helpers.ConsolePrint(TAG, speedString + "   " + percString + "   " + labelDownloaded);
 
         }
 
@@ -106,11 +113,40 @@ namespace NiceHashMiner.Utils {
             } else {
                 // TODO handle Success
                 Helpers.ConsolePrint(TAG, "DownloadCompleted Success");
+                UnzipStart();
             }
         }
 
         #endregion Download delegates
 
+
+        private void UnzipStart() {
+            Thread BenchmarkThread = new Thread(UnzipThreadRoutine);
+            BenchmarkThread.Start();
+        }
+
+        private void UnzipThreadRoutine() {
+            if (File.Exists(BinsZipLocation)) {
+                Helpers.ConsolePrint(TAG, BinsZipLocation + " already downloaded");
+                Helpers.ConsolePrint(TAG, "unzipping");
+                using (ZipArchive archive = ZipFile.Open(BinsZipLocation, ZipArchiveMode.Read)) {
+                    //archive.ExtractToDirectory("bin");
+                    _minerUpdateIndicator.SetMaxProgressValue(archive.Entries.Count);
+                    int prog = 0;
+                    foreach (ZipArchiveEntry entry in archive.Entries) {
+                        Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
+                        Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
+                        // directory
+                        if (entry.Length == 0) {
+                            Directory.CreateDirectory(entry.FullName);
+                        } else {
+                            entry.ExtractToFile(entry.FullName);
+                        }
+                        _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format("Unzipping {0} %", ((double)(prog) / (double)(archive.Entries.Count)).ToString("F2")));
+                    }
+                }
+            }
+        }
 
     }
 }

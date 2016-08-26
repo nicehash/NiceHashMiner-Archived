@@ -171,6 +171,12 @@
     <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DownloadMinersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DownloadMinersForm.Designer.cs">
+      <DependentUpon>DownloadMinersForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormBenchmark_New.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +200,7 @@
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
+    <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="Interfaces\IPathsProperties.cs" />
     <Compile Include="International.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
@@ -286,6 +293,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DownloadMinersForm.resx">
+      <DependentUpon>DownloadMinersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormBenchmark_New.resx">
       <DependentUpon>FormBenchmark_New.cs</DependentUpon>

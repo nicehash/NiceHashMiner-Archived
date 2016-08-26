@@ -466,8 +466,26 @@ namespace NiceHashMiner
         //    Stop(false);
         //}
 
+        protected abstract void UpdateBindPortCommand(int oldPort, int newPort);
+
+        protected void UpdateBindPortCommand_ccminer_cpuminer(int oldPort, int newPort) {
+            // --api-bind=
+            const string MASK = "--api-bind={0}";
+            var oldApiBindStr = String.Format(MASK, oldPort);
+            var newApiBindStr = String.Format(MASK, newPort);
+            if (LastCommandLine.Contains(oldApiBindStr)) {
+                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
+            }
+        }
 
         virtual public void Restart() {
+            // change to new port
+            var oldApiPort = APIPort;
+            APIPort = MinersApiPortsManager.Instance.GetAvaliablePort(0);
+            MinersApiPortsManager.Instance.RemovePort(oldApiPort);
+            // update last command port
+            UpdateBindPortCommand(oldApiPort, APIPort);
+
             Helpers.ConsolePrint(MinerDeviceName, "Restarting miner..");
             Stop(true); // stop miner first
             ProcessHandle = _Start(); // start with old command line
@@ -556,39 +574,5 @@ namespace NiceHashMiner
             FillAlgorithm(aname, ref ad);
             return ad;
         }
-
-        
-
-        //virtual public AlgorithmType GetMaxProfitKey(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData)
-        //{
-        //    double MaxProfit = -1;
-        //    AlgorithmType MaxProfitIndex = AlgorithmType.NONE;
-
-        //    foreach (var key in SupportedAlgorithms.Keys)
-        //    {
-        //        if (SupportedAlgorithms[key].Skip) continue;
-        //        if (EnabledDevicePerAlgoCount(key) == 0) continue;
-
-        //        SupportedAlgorithms[key].CurrentProfit = SupportedAlgorithms[key].BenchmarkSpeed *
-        //            NiceHashData[SupportedAlgorithms[key].NiceHashID].paying * 0.000000001;
-
-        //        Helpers.ConsolePrint(MinerDeviceName, NiceHashData[SupportedAlgorithms[key].NiceHashID].name +
-        //                             " paying " + SupportedAlgorithms[key].CurrentProfit.ToString("F8") + " BTC/Day");
-
-        //        if (SupportedAlgorithms[key].CurrentProfit > MaxProfit)
-        //        {
-        //            MaxProfit = SupportedAlgorithms[key].CurrentProfit;
-        //            MaxProfitIndex = key;
-        //        }
-        //    }
-
-        //    if ((MaxProfit * Globals.BitcoinRate) < MinimumProfit)
-        //        NotProfitable = true;
-        //    else
-        //        NotProfitable = false;
-
-
-        //    return MaxProfitIndex;
-        //}
     }
 }
