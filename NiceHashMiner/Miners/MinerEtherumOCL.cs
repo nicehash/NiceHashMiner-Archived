@@ -15,8 +15,9 @@ namespace NiceHashMiner.Miners {
 
         private readonly int GPUPlatformNumber;
 
-        public MinerEtherumOCL() : base() {
-            MinerDeviceName = "AMD OpenCL";
+        public MinerEtherumOCL()
+            : base("AMD OpenCL") {
+            MinerDeviceName = this.GetType().Name;
             GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
         }
 

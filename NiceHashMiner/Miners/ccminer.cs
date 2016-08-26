@@ -54,8 +54,8 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer(willswitch);
         }
 
-        protected override void UpdateBindPortCommand(int oldPort, int newPort) {
-            UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
+        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
+            return UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
         }
 
         // new decoupled benchmarking routines
@@ -120,19 +120,23 @@ namespace NiceHashMiner.Miners
             if (CurrentAlgorithmType == AlgorithmType.CryptoNight) {
                 // check if running
                 if (ProcessHandle == null) {
+                    Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess is null");
                     return null;
                 }
                 try {
                     var runningProcess = Process.GetProcessById(ProcessHandle.Id);
                 } catch (ArgumentException ex) {
                     //Restart();
+                    Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
                     return null; // will restart outside
                 } catch (InvalidOperationException ex) {
                     //Restart();
+                    Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
                     return null; // will restart outside
                 }
                 // extra check
                 if (CurrentMiningAlgorithm == null) {
+                    Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess CurrentMiningAlgorithm is NULL");
                     return null;
                 }
 

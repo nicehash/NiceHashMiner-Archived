@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
+using System.Net;
 
 namespace NiceHashMiner.Miners {
 
@@ -14,14 +16,16 @@ namespace NiceHashMiner.Miners {
     /// </summary>
     public abstract class MinerEtherum : Miner {
         
-        protected ethminerAPI ethminerLink;
-
         //ComputeDevice
-        public ComputeDevice DaggerHashimotoGenerateDevice;
+        protected ComputeDevice DaggerHashimotoGenerateDevice;
+        private bool _isCurentlyMining = false;
 
-        public MinerEtherum() : base() {
+        readonly protected string CurrentBlockString;
+
+        public MinerEtherum(string blockString) : base() {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
+            CurrentBlockString = blockString;
         }
 
         protected override void InitSupportedMinerAlgorithms() {
@@ -44,22 +48,24 @@ namespace NiceHashMiner.Miners {
         }
 
         public override void Start(Algorithm miningAlgorithm, string url, string username) {
-            //if (ProcessHandle != null) return; // ignore, already running 
+            if (ProcessHandle == null) {
+                CurrentMiningAlgorithm = miningAlgorithm;
+                if (miningAlgorithm == null && miningAlgorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
+                    Helpers.ConsolePrint("MinerEtherum", "Algorithm is null or not DaggerHashimoto");
+                    return;
+                }
 
-            CurrentMiningAlgorithm = miningAlgorithm;
-            if (miningAlgorithm == null && miningAlgorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
-                Helpers.ConsolePrint("MinerEtherum", "Algorithm is null or not DaggerHashimoto");
-                return;
+                LastCommandLine = GetStartCommandStringPart(miningAlgorithm, url, username) + GetDevicesCommandString();
+                ProcessHandle = _Start();
+            } else {
+                Helpers.ConsolePrint(MinerDeviceName, "Resuming ethminer..");
+                StartMining();
             }
-
-            LastCommandLine = GetStartCommandStringPart(miningAlgorithm, url, username) + GetDevicesCommandString();
-
-            ProcessHandle = _Start();
         }
 
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             string CommandLine = GetBenchmarkCommandStringPart(benchmarkConfig, algorithm) + GetDevicesCommandString();
-            Ethereum.GetCurrentBlock(MinerDeviceName);
+            Ethereum.GetCurrentBlock(CurrentBlockString);
             CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
 
             return CommandLine;
@@ -82,52 +88,38 @@ namespace NiceHashMiner.Miners {
             APIData ad = new APIData();
 
             FillAlgorithm("daggerhashimoto", ref ad);
-
             bool ismining;
-            if (!ethminerLink.GetSpeed(out ismining, out ad.Speed)) {
-                if (NumRetries > 0) {
-                    NumRetries--;
-                    ad.Speed = 0;
-                    return ad;
-                }
-
-                Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
-                Stop(false);
-                _Start();
+            var getSpeedStatus = GetSpeed(out ismining, out ad.Speed);
+            if (GetSpeedStatus.GOT == getSpeedStatus) {
+                // fix MH/s
+                ad.Speed *= 1000 * 1000;
+                return ad;
+            } else if (GetSpeedStatus.NONE == getSpeedStatus) {
                 ad.Speed = 0;
                 return ad;
-            } else if (!ismining) {
-                // resend start mining command
-                ethminerLink.StartMining();
             }
-            ad.Speed *= 1000 * 1000;
-            return ad;
+            // else if (GetSpeedStatus.EXCEPTION == getSpeedStatus) {
+            Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
+            IsRunning = false;
+            _isCurentlyMining = false;
+            return null;
         }
 
         protected override NiceHashProcess _Start() {
-            // check if dagger already running
-            if (AlgorithmType.DaggerHashimoto == CurrentAlgorithmType && ProcessHandle != null) {
-                Helpers.ConsolePrint(MinerDeviceName, "Resuming ethminer..");
-                ethminerLink.StartMining();
-                IsRunning = true;
-                return null;
-            }
-            ethminerLink = new ethminerAPI(APIPort);
-            var P = base._Start();
-            ProcessHandle = P;
-            return P;
+            SetEthminerAPI(APIPort);
+            return base._Start();
         }
 
         protected override void _Stop(bool willswitch) {
             if (willswitch) {
                 // daggerhashimoto - we only "pause" mining
                 Helpers.ConsolePrint(MinerDeviceName, "Pausing ethminer..");
-                ethminerLink.StopMining();
+                StopMining();
                 return;
             }
 
             Helpers.ConsolePrint(MinerDeviceName, "Shutting down miner");
-
+            ChangeToNextAvaliablePort();
             if (!willswitch && ProcessHandle != null) {
                 try { ProcessHandle.Kill(); } catch { }
                 ProcessHandle.Close();
@@ -139,14 +131,16 @@ namespace NiceHashMiner.Miners {
             return Ethereum.EtherMinerPath;
         }
 
-        protected override void UpdateBindPortCommand(int oldPort, int newPort) {
+        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
             // --api-port 
             const string MASK = "--api-port {0}";
             var oldApiBindStr = String.Format(MASK, oldPort);
             var newApiBindStr = String.Format(MASK, newPort);
             if (LastCommandLine.Contains(oldApiBindStr)) {
                 LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
+                return true;
             }
+            return false;
         }
 
         // benchmark stuff
@@ -167,6 +161,91 @@ namespace NiceHashMiner.Miners {
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
             CheckOutdata(outdata);
         }
+
+        #region ethminerAPI
+
+        private enum GetSpeedStatus {
+            NONE,
+            GOT,
+            EXCEPTION
+        }
+
+        /// <summary>
+        /// Initialize ethminer API instance.
+        /// </summary>
+        /// <param name="port">ethminer's API port.</param>
+        private void SetEthminerAPI(int port) {
+            m_port = port;
+            m_client = new UdpClient("127.0.0.1", port);
+        }
+
+        /// <summary>
+        /// Call this to start ethminer. If ethminer is already running, nothing happens.
+        /// </summary>
+        private void StartMining() {
+            SendUDP(2);
+            IsRunning = true;
+            _isCurentlyMining = true;
+        }
+
+        /// <summary>
+        /// Call this to stop ethminer. If ethminer is already stopped, nothing happens.
+        /// </summary>
+        private void StopMining() {
+            SendUDP(1);
+            IsRunning = false;
+            _isCurentlyMining = false;
+        }
+
+        /// <summary>
+        /// Call this to get current ethminer speed. This method may block up to 2 seconds.
+        /// </summary>
+        /// <param name="ismining">Set to true if ethminer is not mining (has been stopped).</param>
+        /// <param name="speed">Current ethminer speed in MH/s.</param>
+        /// <returns>False if ethminer is unreachable (crashed or unresponsive and needs restarting).</returns>
+        private GetSpeedStatus GetSpeed(out bool ismining, out double speed) {
+            speed = 0;
+            ismining = false;
+
+            SendUDP(3);
+
+            DateTime start = DateTime.Now;
+
+            while ((DateTime.Now - start) < TimeSpan.FromMilliseconds(2000)) {
+                if (m_client.Available > 0) {
+                    // read
+                    try {
+                        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), m_port);
+                        byte[] data = m_client.Receive(ref ipep);
+                        if (data.Length != 8) return GetSpeedStatus.NONE;
+                        speed = BitConverter.ToDouble(data, 0);
+                        if (speed >= 0) ismining = true;
+                        else speed = 0;
+                        return GetSpeedStatus.GOT;
+                    } catch {
+                        Helpers.ConsolePrint(MinerDeviceName, "Could not read data from API bind port");
+                        return GetSpeedStatus.EXCEPTION;
+                    }
+                } else
+                    System.Threading.Thread.Sleep(2);
+            }
+
+            return GetSpeedStatus.NONE;
+        }
+
+        #region PRIVATE
+
+        private int m_port;
+        private UdpClient m_client;
+
+        private void SendUDP(int code) {
+            byte[] data = new byte[1];
+            data[0] = (byte)code;
+            m_client.Send(data, data.Length);
+        }
+        #endregion
+
+        #endregion //ethminerAPI
 
     }
 }

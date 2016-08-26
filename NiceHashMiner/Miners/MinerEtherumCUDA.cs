@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 namespace NiceHashMiner.Miners {
     public class MinerEtherumCUDA : MinerEtherum {
 
-        public MinerEtherumCUDA() : base() {
-            MinerDeviceName = "NVIDIA";
+        public MinerEtherumCUDA()
+            : base("NVIDIA") {
+            MinerDeviceName = this.GetType().Name;
         }
 
         protected override MinerType GetMinerType() {

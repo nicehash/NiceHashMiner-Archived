@@ -364,6 +364,19 @@ namespace NiceHashMiner.Miners {
         /// <param name="NiceHashData"></param>
         public void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData, string Worker) {
             var devProfits = GetEnabledDeviceProifitDictionary(_perDeviceSpeedDictionary, NiceHashData);
+
+            //////// switching testing code
+            ++stepCheck;
+            if (stepCheck > 1) stepCheck = 0;
+            AlgorithmType MostProfitKey = AlgorithmType.DaggerHashimoto;
+            if (stepCheck == 0) MostProfitKey = AlgorithmType.Lyra2REv2;
+            if (stepCheck == 1) MostProfitKey = AlgorithmType.DaggerHashimoto;
+            if (stepCheck == 3) MostProfitKey = AlgorithmType.Decred;
+            Helpers.ConsolePrint("MostProfitKey", AlgorithmNiceHashNames.GetName(MostProfitKey));
+            foreach (var devProfit in devProfits) {
+                devProfit.Value[MostProfitKey] = 100000;
+            }
+
             double CurrentProfit = 0.0;
             // calculate most profitable algorithm per enabled device
             foreach (var cdev in _enabledDevices) {
@@ -373,7 +386,8 @@ namespace NiceHashMiner.Miners {
                 var algorithmSettings = cdev.DeviceBenchmarkConfig.AlgorithmSettings;
 
                 foreach (var kvpTypeProfit in curDevProfits) {
-                    if (!algorithmSettings[kvpTypeProfit.Key].Skip
+                    if (algorithmSettings.ContainsKey(kvpTypeProfit.Key)
+                        && !algorithmSettings[kvpTypeProfit.Key].Skip
                         && kvpTypeProfit.Value > 0.0d
                         && maxProfit < kvpTypeProfit.Value) {
                         // extra check if current device can't handle dagger
@@ -507,10 +521,7 @@ namespace NiceHashMiner.Miners {
                     }
 
                     // API is inaccessible, try to restart miner
-                    // wait 0.5 seconds before going on
-                    System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                     m.Restart();
-                    System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
 
                     continue;
                 } else {

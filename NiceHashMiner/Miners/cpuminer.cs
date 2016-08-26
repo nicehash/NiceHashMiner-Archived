@@ -178,8 +178,8 @@ namespace NiceHashMiner.Miners
             return P;
         }
 
-        protected override void UpdateBindPortCommand(int oldPort, int newPort) {
-            UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
+        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
+            return UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
         }
 
         // new decoupled benchmarking routines

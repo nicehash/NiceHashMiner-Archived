@@ -48,7 +48,6 @@ namespace NiceHashMiner
             }
         }
         public double CurrentRate;
-        public bool NotProfitable;
         public bool IsRunning { get; protected set; }
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
@@ -101,7 +100,6 @@ namespace NiceHashMiner
 
             CurrentAlgorithmType = AlgorithmType.NONE;
             CurrentRate = 0;
-            NotProfitable = true;
             IsRunning = false;
             PreviousTotalMH = 0.0;
 
@@ -163,22 +161,39 @@ namespace NiceHashMiner
 
             StartingUpDelay = false;
             PreviousTotalMH = 0.0;
-            NotProfitable = true;
             //IsRunning = false;
             //CurrentAlgorithmType = -1;
         }
 
         public void End() {
-            if (IsRunning) {
+            //if (IsRunning) {
                 Stop(false);
                 IsRunning = false;
                 CurrentAlgorithmType = AlgorithmType.NONE;
                 CurrentRate = 0;
+            //}
+        }
+
+        protected void ChangeToNextAvaliablePort() {
+            // change to new port
+            var oldApiPort = APIPort;
+            var newApiPort = MinersApiPortsManager.Instance.GetAvaliablePort(0);
+            // check if update last command port
+            if (UpdateBindPortCommand(oldApiPort, newApiPort)) {
+                Helpers.ConsolePrint(MinerDeviceName, String.Format("Changing miner port from {0} to {1}",
+                    oldApiPort.ToString(),
+                    newApiPort.ToString()));
+                // free old set new
+                MinersApiPortsManager.Instance.RemovePort(oldApiPort);
+                APIPort = newApiPort;
+            } else { // release new
+                MinersApiPortsManager.Instance.RemovePort(newApiPort);
             }
         }
 
         protected void Stop_cpu_ccminer_sgminer(bool willswitch) {
             Helpers.ConsolePrint(MinerDeviceName, "Shutting down miner");
+            ChangeToNextAvaliablePort();
 
             if (ProcessHandle != null) {
                 try { ProcessHandle.Kill(); } catch { }
@@ -466,26 +481,21 @@ namespace NiceHashMiner
         //    Stop(false);
         //}
 
-        protected abstract void UpdateBindPortCommand(int oldPort, int newPort);
+        protected abstract bool UpdateBindPortCommand(int oldPort, int newPort);
 
-        protected void UpdateBindPortCommand_ccminer_cpuminer(int oldPort, int newPort) {
+        protected bool UpdateBindPortCommand_ccminer_cpuminer(int oldPort, int newPort) {
             // --api-bind=
             const string MASK = "--api-bind={0}";
             var oldApiBindStr = String.Format(MASK, oldPort);
             var newApiBindStr = String.Format(MASK, newPort);
             if (LastCommandLine.Contains(oldApiBindStr)) {
                 LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
+                return true;
             }
+            return false;
         }
 
         virtual public void Restart() {
-            // change to new port
-            var oldApiPort = APIPort;
-            APIPort = MinersApiPortsManager.Instance.GetAvaliablePort(0);
-            MinersApiPortsManager.Instance.RemovePort(oldApiPort);
-            // update last command port
-            UpdateBindPortCommand(oldApiPort, APIPort);
-
             Helpers.ConsolePrint(MinerDeviceName, "Restarting miner..");
             Stop(true); // stop miner first
             ProcessHandle = _Start(); // start with old command line
@@ -568,6 +578,7 @@ namespace NiceHashMiner
                         ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                 }
             } catch {
+                Helpers.ConsolePrint(MinerDeviceName, "Could not read data from API bind port");
                 return null;
             }
 
