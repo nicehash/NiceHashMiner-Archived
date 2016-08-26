@@ -51,7 +51,7 @@ namespace NiceHashMiner
         public bool IsRunning { get; protected set; }
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
-        Stopwatch TimeOutStopWatch = null;
+        Stopwatch BenchmarkTimeOutStopWatch = null;
         public bool BenchmarkSignalTimedout = false;
         protected bool BenchmarkSignalFinnished;
         public int NumRetries;
@@ -140,8 +140,6 @@ namespace NiceHashMiner
         /// <returns></returns>
         abstract public string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = true);
 
-
-
         public void KillSGMiner()
         {
             foreach (Process process in Process.GetProcessesByName("sgminer"))
@@ -161,17 +159,14 @@ namespace NiceHashMiner
 
             StartingUpDelay = false;
             PreviousTotalMH = 0.0;
-            //IsRunning = false;
-            //CurrentAlgorithmType = -1;
+            IsRunning = false;
         }
 
         public void End() {
-            //if (IsRunning) {
-                Stop(false);
-                IsRunning = false;
-                CurrentAlgorithmType = AlgorithmType.NONE;
-                CurrentRate = 0;
-            //}
+            Stop(false);
+            IsRunning = false;
+            CurrentAlgorithmType = AlgorithmType.NONE;
+            CurrentRate = 0;
         }
 
         protected void ChangeToNextAvaliablePort() {
@@ -239,7 +234,7 @@ namespace NiceHashMiner
             // check and kill 
             BenchmarkHandle = null;
             OnBenchmarkCompleteCalled = false;
-            TimeOutStopWatch = null;
+            BenchmarkTimeOutStopWatch = null;
 
             string CommandLine = BenchmarkCreateCommandLine(benchmarkConfig, algorithm, time);
 
@@ -287,11 +282,11 @@ namespace NiceHashMiner
         }
 
         private void BenchmarkOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
-            if (TimeOutStopWatch == null) {
-                TimeOutStopWatch = new Stopwatch();
-                TimeOutStopWatch.Start();
-            } else if (TimeOutStopWatch.ElapsedMilliseconds > BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds) * 1000) {
-                TimeOutStopWatch.Stop();
+            if (BenchmarkTimeOutStopWatch == null) {
+                BenchmarkTimeOutStopWatch = new Stopwatch();
+                BenchmarkTimeOutStopWatch.Start();
+            } else if (BenchmarkTimeOutStopWatch.ElapsedMilliseconds > BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds) * 1000) {
+                BenchmarkTimeOutStopWatch.Stop();
                 BenchmarkSignalTimedout = true;
             }
 
