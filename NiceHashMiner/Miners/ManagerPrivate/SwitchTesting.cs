@@ -36,16 +36,6 @@ namespace NiceHashMiner.Miners {
                     _allAvaliableAlgoKeys[cDev.Name] = new List<AlgorithmType>(cDev.DeviceBenchmarkConfig.AlgorithmSettings.Keys);
                     //_allAvaliableAlgoKeys[cDev.Name] = new List<AlgorithmType>(new []{AlgorithmType.DaggerHashimoto, AlgorithmType.CryptoNight, AlgorithmType.Lyra2RE, AlgorithmType.Lyra2REv2});
                 }
-
-                if (MinersManager.ForcePerCardMiners) {
-                    int repat = 0;
-                    foreach (var cDev in ComputeDevice.UniqueAvaliableDevices) {
-                        var pass = new String('x', ++repat);
-                        foreach (var algo in cDev.DeviceBenchmarkConfig.AlgorithmSettings) {
-                            algo.Value.UsePassword = pass; 
-                        }
-                    }
-                }
             }
 
             public void SetNext(ref PerDeviceProifitDictionary devProfits, List<ComputeDevice> enabledDevices) {

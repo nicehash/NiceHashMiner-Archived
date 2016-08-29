@@ -300,6 +300,9 @@ namespace NiceHashMiner.Miners {
         private bool IsAlgorithmSettingsSame(Algorithm a, Algorithm b) {
             return a.NiceHashID == b.NiceHashID
                 && SafeStrCompare(a.UsePassword, b.UsePassword)
+#if (SWITCH_TESTING)
+ && (!ForcePerCardMiners) // this will force individual miners
+#endif
                 && SafeStrCompare(a.ExtraLaunchParameters, b.ExtraLaunchParameters);
         }
 
