@@ -116,15 +116,18 @@ namespace NiceHashMiner.Miners {
             if (GetSpeedStatus.GOT == getSpeedStatus) {
                 // fix MH/s
                 ad.Speed *= 1000 * 1000;
+                CurrentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                 return ad;
             } else if (GetSpeedStatus.NONE == getSpeedStatus) {
                 ad.Speed = 0;
+                CurrentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return ad;
             }
             // else if (GetSpeedStatus.EXCEPTION == getSpeedStatus) {
             Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
             IsRunning = false;
             _isCurentlyMining = false;
+            CurrentMinerReadStatus = MinerAPIReadStatus.NONE;
             return null;
         }
 

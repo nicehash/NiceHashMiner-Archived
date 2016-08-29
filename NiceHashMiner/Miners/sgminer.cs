@@ -61,10 +61,11 @@ namespace NiceHashMiner.Miners
             return (ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds + ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD) / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
         }
 
-        public override void Restart() {
-            StartingUpDelay = true;
-            base.Restart();
-        }
+        // TODO NOT needed because of cool down logic
+        //public override void Restart() {
+        //    StartingUpDelay = true;
+        //    base.Restart();
+        //}
 
         protected override void _Stop(bool willswitch) {
             Stop_cpu_ccminer_sgminer(willswitch);

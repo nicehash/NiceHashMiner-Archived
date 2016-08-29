@@ -14,6 +14,8 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 
+using Timer = System.Windows.Forms.Timer;
+
 namespace NiceHashMiner
 {
     public class APIData
@@ -32,7 +34,6 @@ namespace NiceHashMiner
         // this is now related to devices
         public string ExtraLaunchParameters;
         public string UsePassword;
-        public double MinimumProfit;
         
         public AlgorithmType CurrentAlgorithmType { get; protected set; }
         private Algorithm _currentMiningAlgorithm;
@@ -89,6 +90,18 @@ namespace NiceHashMiner
         protected bool _isEthMinerExit = false;
         protected AlgorithmType[] _supportedMinerAlgorithms;
 
+        // TODO maybe set for individual miner cooldown/retries logic variables
+        private const int _MIN_CooldownTimeInMilliseconds = 5 * 1000; // 5 seconds
+        //private const int _MIN_CooldownTimeInMilliseconds = 1000; // TESTING
+
+        // TODO maybe less time
+        private const int _MAX_CooldownTimeInMilliseconds = 60 * 1000; // 1 minute max, whole waiting time 75seconds
+        private Timer _cooldownCheckTimer;
+        public MinerAPIReadStatus CurrentMinerReadStatus { get; protected set; }
+        private int _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
+        private int _currentCooldownTimeInSecondsLeft = _MIN_CooldownTimeInMilliseconds;
+
+
         public Miner()
         {
             CDevs = new List<ComputeDevice>();
@@ -106,6 +119,11 @@ namespace NiceHashMiner
             InitSupportedMinerAlgorithms();
 
             APIPort = MinersApiPortsManager.Instance.GetAvaliablePort(GetMinerType());
+            // cool down init
+            _cooldownCheckTimer = new Timer() {
+                Interval = _MIN_CooldownTimeInMilliseconds
+            };
+            _cooldownCheckTimer.Tick += MinerCoolingCheck_Tick;
         }
 
         ~Miner() {
@@ -155,6 +173,8 @@ namespace NiceHashMiner
         abstract protected void _Stop(bool willswitch);
         virtual public void Stop(bool willswitch)
         {
+            // TODO stop here timer
+            _cooldownCheckTimer.Stop();
             _Stop(willswitch);
 
             StartingUpDelay = false;
@@ -164,7 +184,6 @@ namespace NiceHashMiner
 
         public void End() {
             Stop(false);
-            IsRunning = false;
             CurrentAlgorithmType = AlgorithmType.NONE;
             CurrentRate = 0;
         }
@@ -449,6 +468,12 @@ namespace NiceHashMiner
 
             Helpers.ConsolePrint(MinerDeviceName, "Starting miner (" + P.StartInfo.FileName + "): " + LastCommandLine);
 
+            // TODO start here timer
+            _cooldownCheckTimer.Start();
+            _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
+            _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            CurrentMinerReadStatus = MinerAPIReadStatus.NONE;
+
             try
             {
                 if (P.Start())
@@ -490,9 +515,9 @@ namespace NiceHashMiner
             return false;
         }
 
-        virtual public void Restart() {
+        private void Restart() {
             Helpers.ConsolePrint(MinerDeviceName, "Restarting miner..");
-            Stop(true); // stop miner first
+            Stop(false); // stop miner first
             ProcessHandle = _Start(); // start with old command line
         }
 
@@ -553,7 +578,6 @@ namespace NiceHashMiner
             return ResponseFromServer;
         }
 
-
         public abstract APIData GetSummary();
 
         protected APIData GetSummaryCPU_CCMINER() {
@@ -564,6 +588,7 @@ namespace NiceHashMiner
             resp = GetAPIData(APIPort, "summary");
             if (resp == null) {
                 Helpers.ConsolePrint(MinerDeviceName, "summary is null");
+                CurrentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
 
@@ -579,11 +604,56 @@ namespace NiceHashMiner
                 }
             } catch {
                 Helpers.ConsolePrint(MinerDeviceName, "Could not read data from API bind port");
+                CurrentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
 
+            CurrentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
             FillAlgorithm(aname, ref ad);
             return ad;
         }
+
+
+        #region Cooldown/retry logic
+        /// <summary>
+        /// decrement time for half current half time, if less then min ammend
+        /// </summary>
+        private void CoolDown() {
+            _currentCooldownTimeInSeconds /= 2;
+            if (_currentCooldownTimeInSeconds < _MIN_CooldownTimeInMilliseconds) {
+                _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
+            } else {
+                Helpers.ConsolePrint(MinerDeviceName, String.Format("Cooling DOWN, cool time is {0} ms", _currentCooldownTimeInSeconds.ToString()));
+            }
+        }
+        /// <summary>
+        /// increment time for half current half time, if more then max set restart
+        /// </summary>
+        private void CoolUp() {
+            _currentCooldownTimeInSeconds *= 2;
+            Helpers.ConsolePrint(MinerDeviceName, String.Format("Cooling UP, cool time is {0} ms", _currentCooldownTimeInSeconds.ToString()));
+            if (_currentCooldownTimeInSeconds > _MAX_CooldownTimeInMilliseconds) {
+                CurrentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                Helpers.ConsolePrint(MinerDeviceName, "MAX cool time exceeded. RESTARTING");
+                Restart();
+            }
+        }
+
+        private void MinerCoolingCheck_Tick(object sender, EventArgs e) {
+            _currentCooldownTimeInSecondsLeft -= _cooldownCheckTimer.Interval;
+            // if times up
+            if (_currentCooldownTimeInSecondsLeft <= 0) {
+                if (CurrentMinerReadStatus == MinerAPIReadStatus.GOT_READ) {
+                    CoolDown();
+                } else {
+                    CoolUp();
+                }
+                // set new times left from the CoolUp/Down change
+                _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            }
+        }
+
+        #endregion //Cooldown/retry logic
+
     }
 }

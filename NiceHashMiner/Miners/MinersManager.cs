@@ -503,17 +503,20 @@ namespace NiceHashMiner.Miners {
                 if (AD == null) {
                     Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
 
-                    // Make sure sgminer has time to start
-                    // properly on slow CPU system
-                    if (m.StartingUpDelay && m.NumRetries > 0) {
-                        m.NumRetries--;
-                        if (m.NumRetries == 0) m.StartingUpDelay = false;
-                        Helpers.ConsolePrint(m.MinerDeviceName, "NumRetries: " + m.NumRetries);
-                        continue;
-                    }
+                    // TODO not needed since new cooldown logic
+                    //// Make sure sgminer has time to start
+                    //// properly on slow CPU system
+                    //if (m.StartingUpDelay && m.NumRetries > 0) {
+                    //    m.NumRetries--;
+                    //    if (m.NumRetries == 0) m.StartingUpDelay = false;
+                    //    Helpers.ConsolePrint(m.MinerDeviceName, "NumRetries: " + m.NumRetries);
+                    //    continue;
+                    //}
 
-                    // API is inaccessible, try to restart miner
-                    m.Restart();
+                    //if (m.CurrentMinerReadStatus == MinerAPIReadStatus.RESTART) {
+                    //    // API is inaccessible, try to restart miner
+                    //    m.Restart();
+                    //}
 
                     continue;
                 } else {
