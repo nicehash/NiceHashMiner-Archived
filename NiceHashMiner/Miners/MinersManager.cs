@@ -505,26 +505,9 @@ namespace NiceHashMiner.Miners {
                 APIData AD = m.GetSummary();
                 if (AD == null) {
                     Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
-
-                    // TODO not needed since new cooldown logic
-                    //// Make sure sgminer has time to start
-                    //// properly on slow CPU system
-                    //if (m.StartingUpDelay && m.NumRetries > 0) {
-                    //    m.NumRetries--;
-                    //    if (m.NumRetries == 0) m.StartingUpDelay = false;
-                    //    Helpers.ConsolePrint(m.MinerDeviceName, "NumRetries: " + m.NumRetries);
-                    //    continue;
-                    //}
-
-                    //if (m._currentMinerReadStatus == MinerAPIReadStatus.RESTART) {
-                    //    // API is inaccessible, try to restart miner
-                    //    m.Restart();
-                    //}
-
                     continue;
                 } else {
                     //Helpers.ConsolePrint("GetSummary", String.Format("Devices {0}\tAlgorithm : {1}\tSpeed : {2}", groupMiners.DevicesInfoString, AD.AlgorithmName, AD.Speed));
-                    m.StartingUpDelay = false;
                 }
                 // set rates
                 if (NiceHashData != null) {

@@ -61,6 +61,7 @@ namespace NiceHashMiner.Configs {
             set { _minerRestartDelayMS = value <= 0 ? 500 : value; }
         }
 
+        // START TODO not used anymore
         private int _minerAPIGraceSeconds = 0;
         public int MinerAPIGraceSeconds {
             get { return _minerAPIGraceSeconds; }
@@ -72,6 +73,7 @@ namespace NiceHashMiner.Configs {
             get { return _minerAPIGraceSecondsAMD; }
             set { _minerAPIGraceSecondsAMD = value < 0 ? 0 : value; }
         }
+        // END TODO not used anymore
 
         public BenchmarkTimeLimitsConfig BenchmarkTimeLimits { get; set; }
         public DeviceDetectionConfig DeviceDetection { get; set; }

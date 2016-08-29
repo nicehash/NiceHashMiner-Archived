@@ -37,8 +37,7 @@ namespace NiceHashMiner
 
         private Random R;
 
-        private Form_Loading _downloadForm;
-        private Form_Loading _unzipForm;
+        private Form_Loading _downloadUnzipForm;
         private Form_Loading LoadingScreen;
         private Form BenchmarkForm;
 
@@ -274,8 +273,11 @@ namespace NiceHashMiner
             LoadingScreen.IncreaseLoadCounter();
 
             // check if download needed
-            var downloadForm = new DownloadMinersForm();
-            downloadForm.ShowDialog();
+            if (!MinersDownloadManager.Instance.IsMinersBinsInit()) {
+                _downloadUnzipForm = new Form_Loading();
+                _downloadUnzipForm.Location = new Point(this.Location.X + (this.Width - _downloadUnzipForm.Width) / 2, this.Location.Y + (this.Height - _downloadUnzipForm.Height) / 2);
+                _downloadUnzipForm.ShowDialog();
+            }
         }
 
 

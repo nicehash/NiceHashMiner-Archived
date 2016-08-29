@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.Interfaces;
+using NiceHashMiner.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
-    public partial class Form_Loading : Form, IMessageNotifier
+    public partial class Form_Loading : Form, IMessageNotifier, IMinerUpdateIndicator
     {
         public interface IAfterInitializationCaller {
             void AfterLoadComplete();
@@ -35,6 +36,13 @@ namespace NiceHashMiner
             this.progressBar1.Value = 0;
 
             SetInfoMsg(startInfoMsg);
+        }
+
+        // download miners
+        public Form_Loading() {
+            InitializeComponent();
+            label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
+            _startMinersInitLogic = true;
         }
 
         public void IncreaseLoadCounterAndMessage(string infoMsg) {
@@ -80,5 +88,51 @@ namespace NiceHashMiner
             IncreaseLoadCounterAndMessage(infoMsg);
         }
         #endregion //IMessageNotifier
+
+        #region IMinerUpdateIndicator
+        public void SetMaxProgressValue(int max) {
+            this.Invoke((MethodInvoker)delegate {
+                this.progressBar1.Maximum = max;
+                this.progressBar1.Value = 0;
+            });
+        }
+
+        public void SetProgressValueAndMsg(int value, string msg) {
+            if (value <= this.progressBar1.Maximum) {
+                this.Invoke((MethodInvoker)delegate {
+                    this.progressBar1.Value = value;
+                    this.LoadText.Text = msg;
+                    this.progressBar1.Invalidate();
+                    this.LoadText.Invalidate();
+                });
+            }
+        }
+
+        public void SetTitle(string title) {
+            this.Invoke((MethodInvoker)delegate {
+                label_LoadingText.Text = title;
+            });
+        }
+
+        public void FinishMsg(bool success) {
+            this.Invoke((MethodInvoker)delegate {
+                if (success) {
+                    label_LoadingText.Text = "Init Finished!";
+                } else {
+                    label_LoadingText.Text = "Init Failed!";
+                }
+                System.Threading.Thread.Sleep(1000);
+                Close();
+            });
+        }
+
+        #endregion IMinerUpdateIndicator
+
+        bool _startMinersInitLogic = false;
+        private void Form_Loading_Shown(object sender, EventArgs e) {
+            if (_startMinersInitLogic) {
+                MinersDownloadManager.Instance.Start(this);
+            }
+        }
     }
 }

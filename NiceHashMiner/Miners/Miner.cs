@@ -55,8 +55,6 @@ namespace NiceHashMiner
         Stopwatch BenchmarkTimeOutStopWatch = null;
         public bool BenchmarkSignalTimedout = false;
         protected bool BenchmarkSignalFinnished;
-        public int NumRetries;
-        public bool StartingUpDelay;
         protected string Path;
 
         protected string WorkingDirectory;
@@ -91,6 +89,7 @@ namespace NiceHashMiner
         protected AlgorithmType[] _supportedMinerAlgorithms;
 
         // TODO maybe set for individual miner cooldown/retries logic variables
+        // this replaces MinerAPIGraceSeconds(AMD)
         private const int _MIN_CooldownTimeInMilliseconds = 5 * 1000; // 5 seconds
         //private const int _MIN_CooldownTimeInMilliseconds = 1000; // TESTING
 
@@ -109,7 +108,6 @@ namespace NiceHashMiner
             WorkingDirectory = "";
             ExtraLaunchParameters = "";
             UsePassword = null;
-            StartingUpDelay = false;
 
             CurrentAlgorithmType = AlgorithmType.NONE;
             CurrentRate = 0;
@@ -177,7 +175,6 @@ namespace NiceHashMiner
             _cooldownCheckTimer.Stop();
             _Stop(willswitch);
 
-            StartingUpDelay = false;
             PreviousTotalMH = 0.0;
             IsRunning = false;
         }
@@ -457,7 +454,8 @@ namespace NiceHashMiner
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
             }
 
-            NumRetries = CalculateNumRetries();
+            // TODO not used anymore
+            //NumRetries = CalculateNumRetries();
 
             P.StartInfo.FileName = Path;
             P.ExitEvent = Miner_Exited;

@@ -57,15 +57,10 @@ namespace NiceHashMiner.Miners
             }
         }
 
+        // TODO this is not used anymore replaced with cooldown logic remove?
         protected override int CalculateNumRetries() {
             return (ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds + ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD) / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
         }
-
-        // TODO NOT needed because of cool down logic
-        //public override void Restart() {
-        //    StartingUpDelay = true;
-        //    base.Restart();
-        //}
 
         protected override void _Stop(bool willswitch) {
             Stop_cpu_ccminer_sgminer(willswitch);
@@ -73,17 +68,12 @@ namespace NiceHashMiner.Miners
 
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
-            //if (ProcessHandle != null) return; // ignore, already running 
-
-            //Algorithm miningAlgorithm = null;//GetMinerAlgorithm(nhalgo);
             CurrentMiningAlgorithm = miningAlgorithm;
             if (miningAlgorithm == null)
             {
                 Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + miningAlgorithm.NiceHashID + "): Algo equals to null");
                 return;
             }
-
-            StartingUpDelay = true;
 
             Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID, CommonGpuCodenameSetting, EnableOptimizedVersion);
             WorkingDirectory = Path.Replace("sgminer.exe", "");
@@ -136,7 +126,6 @@ namespace NiceHashMiner.Miners
 
                         return MinerPaths.sgminer_5_4_0_tweaked;
                     }
-                    // TODO CRITICAL IMPORTANT these segfault
                     if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
                         return MinerPaths.sgminer_5_1_0_optimized;
                     else
@@ -164,6 +153,7 @@ namespace NiceHashMiner.Miners
             if (ConfigManager.Instance.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.Instance.GeneralConfig.WorkerName.Trim();
 
+            // cd to the cgminer for the process bins
             CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
                           " --gpu-platform " + GPUPlatformNumber +
                           " -k " + algorithm.MinerName +
