@@ -86,6 +86,7 @@ namespace NiceHashMiner.Miners
             StartingUpDelay = true;
 
             Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID, CommonGpuCodenameSetting, EnableOptimizedVersion);
+            WorkingDirectory = Path.Replace("sgminer.exe", "");
 
             LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
                               " -k " + miningAlgorithm.MinerName +
