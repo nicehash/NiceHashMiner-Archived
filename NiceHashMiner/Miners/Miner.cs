@@ -97,7 +97,7 @@ namespace NiceHashMiner
         // TODO maybe less time
         private const int _MAX_CooldownTimeInMilliseconds = 60 * 1000; // 1 minute max, whole waiting time 75seconds
         private Timer _cooldownCheckTimer;
-        protected MinerAPIReadStatus _currentMinerReadStatus { get; protected set; }
+        protected MinerAPIReadStatus _currentMinerReadStatus { get; set; }
         private int _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
         private int _currentCooldownTimeInSecondsLeft = _MIN_CooldownTimeInMilliseconds;
 
