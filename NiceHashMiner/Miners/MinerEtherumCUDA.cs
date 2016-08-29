@@ -10,7 +10,8 @@ namespace NiceHashMiner.Miners {
     public class MinerEtherumCUDA : MinerEtherum {
 
         public MinerEtherumCUDA()
-            : base("NVIDIA") {
+            : base("NVIDIA",
+            ConfigManager.Instance.GeneralConfig.EthminerDagGenerationTypeNvidia) {
             MinerDeviceName = this.GetType().Name;
         }
 

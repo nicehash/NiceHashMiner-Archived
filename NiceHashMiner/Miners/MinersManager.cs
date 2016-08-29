@@ -102,7 +102,7 @@ namespace NiceHashMiner.Miners {
             Helpers.AllowMonitorPowerdownAndSleep();
         }
 
-
+        // TODO recheck this
         public string GetActiveMinersGroup() {
             string ActiveMinersGroup = "";
 
@@ -304,7 +304,7 @@ namespace NiceHashMiner.Miners {
         }
 
         private bool SafeStrCompare(string a, string b) {
-            if (string.IsNullOrEmpty(a) == string.IsNullOrEmpty(b)) return true;
+            if (string.IsNullOrEmpty(a) == true && string.IsNullOrEmpty(a) == string.IsNullOrEmpty(b)) return true;
             return a == b;
         }
 
@@ -352,7 +352,6 @@ namespace NiceHashMiner.Miners {
         }
         #endregion //Groupping logic
 
-        static int stepCheck = 5;
         /// <summary>
         /// SwichMostProfitable should check the best combination for most profit.
         /// Calculate profit for each supported algorithm per device group.
@@ -365,17 +364,10 @@ namespace NiceHashMiner.Miners {
         public void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData, string Worker) {
             var devProfits = GetEnabledDeviceProifitDictionary(_perDeviceSpeedDictionary, NiceHashData);
 
-            //////// switching testing code
-            ++stepCheck;
-            if (stepCheck > 1) stepCheck = 0;
-            AlgorithmType MostProfitKey = AlgorithmType.DaggerHashimoto;
-            if (stepCheck == 0) MostProfitKey = AlgorithmType.Lyra2REv2;
-            if (stepCheck == 1) MostProfitKey = AlgorithmType.DaggerHashimoto;
-            if (stepCheck == 3) MostProfitKey = AlgorithmType.Decred;
-            Helpers.ConsolePrint("MostProfitKey", AlgorithmNiceHashNames.GetName(MostProfitKey));
-            foreach (var devProfit in devProfits) {
-                devProfit.Value[MostProfitKey] = 100000;
-            }
+#if (SWITCH_TESTING)
+            SwitchTesting.Instance.SetNext(ref devProfits, _enabledDevices);
+#endif
+
 
             double CurrentProfit = 0.0;
             // calculate most profitable algorithm per enabled device

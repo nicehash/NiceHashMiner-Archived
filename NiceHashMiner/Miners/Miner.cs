@@ -543,8 +543,10 @@ namespace NiceHashMiner
                 if (offset > 0)
                     ResponseFromServer = ASCIIEncoding.ASCII.GetString(IncomingBuffer);
             }
-            catch
+            catch (Exception ex)
             {
+                return null;
+            } catch { // all
                 return null;
             }
 
@@ -560,7 +562,10 @@ namespace NiceHashMiner
             APIData ad = new APIData();
 
             resp = GetAPIData(APIPort, "summary");
-            if (resp == null) return null;
+            if (resp == null) {
+                Helpers.ConsolePrint(MinerDeviceName, "summary is null");
+                return null;
+            }
 
             try {
                 string[] resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);

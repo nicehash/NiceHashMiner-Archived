@@ -34,6 +34,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.amdSpecificSettings1 = new NiceHashMiner.Forms.Components.AmdSpecificSettings();
             this.cpuSpecificSettings1 = new NiceHashMiner.Forms.Components.CpuSpecificSettings();
+            this.nvidiaSpecificSettings1 = new NiceHashMiner.Forms.Components.NvidiaSpecificSettings();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -125,6 +126,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.nvidiaSpecificSettings1);
             this.groupBox3.Controls.Add(this.amdSpecificSettings1);
             this.groupBox3.Controls.Add(this.cpuSpecificSettings1);
             this.groupBox3.Location = new System.Drawing.Point(3, 235);
@@ -136,17 +138,24 @@
             // 
             // amdSpecificSettings1
             // 
-            this.amdSpecificSettings1.Location = new System.Drawing.Point(6, 19);
+            this.amdSpecificSettings1.Location = new System.Drawing.Point(9, 19);
             this.amdSpecificSettings1.Name = "amdSpecificSettings1";
-            this.amdSpecificSettings1.Size = new System.Drawing.Size(380, 88);
+            this.amdSpecificSettings1.Size = new System.Drawing.Size(380, 67);
             this.amdSpecificSettings1.TabIndex = 5;
             // 
             // cpuSpecificSettings1
             // 
-            this.cpuSpecificSettings1.Location = new System.Drawing.Point(9, 13);
+            this.cpuSpecificSettings1.Location = new System.Drawing.Point(9, 19);
             this.cpuSpecificSettings1.Name = "cpuSpecificSettings1";
-            this.cpuSpecificSettings1.Size = new System.Drawing.Size(377, 94);
+            this.cpuSpecificSettings1.Size = new System.Drawing.Size(377, 71);
             this.cpuSpecificSettings1.TabIndex = 0;
+            // 
+            // nvidiaSpecificSettings1
+            // 
+            this.nvidiaSpecificSettings1.Location = new System.Drawing.Point(12, 19);
+            this.nvidiaSpecificSettings1.Name = "nvidiaSpecificSettings1";
+            this.nvidiaSpecificSettings1.Size = new System.Drawing.Size(377, 61);
+            this.nvidiaSpecificSettings1.TabIndex = 6;
             // 
             // DeviceSettingsControl
             // 
@@ -182,6 +191,7 @@
         private System.Windows.Forms.RichTextBox richTextBoxExtraLaunchParameters;
         private CpuSpecificSettings cpuSpecificSettings1;
         private AmdSpecificSettings amdSpecificSettings1;
+        private NvidiaSpecificSettings nvidiaSpecificSettings1;
 
     }
 }

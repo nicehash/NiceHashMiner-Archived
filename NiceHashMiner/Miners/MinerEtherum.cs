@@ -21,11 +21,14 @@ namespace NiceHashMiner.Miners {
         private bool _isCurentlyMining = false;
 
         readonly protected string CurrentBlockString;
+        readonly private DagGenerationType DagGenerationType;
 
-        public MinerEtherum(string blockString) : base() {
+        public MinerEtherum(string blockString, DagGenerationType dagGenerationType)
+            : base() {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
             CurrentBlockString = blockString;
+            DagGenerationType = dagGenerationType;
         }
 
         protected override void InitSupportedMinerAlgorithms() {
@@ -43,8 +46,28 @@ namespace NiceHashMiner.Miners {
                 ids.Add(cdev.ID.ToString());
             }
             deviceStringCommand += string.Join(" ", ids);
-            deviceStringCommand += " --dag-load-mode singlekeep " + DaggerHashimotoGenerateDevice.ID.ToString();
+            // set dag load mode
+            deviceStringCommand += String.Format(" --dag-load-mode {0} ", GetDagGenerationString(DagGenerationType));
+            if (DagGenerationType == DagGenerationType.Single
+                || DagGenerationType == DagGenerationType.SingleKeep) {
+                // set dag generation device
+                deviceStringCommand += DaggerHashimotoGenerateDevice.ID.ToString();
+            }
             return deviceStringCommand;
+        }
+
+        public static string GetDagGenerationString(DagGenerationType type) {
+            switch (type) {
+                case DagGenerationType.Parallel:
+                    return "parallel";
+                case DagGenerationType.Sequential:
+                    return "sequential";
+                case DagGenerationType.Single:
+                    return "single";
+                case DagGenerationType.SingleKeep:
+                    return "singlekeep";
+            }
+            return "singlekeep";
         }
 
         public override void Start(Algorithm miningAlgorithm, string url, string username) {

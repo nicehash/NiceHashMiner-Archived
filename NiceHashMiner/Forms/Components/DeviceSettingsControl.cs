@@ -15,6 +15,7 @@ namespace NiceHashMiner.Forms.Components {
 
             amdSpecificSettings1.Visible = false;
             cpuSpecificSettings1.Visible = false;
+            nvidiaSpecificSettings1.Visible = false;
         }
 
         DeviceGroupConfig _settings;
@@ -54,6 +55,12 @@ namespace NiceHashMiner.Forms.Components {
 
             cpuSpecificSettings1.Visible = _selectedComputeDevice.DeviceGroupType == DeviceGroupType.CPU;
             amdSpecificSettings1.Visible = _selectedComputeDevice.DeviceGroupType == DeviceGroupType.AMD_OpenCL;
+            // yea this is no good
+            nvidiaSpecificSettings1.Visible =
+                   _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_2_1
+                || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_3_x
+                || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_5_x
+                || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_6_x;
         }
     }
 }

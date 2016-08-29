@@ -14,6 +14,8 @@ namespace NiceHashMiner.Forms.Components {
         ComputeDevice _computeDevice = null;
         Algorithm _currentlySelectedAlgorithm = null;
         ListViewItem _currentlySelectedLvi = null;
+        // winform crappy event workarond
+        bool _selected = false;
 
         public AlgorithmSettingsControl() {
             InitializeComponent();
@@ -26,6 +28,7 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         public void Deselect() {
+            _selected = false;
             labelSelectedAlgorithm.Text = "Selected Algorithm: NONE";
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
@@ -48,6 +51,7 @@ namespace NiceHashMiner.Forms.Components {
             _computeDevice = computeDevice;
             var algorithm = lvi.Tag as Algorithm;
             if (algorithm != null) {
+                _selected = true;
                 _currentlySelectedAlgorithm = algorithm;
                 _currentlySelectedLvi = lvi;
                 this.Enabled = lvi.Checked;
@@ -69,13 +73,17 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        private bool CanEdit() {
+            return _currentlySelectedAlgorithm != null && _selected;
+        }
+
         #region Callbacks Events
         private void textChangedPassword(object sender, EventArgs e) {
-            if (_currentlySelectedAlgorithm == null) return;
+            if (!CanEdit()) return;
             _currentlySelectedAlgorithm.UsePassword = fieldBoxPassword.EntryText.Trim();
         }
         private void textChangedBenchmarkSpeed(object sender, EventArgs e) {
-            if (_currentlySelectedAlgorithm == null) return;
+            if (!CanEdit()) return;
             double value;
             if (Double.TryParse(fieldBoxBenchmarkSpeed.EntryText, out value)) {
                 _currentlySelectedAlgorithm.BenchmarkSpeed = value;
@@ -86,8 +94,8 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
         private void textChangedExtraLaunchParameters(object sender, EventArgs e) {
-            if (_currentlySelectedAlgorithm == null) return;
-            _currentlySelectedAlgorithm.ExtraLaunchParameters = richTextBoxExtraLaunchParameters.Text.Trim();
+            if (!CanEdit()) return;
+            _currentlySelectedAlgorithm.ExtraLaunchParameters = richTextBoxExtraLaunchParameters.Text;
         }
         #endregion
 

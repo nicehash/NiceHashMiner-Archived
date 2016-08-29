@@ -98,8 +98,10 @@ namespace NiceHashMiner.Configs {
         public bool NVIDIAP0State { get; set; }
 
         public int ethminerDefaultBlockHeight { get; set; }
+        public DagGenerationType EthminerDagGenerationTypeNvidia;
+        public DagGenerationType EthminerDagGenerationTypeAMD;
 
-        private int _apiBindPortPoolStart = 4100;
+        private int _apiBindPortPoolStart = 5100;
         public int ApiBindPortPoolStart {
             get { return _apiBindPortPoolStart; }
             set {
@@ -108,7 +110,7 @@ namespace NiceHashMiner.Configs {
                     _apiBindPortPoolStart = value;
                 } else {
                     // set default
-                    _apiBindPortPoolStart = 4100;
+                    _apiBindPortPoolStart = 5100;
                 }
             }
         }
@@ -164,6 +166,8 @@ namespace NiceHashMiner.Configs {
             DisplayCurrency = "USD";
             ApiBindPortPoolStart = 4000;
             MinimumProfit = 0;
+            EthminerDagGenerationTypeNvidia = DagGenerationType.SingleKeep;
+            EthminerDagGenerationTypeAMD = DagGenerationType.SingleKeep;
         }
 
         public GeneralConfig(bool initDefaults = false) {
@@ -221,6 +225,8 @@ namespace NiceHashMiner.Configs {
             DisableWindowsErrorReporting  = _file.DisableWindowsErrorReporting;
             NVIDIAP0State = _file.NVIDIAP0State;
             ethminerDefaultBlockHeight = _file.ethminerDefaultBlockHeight;
+            EthminerDagGenerationTypeNvidia = _file.EthminerDagGenerationTypeNvidia;
+            EthminerDagGenerationTypeAMD = _file.EthminerDagGenerationTypeAMD;
             ApiBindPortPoolStart = _file.ApiBindPortPoolStart;
             MinimumProfit = _file.MinimumProfit;
         }

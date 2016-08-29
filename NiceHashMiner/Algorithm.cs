@@ -29,10 +29,10 @@ namespace NiceHashMiner
             NiceHashID = niceHashID;
             NiceHashName = AlgorithmNiceHashNames.GetName(niceHashID);
             MinerName = minerName;
-            // these defaults are kinda useless
+
             BenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
-            UsePassword = null;
+            UsePassword = "";
             Skip = false;
         }
     }

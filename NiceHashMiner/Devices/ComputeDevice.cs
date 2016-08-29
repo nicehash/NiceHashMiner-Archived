@@ -191,6 +191,10 @@ namespace NiceHashMiner.Devices
                             //    CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x6";
                             } else if (_cudaDevice.SM_major >= 5) {
                                 CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x" + _cudaDevice.SMX.ToString();
+                            } else if (_cudaDevice.SM_major == 3) {
+                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=16x" + _cudaDevice.SMX.ToString();
+                            } else if (_cudaDevice.SM_major == 2) {
+                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=8x" + _cudaDevice.SMX.ToString();
                             } else {
                                 // TODO 
                                 //CryptoNightAlgo.ExtraLaunchParameters = "";

@@ -38,6 +38,8 @@ namespace NiceHashMiner
             { AlgorithmType.CryptoNight , "cryptonight" },
         };
 
+        static private List<AlgorithmType> _keys = null;
+
         public static string GetName(AlgorithmType type) { return _names[type]; }
 
         /// <summary>
@@ -52,6 +54,14 @@ namespace NiceHashMiner
             }
 
             return AlgorithmType.INVALID;
+        }
+
+        public static List<AlgorithmType> GetAllAvaliableTypes() {
+            // lazy load
+            if (_keys == null) {
+                _keys = new List<AlgorithmType>(_names.Keys);
+            }
+            return _keys;
         }
     }
 }

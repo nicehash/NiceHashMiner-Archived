@@ -303,6 +303,10 @@ namespace NiceHashMiner
                 SMAMinerCheck.Interval = (ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
+#if (SWITCH_TESTING)
+            SMAMinerCheck.Interval = MinersManager.SMAMinerCheckInterval;
+#endif
+
             string Worker = textBoxWorkerName.Text.Trim();
             if (Worker.Length > 0)
                 Worker = textBoxBTCAddress.Text.Trim() + "." + Worker;

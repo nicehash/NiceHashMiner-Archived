@@ -35,7 +35,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SWITCH_TESTING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -101,6 +101,7 @@
     <Compile Include="Enums\BenchmarkProcessStatus.cs" />
     <Compile Include="Enums\ComputePlatformType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
+    <Compile Include="Enums\DagGenerationType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerType.cs" />
@@ -170,6 +171,12 @@
     <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Components\NvidiaSpecificSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\NvidiaSpecificSettings.Designer.cs">
+      <DependentUpon>NvidiaSpecificSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DownloadMinersForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,6 +214,7 @@
     <Compile Include="Miners\ccminer_sm6x.cs" />
     <Compile Include="Miners\ManagerPrivate\CpuGroupMiner.cs" />
     <Compile Include="Miners\ManagerPrivate\GroupMiners.cs" />
+    <Compile Include="Miners\ManagerPrivate\SwitchTesting.cs" />
     <Compile Include="Miners\MinerEtherum.cs" />
     <Compile Include="Miners\MinerEtherumCUDA.cs" />
     <Compile Include="Miners\MinerEtherumOCL.cs" />
@@ -292,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\NvidiaSpecificSettings.resx">
+      <DependentUpon>NvidiaSpecificSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DownloadMinersForm.resx">
       <DependentUpon>DownloadMinersForm.cs</DependentUpon>
