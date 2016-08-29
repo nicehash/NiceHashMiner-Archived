@@ -608,7 +608,12 @@ namespace NiceHashMiner
             FormSettings Settings = new FormSettings();
             Settings.ShowDialog();
 
-            if (Settings.IsChange && Settings.IsChangeSaved) {
+            if (Settings.IsChange && Settings.IsChangeSaved && Settings.IsRestartNeeded) {
+                Process PHandle = new Process();
+                PHandle.StartInfo.FileName = Application.ExecutablePath;
+                PHandle.Start();
+                Close();
+            } else if (Settings.IsChange && Settings.IsChangeSaved) {
                 InitLocalization();
                 InitMainConfigGUIData();
             }
@@ -731,7 +736,6 @@ namespace NiceHashMiner
 
                 textBoxBTCAddress.Text = "";
                 ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
-                //Config.Commit();
             }
 
             UpdateGlobalRate();

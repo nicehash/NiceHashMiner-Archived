@@ -26,6 +26,7 @@ namespace NiceHashMiner.Forms {
             }
         }
         public bool IsChangeSaved { get; private set; }
+        public bool IsRestartNeeded { get; private set; }
 
         // most likely we wil have settings only per unique devices
         bool ShowUniqueDeviceList = true;
@@ -617,6 +618,10 @@ namespace NiceHashMiner.Forms {
                     return;
                 }
             }
+
+            // check restart parameters change
+            IsRestartNeeded = ConfigManager.Instance.GeneralConfig.DebugConsole != _generalConfigBackup.DebugConsole
+                || ConfigManager.Instance.GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State;
 
             if (IsChangeSaved) {
                 devicesListViewEnableControl1.SaveOptions();
