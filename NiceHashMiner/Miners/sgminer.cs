@@ -248,13 +248,17 @@ namespace NiceHashMiner.Miners
 
         #endregion // Decoupled benchmarking routines
 
+        // TODO _currentMinerReadStatus
         public override APIData GetSummary() {
             string resp;
             string aname = null;
             APIData ad = new APIData();
 
             resp = GetAPIData(APIPort, "summary");
-            if (resp == null) return null;
+            if (resp == null) {
+                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                return null;
+            }
 
             try {
                 string[] resps;
@@ -272,13 +276,17 @@ namespace NiceHashMiner.Miners
                 } else {
                     // Checks if all the GPUs are Alive first
                     string resp2 = GetAPIData(APIPort, "devs");
-                    if (resp2 == null) return null;
+                    if (resp2 == null) {
+                        _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                        return null;
+                    }
 
                     string[] checkGPUStatus = resp2.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
                     for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
                         if (!checkGPUStatus[i].Contains("Status=Alive")) {
                             Helpers.ConsolePrint(MinerDeviceName, "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
+                            _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
                             return null;
                         }
                     }
@@ -302,6 +310,7 @@ namespace NiceHashMiner.Miners
                         if (total_mh <= PreviousTotalMH) {
                             Helpers.ConsolePrint(MinerDeviceName, "SGMiner might be stuck as no new hashes are being produced");
                             Helpers.ConsolePrint(MinerDeviceName, "Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
+                            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                             return null;
                         }
 
@@ -311,9 +320,11 @@ namespace NiceHashMiner.Miners
                     }
                 }
             } catch {
+                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
 
+            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
             FillAlgorithm(aname, ref ad);
             return ad;
         }

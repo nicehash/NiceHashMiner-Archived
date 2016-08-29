@@ -148,10 +148,12 @@ namespace NiceHashMiner.Miners
                 Process[] processes = Process.GetProcessesByName(pname);
                 if (processes.Length < CPUID.GetPhysicalProcessorCount()) {
                     //Restart();
+                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                     return null; // will restart outside
                 }
                 // extra check
                 if (CurrentMiningAlgorithm == null) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                     return null;
                 }
 
@@ -159,6 +161,7 @@ namespace NiceHashMiner.Miners
                 hodlData.AlgorithmID = AlgorithmType.Hodl;
                 hodlData.AlgorithmName = "hodl";
                 hodlData.Speed = CurrentMiningAlgorithm.BenchmarkSpeed;
+                _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                 return hodlData;
             }
             return GetSummaryCPU_CCMINER();

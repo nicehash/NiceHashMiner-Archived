@@ -513,7 +513,7 @@ namespace NiceHashMiner.Miners {
                     //    continue;
                     //}
 
-                    //if (m.CurrentMinerReadStatus == MinerAPIReadStatus.RESTART) {
+                    //if (m._currentMinerReadStatus == MinerAPIReadStatus.RESTART) {
                     //    // API is inaccessible, try to restart miner
                     //    m.Restart();
                     //}

@@ -120,6 +120,7 @@ namespace NiceHashMiner.Miners
             if (CurrentAlgorithmType == AlgorithmType.CryptoNight) {
                 // check if running
                 if (ProcessHandle == null) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                     Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess is null");
                     return null;
                 }
@@ -127,15 +128,18 @@ namespace NiceHashMiner.Miners
                     var runningProcess = Process.GetProcessById(ProcessHandle.Id);
                 } catch (ArgumentException ex) {
                     //Restart();
+                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                     Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
                     return null; // will restart outside
                 } catch (InvalidOperationException ex) {
                     //Restart();
+                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                     Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
                     return null; // will restart outside
                 }
                 // extra check
                 if (CurrentMiningAlgorithm == null) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                     Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess CurrentMiningAlgorithm is NULL");
                     return null;
                 }
@@ -149,6 +153,7 @@ namespace NiceHashMiner.Miners
                 CryptoNightData.AlgorithmID = AlgorithmType.CryptoNight;
                 CryptoNightData.AlgorithmName = "cryptonight";
                 CryptoNightData.Speed = totalSpeed;
+                _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                 return CryptoNightData;
             }
             return GetSummaryCPU_CCMINER();

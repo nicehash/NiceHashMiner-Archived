@@ -97,7 +97,7 @@ namespace NiceHashMiner
         // TODO maybe less time
         private const int _MAX_CooldownTimeInMilliseconds = 60 * 1000; // 1 minute max, whole waiting time 75seconds
         private Timer _cooldownCheckTimer;
-        public MinerAPIReadStatus CurrentMinerReadStatus { get; protected set; }
+        protected MinerAPIReadStatus _currentMinerReadStatus { get; protected set; }
         private int _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
         private int _currentCooldownTimeInSecondsLeft = _MIN_CooldownTimeInMilliseconds;
 
@@ -472,7 +472,7 @@ namespace NiceHashMiner
             _cooldownCheckTimer.Start();
             _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
             _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
-            CurrentMinerReadStatus = MinerAPIReadStatus.NONE;
+            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
 
             try
             {
@@ -588,7 +588,7 @@ namespace NiceHashMiner
             resp = GetAPIData(APIPort, "summary");
             if (resp == null) {
                 Helpers.ConsolePrint(MinerDeviceName, "summary is null");
-                CurrentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
 
@@ -604,11 +604,11 @@ namespace NiceHashMiner
                 }
             } catch {
                 Helpers.ConsolePrint(MinerDeviceName, "Could not read data from API bind port");
-                CurrentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
 
-            CurrentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
             FillAlgorithm(aname, ref ad);
             return ad;
         }
@@ -633,7 +633,7 @@ namespace NiceHashMiner
             _currentCooldownTimeInSeconds *= 2;
             Helpers.ConsolePrint(MinerDeviceName, String.Format("Cooling UP, cool time is {0} ms", _currentCooldownTimeInSeconds.ToString()));
             if (_currentCooldownTimeInSeconds > _MAX_CooldownTimeInMilliseconds) {
-                CurrentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
                 Helpers.ConsolePrint(MinerDeviceName, "MAX cool time exceeded. RESTARTING");
                 Restart();
             }
@@ -643,7 +643,7 @@ namespace NiceHashMiner
             _currentCooldownTimeInSecondsLeft -= _cooldownCheckTimer.Interval;
             // if times up
             if (_currentCooldownTimeInSecondsLeft <= 0) {
-                if (CurrentMinerReadStatus == MinerAPIReadStatus.GOT_READ) {
+                if (_currentMinerReadStatus == MinerAPIReadStatus.GOT_READ) {
                     CoolDown();
                 } else {
                     CoolUp();
