@@ -16,27 +16,27 @@ namespace NiceHashMiner.Miners
         /// </summary>
         public const string ccminer_decred =            _bin + @"\ccminer_decred.exe";
         public const string ccminer_nanashi =           _bin + @"\ccminer_nanashi.exe";
-        //public const string ccminer_nanashi_lyra2rev2 = _bin + @"\ccminer_nanashi_lyra2rev2.exe";
         public const string ccminer_neoscrypt =         _bin + @"\ccminer_neoscrypt.exe";
         public const string ccminer_sp =                _bin + @"\ccminer_sp.exe";
         public const string ccminer_tpruvot =           _bin + @"\ccminer_tpruvot.exe";
         public const string ccminer_cryptonight =       _bin + @"\ccminer_cryptonight.exe";
         /// <summary>
-        /// cpuminers
+        /// cpuminers opt new
         /// </summary>
-        public const string cpuminer_x64_AVX =  _bin + @"\cpuminer_x64_AVX.exe";
+        public const string cpuminer_opt_AVX = _bin  + @"\cpuminer_opt_AVX.exe";
+        public const string cpuminer_opt_AVX2 = _bin + @"\cpuminer_opt_AVX2.exe";
+        public const string cpuminer_opt_SSE2 = _bin + @"\cpuminer_opt_SSE2.exe";
+        /// <summary>
+        /// cpuminers old
+        /// </summary>
+        public const string cpuminer_x64_AVX = _bin +  @"\cpuminer_x64_AVX.exe";
         public const string cpuminer_x64_AVX2 = _bin + @"\cpuminer_x64_AVX2.exe";
         public const string cpuminer_x64_SSE2 = _bin + @"\cpuminer_x64_SSE2.exe";
         /// <summary>
         /// ethminers
         /// </summary>
         public const string ethminer = _bin + @"\ethminer.exe";
-        /// <summary>
-        /// hodlminer also CPU
-        /// </summary>
-        public const string hodlminer_core_avx2 =   _bin + @"\hodlminer\hodlminer_core_avx2.exe";
-        public const string hodlminer_core2 =       _bin + @"\hodlminer\hodlminer_core2.exe";
-        public const string hodlminer_corei7_avx =  _bin + @"\hodlminer\hodlminer_corei7_avx.exe";
+                
         /// <summary>
         /// sgminers
         /// </summary>

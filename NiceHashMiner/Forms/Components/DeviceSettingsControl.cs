@@ -18,14 +18,12 @@ namespace NiceHashMiner.Forms.Components {
             nvidiaSpecificSettings1.Visible = false;
         }
 
-        DeviceGroupConfig _settings;
         ComputeDevice _selectedComputeDevice;
         public ComputeDevice SelectedComputeDevice {
             get { return _selectedComputeDevice; }
             set {
                 if (value != null) {
                     _selectedComputeDevice = value;
-                    _settings = ComputeDeviceGroupManager.Instance.GetDeviceGroupSettings(_selectedComputeDevice.Group);
 
                     SetSelectedDeviceFields();
                 }
@@ -43,16 +41,14 @@ namespace NiceHashMiner.Forms.Components {
             labelSelectedDeviceName.Text = "Name: " + _selectedComputeDevice.Name;
             labelSelectedDeviceGroup.Text = "Group: " +  _selectedComputeDevice.Group;
 
-            if (_settings == null) return;
+            if (_selectedComputeDevice == null || _selectedComputeDevice.DeviceBenchmarkConfig == null) return;
 
-            //fieldAPIBindPort.EntryText = _settings.APIBindPort.ToString();
-            fieldUsePassword.EntryText = _settings.UsePassword;
 
-            richTextBoxExtraLaunchParameters.Text = _settings.ExtraLaunchParameters;
+            fieldUsePassword.EntryText = _selectedComputeDevice.DeviceBenchmarkConfig.UsePassword;
+            richTextBoxExtraLaunchParameters.Text = _selectedComputeDevice.DeviceBenchmarkConfig.ExtraLaunchParameters;
             
             
             // enable group specific settings
-
             cpuSpecificSettings1.Visible = _selectedComputeDevice.DeviceGroupType == DeviceGroupType.CPU;
             amdSpecificSettings1.Visible = _selectedComputeDevice.DeviceGroupType == DeviceGroupType.AMD_OpenCL;
             // yea this is no good

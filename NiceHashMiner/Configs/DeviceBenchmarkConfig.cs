@@ -12,15 +12,17 @@ namespace NiceHashMiner.Configs
     public class DeviceBenchmarkConfig : BaseConfigFile<DeviceBenchmarkConfig> {
         // TODO remove id if only unique benchmarks enabled
         //public string ID { get; private set; }
+        [JsonIgnore]
         public DeviceGroupType DeviceGroupType { get; private set; }
         public string DeviceName { get; private set; }
         // TODO handle defaults for this
+        public string UsePassword { get; set; }
         public string ExtraLaunchParameters { get; set; }
         public int TimeLimit { get; set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
 
         // TODO add cdev UUIDs???
-        List<string> deviceUUIDs;
+        public List<string> DeviceUUIDs;
 
         [field: NonSerialized]
         readonly public static string BENCHMARK_PREFIX = "benchmark_";
@@ -40,7 +42,7 @@ namespace NiceHashMiner.Configs
                 AlgorithmSettings = GroupAlgorithms.CreateDefaultsForGroup(deviceGroupType);
             }
 
-            deviceUUIDs = new List<string>();
+            DeviceUUIDs = new List<string>();
             IsAlgorithmSettingsInit = false;
 
             // calculate ID

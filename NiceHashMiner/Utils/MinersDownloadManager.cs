@@ -185,6 +185,12 @@ namespace NiceHashMiner.Utils {
 
 @"\ccminer_tpruvot.exe",
 
+@"\cpuminer_opt_AVX.exe",
+
+@"\cpuminer_opt_AVX2.exe",
+
+@"\cpuminer_opt_SSE2.exe",
+
 @"\cpuminer_x64_AVX.exe",
 
 @"\cpuminer_x64_AVX2.exe",
@@ -195,23 +201,39 @@ namespace NiceHashMiner.Utils {
 
 @"\ethminer.exe",
 
+@"\libcrypto-1.0.0.dll",
+
 @"\libcurl-4.dll",
 
 @"\libcurl.dll",
 
+@"\libgcc_s_seh-1.dll",
+
+@"\libgmp-10.dll",
+
+@"\libgmpxx-4.dll",
+
+@"\libjansson-4.dll",
+
+@"\libjson-c-2.dll",
+
 @"\libmicrohttpd-dll.dll",
+
+@"\libsigc-2.0-0.dll",
+
+@"\libssl-1.0.0.dll",
+
+@"\libstdc++-6.dll",
+
+@"\libwinpthread-1.dll",
+
+@"\libz-1.dll",
 
 @"\msvcr120.dll",
 
 @"\OpenCL.dll",
 
 @"\zlib1.dll",
-
-@"\hodlminer\hodlminer_core2.exe",
-
-@"\hodlminer\hodlminer_corei7_avx.exe",
-
-@"\hodlminer\hodlminer_core_avx2.exe",
 
 @"\sgminer-5-1-0-optimized\darkcoin-modHawaiigw64l4.bin",
 
@@ -956,6 +978,7 @@ namespace NiceHashMiner.Utils {
 @"\sgminer-5-4-0-tweaked\kernel\zuikkis.cl",
 
 };
+
 
         #endregion //CODE_GEN STUFF
 

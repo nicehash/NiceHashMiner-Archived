@@ -30,7 +30,7 @@ namespace NiceHashMiner.Configs {
 
         public void AfterDeviceQueryInitialization() {
             // initialize group settings
-            ComputeDeviceGroupManager.Instance.InitializeGroupSettings();
+            //ComputeDeviceGroupManager.Instance.InitializeGroupSettings();
             // new stuff
             // set references
             // C# can handle cyclic refs

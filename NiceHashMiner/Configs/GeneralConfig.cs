@@ -120,7 +120,7 @@ namespace NiceHashMiner.Configs {
 
 
         // After Device initialization
-        public Dictionary<string, DeviceGroupConfig> GroupSettings { get; set; }
+
         /// <summary>
         /// LastDevicesSettup field should not be manually edited
         /// The changes can be of two scenarios:
@@ -234,8 +234,7 @@ namespace NiceHashMiner.Configs {
         }
 
         public void AfterDeviceQueryInitialization() {
-            ComputeDeviceGroupManager.Instance.GroupSettings = GroupSettings;
-            GroupSettings = ComputeDeviceGroupManager.Instance.GroupSettings;
+
             if (_file != null && _file.LastDevicesSettup != null) {
                 // TODO reinit devices this is going to need serials upgrade
                 foreach (var configDevice in _file.LastDevicesSettup) {
@@ -244,16 +243,6 @@ namespace NiceHashMiner.Configs {
                             usedDevice.Enabled = configDevice.Enabled;
                             continue;
                         }
-                    }
-                }
-                
-            }
-            if (_file != null && _file.GroupSettings != null) {
-                foreach (var key in _file.GroupSettings.Keys) {
-                    if (this.GroupSettings.ContainsKey(key)) {
-                        this.GroupSettings[key] = _file.GroupSettings[key];
-                    } else {
-                        // TODO think if we let tamnpered data
                     }
                 }
             }

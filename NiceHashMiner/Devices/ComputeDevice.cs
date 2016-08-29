@@ -13,11 +13,14 @@ namespace NiceHashMiner.Devices
     {
         //[JsonIgnore]
         //readonly public int PlatformId;
+        
+        [JsonIgnore]
         readonly public int ID;
         readonly public string Group;
         readonly public string Name;
         public bool Enabled;
 
+        [JsonIgnore]
         public readonly bool IsEtherumCapale;
         
         [JsonIgnore]
@@ -152,6 +155,10 @@ namespace NiceHashMiner.Devices
 
         // TODO add file check and stuff like that
         public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig) {
+            if (!deviceBenchmarkConfig.DeviceUUIDs.Contains(UUID)) {
+                deviceBenchmarkConfig.DeviceUUIDs.Add(UUID);
+            }
+
             DeviceBenchmarkConfig = deviceBenchmarkConfig;
             // check initialization
             if (!DeviceBenchmarkConfig.IsAlgorithmSettingsInit) {

@@ -12,7 +12,7 @@ namespace NiceHashMiner.Miners {
     using PerDeviceProifitDictionary = Dictionary<string, Dictionary<AlgorithmType, double>>;
     public partial class MinersManager {
         // globals testing variables
-        static int seconds = 15;
+        static int seconds = 60;
         public static int SMAMinerCheckInterval = seconds * 1000; // 30s
         public static bool ForcePerCardMiners = true;
 

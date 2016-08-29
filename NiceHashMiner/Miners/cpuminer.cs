@@ -7,21 +7,15 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 
-namespace NiceHashMiner.Miners
-{
-    public class cpuminer : Miner
-    {
+namespace NiceHashMiner.Miners {
+    public class cpuminer : Miner {
         private int Threads;
         private ulong AffinityMask;
-        private string CPUMinerPath;
-        private string HodlMinerPath;
+        private string CPUMinerPath; // axiom faster on AVX2
+        private string CPUMinerPathOpt; // AVX2 faster except axiom
 
-        // hodl benchmark exception
-        int _hodlTotalCount = 0;
-        double _hodlTotal = 0;
-
-        public cpuminer(int id, int threads, ulong affinity) : base()
-        {
+        public cpuminer(int id, int threads, ulong affinity)
+            : base() {
             MinerDeviceName = "CPU" + id.ToString();
             Threads = threads;
             AffinityMask = affinity;
@@ -56,7 +50,7 @@ namespace NiceHashMiner.Miners
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.CPU);
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
         }
-        
+
         /// <summary>
         /// InitializeMinerPaths initializes cpuminer paths based on CPUExtensionType.
         /// Make sure to check if extensions enabled. Currently using CPUID fo checking
@@ -68,18 +62,18 @@ namespace NiceHashMiner.Miners
             // if type not automatic and has extension support set initialized
             if (HasExtensionSupport(type)) {
                 isInitialized = true;
-                switch(type) {
+                switch (type) {
                     case CPUExtensionType.SSE2:
                         CPUMinerPath = MinerPaths.cpuminer_x64_SSE2;
-                        HodlMinerPath = MinerPaths.hodlminer_core2;
+                        CPUMinerPathOpt = MinerPaths.cpuminer_opt_SSE2;
                         break;
                     case CPUExtensionType.AVX:
                         CPUMinerPath = MinerPaths.cpuminer_x64_AVX;
-                        HodlMinerPath = MinerPaths.hodlminer_corei7_avx;
+                        CPUMinerPathOpt = MinerPaths.cpuminer_opt_AVX;
                         break;
                     case CPUExtensionType.AVX2:
                         CPUMinerPath = MinerPaths.cpuminer_x64_AVX2;
-                        HodlMinerPath = MinerPaths.hodlminer_core_avx2;
+                        CPUMinerPathOpt = MinerPaths.cpuminer_opt_AVX2;
                         break;
                     default: // CPUExtensionType.Automatic
                         break;
@@ -88,11 +82,12 @@ namespace NiceHashMiner.Miners
             return isInitialized;
         }
 
+        // TODO only AVX2 tested
         public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = false) {
-            if (algorithmType == AlgorithmType.Hodl) {
-                return HodlMinerPath;
+            if (algorithmType == AlgorithmType.Axiom) {
+                return CPUMinerPath;
             }
-            return CPUMinerPath;
+            return CPUMinerPathOpt;
         }
 
         /// <summary>
@@ -114,56 +109,28 @@ namespace NiceHashMiner.Miners
             return false;
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string username)
-        {
+        public override void Start(Algorithm miningAlgorithm, string url, string username) {
             CurrentMiningAlgorithm = miningAlgorithm;
             if (ProcessHandle != null) return; // ignore, already running
 
             if (CDevs.Count == 0 || !CDevs[0].Enabled) return;
 
-            //Algorithm miningAlgorithm = null;//GetMinerAlgorithm(algorithmType);
             if (miningAlgorithm == null) return;
 
             Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
 
-            LastCommandLine = "--algo=" + miningAlgorithm.MinerName + 
-                              " --url=" + url + 
-                              " --userpass=" + username + ":" + GetPassword(miningAlgorithm) + 
-                              " --threads=" + Threads.ToString() + 
-                              " " + ExtraLaunchParameters + 
-                              " " + miningAlgorithm.ExtraLaunchParameters;
-
-            if (miningAlgorithm.NiceHashID != AlgorithmType.Hodl)
-                LastCommandLine += " --api-bind=" + APIPort.ToString();
+            LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
+                              " --url=" + url +
+                              " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
+                              " --threads=" + Threads.ToString() +
+                              " " + ExtraLaunchParameters +
+                              " " + miningAlgorithm.ExtraLaunchParameters +
+                              " --api-bind=" + APIPort.ToString();
 
             ProcessHandle = _Start();
         }
 
         public override APIData GetSummary() {
-            // for now hodl doesn't have api bind port
-            if (CurrentAlgorithmType == AlgorithmType.Hodl) {
-                // check if running
-                string pname = Path.Split('\\')[2];
-                pname = pname.Substring(0, pname.Length - 4);
-                Process[] processes = Process.GetProcessesByName(pname);
-                if (processes.Length < CPUID.GetPhysicalProcessorCount()) {
-                    //Restart();
-                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-                    return null; // will restart outside
-                }
-                // extra check
-                if (CurrentMiningAlgorithm == null) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-                    return null;
-                }
-
-                APIData hodlData = new APIData();
-                hodlData.AlgorithmID = AlgorithmType.Hodl;
-                hodlData.AlgorithmName = "hodl";
-                hodlData.Speed = CurrentMiningAlgorithm.BenchmarkSpeed;
-                _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                return hodlData;
-            }
             return GetSummaryCPU_CCMINER();
         }
 
@@ -171,8 +138,7 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer(willswitch);
         }
 
-        protected override NiceHashProcess _Start()
-        {
+        protected override NiceHashProcess _Start() {
             NiceHashProcess P = base._Start();
 
             if (AffinityMask != 0 && P != null)
@@ -191,16 +157,12 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
             Path = GetOptimizedMinerPath(algorithm.NiceHashID);
 
-            string ret = "--algo=" + algorithm.MinerName +
+            return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
                          " --threads=" + Threads.ToString() +
                          " " + benchmarkConfig.ExtraLaunchParameters +
-                         " " + algorithm.ExtraLaunchParameters;
-
-            if (algorithm.NiceHashID != AlgorithmType.Hodl)
-                ret += " --time-limit " + time.ToString();
-
-            return ret;
+                         " " + algorithm.ExtraLaunchParameters +
+                         " --time-limit " + time.ToString();
         }
 
         protected override Process BenchmarkStartProcess(string CommandLine) {
@@ -208,10 +170,6 @@ namespace NiceHashMiner.Miners
 
             if (AffinityMask != 0 && BenchmarkHandle != null)
                 CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
-
-            // hodl exception helper variables
-            _hodlTotalCount = BenchmarkTimeInSeconds / 5;
-            _hodlTotal = 0.0d;
 
             return BenchmarkHandle;
         }
@@ -226,26 +184,7 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
-            // Hodl exception
-            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.Hodl) {
-                if (outdata.Contains("Total: ")) {
-                    int st = outdata.IndexOf("Total:") + 7;
-                    int len = outdata.Length - 6 - st;
-
-                    string parse = outdata.Substring(st, len).Trim();
-                    double tmp;
-                    Double.TryParse(parse, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp);
-                    _hodlTotal += tmp;
-                    _hodlTotalCount--;
-                }
-                if (_hodlTotalCount <= 0) {
-                    double spd = _hodlTotal / (BenchmarkTimeInSeconds / 5);
-                    BenchmarkAlgorithm.BenchmarkSpeed = spd;
-                    BenchmarkSignalFinnished = true;
-                }
-            } else {
-                CheckOutdata(outdata);
-            }
+            CheckOutdata(outdata);
         }
 
         #endregion // Decoupled benchmarking routines
