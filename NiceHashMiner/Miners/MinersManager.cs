@@ -102,7 +102,7 @@ namespace NiceHashMiner.Miners {
             Helpers.AllowMonitorPowerdownAndSleep();
         }
 
-        // TODO recheck this
+
         public string GetActiveMinersGroup() {
             string ActiveMinersGroup = "";
 
@@ -110,7 +110,7 @@ namespace NiceHashMiner.Miners {
             HashSet<string> UniqueMinerGroups = new HashSet<string>();
             foreach (var curDevice in ComputeDevice.AllAvaliableDevices) {
                 if (curDevice.Enabled) {
-                    UniqueMinerGroups.Add(curDevice.Group);
+                    UniqueMinerGroups.Add(curDevice.DeviceGroupString);
                 }
             }
             ActiveMinersGroup = string.Join("/", UniqueMinerGroups);
@@ -351,7 +351,12 @@ namespace NiceHashMiner.Miners {
         private bool IsGroupBinaryAndAlgorithmSame(ComputeDevice a, ComputeDevice b) {
             return IsNotCpuGroups(a, b)
                 && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
-                && IsSameBinPath(a, b);
+                && IsSameBinPath(a, b)
+                // add check to password and extra launch params
+                && SafeStrCompare(
+                a.DeviceBenchmarkConfig.UsePassword, b.DeviceBenchmarkConfig.UsePassword)
+                && SafeStrCompare(
+                a.DeviceBenchmarkConfig.ExtraLaunchParameters, b.DeviceBenchmarkConfig.ExtraLaunchParameters);
         }
         #endregion //Groupping logic
 

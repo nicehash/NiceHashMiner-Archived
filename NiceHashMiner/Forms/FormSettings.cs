@@ -118,6 +118,7 @@ namespace NiceHashMiner.Forms {
             benchmarkLimitControlNVIDIA.SetToolTip(ref toolTip1, "NVIDIA GPUs");
             benchmarkLimitControlAMD.SetToolTip(ref toolTip1, "AMD GPUs");
 
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia6X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA6.x"));
             toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia5X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA5.x"));
             toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia3X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA3.x"));
             toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia2X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA2.x"));
@@ -159,6 +160,7 @@ namespace NiceHashMiner.Forms {
             checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
+            checkBox_DisableDetectionNVidia6X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA6.x");
             checkBox_DisableDetectionNVidia5X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA5.x");
             checkBox_DisableDetectionNVidia3X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA3.x");
             checkBox_DisableDetectionNVidia2X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA2.x");
@@ -194,7 +196,7 @@ namespace NiceHashMiner.Forms {
 
             // Benchmark time limits
             // TODO internationalization change
-            groupBoxBenchmarkTimeLimits.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
+            groupBoxBenchmarkTimeLimits.Text = "Benchmark Time Limits:"; //International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
             benchmarkLimitControlCPU.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
             benchmarkLimitControlNVIDIA.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group") + ":";
             benchmarkLimitControlAMD.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Group") + ":";
@@ -215,6 +217,7 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_DisableDetectionNVidia2X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_DisableDetectionNVidia3X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_DisableDetectionNVidia5X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_DisableDetectionNVidia6X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_MinimizeToTray.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_HideMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
@@ -271,6 +274,7 @@ namespace NiceHashMiner.Forms {
                 checkBox_AutoStartMining.Checked = ConfigManager.Instance.GeneralConfig.AutoStartMining;
                 checkBox_HideMiningWindows.Checked = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.Instance.GeneralConfig.MinimizeToTray;
+                checkBox_DisableDetectionNVidia6X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
                 checkBox_DisableDetectionNVidia5X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
                 checkBox_DisableDetectionNVidia3X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X;
                 checkBox_DisableDetectionNVidia2X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X;
@@ -399,6 +403,7 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.AutoStartMining = checkBox_AutoStartMining.Checked;
             ConfigManager.Instance.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             ConfigManager.Instance.GeneralConfig.MinimizeToTray = checkBox_MinimizeToTray.Checked;
+            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X = checkBox_DisableDetectionNVidia6X.Checked;
             ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X = checkBox_DisableDetectionNVidia5X.Checked;
             ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X = checkBox_DisableDetectionNVidia3X.Checked;
             ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X = checkBox_DisableDetectionNVidia2X.Checked;
@@ -517,6 +522,7 @@ namespace NiceHashMiner.Forms {
                                  1000,          //  19 (kH/s) Hodl
                                  1000000,       //  20 (MH/s) Daggerhashimoto
                                  1000000000,    //  21 (GH/s) Decred
+                                 1000,          //  22 (kH/s) CryptoNight
                                  1000000 }; // 999 (MH/s) Ethereum
 
         private void buttonSelectedProfit_Click(object sender, EventArgs e) {
@@ -568,7 +574,7 @@ namespace NiceHashMiner.Forms {
 
         #region Form Buttons
         private void buttonDefaults_Click(object sender, EventArgs e) {
-            // TODO change translation NHM will not restart
+            // TODO change translation NHM will not restart, unless restart changes made
             DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonDefaultsMsg"),
                                                   International.GetText("Form_Settings_buttonDefaultsTitle"),
                                                   MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -582,12 +588,6 @@ namespace NiceHashMiner.Forms {
                 International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
                 InitializeGeneralTabFieldValuesReferences();
                 InitializeGeneralTabTranslations();
-
-                //// old stuff
-                //Config.SetDefaults();
-                //Config.Commit();
-                //ret = 2;
-                //this.Close();
             }
         }
 
@@ -628,9 +628,10 @@ namespace NiceHashMiner.Forms {
                 ConfigManager.Instance.GeneralConfig.Commit();
                 ConfigManager.Instance.CommitBenchmarks();
                 International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
-            } else if (IsChange) {
+            } else /*if (IsChange)*/ {
                 ConfigManager.Instance.GeneralConfig = _generalConfigBackup;
                 ConfigManager.Instance.BenchmarkConfigs = _benchmarkConfigsBackup;
+                ConfigManager.Instance.SetDeviceBenchmarkReferences();
             }
         }
 
@@ -640,12 +641,6 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.DisplayCurrency = Selected;
         }
 
-        #endregion Form Callbacks
-
-        private void buttonSubmitHardware_Click(object sender, EventArgs e) {
-
-        }
-
-        
+        #endregion Form Callbacks        
     }
 }

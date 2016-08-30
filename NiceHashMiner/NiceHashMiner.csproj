@@ -83,7 +83,6 @@
     <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
     <Compile Include="Configs\BaseConfigFile.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
-    <Compile Include="Configs\DebugSettingsConfig.cs" />
     <Compile Include="Configs\DeviceDetectionConfig.cs" />
     <Compile Include="Configs\GeneralConfig.cs" />
     <Compile Include="CurrencyConverter.cs" />
@@ -104,7 +103,6 @@
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerAPIReadStatus.cs" />
-    <Compile Include="Enums\MinerType.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -177,11 +175,11 @@
     <Compile Include="Forms\Components\NvidiaSpecificSettings.Designer.cs">
       <DependentUpon>NvidiaSpecificSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormBenchmark_New.cs">
+    <Compile Include="Forms\FormBenchmark.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormBenchmark_New.Designer.cs">
-      <DependentUpon>FormBenchmark_New.cs</DependentUpon>
+    <Compile Include="Forms\FormBenchmark.Designer.cs">
+      <DependentUpon>FormBenchmark.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormSettings.cs">
       <SubType>Form</SubType>
@@ -298,8 +296,8 @@
     <EmbeddedResource Include="Forms\Components\NvidiaSpecificSettings.resx">
       <DependentUpon>NvidiaSpecificSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormBenchmark_New.resx">
-      <DependentUpon>FormBenchmark_New.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormBenchmark.resx">
+      <DependentUpon>FormBenchmark.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>

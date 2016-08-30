@@ -31,10 +31,6 @@ namespace NiceHashMiner
         protected int APIPort { get; private set; }
         protected List<ComputeDevice> CDevs;
         
-        // this is now related to devices
-        public string ExtraLaunchParameters;
-        public string UsePassword;
-        
         public AlgorithmType CurrentAlgorithmType { get; protected set; }
         private Algorithm _currentMiningAlgorithm;
         protected Algorithm CurrentMiningAlgorithm {
@@ -106,8 +102,6 @@ namespace NiceHashMiner
             CDevs = new List<ComputeDevice>();
 
             WorkingDirectory = "";
-            ExtraLaunchParameters = "";
-            UsePassword = null;
 
             CurrentAlgorithmType = AlgorithmType.NONE;
             CurrentRate = 0;
@@ -116,7 +110,7 @@ namespace NiceHashMiner
 
             InitSupportedMinerAlgorithms();
 
-            APIPort = MinersApiPortsManager.Instance.GetAvaliablePort(GetMinerType());
+            APIPort = MinersApiPortsManager.Instance.GetAvaliablePort();
             // cool down init
             _cooldownCheckTimer = new Timer() {
                 Interval = _MIN_CooldownTimeInMilliseconds
@@ -135,15 +129,27 @@ namespace NiceHashMiner
             }
         }
 
+        // this is now related to devices
+        protected string GetExtraLaunchParameters() {
+            if (CDevs != null && CDevs.Count > 0) {
+                return CDevs[0].DeviceBenchmarkConfig.ExtraLaunchParameters;
+            }
+            return "";
+        }
+        protected string GetUsePassword() {
+            if (CDevs != null && CDevs.Count > 0) {
+                return CDevs[0].DeviceBenchmarkConfig.UsePassword;
+            }
+            return "";
+        }
+
         public bool IsSupportedMinerAlgorithms(AlgorithmType algorithmType) {
             foreach (var supportedType in _supportedMinerAlgorithms) {
                 if (supportedType == algorithmType) return true;
             }
             return false;
         }
-
-        protected abstract MinerType GetMinerType();
-
+        
         protected abstract void InitSupportedMinerAlgorithms();
 
         /// <summary>
@@ -188,7 +194,7 @@ namespace NiceHashMiner
         protected void ChangeToNextAvaliablePort() {
             // change to new port
             var oldApiPort = APIPort;
-            var newApiPort = MinersApiPortsManager.Instance.GetAvaliablePort(0);
+            var newApiPort = MinersApiPortsManager.Instance.GetAvaliablePort();
             // check if update last command port
             if (UpdateBindPortCommand(oldApiPort, newApiPort)) {
                 Helpers.ConsolePrint(MinerDeviceName, String.Format("Changing miner port from {0} to {1}",
@@ -236,12 +242,12 @@ namespace NiceHashMiner
             return timeInSeconds + 120; // wait time plus two minutes
         }
 
-        abstract protected string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time);
+        abstract protected string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time);
 
         // The benchmark config and algorithm must guarantee that they are compatible with miner
         // we guarantee algorithm is supported
         // we will not have empty benchmark configs, all benchmark configs will have device list
-        virtual public void BenchmarkStart(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time, IBenchmarkComunicator benchmarkComunicator) {
+        virtual public void BenchmarkStart(ComputeDevice benchmarkDevice, Algorithm algorithm, int time, IBenchmarkComunicator benchmarkComunicator) {
             
             BenchmarkComunicator = benchmarkComunicator;
             BenchmarkAlgorithm = algorithm;
@@ -252,7 +258,7 @@ namespace NiceHashMiner
             OnBenchmarkCompleteCalled = false;
             BenchmarkTimeOutStopWatch = null;
 
-            string CommandLine = BenchmarkCreateCommandLine(benchmarkConfig, algorithm, time);
+            string CommandLine = BenchmarkCreateCommandLine(benchmarkDevice, algorithm, time);
 
             Thread BenchmarkThread = new Thread(BenchmarkThreadRoutine);
             BenchmarkThread.Start(CommandLine);
@@ -346,6 +352,29 @@ namespace NiceHashMiner
             }
         }
 
+        //protected double BenchmarkParseLine_cpu_ccminer_extra(string outdata) {
+        //    // parse line
+        //    if (outdata.Contains("Benchmark: ") && outdata.Contains("/s")) {
+        //        int i = outdata.IndexOf("Benchmark:");
+        //        int k = outdata.IndexOf("/s");
+        //        string hashspeed = outdata.Substring(i + 11, k - i - 9);
+        //        Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
+
+        //        // save speed
+        //        int b = hashspeed.IndexOf(" ");
+        //        double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
+        //        if (hashspeed.Contains("kH/s"))
+        //            spd *= 1000;
+        //        else if (hashspeed.Contains("MH/s"))
+        //            spd *= 1000000;
+        //        else if (hashspeed.Contains("GH/s"))
+        //            spd *= 1000000000;
+
+        //        return spd;
+        //    }
+        //    return 0.0d;
+        //}
+
         // killing proccesses can take time
         public void EndBenchmarkProcces() {
             if (BenchmarkHandle != null && BenchmarkProcessStatus != BenchmarkProcessStatus.Killing) {
@@ -432,6 +461,8 @@ namespace NiceHashMiner
             if (a.UsePassword != null && a.UsePassword.Length > 0)
                 return a.UsePassword;
 
+            // device password
+            var UsePassword = GetUsePassword();
             if (UsePassword != null && UsePassword.Length > 0)
                 return UsePassword;
 

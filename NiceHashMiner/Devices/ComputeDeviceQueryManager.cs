@@ -12,6 +12,7 @@ using ATI.ADL;
 using System.Runtime.InteropServices;
 using System.Management;
 using System.IO;
+using System.Globalization;
 
 namespace NiceHashMiner.Devices
 {
@@ -24,7 +25,12 @@ namespace NiceHashMiner.Devices
 
         const int AMD_VENDOR_ID = 1002;
         readonly string TAG;
-        // change to protected after .NET upgrade
+
+        const double NVIDIA_RECOMENDED_DRIVER = 372.54;
+        const double NVIDIA_MIN_DETECTION_DRIVER = 362.61;
+        double _currentNvidiaOpenCLDriver = -1;
+        
+            
         protected ComputeDeviceQueryManager() {
             TAG = this.GetType().Name;
         }
@@ -121,6 +127,27 @@ namespace NiceHashMiner.Devices
                     }
                 }
             }
+            // allerts
+            _currentNvidiaOpenCLDriver = GetNvidiaOpenCLDriver();
+            // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
+            if (HasNvidiaVideoController() && CudaDevices.Count == 0) {
+                var minDriver = NVIDIA_MIN_DETECTION_DRIVER.ToString();
+                var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
+                MessageBox.Show(String.Format("We have detected that your system has Nvidia GPUs, but your driver is older then {0}. In order for NiceHash Miner to work correctly you should upgrade your drivers to recomended {1} or newer.",
+                    minDriver, recomendDrvier),
+                                                      "Nvidia Recomended driver",
+                                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            // recomended driver
+            if (HasNvidiaVideoController() && _currentNvidiaOpenCLDriver < NVIDIA_RECOMENDED_DRIVER) {
+                var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
+                var nvdriverString = _currentNvidiaOpenCLDriver > -1 ? String.Format(" (current {0})", _currentNvidiaOpenCLDriver.ToString())
+                : "";
+                MessageBox.Show(String.Format("We have detected that your Nvidia Driver is older then {0}{1}. We recommend you to update to {2} or newer.",
+                    recomendDrvier, nvdriverString, recomendDrvier),
+                                                      "Nvidia Recomended driver",
+                                                      MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
             // #x remove reference
             MessageNotifier = null;
@@ -173,6 +200,13 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        private bool HasNvidiaVideoController() {
+            foreach (var vctrl in AvaliableVideoControllers) {
+                if (vctrl.Name.ToLower().Contains("nvidia")) return true;
+            }
+            return false;
+        }
+
         #endregion // Video controllers, driver versions
 
         private void QueryCPUs() {
@@ -223,6 +257,12 @@ namespace NiceHashMiner.Devices
         private void QueryAMD() {
             //showMessageAndStep(International.GetText("form1_loadtext_AMD"));
             //var dump = new sgminer(true);
+
+            if(ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD) {
+                Helpers.ConsolePrint(TAG, "Skipping AMD device detection, settings set to disabled");
+                showMessageAndStep("Skip check for AMD OpenCL GPUs");
+                return;
+            }
 
             #region AMD driver check, ADL returns 0
             // check the driver version bool EnableOptimizedVersion = true;
@@ -417,6 +457,22 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        private bool IsSMGroupSkip(int sm_major) {
+            if (sm_major == 6) {
+                return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
+            }
+            if (sm_major == 5) {
+                return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
+            }
+            if (sm_major == 3) {
+                return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X;
+            }
+            if (sm_major == 2) {
+                return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X;
+            }
+            return false;
+        }
+
         private void QueryCudaDevices() {
             Process CudaDevicesDetection = new Process();
             CudaDevicesDetection.StartInfo.FileName = "CudaDeviceDetection.exe";
@@ -456,8 +512,10 @@ namespace NiceHashMiner.Devices
                 foreach (var cudaDev in CudaDevices) {
                     // check sm vesrions
                     bool isUnderSM2 = cudaDev.SM_major < 2;
-                    bool isOverSM6 = cudaDev.SM_major > 6;
-                    bool skip = isUnderSM2;
+                    //bool isOverSM6 = cudaDev.SM_major > 6;
+                    // TODO write that disabled group
+                    bool isDisabledGroup = IsSMGroupSkip(cudaDev.SM_major);
+                    bool skip = isUnderSM2 || isDisabledGroup;
                     string skipOrAdd = skip ? "SKIPED" : "ADDED";
                     string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO"; 
                     string logMessage = String.Format("CudaDevicesDetection {0} device: {1}",
@@ -499,6 +557,27 @@ namespace NiceHashMiner.Devices
 
 
         #region OpenCL Query
+
+        private double GetNvidiaOpenCLDriver() {
+            List<OpenCLDevice> nvidiaOCLs = null;
+            foreach (var oclPlatDevs in OpenCLJSONData.OCLPlatformDevices) {
+                if (oclPlatDevs.Key.ToLower().Contains("nvidia")) {
+                    nvidiaOCLs = oclPlatDevs.Value;
+                }
+            }
+
+            if (nvidiaOCLs != null && nvidiaOCLs.Count > 0) {
+                if (Double.TryParse(nvidiaOCLs[0]._CL_DRIVER_VERSION,
+                    NumberStyles.Any,
+                    CultureInfo.InvariantCulture,
+                    out _currentNvidiaOpenCLDriver)) {
+                    return _currentNvidiaOpenCLDriver;
+                }
+            }
+
+            return -1;
+        }
+
         class OpenCLJSON {
             public Dictionary<string, int> OCLPlatforms = new Dictionary<string,int>();
             public Dictionary<string, List<OpenCLDevice>> OCLPlatformDevices = new Dictionary<string,List<OpenCLDevice>>();

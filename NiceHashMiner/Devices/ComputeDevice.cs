@@ -22,7 +22,9 @@ namespace NiceHashMiner.Devices
 
         [JsonIgnore]
         public readonly bool IsEtherumCapale;
-        
+
+        [JsonIgnore]
+        public string DeviceGroupString { get; private set; }
         [JsonIgnore]
         readonly public DeviceGroupType DeviceGroupType;
         // UUID now used for saving
@@ -68,6 +70,7 @@ namespace NiceHashMiner.Devices
             Name = name;
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
+            DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -97,6 +100,7 @@ namespace NiceHashMiner.Devices
             Name = cudaDevice.DeviceName;
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
+            DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
             if (addToGlobalList) {
                 // add to all devices
@@ -125,6 +129,7 @@ namespace NiceHashMiner.Devices
             ID = amdDevice.DeviceID;
             DeviceGroupType = DeviceGroupType.AMD_OpenCL;
             Group = GroupNames.GetName(DeviceGroupType.AMD_OpenCL);
+            DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             Name = amdDevice.DeviceName;
             Enabled = enabled;
             IsEtherumCapale = amdDevice.IsEtherumCapable();
@@ -211,7 +216,6 @@ namespace NiceHashMiner.Devices
                 }
             }
         }
-
 
         // static methods
         public static ComputeDevice GetDeviceWithUUID(string uuid) {

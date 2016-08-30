@@ -14,6 +14,7 @@ namespace NiceHashMiner.Configs
         //public string ID { get; private set; }
         [JsonIgnore]
         public DeviceGroupType DeviceGroupType { get; private set; }
+
         public string DeviceName { get; private set; }
         // TODO handle defaults for this
         public string UsePassword { get; set; }
@@ -41,6 +42,9 @@ namespace NiceHashMiner.Configs
             } else {
                 AlgorithmSettings = GroupAlgorithms.CreateDefaultsForGroup(deviceGroupType);
             }
+
+            UsePassword = "";
+            ExtraLaunchParameters = "";
 
             DeviceUUIDs = new List<string>();
             IsAlgorithmSettingsInit = false;
@@ -76,19 +80,27 @@ namespace NiceHashMiner.Configs
             FilePath = fileName + extension;
             FilePathOld = fileName + "_old" + extension;
         }
+
+        // TODO make generic initializations
         protected override void InitializeObject() {
             // check if data tampered
             bool IsDataTampered = !(
                 /*this.ID == _file.ID
-                &&*/ this.DeviceGroupType == _file.DeviceGroupType
-                && this.DeviceName == _file.DeviceName
+                && this.DeviceGroupType == _file.DeviceGroupType
+                && */this.DeviceName == _file.DeviceName
                 );
 
             // set editable data
             if (_file.ExtraLaunchParameters != null) {
                 this.ExtraLaunchParameters = _file.ExtraLaunchParameters;
             }
+            if (_file.UsePassword != null) {
+                this.UsePassword = _file.UsePassword;
+            }
             this.TimeLimit = _file.TimeLimit;
+            if (_file.DeviceUUIDs != null) {
+                this.DeviceUUIDs = _file.DeviceUUIDs;
+            }
 
             if (_file.AlgorithmSettings != null) {
                 // settings from files are initialized

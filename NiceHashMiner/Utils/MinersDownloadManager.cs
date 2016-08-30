@@ -34,9 +34,13 @@ namespace NiceHashMiner.Utils {
 
         public void Start(IMinerUpdateIndicator minerUpdateIndicator) {
             _minerUpdateIndicator = minerUpdateIndicator;
-            if (File.Exists(BinsZipLocation)) {
-                File.Delete(BinsZipLocation);
-            }
+
+            try {
+                if (File.Exists(BinsZipLocation)) {
+                    File.Delete(BinsZipLocation);
+                }
+            } catch { }
+            
             // #1 check bin folder
             if (!IsMinerBinFolder() && !IsMinerBinZip()) {
                 Helpers.ConsolePrint(TAG, "miner bin folder NOT found");
@@ -47,8 +51,7 @@ namespace NiceHashMiner.Utils {
             }
         }
 
-        // #1 check if miners exits 
-        // TODO
+        // #1 check if miners exits
         bool IsMinerBinFolder() {
             return Directory.Exists("bin");
         }
@@ -70,7 +73,6 @@ namespace NiceHashMiner.Utils {
                 _stopwatch.Start();
                 try {
                     _webClient.DownloadFileAsync(downloadURL, BinsZipLocation);
-                    //_webClient.DownloadFile(downloadURL, BinsZipLocation);
                 } catch (Exception ex) {
                     Helpers.ConsolePrint("MinersDownloadManager", ex.Message);
                 }
@@ -88,9 +90,6 @@ namespace NiceHashMiner.Utils {
             // Calculate download speed and output it to labelSpeed.
             var speedString = string.Format("{0} kb/s", (e.BytesReceived / 1024d / _stopwatch.Elapsed.TotalSeconds).ToString("0.00"));
 
-            // Update the progressbar percentage only when the value is not the same.
-            //progressBar.Value = e.ProgressPercentage;
-
             // Show the percentage on our label.
             var percString = e.ProgressPercentage.ToString() + "%";
 
@@ -102,7 +101,6 @@ namespace NiceHashMiner.Utils {
             _minerUpdateIndicator.SetProgressValueAndMsg(
                 (int)(e.BytesReceived / 1024d),
                 String.Format("{0}   {1}   {2}", speedString, percString,labelDownloaded));
-            //Helpers.ConsolePrint(TAG, speedString + "   " + percString + "   " + labelDownloaded);
 
         }
 

@@ -38,10 +38,6 @@ namespace NiceHashMiner.Miners
             GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
         }
 
-        protected override MinerType GetMinerType() {
-            return MinerType.sgminer;
-        }
-
         protected override void InitSupportedMinerAlgorithms() {
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.AMD_OpenCL);
             allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);
@@ -84,21 +80,13 @@ namespace NiceHashMiner.Miners
                               " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
                               " --api-listen" +
                               " --api-port=" + APIPort.ToString() +
-                              " " + ExtraLaunchParameters +
+                              " " + GetExtraLaunchParameters() +
                               " " + miningAlgorithm.ExtraLaunchParameters +
                               " --device ";
 
-            for (int i = 0; i < CDevs.Count; i++)
-                if (CDevs[i].Enabled)
-                    LastCommandLine += CDevs[i].ID.ToString() + ",";
+            LastCommandLine += GetDevicesCommandString();
 
-            if (LastCommandLine.EndsWith(","))
-                LastCommandLine = LastCommandLine.Remove(LastCommandLine.Length - 1);
-            else {
-                LastCommandLine = "";
-                return; // no GPUs to start mining on
-            }
-
+            // TODO shouldn't this be true?
             if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
                 LastCommandLine += TemperatureParam;
 
@@ -139,7 +127,7 @@ namespace NiceHashMiner.Miners
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
             string CommandLine;
             Path = "cmd";
             string MinerPath = GetOptimizedMinerPath(algorithm.NiceHashID, CommonGpuCodenameSetting, EnableOptimizedVersion);
@@ -161,7 +149,7 @@ namespace NiceHashMiner.Miners
                           " --userpass=" + username + ":" + GetPassword(algorithm) +
                           " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
                           " -T --log 10 --log-file dump.txt" +
-                          " " + ExtraLaunchParameters +
+                          " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters +
                           " " + algorithm.ExtraLaunchParameters +
                           " --device ";
 

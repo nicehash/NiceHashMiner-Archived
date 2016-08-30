@@ -16,9 +16,13 @@ namespace NiceHashMiner.Forms.Components {
             amdSpecificSettings1.Visible = false;
             cpuSpecificSettings1.Visible = false;
             nvidiaSpecificSettings1.Visible = false;
+            // set callbacks
+            fieldUsePassword.SetOnTextChanged(textChangedPassword);
+            richTextBoxExtraLaunchParameters.TextChanged += textChangedExtraLaunchParameters;
         }
 
         ComputeDevice _selectedComputeDevice;
+        bool _selected = false;
         public ComputeDevice SelectedComputeDevice {
             get { return _selectedComputeDevice; }
             set {
@@ -41,12 +45,8 @@ namespace NiceHashMiner.Forms.Components {
             labelSelectedDeviceName.Text = "Name: " + _selectedComputeDevice.Name;
             labelSelectedDeviceGroup.Text = "Group: " +  _selectedComputeDevice.Group;
 
-            if (_selectedComputeDevice == null || _selectedComputeDevice.DeviceBenchmarkConfig == null) return;
-
-
-            fieldUsePassword.EntryText = _selectedComputeDevice.DeviceBenchmarkConfig.UsePassword;
-            richTextBoxExtraLaunchParameters.Text = _selectedComputeDevice.DeviceBenchmarkConfig.ExtraLaunchParameters;
-            
+            _selected = false;
+            if (_selectedComputeDevice == null || _selectedComputeDevice.DeviceBenchmarkConfig == null) return;            
             
             // enable group specific settings
             cpuSpecificSettings1.Visible = _selectedComputeDevice.DeviceGroupType == DeviceGroupType.CPU;
@@ -57,6 +57,31 @@ namespace NiceHashMiner.Forms.Components {
                 || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_3_x
                 || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_5_x
                 || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_6_x;
+
+            fieldUsePassword.EntryText = ParseStringDefault(_selectedComputeDevice.DeviceBenchmarkConfig.UsePassword);
+            richTextBoxExtraLaunchParameters.Text = ParseStringDefault(_selectedComputeDevice.DeviceBenchmarkConfig.ExtraLaunchParameters);
+
+            _selected = true;
         }
+
+        // TODO duplicate code
+        private string ParseStringDefault(string value) {
+            return value == null ? "" : value;
+        }
+
+        private bool CanEdit() {
+            return _selectedComputeDevice != null && _selected && _selectedComputeDevice.DeviceBenchmarkConfig != null;
+        }
+
+        #region Callbacks Events
+        private void textChangedPassword(object sender, EventArgs e) {
+            if (!CanEdit()) return;
+            _selectedComputeDevice.DeviceBenchmarkConfig.UsePassword = fieldUsePassword.EntryText.Trim();
+        }
+        private void textChangedExtraLaunchParameters(object sender, EventArgs e) {
+            if (!CanEdit()) return;
+            _selectedComputeDevice.DeviceBenchmarkConfig.ExtraLaunchParameters = richTextBoxExtraLaunchParameters.Text;
+        }
+        #endregion
     }
 }

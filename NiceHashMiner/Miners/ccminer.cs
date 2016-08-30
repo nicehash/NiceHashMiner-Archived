@@ -39,7 +39,7 @@ namespace NiceHashMiner.Miners
                                   " --url=" + url +
                                   " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
                                   apiBind +
-                                  " " + ExtraLaunchParameters +
+                                  " " + GetExtraLaunchParameters() +
                                   " " + miningAlgorithm.ExtraLaunchParameters +
                                   " --devices ";
 
@@ -61,12 +61,12 @@ namespace NiceHashMiner.Miners
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
             string timeLimit = algorithm.NiceHashID == AlgorithmType.CryptoNight ? "" : " --time-limit " + time.ToString();
             string CommandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
                               timeLimit +
-                              " " + ExtraLaunchParameters +
+                              " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters +
                               " " + algorithm.ExtraLaunchParameters +
                               " --devices ";
 
@@ -91,6 +91,19 @@ namespace NiceHashMiner.Miners
                     string parse = outdata.Substring(st, len).Trim();
                     double tmp;
                     Double.TryParse(parse, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp);
+
+                    // save speed
+                    int i = outdata.IndexOf("Benchmark:");
+                    int k = outdata.IndexOf("/s");
+                    string hashspeed = outdata.Substring(i + 11, k - i - 9);
+                    int b = hashspeed.IndexOf(" ");
+                    if (hashspeed.Contains("kH/s"))
+                        tmp *= 1000;
+                    else if (hashspeed.Contains("MH/s"))
+                        tmp *= 1000000;
+                    else if (hashspeed.Contains("GH/s"))
+                        tmp *= 1000000000;
+
                     _cryptonightTotal += tmp;
                     _cryptonightTotalCount--;
                 }

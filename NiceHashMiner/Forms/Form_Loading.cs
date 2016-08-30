@@ -69,6 +69,12 @@ namespace NiceHashMiner
             }
         }
 
+        public void FinishLoad() {
+            while (LoadCounter < TotalLoadSteps) {
+                IncreaseLoadCounter();
+            }
+        }
+
         public void SetValueAndMsg(int setValue, string infoMsg) {
             SetInfoMsg(infoMsg);
             progressBar1.Value = setValue;

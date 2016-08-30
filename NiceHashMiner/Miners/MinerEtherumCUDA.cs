@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,9 @@ namespace NiceHashMiner.Miners {
             MinerDeviceName = this.GetType().Name;
         }
 
-        protected override MinerType GetMinerType() {
-            return MinerType.MinerEtherumCUDA;
-        }
-
-
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {
             return " --cuda"
-                + " " + ExtraLaunchParameters
+                + " " + GetExtraLaunchParameters()
                 + " " + miningAlgorithm.ExtraLaunchParameters
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":" + GetPassword(miningAlgorithm)
@@ -30,9 +26,9 @@ namespace NiceHashMiner.Miners {
                 + " --cuda-devices ";
         }
 
-        protected override string GetBenchmarkCommandStringPart(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm) {
+        protected override string GetBenchmarkCommandStringPart(ComputeDevice benchmarkDevice, Algorithm algorithm) {
             return " --benchmark-warmup 40 --benchmark-trial 20"
-                + " " + benchmarkConfig.ExtraLaunchParameters
+                + " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters
                 + " " + algorithm.ExtraLaunchParameters
                 + " --cuda --cuda-devices ";
         }

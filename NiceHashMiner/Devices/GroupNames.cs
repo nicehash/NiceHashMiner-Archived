@@ -15,7 +15,19 @@ namespace NiceHashMiner.Devices
                                         "NVIDIA5.x",
                                         "NVIDIA6.x",
                                                   };
+
+        private static readonly string[] _namesGeneral = {
+                                        "CPU", // TODO we can have more then one CPU
+                                        "AMD",
+                                        "NVIDIA",
+                                        "NVIDIA",
+                                        "NVIDIA",
+                                        "NVIDIA",
+                                                  };
+
         public static string GetName(DeviceGroupType type) { return _names[(int)type]; }
+
+        public static string GetNameGeneral(DeviceGroupType type) { return _names[(int)type]; }
 
         public static DeviceGroupType GetType(string name) {
             int i = 0;

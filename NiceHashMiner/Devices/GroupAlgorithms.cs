@@ -18,8 +18,8 @@ namespace NiceHashMiner.Devices {
                 { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
                 { AlgorithmType.Axiom, new Algorithm(AlgorithmType.Axiom, "axiom") },
                 { AlgorithmType.ScryptJaneNf16, new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjane:16") },
-                { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") /*{ ExtraLaunchParameters = "--extranonce-subscribe"}*/ },
-                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") }
+                { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") },
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") { ExtraLaunchParameters = "--no-extranonce"} }
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
@@ -87,6 +87,7 @@ namespace NiceHashMiner.Devices {
                     // TODO check if remove needed
                     ret.Remove(AlgorithmType.Lyra2RE);
                     ret.Remove(AlgorithmType.Lyra2REv2);
+                    ret.Remove(AlgorithmType.CryptoNight);
                 }
                 if (DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     // minerName change => "whirlpoolx" => "whirlpool"
@@ -95,6 +96,7 @@ namespace NiceHashMiner.Devices {
                     ret.Remove(AlgorithmType.NeoScrypt);
                     ret.Remove(AlgorithmType.Lyra2RE);
                     ret.Remove(AlgorithmType.Lyra2REv2);
+                    ret.Remove(AlgorithmType.CryptoNight);
                 }
                 return ret;
             }
@@ -102,7 +104,7 @@ namespace NiceHashMiner.Devices {
             return null;
         }
 
-        // TODO redo this make lazy loadig 
+
         public static List<AlgorithmType> GetAlgorithmKeysForGroup(DeviceGroupType deviceGroupType) {
             var ret = CreateDefaultsForGroup(deviceGroupType);
             if (ret != null) {

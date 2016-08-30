@@ -42,10 +42,6 @@ namespace NiceHashMiner.Miners {
             }
         }
 
-        protected override MinerType GetMinerType() {
-            return MinerType.cpuminer;
-        }
-
         protected override void InitSupportedMinerAlgorithms() {
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.CPU);
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
@@ -123,7 +119,7 @@ namespace NiceHashMiner.Miners {
                               " --url=" + url +
                               " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
                               " --threads=" + Threads.ToString() +
-                              " " + ExtraLaunchParameters +
+                              " " + GetExtraLaunchParameters() +
                               " " + miningAlgorithm.ExtraLaunchParameters +
                               " --api-bind=" + APIPort.ToString();
 
@@ -154,13 +150,13 @@ namespace NiceHashMiner.Miners {
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
             Path = GetOptimizedMinerPath(algorithm.NiceHashID);
 
             return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
                          " --threads=" + Threads.ToString() +
-                         " " + benchmarkConfig.ExtraLaunchParameters +
+                         " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters +
                          " " + algorithm.ExtraLaunchParameters +
                          " --time-limit " + time.ToString();
         }

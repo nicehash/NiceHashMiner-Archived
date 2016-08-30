@@ -22,15 +22,11 @@ namespace NiceHashMiner.Miners {
             GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
         }
 
-        protected override MinerType GetMinerType() {
-            return MinerType.MinerEtherumOCL;
-        }
-
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {
             // set directory
             WorkingDirectory = "";
             return " --opencl --opencl-platform " + GPUPlatformNumber
-                + " " + ExtraLaunchParameters
+                + " " + GetExtraLaunchParameters()
                 + " " + miningAlgorithm.ExtraLaunchParameters
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":" + GetPassword(miningAlgorithm)
@@ -38,9 +34,9 @@ namespace NiceHashMiner.Miners {
                 + " --opencl-devices ";
         }
 
-        protected override string GetBenchmarkCommandStringPart(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm) {
+        protected override string GetBenchmarkCommandStringPart(ComputeDevice benchmarkDevice, Algorithm algorithm) {
             return " --opencl --opencl-platform " + GPUPlatformNumber
-                + " " + ExtraLaunchParameters
+                + " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters
                 + " " + algorithm.ExtraLaunchParameters
                 + " --benchmark-warmup 40 --benchmark-trial 20"
                 + " --opencl-devices ";

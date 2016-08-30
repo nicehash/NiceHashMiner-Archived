@@ -82,17 +82,13 @@
             this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
             this.displayCurrencyLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.groupBoxBenchmarkTimeLimits = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.tabPageDevices = new System.Windows.Forms.TabPage();
-            this.buttonSaveClose = new System.Windows.Forms.Button();
-            this.buttonDefaults = new System.Windows.Forms.Button();
-            this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.tabPageDevices = new System.Windows.Forms.TabPage();
             this.splitContainerDevicesSettings = new System.Windows.Forms.SplitContainer();
             this.buttonAllProfit = new System.Windows.Forms.Button();
             this.buttonSelectedProfit = new System.Windows.Forms.Button();
@@ -101,6 +97,11 @@
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.buttonSaveClose = new System.Windows.Forms.Button();
+            this.buttonDefaults = new System.Windows.Forms.Button();
+            this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkBox_DisableDetectionNVidia6X = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTabControlButtons)).BeginInit();
             this.splitContainerTabControlButtons.Panel1.SuspendLayout();
             this.splitContainerTabControlButtons.Panel2.SuspendLayout();
@@ -179,6 +180,7 @@
             this.groupBox6.Controls.Add(this.checkBox_AutoStartMining);
             this.groupBox6.Controls.Add(this.checkBox_HideMiningWindows);
             this.groupBox6.Controls.Add(this.checkBox_MinimizeToTray);
+            this.groupBox6.Controls.Add(this.checkBox_DisableDetectionNVidia6X);
             this.groupBox6.Controls.Add(this.checkBox_DisableDetectionNVidia5X);
             this.groupBox6.Controls.Add(this.checkBox_DisableDetectionNVidia3X);
             this.groupBox6.Controls.Add(this.checkBox_DisableDetectionNVidia2X);
@@ -228,7 +230,7 @@
             // checkBox_DisableDetectionNVidia5X
             // 
             this.checkBox_DisableDetectionNVidia5X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia5X.Location = new System.Drawing.Point(6, 85);
+            this.checkBox_DisableDetectionNVidia5X.Location = new System.Drawing.Point(6, 108);
             this.checkBox_DisableDetectionNVidia5X.Name = "checkBox_DisableDetectionNVidia5X";
             this.checkBox_DisableDetectionNVidia5X.Size = new System.Drawing.Size(151, 17);
             this.checkBox_DisableDetectionNVidia5X.TabIndex = 317;
@@ -238,7 +240,7 @@
             // checkBox_DisableDetectionNVidia3X
             // 
             this.checkBox_DisableDetectionNVidia3X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia3X.Location = new System.Drawing.Point(6, 107);
+            this.checkBox_DisableDetectionNVidia3X.Location = new System.Drawing.Point(6, 130);
             this.checkBox_DisableDetectionNVidia3X.Name = "checkBox_DisableDetectionNVidia3X";
             this.checkBox_DisableDetectionNVidia3X.Size = new System.Drawing.Size(151, 17);
             this.checkBox_DisableDetectionNVidia3X.TabIndex = 318;
@@ -248,7 +250,7 @@
             // checkBox_DisableDetectionNVidia2X
             // 
             this.checkBox_DisableDetectionNVidia2X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia2X.Location = new System.Drawing.Point(6, 129);
+            this.checkBox_DisableDetectionNVidia2X.Location = new System.Drawing.Point(6, 152);
             this.checkBox_DisableDetectionNVidia2X.Name = "checkBox_DisableDetectionNVidia2X";
             this.checkBox_DisableDetectionNVidia2X.Size = new System.Drawing.Size(151, 17);
             this.checkBox_DisableDetectionNVidia2X.TabIndex = 319;
@@ -258,7 +260,7 @@
             // checkBox_DisableDetectionAMD
             // 
             this.checkBox_DisableDetectionAMD.AutoSize = true;
-            this.checkBox_DisableDetectionAMD.Location = new System.Drawing.Point(6, 151);
+            this.checkBox_DisableDetectionAMD.Location = new System.Drawing.Point(6, 174);
             this.checkBox_DisableDetectionAMD.Name = "checkBox_DisableDetectionAMD";
             this.checkBox_DisableDetectionAMD.Size = new System.Drawing.Size(131, 17);
             this.checkBox_DisableDetectionAMD.TabIndex = 320;
@@ -268,7 +270,7 @@
             // checkBox_NVIDIAP0State
             // 
             this.checkBox_NVIDIAP0State.AutoSize = true;
-            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(5, 261);
+            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 284);
             this.checkBox_NVIDIAP0State.Name = "checkBox_NVIDIAP0State";
             this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(100, 17);
             this.checkBox_NVIDIAP0State.TabIndex = 326;
@@ -278,7 +280,7 @@
             // checkBox_AutoScaleBTCValues
             // 
             this.checkBox_AutoScaleBTCValues.AutoSize = true;
-            this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(6, 173);
+            this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(6, 196);
             this.checkBox_AutoScaleBTCValues.Name = "checkBox_AutoScaleBTCValues";
             this.checkBox_AutoScaleBTCValues.Size = new System.Drawing.Size(128, 17);
             this.checkBox_AutoScaleBTCValues.TabIndex = 321;
@@ -288,7 +290,7 @@
             // checkBox_DisableWindowsErrorReporting
             // 
             this.checkBox_DisableWindowsErrorReporting.AutoSize = true;
-            this.checkBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(5, 239);
+            this.checkBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(6, 262);
             this.checkBox_DisableWindowsErrorReporting.Name = "checkBox_DisableWindowsErrorReporting";
             this.checkBox_DisableWindowsErrorReporting.Size = new System.Drawing.Size(173, 17);
             this.checkBox_DisableWindowsErrorReporting.TabIndex = 324;
@@ -298,7 +300,7 @@
             // checkBox_StartMiningWhenIdle
             // 
             this.checkBox_StartMiningWhenIdle.AutoSize = true;
-            this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 195);
+            this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 218);
             this.checkBox_StartMiningWhenIdle.Name = "checkBox_StartMiningWhenIdle";
             this.checkBox_StartMiningWhenIdle.Size = new System.Drawing.Size(125, 17);
             this.checkBox_StartMiningWhenIdle.TabIndex = 322;
@@ -308,7 +310,7 @@
             // checkBox_ShowDriverVersionWarning
             // 
             this.checkBox_ShowDriverVersionWarning.AutoSize = true;
-            this.checkBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(5, 217);
+            this.checkBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(6, 240);
             this.checkBox_ShowDriverVersionWarning.Name = "checkBox_ShowDriverVersionWarning";
             this.checkBox_ShowDriverVersionWarning.Size = new System.Drawing.Size(156, 17);
             this.checkBox_ShowDriverVersionWarning.TabIndex = 323;
@@ -735,6 +737,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "All Avaliable devices:";
             // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.AutoSaveChange = true;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 19);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.SetAllEnabled = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(481, 181);
+            this.devicesListViewEnableControl1.TabIndex = 0;
+            // 
             // groupBoxBenchmarkTimeLimits
             // 
             this.groupBoxBenchmarkTimeLimits.Controls.Add(this.flowLayoutPanel1);
@@ -755,66 +768,6 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(217, 363);
             this.flowLayoutPanel1.TabIndex = 0;
-            // 
-            // tabPageDevices
-            // 
-            this.tabPageDevices.Controls.Add(this.splitContainerDevicesSettings);
-            this.tabPageDevices.Location = new System.Drawing.Point(4, 22);
-            this.tabPageDevices.Name = "tabPageDevices";
-            this.tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDevices.Size = new System.Drawing.Size(864, 608);
-            this.tabPageDevices.TabIndex = 1;
-            this.tabPageDevices.Text = "Devices";
-            this.tabPageDevices.UseVisualStyleBackColor = true;
-            // 
-            // buttonSaveClose
-            // 
-            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(584, 10);
-            this.buttonSaveClose.Name = "buttonSaveClose";
-            this.buttonSaveClose.Size = new System.Drawing.Size(110, 23);
-            this.buttonSaveClose.TabIndex = 44;
-            this.buttonSaveClose.Text = "&Save and Close";
-            this.buttonSaveClose.UseVisualStyleBackColor = true;
-            this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
-            // 
-            // buttonDefaults
-            // 
-            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(503, 10);
-            this.buttonDefaults.Name = "buttonDefaults";
-            this.buttonDefaults.Size = new System.Drawing.Size(75, 23);
-            this.buttonDefaults.TabIndex = 43;
-            this.buttonDefaults.Text = "&Defaults";
-            this.buttonDefaults.UseVisualStyleBackColor = true;
-            this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
-            // 
-            // buttonCloseNoSave
-            // 
-            this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(700, 10);
-            this.buttonCloseNoSave.Name = "buttonCloseNoSave";
-            this.buttonCloseNoSave.Size = new System.Drawing.Size(135, 23);
-            this.buttonCloseNoSave.TabIndex = 45;
-            this.buttonCloseNoSave.Text = "&Close without Saving";
-            this.buttonCloseNoSave.UseVisualStyleBackColor = true;
-            this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
-            // 
-            // toolTip1
-            // 
-            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
-            // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.AutoSaveChange = true;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 19);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.SetAllEnabled = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(481, 181);
-            this.devicesListViewEnableControl1.TabIndex = 0;
             // 
             // benchmarkLimitControlNVIDIA
             // 
@@ -845,6 +798,17 @@
             this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(213, 121);
             this.benchmarkLimitControlAMD.TabIndex = 2;
             this.benchmarkLimitControlAMD.TimeLimits = null;
+            // 
+            // tabPageDevices
+            // 
+            this.tabPageDevices.Controls.Add(this.splitContainerDevicesSettings);
+            this.tabPageDevices.Location = new System.Drawing.Point(4, 22);
+            this.tabPageDevices.Name = "tabPageDevices";
+            this.tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageDevices.Size = new System.Drawing.Size(864, 608);
+            this.tabPageDevices.TabIndex = 1;
+            this.tabPageDevices.Text = "Devices";
+            this.tabPageDevices.UseVisualStyleBackColor = true;
             // 
             // splitContainerDevicesSettings
             // 
@@ -930,6 +894,54 @@
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
             this.algorithmSettingsControl1.Size = new System.Drawing.Size(410, 245);
             this.algorithmSettingsControl1.TabIndex = 1;
+            // 
+            // buttonSaveClose
+            // 
+            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSaveClose.Location = new System.Drawing.Point(584, 10);
+            this.buttonSaveClose.Name = "buttonSaveClose";
+            this.buttonSaveClose.Size = new System.Drawing.Size(110, 23);
+            this.buttonSaveClose.TabIndex = 44;
+            this.buttonSaveClose.Text = "&Save and Close";
+            this.buttonSaveClose.UseVisualStyleBackColor = true;
+            this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
+            // 
+            // buttonDefaults
+            // 
+            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDefaults.Location = new System.Drawing.Point(503, 10);
+            this.buttonDefaults.Name = "buttonDefaults";
+            this.buttonDefaults.Size = new System.Drawing.Size(75, 23);
+            this.buttonDefaults.TabIndex = 43;
+            this.buttonDefaults.Text = "&Defaults";
+            this.buttonDefaults.UseVisualStyleBackColor = true;
+            this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
+            // 
+            // buttonCloseNoSave
+            // 
+            this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(700, 10);
+            this.buttonCloseNoSave.Name = "buttonCloseNoSave";
+            this.buttonCloseNoSave.Size = new System.Drawing.Size(135, 23);
+            this.buttonCloseNoSave.TabIndex = 45;
+            this.buttonCloseNoSave.Text = "&Close without Saving";
+            this.buttonCloseNoSave.UseVisualStyleBackColor = true;
+            this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
+            // 
+            // checkBox_DisableDetectionNVidia6X
+            // 
+            this.checkBox_DisableDetectionNVidia6X.AutoSize = true;
+            this.checkBox_DisableDetectionNVidia6X.Location = new System.Drawing.Point(6, 86);
+            this.checkBox_DisableDetectionNVidia6X.Name = "checkBox_DisableDetectionNVidia6X";
+            this.checkBox_DisableDetectionNVidia6X.Size = new System.Drawing.Size(151, 17);
+            this.checkBox_DisableDetectionNVidia6X.TabIndex = 317;
+            this.checkBox_DisableDetectionNVidia6X.Text = "DisableDetectionNVidia6X";
+            this.checkBox_DisableDetectionNVidia6X.UseVisualStyleBackColor = true;
             // 
             // FormSettings
             // 
@@ -1051,6 +1063,7 @@
         private System.Windows.Forms.TextBox textBox_MinProfit;
         private System.Windows.Forms.Label label_MinProfit;
         private System.Windows.Forms.GroupBox groupBoxAlgorithmSettings;
+        private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia6X;
 
     }
 }

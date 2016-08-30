@@ -102,7 +102,7 @@ namespace NiceHashMiner.Forms.Components {
         private void buttonBenchmark_Click(object sender, EventArgs e) {
             var device = new List<ComputeDevice>();
             device.Add(_computeDevice);
-            var BenchmarkForm = new FormBenchmark_New(
+            var BenchmarkForm = new FormBenchmark(
                         BenchmarkPerformanceType.Standard,
                         false, device, _currentlySelectedAlgorithm.NiceHashID);
             BenchmarkForm.ShowDialog();

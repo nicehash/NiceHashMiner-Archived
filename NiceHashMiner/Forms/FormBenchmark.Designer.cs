@@ -1,5 +1,5 @@
 ﻿namespace NiceHashMiner.Forms {
-    partial class FormBenchmark_New {
+    partial class FormBenchmark {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBenchmark));
             this.label1 = new System.Windows.Forms.Label();
             this.StartStopBtn = new System.Windows.Forms.Button();
             this.CloseBtn = new System.Windows.Forms.Button();
@@ -264,6 +265,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormBenchmark_New";

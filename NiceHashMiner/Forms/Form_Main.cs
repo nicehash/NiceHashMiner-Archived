@@ -270,7 +270,7 @@ namespace NiceHashMiner
                 }
             }
 
-            LoadingScreen.IncreaseLoadCounter();
+            LoadingScreen.FinishLoad();
 
             // check if download needed
             if (!MinersDownloadManager.Instance.IsMinersBinsInit()) {
@@ -589,7 +589,7 @@ namespace NiceHashMiner
             }
 
             SMACheck.Stop();
-            BenchmarkForm = new FormBenchmark_New();
+            BenchmarkForm = new FormBenchmark();
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
             SMACheck.Start();
@@ -676,7 +676,7 @@ namespace NiceHashMiner
                             enabledDevices.Add(cdev);
                         }
                     }
-                    BenchmarkForm = new FormBenchmark_New(
+                    BenchmarkForm = new FormBenchmark(
                         BenchmarkPerformanceType.Standard,
                         true,
                         enabledDevices);

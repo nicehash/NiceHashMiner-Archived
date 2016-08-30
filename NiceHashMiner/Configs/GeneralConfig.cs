@@ -188,10 +188,6 @@ namespace NiceHashMiner.Configs {
             FilePathOld = "General_old.json";
         }
         protected override void InitializeObject() {
-
-            // TODO config migration logic
-            // TODO IMPORTANT
-
             // init fields
             Language = _file.Language;
             DisplayCurrency = _file.DisplayCurrency;

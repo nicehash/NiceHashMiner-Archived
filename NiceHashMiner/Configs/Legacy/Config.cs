@@ -104,7 +104,7 @@ namespace NiceHashMiner.Configs
                     try {
                         if (File.Exists("config_old.json"))
                             File.Delete("config_old.json");
-                        File.Move("config.json", "config_old.json");
+                        //File.Move("config.json", "config_old.json");
                     } catch { }
 
                     SetDefaults();
@@ -177,20 +177,26 @@ namespace NiceHashMiner.Configs
 
             }
 
-            public static void Commit() {
-                try { File.WriteAllText("config.json", JsonConvert.SerializeObject(ConfigData, Formatting.Indented)); } catch { }
+            //public static void Commit() {
+            //    try { File.WriteAllText("config.json", JsonConvert.SerializeObject(ConfigData, Formatting.Indented)); } catch { }
+            //}
 
-            }
-
-            public static void RebuildGroups() {
-                Config.Commit();
-            }
+            //public static void RebuildGroups() {
+            //    Config.Commit();
+            //}
 
             public static bool ConfigFileExist() {
                 if (File.Exists("config.json"))
                     return true;
 
                 return false;
+            }
+
+            public static void DeleteLegacy() {
+                try {
+                    if (File.Exists("config.json"))
+                        File.Delete("config.json");
+                } catch { }
             }
         }
     }

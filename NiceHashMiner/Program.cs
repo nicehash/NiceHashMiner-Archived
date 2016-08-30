@@ -21,8 +21,8 @@ namespace NiceHashMiner
 
             // #1 first initialize config
             ConfigManager.Instance.GeneralConfig.InitializeConfig();
-            //bool ConfigExist = Config.ConfigFileExist();
-            //Config.InitializeConfig();
+            ConfigManager.Instance.LegacyConfigMigration();
+
             if (ConfigManager.Instance.GeneralConfig.LogToFile) {
                 Logger.ConfigureWithFile();
             }
@@ -52,7 +52,6 @@ namespace NiceHashMiner
             }
             
             Application.Run(new Form_Main());
-            //Application.Run(new FormSettings_New());
         }
 
     }

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
+    // TODO probably remove
     public partial class MinerFileNotFoundDialog : Form
     {
         public bool DisableDetection;

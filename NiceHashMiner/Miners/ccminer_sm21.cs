@@ -15,10 +15,6 @@ namespace NiceHashMiner.Miners
             Path = MinerPaths.ccminer_tpruvot;
         }
 
-        protected override MinerType GetMinerType() {
-            return MinerType.ccminer_sm21;
-        }
-
         protected override void InitSupportedMinerAlgorithms() {
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.NVIDIA_2_1);
             allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);

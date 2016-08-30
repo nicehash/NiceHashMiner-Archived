@@ -18,7 +18,6 @@ namespace NiceHashMiner.Miners {
         
         //ComputeDevice
         protected ComputeDevice DaggerHashimotoGenerateDevice;
-        private bool _isCurentlyMining = false;
 
         readonly protected string CurrentBlockString;
         readonly private DagGenerationType DagGenerationType;
@@ -36,7 +35,7 @@ namespace NiceHashMiner.Miners {
         }
 
         protected abstract string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username);
-        protected abstract string GetBenchmarkCommandStringPart(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm);
+        protected abstract string GetBenchmarkCommandStringPart(ComputeDevice benchmarkDevice, Algorithm algorithm);
 
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " ";
@@ -86,8 +85,8 @@ namespace NiceHashMiner.Miners {
             }
         }
 
-        protected override string BenchmarkCreateCommandLine(DeviceBenchmarkConfig benchmarkConfig, Algorithm algorithm, int time) {
-            string CommandLine = GetBenchmarkCommandStringPart(benchmarkConfig, algorithm) + GetDevicesCommandString();
+        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
+            string CommandLine = GetBenchmarkCommandStringPart(benchmarkDevice, algorithm) + GetDevicesCommandString();
             Ethereum.GetCurrentBlock(CurrentBlockString);
             CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
 
@@ -124,9 +123,9 @@ namespace NiceHashMiner.Miners {
                 return ad;
             }
             // else if (GetSpeedStatus.EXCEPTION == getSpeedStatus) {
-            Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
+            // we don't restart unles not responding for long time check cooldown logic in Miner
+            //Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
             IsRunning = false;
-            _isCurentlyMining = false;
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             return null;
         }
@@ -211,7 +210,6 @@ namespace NiceHashMiner.Miners {
         private void StartMining() {
             SendUDP(2);
             IsRunning = true;
-            _isCurentlyMining = true;
         }
 
         /// <summary>
@@ -220,7 +218,6 @@ namespace NiceHashMiner.Miners {
         private void StopMining() {
             SendUDP(1);
             IsRunning = false;
-            _isCurentlyMining = false;
         }
 
         /// <summary>

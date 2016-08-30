@@ -17,8 +17,5 @@ namespace NiceHashMiner.Miners {
             Path = MinerPaths.ccminer_nanashi;
         }
 
-        protected override MinerType GetMinerType() {
-            return MinerType.ccminer_sm6x;
-        }
     }
 }

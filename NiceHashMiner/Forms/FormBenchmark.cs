@@ -12,7 +12,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms {
-    public partial class FormBenchmark_New : Form, IListItemCheckColorSetter, IBenchmarkComunicator {
+    public partial class FormBenchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator {
 
         private bool _inBenchmark = false;
         private int _bechmarkCurrentIndex = 0;
@@ -79,7 +79,7 @@ namespace NiceHashMiner.Forms {
             }
         }
 
-        public FormBenchmark_New(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+        public FormBenchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false,
             List<ComputeDevice> enabledDevices = null,
             AlgorithmType singleBenchmarkType = AlgorithmType.NONE) {
@@ -317,7 +317,7 @@ namespace NiceHashMiner.Forms {
                 progressBarAlgorithmTime.Value = 0;
                 _algorithmProgressTimer.Start();
 
-                _currentMiner.BenchmarkStart(currentConfig, _currentAlgorithm, time, this);
+                _currentMiner.BenchmarkStart(_currentDevice, _currentAlgorithm, time, this);
             } else {
                 NextBenchmark();
             }
