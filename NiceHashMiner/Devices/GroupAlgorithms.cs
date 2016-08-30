@@ -87,7 +87,7 @@ namespace NiceHashMiner.Devices {
                     // TODO check if remove needed
                     ret.Remove(AlgorithmType.Lyra2RE);
                     ret.Remove(AlgorithmType.Lyra2REv2);
-                    ret.Remove(AlgorithmType.CryptoNight);
+                    //ret.Remove(AlgorithmType.CryptoNight);
                 }
                 if (DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     // minerName change => "whirlpoolx" => "whirlpool"
@@ -96,7 +96,7 @@ namespace NiceHashMiner.Devices {
                     ret.Remove(AlgorithmType.NeoScrypt);
                     ret.Remove(AlgorithmType.Lyra2RE);
                     ret.Remove(AlgorithmType.Lyra2REv2);
-                    ret.Remove(AlgorithmType.CryptoNight);
+                    //ret.Remove(AlgorithmType.CryptoNight);
                 }
                 return ret;
             }

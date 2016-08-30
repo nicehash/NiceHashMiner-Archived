@@ -97,18 +97,18 @@ namespace NiceHashMiner.Configs
                     }
                 } catch { }
 
-                if (ConfigData.ConfigFileVersion == null ||
-                    ConfigData.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0) {
-                    Helpers.ConsolePrint("CONFIG", "Config file is from an older version of NiceHashMiner..");
-                    Helpers.ConsolePrint("CONFIG", "Backing up config.json to config_old.json..");
-                    try {
-                        if (File.Exists("config_old.json"))
-                            File.Delete("config_old.json");
-                        //File.Move("config.json", "config_old.json");
-                    } catch { }
+                //if (ConfigData.ConfigFileVersion == null ||
+                //    ConfigData.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0) {
+                //    Helpers.ConsolePrint("CONFIG", "Config file is from an older version of NiceHashMiner..");
+                //    Helpers.ConsolePrint("CONFIG", "Backing up config.json to config_old.json..");
+                //    try {
+                //        if (File.Exists("config_old.json"))
+                //            File.Delete("config_old.json");
+                //        //File.Move("config.json", "config_old.json");
+                //    } catch { }
 
-                    SetDefaults();
-                }
+                //    SetDefaults();
+                //}
 
                 if (ConfigData.SwitchMinSecondsFixed <= 0)
                     ConfigData.SwitchMinSecondsFixed = 90;

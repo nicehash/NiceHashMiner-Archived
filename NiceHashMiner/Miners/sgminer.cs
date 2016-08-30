@@ -38,6 +38,10 @@ namespace NiceHashMiner.Miners
             GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
         }
 
+        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+            return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
+        }
+
         protected override void InitSupportedMinerAlgorithms() {
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.AMD_OpenCL);
             allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);

@@ -42,6 +42,10 @@ namespace NiceHashMiner.Miners {
             }
         }
 
+        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+            return 60 * 1000; // 1 minute max, whole waiting time 75seconds
+        }
+
         protected override void InitSupportedMinerAlgorithms() {
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.CPU);
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();

@@ -22,7 +22,6 @@ namespace NiceHashMiner.Configs
         public int TimeLimit { get; set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
 
-        // TODO add cdev UUIDs???
         public List<string> DeviceUUIDs;
 
         [field: NonSerialized]

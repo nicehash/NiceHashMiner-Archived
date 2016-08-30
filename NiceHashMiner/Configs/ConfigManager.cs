@@ -85,8 +85,26 @@ namespace NiceHashMiner.Configs {
         public void AfterDeviceQueryInitialization() {
             GeneralConfig.AfterDeviceQueryInitialization();
             LoadBenchmarks();            
-            
+
             SetDeviceBenchmarkReferences();
+
+            // check ethminers and remove from settings if no device supports it in config
+            foreach (var config in BenchmarkConfigs) {
+                bool removeDagger = true;
+                foreach (var devUUID in config.Value.DeviceUUIDs) {
+                    var cDev = ComputeDevice.GetDeviceWithUUID(devUUID);
+                    if (cDev != null) {
+                        // if only one dev ing roup supports terminate
+                        if (cDev.IsEtherumCapale) {
+                            removeDagger = false;
+                            break;
+                        }
+                    }
+                }
+                if (removeDagger) {
+                    config.Value.AlgorithmSettings.Remove(AlgorithmType.DaggerHashimoto);
+                }
+            }
             
             CommitBenchmarks();
         }

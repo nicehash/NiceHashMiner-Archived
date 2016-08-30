@@ -90,7 +90,9 @@ namespace NiceHashMiner
         //private const int _MIN_CooldownTimeInMilliseconds = 1000; // TESTING
 
         // TODO maybe less time
-        private const int _MAX_CooldownTimeInMilliseconds = 60 * 1000; // 1 minute max, whole waiting time 75seconds
+        //private const int _MAX_CooldownTimeInMilliseconds = 60 * 1000; // 1 minute max, whole waiting time 75seconds
+        private readonly int _MAX_CooldownTimeInMilliseconds; // = GET_MAX_CooldownTimeInMilliseconds();
+        protected abstract int GET_MAX_CooldownTimeInMilliseconds();
         private Timer _cooldownCheckTimer;
         protected MinerAPIReadStatus _currentMinerReadStatus { get; set; }
         private int _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
@@ -111,6 +113,7 @@ namespace NiceHashMiner
             InitSupportedMinerAlgorithms();
 
             APIPort = MinersApiPortsManager.Instance.GetAvaliablePort();
+            _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
             // cool down init
             _cooldownCheckTimer = new Timer() {
                 Interval = _MIN_CooldownTimeInMilliseconds

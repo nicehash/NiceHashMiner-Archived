@@ -30,6 +30,10 @@ namespace NiceHashMiner.Miners {
             DagGenerationType = dagGenerationType;
         }
 
+        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+            return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
+        }
+
         protected override void InitSupportedMinerAlgorithms() {
             _supportedMinerAlgorithms = new AlgorithmType[] { AlgorithmType.DaggerHashimoto };
         }

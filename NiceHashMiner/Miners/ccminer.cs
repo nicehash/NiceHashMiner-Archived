@@ -21,6 +21,10 @@ namespace NiceHashMiner.Miners
         int _cryptonightTotalCount = 0;
         double _cryptonightTotal = 0;
 
+        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+            return 60 * 1000; // 1 minute max, whole waiting time 75seconds
+        }
+
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
             //if (ProcessHandle != null) return; // ignore, already running 

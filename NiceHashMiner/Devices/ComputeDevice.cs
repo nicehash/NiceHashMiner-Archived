@@ -188,28 +188,13 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + _amdDevice.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
                     }
                 }
+                // CUDA extra initializations
                 if (_cudaDevice != null) {
                     if (DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(AlgorithmType.CryptoNight)) {
                         var CryptoNightAlgo = DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.CryptoNight];
-                        if (CryptoNightAlgo.ExtraLaunchParameters == "") {
-                            // comon popular cards settings
-                            if (Name.Contains("GTX 980")) {
-                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x16";
-                            //} else if (Name.Contains("GTX 970")) {
-                            //    CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x13";
-                            //} else if (Name.Contains("GTX 960")) {
-                            //    CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x8";
-                            //} else if (Name.Contains("GTX 950")) {
-                            //    CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x6";
-                            } else if (_cudaDevice.SM_major >= 5) {
+                        if (CryptoNightAlgo.ExtraLaunchParameters == "") { 
+                            if (_cudaDevice.SM_major >= 5) {
                                 CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x" + _cudaDevice.SMX.ToString();
-                            } else if (_cudaDevice.SM_major == 3) {
-                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=16x" + _cudaDevice.SMX.ToString();
-                            } else if (_cudaDevice.SM_major == 2) {
-                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=8x" + _cudaDevice.SMX.ToString();
-                            } else {
-                                // TODO 
-                                //CryptoNightAlgo.ExtraLaunchParameters = "";
                             }
                         }
                     }
