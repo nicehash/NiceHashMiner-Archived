@@ -278,6 +278,12 @@ namespace NiceHashMiner
                 _downloadUnzipForm.Location = new Point(this.Location.X + (this.Width - _downloadUnzipForm.Width) / 2, this.Location.Y + (this.Height - _downloadUnzipForm.Height) / 2);
                 _downloadUnzipForm.ShowDialog();
             }
+            // TODO no bots please
+            if (ConfigManager.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager.Instance.GeneralConfig.hwidOK) {
+                MessageBox.Show("IF YOU DID NOT INSTALL NICEHASH MINER ON THIS PC, YOUR PC MAY BE COMPROMISED!",
+                                                            "Warning!",
+                                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
@@ -378,10 +384,10 @@ namespace NiceHashMiner
         }
 
         public void ShowNotProfitable() {
-            label_MiningProfitabilityStatus.Text = "MININGRPOTIFABILITY STATUS: MINING NOT PROFITABLE";
+            label_MiningProfitabilityStatus.Text = "MINING PROTIFABILITY STATUS: MINING NOT PROFITABLE";
         }
         public void HideNotProfitable() {
-            label_MiningProfitabilityStatus.Text = "MININGRPOTIFABILITY STATUS: PROFITABLE";
+            label_MiningProfitabilityStatus.Text = "MINING PROTIFABILITY STATUS: PROFITABLE";
         }
 
         private void UpdateGlobalRate()

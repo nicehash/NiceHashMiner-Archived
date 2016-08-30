@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using NiceHashMiner.Configs;
 using System.Globalization;
 using NiceHashMiner.PInvoke;
+using System.Management;
 
 namespace NiceHashMiner
 {
@@ -136,6 +137,29 @@ namespace NiceHashMiner
                 ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + " GH/s ";
 
             return ret;
+        }
+
+        public static string GetMotherboardID() {
+            ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard");
+            ManagementObjectCollection moc = mos.Get();
+            string serial = "";
+            foreach (ManagementObject mo in moc) {
+                serial = (string)mo["SerialNumber"];
+            }
+
+            return serial;
+        }
+
+        // TODO could have multiple cpus
+        public static string GetCpuID() {
+            ManagementObjectCollection mbsList = null;
+            ManagementObjectSearcher mbs = new ManagementObjectSearcher("Select * From Win32_processor");
+            mbsList = mbs.Get();
+            string id = "";
+            foreach (ManagementObject mo in mbsList) {
+                id = mo["ProcessorID"].ToString();
+            }
+            return id;
         }
     }
 }

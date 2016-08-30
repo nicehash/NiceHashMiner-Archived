@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using Newtonsoft.Json;
 
 namespace NiceHashMiner.Configs {
     [Serializable]
@@ -117,7 +118,13 @@ namespace NiceHashMiner.Configs {
             }
         }
         public double MinimumProfit { get; set; }
+        public string hwid { get; set; }
 
+
+        [JsonIgnore]
+        public bool hwidOK { get; private set; }
+        [JsonIgnore]
+        public bool hwidLoadFromFile { get; private set; }
 
         // After Device initialization
 
@@ -177,9 +184,13 @@ namespace NiceHashMiner.Configs {
             BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             DeviceDetection = new DeviceDetectionConfig();
 
+            hwidOK = false;
+            hwidLoadFromFile = false;
+
             // only init defaults for created config not read
             if (initDefaults) {
                 SetDefaults();
+                hwid = Helpers.GetCpuID();
             }
         }
 
@@ -227,6 +238,9 @@ namespace NiceHashMiner.Configs {
             EthminerDagGenerationTypeAMD = _file.EthminerDagGenerationTypeAMD;
             ApiBindPortPoolStart = _file.ApiBindPortPoolStart;
             MinimumProfit = _file.MinimumProfit;
+
+            hwidLoadFromFile = true;
+            hwidOK = this.hwid == _file.hwid;
         }
 
         public void AfterDeviceQueryInitialization() {
