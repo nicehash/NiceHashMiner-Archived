@@ -86,7 +86,7 @@ namespace NiceHashMiner.Devices
                 }
             }
             // #7 init ethminer ID mappings offset
-            {
+            if (OpenCLJSONData != null) {
                 // helper vars
                 Dictionary<ComputePlatformType, int> openCLGpuCount = new Dictionary<ComputePlatformType,int>();
                 Dictionary<ComputePlatformType, int> openCLPlatformIds = new Dictionary<ComputePlatformType,int>();
@@ -560,19 +560,21 @@ namespace NiceHashMiner.Devices
         #region OpenCL Query
 
         private double GetNvidiaOpenCLDriver() {
-            List<OpenCLDevice> nvidiaOCLs = null;
-            foreach (var oclPlatDevs in OpenCLJSONData.OCLPlatformDevices) {
-                if (oclPlatDevs.Key.ToLower().Contains("nvidia")) {
-                    nvidiaOCLs = oclPlatDevs.Value;
+            if (OpenCLJSONData != null) {
+                List<OpenCLDevice> nvidiaOCLs = null;
+                foreach (var oclPlatDevs in OpenCLJSONData.OCLPlatformDevices) {
+                    if (oclPlatDevs.Key.ToLower().Contains("nvidia")) {
+                        nvidiaOCLs = oclPlatDevs.Value;
+                    }
                 }
-            }
 
-            if (nvidiaOCLs != null && nvidiaOCLs.Count > 0) {
-                if (Double.TryParse(nvidiaOCLs[0]._CL_DRIVER_VERSION,
-                    NumberStyles.Any,
-                    CultureInfo.InvariantCulture,
-                    out _currentNvidiaOpenCLDriver)) {
-                    return _currentNvidiaOpenCLDriver;
+                if (nvidiaOCLs != null && nvidiaOCLs.Count > 0) {
+                    if (Double.TryParse(nvidiaOCLs[0]._CL_DRIVER_VERSION,
+                        NumberStyles.Any,
+                        CultureInfo.InvariantCulture,
+                        out _currentNvidiaOpenCLDriver)) {
+                        return _currentNvidiaOpenCLDriver;
+                    }
                 }
             }
 
@@ -618,7 +620,6 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection threw Exception: " + ex.Message);
             } finally {
                 if (QueryOpenCLDevicesString != "") {
-                    OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString, _jsonSettings);
                     try {
                         OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString, _jsonSettings);
                     } catch { }
