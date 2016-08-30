@@ -18,7 +18,6 @@ private static string[] ALL_FILES_BINS = {
 @"\cudart32_80.dll",
 @"\cudart64_80.dll",
 @"\ethminer.exe",
-@"\ethminer_old.exe",
 @"\libcrypto-1.0.0.dll",
 @"\libcurl-4.dll",
 @"\libcurl.dll",
