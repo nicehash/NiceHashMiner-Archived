@@ -7,6 +7,7 @@ using log4net.Core;
 using log4net.Appender;
 using log4net.Layout;
 using NiceHashMiner.Configs;
+using System.IO;
 
 namespace NiceHashMiner
 {
@@ -14,8 +15,16 @@ namespace NiceHashMiner
     {
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
+        const string _logPath = @"logs\";
+
         public static void ConfigureWithFile()
         {
+            try {
+                if (!Directory.Exists("logs")) {
+                    Directory.CreateDirectory("logs");
+                }
+            } catch { }
+
             Hierarchy h = (Hierarchy)LogManager.GetRepository();
 
             if (ConfigManager.Instance.GeneralConfig.LogToFile)
@@ -33,7 +42,7 @@ namespace NiceHashMiner
         {
             RollingFileAppender appender = new RollingFileAppender();
             appender.Name = "RollingFileAppender";
-            appender.File = "log.txt";
+            appender.File = _logPath + "log.txt";
             appender.AppendToFile = true;
             appender.RollingStyle = RollingFileAppender.RollingMode.Size;
             appender.MaxSizeRollBackups = 1;

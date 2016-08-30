@@ -57,11 +57,6 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        // TODO this is not used anymore replaced with cooldown logic remove?
-        protected override int CalculateNumRetries() {
-            return (ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds + ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD) / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
-        }
-
         protected override void _Stop(bool willswitch) {
             Stop_cpu_ccminer_sgminer(willswitch);
         }
@@ -142,6 +137,9 @@ namespace NiceHashMiner.Miners
                          nhAlgorithmData.port;
 
             string username = ConfigManager.Instance.GeneralConfig.BitcoinAddress.Trim();
+            if (String.IsNullOrEmpty(username) || String.IsNullOrWhiteSpace(username)) {
+                username = Globals.DemoUser;
+            } 
             if (ConfigManager.Instance.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.Instance.GeneralConfig.WorkerName.Trim();
 

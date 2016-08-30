@@ -28,6 +28,9 @@ namespace NiceHashMiner.Miners {
         PerDeviceSpeedDictionary _perDeviceSpeedDictionary;
         string _miningLocation;
         string _worker;
+        string _btcAdress;
+
+        string _workerBtcStringWorker;
 
         readonly DeviceGroupType[] _nvidiaTypes = new DeviceGroupType[] {
             DeviceGroupType.NVIDIA_2_1,
@@ -166,10 +169,16 @@ namespace NiceHashMiner.Miners {
         }
 
         public bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
-            string miningLocation, string worker) {
+            string miningLocation, string worker, string btcAdress) {
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
             _worker = worker;
+            _btcAdress = btcAdress;
+
+            if (_worker.Length > 0)
+                _workerBtcStringWorker = _btcAdress + "." + _worker;
+            else
+                _workerBtcStringWorker = _btcAdress;
 
             _perDeviceSpeedDictionary = GetEnabledDeviceTypeSpeeds();
             //_groupedDevicesMiners = new Dictionary<GroupedDevices, GroupMiners>();
@@ -369,7 +378,7 @@ namespace NiceHashMiner.Miners {
         /// NVIDIA SMx.x should be paired separately except for daggerhashimoto.
         /// </summary>
         /// <param name="NiceHashData"></param>
-        public void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData, string Worker) {
+        public void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
             var devProfits = GetEnabledDeviceProifitDictionary(_perDeviceSpeedDictionary, NiceHashData);
 
 #if (SWITCH_TESTING)
@@ -489,7 +498,7 @@ namespace NiceHashMiner.Miners {
                     currentGroupMiners = new GroupMiners(group);
                     _groupedDevicesMiners.Add(groupStringKey, currentGroupMiners);
                 }
-                currentGroupMiners.StartAlgorihtm(algorithm, _miningLocation, Worker);
+                currentGroupMiners.StartAlgorihtm(algorithm, _miningLocation, _workerBtcStringWorker);
             }
 
             // stats quick fix code

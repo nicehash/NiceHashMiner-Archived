@@ -129,11 +129,6 @@ namespace NiceHashMiner
 
             this.Enabled = true;
 
-            if (ConfigManager.Instance.GeneralConfig.AutoStartMining)
-            {
-                buttonStartMining_Click(null, null);
-            }
-
             IdleCheck = new Timer();
             IdleCheck.Tick += IdleCheck_Tick;
             IdleCheck.Interval = 500;
@@ -314,14 +309,7 @@ namespace NiceHashMiner
 #if (SWITCH_TESTING)
             SMAMinerCheck.Interval = MinersManager.SMAMinerCheckInterval;
 #endif
-
-            string Worker = textBoxWorkerName.Text.Trim();
-            if (Worker.Length > 0)
-                Worker = textBoxBTCAddress.Text.Trim() + "." + Worker;
-            else
-                Worker = textBoxBTCAddress.Text.Trim();
-
-            MinersManager.Instance.SwichMostProfitableGroupUpMethod(Globals.NiceHashData, Worker);
+            MinersManager.Instance.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
         }
 
 
@@ -583,29 +571,13 @@ namespace NiceHashMiner
 
         private void buttonBenchmark_Click(object sender, EventArgs e)
         {
-            bool NoBTCAddress = false;
-
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-
-            if (textBoxBTCAddress.Text == "")
-            {
-                NoBTCAddress = true;
-                textBoxBTCAddress.Text = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
-                ConfigManager.Instance.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text;
-            }
 
             SMACheck.Stop();
             BenchmarkForm = new FormBenchmark();
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
             SMACheck.Start();
-
-            if (NoBTCAddress)
-            {
-                NoBTCAddress = false;
-                textBoxBTCAddress.Text = "";
-                ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
-            }
         }
 
 
@@ -615,6 +587,9 @@ namespace NiceHashMiner
             Settings.ShowDialog();
 
             if (Settings.IsChange && Settings.IsChangeSaved && Settings.IsRestartNeeded) {
+                MessageBox.Show("Settings change requires NiceHash Miner to restart.",
+                            "Info",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Process PHandle = new Process();
                 PHandle.StartInfo.FileName = Application.ExecutablePath;
                 PHandle.Start();
@@ -640,7 +615,7 @@ namespace NiceHashMiner
                     labelDemoMode.Visible = true;
                     labelDemoMode.Text = International.GetText("form1_DemoModeLabel");
 
-                    textBoxBTCAddress.Text = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
+                    //textBoxBTCAddress.Text = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
                 }
                 else
                     return;
@@ -707,7 +682,8 @@ namespace NiceHashMiner
             ConfigManager.Instance.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
-            var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim());
+            var btcAdress = DemoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
+            var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim(), btcAdress);
             InitFlowPanelStart();
 
             if (!DemoMode) ConfigManager.Instance.GeneralConfig.Commit();
@@ -740,8 +716,8 @@ namespace NiceHashMiner
                 DemoMode = false;
                 labelDemoMode.Visible = false;
 
-                textBoxBTCAddress.Text = "";
-                ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
+                //textBoxBTCAddress.Text = "";
+                //ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
             }
 
             UpdateGlobalRate();

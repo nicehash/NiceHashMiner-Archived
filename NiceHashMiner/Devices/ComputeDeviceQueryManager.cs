@@ -216,7 +216,7 @@ namespace NiceHashMiner.Devices
             // get all cores (including virtual - HT can benefit mining)
             int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / CPUs;
 
-            if (!Helpers.InternalCheckIsWow64() && !ConfigManager.Instance.GeneralConfig.AutoStartMining)
+            if (!Helpers.InternalCheckIsWow64())
             {
                 MessageBox.Show(International.GetText("form1_msgbox_CPUMining64bitMsg"),
                                 International.GetText("Warning_with_Exclamation"),

@@ -29,9 +29,9 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.checkBox_HideMiningWindows = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeToTray = new System.Windows.Forms.CheckBox();
+            this.checkBox_DisableDetectionNVidia6X = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDetectionNVidia5X = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDetectionNVidia3X = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDetectionNVidia2X = new System.Windows.Forms.CheckBox();
@@ -52,18 +52,14 @@
             this.label_SwitchMinSecondsDynamic = new System.Windows.Forms.Label();
             this.label_MinerAPIQueryInterval = new System.Windows.Forms.Label();
             this.label_MinerRestartDelayMS = new System.Windows.Forms.Label();
-            this.textBox_MinerAPIGraceSecondsAMD = new System.Windows.Forms.TextBox();
-            this.label_MinerAPIGraceSeconds = new System.Windows.Forms.Label();
             this.textBox_SwitchMinSecondsAMD = new System.Windows.Forms.TextBox();
             this.label_APIBindPortStart = new System.Windows.Forms.Label();
             this.textBox_ethminerDefaultBlockHeight = new System.Windows.Forms.TextBox();
             this.label_ethminerDefaultBlockHeight = new System.Windows.Forms.Label();
             this.textBox_APIBindPortStart = new System.Windows.Forms.TextBox();
             this.label_SwitchMinSecondsAMD = new System.Windows.Forms.Label();
-            this.label_MinerAPIGraceSecondsAMD = new System.Windows.Forms.Label();
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.textBox_SwitchMinSecondsFixed = new System.Windows.Forms.TextBox();
-            this.textBox_MinerAPIGraceSeconds = new System.Windows.Forms.TextBox();
             this.textBox_SwitchMinSecondsDynamic = new System.Windows.Forms.TextBox();
             this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.textBox_MinerAPIQueryInterval = new System.Windows.Forms.TextBox();
@@ -101,7 +97,6 @@
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBox_DisableDetectionNVidia6X = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTabControlButtons)).BeginInit();
             this.splitContainerTabControlButtons.Panel1.SuspendLayout();
             this.splitContainerTabControlButtons.Panel2.SuspendLayout();
@@ -177,7 +172,6 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.checkBox_AutoStartMining);
             this.groupBox6.Controls.Add(this.checkBox_HideMiningWindows);
             this.groupBox6.Controls.Add(this.checkBox_MinimizeToTray);
             this.groupBox6.Controls.Add(this.checkBox_DisableDetectionNVidia6X);
@@ -197,20 +191,10 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Misc:";
             // 
-            // checkBox_AutoStartMining
-            // 
-            this.checkBox_AutoStartMining.AutoSize = true;
-            this.checkBox_AutoStartMining.Location = new System.Drawing.Point(6, 19);
-            this.checkBox_AutoStartMining.Name = "checkBox_AutoStartMining";
-            this.checkBox_AutoStartMining.Size = new System.Drawing.Size(101, 17);
-            this.checkBox_AutoStartMining.TabIndex = 314;
-            this.checkBox_AutoStartMining.Text = "AutoStartMining";
-            this.checkBox_AutoStartMining.UseVisualStyleBackColor = true;
-            // 
             // checkBox_HideMiningWindows
             // 
             this.checkBox_HideMiningWindows.AutoSize = true;
-            this.checkBox_HideMiningWindows.Location = new System.Drawing.Point(6, 41);
+            this.checkBox_HideMiningWindows.Location = new System.Drawing.Point(6, 19);
             this.checkBox_HideMiningWindows.Name = "checkBox_HideMiningWindows";
             this.checkBox_HideMiningWindows.Size = new System.Drawing.Size(123, 17);
             this.checkBox_HideMiningWindows.TabIndex = 315;
@@ -220,17 +204,27 @@
             // checkBox_MinimizeToTray
             // 
             this.checkBox_MinimizeToTray.AutoSize = true;
-            this.checkBox_MinimizeToTray.Location = new System.Drawing.Point(6, 63);
+            this.checkBox_MinimizeToTray.Location = new System.Drawing.Point(6, 41);
             this.checkBox_MinimizeToTray.Name = "checkBox_MinimizeToTray";
             this.checkBox_MinimizeToTray.Size = new System.Drawing.Size(100, 17);
             this.checkBox_MinimizeToTray.TabIndex = 316;
             this.checkBox_MinimizeToTray.Text = "MinimizeToTray";
             this.checkBox_MinimizeToTray.UseVisualStyleBackColor = true;
             // 
+            // checkBox_DisableDetectionNVidia6X
+            // 
+            this.checkBox_DisableDetectionNVidia6X.AutoSize = true;
+            this.checkBox_DisableDetectionNVidia6X.Location = new System.Drawing.Point(6, 64);
+            this.checkBox_DisableDetectionNVidia6X.Name = "checkBox_DisableDetectionNVidia6X";
+            this.checkBox_DisableDetectionNVidia6X.Size = new System.Drawing.Size(151, 17);
+            this.checkBox_DisableDetectionNVidia6X.TabIndex = 317;
+            this.checkBox_DisableDetectionNVidia6X.Text = "DisableDetectionNVidia6X";
+            this.checkBox_DisableDetectionNVidia6X.UseVisualStyleBackColor = true;
+            // 
             // checkBox_DisableDetectionNVidia5X
             // 
             this.checkBox_DisableDetectionNVidia5X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia5X.Location = new System.Drawing.Point(6, 108);
+            this.checkBox_DisableDetectionNVidia5X.Location = new System.Drawing.Point(6, 86);
             this.checkBox_DisableDetectionNVidia5X.Name = "checkBox_DisableDetectionNVidia5X";
             this.checkBox_DisableDetectionNVidia5X.Size = new System.Drawing.Size(151, 17);
             this.checkBox_DisableDetectionNVidia5X.TabIndex = 317;
@@ -240,7 +234,7 @@
             // checkBox_DisableDetectionNVidia3X
             // 
             this.checkBox_DisableDetectionNVidia3X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia3X.Location = new System.Drawing.Point(6, 130);
+            this.checkBox_DisableDetectionNVidia3X.Location = new System.Drawing.Point(6, 108);
             this.checkBox_DisableDetectionNVidia3X.Name = "checkBox_DisableDetectionNVidia3X";
             this.checkBox_DisableDetectionNVidia3X.Size = new System.Drawing.Size(151, 17);
             this.checkBox_DisableDetectionNVidia3X.TabIndex = 318;
@@ -250,7 +244,7 @@
             // checkBox_DisableDetectionNVidia2X
             // 
             this.checkBox_DisableDetectionNVidia2X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia2X.Location = new System.Drawing.Point(6, 152);
+            this.checkBox_DisableDetectionNVidia2X.Location = new System.Drawing.Point(6, 130);
             this.checkBox_DisableDetectionNVidia2X.Name = "checkBox_DisableDetectionNVidia2X";
             this.checkBox_DisableDetectionNVidia2X.Size = new System.Drawing.Size(151, 17);
             this.checkBox_DisableDetectionNVidia2X.TabIndex = 319;
@@ -260,7 +254,7 @@
             // checkBox_DisableDetectionAMD
             // 
             this.checkBox_DisableDetectionAMD.AutoSize = true;
-            this.checkBox_DisableDetectionAMD.Location = new System.Drawing.Point(6, 174);
+            this.checkBox_DisableDetectionAMD.Location = new System.Drawing.Point(6, 152);
             this.checkBox_DisableDetectionAMD.Name = "checkBox_DisableDetectionAMD";
             this.checkBox_DisableDetectionAMD.Size = new System.Drawing.Size(131, 17);
             this.checkBox_DisableDetectionAMD.TabIndex = 320;
@@ -270,7 +264,7 @@
             // checkBox_NVIDIAP0State
             // 
             this.checkBox_NVIDIAP0State.AutoSize = true;
-            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 284);
+            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 262);
             this.checkBox_NVIDIAP0State.Name = "checkBox_NVIDIAP0State";
             this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(100, 17);
             this.checkBox_NVIDIAP0State.TabIndex = 326;
@@ -280,7 +274,7 @@
             // checkBox_AutoScaleBTCValues
             // 
             this.checkBox_AutoScaleBTCValues.AutoSize = true;
-            this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(6, 196);
+            this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(6, 174);
             this.checkBox_AutoScaleBTCValues.Name = "checkBox_AutoScaleBTCValues";
             this.checkBox_AutoScaleBTCValues.Size = new System.Drawing.Size(128, 17);
             this.checkBox_AutoScaleBTCValues.TabIndex = 321;
@@ -290,7 +284,7 @@
             // checkBox_DisableWindowsErrorReporting
             // 
             this.checkBox_DisableWindowsErrorReporting.AutoSize = true;
-            this.checkBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(6, 262);
+            this.checkBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(6, 240);
             this.checkBox_DisableWindowsErrorReporting.Name = "checkBox_DisableWindowsErrorReporting";
             this.checkBox_DisableWindowsErrorReporting.Size = new System.Drawing.Size(173, 17);
             this.checkBox_DisableWindowsErrorReporting.TabIndex = 324;
@@ -300,7 +294,7 @@
             // checkBox_StartMiningWhenIdle
             // 
             this.checkBox_StartMiningWhenIdle.AutoSize = true;
-            this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 218);
+            this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 196);
             this.checkBox_StartMiningWhenIdle.Name = "checkBox_StartMiningWhenIdle";
             this.checkBox_StartMiningWhenIdle.Size = new System.Drawing.Size(125, 17);
             this.checkBox_StartMiningWhenIdle.TabIndex = 322;
@@ -310,7 +304,7 @@
             // checkBox_ShowDriverVersionWarning
             // 
             this.checkBox_ShowDriverVersionWarning.AutoSize = true;
-            this.checkBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(6, 240);
+            this.checkBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(6, 218);
             this.checkBox_ShowDriverVersionWarning.Name = "checkBox_ShowDriverVersionWarning";
             this.checkBox_ShowDriverVersionWarning.Size = new System.Drawing.Size(156, 17);
             this.checkBox_ShowDriverVersionWarning.TabIndex = 323;
@@ -323,7 +317,7 @@
             this.groupBox5.Controls.Add(this.textBox_LogMaxFileSize);
             this.groupBox5.Controls.Add(this.checkBox_LogToFile);
             this.groupBox5.Controls.Add(this.checkBox_DebugConsole);
-            this.groupBox5.Location = new System.Drawing.Point(7, 491);
+            this.groupBox5.Location = new System.Drawing.Point(6, 452);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(345, 70);
             this.groupBox5.TabIndex = 388;
@@ -373,24 +367,20 @@
             this.groupBox4.Controls.Add(this.label_SwitchMinSecondsDynamic);
             this.groupBox4.Controls.Add(this.label_MinerAPIQueryInterval);
             this.groupBox4.Controls.Add(this.label_MinerRestartDelayMS);
-            this.groupBox4.Controls.Add(this.textBox_MinerAPIGraceSecondsAMD);
-            this.groupBox4.Controls.Add(this.label_MinerAPIGraceSeconds);
             this.groupBox4.Controls.Add(this.textBox_SwitchMinSecondsAMD);
             this.groupBox4.Controls.Add(this.label_APIBindPortStart);
             this.groupBox4.Controls.Add(this.textBox_ethminerDefaultBlockHeight);
             this.groupBox4.Controls.Add(this.label_ethminerDefaultBlockHeight);
             this.groupBox4.Controls.Add(this.textBox_APIBindPortStart);
             this.groupBox4.Controls.Add(this.label_SwitchMinSecondsAMD);
-            this.groupBox4.Controls.Add(this.label_MinerAPIGraceSecondsAMD);
             this.groupBox4.Controls.Add(this.textBox_MinIdleSeconds);
             this.groupBox4.Controls.Add(this.textBox_SwitchMinSecondsFixed);
-            this.groupBox4.Controls.Add(this.textBox_MinerAPIGraceSeconds);
             this.groupBox4.Controls.Add(this.textBox_SwitchMinSecondsDynamic);
             this.groupBox4.Controls.Add(this.textBox_MinerRestartDelayMS);
             this.groupBox4.Controls.Add(this.textBox_MinerAPIQueryInterval);
             this.groupBox4.Location = new System.Drawing.Point(7, 240);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(345, 247);
+            this.groupBox4.Size = new System.Drawing.Size(345, 207);
             this.groupBox4.TabIndex = 387;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Miners:";
@@ -407,7 +397,7 @@
             // label_SwitchMinSecondsFixed
             // 
             this.label_SwitchMinSecondsFixed.AutoSize = true;
-            this.label_SwitchMinSecondsFixed.Location = new System.Drawing.Point(6, 151);
+            this.label_SwitchMinSecondsFixed.Location = new System.Drawing.Point(6, 106);
             this.label_SwitchMinSecondsFixed.Name = "label_SwitchMinSecondsFixed";
             this.label_SwitchMinSecondsFixed.Size = new System.Drawing.Size(126, 13);
             this.label_SwitchMinSecondsFixed.TabIndex = 366;
@@ -416,7 +406,7 @@
             // label_SwitchMinSecondsDynamic
             // 
             this.label_SwitchMinSecondsDynamic.AutoSize = true;
-            this.label_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(185, 106);
+            this.label_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(185, 61);
             this.label_SwitchMinSecondsDynamic.Name = "label_SwitchMinSecondsDynamic";
             this.label_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(142, 13);
             this.label_SwitchMinSecondsDynamic.TabIndex = 378;
@@ -425,7 +415,7 @@
             // label_MinerAPIQueryInterval
             // 
             this.label_MinerAPIQueryInterval.AutoSize = true;
-            this.label_MinerAPIQueryInterval.Location = new System.Drawing.Point(185, 151);
+            this.label_MinerAPIQueryInterval.Location = new System.Drawing.Point(185, 106);
             this.label_MinerAPIQueryInterval.Name = "label_MinerAPIQueryInterval";
             this.label_MinerAPIQueryInterval.Size = new System.Drawing.Size(116, 13);
             this.label_MinerAPIQueryInterval.TabIndex = 376;
@@ -440,25 +430,9 @@
             this.label_MinerRestartDelayMS.TabIndex = 375;
             this.label_MinerRestartDelayMS.Text = "MinerRestartDelayMS:";
             // 
-            // textBox_MinerAPIGraceSecondsAMD
-            // 
-            this.textBox_MinerAPIGraceSecondsAMD.Location = new System.Drawing.Point(185, 80);
-            this.textBox_MinerAPIGraceSecondsAMD.Name = "textBox_MinerAPIGraceSecondsAMD";
-            this.textBox_MinerAPIGraceSecondsAMD.Size = new System.Drawing.Size(148, 20);
-            this.textBox_MinerAPIGraceSecondsAMD.TabIndex = 336;
-            // 
-            // label_MinerAPIGraceSeconds
-            // 
-            this.label_MinerAPIGraceSeconds.AutoSize = true;
-            this.label_MinerAPIGraceSeconds.Location = new System.Drawing.Point(6, 61);
-            this.label_MinerAPIGraceSeconds.Name = "label_MinerAPIGraceSeconds";
-            this.label_MinerAPIGraceSeconds.Size = new System.Drawing.Size(124, 13);
-            this.label_MinerAPIGraceSeconds.TabIndex = 379;
-            this.label_MinerAPIGraceSeconds.Text = "MinerAPIGraceSeconds:";
-            // 
             // textBox_SwitchMinSecondsAMD
             // 
-            this.textBox_SwitchMinSecondsAMD.Location = new System.Drawing.Point(6, 125);
+            this.textBox_SwitchMinSecondsAMD.Location = new System.Drawing.Point(6, 80);
             this.textBox_SwitchMinSecondsAMD.Name = "textBox_SwitchMinSecondsAMD";
             this.textBox_SwitchMinSecondsAMD.Size = new System.Drawing.Size(143, 20);
             this.textBox_SwitchMinSecondsAMD.TabIndex = 342;
@@ -466,7 +440,7 @@
             // label_APIBindPortStart
             // 
             this.label_APIBindPortStart.AutoSize = true;
-            this.label_APIBindPortStart.Location = new System.Drawing.Point(185, 196);
+            this.label_APIBindPortStart.Location = new System.Drawing.Point(185, 151);
             this.label_APIBindPortStart.Name = "label_APIBindPortStart";
             this.label_APIBindPortStart.Size = new System.Drawing.Size(118, 13);
             this.label_APIBindPortStart.TabIndex = 357;
@@ -474,7 +448,7 @@
             // 
             // textBox_ethminerDefaultBlockHeight
             // 
-            this.textBox_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(6, 215);
+            this.textBox_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(6, 170);
             this.textBox_ethminerDefaultBlockHeight.Name = "textBox_ethminerDefaultBlockHeight";
             this.textBox_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(143, 20);
             this.textBox_ethminerDefaultBlockHeight.TabIndex = 333;
@@ -482,7 +456,7 @@
             // label_ethminerDefaultBlockHeight
             // 
             this.label_ethminerDefaultBlockHeight.AutoSize = true;
-            this.label_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(6, 196);
+            this.label_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(6, 151);
             this.label_ethminerDefaultBlockHeight.Name = "label_ethminerDefaultBlockHeight";
             this.label_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(142, 13);
             this.label_ethminerDefaultBlockHeight.TabIndex = 361;
@@ -490,7 +464,7 @@
             // 
             // textBox_APIBindPortStart
             // 
-            this.textBox_APIBindPortStart.Location = new System.Drawing.Point(185, 215);
+            this.textBox_APIBindPortStart.Location = new System.Drawing.Point(185, 170);
             this.textBox_APIBindPortStart.Name = "textBox_APIBindPortStart";
             this.textBox_APIBindPortStart.Size = new System.Drawing.Size(148, 20);
             this.textBox_APIBindPortStart.TabIndex = 334;
@@ -498,20 +472,11 @@
             // label_SwitchMinSecondsAMD
             // 
             this.label_SwitchMinSecondsAMD.AutoSize = true;
-            this.label_SwitchMinSecondsAMD.Location = new System.Drawing.Point(6, 106);
+            this.label_SwitchMinSecondsAMD.Location = new System.Drawing.Point(6, 61);
             this.label_SwitchMinSecondsAMD.Name = "label_SwitchMinSecondsAMD";
             this.label_SwitchMinSecondsAMD.Size = new System.Drawing.Size(125, 13);
             this.label_SwitchMinSecondsAMD.TabIndex = 362;
             this.label_SwitchMinSecondsAMD.Text = "SwitchMinSecondsAMD:";
-            // 
-            // label_MinerAPIGraceSecondsAMD
-            // 
-            this.label_MinerAPIGraceSecondsAMD.AutoSize = true;
-            this.label_MinerAPIGraceSecondsAMD.Location = new System.Drawing.Point(185, 61);
-            this.label_MinerAPIGraceSecondsAMD.Name = "label_MinerAPIGraceSecondsAMD";
-            this.label_MinerAPIGraceSecondsAMD.Size = new System.Drawing.Size(148, 13);
-            this.label_MinerAPIGraceSecondsAMD.TabIndex = 380;
-            this.label_MinerAPIGraceSecondsAMD.Text = "MinerAPIGraceSecondsAMD:";
             // 
             // textBox_MinIdleSeconds
             // 
@@ -522,21 +487,14 @@
             // 
             // textBox_SwitchMinSecondsFixed
             // 
-            this.textBox_SwitchMinSecondsFixed.Location = new System.Drawing.Point(6, 170);
+            this.textBox_SwitchMinSecondsFixed.Location = new System.Drawing.Point(6, 125);
             this.textBox_SwitchMinSecondsFixed.Name = "textBox_SwitchMinSecondsFixed";
             this.textBox_SwitchMinSecondsFixed.Size = new System.Drawing.Size(143, 20);
             this.textBox_SwitchMinSecondsFixed.TabIndex = 332;
             // 
-            // textBox_MinerAPIGraceSeconds
-            // 
-            this.textBox_MinerAPIGraceSeconds.Location = new System.Drawing.Point(6, 80);
-            this.textBox_MinerAPIGraceSeconds.Name = "textBox_MinerAPIGraceSeconds";
-            this.textBox_MinerAPIGraceSeconds.Size = new System.Drawing.Size(143, 20);
-            this.textBox_MinerAPIGraceSeconds.TabIndex = 331;
-            // 
             // textBox_SwitchMinSecondsDynamic
             // 
-            this.textBox_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(185, 125);
+            this.textBox_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(185, 80);
             this.textBox_SwitchMinSecondsDynamic.Name = "textBox_SwitchMinSecondsDynamic";
             this.textBox_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(148, 20);
             this.textBox_SwitchMinSecondsDynamic.TabIndex = 337;
@@ -550,7 +508,7 @@
             // 
             // textBox_MinerAPIQueryInterval
             // 
-            this.textBox_MinerAPIQueryInterval.Location = new System.Drawing.Point(185, 170);
+            this.textBox_MinerAPIQueryInterval.Location = new System.Drawing.Point(185, 125);
             this.textBox_MinerAPIQueryInterval.Name = "textBox_MinerAPIQueryInterval";
             this.textBox_MinerAPIQueryInterval.Size = new System.Drawing.Size(148, 20);
             this.textBox_MinerAPIQueryInterval.TabIndex = 341;
@@ -933,16 +891,6 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
-            // checkBox_DisableDetectionNVidia6X
-            // 
-            this.checkBox_DisableDetectionNVidia6X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia6X.Location = new System.Drawing.Point(6, 86);
-            this.checkBox_DisableDetectionNVidia6X.Name = "checkBox_DisableDetectionNVidia6X";
-            this.checkBox_DisableDetectionNVidia6X.Size = new System.Drawing.Size(151, 17);
-            this.checkBox_DisableDetectionNVidia6X.TabIndex = 317;
-            this.checkBox_DisableDetectionNVidia6X.Text = "DisableDetectionNVidia6X";
-            this.checkBox_DisableDetectionNVidia6X.UseVisualStyleBackColor = true;
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -995,19 +943,16 @@
         private System.Windows.Forms.TabPage tabPageGeneral;
         private System.Windows.Forms.Label displayCurrencyLabel;
         private System.Windows.Forms.ComboBox currencyConverterCombobox;
-        private System.Windows.Forms.TextBox textBox_MinerAPIGraceSecondsAMD;
         private System.Windows.Forms.TextBox textBox_SwitchMinSecondsAMD;
         private System.Windows.Forms.TextBox textBox_ethminerDefaultBlockHeight;
         private System.Windows.Forms.TextBox textBox_LogMaxFileSize;
         private System.Windows.Forms.TextBox textBox_MinIdleSeconds;
-        private System.Windows.Forms.TextBox textBox_MinerAPIGraceSeconds;
         private System.Windows.Forms.TextBox textBox_MinerRestartDelayMS;
         private System.Windows.Forms.TextBox textBox_MinerAPIQueryInterval;
         private System.Windows.Forms.TextBox textBox_SwitchMinSecondsDynamic;
         private System.Windows.Forms.TextBox textBox_SwitchMinSecondsFixed;
         private System.Windows.Forms.TextBox textBox_WorkerName;
         private System.Windows.Forms.TextBox textBox_BitcoinAddress;
-        private System.Windows.Forms.Label label_MinerAPIGraceSecondsAMD;
         private System.Windows.Forms.Label label_SwitchMinSecondsAMD;
         private System.Windows.Forms.CheckBox checkBox_LogToFile;
         private System.Windows.Forms.Label label_ethminerDefaultBlockHeight;
@@ -1017,7 +962,6 @@
         private System.Windows.Forms.CheckBox checkBox_DisableWindowsErrorReporting;
         private System.Windows.Forms.Label label_LogMaxFileSize;
         private System.Windows.Forms.Label label_MinIdleSeconds;
-        private System.Windows.Forms.Label label_MinerAPIGraceSeconds;
         private System.Windows.Forms.Label label_MinerRestartDelayMS;
         private System.Windows.Forms.Label label_MinerAPIQueryInterval;
         private System.Windows.Forms.Label label_SwitchMinSecondsDynamic;
@@ -1035,7 +979,6 @@
         private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia5X;
         private System.Windows.Forms.CheckBox checkBox_MinimizeToTray;
         private System.Windows.Forms.CheckBox checkBox_HideMiningWindows;
-        private System.Windows.Forms.CheckBox checkBox_AutoStartMining;
         private System.Windows.Forms.CheckBox checkBox_DebugConsole;
         private System.Windows.Forms.TabPage tabPageDevices;
         private System.Windows.Forms.SplitContainer splitContainerDevicesSettings;

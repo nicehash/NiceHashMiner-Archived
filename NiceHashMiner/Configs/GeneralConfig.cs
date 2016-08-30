@@ -23,7 +23,6 @@ namespace NiceHashMiner.Configs {
         public string BitcoinAddress { get; set; }
         public string WorkerName { get; set; }
         public int ServiceLocation { get; set; }
-        public bool AutoStartMining { get; set; }
         public bool HideMiningWindows { get; set; }
         public bool MinimizeToTray { get; set; }
         public int LessThreads { get; set; }
@@ -61,20 +60,6 @@ namespace NiceHashMiner.Configs {
             get { return _minerRestartDelayMS; }
             set { _minerRestartDelayMS = value <= 0 ? 500 : value; }
         }
-
-        // START TODO not used anymore
-        private int _minerAPIGraceSeconds = 0;
-        public int MinerAPIGraceSeconds {
-            get { return _minerAPIGraceSeconds; }
-            set { _minerAPIGraceSeconds = value < 0 ? 0 : value; }
-        }
-
-        private int _minerAPIGraceSecondsAMD = 0;
-        public int MinerAPIGraceSecondsAMD {
-            get { return _minerAPIGraceSecondsAMD; }
-            set { _minerAPIGraceSecondsAMD = value < 0 ? 0 : value; }
-        }
-        // END TODO not used anymore
 
         public BenchmarkTimeLimitsConfig BenchmarkTimeLimits { get; set; }
         public DeviceDetectionConfig DeviceDetection { get; set; }
@@ -153,7 +138,6 @@ namespace NiceHashMiner.Configs {
             DebugConsole = false;
             HideMiningWindows = false;
             MinimizeToTray = false;
-            AutoStartMining = false;
             BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             DeviceDetection = new DeviceDetectionConfig();
             DisableAMDTempControl = false;
@@ -166,8 +150,6 @@ namespace NiceHashMiner.Configs {
             NVIDIAP0State = false;
             MinerRestartDelayMS = 500;
             ethminerDefaultBlockHeight = 1700000;
-            MinerAPIGraceSeconds = 30;
-            MinerAPIGraceSecondsAMD = 60;
             SwitchMinSecondsFixed = 90;
             SwitchMinSecondsDynamic = 30;
             SwitchMinSecondsAMD = 90;
@@ -206,7 +188,7 @@ namespace NiceHashMiner.Configs {
             BitcoinAddress = _file.BitcoinAddress;
             WorkerName = _file.WorkerName;
             ServiceLocation = _file.ServiceLocation;
-            AutoStartMining = _file.AutoStartMining;
+            //AutoStartMining = _file.AutoStartMining;
             HideMiningWindows = _file.HideMiningWindows;
             MinimizeToTray = _file.MinimizeToTray;
             LessThreads = _file.LessThreads;
@@ -216,8 +198,8 @@ namespace NiceHashMiner.Configs {
             SwitchMinSecondsAMD = _file.SwitchMinSecondsAMD;
             MinerAPIQueryInterval = _file.MinerAPIQueryInterval;
             MinerRestartDelayMS = _file.MinerRestartDelayMS;
-            MinerAPIGraceSeconds = _file.MinerAPIGraceSeconds;
-            MinerAPIGraceSecondsAMD = _file.MinerAPIGraceSecondsAMD;
+            //MinerAPIGraceSeconds = _file.MinerAPIGraceSeconds;
+            //MinerAPIGraceSecondsAMD = _file.MinerAPIGraceSecondsAMD;
             if (_file.BenchmarkTimeLimits != null) {
                 this.BenchmarkTimeLimits = _file.BenchmarkTimeLimits;
             }

@@ -212,7 +212,7 @@
             // labelBenchmarkSteps
             // 
             this.labelBenchmarkSteps.AutoSize = true;
-            this.labelBenchmarkSteps.Location = new System.Drawing.Point(33, 19);
+            this.labelBenchmarkSteps.Location = new System.Drawing.Point(9, 19);
             this.labelBenchmarkSteps.Name = "labelBenchmarkSteps";
             this.labelBenchmarkSteps.Size = new System.Drawing.Size(116, 13);
             this.labelBenchmarkSteps.TabIndex = 109;
@@ -252,7 +252,7 @@
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(531, 156);
             this.devicesListViewEnableControl1.TabIndex = 0;
             // 
-            // FormBenchmark_New
+            // FormBenchmark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -268,7 +268,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormBenchmark_New";
+            this.Name = "FormBenchmark";
             this.Text = "Benchmark";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBenchmark_New_FormClosing);
             this.groupBoxAlgorithmBenchmarkSettings.ResumeLayout(false);

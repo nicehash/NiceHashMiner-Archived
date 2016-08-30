@@ -35,7 +35,7 @@ namespace NiceHashMiner.Configs {
                 GeneralConfig.DebugConsole = Config.ConfigData.DebugConsole;
                 GeneralConfig.HideMiningWindows = Config.ConfigData.HideMiningWindows;
                 GeneralConfig.MinimizeToTray = Config.ConfigData.MinimizeToTray;
-                GeneralConfig.AutoStartMining = Config.ConfigData.AutoStartMining;
+                //GeneralConfig.AutoStartMining = Config.ConfigData.AutoStartMining;
                 GeneralConfig.DeviceDetection.DisableDetectionNVidia5X = Config.ConfigData.DisableDetectionNVidia5X;
                 GeneralConfig.DeviceDetection.DisableDetectionNVidia3X = Config.ConfigData.DisableDetectionNVidia3X;
                 GeneralConfig.DeviceDetection.DisableDetectionNVidia2X = Config.ConfigData.DisableDetectionNVidia2X;
@@ -53,8 +53,8 @@ namespace NiceHashMiner.Configs {
                 //GeneralConfig.ethminerAPIPortNvidia = Config.ConfigData.ethminerAPIPortNvidia;
                 //GeneralConfig.ethminerAPIPortAMD = Config.ConfigData.ethminerAPIPortAMD;
                 GeneralConfig.ethminerDefaultBlockHeight = Config.ConfigData.ethminerDefaultBlockHeight;
-                GeneralConfig.MinerAPIGraceSeconds = Config.ConfigData.MinerAPIGraceSeconds;
-                GeneralConfig.MinerAPIGraceSecondsAMD = Config.ConfigData.MinerAPIGraceSecondsAMD;
+                //GeneralConfig.MinerAPIGraceSeconds = Config.ConfigData.MinerAPIGraceSeconds;
+                //GeneralConfig.MinerAPIGraceSecondsAMD = Config.ConfigData.MinerAPIGraceSecondsAMD;
                 GeneralConfig.SwitchMinSecondsFixed = Config.ConfigData.SwitchMinSecondsFixed;
                 GeneralConfig.SwitchMinSecondsDynamic = Config.ConfigData.SwitchMinSecondsDynamic;
                 GeneralConfig.SwitchMinSecondsAMD = Config.ConfigData.SwitchMinSecondsAMD;

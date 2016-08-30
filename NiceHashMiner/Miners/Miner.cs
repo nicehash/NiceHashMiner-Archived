@@ -472,10 +472,6 @@ namespace NiceHashMiner
             return "x";
         }
 
-        virtual protected int CalculateNumRetries() {
-            return ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds / ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval;
-        }
-
         virtual protected NiceHashProcess _Start()
         {
             PreviousTotalMH = 0.0;

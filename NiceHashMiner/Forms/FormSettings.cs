@@ -94,7 +94,6 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.label_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
             toolTip1.SetToolTip(this.comboBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.label_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
-            toolTip1.SetToolTip(this.checkBox_AutoStartMining, International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
             toolTip1.SetToolTip(this.checkBox_HideMiningWindows, International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
             toolTip1.SetToolTip(this.checkBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
 
@@ -109,10 +108,6 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.label_MinerAPIQueryInterval, International.GetText("Form_Settings_ToolTip_MinerAPIQueryInterval"));
             toolTip1.SetToolTip(this.textBox_MinerRestartDelayMS, International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
             toolTip1.SetToolTip(this.label_MinerRestartDelayMS, International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
-            toolTip1.SetToolTip(this.textBox_MinerAPIGraceSeconds, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSeconds"));
-            toolTip1.SetToolTip(this.label_MinerAPIGraceSeconds, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSeconds"));
-            toolTip1.SetToolTip(this.textBox_MinerAPIGraceSecondsAMD, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSecondsAMD"));
-            toolTip1.SetToolTip(this.label_MinerAPIGraceSecondsAMD, International.GetText("Form_Settings_ToolTip_MinerAPIGraceSecondsAMD"));
 
             benchmarkLimitControlCPU.SetToolTip(ref toolTip1, "CPUs");
             benchmarkLimitControlNVIDIA.SetToolTip(ref toolTip1, "NVIDIA GPUs");
@@ -157,7 +152,6 @@ namespace NiceHashMiner.Forms {
 
         private void InitializeGeneralTabTranslations() {
             checkBox_DebugConsole.Text = International.GetText("Form_Settings_General_DebugConsole");
-            checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
             checkBox_DisableDetectionNVidia6X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA6.x");
@@ -179,8 +173,6 @@ namespace NiceHashMiner.Forms {
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
-            label_MinerAPIGraceSeconds.Text = International.GetText("Form_Settings_General_MinerAPIGraceSeconds") + ":";
-            label_MinerAPIGraceSecondsAMD.Text = International.GetText("Form_Settings_General_MinerAPIGraceSecondsAMD") + ":";
             label_MinerAPIQueryInterval.Text = International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";
             label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
 
@@ -220,7 +212,6 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_DisableDetectionNVidia6X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_MinimizeToTray.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_HideMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-                this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_DebugConsole.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_ShowDriverVersionWarning.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_DisableWindowsErrorReporting.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
@@ -238,8 +229,6 @@ namespace NiceHashMiner.Forms {
                 this.textBox_SwitchMinSecondsAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_MinerAPIQueryInterval.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_MinerRestartDelayMS.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                this.textBox_MinerAPIGraceSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
-                this.textBox_MinerAPIGraceSecondsAMD.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_MinIdleSeconds.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_LogMaxFileSize.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_ethminerDefaultBlockHeight.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
@@ -251,8 +240,6 @@ namespace NiceHashMiner.Forms {
                 this.textBox_SwitchMinSecondsAMD.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_MinerAPIQueryInterval.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_MinerRestartDelayMS.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
-                this.textBox_MinerAPIGraceSeconds.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
-                this.textBox_MinerAPIGraceSecondsAMD.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_MinIdleSeconds.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_LogMaxFileSize.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_ethminerDefaultBlockHeight.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
@@ -271,7 +258,6 @@ namespace NiceHashMiner.Forms {
             // Checkboxes set checked value
             {
                 checkBox_DebugConsole.Checked = ConfigManager.Instance.GeneralConfig.DebugConsole;
-                checkBox_AutoStartMining.Checked = ConfigManager.Instance.GeneralConfig.AutoStartMining;
                 checkBox_HideMiningWindows.Checked = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.Instance.GeneralConfig.MinimizeToTray;
                 checkBox_DisableDetectionNVidia6X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
@@ -296,8 +282,6 @@ namespace NiceHashMiner.Forms {
                 textBox_SwitchMinSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD.ToString();
                 textBox_MinerAPIQueryInterval.Text = ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval.ToString();
                 textBox_MinerRestartDelayMS.Text = ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS.ToString();
-                textBox_MinerAPIGraceSeconds.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds.ToString();
-                textBox_MinerAPIGraceSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD.ToString();
                 textBox_MinIdleSeconds.Text = ConfigManager.Instance.GeneralConfig.MinIdleSeconds.ToString();
                 textBox_LogMaxFileSize.Text = ConfigManager.Instance.GeneralConfig.LogMaxFileSize.ToString();
                 textBox_ethminerDefaultBlockHeight.Text = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
@@ -397,10 +381,10 @@ namespace NiceHashMiner.Forms {
 
         #region Tab General
         private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e) {
+            if (!_isInitFinished) return;
             // indicate there has been a change
             IsChange = true;
             ConfigManager.Instance.GeneralConfig.DebugConsole = checkBox_DebugConsole.Checked;
-            ConfigManager.Instance.GeneralConfig.AutoStartMining = checkBox_AutoStartMining.Checked;
             ConfigManager.Instance.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             ConfigManager.Instance.GeneralConfig.MinimizeToTray = checkBox_MinimizeToTray.Checked;
             ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X = checkBox_DisableDetectionNVidia6X.Checked;
@@ -418,6 +402,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void GeneralTextBoxes_Leave(object sender, EventArgs e) {
+            if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.Instance.GeneralConfig.BitcoinAddress = textBox_BitcoinAddress.Text.Trim();
             ConfigManager.Instance.GeneralConfig.WorkerName = textBox_WorkerName.Text.Trim();
@@ -445,14 +430,6 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS = Int32.Parse(textBox_MinerRestartDelayMS.Text);
             textBox_MinerRestartDelayMS.Text = ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS.ToString();
 
-            if (!ParseStringToInt32(ref textBox_MinerAPIGraceSeconds)) return;
-            ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds = Int32.Parse(textBox_MinerAPIGraceSeconds.Text);
-            textBox_MinerAPIGraceSeconds.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSeconds.ToString();
-
-            if (!ParseStringToInt32(ref textBox_MinerAPIGraceSecondsAMD)) return;
-            ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD = Int32.Parse(textBox_MinerAPIGraceSecondsAMD.Text);
-            textBox_MinerAPIGraceSecondsAMD.Text = ConfigManager.Instance.GeneralConfig.MinerAPIGraceSecondsAMD.ToString();
-
             if (!ParseStringToInt32(ref textBox_MinIdleSeconds)) return;
             ConfigManager.Instance.GeneralConfig.MinIdleSeconds = Int32.Parse(textBox_MinIdleSeconds.Text);
             textBox_MinIdleSeconds.Text = ConfigManager.Instance.GeneralConfig.MinIdleSeconds.ToString();
@@ -475,6 +452,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e) {
+            if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.Instance.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
@@ -621,14 +599,15 @@ namespace NiceHashMiner.Forms {
 
             // check restart parameters change
             IsRestartNeeded = ConfigManager.Instance.GeneralConfig.DebugConsole != _generalConfigBackup.DebugConsole
-                || ConfigManager.Instance.GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State;
+                || ConfigManager.Instance.GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
+                || ConfigManager.Instance.GeneralConfig.LogToFile != _generalConfigBackup.LogToFile;
 
             if (IsChangeSaved) {
                 devicesListViewEnableControl1.SaveOptions();
                 ConfigManager.Instance.GeneralConfig.Commit();
                 ConfigManager.Instance.CommitBenchmarks();
                 International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
-            } else /*if (IsChange)*/ {
+            } else if (IsChange) {
                 ConfigManager.Instance.GeneralConfig = _generalConfigBackup;
                 ConfigManager.Instance.BenchmarkConfigs = _benchmarkConfigsBackup;
                 ConfigManager.Instance.SetDeviceBenchmarkReferences();
