@@ -149,7 +149,7 @@ namespace NiceHashMiner.Configs {
             DisableWindowsErrorReporting = true;
             NVIDIAP0State = false;
             MinerRestartDelayMS = 500;
-            ethminerDefaultBlockHeight = 1700000;
+            ethminerDefaultBlockHeight = 2000000;
             SwitchMinSecondsFixed = 90;
             SwitchMinSecondsDynamic = 30;
             SwitchMinSecondsAMD = 90;

@@ -29,10 +29,15 @@ namespace NiceHashMiner.Devices
         const double NVIDIA_RECOMENDED_DRIVER = 372.54;
         const double NVIDIA_MIN_DETECTION_DRIVER = 362.61;
         double _currentNvidiaOpenCLDriver = -1;
-        
+        JsonSerializerSettings _jsonSettings = null;
             
         protected ComputeDeviceQueryManager() {
             TAG = this.GetType().Name;
+            _jsonSettings = new JsonSerializerSettings {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                Culture = CultureInfo.InvariantCulture
+            };
         }
 
         public int CPUs { get; private set; }
@@ -499,12 +504,8 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint(TAG, "CudaDevicesDetection threw Exception: " + ex.Message);
             } finally {
                 if (QueryCudaDevicesString != "") {
-                    //var settings = new JsonSerializerSettings {
-                    //    NullValueHandling = NullValueHandling.Ignore,
-                    //    MissingMemberHandling = MissingMemberHandling.Ignore
-                    //};
                     try {
-                        CudaDevices = JsonConvert.DeserializeObject<List<CudaDevice>>(QueryCudaDevicesString/*, settings*/);
+                        CudaDevices = JsonConvert.DeserializeObject<List<CudaDevice>>(QueryCudaDevicesString, _jsonSettings);
                     } catch { }
                 }
             }
@@ -617,13 +618,9 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection threw Exception: " + ex.Message);
             } finally {
                 if (QueryOpenCLDevicesString != "") {
-                    //var settings = new JsonSerializerSettings {
-                    //    NullValueHandling = NullValueHandling.Ignore,
-                    //    MissingMemberHandling = MissingMemberHandling.Ignore
-                    //};
-                    OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString/*, settings*/);
+                    OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString, _jsonSettings);
                     try {
-                        OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString/*, settings*/);
+                        OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString, _jsonSettings);
                     } catch { }
                 }
             }
