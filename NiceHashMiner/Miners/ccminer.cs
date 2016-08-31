@@ -27,8 +27,6 @@ namespace NiceHashMiner.Miners
 
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
-            //if (ProcessHandle != null) return; // ignore, already running 
-
             CurrentMiningAlgorithm = miningAlgorithm;
             if (miningAlgorithm == null) return;
 
@@ -38,6 +36,8 @@ namespace NiceHashMiner.Miners
                 algo = "--algo=" + miningAlgorithm.MinerName;
                 apiBind = " --api-bind=" + APIPort.ToString();
             }
+
+            IsAPIReadException = CurrentMiningAlgorithm.NiceHashID == AlgorithmType.CryptoNight;
 
             LastCommandLine = algo +
                                   " --url=" + url +
@@ -137,26 +137,24 @@ namespace NiceHashMiner.Miners
             if (CurrentAlgorithmType == AlgorithmType.CryptoNight) {
                 // check if running
                 if (ProcessHandle == null) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
                     Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess is null");
                     return null;
                 }
                 try {
                     var runningProcess = Process.GetProcessById(ProcessHandle.Id);
                 } catch (ArgumentException ex) {
-                    //Restart();
-                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
                     Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
                     return null; // will restart outside
                 } catch (InvalidOperationException ex) {
-                    //Restart();
-                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
                     Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
                     return null; // will restart outside
                 }
                 // extra check
                 if (CurrentMiningAlgorithm == null) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
                     Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess CurrentMiningAlgorithm is NULL");
                     return null;
                 }

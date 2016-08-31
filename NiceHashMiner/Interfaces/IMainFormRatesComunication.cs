@@ -8,7 +8,7 @@ namespace NiceHashMiner.Interfaces {
     public interface IMainFormRatesComunication {
 
         void ClearRates(int groupCount);
-        void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying);
+        void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException);
         void ShowNotProfitable();
         void HideNotProfitable();
     }

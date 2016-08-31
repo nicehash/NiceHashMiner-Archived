@@ -355,12 +355,10 @@ namespace NiceHashMiner
             flowLayoutPanelRatesIndex = 0;
         }
 
-        public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying) {
-            string HodlExceptionPostfix =
-                (iAPIData.AlgorithmID == AlgorithmType.Hodl
-                || iAPIData.AlgorithmID == AlgorithmType.CryptoNight)
-                ? "**" : "";
-            string speedString = Helpers.FormatSpeedOutput(iAPIData.Speed) + iAPIData.AlgorithmName + HodlExceptionPostfix;
+        public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException) {
+            string ApiGetExceptionString = isApiGetException ? "**" : "";
+
+            string speedString = Helpers.FormatSpeedOutput(iAPIData.Speed) + iAPIData.AlgorithmName + ApiGetExceptionString;
             string rateBTCString = FormatPayingOutput(paying);
             string rateCurrencyString = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");

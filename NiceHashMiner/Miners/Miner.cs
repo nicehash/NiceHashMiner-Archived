@@ -29,6 +29,8 @@ namespace NiceHashMiner
     {
         public string MinerDeviceName { get; protected set; }
         protected int APIPort { get; private set; }
+        // if miner has no API bind port for reading curentlly only CryptoNight on ccminer
+        public bool IsAPIReadException { get; protected set; }
         protected List<ComputeDevice> CDevs;
         
         public AlgorithmType CurrentAlgorithmType { get; protected set; }
@@ -113,6 +115,7 @@ namespace NiceHashMiner
             InitSupportedMinerAlgorithms();
 
             APIPort = MinersApiPortsManager.Instance.GetAvaliablePort();
+            IsAPIReadException = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
             // cool down init
             _cooldownCheckTimer = new Timer() {

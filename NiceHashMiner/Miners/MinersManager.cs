@@ -369,6 +369,30 @@ namespace NiceHashMiner.Miners {
         }
         #endregion //Groupping logic
 
+        private string GetDevProfitString(string deviceName, Dictionary<AlgorithmType, double> deviceProfits) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(String.Format("\tProfits for {0}:", deviceName));
+            int MAX_NAME_LEN = "daggerhashimoto".Length;
+            foreach (var kvp in deviceProfits) {
+                string name = AlgorithmNiceHashNames.GetName(kvp.Key);
+                string namePreaty = name + new String(' ', MAX_NAME_LEN - name.Length);
+                stringBuilder.AppendLine(String.Format("\t\t{0}\t:\t{1},",
+                    namePreaty,
+                    kvp.Value.ToString("F12")));
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        private string GetProfitsSummery(PerDeviceProifitDictionary devProfits) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Current device profits:");
+            foreach (var kvp in devProfits) {
+                stringBuilder.AppendLine(GetDevProfitString(kvp.Key, kvp.Value));
+            }
+            return stringBuilder.ToString();
+        }
+
         /// <summary>
         /// SwichMostProfitable should check the best combination for most profit.
         /// Calculate profit for each supported algorithm per device group.
@@ -384,7 +408,7 @@ namespace NiceHashMiner.Miners {
 #if (SWITCH_TESTING)
             SwitchTesting.Instance.SetNext(ref devProfits, _enabledDevices);
 #endif
-
+            Helpers.ConsolePrint(TAG, GetProfitsSummery(devProfits));
 
             double CurrentProfit = 0.0;
             // calculate most profitable algorithm per enabled device
@@ -531,7 +555,7 @@ namespace NiceHashMiner.Miners {
                 }
 
                 // Update GUI
-                _mainFormRatesComunication.AddRateInfo(m.MinerDeviceName, groupMiners.DevicesInfoString, AD, m.CurrentRate);
+                _mainFormRatesComunication.AddRateInfo(m.MinerDeviceName, groupMiners.DevicesInfoString, AD, m.CurrentRate, m.IsAPIReadException);
             }
         }
 
