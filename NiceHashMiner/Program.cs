@@ -7,6 +7,7 @@ using NiceHashMiner.Forms;
 using NiceHashMiner.Enums;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Threading;
 
 namespace NiceHashMiner
 {
@@ -21,6 +22,7 @@ namespace NiceHashMiner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             // #0 set this first so data parsing will work correctly
             Globals.JsonSettings = new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore,
