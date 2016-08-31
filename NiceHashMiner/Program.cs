@@ -5,6 +5,8 @@ using NiceHashMiner.Utils;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Enums;
+using Newtonsoft.Json;
+using System.Globalization;
 
 namespace NiceHashMiner
 {
@@ -18,6 +20,13 @@ namespace NiceHashMiner
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // #0 set this first so data parsing will work correctly
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                Culture = CultureInfo.InvariantCulture
+            };
 
             // #1 first initialize config
             ConfigManager.Instance.GeneralConfig.InitializeConfig();
