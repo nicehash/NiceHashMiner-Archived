@@ -70,7 +70,7 @@ namespace NiceHashMiner.Configs {
             CheckAndCreateConfigsFolder();
             try {
                 if (new FileInfo(FilePath).Exists) {
-                    _file = JsonConvert.DeserializeObject<T>(File.ReadAllText(FilePath));
+                    _file = JsonConvert.DeserializeObject<T>(File.ReadAllText(FilePath), Globals.JsonSettings);
                 } else {
                     Commit();
                 }

@@ -31,7 +31,7 @@ namespace NiceHashMiner
 
             try
             {
-                CoinbaseResponse cbr = JsonConvert.DeserializeObject<CoinbaseResponse>(jsondata);
+                CoinbaseResponse cbr = JsonConvert.DeserializeObject<CoinbaseResponse>(jsondata, Globals.JsonSettings);
                 return cbr.amount;
             }
             catch

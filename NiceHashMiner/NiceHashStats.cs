@@ -86,7 +86,7 @@ namespace NiceHashMiner
             nicehash_json_2 nhjson_current;
             try
             {
-                nhjson_current = JsonConvert.DeserializeObject<nicehash_json_2>(r1);
+                nhjson_current = JsonConvert.DeserializeObject<nicehash_json_2>(r1, Globals.JsonSettings);
                 Dictionary<AlgorithmType, NiceHashSMA> ret = new Dictionary<AlgorithmType, NiceHashSMA>();
                 NiceHashSMA[] temp = nhjson_current.result.simplemultialgo;
                 if (temp != null) {
@@ -112,7 +112,7 @@ namespace NiceHashMiner
             nicehash_json<nicehash_stats> nhjson_current;
             try
             {
-                nhjson_current = JsonConvert.DeserializeObject<nicehash_json<nicehash_stats>>(r1);
+                nhjson_current = JsonConvert.DeserializeObject<nicehash_json<nicehash_stats>>(r1, Globals.JsonSettings);
                 for (int i = 0; i < nhjson_current.result.stats.Length; i++)
                 {
                     if (nhjson_current.result.stats[i].algo == algo)
@@ -138,7 +138,7 @@ namespace NiceHashMiner
                 nicehash_json<nicehash_stats> nhjson_current;
                 try
                 {
-                    nhjson_current = JsonConvert.DeserializeObject<nicehash_json<nicehash_stats>>(r1);
+                    nhjson_current = JsonConvert.DeserializeObject<nicehash_json<nicehash_stats>>(r1, Globals.JsonSettings);
                     for (int i = 0; i < nhjson_current.result.stats.Length; i++)
                     {
                         if (nhjson_current.result.stats[i].algo != 999)
@@ -166,7 +166,7 @@ namespace NiceHashMiner
             nicehashminer_version nhjson;
             try
             {
-                nhjson = JsonConvert.DeserializeObject<nicehashminer_version>(r1);
+                nhjson = JsonConvert.DeserializeObject<nicehashminer_version>(r1, Globals.JsonSettings);
                 return nhjson.version;
             }
             catch

@@ -153,6 +153,12 @@ namespace NiceHashMiner.Utils {
                 }
             }
             _minerUpdateIndicator.FinishMsg(IsMinersBinsInit());
+            // remove bins zip
+            try {
+                if (File.Exists(BinsZipLocation)) {
+                    File.Delete(BinsZipLocation);
+                }
+            } catch { }
         }
 
         public bool IsMinersBinsInit() {

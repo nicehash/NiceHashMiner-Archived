@@ -22,7 +22,7 @@ namespace NiceHashMiner
             Application.SetCompatibleTextRenderingDefault(false);
 
             // #0 set this first so data parsing will work correctly
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+            Globals.JsonSettings = new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 Culture = CultureInfo.InvariantCulture

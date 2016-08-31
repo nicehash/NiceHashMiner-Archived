@@ -91,7 +91,7 @@ namespace NiceHashMiner.Configs
 
                 try {
                     if (new FileInfo("config.json").Length > 17000)
-                        ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+                        ConfigData = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"), Globals.JsonSettings);
                     else {
                         File.Delete("config.json");
                     }

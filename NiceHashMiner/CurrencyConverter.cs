@@ -50,7 +50,7 @@ namespace NiceHashMiner.CurrencyConverter
             try {
                 var Client = new WebClient();
                 var Response = Client.DownloadString("http://api.fixer.io/latest?base=USD");
-                LastResponse = JsonConvert.DeserializeObject<CurrencyAPIResponse>(Response);
+                LastResponse = JsonConvert.DeserializeObject<CurrencyAPIResponse>(Response, Globals.JsonSettings);
                 LastUpdate = DateTime.Now;
             }
             catch (Exception E)

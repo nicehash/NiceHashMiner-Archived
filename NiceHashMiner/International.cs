@@ -33,7 +33,7 @@ namespace NiceHashMiner
                 {
                     try
                     {
-                        Language l = JsonConvert.DeserializeObject<Language>(File.ReadAllText(fi.FullName));
+                        Language l = JsonConvert.DeserializeObject<Language>(File.ReadAllText(fi.FullName)); // TODO , Globals.JsonSettings not sure since data must be localized
                         langs.Add(l);
                     }
                     catch (Exception ex)
