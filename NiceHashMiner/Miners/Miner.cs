@@ -455,20 +455,6 @@ namespace NiceHashMiner
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
-
-        // TODO remove
-        //virtual protected string GetPassword(Algorithm a) {
-        //    //if (a.PasswordDefault != null && a.PasswordDefault.Length > 0)
-        //    //    return a.PasswordDefault;
-
-        //    //// device password
-        //    //var PasswordDefault = GetUsePassword();
-        //    //if (PasswordDefault != null && PasswordDefault.Length > 0)
-        //    //    return PasswordDefault;
-
-        //    return "x";
-        //}
-
         virtual protected NiceHashProcess _Start()
         {
             PreviousTotalMH = 0.0;
@@ -480,9 +466,6 @@ namespace NiceHashMiner
             {
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
             }
-
-            // TODO not used anymore
-            //NumRetries = CalculateNumRetries();
 
             P.StartInfo.FileName = Path;
             P.ExitEvent = Miner_Exited;

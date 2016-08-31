@@ -68,6 +68,8 @@ namespace NiceHashMiner.Miners {
 
         readonly string TAG;
 
+        readonly string DOUBLE_FORMAT = "F12";
+
         protected MinersManager() {
             TAG = this.GetType().Name;
             _preventSleepTimer = new Timer();
@@ -274,7 +276,14 @@ namespace NiceHashMiner.Miners {
                     foreach (var kvp in deviceConfig.AlgorithmSettings) {
                         var key = kvp.Key;
                         var algorithm = kvp.Value;
-                        cumulativeSpeeds[key] *= algorithm.BenchmarkSpeed;
+                        // TODO instead of cumulative speeds get just if enabled or not count x > 0 => enabled; x < 0 => disabled
+                        if (cumulativeSpeeds[key] > 0) {
+                            cumulativeSpeeds[key] = algorithm.BenchmarkSpeed;
+                        } else {
+                            cumulativeSpeeds[key] = -1 * algorithm.BenchmarkSpeed;
+                        }
+                        // TODO OLD
+                        //cumulativeSpeeds[key] *= algorithm.BenchmarkSpeed;
                     }
                 }
             }
@@ -286,22 +295,61 @@ namespace NiceHashMiner.Miners {
         PerDeviceProifitDictionary GetEnabledDeviceProifitDictionary(PerDeviceSpeedDictionary speedDict, Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
             PerDeviceProifitDictionary profitDict = new PerDeviceProifitDictionary();
 
+            // log stuff
+            int MAX_NAME_LEN = "daggerhashimoto".Length;
+            int MAX_SPEED_LEN = 15;
+            StringBuilder stringBuilderFull = new StringBuilder();
+            stringBuilderFull.AppendLine("Current device profits:");
+
             foreach (var nameBenchKvp in speedDict) {
                 var deviceName = nameBenchKvp.Key;
                 var curDevProfits = new Dictionary<AlgorithmType, double>();
+                StringBuilder stringBuilderDevice = new StringBuilder();
+                stringBuilderDevice.AppendLine(String.Format("\tProfits for {0}:", deviceName));
+                AlgorithmType mostProfitKey = AlgorithmType.NONE;
+                double mostProfitAlgoVal = -1;
                 foreach (var algoSpeedKvp in nameBenchKvp.Value) {
-                    if (algoSpeedKvp.Value < 0) {
+                    // Log stuff and calculation
+                    string name = AlgorithmNiceHashNames.GetName(algoSpeedKvp.Key);
+                    string namePreaty = name + new String(' ', MAX_NAME_LEN - name.Length);
+                    bool isEnabled = algoSpeedKvp.Value > 0;
+                    double nhmSMADataVal = NiceHashData[algoSpeedKvp.Key].paying;
+                    // TODO what is the constant at the end?
+                    double algoProfit = algoSpeedKvp.Value * nhmSMADataVal * 0.000000001;
+
+                    // calculate
+                    if (isEnabled) {
+                        curDevProfits.Add(algoSpeedKvp.Key, algoProfit);
+                        if (mostProfitAlgoVal < algoProfit) {
+                            mostProfitKey = algoSpeedKvp.Key;
+                            mostProfitAlgoVal = algoProfit;
+                        }
+                    } else {
                         // if disabled make unprofitable
                         curDevProfits.Add(algoSpeedKvp.Key, -1000000);
-                    } else {
-                        // TODO what is the constant at the end?
-                        curDevProfits.Add(algoSpeedKvp.Key, algoSpeedKvp.Value * NiceHashData[algoSpeedKvp.Key].paying * 0.000000001);
+                        algoProfit *= -1; // make bigger then 0 for logging reasons
                     }
+                    // log stuff
+                    string speedStr = algoSpeedKvp.Value.ToString("F3");
+                    string speedPreaty = new String(' ', MAX_SPEED_LEN - speedStr.Length) + speedStr;
+                    stringBuilderDevice.AppendLine(String.Format("\t\t{0}\t:\t:PROFIT={1} ({2}, SPEED={3}, NHSMA={4})",
+                    namePreaty, // Name
+                    algoProfit.ToString(DOUBLE_FORMAT), // Profit
+                    isEnabled ? "ENABLED" : "DISABLED", // ENABLED/DISABLED
+                    speedPreaty, // Speed
+                    nhmSMADataVal.ToString(DOUBLE_FORMAT) // NiceHashData
+                    ));
                 }
                 // add profits
                 profitDict.Add(deviceName, curDevProfits);
+                // log stuff
+                stringBuilderDevice.AppendLine(String.Format("\t\tMOST PROFITABLE (ENABLED) ALGO: {0}, PROFIT: {1}",
+                    AlgorithmNiceHashNames.GetName(mostProfitKey),
+                    mostProfitAlgoVal.ToString(DOUBLE_FORMAT)));
+                stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
 
+            Helpers.ConsolePrint(TAG, stringBuilderFull.ToString());
             return profitDict;
         }
 
@@ -371,13 +419,14 @@ namespace NiceHashMiner.Miners {
         private string GetDevProfitString(string deviceName, Dictionary<AlgorithmType, double> deviceProfits) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(String.Format("\tProfits for {0}:", deviceName));
+            // TODO make parameter
             int MAX_NAME_LEN = "daggerhashimoto".Length;
             foreach (var kvp in deviceProfits) {
                 string name = AlgorithmNiceHashNames.GetName(kvp.Key);
                 string namePreaty = name + new String(' ', MAX_NAME_LEN - name.Length);
                 stringBuilder.AppendLine(String.Format("\t\t{0}\t:\t{1},",
                     namePreaty,
-                    kvp.Value.ToString("F12")));
+                    kvp.Value.ToString(DOUBLE_FORMAT)));
             }
 
             return stringBuilder.ToString();
@@ -407,7 +456,6 @@ namespace NiceHashMiner.Miners {
 #if (SWITCH_TESTING)
             SwitchTesting.Instance.SetNext(ref devProfits, _enabledDevices);
 #endif
-            Helpers.ConsolePrint(TAG, GetProfitsSummery(devProfits));
 
             double CurrentProfit = 0.0;
             // calculate most profitable algorithm per enabled device
