@@ -335,7 +335,7 @@ namespace NiceHashMiner.Miners {
                     stringBuilderDevice.AppendLine(String.Format("\t\t{0}\t:\t:PROFIT={1} ({2}, SPEED={3}, NHSMA={4})",
                     namePreaty, // Name
                     algoProfit.ToString(DOUBLE_FORMAT), // Profit
-                    isEnabled ? "ENABLED" : "DISABLED", // ENABLED/DISABLED
+                    isEnabled ? "ENABLED " : "DISABLED", // ENABLED/DISABLED
                     speedPreaty, // Speed
                     nhmSMADataVal.ToString(DOUBLE_FORMAT) // NiceHashData
                     ));
