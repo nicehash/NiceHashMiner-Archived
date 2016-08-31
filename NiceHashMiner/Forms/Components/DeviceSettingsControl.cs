@@ -58,7 +58,8 @@ namespace NiceHashMiner.Forms.Components {
                 || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_5_x
                 || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_6_x;
 
-            fieldUsePassword.EntryText = ParseStringDefault(_selectedComputeDevice.DeviceBenchmarkConfig.UsePassword);
+            // TODO remove or set intensity
+            //fieldUsePassword.EntryText = ParseStringDefault(_selectedComputeDevice.DeviceBenchmarkConfig.PasswordDefault);
             richTextBoxExtraLaunchParameters.Text = ParseStringDefault(_selectedComputeDevice.DeviceBenchmarkConfig.ExtraLaunchParameters);
 
             _selected = true;
@@ -76,7 +77,8 @@ namespace NiceHashMiner.Forms.Components {
         #region Callbacks Events
         private void textChangedPassword(object sender, EventArgs e) {
             if (!CanEdit()) return;
-            _selectedComputeDevice.DeviceBenchmarkConfig.UsePassword = fieldUsePassword.EntryText.Trim();
+            // TODO replace intensity or remove
+            //_selectedComputeDevice.DeviceBenchmarkConfig.PasswordDefault = fieldUsePassword.EntryText.Trim();
         }
         private void textChangedExtraLaunchParameters(object sender, EventArgs e) {
             if (!CanEdit()) return;

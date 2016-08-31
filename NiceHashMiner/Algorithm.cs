@@ -17,8 +17,10 @@ namespace NiceHashMiner
         readonly public string MinerName;
         public double BenchmarkSpeed { get; set; }
         public string ExtraLaunchParameters { get; set; }
-        public string UsePassword { get; set; }
+        //public string PasswordDefault { get; set; } // TODO set to intensity
         public bool Skip { get; set; }
+
+        public static readonly string PasswordDefault = "x"; // TODO rename default
 
         [JsonIgnore]
         public double CurrentProfit { get; set; }
@@ -32,7 +34,7 @@ namespace NiceHashMiner
 
             BenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
-            UsePassword = "";
+            //PasswordDefault = ""; // TODO set intenstity
             Skip = false;
         }
     }

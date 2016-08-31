@@ -21,7 +21,7 @@ namespace NiceHashMiner.Miners {
                 + " " + GetExtraLaunchParameters()
                 + " " + miningAlgorithm.ExtraLaunchParameters
                 + " -S " + url.Substring(14)
-                + " -O " + username + ":" + GetPassword(miningAlgorithm)
+                + " -O " + username + ":" + Algorithm.PasswordDefault
                 + " --api-port " + APIPort.ToString()
                 + " --cuda-devices ";
         }

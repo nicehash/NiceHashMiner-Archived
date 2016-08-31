@@ -58,7 +58,7 @@ namespace NiceHashMiner.Forms.Components {
 
                 labelSelectedAlgorithm.Text = "Selected Algorithm: " + algorithm.NiceHashName;
 
-                fieldBoxPassword.EntryText = ParseStringDefault(algorithm.UsePassword);
+                fieldBoxPassword.EntryText = ParseStringDefault("TODO" /*algorithm.PasswordDefault*/);
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
                 this.Update();
@@ -80,7 +80,8 @@ namespace NiceHashMiner.Forms.Components {
         #region Callbacks Events
         private void textChangedPassword(object sender, EventArgs e) {
             if (!CanEdit()) return;
-            _currentlySelectedAlgorithm.UsePassword = fieldBoxPassword.EntryText.Trim();
+            // TODO
+            //_currentlySelectedAlgorithm.PasswordDefault = fieldBoxPassword.EntryText.Trim();
         }
         private void textChangedBenchmarkSpeed(object sender, EventArgs e) {
             if (!CanEdit()) return;

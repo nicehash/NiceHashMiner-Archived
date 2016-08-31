@@ -121,7 +121,7 @@ namespace NiceHashMiner.Miners {
 
             LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
                               " --url=" + url +
-                              " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
+                              " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                               " --threads=" + Threads.ToString() +
                               " " + GetExtraLaunchParameters() +
                               " " + miningAlgorithm.ExtraLaunchParameters +

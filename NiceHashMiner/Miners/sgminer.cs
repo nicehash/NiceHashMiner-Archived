@@ -76,7 +76,7 @@ namespace NiceHashMiner.Miners
             LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
                               " -k " + miningAlgorithm.MinerName +
                               " --url=" + url +
-                              " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
+                              " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                               " --api-listen" +
                               " --api-port=" + APIPort.ToString() +
                               " " + GetExtraLaunchParameters() +
@@ -148,7 +148,7 @@ namespace NiceHashMiner.Miners
                           " --gpu-platform " + GPUPlatformNumber +
                           " -k " + algorithm.MinerName +
                           " --url=" + url +
-                          " --userpass=" + username + ":" + GetPassword(algorithm) +
+                          " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                           " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
                           " -T --log 10 --log-file dump.txt" +
                           " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters +

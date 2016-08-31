@@ -308,7 +308,6 @@ namespace NiceHashMiner.Miners {
         #region Groupping logic
         private bool IsAlgorithmSettingsSame(Algorithm a, Algorithm b) {
             return a.NiceHashID == b.NiceHashID
-                && SafeStrCompare(a.UsePassword, b.UsePassword)
 #if (SWITCH_TESTING)
  && (!ForcePerCardMiners) // this will force individual miners
 #endif
@@ -362,8 +361,8 @@ namespace NiceHashMiner.Miners {
                 && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
                 && IsSameBinPath(a, b)
                 // add check to password and extra launch params
-                && SafeStrCompare(
-                a.DeviceBenchmarkConfig.UsePassword, b.DeviceBenchmarkConfig.UsePassword)
+                //&& SafeStrCompare(
+                //a.DeviceBenchmarkConfig.PasswordDefault, b.DeviceBenchmarkConfig.PasswordDefault)
                 && SafeStrCompare(
                 a.DeviceBenchmarkConfig.ExtraLaunchParameters, b.DeviceBenchmarkConfig.ExtraLaunchParameters);
         }

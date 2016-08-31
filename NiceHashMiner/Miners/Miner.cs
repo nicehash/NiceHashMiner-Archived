@@ -142,12 +142,6 @@ namespace NiceHashMiner
             }
             return "";
         }
-        protected string GetUsePassword() {
-            if (CDevs != null && CDevs.Count > 0) {
-                return CDevs[0].DeviceBenchmarkConfig.UsePassword;
-            }
-            return "";
-        }
 
         public bool IsSupportedMinerAlgorithms(AlgorithmType algorithmType) {
             foreach (var supportedType in _supportedMinerAlgorithms) {
@@ -462,18 +456,18 @@ namespace NiceHashMiner
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
 
-        virtual protected string GetPassword(Algorithm a)
-        {
-            if (a.UsePassword != null && a.UsePassword.Length > 0)
-                return a.UsePassword;
+        // TODO remove
+        //virtual protected string GetPassword(Algorithm a) {
+        //    //if (a.PasswordDefault != null && a.PasswordDefault.Length > 0)
+        //    //    return a.PasswordDefault;
 
-            // device password
-            var UsePassword = GetUsePassword();
-            if (UsePassword != null && UsePassword.Length > 0)
-                return UsePassword;
+        //    //// device password
+        //    //var PasswordDefault = GetUsePassword();
+        //    //if (PasswordDefault != null && PasswordDefault.Length > 0)
+        //    //    return PasswordDefault;
 
-            return "x";
-        }
+        //    return "x";
+        //}
 
         virtual protected NiceHashProcess _Start()
         {

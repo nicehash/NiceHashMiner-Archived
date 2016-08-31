@@ -41,7 +41,7 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine = algo +
                                   " --url=" + url +
-                                  " --userpass=" + username + ":" + GetPassword(miningAlgorithm) +
+                                  " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                                   apiBind +
                                   " " + GetExtraLaunchParameters() +
                                   " " + miningAlgorithm.ExtraLaunchParameters +
