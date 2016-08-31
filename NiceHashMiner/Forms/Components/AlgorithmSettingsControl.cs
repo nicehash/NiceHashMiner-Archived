@@ -21,7 +21,8 @@ namespace NiceHashMiner.Forms.Components {
             InitializeComponent();
             fieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
 
-            fieldBoxPassword.SetOnTextChanged(textChangedPassword);
+            // TODO make sure intensity accepts valid ints based on Device and algo, miner...
+            fieldIntensity.SetOnTextChanged(textChangedIntensity);
             fieldBoxBenchmarkSpeed.SetOnTextChanged(textChangedBenchmarkSpeed);
             richTextBoxExtraLaunchParameters.TextChanged += textChangedExtraLaunchParameters;
 
@@ -32,7 +33,7 @@ namespace NiceHashMiner.Forms.Components {
             labelSelectedAlgorithm.Text = "Selected Algorithm: NONE";
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
-            fieldBoxPassword.EntryText = "";
+            fieldIntensity.EntryText = "";
             richTextBoxExtraLaunchParameters.Text = "";
         }
 
@@ -58,7 +59,12 @@ namespace NiceHashMiner.Forms.Components {
 
                 labelSelectedAlgorithm.Text = "Selected Algorithm: " + algorithm.NiceHashName;
 
-                fieldBoxPassword.EntryText = ParseStringDefault("TODO" /*algorithm.PasswordDefault*/);
+                fieldIntensity.EntryText = ParseStringDefault(algorithm.Intensity);
+                // no intensity for cpu miners and ccminer_cryptonight
+                fieldIntensity.Enabled = !(_computeDevice.DeviceGroupType == DeviceGroupType.CPU
+                    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.CryptoNight
+                    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto);
+
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
                 this.Update();
@@ -78,10 +84,10 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         #region Callbacks Events
-        private void textChangedPassword(object sender, EventArgs e) {
+        // TODO Intensity
+        private void textChangedIntensity(object sender, EventArgs e) {
             if (!CanEdit()) return;
-            // TODO
-            //_currentlySelectedAlgorithm.PasswordDefault = fieldBoxPassword.EntryText.Trim();
+            _currentlySelectedAlgorithm.Intensity = fieldIntensity.EntryText.Trim();
         }
         private void textChangedBenchmarkSpeed(object sender, EventArgs e) {
             if (!CanEdit()) return;

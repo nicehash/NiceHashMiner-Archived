@@ -16,7 +16,6 @@ namespace NiceHashMiner.Configs
         public DeviceGroupType DeviceGroupType { get; private set; }
 
         public string DeviceName { get; private set; }
-        public string ExtraLaunchParameters { get; set; }
         public int TimeLimit { get; set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
 
@@ -39,9 +38,6 @@ namespace NiceHashMiner.Configs
             } else {
                 AlgorithmSettings = GroupAlgorithms.CreateDefaultsForGroup(deviceGroupType);
             }
-
-            //PasswordDefault = "";
-            ExtraLaunchParameters = "";
 
             DeviceUUIDs = new List<string>();
             IsAlgorithmSettingsInit = false;
@@ -87,14 +83,6 @@ namespace NiceHashMiner.Configs
                 && */this.DeviceName == _file.DeviceName
                 );
 
-            // set editable data
-            if (_file.ExtraLaunchParameters != null) {
-                this.ExtraLaunchParameters = _file.ExtraLaunchParameters;
-            }
-            // TODO remove or set intensity
-            //if (_file.PasswordDefault != null) {
-            //    this.PasswordDefault = _file.PasswordDefault;
-            //}
             this.TimeLimit = _file.TimeLimit;
             if (_file.DeviceUUIDs != null) {
                 this.DeviceUUIDs = _file.DeviceUUIDs;

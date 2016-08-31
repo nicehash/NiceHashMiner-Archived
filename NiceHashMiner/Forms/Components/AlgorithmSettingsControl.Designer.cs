@@ -28,10 +28,10 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonBenchmark = new System.Windows.Forms.Button();
             this.labelSelectedAlgorithm = new System.Windows.Forms.Label();
-            this.fieldBoxPassword = new NiceHashMiner.Forms.Components.Field();
-            this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
             this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.RichTextBox();
+            this.fieldIntensity = new NiceHashMiner.Forms.Components.Field();
+            this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxSelectedAlgorithmSettings.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -51,7 +51,7 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel2);
-            this.flowLayoutPanel1.Controls.Add(this.fieldBoxPassword);
+            this.flowLayoutPanel1.Controls.Add(this.fieldIntensity);
             this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -92,28 +92,6 @@
             this.labelSelectedAlgorithm.TabIndex = 15;
             this.labelSelectedAlgorithm.Text = "Selected Algorithm: NONE";
             // 
-            // fieldBoxPassword
-            // 
-            this.fieldBoxPassword.AutoSize = true;
-            this.fieldBoxPassword.BackColor = System.Drawing.Color.Transparent;
-            this.fieldBoxPassword.EntryText = "";
-            this.fieldBoxPassword.LabelText = "Use Password:";
-            this.fieldBoxPassword.Location = new System.Drawing.Point(3, 40);
-            this.fieldBoxPassword.Name = "fieldBoxPassword";
-            this.fieldBoxPassword.Size = new System.Drawing.Size(389, 31);
-            this.fieldBoxPassword.TabIndex = 2;
-            // 
-            // fieldBoxBenchmarkSpeed
-            // 
-            this.fieldBoxBenchmarkSpeed.AutoSize = true;
-            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
-            this.fieldBoxBenchmarkSpeed.EntryText = "";
-            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed:";
-            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 77);
-            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
-            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(389, 31);
-            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
-            // 
             // groupBoxExtraLaunchParameters
             // 
             this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
@@ -132,6 +110,28 @@
             this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(381, 76);
             this.richTextBoxExtraLaunchParameters.TabIndex = 0;
             this.richTextBoxExtraLaunchParameters.Text = "";
+            // 
+            // fieldIntensity
+            // 
+            this.fieldIntensity.AutoSize = true;
+            this.fieldIntensity.BackColor = System.Drawing.Color.Transparent;
+            this.fieldIntensity.EntryText = "";
+            this.fieldIntensity.LabelText = "Intensity:";
+            this.fieldIntensity.Location = new System.Drawing.Point(3, 40);
+            this.fieldIntensity.Name = "fieldIntensity";
+            this.fieldIntensity.Size = new System.Drawing.Size(389, 31);
+            this.fieldIntensity.TabIndex = 2;
+            // 
+            // fieldBoxBenchmarkSpeed
+            // 
+            this.fieldBoxBenchmarkSpeed.AutoSize = true;
+            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.fieldBoxBenchmarkSpeed.EntryText = "";
+            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
+            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 77);
+            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
+            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(389, 31);
+            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
             // 
             // AlgorithmSettingsControl
             // 
@@ -156,7 +156,7 @@
         private System.Windows.Forms.GroupBox groupBoxExtraLaunchParameters;
         private System.Windows.Forms.RichTextBox richTextBoxExtraLaunchParameters;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private Field fieldBoxPassword;
+        private Field fieldIntensity;
         private Field fieldBoxBenchmarkSpeed;
         private System.Windows.Forms.Button buttonBenchmark;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;

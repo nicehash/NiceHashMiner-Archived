@@ -18,7 +18,6 @@ namespace NiceHashMiner.Miners {
 
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {
             return " --cuda"
-                + " " + GetExtraLaunchParameters()
                 + " " + miningAlgorithm.ExtraLaunchParameters
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":" + Algorithm.PasswordDefault
@@ -28,7 +27,6 @@ namespace NiceHashMiner.Miners {
 
         protected override string GetBenchmarkCommandStringPart(ComputeDevice benchmarkDevice, Algorithm algorithm) {
             return " --benchmark-warmup 40 --benchmark-trial 20"
-                + " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters
                 + " " + algorithm.ExtraLaunchParameters
                 + " --cuda --cuda-devices ";
         }

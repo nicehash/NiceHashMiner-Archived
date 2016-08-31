@@ -407,12 +407,7 @@ namespace NiceHashMiner.Miners {
         private bool IsGroupBinaryAndAlgorithmSame(ComputeDevice a, ComputeDevice b) {
             return IsNotCpuGroups(a, b)
                 && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
-                && IsSameBinPath(a, b)
-                // add check to password and extra launch params
-                //&& SafeStrCompare(
-                //a.DeviceBenchmarkConfig.PasswordDefault, b.DeviceBenchmarkConfig.PasswordDefault)
-                && SafeStrCompare(
-                a.DeviceBenchmarkConfig.ExtraLaunchParameters, b.DeviceBenchmarkConfig.ExtraLaunchParameters);
+                && IsSameBinPath(a, b);
         }
         #endregion //Groupping logic
 

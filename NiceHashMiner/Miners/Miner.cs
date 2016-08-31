@@ -135,14 +135,6 @@ namespace NiceHashMiner
             }
         }
 
-        // this is now related to devices
-        protected string GetExtraLaunchParameters() {
-            if (CDevs != null && CDevs.Count > 0) {
-                return CDevs[0].DeviceBenchmarkConfig.ExtraLaunchParameters;
-            }
-            return "";
-        }
-
         public bool IsSupportedMinerAlgorithms(AlgorithmType algorithmType) {
             foreach (var supportedType in _supportedMinerAlgorithms) {
                 if (supportedType == algorithmType) return true;

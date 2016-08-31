@@ -16,17 +16,13 @@ namespace NiceHashMiner.Devices {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<AlgorithmType, Algorithm>() {
                 { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
-                { AlgorithmType.Axiom, new Algorithm(AlgorithmType.Axiom, "axiom") },
-                { AlgorithmType.ScryptJaneNf16, new Algorithm(AlgorithmType.ScryptJaneNf16, "scryptjane:16") },
                 { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") },
-                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") { ExtraLaunchParameters = "--no-extranonce"} }
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") /* NOT NEDDED { ExtraLaunchParameters = "--no-extranonce"}*/ }
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
                 string DefaultParam = AmdGpuDevice.DefaultParam;
                 return new Dictionary<AlgorithmType, Algorithm>() { 
-                { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  640 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },
                 { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13,  "x13")
                     { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2" } },
                 { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak,  "keccak")
@@ -59,7 +55,6 @@ namespace NiceHashMiner.Devices {
             // NVIDIA
             if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                 var ret = new Dictionary<AlgorithmType, Algorithm> {
-                { AlgorithmType.X11 , new Algorithm(AlgorithmType.X11, "x11") },
                 { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13, "x13") },
                 { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak, "keccak") },
                 { AlgorithmType.X15 , new Algorithm(AlgorithmType.X15, "x15") },

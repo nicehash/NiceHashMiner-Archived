@@ -16,9 +16,6 @@ namespace NiceHashMiner.Forms.Components {
             amdSpecificSettings1.Visible = false;
             cpuSpecificSettings1.Visible = false;
             nvidiaSpecificSettings1.Visible = false;
-            // set callbacks
-            fieldUsePassword.SetOnTextChanged(textChangedPassword);
-            richTextBoxExtraLaunchParameters.TextChanged += textChangedExtraLaunchParameters;
         }
 
         ComputeDevice _selectedComputeDevice;
@@ -58,32 +55,7 @@ namespace NiceHashMiner.Forms.Components {
                 || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_5_x
                 || _selectedComputeDevice.DeviceGroupType == DeviceGroupType.NVIDIA_6_x;
 
-            // TODO remove or set intensity
-            //fieldUsePassword.EntryText = ParseStringDefault(_selectedComputeDevice.DeviceBenchmarkConfig.PasswordDefault);
-            richTextBoxExtraLaunchParameters.Text = ParseStringDefault(_selectedComputeDevice.DeviceBenchmarkConfig.ExtraLaunchParameters);
-
             _selected = true;
         }
-
-        // TODO duplicate code
-        private string ParseStringDefault(string value) {
-            return value == null ? "" : value;
-        }
-
-        private bool CanEdit() {
-            return _selectedComputeDevice != null && _selected && _selectedComputeDevice.DeviceBenchmarkConfig != null;
-        }
-
-        #region Callbacks Events
-        private void textChangedPassword(object sender, EventArgs e) {
-            if (!CanEdit()) return;
-            // TODO replace intensity or remove
-            //_selectedComputeDevice.DeviceBenchmarkConfig.PasswordDefault = fieldUsePassword.EntryText.Trim();
-        }
-        private void textChangedExtraLaunchParameters(object sender, EventArgs e) {
-            if (!CanEdit()) return;
-            _selectedComputeDevice.DeviceBenchmarkConfig.ExtraLaunchParameters = richTextBoxExtraLaunchParameters.Text;
-        }
-        #endregion
     }
 }

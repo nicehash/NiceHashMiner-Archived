@@ -26,7 +26,6 @@ namespace NiceHashMiner.Miners {
             // set directory
             WorkingDirectory = "";
             return " --opencl --opencl-platform " + GPUPlatformNumber
-                + " " + GetExtraLaunchParameters()
                 + " " + miningAlgorithm.ExtraLaunchParameters
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":" + Algorithm.PasswordDefault
@@ -36,7 +35,6 @@ namespace NiceHashMiner.Miners {
 
         protected override string GetBenchmarkCommandStringPart(ComputeDevice benchmarkDevice, Algorithm algorithm) {
             return " --opencl --opencl-platform " + GPUPlatformNumber
-                + " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters
                 + " " + algorithm.ExtraLaunchParameters
                 + " --benchmark-warmup 40 --benchmark-trial 20"
                 + " --opencl-devices ";

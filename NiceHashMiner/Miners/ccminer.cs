@@ -32,9 +32,11 @@ namespace NiceHashMiner.Miners
 
             string algo = "";
             string apiBind = "";
+            string intensity = "";
             if (CurrentMiningAlgorithm.NiceHashID != AlgorithmType.CryptoNight) {
                 algo = "--algo=" + miningAlgorithm.MinerName;
                 apiBind = " --api-bind=" + APIPort.ToString();
+                intensity = " --intensity=" + miningAlgorithm.Intensity;
             }
 
             IsAPIReadException = CurrentMiningAlgorithm.NiceHashID == AlgorithmType.CryptoNight;
@@ -43,8 +45,8 @@ namespace NiceHashMiner.Miners
                                   " --url=" + url +
                                   " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                                   apiBind +
-                                  " " + GetExtraLaunchParameters() +
                                   " " + miningAlgorithm.ExtraLaunchParameters +
+                                  intensity +
                                   " --devices ";
 
             LastCommandLine += GetDevicesCommandString();
@@ -70,7 +72,6 @@ namespace NiceHashMiner.Miners
             string CommandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
                               timeLimit +
-                              " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters +
                               " " + algorithm.ExtraLaunchParameters +
                               " --devices ";
 

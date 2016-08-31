@@ -27,12 +27,6 @@ namespace NiceHashMiner.Miners
         public const string cpuminer_opt_AVX2 = _bin + @"\cpuminer_opt_AVX2.exe";
         public const string cpuminer_opt_SSE2 = _bin + @"\cpuminer_opt_SSE2.exe";
         /// <summary>
-        /// cpuminers old
-        /// </summary>
-        public const string cpuminer_x64_AVX = _bin +  @"\cpuminer_x64_AVX.exe";
-        public const string cpuminer_x64_AVX2 = _bin + @"\cpuminer_x64_AVX2.exe";
-        public const string cpuminer_x64_SSE2 = _bin + @"\cpuminer_x64_SSE2.exe";
-        /// <summary>
         /// ethminers
         /// </summary>
         public const string ethminer = _bin + @"\ethminer.exe";

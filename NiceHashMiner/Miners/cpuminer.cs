@@ -11,8 +11,7 @@ namespace NiceHashMiner.Miners {
     public class cpuminer : Miner {
         private int Threads;
         private ulong AffinityMask;
-        private string CPUMinerPath; // axiom faster on AVX2
-        private string CPUMinerPathOpt; // AVX2 faster except axiom
+        private string CPUMinerPath;
 
         public cpuminer(int id, int threads, ulong affinity)
             : base() {
@@ -64,16 +63,13 @@ namespace NiceHashMiner.Miners {
                 isInitialized = true;
                 switch (type) {
                     case CPUExtensionType.SSE2:
-                        CPUMinerPath = MinerPaths.cpuminer_x64_SSE2;
-                        CPUMinerPathOpt = MinerPaths.cpuminer_opt_SSE2;
+                        CPUMinerPath = MinerPaths.cpuminer_opt_SSE2;
                         break;
                     case CPUExtensionType.AVX:
-                        CPUMinerPath = MinerPaths.cpuminer_x64_AVX;
-                        CPUMinerPathOpt = MinerPaths.cpuminer_opt_AVX;
+                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX;
                         break;
                     case CPUExtensionType.AVX2:
-                        CPUMinerPath = MinerPaths.cpuminer_x64_AVX2;
-                        CPUMinerPathOpt = MinerPaths.cpuminer_opt_AVX2;
+                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX2;
                         break;
                     default: // CPUExtensionType.Automatic
                         break;
@@ -84,10 +80,7 @@ namespace NiceHashMiner.Miners {
 
         // TODO only AVX2 tested
         public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = false) {
-            if (algorithmType == AlgorithmType.Axiom) {
-                return CPUMinerPath;
-            }
-            return CPUMinerPathOpt;
+            return CPUMinerPath;
         }
 
         /// <summary>
@@ -123,7 +116,6 @@ namespace NiceHashMiner.Miners {
                               " --url=" + url +
                               " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                               " --threads=" + Threads.ToString() +
-                              " " + GetExtraLaunchParameters() +
                               " " + miningAlgorithm.ExtraLaunchParameters +
                               " --api-bind=" + APIPort.ToString();
 
@@ -160,7 +152,6 @@ namespace NiceHashMiner.Miners {
             return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
                          " --threads=" + Threads.ToString() +
-                         " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters +
                          " " + algorithm.ExtraLaunchParameters +
                          " --time-limit " + time.ToString();
         }

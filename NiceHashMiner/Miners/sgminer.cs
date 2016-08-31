@@ -14,6 +14,7 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Miners
 {
+    // TODO IMPORTANT, Intensity not handled correctly
     // for now AMD only
     class sgminer : Miner
     {
@@ -79,7 +80,6 @@ namespace NiceHashMiner.Miners
                               " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                               " --api-listen" +
                               " --api-port=" + APIPort.ToString() +
-                              " " + GetExtraLaunchParameters() +
                               " " + miningAlgorithm.ExtraLaunchParameters +
                               " --device ";
 
@@ -151,7 +151,6 @@ namespace NiceHashMiner.Miners
                           " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                           " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
                           " -T --log 10 --log-file dump.txt" +
-                          " " + benchmarkDevice.DeviceBenchmarkConfig.ExtraLaunchParameters +
                           " " + algorithm.ExtraLaunchParameters +
                           " --device ";
 
