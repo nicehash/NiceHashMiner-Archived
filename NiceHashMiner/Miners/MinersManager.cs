@@ -332,7 +332,7 @@ namespace NiceHashMiner.Miners {
                     // log stuff
                     string speedStr = algoSpeedKvp.Value.ToString("F3");
                     string speedPreaty = new String(' ', MAX_SPEED_LEN - speedStr.Length) + speedStr;
-                    stringBuilderDevice.AppendLine(String.Format("\t\t{0}\t:\t:PROFIT={1} ({2}, SPEED={3}, NHSMA={4})",
+                    stringBuilderDevice.AppendLine(String.Format("\t\t{0}\t:\tPROFIT = {1}  ({2}, SPEED = {3}, NHSMA = {4})",
                     namePreaty, // Name
                     algoProfit.ToString(DOUBLE_FORMAT), // Profit
                     isEnabled ? "ENABLED " : "DISABLED", // ENABLED/DISABLED
@@ -486,19 +486,19 @@ namespace NiceHashMiner.Miners {
             // now if profitable check
             // TODO FOR NOW USD ONLY
             var currentProfitUSD = (CurrentProfit * Globals.BitcoinRate);
-            Helpers.ConsolePrint(TAG,  "Current Global profit: " + currentProfitUSD.ToString("F8") + " BTC/Day");
+            Helpers.ConsolePrint(TAG,  "Current Global profit: " + currentProfitUSD.ToString("F8") + " USD/Day");
             if (ConfigManager.Instance.GeneralConfig.MinimumProfit > 0
                     && currentProfitUSD < ConfigManager.Instance.GeneralConfig.MinimumProfit) {
                 IsProfitable = false;
                 _mainFormRatesComunication.ShowNotProfitable();
                 // return don't group
                 StopAllMiners();
-                Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " BTC/Day");
+                Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");
                 return;
             } else {
                 IsProfitable = true;
                 _mainFormRatesComunication.HideNotProfitable();
-                Helpers.ConsolePrint(TAG, "Current Global profit: IS PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " BTC/Day");
+                Helpers.ConsolePrint(TAG, "Current Global profit: IS PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");
             }
 
             // group devices with same supported algorithms
@@ -585,9 +585,6 @@ namespace NiceHashMiner.Miners {
                 APIData AD = m.GetSummary();
                 if (AD == null) {
                     Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
-                    continue;
-                } else {
-                    //Helpers.ConsolePrint("GetSummary", String.Format("Devices {0}\tAlgorithm : {1}\tSpeed : {2}", groupMiners.DevicesInfoString, AD.AlgorithmName, AD.Speed));
                 }
                 // set rates
                 if (NiceHashData != null) {

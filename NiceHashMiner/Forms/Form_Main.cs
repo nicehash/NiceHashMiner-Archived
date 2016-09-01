@@ -270,7 +270,7 @@ namespace NiceHashMiner
             // check if download needed
             if (!MinersDownloadManager.Instance.IsMinersBinsInit()) {
                 _downloadUnzipForm = new Form_Loading();
-                _downloadUnzipForm.Location = new Point(this.Location.X + (this.Width - _downloadUnzipForm.Width) / 2, this.Location.Y + (this.Height - _downloadUnzipForm.Height) / 2);
+                SetFormCenter(_downloadUnzipForm);
                 _downloadUnzipForm.ShowDialog();
             }
             // TODO no bots please
@@ -281,6 +281,9 @@ namespace NiceHashMiner
             }
         }
 
+        private void SetFormCenter(Form form) {
+            form.Location = new Point(this.Location.X + (this.Width - form.Width) / 2, this.Location.Y + (this.Height - form.Height) / 2);
+        }
 
         private void Form_Main_Shown(object sender, EventArgs e)
         {
@@ -290,7 +293,7 @@ namespace NiceHashMiner
             LoadingScreen = new Form_Loading(this,
                 International.GetText("form3_label_LoadingText"),
                 International.GetText("form1_loadtext_CPU"), TotalLoadSteps);
-            LoadingScreen.Location = new Point(this.Location.X + (this.Width - LoadingScreen.Width) / 2, this.Location.Y + (this.Height - LoadingScreen.Height) / 2);
+            SetFormCenter(LoadingScreen);
             LoadingScreen.Show();
 
             StartupTimer = new Timer();
@@ -582,6 +585,8 @@ namespace NiceHashMiner
         private void buttonSettings_Click(object sender, EventArgs e)
         {
             FormSettings Settings = new FormSettings();
+            // TODO location not working for settings dialog
+            SetFormCenter(Settings);
             Settings.ShowDialog();
 
             if (Settings.IsChange && Settings.IsChangeSaved && Settings.IsRestartNeeded) {

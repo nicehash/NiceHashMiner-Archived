@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,6 +31,8 @@ namespace NiceHashMiner.Forms {
 
         // most likely we wil have settings only per unique devices
         bool ShowUniqueDeviceList = true;
+
+        ComputeDevice _selectedComputeDevice;
 
         // deep copy initial state if we want to discard changes
         private GeneralConfig _generalConfigBackup;
@@ -88,8 +91,11 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.comboBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
             toolTip1.SetToolTip(this.label_Language, International.GetText("Form_Settings_ToolTip_Language"));
             toolTip1.SetToolTip(this.checkBox_DebugConsole, International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
+            
             toolTip1.SetToolTip(this.textBox_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
             toolTip1.SetToolTip(this.label_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
+            toolTip1.SetToolTip(this.pictureBox_Info_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
+            
             toolTip1.SetToolTip(this.textBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
             toolTip1.SetToolTip(this.label_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
             toolTip1.SetToolTip(this.comboBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
@@ -138,6 +144,12 @@ namespace NiceHashMiner.Forms {
             //toolTip1.SetToolTip(this.label_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
+
+            // Setup Tooltips CPU
+            toolTip1.SetToolTip(comboBox_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
+            toolTip1.SetToolTip(label_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
+            toolTip1.SetToolTip(textBox_CPU0_LessThreads, International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
+            toolTip1.SetToolTip(label_CPU0_LessThreads, International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
         }
 
         #region Form this
@@ -199,6 +211,10 @@ namespace NiceHashMiner.Forms {
 
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
+
+            // Setup Tooltips CPU
+            label_CPU0_ForceCPUExtension.Text = International.GetText("Form_Settings_General_CPU_ForceCPUExtension") + ":";
+            label_CPU0_LessThreads.Text = International.GetText("Form_Settings_General_CPU_LessThreads") + ":";
         }
 
         private void InitializeGeneralTabCallbacks() {
@@ -252,6 +268,21 @@ namespace NiceHashMiner.Forms {
                 this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
             }
+
+            // TODO CPU exceptions
+            comboBox_CPU0_ForceCPUExtension.SelectedIndex = (int)ConfigManager.Instance.GeneralConfig.ForceCPUExtension;
+            comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged;
+            textBox_CPU0_LessThreads.Text = ConfigManager.Instance.GeneralConfig.LessThreads.ToString();
+            textBox_CPU0_LessThreads.Leave += LessThreads_Leave;
+            textBox_CPU0_LessThreads.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+            // TODO 
+            // fill dag dropdown
+            comboBox_DagLoadMode.Items.Clear();
+            for (int i = 0; i < (int)DagGenerationType.END; ++i) {
+                comboBox_DagLoadMode.Items.Add(MinerEtherum.GetDagGenerationString((DagGenerationType)i));
+            }
+            // set selected
+            comboBox_DagLoadMode.SelectedIndex = (int)ConfigManager.Instance.GeneralConfig.EthminerDagGenerationType;
         }
 
         private void InitializeGeneralTabFieldValuesReferences() {
@@ -335,7 +366,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void InitializeDevicesTabTranslations() {
-            deviceSettingsControl1.InitLocale(toolTip1);
+            //deviceSettingsControl1.InitLocale(toolTip1);
         }
 
 
@@ -396,7 +427,6 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
             ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning = checkBox_ShowDriverVersionWarning.Checked;
             ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
-            //ConfigManager.Instance.GeneralConfig.UseNewSettingsPage = checkBox_UseNewSettingsPage.Checked;
             ConfigManager.Instance.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.Instance.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
         }
@@ -458,22 +488,42 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
         }
 
+        private void comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e) {
+            ComboBox cmbbox = (ComboBox)sender;
+            ConfigManager.Instance.GeneralConfig.ForceCPUExtension = (CPUExtensionType)cmbbox.SelectedIndex;
+        }
+
+        private void LessThreads_Leave(object sender, EventArgs e) {
+            TextBox txtbox = (TextBox)sender;
+
+            int val;
+            if (Int32.TryParse(txtbox.Text, out val))
+                ConfigManager.Instance.GeneralConfig.LessThreads = val;
+            else {
+                MessageBox.Show(International.GetText("Form_Settings_LessThreadWarningMsg"),
+                                International.GetText("Form_Settings_LessThreadWarningTitle"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtbox.Text = ConfigManager.Instance.GeneralConfig.LessThreads.ToString();
+                txtbox.Focus();
+            }
+        }
+
+        private void comboBox_DagLoadMode_Leave(object sender, EventArgs e) {
+            ConfigManager.Instance.GeneralConfig.EthminerDagGenerationType = (DagGenerationType)comboBox_DagLoadMode.SelectedIndex;
+        }
+
         #endregion //Tab General
 
 
         #region Tab Device
         // TODO indicate change
         private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
-            // check if device settings enabled
-            if (deviceSettingsControl1.Enabled == false) {
-                deviceSettingsControl1.Enabled = true;
-            }
+
             algorithmSettingsControl1.Deselect();
             // show algorithms
-            var selectedComputeDevice = GetCurrentlySelectedComputeDevice(e.ItemIndex);
-            deviceSettingsControl1.SelectedComputeDevice = selectedComputeDevice;
-            algorithmsListView1.SetAlgorithms(selectedComputeDevice);
-            groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", selectedComputeDevice.Name);
+            _selectedComputeDevice = GetCurrentlySelectedComputeDevice(e.ItemIndex);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice);
+            groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", _selectedComputeDevice.Name);
         }
 
         // TODO IMPORTANT get back to this div thing
@@ -504,15 +554,14 @@ namespace NiceHashMiner.Forms {
                                  1000000 }; // 999 (MH/s) Ethereum
 
         private void buttonSelectedProfit_Click(object sender, EventArgs e) {
-            var selectedCDev = deviceSettingsControl1.SelectedComputeDevice;
-            if (selectedCDev == null) {
+            if (_selectedComputeDevice == null) {
                 MessageBox.Show("Select device first",
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK);
                 return;
             }
-            var url = "https://www.nicehash.com/?p=calc&name=" + selectedCDev.Name;
-            foreach (var algorithm in selectedCDev.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
+            var url = "https://www.nicehash.com/?p=calc&name=" + _selectedComputeDevice.Name;
+            foreach (var algorithm in _selectedComputeDevice.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
                 var id = (int)algorithm.NiceHashID;
                 url += "&speed" + id + "=" + (algorithm.BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
             }

@@ -13,8 +13,7 @@ namespace NiceHashMiner.Forms.Components {
     public partial class DevicesListViewEnableControl : UserControl {
 
         private const int ENABLED = 0;
-        private const int GROUP = 1;
-        private const int DEVICE = 2;
+        private const int DEVICE = 1;
 
         private class DefaultDevicesColorSeter : IListItemCheckColorSetter {
             private static Color ENABLED_COLOR = Color.White;
@@ -85,7 +84,6 @@ namespace NiceHashMiner.Forms.Components {
             // set devices
             foreach (var computeDevice in computeDevices) {
                 ListViewItem lvi = new ListViewItem();
-                lvi.SubItems.Add(computeDevice.Group);
                 lvi.SubItems.Add(computeDevice.Name);
                 lvi.Checked = computeDevice.Enabled || SetAllEnabled;
                 ComputeDeviceEnabledOption newTag = new ComputeDeviceEnabledOption() {
@@ -110,7 +108,6 @@ namespace NiceHashMiner.Forms.Components {
 
         public void InitLocale() {
             listViewDevices.Columns[ENABLED].Text = International.GetText("ListView_Enabled");
-            listViewDevices.Columns[GROUP].Text = International.GetText("ListView_Group");
             listViewDevices.Columns[DEVICE].Text = International.GetText("ListView_Device");
         }
 

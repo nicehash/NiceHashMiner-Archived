@@ -25,8 +25,6 @@
         private void InitializeComponent() {
             this.labelFieldIndicator = new System.Windows.Forms.Label();
             this.textBox = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelFieldIndicator
@@ -36,25 +34,15 @@
             this.labelFieldIndicator.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.labelFieldIndicator.Name = "labelFieldIndicator";
             this.labelFieldIndicator.Size = new System.Drawing.Size(98, 13);
-            this.labelFieldIndicator.TabIndex = 3;
+            this.labelFieldIndicator.TabIndex = 6;
             this.labelFieldIndicator.Text = "Label field indicator";
             // 
             // textBox
             // 
-            this.textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox.Location = new System.Drawing.Point(165, 3);
+            this.textBox.Location = new System.Drawing.Point(3, 22);
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(206, 20);
-            this.textBox.TabIndex = 5;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.labelFieldIndicator);
-            this.panel1.Controls.Add(this.textBox);
-            this.panel1.Location = new System.Drawing.Point(12, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(374, 28);
-            this.panel1.TabIndex = 6;
+            this.textBox.Size = new System.Drawing.Size(148, 20);
+            this.textBox.TabIndex = 7;
             // 
             // Field
             // 
@@ -62,12 +50,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.labelFieldIndicator);
+            this.Controls.Add(this.textBox);
             this.Name = "Field";
-            this.Size = new System.Drawing.Size(455, 31);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.Size = new System.Drawing.Size(195, 47);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -75,7 +63,7 @@
 
         private System.Windows.Forms.Label labelFieldIndicator;
         private System.Windows.Forms.TextBox textBox;
-        private System.Windows.Forms.Panel panel1;
+
 
 
     }

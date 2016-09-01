@@ -35,7 +35,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SWITCH_TESTING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -109,12 +109,6 @@
     <Compile Include="Forms\Components\AlgorithmsListView.Designer.cs">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\AmdSpecificSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\AmdSpecificSettings.Designer.cs">
-      <DependentUpon>AmdSpecificSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Components\AlgorithmSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -132,18 +126,6 @@
     </Compile>
     <Compile Include="Forms\Components\BenchmarkOptions.Designer.cs">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\CpuSpecificSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\CpuSpecificSettings.Designer.cs">
-      <DependentUpon>CpuSpecificSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\DeviceSettingsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\DeviceSettingsControl.Designer.cs">
-      <DependentUpon>DeviceSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Components\DevicesListView.cs">
       <SubType>UserControl</SubType>
@@ -168,12 +150,6 @@
     </Compile>
     <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\NvidiaSpecificSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\NvidiaSpecificSettings.Designer.cs">
-      <DependentUpon>NvidiaSpecificSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormBenchmark.cs">
       <SubType>Form</SubType>
@@ -263,9 +239,6 @@
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\AmdSpecificSettings.resx">
-      <DependentUpon>AmdSpecificSettings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
       <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -275,12 +248,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\CpuSpecificSettings.resx">
-      <DependentUpon>CpuSpecificSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\DeviceSettingsControl.resx">
-      <DependentUpon>DeviceSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\DevicesListView.resx">
       <DependentUpon>DevicesListView.cs</DependentUpon>
@@ -293,9 +260,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\NvidiaSpecificSettings.resx">
-      <DependentUpon>NvidiaSpecificSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormBenchmark.resx">
       <DependentUpon>FormBenchmark.cs</DependentUpon>
@@ -349,6 +313,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\info_black_18.png" />
+    <Content Include="Resources\info_black_36.png" />
     <Content Include="Resources\logo.ico" />
     <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
     <Content Include="Resources\NHM_help_50px.png" />

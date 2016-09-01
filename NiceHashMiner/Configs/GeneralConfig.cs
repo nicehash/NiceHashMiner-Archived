@@ -63,6 +63,8 @@ namespace NiceHashMiner.Configs {
 
         public BenchmarkTimeLimitsConfig BenchmarkTimeLimits { get; set; }
         public DeviceDetectionConfig DeviceDetection { get; set; }
+        
+        // TODO remove
         public bool DisableAMDTempControl { get; set; }
         public bool AutoScaleBTCValues { get; set; }
         public bool StartMiningWhenIdle { get; set; }
@@ -86,8 +88,7 @@ namespace NiceHashMiner.Configs {
         public bool NVIDIAP0State { get; set; }
 
         public int ethminerDefaultBlockHeight { get; set; }
-        public DagGenerationType EthminerDagGenerationTypeNvidia;
-        public DagGenerationType EthminerDagGenerationTypeAMD;
+        public DagGenerationType EthminerDagGenerationType;
 
         private int _apiBindPortPoolStart = 5100;
         public int ApiBindPortPoolStart {
@@ -157,8 +158,7 @@ namespace NiceHashMiner.Configs {
             DisplayCurrency = "USD";
             ApiBindPortPoolStart = 4000;
             MinimumProfit = 0;
-            EthminerDagGenerationTypeNvidia = DagGenerationType.SingleKeep;
-            EthminerDagGenerationTypeAMD = DagGenerationType.SingleKeep;
+            EthminerDagGenerationType = DagGenerationType.SingleKeep;
         }
 
         public GeneralConfig(bool initDefaults = false) {
@@ -216,8 +216,7 @@ namespace NiceHashMiner.Configs {
             DisableWindowsErrorReporting  = _file.DisableWindowsErrorReporting;
             NVIDIAP0State = _file.NVIDIAP0State;
             ethminerDefaultBlockHeight = _file.ethminerDefaultBlockHeight;
-            EthminerDagGenerationTypeNvidia = _file.EthminerDagGenerationTypeNvidia;
-            EthminerDagGenerationTypeAMD = _file.EthminerDagGenerationTypeAMD;
+            EthminerDagGenerationType = _file.EthminerDagGenerationType;
             ApiBindPortPoolStart = _file.ApiBindPortPoolStart;
             MinimumProfit = _file.MinimumProfit;
 

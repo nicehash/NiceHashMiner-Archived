@@ -19,7 +19,8 @@ namespace NiceHashMiner.Forms.Components {
             string speedString, string btcRateString, string currencyRateString) {
             bool isGPU = groupName.Contains("NVIDIA") || groupName.Contains("AMD");
             string gpuPrefix = isGPU ? "GPU " : "";
-            groupBoxMinerGroup.Text = String.Format("{0}{1} Mining Devices {2}:", gpuPrefix, groupName, deviceStringInfo);
+            //groupBoxMinerGroup.Text = String.Format("{0}{1} Mining Devices {2}:", gpuPrefix, groupName, deviceStringInfo);
+            groupBoxMinerGroup.Text = String.Format("Mining Devices {0}:", deviceStringInfo);
             labelSpeedValue.Text = speedString;
             labelBTCRateValue.Text = btcRateString;
             labelCurentcyPerDayVaue.Text = currencyRateString;

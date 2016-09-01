@@ -30,7 +30,7 @@ namespace NiceHashMiner.Forms.Components {
 
         public void Deselect() {
             _selected = false;
-            labelSelectedAlgorithm.Text = "Selected Algorithm: NONE";
+            groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm: NONE";
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
             fieldIntensity.EntryText = "";
@@ -57,7 +57,7 @@ namespace NiceHashMiner.Forms.Components {
                 _currentlySelectedLvi = lvi;
                 this.Enabled = lvi.Checked;
 
-                labelSelectedAlgorithm.Text = "Selected Algorithm: " + algorithm.NiceHashName;
+                groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm: " + algorithm.NiceHashName;
 
                 fieldIntensity.EntryText = ParseStringDefault(algorithm.Intensity);
                 // no intensity for cpu miners and ccminer_cryptonight

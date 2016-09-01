@@ -63,7 +63,7 @@ namespace NiceHashMiner.Forms.Components {
                 foreach (var alg in config.AlgorithmSettings) {
                     ListViewItem lvi = new ListViewItem();
                     lvi.Checked = !alg.Value.Skip;
-                    //lvi.SubItems.Add(config.DeviceName);
+                    lvi.Text = alg.Value.NiceHashName;
                     ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
 
                     //sub.Tag = alg.Value;

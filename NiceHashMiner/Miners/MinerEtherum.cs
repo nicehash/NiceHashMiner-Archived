@@ -22,12 +22,12 @@ namespace NiceHashMiner.Miners {
         readonly protected string CurrentBlockString;
         readonly private DagGenerationType DagGenerationType;
 
-        public MinerEtherum(string blockString, DagGenerationType dagGenerationType)
+        public MinerEtherum(string blockString)
             : base() {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
             CurrentBlockString = blockString;
-            DagGenerationType = dagGenerationType;
+            DagGenerationType = ConfigManager.Instance.GeneralConfig.EthminerDagGenerationType;
         }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {

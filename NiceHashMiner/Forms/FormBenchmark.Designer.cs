@@ -24,7 +24,6 @@
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBenchmark));
-            this.label1 = new System.Windows.Forms.Label();
             this.StartStopBtn = new System.Windows.Forms.Button();
             this.CloseBtn = new System.Windows.Forms.Button();
             this.radioButton_SelectedUnbenchmarked = new System.Windows.Forms.RadioButton();
@@ -48,15 +47,6 @@
             this.groupBoxBenchmarkProgress.SuspendLayout();
             this.groupBoxBenchmarkingAlgoStats.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(148, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Select devices to benchmark.";
             // 
             // StartStopBtn
             // 
@@ -245,24 +235,23 @@
             // 
             this.devicesListViewEnableControl1.AutoSaveChange = false;
             this.devicesListViewEnableControl1.FirstColumnText = "Benckmark";
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(12, 45);
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(12, 12);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
             this.devicesListViewEnableControl1.SetAllEnabled = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(531, 156);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(471, 156);
             this.devicesListViewEnableControl1.TabIndex = 0;
             // 
             // FormBenchmark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(555, 590);
+            this.ClientSize = new System.Drawing.Size(624, 590);
             this.Controls.Add(this.groupBoxBenchmarkProgress);
             this.Controls.Add(this.benchmarkOptions1);
             this.Controls.Add(this.groupBoxAlgorithmBenchmarkSettings);
             this.Controls.Add(this.StartStopBtn);
             this.Controls.Add(this.CloseBtn);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -278,14 +267,12 @@
             this.groupBoxBenchmarkingAlgoStats.ResumeLayout(false);
             this.groupBoxBenchmarkingAlgoStats.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private Components.DevicesListViewEnableControl devicesListViewEnableControl1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button StartStopBtn;
         private System.Windows.Forms.Button CloseBtn;
         private System.Windows.Forms.RadioButton radioButton_SelectedUnbenchmarked;

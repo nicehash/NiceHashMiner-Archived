@@ -192,9 +192,12 @@ namespace NiceHashMiner.Devices
         private List<VideoControllerData> AvaliableVideoControllers = new List<VideoControllerData>();
 
         private void QueryVideoControllers() {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("");
+            stringBuilder.AppendLine("QueryVideoControllers: ");
             ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get();
             foreach (var manObj in moc) {
-                Helpers.ConsolePrint(TAG, "GPU Name (Driver Ver): " + manObj["Name"] + " (" + manObj["DriverVersion"] + ")");
+                stringBuilder.AppendLine(String.Format("\tGPU Name (Driver Ver): {0} ({1})", manObj["Name"] , manObj["DriverVersion"]));
                 AvaliableVideoControllers.Add(
                     new VideoControllerData() {
                         Name = manObj["Name"] as string,
@@ -203,6 +206,7 @@ namespace NiceHashMiner.Devices
                         DriverVersion = manObj["DriverVersion"] as string
                     });
             }
+            Helpers.ConsolePrint(TAG, stringBuilder.ToString());
         }
 
         private bool HasNvidiaVideoController() {
@@ -496,7 +500,7 @@ namespace NiceHashMiner.Devices
                     CudaDevicesDetection.BeginErrorReadLine();
                     CudaDevicesDetection.BeginOutputReadLine();
                     if (CudaDevicesDetection.WaitForExit(waitTime)) {
-                        CudaDevicesDetection.Kill();
+                        CudaDevicesDetection.Close();
                     }
                 }
             } catch (Exception ex) {
@@ -510,6 +514,9 @@ namespace NiceHashMiner.Devices
                 }
             }
             if (CudaDevices != null && CudaDevices.Count != 0) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("");
+                stringBuilder.AppendLine("CudaDevicesDetection:");
                 foreach (var cudaDev in CudaDevices) {
                     // check sm vesrions
                     bool isUnderSM2 = cudaDev.SM_major < 2;
@@ -518,13 +525,14 @@ namespace NiceHashMiner.Devices
                     bool isDisabledGroup = IsSMGroupSkip(cudaDev.SM_major);
                     bool skip = isUnderSM2 || isDisabledGroup;
                     string skipOrAdd = skip ? "SKIPED" : "ADDED";
-                    string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO"; 
-                    string logMessage = String.Format("CudaDevicesDetection {0} device: {1}",
-                        skipOrAdd,
-                        String.Format("ID: {0}, NAME: {1}, UUID: {2}, SM: {3}, MEMORY: {4}, ETHEREUM: {5}",
-                        cudaDev.DeviceID.ToString(), cudaDev.DeviceName, cudaDev.UUID, cudaDev.SMVersionString,
-                        cudaDev.DeviceGlobalMemory.ToString(), etherumCapableStr)
-                        );
+                    string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
+                    stringBuilder.AppendLine(String.Format("\t{0} device:", skipOrAdd));
+                    stringBuilder.AppendLine(String.Format("\t\tID: {0}", cudaDev.DeviceID.ToString()));
+                    stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", cudaDev.DeviceName));
+                    stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", cudaDev.UUID));
+                    stringBuilder.AppendLine(String.Format("\t\tSM: {0}", cudaDev.SMVersionString));
+                    stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", cudaDev.DeviceGlobalMemory.ToString()));
+                    stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
                     
                     if (!skip) {
                         string group;
@@ -547,8 +555,8 @@ namespace NiceHashMiner.Devices
                         }
                         new ComputeDevice(cudaDev, group, true);
                     }
-                    Helpers.ConsolePrint(TAG, logMessage);
                 }
+                Helpers.ConsolePrint(TAG, stringBuilder.ToString());
             } else {
                 Helpers.ConsolePrint(TAG, "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " + QueryCudaDevicesString);
             }
@@ -612,7 +620,7 @@ namespace NiceHashMiner.Devices
                     OpenCLDevicesDetection.BeginErrorReadLine();
                     OpenCLDevicesDetection.BeginOutputReadLine();
                     if (OpenCLDevicesDetection.WaitForExit(waitTime)) {
-                        OpenCLDevicesDetection.Kill();
+                        OpenCLDevicesDetection.Close();
                     }
                 }
             } catch(Exception ex) {
@@ -630,9 +638,28 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection found no devices. OpenCLDeviceDetection returned: " + QueryOpenCLDevicesString);
             } else {
                 IsOpenCLQuerrySuccess = true;
-                Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection found devices success.");
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("");
+                stringBuilder.AppendLine("OpenCLDeviceDetection found devices success:");
+                foreach (var kvp in OpenCLJSONData.OCLPlatformDevices) {
+                    stringBuilder.AppendLine(String.Format("\tFound devices for platform: {0}", RemoveNullTerminator(kvp.Key)));
+                    foreach (var oclDev in kvp.Value) {
+                        stringBuilder.AppendLine("\t\tDevice:");
+                        stringBuilder.AppendLine(String.Format("\t\t\tDevice ID {0}", oclDev.DeviceID));
+                        stringBuilder.AppendLine(String.Format("\t\t\tDevice NAME {0}", RemoveNullTerminator(oclDev._CL_DEVICE_NAME)));
+                        stringBuilder.AppendLine(String.Format("\t\t\tDevice TYPE {0}", RemoveNullTerminator(oclDev._CL_DEVICE_TYPE)));
+                    }
+                }
+                Helpers.ConsolePrint(TAG, stringBuilder.ToString());
             }
         }
+
+        private string RemoveNullTerminator(string inOut) {
+            while (inOut.Contains("\0")) {
+                inOut = inOut.Substring(0, inOut.Length - 1);
+            }
+            return inOut;
+        } 
 
         #endregion OpenCL Query
 
