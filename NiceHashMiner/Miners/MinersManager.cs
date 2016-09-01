@@ -498,7 +498,8 @@ namespace NiceHashMiner.Miners {
             } else {
                 IsProfitable = true;
                 _mainFormRatesComunication.HideNotProfitable();
-                Helpers.ConsolePrint(TAG, "Current Global profit: IS PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");
+                string profitabilityInfo = ConfigManager.Instance.GeneralConfig.MinimumProfit == 0 ? "mine always regardless of profit" : ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
+                Helpers.ConsolePrint(TAG, "Current Global profit: IS PROFITABLE MinProfit " + profitabilityInfo);
             }
 
             // group devices with same supported algorithms
@@ -587,10 +588,16 @@ namespace NiceHashMiner.Miners {
                     Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
                 }
                 // set rates
-                if (NiceHashData != null) {
+                if (NiceHashData != null && AD != null) {
                     m.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
                 } else {
                     m.CurrentRate = 0;
+                    // set empty
+                    AD = new APIData() {
+                        AlgorithmID = m.CurrentAlgorithmType,
+                        AlgorithmName = AlgorithmNiceHashNames.GetName(m.CurrentAlgorithmType),
+                        Speed = 0.0d
+                    };
                 }
 
                 // Update GUI
