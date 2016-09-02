@@ -519,16 +519,23 @@ namespace NiceHashMiner.Devices
                 stringBuilder.AppendLine("CudaDevicesDetection:");
                 foreach (var cudaDev in CudaDevices) {
                     // check sm vesrions
-                    bool isUnderSM2 = cudaDev.SM_major < 2;
+                    bool isUnderSM21;
+                    {
+                        bool isUnderSM2_major = cudaDev.SM_major < 2;
+                        bool isUnderSM1_minor = cudaDev.SM_minor < 1;
+                        isUnderSM21 = isUnderSM2_major && isUnderSM1_minor;
+                    }
                     //bool isOverSM6 = cudaDev.SM_major > 6;
                     // TODO write that disabled group
                     bool isDisabledGroup = IsSMGroupSkip(cudaDev.SM_major);
-                    bool skip = isUnderSM2 || isDisabledGroup;
+                    bool skip = isUnderSM21 || isDisabledGroup;
                     string skipOrAdd = skip ? "SKIPED" : "ADDED";
+                    string isDisabledGroupStr = isDisabledGroup ? " (SM group disabled)" : "";
                     string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
-                    stringBuilder.AppendLine(String.Format("\t{0} device:", skipOrAdd));
+                    stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
                     stringBuilder.AppendLine(String.Format("\t\tID: {0}", cudaDev.DeviceID.ToString()));
                     stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", cudaDev.DeviceName));
+                    stringBuilder.AppendLine(String.Format("\t\tVENDOR: {0}", cudaDev.VendorName));
                     stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", cudaDev.UUID));
                     stringBuilder.AppendLine(String.Format("\t\tSM: {0}", cudaDev.SMVersionString));
                     stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", cudaDev.DeviceGlobalMemory.ToString()));

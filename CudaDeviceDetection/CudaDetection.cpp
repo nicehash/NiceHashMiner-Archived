@@ -29,6 +29,7 @@ bool CudaDetection::QueryDevices() {
 
 			// init device info
 			cudaDevice.DeviceID = i;
+			cudaDevice.VendorName = getVendorString(pciInfo);
 			cudaDevice.DeviceName = props.name;
 			cudaDevice.SMVersionString = to_string(props.major) + "." + to_string(props.minor);
 			cudaDevice.SM_major = props.major;
@@ -38,6 +39,7 @@ bool CudaDetection::QueryDevices() {
 			cudaDevice.pciDeviceId = pciInfo.pciDeviceId;
 			cudaDevice.pciSubSystemId = pciInfo.pciSubSystemId;
 			cudaDevice.SMX = props.multiProcessorCount;
+			cudaDevice.VendorID = getVendorId(pciInfo);
 
 			_cudaDevices.push_back(cudaDevice);
 		}
@@ -48,6 +50,42 @@ bool CudaDetection::QueryDevices() {
 		return false;
 	}
 	return true;
+}
+
+std::map<uint16_t, std::string> CudaDetection::_VENDOR_NAMES = {
+	{ 0x1043, "ASUS" },
+	{ 0x107D, "Leadtek" },
+	{ 0x10B0, "Gainward" },
+	{ 0x10DE, "NVIDIA" },
+	{ 0x1458, "Gigabyte" },
+	{ 0x1462, "MSI" },
+	{ 0x154B, "PNY" },
+	{ 0x1682, "XFX" },
+	{ 0x196D, "Club3D" },
+	{ 0x19DA, "Zotac" },
+	{ 0x19F1, "BFG" },
+	{ 0x1ACC, "PoV" },
+	{ 0x1B4C, "KFA2" },
+	{ 0x3842, "EVGA" },
+	{ 0x7377, "Colorful" },
+	{ 0, "" }
+};
+
+uint16_t CudaDetection::getVendorId(nvmlPciInfo_t &nvmlPciInfo) {
+	uint16_t vendorId = 0;
+	vendorId = nvmlPciInfo.pciDeviceId & 0xFFFF;
+	if (vendorId == 0x10DE && nvmlPciInfo.pciSubSystemId) {
+		vendorId = nvmlPciInfo.pciSubSystemId & 0xFFFF;
+	}
+	return vendorId;
+}
+
+std::string CudaDetection::getVendorString(nvmlPciInfo_t &nvmlPciInfo) {
+	auto venId = getVendorId(nvmlPciInfo);
+	for (const auto &vpair : _VENDOR_NAMES) {
+		if (vpair.first == venId) return vpair.second;
+	}
+	return "UNKNOWN";
 }
 
 void CudaDetection::PrintDevicesJson() {
@@ -73,6 +111,8 @@ void CudaDetection::print(CudaDevice &dev) {
 void CudaDetection::json_print(CudaDevice &dev) {
 	cout << "\t{" << endl;
 	cout << "\t\t\"DeviceID\" : " << dev.DeviceID << "," << endl; // num
+	cout << "\t\t\"VendorID\" : " << dev.VendorID << "," << endl; // num
+	cout << "\t\t\"VendorName\" : \"" << dev.VendorName << "\"," << endl; // string
 	cout << "\t\t\"DeviceName\" : \"" << dev.DeviceName << "\"," << endl; // string
 	cout << "\t\t\"SMVersionString\" : \"" << dev.SMVersionString << "\"," << endl;  // string
 	cout << "\t\t\"SM_major\" : " << dev.SM_major << "," << endl; // num

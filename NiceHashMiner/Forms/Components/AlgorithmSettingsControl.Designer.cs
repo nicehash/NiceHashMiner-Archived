@@ -25,11 +25,11 @@
         private void InitializeComponent() {
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
-            this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.RichTextBox();
             this.buttonBenchmark = new System.Windows.Forms.Button();
             this.fieldIntensity = new NiceHashMiner.Forms.Components.Field();
             this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
+            this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
+            this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.RichTextBox();
             this.groupBoxSelectedAlgorithmSettings.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxExtraLaunchParameters.SuspendLayout();
@@ -58,25 +58,6 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(223, 241);
             this.flowLayoutPanel1.TabIndex = 12;
             // 
-            // groupBoxExtraLaunchParameters
-            // 
-            this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
-            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 134);
-            this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
-            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(217, 104);
-            this.groupBoxExtraLaunchParameters.TabIndex = 14;
-            this.groupBoxExtraLaunchParameters.TabStop = false;
-            this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
-            // 
-            // richTextBoxExtraLaunchParameters
-            // 
-            this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
-            this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
-            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(211, 85);
-            this.richTextBoxExtraLaunchParameters.TabIndex = 0;
-            this.richTextBoxExtraLaunchParameters.Text = "";
-            // 
             // buttonBenchmark
             // 
             this.buttonBenchmark.Location = new System.Drawing.Point(3, 3);
@@ -85,6 +66,7 @@
             this.buttonBenchmark.TabIndex = 17;
             this.buttonBenchmark.Text = "Benchmark Selected Algorithm";
             this.buttonBenchmark.UseVisualStyleBackColor = true;
+            this.buttonBenchmark.Click += new System.EventHandler(this.buttonBenchmark_Click);
             // 
             // fieldIntensity
             // 
@@ -107,6 +89,25 @@
             this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
             this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(154, 45);
             this.fieldBoxBenchmarkSpeed.TabIndex = 1;
+            // 
+            // groupBoxExtraLaunchParameters
+            // 
+            this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
+            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 134);
+            this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
+            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(217, 104);
+            this.groupBoxExtraLaunchParameters.TabIndex = 14;
+            this.groupBoxExtraLaunchParameters.TabStop = false;
+            this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
+            // 
+            // richTextBoxExtraLaunchParameters
+            // 
+            this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
+            this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
+            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(211, 85);
+            this.richTextBoxExtraLaunchParameters.TabIndex = 0;
+            this.richTextBoxExtraLaunchParameters.Text = "";
             // 
             // AlgorithmSettingsControl
             // 

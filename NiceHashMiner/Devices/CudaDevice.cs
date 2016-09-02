@@ -8,6 +8,8 @@ namespace NiceHashMiner.Devices {
     [Serializable]
     public class CudaDevice {
         public uint DeviceID;
+        public int VendorID;
+        public string VendorName;
         public string DeviceName;
 	    public string SMVersionString;
         public int SM_major;

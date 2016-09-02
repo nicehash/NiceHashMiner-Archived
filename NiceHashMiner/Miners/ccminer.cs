@@ -20,6 +20,7 @@ namespace NiceHashMiner.Miners
         // cryptonight benchmark exception
         int _cryptonightTotalCount = 0;
         double _cryptonightTotal = 0;
+        const int _cryptonightTotalDelim = 2;
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 60 * 1000; // 1 minute max, whole waiting time 75seconds
@@ -36,7 +37,9 @@ namespace NiceHashMiner.Miners
             if (CurrentMiningAlgorithm.NiceHashID != AlgorithmType.CryptoNight) {
                 algo = "--algo=" + miningAlgorithm.MinerName;
                 apiBind = " --api-bind=" + APIPort.ToString();
-                intensity = " --intensity=" + miningAlgorithm.Intensity;
+                if (!string.IsNullOrEmpty(miningAlgorithm.Intensity)) {
+                    intensity = " --intensity=" + miningAlgorithm.Intensity;
+                }
             }
 
             IsAPIReadException = CurrentMiningAlgorithm.NiceHashID == AlgorithmType.CryptoNight;
@@ -80,7 +83,7 @@ namespace NiceHashMiner.Miners
             Path = GetOptimizedMinerPath(algorithm.NiceHashID);
 
             // cryptonight exception helper variables
-            _cryptonightTotalCount = BenchmarkTimeInSeconds / 2;
+            _cryptonightTotalCount = BenchmarkTimeInSeconds / _cryptonightTotalDelim;
             _cryptonightTotal = 0.0d;
 
             return CommandLine;
@@ -113,7 +116,7 @@ namespace NiceHashMiner.Miners
                     _cryptonightTotalCount--;
                 }
                 if (_cryptonightTotalCount <= 0) {
-                    double spd = _cryptonightTotal / (BenchmarkTimeInSeconds / 2);
+                    double spd = _cryptonightTotal / (BenchmarkTimeInSeconds / _cryptonightTotalDelim);
                     BenchmarkAlgorithm.BenchmarkSpeed = spd;
                     BenchmarkSignalFinnished = true;
                 }

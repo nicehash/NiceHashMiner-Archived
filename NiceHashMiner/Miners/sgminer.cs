@@ -106,14 +106,14 @@ namespace NiceHashMiner.Miners
 
         public override string GetOptimizedMinerPath(AlgorithmType type, string gpuCodename, bool isOptimized) {
             if (EnableOptimizedVersion) {
-                if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
+                if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
                     if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
                         if (!Helpers.InternalCheckIsWow64())
                             return MinerPaths.sgminer_5_4_0_general;
 
                         return MinerPaths.sgminer_5_4_0_tweaked;
                     }
-                    if (AlgorithmType.X11 == type || AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
+                    if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
                         return MinerPaths.sgminer_5_1_0_optimized;
                     else
                         return MinerPaths.sgminer_5_1_1_optimized;
