@@ -22,7 +22,7 @@ namespace NiceHashMiner.Forms.Components {
             fieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
 
             // TODO make sure intensity accepts valid ints based on Device and algo, miner...
-            fieldIntensity.SetOnTextChanged(textChangedIntensity);
+            //fieldIntensity.SetOnTextChanged(textChangedIntensity);
             fieldBoxBenchmarkSpeed.SetOnTextChanged(textChangedBenchmarkSpeed);
             richTextBoxExtraLaunchParameters.TextChanged += textChangedExtraLaunchParameters;
 
@@ -33,7 +33,7 @@ namespace NiceHashMiner.Forms.Components {
             groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm: NONE";
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
-            fieldIntensity.EntryText = "";
+            //fieldIntensity.EntryText = "";
             richTextBoxExtraLaunchParameters.Text = "";
         }
 
@@ -59,11 +59,11 @@ namespace NiceHashMiner.Forms.Components {
 
                 groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm: " + algorithm.NiceHashName;
 
-                fieldIntensity.EntryText = ParseStringDefault(algorithm.Intensity);
-                // no intensity for cpu miners and ccminer_cryptonight
-                fieldIntensity.Enabled = !(_computeDevice.DeviceGroupType == DeviceGroupType.CPU
-                    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.CryptoNight
-                    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto);
+                //fieldIntensity.EntryText = ParseStringDefault(algorithm.Intensity);
+                //// no intensity for cpu miners and ccminer_cryptonight
+                //fieldIntensity.Enabled = !(_computeDevice.DeviceGroupType == DeviceGroupType.CPU
+                //    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.CryptoNight
+                //    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto);
 
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
@@ -87,7 +87,7 @@ namespace NiceHashMiner.Forms.Components {
         // TODO Intensity
         private void textChangedIntensity(object sender, EventArgs e) {
             if (!CanEdit()) return;
-            _currentlySelectedAlgorithm.Intensity = fieldIntensity.EntryText.Trim();
+            //_currentlySelectedAlgorithm.Intensity = fieldIntensity.EntryText.Trim();
         }
         private void textChangedBenchmarkSpeed(object sender, EventArgs e) {
             if (!CanEdit()) return;

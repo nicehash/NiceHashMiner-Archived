@@ -6,16 +6,17 @@ namespace NiceHashMiner.Enums
 {
     /// <summary>
     /// AlgorithmType enum should/must mirror the values from https://www.nicehash.com/?p=api
+    /// Some algorithms are not used anymore on the client, rename them with _UNUSED postfix so we can catch compile time errors if they are used.
     /// </summary>
     public enum AlgorithmType : int
     {
         INVALID = -2,
         NONE = -1,
         #region NiceHashAPI
-        Scrypt = 0,
-        SHA256 = 1,
-        ScryptNf = 2,
-        X11 = 3,
+        Scrypt_UNUSED = 0,
+        SHA256_UNUSED = 1,
+        ScryptNf_UNUSED = 2,
+        X11_UNUSED = 3,
         X13 = 4,
         Keccak = 5,
         X15 = 6,
@@ -25,9 +26,9 @@ namespace NiceHashMiner.Enums
         WhirlpoolX = 10,
         Qubit = 11,
         Quark = 12,
-        Axiom = 13,
+        Axiom_UNUSED = 13,
         Lyra2REv2 = 14,
-        ScryptJaneNf16 = 15,
+        ScryptJaneNf16_UNUSED = 15,
         Blake256r8 = 16,
         Blake256r14 = 17,
         Blake256r8vnl = 18,

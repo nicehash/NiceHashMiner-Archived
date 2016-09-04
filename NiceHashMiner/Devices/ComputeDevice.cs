@@ -227,5 +227,14 @@ namespace NiceHashMiner.Devices
             // GEN indicates the UUID has been generated and cannot be presumed to be immutable
             return "GEN-" + hash.ToString();
         }
+
+        public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique) {
+            // TODO index checking
+            if (unique) {
+                return ComputeDevice.UniqueAvaliableDevices[index];
+            } else {
+                return ComputeDevice.AllAvaliableDevices[index];
+            }
+        }
     }
 }

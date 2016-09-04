@@ -49,7 +49,8 @@ namespace NiceHashMiner.Miners
                                   " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                                   apiBind +
                                   " " + miningAlgorithm.ExtraLaunchParameters +
-                                  intensity +
+                                  // TODO disable for now
+                                  //intensity +
                                   " --devices ";
 
             LastCommandLine += GetDevicesCommandString();

@@ -69,19 +69,11 @@ namespace NiceHashMiner.Forms {
             // link algorithm list with algorithm settings control
             algorithmSettingsControl1.Enabled = false;
             algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
+            algorithmsListView1.RemoveRatioRates();
 
 
             // At the very end set to true
             _isInitFinished = true;
-        }
-
-        private ComputeDevice GetCurrentlySelectedComputeDevice(int index) {
-            // TODO index checking
-            if (ShowUniqueDeviceList) {
-                return ComputeDevice.UniqueAvaliableDevices[index];
-            } else {
-                return ComputeDevice.AllAvaliableDevices[index];
-            }
         }
 
         #region Initializations
@@ -90,7 +82,10 @@ namespace NiceHashMiner.Forms {
             // Setup Tooltips
             toolTip1.SetToolTip(this.comboBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
             toolTip1.SetToolTip(this.label_Language, International.GetText("Form_Settings_ToolTip_Language"));
+            toolTip1.SetToolTip(this.pictureBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
+            
             toolTip1.SetToolTip(this.checkBox_DebugConsole, International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
+            toolTip1.SetToolTip(this.pictureBox_DebugConsole, International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
             
             toolTip1.SetToolTip(this.textBox_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
             toolTip1.SetToolTip(this.label_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
@@ -98,15 +93,25 @@ namespace NiceHashMiner.Forms {
             
             toolTip1.SetToolTip(this.textBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
             toolTip1.SetToolTip(this.label_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
+            toolTip1.SetToolTip(this.pictureBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
+            
             toolTip1.SetToolTip(this.comboBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.label_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
+            toolTip1.SetToolTip(this.pictureBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
+            
             toolTip1.SetToolTip(this.checkBox_HideMiningWindows, International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
             toolTip1.SetToolTip(this.checkBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
+            toolTip1.SetToolTip(this.checkBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
+            
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
+            toolTip1.SetToolTip(this.label_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
+            
+
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
+
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsAMD, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsAMD, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
 
@@ -267,6 +272,7 @@ namespace NiceHashMiner.Forms {
             {
                 this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
+                this.comboBox_DagLoadMode.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
             }
 
             // TODO CPU exceptions
@@ -486,6 +492,7 @@ namespace NiceHashMiner.Forms {
             IsChange = true;
             ConfigManager.Instance.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
+            ConfigManager.Instance.GeneralConfig.EthminerDagGenerationType = (DagGenerationType)comboBox_DagLoadMode.SelectedIndex;
         }
 
         private void comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e) {
@@ -521,7 +528,7 @@ namespace NiceHashMiner.Forms {
 
             algorithmSettingsControl1.Deselect();
             // show algorithms
-            _selectedComputeDevice = GetCurrentlySelectedComputeDevice(e.ItemIndex);
+            _selectedComputeDevice = ComputeDevice.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice);
             groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", _selectedComputeDevice.Name);
         }

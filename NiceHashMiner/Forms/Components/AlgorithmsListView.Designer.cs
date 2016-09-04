@@ -25,8 +25,10 @@
         private void InitializeComponent() {
             this.listViewAlgorithms = new System.Windows.Forms.ListView();
             this.columnHeader0 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listViewAlgorithms
@@ -34,15 +36,17 @@
             this.listViewAlgorithms.CheckBoxes = true;
             this.listViewAlgorithms.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader0,
+            this.columnHeader1,
             this.columnHeader2,
-            this.columnHeader3});
+            this.columnHeader3,
+            this.columnHeader4});
             this.listViewAlgorithms.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewAlgorithms.FullRowSelect = true;
             this.listViewAlgorithms.GridLines = true;
             this.listViewAlgorithms.Location = new System.Drawing.Point(0, 0);
             this.listViewAlgorithms.MultiSelect = false;
             this.listViewAlgorithms.Name = "listViewAlgorithms";
-            this.listViewAlgorithms.Size = new System.Drawing.Size(345, 380);
+            this.listViewAlgorithms.Size = new System.Drawing.Size(539, 380);
             this.listViewAlgorithms.TabIndex = 11;
             this.listViewAlgorithms.UseCompatibleStateImageBehavior = false;
             this.listViewAlgorithms.View = System.Windows.Forms.View.Details;
@@ -52,16 +56,26 @@
             this.columnHeader0.Text = "Enabled";
             this.columnHeader0.Width = 63;
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Algorithm";
+            this.columnHeader1.Width = 117;
+            // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "Algorithm";
-            this.columnHeader2.Width = 117;
+            this.columnHeader2.Text = "Speed";
+            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader2.Width = 120;
             // 
             // columnHeader3
             // 
-            this.columnHeader3.Text = "Speed";
-            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeader3.Width = 120;
+            this.columnHeader3.Text = "Ratio";
+            this.columnHeader3.Width = 97;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Rate";
+            this.columnHeader4.Width = 134;
             // 
             // AlgorithmsListView
             // 
@@ -69,7 +83,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.listViewAlgorithms);
             this.Name = "AlgorithmsListView";
-            this.Size = new System.Drawing.Size(345, 380);
+            this.Size = new System.Drawing.Size(539, 380);
             this.ResumeLayout(false);
 
         }
@@ -78,7 +92,9 @@
 
         private System.Windows.Forms.ListView listViewAlgorithms;
         private System.Windows.Forms.ColumnHeader columnHeader0;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
     }
 }

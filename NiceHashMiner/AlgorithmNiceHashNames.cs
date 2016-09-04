@@ -12,10 +12,10 @@ namespace NiceHashMiner
     {
         readonly static private Dictionary<AlgorithmType, string> _names = new Dictionary<AlgorithmType, string>()
         {
-            { AlgorithmType.Scrypt , "scrypt" }, // NOT used
-            { AlgorithmType.SHA256 , "sha256" }, // NOT used
-            { AlgorithmType.ScryptNf , "scryptnf" }, // NOT used
-            { AlgorithmType.X11 , "x11" },
+            //{ AlgorithmType.Scrypt , "scrypt" }, // NOT used
+            //{ AlgorithmType.SHA256 , "sha256" }, // NOT used
+            //{ AlgorithmType.ScryptNf , "scryptnf" }, // NOT used
+            //{ AlgorithmType.X11 , "x11" }, // NOT used
             { AlgorithmType.X13 , "x13" },
             { AlgorithmType.Keccak , "keccak" },
             { AlgorithmType.X15 , "x15" },
@@ -25,9 +25,9 @@ namespace NiceHashMiner
             { AlgorithmType.WhirlpoolX , "whirlpoolx" },
             { AlgorithmType.Qubit , "qubit" },
             { AlgorithmType.Quark , "quark" },
-            { AlgorithmType.Axiom , "axiom" },
+            //{ AlgorithmType.Axiom , "axiom" }, // NOT used
             { AlgorithmType.Lyra2REv2 , "lyra2rev2" },
-            { AlgorithmType.ScryptJaneNf16 , "scryptjanenf16" },
+            //{ AlgorithmType.ScryptJaneNf16 , "scryptjanenf16" }, // NOT used
             { AlgorithmType.Blake256r8 , "blake256r8" },
             { AlgorithmType.Blake256r14 , "blake256r14" },
             { AlgorithmType.Blake256r8vnl , "blake256r8vnl" },
