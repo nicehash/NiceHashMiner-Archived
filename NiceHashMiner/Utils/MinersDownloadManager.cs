@@ -48,7 +48,7 @@ namespace NiceHashMiner.Utils {
         }
 
         // #1 check if miners exits
-        bool IsMinerBinFolder() {
+        public bool IsMinerBinFolder() {
             return Directory.Exists("bin");
         }
 
