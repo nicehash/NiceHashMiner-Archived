@@ -15,6 +15,12 @@ using NiceHashMiner.Interfaces;
 namespace NiceHashMiner.Forms.Components {
     public partial class AlgorithmsListView : UserControl {
 
+        private const int ENABLED   = 0;
+        private const int ALGORITHM = 1;
+        private const int SPEED     = 2;
+        private const int RATIO     = 3;
+        private const int RATE      = 4;
+
         public interface IAlgorithmsListView {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
             void HandleCheck(ListViewItem lvi);
@@ -51,33 +57,30 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.ItemChecked += new ItemCheckedEventHandler(listViewAlgorithms_ItemChecked);
         }
 
-        public void SetAlgorithms(ComputeDevice computeDevice) {
-            _computeDevice = computeDevice;
-            SetAlgorithms(new List<DeviceBenchmarkConfig>() { computeDevice.DeviceBenchmarkConfig });
+        public void RemoveRatioRates() {
+            listViewAlgorithms.Columns.RemoveAt(RATE);
+            listViewAlgorithms.Columns.RemoveAt(RATIO);
         }
 
-        public void SetAlgorithms(List<DeviceBenchmarkConfig> benchmarkConfigs) {
+        public void SetAlgorithms(ComputeDevice computeDevice) {
+            _computeDevice = computeDevice;
+            var config = computeDevice.DeviceBenchmarkConfig;
             listViewAlgorithms.Items.Clear();
-            bool switchColor = false;
-            foreach (var config in benchmarkConfigs) {
-                foreach (var alg in config.AlgorithmSettings) {
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Checked = !alg.Value.Skip;
-                    lvi.Text = alg.Value.NiceHashName;
-                    ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
+            foreach (var alg in config.AlgorithmSettings) {
+                ListViewItem lvi = new ListViewItem();
+                lvi.Checked = !alg.Value.Skip;
+                //lvi.Text = alg.Value.NiceHashName;
+                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
 
-                    //sub.Tag = alg.Value;
-                    if (alg.Value.BenchmarkSpeed > 0) {
-                        lvi.SubItems.Add(Helpers.FormatSpeedOutput(alg.Value.BenchmarkSpeed));
-
-                    } else {
-                        lvi.SubItems.Add("none");
-                    }
-                    lvi.Tag = alg.Value;
-                    _listItemCheckColorSetter.LviSetColor(lvi);
-                    listViewAlgorithms.Items.Add(lvi);
+                //sub.Tag = alg.Value;
+                if (alg.Value.BenchmarkSpeed > 0) {
+                    lvi.SubItems.Add(Helpers.FormatSpeedOutput(alg.Value.BenchmarkSpeed));
+                } else {
+                    lvi.SubItems.Add("none");
                 }
-                switchColor = !switchColor;
+                lvi.Tag = alg.Value;
+                _listItemCheckColorSetter.LviSetColor(lvi);
+                listViewAlgorithms.Items.Add(lvi);
             }
         }
 
@@ -89,11 +92,11 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         private void listViewAlgorithms_ItemChecked(object sender, ItemCheckedEventArgs e) {
+            var algo = e.Item.Tag as Algorithm;
+            if (algo != null) {
+                algo.Skip = !e.Item.Checked;
+            }
             if (ComunicationInterface != null) {
-                var algo = e.Item.Tag as Algorithm;
-                if(algo != null) {
-                    algo.Skip = !e.Item.Checked;
-                }
                 ComunicationInterface.HandleCheck(e.Item);
             }
             var lvi = e.Item as ListViewItem;
@@ -101,5 +104,16 @@ namespace NiceHashMiner.Forms.Components {
         }
         #endregion //Callbacks Events
 
+        // benchmark settings
+        public void SetSpeedStatus(string status, AlgorithmType algorithmType) {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                Algorithm algo = lvi.Tag as Algorithm;
+                if (algo != null && algo.NiceHashID == algorithmType) {
+                    // TODO handle numbers
+                    lvi.SubItems[SPEED].Text = status;
+                    break;
+                }
+            }
+        }
     }
 }

@@ -92,7 +92,7 @@
             this.groupBoxAlgorithmBenchmarkSettings.Size = new System.Drawing.Size(325, 115);
             this.groupBoxAlgorithmBenchmarkSettings.TabIndex = 105;
             this.groupBoxAlgorithmBenchmarkSettings.TabStop = false;
-            this.groupBoxAlgorithmBenchmarkSettings.Text = "Benchmark Algoruthms Settings:";
+            this.groupBoxAlgorithmBenchmarkSettings.Text = "Benchmark Algorithms Settings:";
             // 
             // radioButton_All
             // 
@@ -239,14 +239,14 @@
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
             this.devicesListViewEnableControl1.SetAllEnabled = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(471, 156);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(471, 201);
             this.devicesListViewEnableControl1.TabIndex = 0;
             // 
             // FormBenchmark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 590);
+            this.ClientSize = new System.Drawing.Size(550, 590);
             this.Controls.Add(this.groupBoxBenchmarkProgress);
             this.Controls.Add(this.benchmarkOptions1);
             this.Controls.Add(this.groupBoxAlgorithmBenchmarkSettings);

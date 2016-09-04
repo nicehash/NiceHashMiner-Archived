@@ -26,10 +26,9 @@
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonBenchmark = new System.Windows.Forms.Button();
-            this.fieldIntensity = new NiceHashMiner.Forms.Components.Field();
-            this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
             this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.RichTextBox();
+            this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxSelectedAlgorithmSettings.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxExtraLaunchParameters.SuspendLayout();
@@ -48,7 +47,6 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.buttonBenchmark);
-            this.flowLayoutPanel1.Controls.Add(this.fieldIntensity);
             this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -68,32 +66,10 @@
             this.buttonBenchmark.UseVisualStyleBackColor = true;
             this.buttonBenchmark.Click += new System.EventHandler(this.buttonBenchmark_Click);
             // 
-            // fieldIntensity
-            // 
-            this.fieldIntensity.AutoSize = true;
-            this.fieldIntensity.BackColor = System.Drawing.Color.Transparent;
-            this.fieldIntensity.EntryText = "";
-            this.fieldIntensity.LabelText = "Intensity:";
-            this.fieldIntensity.Location = new System.Drawing.Point(3, 32);
-            this.fieldIntensity.Name = "fieldIntensity";
-            this.fieldIntensity.Size = new System.Drawing.Size(154, 45);
-            this.fieldIntensity.TabIndex = 2;
-            // 
-            // fieldBoxBenchmarkSpeed
-            // 
-            this.fieldBoxBenchmarkSpeed.AutoSize = true;
-            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
-            this.fieldBoxBenchmarkSpeed.EntryText = "";
-            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
-            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 83);
-            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
-            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(154, 45);
-            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
-            // 
             // groupBoxExtraLaunchParameters
             // 
             this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
-            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 134);
+            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 83);
             this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
             this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(217, 104);
             this.groupBoxExtraLaunchParameters.TabIndex = 14;
@@ -108,6 +84,17 @@
             this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(211, 85);
             this.richTextBoxExtraLaunchParameters.TabIndex = 0;
             this.richTextBoxExtraLaunchParameters.Text = "";
+            // 
+            // fieldBoxBenchmarkSpeed
+            // 
+            this.fieldBoxBenchmarkSpeed.AutoSize = true;
+            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.fieldBoxBenchmarkSpeed.EntryText = "";
+            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
+            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 32);
+            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
+            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(154, 45);
+            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
             // 
             // AlgorithmSettingsControl
             // 
@@ -130,7 +117,6 @@
         private System.Windows.Forms.GroupBox groupBoxExtraLaunchParameters;
         private System.Windows.Forms.RichTextBox richTextBoxExtraLaunchParameters;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private Field fieldIntensity;
         private Field fieldBoxBenchmarkSpeed;
         private System.Windows.Forms.Button buttonBenchmark;
     }

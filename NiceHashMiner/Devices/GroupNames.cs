@@ -27,7 +27,7 @@ namespace NiceHashMiner.Devices
 
         public static string GetName(DeviceGroupType type) { return _names[(int)type]; }
 
-        public static string GetNameGeneral(DeviceGroupType type) { return _names[(int)type]; }
+        public static string GetNameGeneral(DeviceGroupType type) { return _namesGeneral[(int)type]; }
 
         public static DeviceGroupType GetType(string name) {
             int i = 0;
