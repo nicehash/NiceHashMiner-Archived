@@ -70,6 +70,9 @@ namespace NiceHashMiner.Miners {
 
         readonly string DOUBLE_FORMAT = "F12";
 
+        static MinerEtherumCUDA _MinerEtherumCUDA = null;
+        static MinerEtherumOCL _MinerEtherumOCL = null;
+
         protected MinersManager() {
             TAG = this.GetType().Name;
             _preventSleepTimer = new Timer();
@@ -102,6 +105,8 @@ namespace NiceHashMiner.Miners {
             if (_mainFormRatesComunication != null) {
                 _mainFormRatesComunication.ClearRates(-1);
             }
+            _MinerEtherumCUDA = null;
+            _MinerEtherumOCL = null;
             // restroe/enable sleep
             _preventSleepTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
@@ -135,9 +140,19 @@ namespace NiceHashMiner.Miners {
         public static Miner CreateMiner(DeviceGroupType deviceGroupType, AlgorithmType algorithmType) {
             if (AlgorithmType.DaggerHashimoto == algorithmType) {
                 if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
-                    return new MinerEtherumOCL();
+                    // make sure only one instance is running
+                    if (_MinerEtherumOCL != null) {
+                        _MinerEtherumOCL.End();
+                    }
+                    _MinerEtherumOCL = new MinerEtherumOCL();
+                    return _MinerEtherumOCL;
                 } else {
-                    return new MinerEtherumCUDA();
+                    // make sure only one instance is running
+                    if (_MinerEtherumCUDA != null) {
+                        _MinerEtherumCUDA.End();
+                    }
+                    _MinerEtherumCUDA = new MinerEtherumCUDA();
+                    return _MinerEtherumCUDA;
                 }
             } else {
                 switch (deviceGroupType) {
@@ -239,21 +254,19 @@ namespace NiceHashMiner.Miners {
             // init algorithms count 0
             foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
                 if (curCDev.Enabled) {
-                    var cdevName = curCDev.Name;
                     Dictionary<AlgorithmType, double> cumulativeSpeeds = new Dictionary<AlgorithmType, double>();
                     var deviceConfig = curCDev.DeviceBenchmarkConfig;
                     foreach (var kvp in deviceConfig.AlgorithmSettings) {
                         var key = kvp.Key;
                         cumulativeSpeeds[key] = 0;
                     }
-                    perDeviceTypeBenchmarks[cdevName] = cumulativeSpeeds;
+                    perDeviceTypeBenchmarks[curCDev.UUID] = cumulativeSpeeds;
                 }
             }
             // set enabled algorithm count per device counts
             foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
                 if (curCDev.Enabled) {
-                    var cdevName = curCDev.Name;
-                    Dictionary<AlgorithmType, double> cumulativeSpeeds = perDeviceTypeBenchmarks[cdevName];
+                    Dictionary<AlgorithmType, double> cumulativeSpeeds = perDeviceTypeBenchmarks[curCDev.UUID];
                     var deviceConfig = curCDev.DeviceBenchmarkConfig;
                     foreach (var kvp in deviceConfig.AlgorithmSettings) {
                         var key = kvp.Key;
@@ -272,8 +285,7 @@ namespace NiceHashMiner.Miners {
             // calculate benchmarks
             foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
                 if (curCDev.Enabled) {
-                    var cdevName = curCDev.Name;
-                    Dictionary<AlgorithmType, double> cumulativeSpeeds = perDeviceTypeBenchmarks[cdevName];
+                    Dictionary<AlgorithmType, double> cumulativeSpeeds = perDeviceTypeBenchmarks[curCDev.UUID];
                     var deviceConfig = curCDev.DeviceBenchmarkConfig;
                     foreach (var kvp in deviceConfig.AlgorithmSettings) {
                         var key = kvp.Key;
@@ -457,7 +469,7 @@ namespace NiceHashMiner.Miners {
             double CurrentProfit = 0.0;
             // calculate most profitable algorithm per enabled device
             foreach (var cdev in _enabledDevices) {
-                var curDevProfits = devProfits[cdev.Name];
+                var curDevProfits = devProfits[cdev.UUID];
                 double maxProfit = double.MinValue;
                 AlgorithmType maxAlgorithmTypeKey = AlgorithmType.NONE;
                 var algorithmSettings = cdev.DeviceBenchmarkConfig.AlgorithmSettings;

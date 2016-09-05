@@ -581,6 +581,8 @@ namespace NiceHashMiner
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
             SMACheck.Start();
+
+            InitMainConfigGUIData();
         }
 
 

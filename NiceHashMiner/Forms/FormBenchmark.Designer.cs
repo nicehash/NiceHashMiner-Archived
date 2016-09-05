@@ -77,7 +77,7 @@
             // 
             // progressBarBenchmarkSteps
             // 
-            this.progressBarBenchmarkSteps.Location = new System.Drawing.Point(128, 16);
+            this.progressBarBenchmarkSteps.Location = new System.Drawing.Point(162, 16);
             this.progressBarBenchmarkSteps.Name = "progressBarBenchmarkSteps";
             this.progressBarBenchmarkSteps.Size = new System.Drawing.Size(161, 23);
             this.progressBarBenchmarkSteps.TabIndex = 108;

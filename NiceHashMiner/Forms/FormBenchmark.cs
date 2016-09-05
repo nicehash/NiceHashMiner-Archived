@@ -89,7 +89,7 @@ namespace NiceHashMiner.Forms {
             
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
-            devicesListViewEnableControl1.SetAllEnabled = true;
+            //devicesListViewEnableControl1.SetAllEnabled = true;
             if (enabledDevices == null) {
                 devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.UniqueAvaliableDevices);
             } else {
