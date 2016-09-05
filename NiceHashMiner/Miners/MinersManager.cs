@@ -143,15 +143,19 @@ namespace NiceHashMiner.Miners {
                     // make sure only one instance is running
                     if (_MinerEtherumOCL != null) {
                         _MinerEtherumOCL.End();
+                        _MinerEtherumOCL.ClearCDevs();
+                    } else {
+                        _MinerEtherumOCL = new MinerEtherumOCL();
                     }
-                    _MinerEtherumOCL = new MinerEtherumOCL();
                     return _MinerEtherumOCL;
                 } else {
                     // make sure only one instance is running
                     if (_MinerEtherumCUDA != null) {
                         _MinerEtherumCUDA.End();
+                        _MinerEtherumCUDA.ClearCDevs();
+                    } else {
+                        _MinerEtherumCUDA = new MinerEtherumCUDA();
                     }
-                    _MinerEtherumCUDA = new MinerEtherumCUDA();
                     return _MinerEtherumCUDA;
                 }
             } else {

@@ -137,6 +137,10 @@ namespace NiceHashMiner
             }
         }
 
+        public void ClearCDevs() {
+            CDevs.Clear();
+        }
+
         public bool IsSupportedMinerAlgorithms(AlgorithmType algorithmType) {
             foreach (var supportedType in _supportedMinerAlgorithms) {
                 if (supportedType == algorithmType) return true;
