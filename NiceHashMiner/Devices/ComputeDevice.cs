@@ -50,9 +50,13 @@ namespace NiceHashMiner.Devices
         [JsonIgnore]
         public DeviceBenchmarkConfig DeviceBenchmarkConfig { get; private set; }
 
+        [JsonIgnore]
+        [field: NonSerialized]
+        public NiceHashMiner.Forms.Components.DevicesListViewEnableControl.ComputeDeviceEnabledOption ComputeDeviceEnabledOption { get; set; }
+
         // 
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
-        readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
+        //readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
 
         [JsonConstructor]
         public ComputeDevice(int id, string group, string name, string uuid, bool enabled = true) {
@@ -74,19 +78,19 @@ namespace NiceHashMiner.Devices
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
-                // compare new device with unique list scope
-                {
-                    bool isNewUnique = true;
-                    foreach (var d in UniqueAvaliableDevices) {
-                        if(this.Name == d.Name) {
-                            isNewUnique = false;
-                            break;
-                        }
-                    }
-                    if (isNewUnique) {
-                        UniqueAvaliableDevices.Add(this);
-                    }
-                }
+                //// compare new device with unique list scope
+                //{
+                //    bool isNewUnique = true;
+                //    foreach (var d in UniqueAvaliableDevices) {
+                //        if(this.Name == d.Name) {
+                //            isNewUnique = false;
+                //            break;
+                //        }
+                //    }
+                //    if (isNewUnique) {
+                //        UniqueAvaliableDevices.Add(this);
+                //    }
+                //}
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
@@ -105,19 +109,19 @@ namespace NiceHashMiner.Devices
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
-                // compare new device with unique list scope
-                {
-                    bool isNewUnique = true;
-                    foreach (var d in UniqueAvaliableDevices) {
-                        if (this.Name == d.Name) {
-                            isNewUnique = false;
-                            break;
-                        }
-                    }
-                    if (isNewUnique) {
-                        UniqueAvaliableDevices.Add(this);
-                    }
-                }
+                //// compare new device with unique list scope
+                //{
+                //    bool isNewUnique = true;
+                //    foreach (var d in UniqueAvaliableDevices) {
+                //        if (this.Name == d.Name) {
+                //            isNewUnique = false;
+                //            break;
+                //        }
+                //    }
+                //    if (isNewUnique) {
+                //        UniqueAvaliableDevices.Add(this);
+                //    }
+                //}
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
@@ -136,19 +140,19 @@ namespace NiceHashMiner.Devices
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
-                // compare new device with unique list scope
-                {
-                    bool isNewUnique = true;
-                    foreach (var d in UniqueAvaliableDevices) {
-                        if (this.Name == d.Name) {
-                            isNewUnique = false;
-                            break;
-                        }
-                    }
-                    if (isNewUnique) {
-                        UniqueAvaliableDevices.Add(this);
-                    }
-                }
+                //// compare new device with unique list scope
+                //{
+                //    bool isNewUnique = true;
+                //    foreach (var d in UniqueAvaliableDevices) {
+                //        if (this.Name == d.Name) {
+                //            isNewUnique = false;
+                //            break;
+                //        }
+                //    }
+                //    if (isNewUnique) {
+                //        UniqueAvaliableDevices.Add(this);
+                //    }
+                //}
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
@@ -229,12 +233,13 @@ namespace NiceHashMiner.Devices
         }
 
         public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique) {
-            // TODO index checking
-            if (unique) {
-                return ComputeDevice.UniqueAvaliableDevices[index];
-            } else {
-                return ComputeDevice.AllAvaliableDevices[index];
-            }
+            //// TODO index checking
+            //if (unique) {
+            //    return ComputeDevice.UniqueAvaliableDevices[index];
+            //} else {
+            //    return ComputeDevice.AllAvaliableDevices[index];
+            //}
+            return ComputeDevice.AllAvaliableDevices[index];
         }
     }
 }

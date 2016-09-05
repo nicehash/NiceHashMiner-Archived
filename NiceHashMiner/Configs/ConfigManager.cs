@@ -75,10 +75,10 @@ namespace NiceHashMiner.Configs {
         }
 
         private void LoadBenchmarks() {
-            foreach (var CDev in ComputeDevice.UniqueAvaliableDevices) {
-                var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.Name);
+            foreach (var CDev in ComputeDevice.AllAvaliableDevices) {
+                var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.UUID, CDev.Name);
                 benchConfig.InitializeConfig();
-                BenchmarkConfigs.Add(CDev.Name, benchConfig);
+                BenchmarkConfigs.Add(CDev.UUID, benchConfig);
             }
         }
 
@@ -117,7 +117,7 @@ namespace NiceHashMiner.Configs {
             BenchmarkConfigs = DeviceBenchmarkConfigManager.Instance.BenchmarkConfigs;
             // set Benchmarks for devices
             foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
-                cdev.SetDeviceBenchmarkConfig(DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.DeviceGroupType, cdev.Name));
+                cdev.SetDeviceBenchmarkConfig(DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.DeviceGroupType, cdev.UUID, cdev.Name));
             }
         }
 

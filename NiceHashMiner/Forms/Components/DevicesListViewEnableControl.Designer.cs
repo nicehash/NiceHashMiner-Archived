@@ -47,7 +47,7 @@
             // columnHeader0
             // 
             this.columnHeader0.Text = "Enabled";
-            this.columnHeader0.Width = 98;
+            this.columnHeader0.Width = 76;
             // 
             // columnHeader3
             // 

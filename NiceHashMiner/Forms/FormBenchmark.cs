@@ -91,7 +91,7 @@ namespace NiceHashMiner.Forms {
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
             //devicesListViewEnableControl1.SetAllEnabled = true;
             if (enabledDevices == null) {
-                devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.UniqueAvaliableDevices);
+                devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
             } else {
                 devicesListViewEnableControl1.SetComputeDevices(enabledDevices);
             }
@@ -102,6 +102,8 @@ namespace NiceHashMiner.Forms {
 
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
+
+            devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
 
             // use this to track miner benchmark statuses
             _benchmarkMiners = new List<Miner>();
@@ -153,7 +155,9 @@ namespace NiceHashMiner.Forms {
             algorithmsListView1.IsInBenchmark = false;
             // TODO make scrolable but not checkable
             //devicesListViewEnableControl1.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
-            algorithmsListView1.RepaintStatus();
+            if (_currentDevice != null) {
+                algorithmsListView1.RepaintStatus(_currentDevice.ComputeDeviceEnabledOption.IsEnabled, _currentDevice.UUID);
+            }
 
             CloseBtn.Enabled = true;
         }
@@ -213,7 +217,9 @@ namespace NiceHashMiner.Forms {
                     algo.SetBenchmarkPending();
                 }
             }
-            algorithmsListView1.RepaintStatus();
+            if (_currentDevice != null) {
+                algorithmsListView1.RepaintStatus(_currentDevice.ComputeDeviceEnabledOption.IsEnabled, _currentDevice.UUID);
+            }
 
             StartBenchmark();
 
@@ -465,6 +471,7 @@ namespace NiceHashMiner.Forms {
             }
             // save already benchmarked algorithms
             ConfigManager.Instance.CommitBenchmarks();
+            devicesListViewEnableControl1.SaveOptions();
         }
 
         private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
@@ -472,7 +479,7 @@ namespace NiceHashMiner.Forms {
             //algorithmSettingsControl1.Deselect();
             // show algorithms
             var _selectedComputeDevice = ComputeDevice.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
-            algorithmsListView1.SetAlgorithms(_selectedComputeDevice);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
             //groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", _selectedComputeDevice.Name);
         }
 

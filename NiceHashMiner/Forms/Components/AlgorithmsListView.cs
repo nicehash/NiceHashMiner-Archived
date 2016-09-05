@@ -66,7 +66,7 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Columns.RemoveAt(RATIO);
         }
 
-        public void SetAlgorithms(ComputeDevice computeDevice) {
+        public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled) {
             _computeDevice = computeDevice;
             var config = computeDevice.DeviceBenchmarkConfig;
             listViewAlgorithms.Items.Clear();
@@ -82,14 +82,17 @@ namespace NiceHashMiner.Forms.Components {
                 _listItemCheckColorSetter.LviSetColor(lvi);
                 listViewAlgorithms.Items.Add(lvi);
             }
-            this.Enabled = _computeDevice.Enabled;
+            this.Enabled = isEnabled;
         }
 
-        public void RepaintStatus() {
-            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
-                Algorithm algo = lvi.Tag as Algorithm;
-                lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
-                _listItemCheckColorSetter.LviSetColor(lvi);
+        public void RepaintStatus(bool isEnabled, string uuid) {
+            if (_computeDevice != null && _computeDevice.UUID == uuid) {
+                foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                    Algorithm algo = lvi.Tag as Algorithm;
+                    lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                    _listItemCheckColorSetter.LviSetColor(lvi);
+                }
+                this.Enabled = isEnabled;
             }
         }
 

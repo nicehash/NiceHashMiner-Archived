@@ -22,20 +22,20 @@ namespace NiceHashMiner.Configs {
             _benchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
         }
 
-        private DeviceBenchmarkConfig GetConfig(string deviceName) {
+        private DeviceBenchmarkConfig GetConfig(string deviceUUID) {
             DeviceBenchmarkConfig retConfig = null;
-            if (_benchmarkConfigs.TryGetValue(deviceName, out retConfig) == false) {
+            if (_benchmarkConfigs.TryGetValue(deviceUUID, out retConfig) == false) {
                 retConfig = null;
             }
             return retConfig;
         }
 
         public DeviceBenchmarkConfig GetConfig(DeviceGroupType deviceGroupType,
-            string deviceName) {
-            DeviceBenchmarkConfig retConfig = GetConfig(deviceName);
+            string deviceUUID, string deviceName) {
+                DeviceBenchmarkConfig retConfig = GetConfig(deviceUUID);
             if (retConfig == null) {
-                retConfig = new DeviceBenchmarkConfig(deviceGroupType, deviceName, null);
-                _benchmarkConfigs.Add(deviceName, retConfig);
+                retConfig = new DeviceBenchmarkConfig(deviceGroupType, deviceUUID, deviceName);
+                _benchmarkConfigs.Add(deviceUUID, retConfig);
             }
 
             return retConfig;

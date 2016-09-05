@@ -10,8 +10,8 @@ namespace NiceHashMiner.Configs
 {
     [Serializable]
     public class DeviceBenchmarkConfig : BaseConfigFile<DeviceBenchmarkConfig> {
-        // TODO remove id if only unique benchmarks enabled
-        //public string ID { get; private set; }
+        [JsonIgnore]
+        public string DeviceUUID { get; private set; }
         [JsonIgnore]
         public DeviceGroupType DeviceGroupType { get; private set; }
 
@@ -28,11 +28,13 @@ namespace NiceHashMiner.Configs
         public bool IsAlgorithmSettingsInit { get; set; }
 
         public DeviceBenchmarkConfig(DeviceGroupType deviceGroupType,
-            string deviceGroupName,
+            string deviceUUID,
+            string deviceName,
             Dictionary<AlgorithmType, Algorithm> benchmarkSpeeds = null) {
 
             DeviceGroupType = deviceGroupType;
-            DeviceName = deviceGroupName;
+            DeviceUUID = deviceUUID;
+            DeviceName = deviceName;
             if (benchmarkSpeeds != null) {
                 AlgorithmSettings = benchmarkSpeeds;
             } else {
@@ -65,7 +67,7 @@ namespace NiceHashMiner.Configs
         protected override void InitializePaths() {
             // make device name
             char[] invalid = new char[] { '<', '>', ':', '"', '/', '\\', '|', '?', '*' };
-            string fileName = BENCHMARK_PREFIX + DeviceName.Replace(' ', '_');
+            string fileName = BENCHMARK_PREFIX + DeviceUUID.Replace(' ', '_');
             foreach (var c in invalid) {
                 fileName = fileName.Replace(c.ToString(), String.Empty);
             }

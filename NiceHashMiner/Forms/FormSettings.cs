@@ -47,14 +47,7 @@ namespace NiceHashMiner.Forms {
 
             _benchmarkConfigsBackup = MemoryHelper.DeepClone(ConfigManager.Instance.BenchmarkConfigs);
             _generalConfigBackup = MemoryHelper.DeepClone(ConfigManager.Instance.GeneralConfig);
-
-            // initialize device lists, unique or every single one
-            if (ShowUniqueDeviceList) {
-                devicesListView1.SetComputeDevices(ComputeDevice.UniqueAvaliableDevices);
-            } else {
-                devicesListView1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
-            }
-
+            
             // initialize form
             InitializeFormTranslations();
 
@@ -335,6 +328,7 @@ namespace NiceHashMiner.Forms {
                 // here we want all devices
                 devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
                 devicesListViewEnableControl1.AutoSaveChange = false;
+                devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
             }
 
             // Add language selections list
@@ -377,7 +371,7 @@ namespace NiceHashMiner.Forms {
 
 
         private void InitializeDevicesCallbacks() {
-            devicesListView1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
+            devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
         }
 
         #endregion //Tab Devices
@@ -529,7 +523,7 @@ namespace NiceHashMiner.Forms {
             algorithmSettingsControl1.Deselect();
             // show algorithms
             _selectedComputeDevice = ComputeDevice.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
-            algorithmsListView1.SetAlgorithms(_selectedComputeDevice);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
             groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", _selectedComputeDevice.Name);
         }
 

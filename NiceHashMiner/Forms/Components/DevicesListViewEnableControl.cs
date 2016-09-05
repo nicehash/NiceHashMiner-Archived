@@ -32,6 +32,9 @@ namespace NiceHashMiner.Forms.Components {
 
         IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultDevicesColorSeter();
 
+        private AlgorithmsListView _algorithmsListView = null;
+
+        [Serializable]
         public class ComputeDeviceEnabledOption {
             public bool IsEnabled { get; set; }
             public ComputeDevice CDevice { get; set; }
@@ -67,6 +70,10 @@ namespace NiceHashMiner.Forms.Components {
             _listItemCheckColorSetter = listItemCheckColorSetter;
         }
 
+        public void SetAlgorithmsListView(AlgorithmsListView algorithmsListView) {
+            _algorithmsListView = algorithmsListView;
+        }
+
         public void ResetListItemColors() {
             foreach (ListViewItem lvi in listViewDevices.Items) {
                 if (_listItemCheckColorSetter != null) {
@@ -90,6 +97,7 @@ namespace NiceHashMiner.Forms.Components {
                     IsEnabled = computeDevice.Enabled || SetAllEnabled,
                     CDevice = computeDevice
                 };
+                computeDevice.ComputeDeviceEnabledOption = newTag;
                 Options.Add(newTag);
                 lvi.Tag = newTag;
                 listViewDevices.Items.Add(lvi);
@@ -122,6 +130,7 @@ namespace NiceHashMiner.Forms.Components {
             }
             var lvi = e.Item as ListViewItem;
             if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
+            if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
         }
 
         public void SaveOptions() {
