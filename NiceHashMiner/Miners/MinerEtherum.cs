@@ -150,9 +150,12 @@ namespace NiceHashMiner.Miners {
             Helpers.ConsolePrint(MinerDeviceName, "Shutting down miner");
             ChangeToNextAvaliablePort();
             if (!willswitch && ProcessHandle != null) {
-                try { ProcessHandle.Kill(); } catch { }
-                ProcessHandle.Close();
-                ProcessHandle = null;
+                try {
+                    ProcessHandle.Close();
+                } catch {
+                } finally {
+                    ProcessHandle = null;
+                }
             }
         }
 

@@ -28,7 +28,10 @@ namespace NiceHashMiner {
         public string BenchmarkStatus { get; set; }
         [JsonIgnore]
         public bool IsBenchmarkPending { get; private set; }
-
+        [JsonIgnore]
+        public double CurRatio { get; set; }
+        [JsonIgnore]
+        public bool CurPaying { get; set; }
 
         public Algorithm(AlgorithmType niceHashID, string minerName) {
             NiceHashID = niceHashID;
