@@ -115,7 +115,7 @@ namespace NiceHashMiner.Miners {
             LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
                               " --url=" + url +
                               " --userpass=" + username + ":" + Algorithm.PasswordDefault +
-                              " --threads=" + Threads.ToString() +
+                              " --threads=" + GetThreads().ToString() +
                               " " + miningAlgorithm.ExtraLaunchParameters +
                               " --api-bind=" + APIPort.ToString();
 
@@ -143,6 +143,13 @@ namespace NiceHashMiner.Miners {
             return UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
         }
 
+        private int GetThreads() {
+            if (Threads > ConfigManager.Instance.GeneralConfig.LessThreads) {
+                return Threads - ConfigManager.Instance.GeneralConfig.LessThreads;
+            }
+            return Threads;
+        }
+
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
@@ -151,7 +158,7 @@ namespace NiceHashMiner.Miners {
 
             return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
-                         " --threads=" + Threads.ToString() +
+                         " --threads=" + GetThreads().ToString() +
                          " " + algorithm.ExtraLaunchParameters +
                          " --time-limit " + time.ToString();
         }
