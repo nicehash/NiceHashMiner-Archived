@@ -33,8 +33,6 @@ namespace NiceHashMiner.Forms {
         }
         private List<DeviceAlgo> _benchmarkFailedAlgoPerDev;
 
-        private Timer _algorithmProgressTimer;
-
         private enum BenchmarkSettingsStatus : int {
             NONE = 0,
             TODO,
@@ -98,16 +96,12 @@ namespace NiceHashMiner.Forms {
                 devicesListViewEnableControl1.SetComputeDevices(enabledDevices);
             }
 
-            groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
+            //groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
             devicesListViewEnableControl1.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
+            devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
 
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
-
-            // _algorithmProgressTimer init 
-            _algorithmProgressTimer = new Timer();
-            _algorithmProgressTimer.Interval = 1000; // 1 second
-            _algorithmProgressTimer.Tick += AlgorithmProgressTimerTick;
 
             // use this to track miner benchmark statuses
             _benchmarkMiners = new List<Miner>();
@@ -144,11 +138,23 @@ namespace NiceHashMiner.Forms {
 
         private void BenchmarkStoppedGUISettings() {
             StartStopBtn.Text = International.GetText("form2_buttonStartBenchmark");
+            // clear benchmark pending status
+            if (_currentAlgorithm != null) _currentAlgorithm.ClearBenchmarkPending();
+            foreach (var deviceAlgosTuple in _benchmarkDevicesAlgorithmQueue) {
+                foreach (var algo in deviceAlgosTuple.Item2) {
+                    algo.ClearBenchmarkPending();
+                }
+            }
             ResetBenchmarkProgressStatus();
             CalcBenchmarkDevicesAlgorithmQueue();
-            groupBoxAlgorithmBenchmarkSettings.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
+            //groupBoxAlgorithmBenchmarkSettings.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
             benchmarkOptions1.Enabled = true;
-            devicesListViewEnableControl1.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
+
+            algorithmsListView1.IsInBenchmark = false;
+            // TODO make scrolable but not checkable
+            //devicesListViewEnableControl1.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
+            algorithmsListView1.RepaintStatus();
+
             CloseBtn.Enabled = true;
         }
 
@@ -195,10 +201,20 @@ namespace NiceHashMiner.Forms {
             // current failed new list
             _benchmarkFailedAlgoPerDev = new List<DeviceAlgo>();
             // disable gui controls
-            groupBoxAlgorithmBenchmarkSettings.Enabled = false;
+            //groupBoxAlgorithmBenchmarkSettings.Enabled = false;
             benchmarkOptions1.Enabled = false;
-            devicesListViewEnableControl1.Enabled = false;
+            // TODO make scrolable but not checkable
+            //devicesListViewEnableControl1.Enabled = false;
             CloseBtn.Enabled = false;
+            algorithmsListView1.IsInBenchmark = true;
+            // set benchmark pending status
+            foreach (var deviceAlgosTuple in _benchmarkDevicesAlgorithmQueue) {
+                foreach (var algo in deviceAlgosTuple.Item2) {
+                    algo.SetBenchmarkPending();
+                }
+            }
+            algorithmsListView1.RepaintStatus();
+
             StartBenchmark();
 
             return true;
@@ -306,18 +322,12 @@ namespace NiceHashMiner.Forms {
                 var time = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits
                     .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
                 
-                // set GUI progress stuff
-                _algorithmProgressTimer.Stop();
-                SetLabelBenchmarkDevice(_currentDevice.Name);
                 // dagger about 4 minutes
                 var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;
-                SetLabelBenchmarAlgorithm(_currentAlgorithm.NiceHashName,
-                    GetAlgorithmWaitString(showWaitTime));
-                progressBarAlgorithmTime.Maximum = showWaitTime + 10;
-                progressBarAlgorithmTime.Value = 0;
-                _algorithmProgressTimer.Start();
-
+                
                 _currentMiner.BenchmarkStart(_currentDevice, _currentAlgorithm, time, this);
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID,
+                    GetBenchmarWaitString(GetAlgorithmWaitString(showWaitTime)));
             } else {
                 NextBenchmark();
             }
@@ -360,7 +370,7 @@ namespace NiceHashMiner.Forms {
 
         public void SetCurrentStatus(string status) {
             this.Invoke((MethodInvoker)delegate {
-                SetLabelCurrentAlgorithmStatus(status);
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
             });
         }
 
@@ -375,8 +385,12 @@ namespace NiceHashMiner.Forms {
                             Device = _currentDevice.Name,
                             Algorithm = _currentAlgorithm.NiceHashName
                         } );
+                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
+                } else {
+                    // set status to empty string it will return speed
+                    _currentAlgorithm.ClearBenchmarkPending();
+                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, "");
                 }
-                SetLabelPreviousAlgorithmStatus(status);
                 NextBenchmark();
             });
         }
@@ -387,25 +401,8 @@ namespace NiceHashMiner.Forms {
             labelBenchmarkSteps.Text = String.Format("Benchmark step ( {0} / {1} )", current, max);
         }
 
-        private void SetLabelBenchmarkDevice(string deviceName) {
-            labelBenchmarkDevice.Text = String.Format("Current Benchmarking Device: {0}", deviceName);
-        }
-
-        private void SetLabelPreviousAlgorithmStatus(string status) {
-            labelPreviousAlgorithmStatus.Text = String.Format("Previous Benchmared Algorithm Status: {0}", status);
-        }
-
-        private void SetLabelCurrentAlgorithmStatus(string status) {
-            labelAlgorithmStatus.Text = String.Format("Status: {0}", status);
-        }
-
-        private void SetLabelBenchmarAlgorithm(string algoName, string timeExtraString = "") {
-            groupBoxBenchmarkingAlgoStats.Text = String.Format("Current Benchmarking Algorithm: {0}", algoName);
-            if (timeExtraString == "") {
-                labelWaitTime.Text = "Wait time: NONE";
-            } else {
-                labelWaitTime.Text = "Wait time: " + timeExtraString;
-            }
+        private string GetBenchmarWaitString(string timeExtraString = "") {
+            return String.Format("Benchmarking {0}", timeExtraString);
         }
 
         private string GetAlgorithmWaitString(int timeInSeconds) {
@@ -427,21 +424,8 @@ namespace NiceHashMiner.Forms {
             progressBarBenchmarkSteps.Value = _bechmarkCurrentIndex + 1;
         }
 
-        private void AlgorithmProgressTimerTick(object sender, EventArgs e) {
-            if (progressBarAlgorithmTime.Value < progressBarAlgorithmTime.Maximum) {
-                ++progressBarAlgorithmTime.Value;
-                SetLabelCurrentAlgorithmStatus(String.Format("Benchmarking (Elapsed time {0} seconds)", progressBarAlgorithmTime.Value));
-            }
-        }
-
         private void ResetBenchmarkProgressStatus() {
-            SetLabelBenchmarkDevice("NONE");
-            SetLabelBenchmarAlgorithm("NONE");
-            SetLabelPreviousAlgorithmStatus("NONE");
-            SetLabelCurrentAlgorithmStatus("NONE");
-            progressBarAlgorithmTime.Value = 0;
             progressBarBenchmarkSteps.Value = 0;
-            _algorithmProgressTimer.Stop();
         }
 
         #endregion // Benchmark progress GUI stuff
@@ -481,6 +465,19 @@ namespace NiceHashMiner.Forms {
             }
             // save already benchmarked algorithms
             ConfigManager.Instance.CommitBenchmarks();
+        }
+
+        private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
+
+            //algorithmSettingsControl1.Deselect();
+            // show algorithms
+            var _selectedComputeDevice = ComputeDevice.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice);
+            //groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", _selectedComputeDevice.Name);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e) {
+
         }
 
     }

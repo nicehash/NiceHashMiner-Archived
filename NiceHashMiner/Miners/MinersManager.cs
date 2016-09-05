@@ -118,7 +118,9 @@ namespace NiceHashMiner.Miners {
                     UniqueMinerGroups.Add(curDevice.DeviceGroupString);
                 }
             }
-            ActiveMinersGroup = string.Join("/", UniqueMinerGroups);
+            if (UniqueMinerGroups.Count > 0 && IsProfitable) {
+                ActiveMinersGroup = string.Join("/", UniqueMinerGroups);
+            }
 
             return ActiveMinersGroup;
         }

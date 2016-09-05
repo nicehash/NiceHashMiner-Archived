@@ -37,9 +37,9 @@ namespace NiceHashMiner.Forms.Components {
             public void LviSetColor(ListViewItem lvi) {
                 Algorithm algorithm = lvi.Tag as Algorithm;
                 if (algorithm != null) {
-                    if (algorithm.Skip) {
+                    if (algorithm.Skip && !algorithm.IsBenchmarkPending) {
                         lvi.BackColor = DISABLED_COLOR;
-                    } else if (algorithm.BenchmarkSpeed > 0) {
+                    } else if (algorithm.BenchmarkSpeed > 0 && !algorithm.IsBenchmarkPending) {
                         lvi.BackColor = BENCHMARKED_COLOR;
                     } else {
                         lvi.BackColor = UNBENCHMARKED_COLOR;
@@ -50,11 +50,15 @@ namespace NiceHashMiner.Forms.Components {
 
         IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultAlgorithmColorSeter();
 
+        // helper for benchmarking logic
+        public bool IsInBenchmark { get; set; }
+
         public AlgorithmsListView() {
             InitializeComponent();
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(listViewAlgorithms_ItemSelectionChanged);
             listViewAlgorithms.ItemChecked += new ItemCheckedEventHandler(listViewAlgorithms_ItemChecked);
+            IsInBenchmark = false;
         }
 
         public void RemoveRatioRates() {
@@ -73,14 +77,19 @@ namespace NiceHashMiner.Forms.Components {
                 ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
 
                 //sub.Tag = alg.Value;
-                if (alg.Value.BenchmarkSpeed > 0) {
-                    lvi.SubItems.Add(Helpers.FormatSpeedOutput(alg.Value.BenchmarkSpeed));
-                } else {
-                    lvi.SubItems.Add("none");
-                }
+                lvi.SubItems.Add(alg.Value.BenchmarkSpeedString());
                 lvi.Tag = alg.Value;
                 _listItemCheckColorSetter.LviSetColor(lvi);
                 listViewAlgorithms.Items.Add(lvi);
+            }
+            this.Enabled = _computeDevice.Enabled;
+        }
+
+        public void RepaintStatus() {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                Algorithm algo = lvi.Tag as Algorithm;
+                lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                _listItemCheckColorSetter.LviSetColor(lvi);
             }
         }
 
@@ -105,13 +114,20 @@ namespace NiceHashMiner.Forms.Components {
         #endregion //Callbacks Events
 
         // benchmark settings
-        public void SetSpeedStatus(string status, AlgorithmType algorithmType) {
-            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
-                Algorithm algo = lvi.Tag as Algorithm;
-                if (algo != null && algo.NiceHashID == algorithmType) {
-                    // TODO handle numbers
-                    lvi.SubItems[SPEED].Text = status;
-                    break;
+        public void SetSpeedStatus(ComputeDevice computeDevice, AlgorithmType algorithmType, string status) {
+            var algorithm = computeDevice.DeviceBenchmarkConfig.AlgorithmSettings[algorithmType];
+            algorithm.BenchmarkStatus = status;
+
+            // gui update only if same as selected
+            if (_computeDevice != null && computeDevice.UUID == _computeDevice.UUID) {
+                foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                    Algorithm algo = lvi.Tag as Algorithm;
+                    if (algo != null && algo.NiceHashID == algorithmType) {
+                        // TODO handle numbers
+                        lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
+                        _listItemCheckColorSetter.LviSetColor(lvi);
+                        break;
+                    }
                 }
             }
         }

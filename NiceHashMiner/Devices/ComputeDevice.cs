@@ -97,7 +97,7 @@ namespace NiceHashMiner.Devices
             _cudaDevice = cudaDevice;
             ID = (int)cudaDevice.DeviceID;
             Group = group;
-            Name = cudaDevice.DeviceName;
+            Name = cudaDevice.GetName();
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);

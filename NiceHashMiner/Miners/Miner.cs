@@ -112,6 +112,8 @@ namespace NiceHashMiner
             IsRunning = false;
             PreviousTotalMH = 0.0;
 
+            LastCommandLine = "";
+
             InitSupportedMinerAlgorithms();
 
             APIPort = MinersApiPortsManager.Instance.GetAvaliablePort();

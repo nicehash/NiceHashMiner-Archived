@@ -537,7 +537,7 @@ namespace NiceHashMiner.Devices
                     string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
                     stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
                     stringBuilder.AppendLine(String.Format("\t\tID: {0}", cudaDev.DeviceID.ToString()));
-                    stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", cudaDev.DeviceName));
+                    stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", cudaDev.GetName()));
                     stringBuilder.AppendLine(String.Format("\t\tVENDOR: {0}", cudaDev.VendorName));
                     stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", cudaDev.UUID));
                     stringBuilder.AppendLine(String.Format("\t\tSM: {0}", cudaDev.SMVersionString));

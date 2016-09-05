@@ -20,6 +20,13 @@ namespace NiceHashMiner.Devices {
         public uint pciSubSystemId; //!< The 32-bit Sub System Device ID
         public int SMX;
 
+        // more accuare description
+        public string GetName() {
+            if (VendorName == "UNKNOWN") {
+                VendorName = String.Format("V_ID_{0}", VendorID);
+            }
+            return String.Format("{0} {1}", VendorName, DeviceName);
+        }
 
         private bool _isEtherumCapable = false;
         private bool _isEtherumCapableInit = false;

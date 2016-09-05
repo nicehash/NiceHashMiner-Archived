@@ -12,6 +12,8 @@ namespace NiceHashMiner
     {
         readonly static private Dictionary<AlgorithmType, string> _names = new Dictionary<AlgorithmType, string>()
         {
+            { AlgorithmType.INVALID , "INVALID" },
+            { AlgorithmType.NONE , "NONE" },
             //{ AlgorithmType.Scrypt , "scrypt" }, // NOT used
             //{ AlgorithmType.SHA256 , "sha256" }, // NOT used
             //{ AlgorithmType.ScryptNf , "scryptnf" }, // NOT used
