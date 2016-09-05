@@ -151,7 +151,7 @@ namespace NiceHashMiner.Miners {
             ChangeToNextAvaliablePort();
             if (!willswitch && ProcessHandle != null) {
                 try {
-                    ProcessHandle.Close();
+                    ProcessHandle.Kill();
                 } catch {
                 } finally {
                     ProcessHandle = null;
