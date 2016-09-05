@@ -440,29 +440,29 @@ namespace NiceHashMiner.Forms {
             this.Close();
         }
 
-        private void radioButton_SelectedUnbenchmarked_CheckedChanged(object sender, EventArgs e) {
-            _algorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
-            CalcBenchmarkDevicesAlgorithmQueue();
-            devicesListViewEnableControl1.ResetListItemColors();
-        }
+        //private void radioButton_SelectedUnbenchmarked_CheckedChanged(object sender, EventArgs e) {
+        //    _algorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
+        //    CalcBenchmarkDevicesAlgorithmQueue();
+        //    devicesListViewEnableControl1.ResetListItemColors();
+        //}
 
-        private void radioButton_Unbenchmarked_CheckedChanged(object sender, EventArgs e) {
-            _algorithmOption = AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms;
-            CalcBenchmarkDevicesAlgorithmQueue();
-            devicesListViewEnableControl1.ResetListItemColors();
-        }
+        //private void radioButton_Unbenchmarked_CheckedChanged(object sender, EventArgs e) {
+        //    _algorithmOption = AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms;
+        //    CalcBenchmarkDevicesAlgorithmQueue();
+        //    devicesListViewEnableControl1.ResetListItemColors();
+        //}
 
-        private void radioButton_ReOnlySelected_CheckedChanged(object sender, EventArgs e) {
-            _algorithmOption = AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms;
-            CalcBenchmarkDevicesAlgorithmQueue();
-            devicesListViewEnableControl1.ResetListItemColors();
-        }
+        //private void radioButton_ReOnlySelected_CheckedChanged(object sender, EventArgs e) {
+        //    _algorithmOption = AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms;
+        //    CalcBenchmarkDevicesAlgorithmQueue();
+        //    devicesListViewEnableControl1.ResetListItemColors();
+        //}
 
-        private void radioButton_All_CheckedChanged(object sender, EventArgs e) {
-            _algorithmOption = AlgorithmBenchmarkSettingsType.AllAlgorithms;
-            CalcBenchmarkDevicesAlgorithmQueue();
-            devicesListViewEnableControl1.ResetListItemColors();
-        }
+        //private void radioButton_All_CheckedChanged(object sender, EventArgs e) {
+        //    _algorithmOption = AlgorithmBenchmarkSettingsType.AllAlgorithms;
+        //    CalcBenchmarkDevicesAlgorithmQueue();
+        //    devicesListViewEnableControl1.ResetListItemColors();
+        //}
 
         private void FormBenchmark_New_FormClosing(object sender, FormClosingEventArgs e) {
             if (_inBenchmark) {
@@ -485,6 +485,18 @@ namespace NiceHashMiner.Forms {
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e) {
 
+        }
+
+        private void radioButton_SelectedUnbenchmarked_CheckedChanged_1(object sender, EventArgs e) {
+            _algorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
+            CalcBenchmarkDevicesAlgorithmQueue();
+            devicesListViewEnableControl1.ResetListItemColors();
+        }
+
+        private void radioButton_RE_SelectedUnbenchmarked_CheckedChanged(object sender, EventArgs e) {
+            _algorithmOption = AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms;
+            CalcBenchmarkDevicesAlgorithmQueue();
+            devicesListViewEnableControl1.ResetListItemColors();
         }
 
     }

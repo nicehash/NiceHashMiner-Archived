@@ -25,7 +25,6 @@
         private void InitializeComponent() {
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonBenchmark = new System.Windows.Forms.Button();
             this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
             this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.RichTextBox();
             this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
@@ -39,37 +38,26 @@
             this.groupBoxSelectedAlgorithmSettings.Controls.Add(this.flowLayoutPanel1);
             this.groupBoxSelectedAlgorithmSettings.Location = new System.Drawing.Point(3, 3);
             this.groupBoxSelectedAlgorithmSettings.Name = "groupBoxSelectedAlgorithmSettings";
-            this.groupBoxSelectedAlgorithmSettings.Size = new System.Drawing.Size(229, 260);
+            this.groupBoxSelectedAlgorithmSettings.Size = new System.Drawing.Size(229, 188);
             this.groupBoxSelectedAlgorithmSettings.TabIndex = 11;
             this.groupBoxSelectedAlgorithmSettings.TabStop = false;
             this.groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm Settings:";
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.buttonBenchmark);
             this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(223, 241);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(223, 169);
             this.flowLayoutPanel1.TabIndex = 12;
-            // 
-            // buttonBenchmark
-            // 
-            this.buttonBenchmark.Location = new System.Drawing.Point(3, 3);
-            this.buttonBenchmark.Name = "buttonBenchmark";
-            this.buttonBenchmark.Size = new System.Drawing.Size(214, 23);
-            this.buttonBenchmark.TabIndex = 17;
-            this.buttonBenchmark.Text = "Benchmark Selected Algorithm";
-            this.buttonBenchmark.UseVisualStyleBackColor = true;
-            this.buttonBenchmark.Click += new System.EventHandler(this.buttonBenchmark_Click);
             // 
             // groupBoxExtraLaunchParameters
             // 
             this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
-            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 83);
+            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 54);
             this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
             this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(217, 104);
             this.groupBoxExtraLaunchParameters.TabIndex = 14;
@@ -91,7 +79,7 @@
             this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
             this.fieldBoxBenchmarkSpeed.EntryText = "";
             this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
-            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 32);
+            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 3);
             this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
             this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(154, 45);
             this.fieldBoxBenchmarkSpeed.TabIndex = 1;
@@ -102,7 +90,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBoxSelectedAlgorithmSettings);
             this.Name = "AlgorithmSettingsControl";
-            this.Size = new System.Drawing.Size(235, 268);
+            this.Size = new System.Drawing.Size(235, 196);
             this.groupBoxSelectedAlgorithmSettings.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
@@ -118,6 +106,5 @@
         private System.Windows.Forms.RichTextBox richTextBoxExtraLaunchParameters;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private Field fieldBoxBenchmarkSpeed;
-        private System.Windows.Forms.Button buttonBenchmark;
     }
 }
