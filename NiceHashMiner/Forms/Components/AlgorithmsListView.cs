@@ -74,10 +74,10 @@ namespace NiceHashMiner.Forms.Components {
             IsInBenchmark = false;
         }
 
-        public void RemoveRatioRates() {
-            listViewAlgorithms.Columns.RemoveAt(RATE);
-            listViewAlgorithms.Columns.RemoveAt(RATIO);
-        }
+        //public void RemoveRatioRates() {
+        //    listViewAlgorithms.Columns.RemoveAt(RATE);
+        //    listViewAlgorithms.Columns.RemoveAt(RATIO);
+        //}
 
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled) {
             _computeDevice = computeDevice;
@@ -91,6 +91,8 @@ namespace NiceHashMiner.Forms.Components {
 
                 //sub.Tag = alg.Value;
                 lvi.SubItems.Add(alg.Value.BenchmarkSpeedString());
+                lvi.SubItems.Add(alg.Value.CurPayingRatio);
+                lvi.SubItems.Add(alg.Value.CurPayingRate);
                 lvi.Tag = alg.Value;
                 _listItemCheckColorSetter.LviSetColor(lvi);
                 listViewAlgorithms.Items.Add(lvi);
@@ -138,6 +140,9 @@ namespace NiceHashMiner.Forms.Components {
             var algorithm = computeDevice.DeviceBenchmarkConfig.AlgorithmSettings[algorithmType];
             algorithm.BenchmarkStatus = status;
 
+            
+            
+
             // gui update only if same as selected
             if (_computeDevice != null && computeDevice.UUID == _computeDevice.UUID) {
                 foreach (ListViewItem lvi in listViewAlgorithms.Items) {
@@ -145,6 +150,8 @@ namespace NiceHashMiner.Forms.Components {
                     if (algo != null && algo.NiceHashID == algorithmType) {
                         // TODO handle numbers
                         lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
+                        lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
+                        lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
                         _listItemCheckColorSetter.LviSetColor(lvi);
                         break;
                     }

@@ -90,7 +90,7 @@ namespace NiceHashMiner.Utils {
             var percString = e.ProgressPercentage.ToString() + "%";
 
             // Update the label with how much data have been downloaded so far and the total size of the file we are currently downloading
-            var labelDownloaded = string.Format("{0} MB's / {1} MB's",
+            var labelDownloaded = string.Format("{0} MB / {1} MB",
                 (e.BytesReceived / 1024d / 1024d).ToString("0.00"),
                 (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
 

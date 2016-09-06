@@ -60,7 +60,7 @@
             this.flowLayoutPanelRates = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.label_MiningProfitabilityStatus = new System.Windows.Forms.Label();
+            this.label_NotProfitable = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -323,16 +323,17 @@
             this.flowLayoutPanelRates.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelRates.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelRates.Name = "flowLayoutPanelRates";
-            this.flowLayoutPanelRates.Size = new System.Drawing.Size(536, 166);
+            this.flowLayoutPanelRates.Size = new System.Drawing.Size(536, 204);
             this.flowLayoutPanelRates.TabIndex = 107;
             this.flowLayoutPanelRates.WrapContents = false;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label_NotProfitable);
             this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
             this.groupBox1.Location = new System.Drawing.Point(11, 202);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(542, 185);
+            this.groupBox1.Size = new System.Drawing.Size(542, 223);
             this.groupBox1.TabIndex = 108;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Group/Device Rates:";
@@ -341,6 +342,7 @@
             // 
             this.devicesListViewEnableControl1.AutoSaveChange = false;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(11, 91);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
@@ -348,21 +350,22 @@
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 105);
             this.devicesListViewEnableControl1.TabIndex = 109;
             // 
-            // label_MiningProfitabilityStatus
+            // label_NotProfitable
             // 
-            this.label_MiningProfitabilityStatus.AutoSize = true;
-            this.label_MiningProfitabilityStatus.Location = new System.Drawing.Point(14, 394);
-            this.label_MiningProfitabilityStatus.Name = "label_MiningProfitabilityStatus";
-            this.label_MiningProfitabilityStatus.Size = new System.Drawing.Size(125, 13);
-            this.label_MiningProfitabilityStatus.TabIndex = 110;
-            this.label_MiningProfitabilityStatus.Text = "Profitability status: NONE";
+            this.label_NotProfitable.AutoSize = true;
+            this.label_NotProfitable.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label_NotProfitable.ForeColor = System.Drawing.Color.Red;
+            this.label_NotProfitable.Location = new System.Drawing.Point(6, 0);
+            this.label_NotProfitable.Name = "label_NotProfitable";
+            this.label_NotProfitable.Size = new System.Drawing.Size(366, 24);
+            this.label_NotProfitable.TabIndex = 110;
+            this.label_NotProfitable.Text = "CURRENTLY MINING NOT PROFITABLE.";
             // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 453);
-            this.Controls.Add(this.label_MiningProfitabilityStatus);
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);
@@ -394,6 +397,7 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -431,7 +435,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         private System.Windows.Forms.GroupBox groupBox1;
         private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
-        private System.Windows.Forms.Label label_MiningProfitabilityStatus;
+        private System.Windows.Forms.Label label_NotProfitable;
     }
 }
 

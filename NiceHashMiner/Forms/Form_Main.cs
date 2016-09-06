@@ -69,6 +69,8 @@ namespace NiceHashMiner
 
             Text += " v" + Application.ProductVersion + _betaAlphaPostfixString;
 
+            label_NotProfitable.Visible = false;
+
             InitMainConfigGUIData();
         }
 
@@ -275,9 +277,9 @@ namespace NiceHashMiner
             }
             // TODO no bots please
             if (ConfigManager.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager.Instance.GeneralConfig.hwidOK) {
-                MessageBox.Show("IF YOU DID NOT INSTALL NICEHASH MINER ON THIS PC, YOUR PC MAY BE COMPROMISED!",
-                                                            "Warning!",
-                                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(International.GetText("form1_msgbox_anti_botnet_msgbox"),
+                    International.GetText("Warning_with_Exclamation"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             }
         }
 
@@ -346,6 +348,11 @@ namespace NiceHashMiner
             }
         }
 
+        public void ClearRatesALL() {
+            HideNotProfitable();
+            ClearRates(-1);
+        }
+
         public void ClearRates(int groupCount) {
             if (flowLayoutPanelVisibleCount != groupCount) {
                 flowLayoutPanelVisibleCount = groupCount;
@@ -374,10 +381,12 @@ namespace NiceHashMiner
         }
 
         public void ShowNotProfitable() {
-            label_MiningProfitabilityStatus.Text = "MINING PROTIFABILITY STATUS: MINING NOT PROFITABLE";
+            label_NotProfitable.Visible = true;
+            label_NotProfitable.Invalidate();
         }
         public void HideNotProfitable() {
-            label_MiningProfitabilityStatus.Text = "MINING PROTIFABILITY STATUS: PROFITABLE";
+            label_NotProfitable.Visible = false;
+            label_NotProfitable.Invalidate();
         }
 
         private void UpdateGlobalRate()
@@ -689,9 +698,10 @@ namespace NiceHashMiner
             ConfigManager.Instance.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
+            InitFlowPanelStart();
+
             var btcAdress = DemoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
             var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim(), btcAdress);
-            InitFlowPanelStart();
 
             if (!DemoMode) ConfigManager.Instance.GeneralConfig.Commit();
 

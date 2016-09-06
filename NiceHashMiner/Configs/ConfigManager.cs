@@ -50,8 +50,6 @@ namespace NiceHashMiner.Configs {
                 //GeneralConfig.UseNewSettingsPage = Config.ConfigData.UseNewSettingsPage;
                 GeneralConfig.NVIDIAP0State = Config.ConfigData.NVIDIAP0State;
                 GeneralConfig.MinerRestartDelayMS = Config.ConfigData.MinerRestartDelayMS;
-                //GeneralConfig.ethminerAPIPortNvidia = Config.ConfigData.ethminerAPIPortNvidia;
-                //GeneralConfig.ethminerAPIPortAMD = Config.ConfigData.ethminerAPIPortAMD;
                 GeneralConfig.ethminerDefaultBlockHeight = Config.ConfigData.ethminerDefaultBlockHeight;
                 //GeneralConfig.MinerAPIGraceSeconds = Config.ConfigData.MinerAPIGraceSeconds;
                 //GeneralConfig.MinerAPIGraceSecondsAMD = Config.ConfigData.MinerAPIGraceSecondsAMD;

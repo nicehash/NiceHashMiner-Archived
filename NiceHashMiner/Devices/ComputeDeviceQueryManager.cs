@@ -72,13 +72,13 @@ namespace NiceHashMiner.Devices
                 int NVIDIA_count = 0;
                 int AMD_count = 0;
                 foreach (var vidCtrl in AvaliableVideoControllers) {
-                    NVIDIA_count += (vidCtrl.Name.Contains("Nvidia") || vidCtrl.Name.Contains("NVIDIA")) ? 1 : 0;
-                    AMD_count += (vidCtrl.Name.Contains("Amd") || vidCtrl.Name.Contains("AMD")) ? 1 : 0;
+                    NVIDIA_count += (vidCtrl.Name.ToLower().Contains("nvidia")) ? 1 : 0;
+                    AMD_count += (vidCtrl.Name.ToLower().Contains("amd")) ? 1 : 0;
                 }
                 if (NVIDIA_count == CudaDevices.Count) {
-                    Helpers.ConsolePrint(TAG, "Cuda Nvidia/CUDA device count GOOD");
+                    Helpers.ConsolePrint(TAG, "Cuda NVIDIA/CUDA device count GOOD");
                 } else {
-                    Helpers.ConsolePrint(TAG, "Cuda Nvidia/CUDA device count BAD!!!");
+                    Helpers.ConsolePrint(TAG, "Cuda NVIDIA/CUDA device count BAD!!!");
                 }
                 if (AMD_count == amdGpus.Count) {
                     Helpers.ConsolePrint(TAG, "AMD GPU device count GOOD");

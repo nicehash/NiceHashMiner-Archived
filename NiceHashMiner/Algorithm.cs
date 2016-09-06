@@ -34,9 +34,25 @@ namespace NiceHashMiner {
         [JsonIgnore]
         public bool IsBenchmarkPending { get; private set; }
         [JsonIgnore]
-        public double CurRatio { get; set; }
+        public string CurPayingRatio {
+            get {
+                string ratio = "N/A";
+                if (Globals.NiceHashData != null) {
+                    ratio = Globals.NiceHashData[NiceHashID].paying.ToString("F8");
+                }
+                return ratio;
+            }
+        }
         [JsonIgnore]
-        public bool CurPaying { get; set; }
+        public string CurPayingRate {
+            get {
+                string rate = "N/A";
+                if (BenchmarkSpeed > 0 && Globals.NiceHashData != null) {
+                    rate = (BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001).ToString("F8");
+                }
+                return rate;
+            }
+        }
 
         public Algorithm(AlgorithmType niceHashID, string minerName) {
             NiceHashID = niceHashID;

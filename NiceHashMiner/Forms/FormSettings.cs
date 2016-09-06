@@ -62,7 +62,7 @@ namespace NiceHashMiner.Forms {
             // link algorithm list with algorithm settings control
             algorithmSettingsControl1.Enabled = false;
             algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
-            algorithmsListView1.RemoveRatioRates();
+            //algorithmsListView1.RemoveRatioRates();
 
 
             // At the very end set to true
@@ -101,7 +101,7 @@ namespace NiceHashMiner.Forms {
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
-            toolTip1.SetToolTip(this.label_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
+            toolTip1.SetToolTip(this.pictureBox_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
 
             toolTip1.SetToolTip(this.label_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(this.pictureBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
@@ -109,14 +109,27 @@ namespace NiceHashMiner.Forms {
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
+            toolTip1.SetToolTip(this.pictureBox_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsAMD, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsAMD, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
+            toolTip1.SetToolTip(this.pictureBox_SwitchMinSecondsAMD, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
 
             toolTip1.SetToolTip(this.textBox_MinerAPIQueryInterval, International.GetText("Form_Settings_ToolTip_MinerAPIQueryInterval"));
             toolTip1.SetToolTip(this.label_MinerAPIQueryInterval, International.GetText("Form_Settings_ToolTip_MinerAPIQueryInterval"));
+            toolTip1.SetToolTip(this.pictureBox_MinerAPIQueryInterval, International.GetText("Form_Settings_ToolTip_MinerAPIQueryInterval"));
+
             toolTip1.SetToolTip(this.textBox_MinerRestartDelayMS, International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
             toolTip1.SetToolTip(this.label_MinerRestartDelayMS, International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
+            toolTip1.SetToolTip(this.pictureBox_MinerRestartDelayMS, International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
+
+            toolTip1.SetToolTip(this.textBox_APIBindPortStart, International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
+            toolTip1.SetToolTip(this.label_APIBindPortStart, International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
+            toolTip1.SetToolTip(this.pictureBox_APIBindPortStart, International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
+
+            toolTip1.SetToolTip(this.comboBox_DagLoadMode, International.GetText("Form_Settings_ToolTip_DagGeneration"));
+            toolTip1.SetToolTip(this.label_DagGeneration, International.GetText("Form_Settings_ToolTip_DagGeneration"));
+            toolTip1.SetToolTip(this.pictureBox_DagGeneration, International.GetText("Form_Settings_ToolTip_DagGeneration"));
 
             benchmarkLimitControlCPU.SetToolTip(ref toolTip1, "CPUs");
             benchmarkLimitControlNVIDIA.SetToolTip(ref toolTip1, "NVIDIA GPUs");
@@ -141,6 +154,7 @@ namespace NiceHashMiner.Forms {
 
             toolTip1.SetToolTip(this.textBox_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
             toolTip1.SetToolTip(this.label_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
+            toolTip1.SetToolTip(this.pictureBox_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
             
             toolTip1.SetToolTip(this.checkBox_LogToFile, International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
             toolTip1.SetToolTip(this.pictureBox_LogToFile, International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
@@ -161,6 +175,7 @@ namespace NiceHashMiner.Forms {
             
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
+            toolTip1.SetToolTip(this.pictureBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
 
             toolTip1.SetToolTip(this.label_displayCurrency, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
             toolTip1.SetToolTip(this.pictureBox_displayCurrency, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
@@ -169,6 +184,7 @@ namespace NiceHashMiner.Forms {
             // Setup Tooltips CPU
             toolTip1.SetToolTip(comboBox_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
             toolTip1.SetToolTip(label_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
+            toolTip1.SetToolTip(pictureBox_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
 
             algorithmSettingsControl1.InitLocale(toolTip1);
         }
@@ -214,8 +230,8 @@ namespace NiceHashMiner.Forms {
             label_SwitchMinSecondsAMD.Text = International.GetText("Form_Settings_General_SwitchMinSecondsAMD") + ":";
 
             label_ethminerDefaultBlockHeight.Text = International.GetText("Form_Settings_General_ethminerDefaultBlockHeight") + ":";
-            //label_ethminerAPIPortNvidia.Text = International.GetText("Form_Settings_General_ethminerAPIPortNVIDIA") + ":";
-            //label_ethminerAPIPortAMD.Text = International.GetText("Form_Settings_General_ethminerAPIPortAMD") + ":";
+            label_DagGeneration.Text = International.GetText("Form_Settings_DagGeneration") + ":";
+            label_APIBindPortStart.Text = International.GetText("Form_Settings_APIBindPortStart") + ":";
 
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
 
@@ -337,7 +353,7 @@ namespace NiceHashMiner.Forms {
                 textBox_LogMaxFileSize.Text = ConfigManager.Instance.GeneralConfig.LogMaxFileSize.ToString();
                 textBox_ethminerDefaultBlockHeight.Text = ConfigManager.Instance.GeneralConfig.ethminerDefaultBlockHeight.ToString();
                 textBox_APIBindPortStart.Text = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart.ToString();
-                textBox_MinProfit.Text = ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString().Replace(',', '.'); // force comma;
+                textBox_MinProfit.Text = ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
             }
 
             // set custom control referances
@@ -499,7 +515,7 @@ namespace NiceHashMiner.Forms {
 
             // TODO maybe make to parse double check
             ConfigManager.Instance.GeneralConfig.MinimumProfit = Double.Parse(textBox_MinProfit.Text, CultureInfo.InvariantCulture);
-            textBox_MinProfit.Text = ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F16").Replace(',', '.'); // force comma
+            textBox_MinProfit.Text = ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e) {
@@ -673,5 +689,6 @@ namespace NiceHashMiner.Forms {
         }
 
         #endregion Form Callbacks        
+
     }
 }

@@ -63,6 +63,7 @@
         "form1_msgbox_buttonBenchmarkWarningMsg": "Editing additional settings is for advanced users.\r\n\r\nIf {0} crashes due to bad config value you can restore it by deleting 'config.json' file.\r\n\r\nContinue with editing settings?",
         "form1_msgbox_buttonBenchmarkRestartWarningTitle": "Restarting {0}",
         "form1_msgbox_buttonBenchmarkRestartWarningMsg": "{0} will exit now. This new settings dialog is still in beta and {0} needs to restart to take effect.",
+        "form1_msgbox_anti_botnet_msgbox": "NiceHash Miner has detected change of hardware ID. If you did not download and install NiceHash Miner, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall your Windows.\r\n\r\nContinue with NiceHash Miner?",
 
 
         "form2_title": "Benchmark",
@@ -233,6 +234,10 @@
         "Form_Settings_ToolTip_AlgoDisabledDevices": "Any devices that are checked will be skipped by NiceHashMiner (only for this algorithm).",
         "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Additional launch parameters when launching miner and this algorithm.",
         "Form_Settings_DisplayCurrency": "Display Currency",
-        "Form_Settings_ToolTip_DisplayCurrency": "Choose what Currency to Display mining protif."
+        "Form_Settings_ToolTip_DisplayCurrency": "Choose what Currency to Display mining protif.",
+        "Form_Settings_APIBindPortStart": "API Bind port pool start",
+        "Form_Settings_ToolTip_APIBindPortStart": "Set starting port number from which miner API Bind ports will be set for comunication.",
+        "Form_Settings_DagGeneration": "Dag Load Mode",
+        "Form_Settings_ToolTip_DagGeneration": "Sets Dag Load Mode for ethminers."
     }
 }

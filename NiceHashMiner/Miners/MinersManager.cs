@@ -103,7 +103,7 @@ namespace NiceHashMiner.Miners {
                 }
             }
             if (_mainFormRatesComunication != null) {
-                _mainFormRatesComunication.ClearRates(-1);
+                _mainFormRatesComunication.ClearRatesALL();
             }
             _MinerEtherumCUDA = null;
             _MinerEtherumOCL = null;
@@ -112,6 +112,18 @@ namespace NiceHashMiner.Miners {
             Helpers.AllowMonitorPowerdownAndSleep();
         }
 
+        public void StopAllMinersNonProfitable() {
+            if (_groupedDevicesMiners != null) {
+                foreach (var kv in _groupedDevicesMiners) {
+                    kv.Value.End();
+                }
+            }
+            if (_mainFormRatesComunication != null) {
+                _mainFormRatesComunication.ClearRates(-1);
+            }
+            _MinerEtherumCUDA = null;
+            _MinerEtherumOCL = null;
+        }
 
         public string GetActiveMinersGroup() {
             string ActiveMinersGroup = "";
@@ -473,8 +485,7 @@ namespace NiceHashMiner.Miners {
 #if (SWITCH_TESTING)
             SwitchTesting.Instance.SetNext(ref devProfits, _enabledDevices);
 #endif
-
-            double CurrentProfit = 0.0;
+            double CurrentProfit = 0.0d;
             // calculate most profitable algorithm per enabled device
             foreach (var cdev in _enabledDevices) {
                 var curDevProfits = devProfits[cdev.UUID];
@@ -514,7 +525,7 @@ namespace NiceHashMiner.Miners {
                 IsProfitable = false;
                 _mainFormRatesComunication.ShowNotProfitable();
                 // return don't group
-                StopAllMiners();
+                StopAllMinersNonProfitable();
                 Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");
                 return;
             } else {
