@@ -53,7 +53,7 @@
 
         "form1_msgbox_CPUMining64bitMsg": "NiceHash Miner works only on 64 bit version of OS for CPU mining. CPU mining will be disabled.",
         "form1_msgbox_CPUMining64CoresMsg": "NiceHash Miner does not support more than 64 virtual cores. CPU mining will be disabled.",
-        "form1_msgbox_CPUMiningLessThreadMsg": "LessThreads greater than number of threads per CPU. CPU mining will be disabled.",
+        "form1_msgbox_CPUMiningLessThreadMsg": "LessThreads greater than number of threads per CPU. Ignore setting.",
         "form1_msgbox_NoInternetTitle": "Check internet connection",
         "form1_msgbox_NoInternetMsg": "NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner. Would you like to continue?",
         "form1_msgbox_InvalidBTCAddressMsg": "Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one.",
@@ -155,7 +155,7 @@
         "Form_Settings_General_DisableAMDTempControl": "Disable AMD Temperature Control",
 
         "Form_Settings_Algo_Skip": "Skip",
-        "Form_Settings_Algo_BenchmarkSpeed": "Benchmark Speed",
+        "Form_Settings_Algo_BenchmarkSpeed": "Benchmark Speed (H/s)",
 
         "Form_Settings_LessThreadWarningTitle": "Invalid number for LessThreads!",
         "Form_Settings_LessThreadWarningMsg": "Error! Please input a valid number for LessThreads.",
@@ -232,6 +232,7 @@
         "Form_Settings_ToolTip_AlgoBenchmarkSpeed": "Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.",
         "Form_Settings_ToolTip_AlgoDisabledDevices": "Any devices that are checked will be skipped by NiceHashMiner (only for this algorithm).",
         "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Additional launch parameters when launching miner and this algorithm.",
-        "Form_Settings_DisplayCurrency":  "Display Currency"
+        "Form_Settings_DisplayCurrency": "Display Currency",
+        "Form_Settings_ToolTip_DisplayCurrency": "Choose what Currency to Display mining protif."
     }
 }

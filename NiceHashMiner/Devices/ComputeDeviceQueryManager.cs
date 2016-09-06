@@ -242,15 +242,9 @@ namespace NiceHashMiner.Devices
                 CPUs = 0;
             }
 
+            // TODO important move this to settings
             int ThreadsPerCPUMask = ThreadsPerCPU;
-            ThreadsPerCPU -= ConfigManager.Instance.GeneralConfig.LessThreads;
-            if (ThreadsPerCPU < 1)
-            {
-                MessageBox.Show(International.GetText("form1_msgbox_CPUMiningLessThreadMsg"),
-                                International.GetText("Warning_with_Exclamation"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                CPUs = 0;
-            }
+            Globals.ThreadsPerCPU = ThreadsPerCPU;
             
             if (CPUs == 1) {
                 MinersManager.Instance.AddCpuMiner(new cpuminer(0, ThreadsPerCPU, 0), 0, CPUID.GetCPUName().Trim());

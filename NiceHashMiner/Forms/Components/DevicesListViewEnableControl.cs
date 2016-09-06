@@ -34,6 +34,22 @@ namespace NiceHashMiner.Forms.Components {
 
         private AlgorithmsListView _algorithmsListView = null;
 
+        // disable checkboxes when in benchmark mode
+        private bool _isInBenchmark = false;
+        // helper for benchmarking logic
+        public bool IsInBenchmark {
+            get { return _isInBenchmark; }
+            set {
+                if (value) {
+                    _isInBenchmark = value;
+                    listViewDevices.CheckBoxes = false;
+                } else {
+                    _isInBenchmark = value;
+                    listViewDevices.CheckBoxes = true;
+                }
+            }
+        }
+
         [Serializable]
         public class ComputeDeviceEnabledOption {
             public bool IsEnabled { get; set; }

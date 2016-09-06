@@ -50,14 +50,27 @@ namespace NiceHashMiner.Forms.Components {
 
         IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultAlgorithmColorSeter();
 
+        // disable checkboxes when in benchmark mode
+        private bool _isInBenchmark = false;
         // helper for benchmarking logic
-        public bool IsInBenchmark { get; set; }
+        public bool IsInBenchmark {
+            get { return _isInBenchmark; }
+            set {
+                if (value) {
+                    _isInBenchmark = value;
+                    listViewAlgorithms.CheckBoxes = false;
+                } else {
+                    _isInBenchmark = value;
+                    listViewAlgorithms.CheckBoxes = true;
+                }
+            }
+        }
 
         public AlgorithmsListView() {
             InitializeComponent();
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(listViewAlgorithms_ItemSelectionChanged);
-            listViewAlgorithms.ItemChecked += new ItemCheckedEventHandler(listViewAlgorithms_ItemChecked);
+            listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler)listViewAlgorithms_ItemChecked;
             IsInBenchmark = false;
         }
 
@@ -104,6 +117,10 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         private void listViewAlgorithms_ItemChecked(object sender, ItemCheckedEventArgs e) {
+            if (IsInBenchmark) {
+                e.Item.Checked = !e.Item.Checked;
+                return;
+            }
             var algo = e.Item.Tag as Algorithm;
             if (algo != null) {
                 algo.Skip = !e.Item.Checked;

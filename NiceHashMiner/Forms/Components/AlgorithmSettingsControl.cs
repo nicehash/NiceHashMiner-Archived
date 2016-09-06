@@ -20,9 +20,11 @@ namespace NiceHashMiner.Forms.Components {
         public AlgorithmSettingsControl() {
             InitializeComponent();
             fieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
+            field_LessThreads.SetInputModeIntOnly();
 
             // TODO make sure intensity accepts valid ints based on Device and algo, miner...
             //fieldIntensity.SetOnTextChanged(textChangedIntensity);
+            field_LessThreads.SetOnTextLeave(LessThreads_Leave);
             fieldBoxBenchmarkSpeed.SetOnTextChanged(textChangedBenchmarkSpeed);
             richTextBoxExtraLaunchParameters.TextChanged += textChangedExtraLaunchParameters;
 
@@ -34,7 +36,19 @@ namespace NiceHashMiner.Forms.Components {
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
             //fieldIntensity.EntryText = "";
+            field_LessThreads.EntryText = "";
             richTextBoxExtraLaunchParameters.Text = "";
+        }
+
+        public void InitLocale(ToolTip toolTip1) {
+            field_LessThreads.InitLocale(toolTip1,
+                International.GetText("Form_Settings_General_CPU_LessThreads") + ":",
+                International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
+            fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
+                International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
+                International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
+            toolTip1.SetToolTip(groupBoxExtraLaunchParameters, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
+            toolTip1.SetToolTip(pictureBox1, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
         }
 
         private string ParseStringDefault(string value) {
@@ -64,7 +78,10 @@ namespace NiceHashMiner.Forms.Components {
                 //fieldIntensity.Enabled = !(_computeDevice.DeviceGroupType == DeviceGroupType.CPU
                 //    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.CryptoNight
                 //    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto);
-
+                field_LessThreads.Enabled = _computeDevice.DeviceGroupType == DeviceGroupType.CPU;
+                if (field_LessThreads.Enabled) {
+                    field_LessThreads.EntryText = algorithm.LessThreads.ToString();
+                }
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
                 this.Update();
@@ -100,6 +117,28 @@ namespace NiceHashMiner.Forms.Components {
                 }
             }
         }
+
+        private void LessThreads_Leave(object sender, EventArgs e) {
+            TextBox txtbox = (TextBox)sender;
+            int val;
+            if (Int32.TryParse(txtbox.Text, out val)) {
+                if (Globals.ThreadsPerCPU - val < 1) {
+                    MessageBox.Show(International.GetText("form1_msgbox_CPUMiningLessThreadMsg"),
+                                    International.GetText("Warning_with_Exclamation"),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                } else {
+                    _currentlySelectedAlgorithm.LessThreads = val;
+                }
+                txtbox.Text = _currentlySelectedAlgorithm.LessThreads.ToString();
+            } else {
+                MessageBox.Show(International.GetText("Form_Settings_LessThreadWarningMsg"),
+                                International.GetText("Form_Settings_LessThreadWarningTitle"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtbox.Text = _currentlySelectedAlgorithm.LessThreads.ToString();
+                txtbox.Focus();
+            }
+        }
+
         private void textChangedExtraLaunchParameters(object sender, EventArgs e) {
             if (!CanEdit()) return;
             _currentlySelectedAlgorithm.ExtraLaunchParameters = richTextBoxExtraLaunchParameters.Text;

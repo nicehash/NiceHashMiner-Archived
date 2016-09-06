@@ -4,6 +4,7 @@ using System.Text;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace NiceHashMiner.Configs {
     [Serializable]
@@ -25,7 +26,7 @@ namespace NiceHashMiner.Configs {
         public int ServiceLocation { get; set; }
         public bool HideMiningWindows { get; set; }
         public bool MinimizeToTray { get; set; }
-        public int LessThreads { get; set; }
+        //public int LessThreads { get; set; }
         public CPUExtensionType ForceCPUExtension { get; set; } // 0 - automatic, 1 - SSE2, 2 - AVX, 3 - AVX2
 
         private int _switchMinSecondsFixed = 90;
@@ -135,7 +136,7 @@ namespace NiceHashMiner.Configs {
             BitcoinAddress = "";
             WorkerName = "worker1";
             ServiceLocation = 0;
-            LessThreads = 0;
+            //LessThreads = 0;
             DebugConsole = false;
             HideMiningWindows = false;
             MinimizeToTray = false;
@@ -181,6 +182,20 @@ namespace NiceHashMiner.Configs {
             FilePathOld = "General_old.json";
         }
         protected override void InitializeObject() {
+            if (_file.ConfigFileVersion == null ||
+                _file.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0) {
+                Helpers.ConsolePrint("GeneralConfig", "Config file is from an older version of NiceHashMiner..");
+                Helpers.ConsolePrint("GeneralConfig", String.Format("Backing up {0} to {1}..", FilePath, FilePathOld));
+                try {
+                    if (File.Exists(FilePathOld))
+                        File.Delete(FilePathOld);
+                    File.Move(FilePath, FilePathOld);
+                } catch { }
+
+                SetDefaults();
+            }
+
+
             // init fields
             Language = _file.Language;
             DisplayCurrency = _file.DisplayCurrency;
@@ -191,7 +206,7 @@ namespace NiceHashMiner.Configs {
             //AutoStartMining = _file.AutoStartMining;
             HideMiningWindows = _file.HideMiningWindows;
             MinimizeToTray = _file.MinimizeToTray;
-            LessThreads = _file.LessThreads;
+            //LessThreads = _file.LessThreads;
             ForceCPUExtension = _file.ForceCPUExtension;
             SwitchMinSecondsFixed  = _file.SwitchMinSecondsFixed;
             SwitchMinSecondsDynamic = _file.SwitchMinSecondsDynamic;

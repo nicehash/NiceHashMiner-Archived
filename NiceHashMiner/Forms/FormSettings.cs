@@ -93,14 +93,19 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.pictureBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             
             toolTip1.SetToolTip(this.checkBox_HideMiningWindows, International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
+            toolTip1.SetToolTip(this.pictureBox_HideMiningWindows, International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
+            
             toolTip1.SetToolTip(this.checkBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
-            toolTip1.SetToolTip(this.checkBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
+            toolTip1.SetToolTip(this.pictureBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
             
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
-            
+
+            toolTip1.SetToolTip(this.label_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
+            toolTip1.SetToolTip(this.pictureBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
+            toolTip1.SetToolTip(this.textBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsDynamic, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
@@ -122,32 +127,50 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia3X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA3.x"));
             toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia2X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA2.x"));
             toolTip1.SetToolTip(this.checkBox_DisableDetectionAMD, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
+            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVidia6X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA6.x"));
+            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVidia5X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA5.x"));
+            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVidia3X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA3.x"));
+            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVidia2X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA2.x"));
+            toolTip1.SetToolTip(this.pictureBox_DisableDetectionAMD, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
 
             toolTip1.SetToolTip(this.checkBox_AutoScaleBTCValues, International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
+            toolTip1.SetToolTip(this.pictureBox_AutoScaleBTCValues, International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
+            
             toolTip1.SetToolTip(this.checkBox_StartMiningWhenIdle, International.GetText("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
+            toolTip1.SetToolTip(this.pictureBox_StartMiningWhenIdle, International.GetText("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
 
             toolTip1.SetToolTip(this.textBox_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
             toolTip1.SetToolTip(this.label_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
+            
             toolTip1.SetToolTip(this.checkBox_LogToFile, International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
+            toolTip1.SetToolTip(this.pictureBox_LogToFile, International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
+
+
             toolTip1.SetToolTip(this.textBox_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
             toolTip1.SetToolTip(this.label_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
+            toolTip1.SetToolTip(this.pictureBox_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
 
             toolTip1.SetToolTip(this.checkBox_ShowDriverVersionWarning, International.GetText("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
+            toolTip1.SetToolTip(this.pictureBox_ShowDriverVersionWarning, International.GetText("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
+            
             toolTip1.SetToolTip(this.checkBox_DisableWindowsErrorReporting, International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
-            //toolTip1.SetToolTip(this.checkBox_UseNewSettingsPage, International.GetText("Form_Settings_ToolTip_checkBox_UseNewSettingsPage"));
+            toolTip1.SetToolTip(this.pictureBox_DisableWindowsErrorReporting, International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
+            
             toolTip1.SetToolTip(this.checkBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
-            //toolTip1.SetToolTip(this.textBox_ethminerAPIPortNvidia, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "NVIDIA"));
-            //toolTip1.SetToolTip(this.label_ethminerAPIPortNvidia, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "NVIDIA"));
-            //toolTip1.SetToolTip(this.textBox_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
-            //toolTip1.SetToolTip(this.label_ethminerAPIPortAMD, String.Format(International.GetText("Form_Settings_ToolTip_ethminerAPIPort"), "AMD"));
+            toolTip1.SetToolTip(this.pictureBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
+            
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
 
+            toolTip1.SetToolTip(this.label_displayCurrency, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
+            toolTip1.SetToolTip(this.pictureBox_displayCurrency, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
+            toolTip1.SetToolTip(this.currencyConverterCombobox, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
+            
             // Setup Tooltips CPU
             toolTip1.SetToolTip(comboBox_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
             toolTip1.SetToolTip(label_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
-            toolTip1.SetToolTip(textBox_CPU0_LessThreads, International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
-            toolTip1.SetToolTip(label_CPU0_LessThreads, International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
+
+            algorithmSettingsControl1.InitLocale(toolTip1);
         }
 
         #region Form this
@@ -194,7 +217,9 @@ namespace NiceHashMiner.Forms {
             //label_ethminerAPIPortNvidia.Text = International.GetText("Form_Settings_General_ethminerAPIPortNVIDIA") + ":";
             //label_ethminerAPIPortAMD.Text = International.GetText("Form_Settings_General_ethminerAPIPortAMD") + ":";
 
-            displayCurrencyLabel.Text = International.GetText("Form_Settings_DisplayCurrency");
+            label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
+
+            label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
 
             // Benchmark time limits
             // TODO internationalization change
@@ -212,7 +237,6 @@ namespace NiceHashMiner.Forms {
 
             // Setup Tooltips CPU
             label_CPU0_ForceCPUExtension.Text = International.GetText("Form_Settings_General_CPU_ForceCPUExtension") + ":";
-            label_CPU0_LessThreads.Text = International.GetText("Form_Settings_General_CPU_LessThreads") + ":";
         }
 
         private void InitializeGeneralTabCallbacks() {
@@ -271,9 +295,6 @@ namespace NiceHashMiner.Forms {
             // TODO CPU exceptions
             comboBox_CPU0_ForceCPUExtension.SelectedIndex = (int)ConfigManager.Instance.GeneralConfig.ForceCPUExtension;
             comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged;
-            textBox_CPU0_LessThreads.Text = ConfigManager.Instance.GeneralConfig.LessThreads.ToString();
-            textBox_CPU0_LessThreads.Leave += LessThreads_Leave;
-            textBox_CPU0_LessThreads.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
             // TODO 
             // fill dag dropdown
             comboBox_DagLoadMode.Items.Clear();
@@ -492,25 +513,6 @@ namespace NiceHashMiner.Forms {
         private void comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e) {
             ComboBox cmbbox = (ComboBox)sender;
             ConfigManager.Instance.GeneralConfig.ForceCPUExtension = (CPUExtensionType)cmbbox.SelectedIndex;
-        }
-
-        private void LessThreads_Leave(object sender, EventArgs e) {
-            TextBox txtbox = (TextBox)sender;
-
-            int val;
-            if (Int32.TryParse(txtbox.Text, out val))
-                ConfigManager.Instance.GeneralConfig.LessThreads = val;
-            else {
-                MessageBox.Show(International.GetText("Form_Settings_LessThreadWarningMsg"),
-                                International.GetText("Form_Settings_LessThreadWarningTitle"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtbox.Text = ConfigManager.Instance.GeneralConfig.LessThreads.ToString();
-                txtbox.Focus();
-            }
-        }
-
-        private void comboBox_DagLoadMode_Leave(object sender, EventArgs e) {
-            ConfigManager.Instance.GeneralConfig.EthminerDagGenerationType = (DagGenerationType)comboBox_DagLoadMode.SelectedIndex;
         }
 
         #endregion //Tab General

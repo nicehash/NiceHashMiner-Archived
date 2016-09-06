@@ -30,6 +30,13 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        public void InitLocale(ToolTip toolTip1, string infoLabel, string infoMsg) {
+            labelFieldIndicator.Text = infoLabel;
+            toolTip1.SetToolTip(labelFieldIndicator, infoMsg);
+            toolTip1.SetToolTip(textBox, infoMsg);
+            toolTip1.SetToolTip(pictureBox1, infoMsg);
+        }
+
         public void SetInputModeDoubleOnly() {
             textBox.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxDoubleOnly_KeyPress);
         }
@@ -40,6 +47,10 @@ namespace NiceHashMiner.Forms.Components {
 
         public void SetOnTextChanged(EventHandler textChanged) {
             textBox.TextChanged += textChanged;
+        }
+
+        public void SetOnTextLeave(EventHandler textLeave) {
+            textBox.Leave += textLeave;
         }
 
         public Field() {

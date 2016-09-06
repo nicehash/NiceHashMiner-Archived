@@ -82,13 +82,11 @@
             this.pictureBox_Language = new System.Windows.Forms.PictureBox();
             this.comboBox_Language = new System.Windows.Forms.ComboBox();
             this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
-            this.displayCurrencyLabel = new System.Windows.Forms.Label();
+            this.label_displayCurrency = new System.Windows.Forms.Label();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.comboBox_DagLoadMode = new System.Windows.Forms.ComboBox();
             this.label_DagGeneration = new System.Windows.Forms.Label();
-            this.textBox_CPU0_LessThreads = new System.Windows.Forms.TextBox();
-            this.label_CPU0_LessThreads = new System.Windows.Forms.Label();
             this.comboBox_CPU0_ForceCPUExtension = new System.Windows.Forms.ComboBox();
             this.label_CPU0_ForceCPUExtension = new System.Windows.Forms.Label();
             this.label_MinIdleSeconds = new System.Windows.Forms.Label();
@@ -709,7 +707,7 @@
             this.groupBox2.Controls.Add(this.pictureBox_Language);
             this.groupBox2.Controls.Add(this.comboBox_Language);
             this.groupBox2.Controls.Add(this.currencyConverterCombobox);
-            this.groupBox2.Controls.Add(this.displayCurrencyLabel);
+            this.groupBox2.Controls.Add(this.label_displayCurrency);
             this.groupBox2.Location = new System.Drawing.Point(6, 164);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(345, 70);
@@ -809,14 +807,14 @@
             this.currencyConverterCombobox.TabIndex = 381;
             this.currencyConverterCombobox.SelectedIndexChanged += new System.EventHandler(this.currencyConverterCombobox_SelectedIndexChanged);
             // 
-            // displayCurrencyLabel
+            // label_displayCurrency
             // 
-            this.displayCurrencyLabel.AutoSize = true;
-            this.displayCurrencyLabel.Location = new System.Drawing.Point(212, 16);
-            this.displayCurrencyLabel.Name = "displayCurrencyLabel";
-            this.displayCurrencyLabel.Size = new System.Drawing.Size(89, 13);
-            this.displayCurrencyLabel.TabIndex = 382;
-            this.displayCurrencyLabel.Text = "Display Currency:";
+            this.label_displayCurrency.AutoSize = true;
+            this.label_displayCurrency.Location = new System.Drawing.Point(212, 16);
+            this.label_displayCurrency.Name = "label_displayCurrency";
+            this.label_displayCurrency.Size = new System.Drawing.Size(89, 13);
+            this.label_displayCurrency.TabIndex = 382;
+            this.label_displayCurrency.Text = "Display Currency:";
             // 
             // tabPageAdvanced
             // 
@@ -834,8 +832,6 @@
             // 
             this.groupBox4.Controls.Add(this.comboBox_DagLoadMode);
             this.groupBox4.Controls.Add(this.label_DagGeneration);
-            this.groupBox4.Controls.Add(this.textBox_CPU0_LessThreads);
-            this.groupBox4.Controls.Add(this.label_CPU0_LessThreads);
             this.groupBox4.Controls.Add(this.comboBox_CPU0_ForceCPUExtension);
             this.groupBox4.Controls.Add(this.label_CPU0_ForceCPUExtension);
             this.groupBox4.Controls.Add(this.label_MinIdleSeconds);
@@ -883,22 +879,6 @@
             this.label_DagGeneration.Size = new System.Drawing.Size(87, 13);
             this.label_DagGeneration.TabIndex = 384;
             this.label_DagGeneration.Text = "Dag Load Mode:";
-            // 
-            // textBox_CPU0_LessThreads
-            // 
-            this.textBox_CPU0_LessThreads.Location = new System.Drawing.Point(409, 114);
-            this.textBox_CPU0_LessThreads.Name = "textBox_CPU0_LessThreads";
-            this.textBox_CPU0_LessThreads.Size = new System.Drawing.Size(148, 20);
-            this.textBox_CPU0_LessThreads.TabIndex = 380;
-            // 
-            // label_CPU0_LessThreads
-            // 
-            this.label_CPU0_LessThreads.AutoSize = true;
-            this.label_CPU0_LessThreads.Location = new System.Drawing.Point(409, 97);
-            this.label_CPU0_LessThreads.Name = "label_CPU0_LessThreads";
-            this.label_CPU0_LessThreads.Size = new System.Drawing.Size(71, 13);
-            this.label_CPU0_LessThreads.TabIndex = 381;
-            this.label_CPU0_LessThreads.Text = "LessThreads:";
             // 
             // comboBox_CPU0_ForceCPUExtension
             // 
@@ -1174,6 +1154,7 @@
             // 
             this.devicesListViewEnableControl1.AutoSaveChange = true;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
@@ -1264,7 +1245,7 @@
         private System.Windows.Forms.Button buttonCloseNoSave;
         private System.Windows.Forms.TabControl tabControlGeneral;
         private System.Windows.Forms.TabPage tabPageGeneral;
-        private System.Windows.Forms.Label displayCurrencyLabel;
+        private System.Windows.Forms.Label label_displayCurrency;
         private System.Windows.Forms.ComboBox currencyConverterCombobox;
         private System.Windows.Forms.TextBox textBox_LogMaxFileSize;
         private System.Windows.Forms.TextBox textBox_WorkerName;
@@ -1317,8 +1298,6 @@
         private System.Windows.Forms.CheckBox checkBox_DisableWindowsErrorReporting;
         private System.Windows.Forms.CheckBox checkBox_StartMiningWhenIdle;
         private System.Windows.Forms.CheckBox checkBox_ShowDriverVersionWarning;
-        private System.Windows.Forms.TextBox textBox_CPU0_LessThreads;
-        private System.Windows.Forms.Label label_CPU0_LessThreads;
         private System.Windows.Forms.ComboBox comboBox_CPU0_ForceCPUExtension;
         private System.Windows.Forms.Label label_CPU0_ForceCPUExtension;
         private System.Windows.Forms.ComboBox comboBox_DagLoadMode;

@@ -153,6 +153,7 @@ namespace NiceHashMiner.Forms {
             benchmarkOptions1.Enabled = true;
 
             algorithmsListView1.IsInBenchmark = false;
+            devicesListViewEnableControl1.IsInBenchmark = false;
             // TODO make scrolable but not checkable
             //devicesListViewEnableControl1.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
             if (_currentDevice != null) {
@@ -211,6 +212,7 @@ namespace NiceHashMiner.Forms {
             //devicesListViewEnableControl1.Enabled = false;
             CloseBtn.Enabled = false;
             algorithmsListView1.IsInBenchmark = true;
+            devicesListViewEnableControl1.IsInBenchmark = true;
             // set benchmark pending status
             foreach (var deviceAlgosTuple in _benchmarkDevicesAlgorithmQueue) {
                 foreach (var algo in deviceAlgosTuple.Item2) {

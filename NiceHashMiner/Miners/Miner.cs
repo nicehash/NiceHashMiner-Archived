@@ -235,8 +235,11 @@ namespace NiceHashMiner
 
         public int BenchmarkTimeoutInSeconds(int timeInSeconds) {
             if (CurrentBenchmarkAlgorithmType == AlgorithmType.DaggerHashimoto) {
-                return 4 * 60 + 120; // 4 minutes plus two minutes
-            } 
+                return 5 * 60 + 120; // 5 minutes plus two minutes
+            }
+            if (CurrentBenchmarkAlgorithmType == AlgorithmType.CryptoNight) {
+                return 5 * 60 + 120; // 5 minutes plus two minutes
+            }
             return timeInSeconds + 120; // wait time plus two minutes
         }
 

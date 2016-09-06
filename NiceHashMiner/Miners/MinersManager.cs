@@ -144,8 +144,10 @@ namespace NiceHashMiner.Miners {
                     if (_MinerEtherumOCL != null) {
                         _MinerEtherumOCL.End();
                         _MinerEtherumOCL.ClearCDevs();
+                        Helpers.ConsolePrint(Instance.TAG, String.Format("Reseting {0} instance, with new devices", "MinerEtherumOCL"));
                     } else {
                         _MinerEtherumOCL = new MinerEtherumOCL();
+                        Helpers.ConsolePrint(Instance.TAG, String.Format("CreateMiner Creating {0} instance", "MinerEtherumOCL"));
                     }
                     return _MinerEtherumOCL;
                 } else {
@@ -153,8 +155,10 @@ namespace NiceHashMiner.Miners {
                     if (_MinerEtherumCUDA != null) {
                         _MinerEtherumCUDA.End();
                         _MinerEtherumCUDA.ClearCDevs();
+                        Helpers.ConsolePrint(Instance.TAG, String.Format("Reseting {0} instance, with new devices", "MinerEtherumCUDA"));
                     } else {
                         _MinerEtherumCUDA = new MinerEtherumCUDA();
+                        Helpers.ConsolePrint(Instance.TAG, String.Format("CreateMiner Creating {0} instance", "MinerEtherumCUDA"));
                     }
                     return _MinerEtherumCUDA;
                 }

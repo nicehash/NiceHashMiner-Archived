@@ -30,7 +30,7 @@ namespace NiceHashMiner.Configs {
                 GeneralConfig.BitcoinAddress = Config.ConfigData.BitcoinAddress;
                 GeneralConfig.WorkerName = Config.ConfigData.WorkerName;
                 GeneralConfig.ServiceLocation = Config.ConfigData.ServiceLocation;
-                GeneralConfig.LessThreads = Config.ConfigData.LessThreads;
+                //GeneralConfig.LessThreads = Config.ConfigData.LessThreads;
                 //GeneralConfig.Groups = new Group[0] = Config.ConfigData.Groups = new Group[0];
                 GeneralConfig.DebugConsole = Config.ConfigData.DebugConsole;
                 GeneralConfig.HideMiningWindows = Config.ConfigData.HideMiningWindows;

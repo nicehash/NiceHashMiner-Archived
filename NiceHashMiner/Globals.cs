@@ -10,5 +10,6 @@ namespace NiceHashMiner {
         public static double BitcoinRate;
         public static string DemoUser = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
         public static JsonSerializerSettings JsonSettings = null;
+        public static int ThreadsPerCPU;
     }
 }

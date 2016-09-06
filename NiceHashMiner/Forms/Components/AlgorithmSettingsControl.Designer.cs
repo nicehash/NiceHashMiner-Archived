@@ -25,12 +25,15 @@
         private void InitializeComponent() {
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
-            this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.RichTextBox();
+            this.field_LessThreads = new NiceHashMiner.Forms.Components.Field();
             this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
+            this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.RichTextBox();
             this.groupBoxSelectedAlgorithmSettings.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxExtraLaunchParameters.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxSelectedAlgorithmSettings
@@ -38,40 +41,33 @@
             this.groupBoxSelectedAlgorithmSettings.Controls.Add(this.flowLayoutPanel1);
             this.groupBoxSelectedAlgorithmSettings.Location = new System.Drawing.Point(3, 3);
             this.groupBoxSelectedAlgorithmSettings.Name = "groupBoxSelectedAlgorithmSettings";
-            this.groupBoxSelectedAlgorithmSettings.Size = new System.Drawing.Size(229, 188);
+            this.groupBoxSelectedAlgorithmSettings.Size = new System.Drawing.Size(229, 247);
             this.groupBoxSelectedAlgorithmSettings.TabIndex = 11;
             this.groupBoxSelectedAlgorithmSettings.TabStop = false;
             this.groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm Settings:";
             // 
             // flowLayoutPanel1
             // 
+            this.flowLayoutPanel1.Controls.Add(this.field_LessThreads);
             this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(223, 169);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(223, 228);
             this.flowLayoutPanel1.TabIndex = 12;
             // 
-            // groupBoxExtraLaunchParameters
+            // field_LessThreads
             // 
-            this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
-            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 54);
-            this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
-            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(217, 104);
-            this.groupBoxExtraLaunchParameters.TabIndex = 14;
-            this.groupBoxExtraLaunchParameters.TabStop = false;
-            this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
-            // 
-            // richTextBoxExtraLaunchParameters
-            // 
-            this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
-            this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
-            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(211, 85);
-            this.richTextBoxExtraLaunchParameters.TabIndex = 0;
-            this.richTextBoxExtraLaunchParameters.Text = "";
+            this.field_LessThreads.AutoSize = true;
+            this.field_LessThreads.BackColor = System.Drawing.Color.Transparent;
+            this.field_LessThreads.EntryText = "";
+            this.field_LessThreads.LabelText = "LessThreads:";
+            this.field_LessThreads.Location = new System.Drawing.Point(3, 3);
+            this.field_LessThreads.Name = "field_LessThreads";
+            this.field_LessThreads.Size = new System.Drawing.Size(220, 47);
+            this.field_LessThreads.TabIndex = 15;
             // 
             // fieldBoxBenchmarkSpeed
             // 
@@ -79,10 +75,40 @@
             this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
             this.fieldBoxBenchmarkSpeed.EntryText = "";
             this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
-            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 3);
+            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 56);
             this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
-            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(154, 45);
+            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(220, 47);
             this.fieldBoxBenchmarkSpeed.TabIndex = 1;
+            // 
+            // groupBoxExtraLaunchParameters
+            // 
+            this.groupBoxExtraLaunchParameters.Controls.Add(this.pictureBox1);
+            this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
+            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 109);
+            this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
+            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(217, 116);
+            this.groupBoxExtraLaunchParameters.TabIndex = 14;
+            this.groupBoxExtraLaunchParameters.TabStop = false;
+            this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox1.Location = new System.Drawing.Point(193, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            // 
+            // richTextBoxExtraLaunchParameters
+            // 
+            this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
+            this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
+            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(211, 97);
+            this.richTextBoxExtraLaunchParameters.TabIndex = 0;
+            this.richTextBoxExtraLaunchParameters.Text = "";
             // 
             // AlgorithmSettingsControl
             // 
@@ -90,11 +116,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBoxSelectedAlgorithmSettings);
             this.Name = "AlgorithmSettingsControl";
-            this.Size = new System.Drawing.Size(235, 196);
+            this.Size = new System.Drawing.Size(235, 255);
             this.groupBoxSelectedAlgorithmSettings.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.groupBoxExtraLaunchParameters.ResumeLayout(false);
+            this.groupBoxExtraLaunchParameters.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -106,5 +134,7 @@
         private System.Windows.Forms.RichTextBox richTextBoxExtraLaunchParameters;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private Field fieldBoxBenchmarkSpeed;
+        private Field field_LessThreads;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

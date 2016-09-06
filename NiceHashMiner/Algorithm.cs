@@ -15,7 +15,12 @@ namespace NiceHashMiner {
         readonly public string MinerName;
         public double BenchmarkSpeed { get; set; }
         public string ExtraLaunchParameters { get; set; }
+
+        // not all miners, GPU sgminer and most ccminers
         public string Intensity { get; set; } // TODO set to intensity
+        // CPU miners only setting
+        public int LessThreads { get; set; }
+
         public bool Skip { get; set; }
 
         public static readonly string PasswordDefault = "x"; // TODO rename default
@@ -41,6 +46,7 @@ namespace NiceHashMiner {
             BenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
             Intensity = ""; // TODO set intenstity
+            LessThreads = 0;
             Skip = false;
             BenchmarkStatus = "";
         }

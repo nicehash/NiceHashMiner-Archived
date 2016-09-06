@@ -71,7 +71,7 @@
             // labelBenchmarkSteps
             // 
             this.labelBenchmarkSteps.AutoSize = true;
-            this.labelBenchmarkSteps.Location = new System.Drawing.Point(6, 16);
+            this.labelBenchmarkSteps.Location = new System.Drawing.Point(6, 24);
             this.labelBenchmarkSteps.Name = "labelBenchmarkSteps";
             this.labelBenchmarkSteps.Size = new System.Drawing.Size(116, 13);
             this.labelBenchmarkSteps.TabIndex = 109;

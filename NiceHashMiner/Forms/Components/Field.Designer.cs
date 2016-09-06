@@ -25,6 +25,8 @@
         private void InitializeComponent() {
             this.labelFieldIndicator = new System.Windows.Forms.Label();
             this.textBox = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // labelFieldIndicator
@@ -39,10 +41,19 @@
             // 
             // textBox
             // 
-            this.textBox.Location = new System.Drawing.Point(3, 22);
+            this.textBox.Location = new System.Drawing.Point(3, 24);
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(148, 20);
+            this.textBox.Size = new System.Drawing.Size(214, 20);
             this.textBox.TabIndex = 7;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox1.Location = new System.Drawing.Point(197, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(20, 19);
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
             // 
             // Field
             // 
@@ -50,10 +61,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.labelFieldIndicator);
             this.Controls.Add(this.textBox);
             this.Name = "Field";
-            this.Size = new System.Drawing.Size(195, 47);
+            this.Size = new System.Drawing.Size(220, 48);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -63,6 +76,7 @@
 
         private System.Windows.Forms.Label labelFieldIndicator;
         private System.Windows.Forms.TextBox textBox;
+        private System.Windows.Forms.PictureBox pictureBox1;
 
 
 
