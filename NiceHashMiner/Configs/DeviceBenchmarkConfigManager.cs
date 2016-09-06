@@ -51,7 +51,7 @@ namespace NiceHashMiner.Configs {
             HashSet<string> enabledDevicesNames = new HashSet<string>();
             foreach (var device in ComputeDevice.AllAvaliableDevices) {
                 if (device.Enabled) {
-                    enabledDevicesNames.Add(device.Name);
+                    enabledDevicesNames.Add(device.UUID);
                 }
             }
             // get enabled unbenchmarked algorithms

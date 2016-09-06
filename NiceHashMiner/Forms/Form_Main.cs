@@ -652,15 +652,7 @@ namespace NiceHashMiner
             Dictionary<string, List<AlgorithmType>> nonBenchmarkedPerDevice = tuplePair.Item2;
             // Check if the user has run benchmark first
             if (!isBenchInit) {
-                // first benchmark and start mining
-                string warningMsg = "Unbenchmarked enabled algorithms for enabled devices:" + Environment.NewLine; ;
-                foreach (var kvp in nonBenchmarkedPerDevice) {
-                    if (kvp.Value.Count != 0) {
-                        warningMsg += kvp.Key + ": " + string.Join(", ", kvp.Value) + Environment.NewLine;
-                    }
-                }
-                warningMsg += "Benchmark and start mining?";
-                DialogResult result = MessageBox.Show(String.Format("{0}", warningMsg),
+                DialogResult result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
                                                           International.GetText("Warning_with_Exclamation"),
                                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == System.Windows.Forms.DialogResult.Yes) {
@@ -675,10 +667,10 @@ namespace NiceHashMiner
                     }
                     BenchmarkForm = new FormBenchmark(
                         BenchmarkPerformanceType.Standard,
-                        true,
-                        enabledDevices);
+                        true);
                     BenchmarkForm.ShowDialog();
                     BenchmarkForm = null;
+                    InitMainConfigGUIData();
                     SMACheck.Start();
                 } else {
                     return;

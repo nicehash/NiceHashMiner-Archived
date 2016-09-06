@@ -27,6 +27,9 @@ namespace NiceHashMiner.Forms {
         private bool ExitWhenFinished = false;
         private AlgorithmType _singleBenchmarkType = AlgorithmType.NONE;
 
+        private Timer _benchmarkingTimer;
+        private int dotCount = 0;
+
         private struct DeviceAlgo {
             public string Device { get; set; }
             public string Algorithm { get; set; }
@@ -79,7 +82,7 @@ namespace NiceHashMiner.Forms {
 
         public FormBenchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false,
-            List<ComputeDevice> enabledDevices = null,
+            //List<ComputeDevice> enabledDevices = null,
             AlgorithmType singleBenchmarkType = AlgorithmType.NONE) {
             InitializeComponent();
 
@@ -90,11 +93,7 @@ namespace NiceHashMiner.Forms {
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
             //devicesListViewEnableControl1.SetAllEnabled = true;
-            if (enabledDevices == null) {
-                devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
-            } else {
-                devicesListViewEnableControl1.SetComputeDevices(enabledDevices);
-            }
+            devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
 
             //groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
             devicesListViewEnableControl1.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
@@ -112,10 +111,26 @@ namespace NiceHashMiner.Forms {
 
             InitLocale();
 
+            _benchmarkingTimer = new Timer();
+            _benchmarkingTimer.Tick += BenchmarkingTimer_Tick;
+            _benchmarkingTimer.Interval = 1000; // 1s
+
             if (autostart) {
                 ExitWhenFinished = true;
                 StartStopBtn_Click(null, null);
             }
+        }
+
+        private void BenchmarkingTimer_Tick(object sender, EventArgs e) {
+            if (_inBenchmark) {
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, getDotsWaitString());
+            }
+        }
+
+        private string getDotsWaitString() {
+            ++dotCount;
+            if (dotCount > 3) dotCount = 1;
+            return new String('.', dotCount);
         }
 
         private void InitLocale() {
@@ -127,6 +142,7 @@ namespace NiceHashMiner.Forms {
             // TODO fix locale for benchmark enabled label
             devicesListViewEnableControl1.InitLocale();
             benchmarkOptions1.InitLocale();
+            algorithmsListView1.InitLocale();
         }
 
         private void StartStopBtn_Click(object sender, EventArgs e) {
@@ -165,10 +181,14 @@ namespace NiceHashMiner.Forms {
 
         // TODO add list for safety and kill all miners
         private void StopButonClick() {
+            _benchmarkingTimer.Stop();
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
             if (_currentMiner != null) {
                 _currentMiner.BenchmarkSignalQuit = true;
+            }
+            if (ExitWhenFinished) {
+                this.Close();
             }
         }
 
@@ -332,7 +352,10 @@ namespace NiceHashMiner.Forms {
                 
                 // dagger about 4 minutes
                 var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;
-                
+
+                dotCount = 0;
+                _benchmarkingTimer.Start();
+
                 _currentMiner.BenchmarkStart(_currentDevice, _currentAlgorithm, time, this);
                 algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID,
                     GetBenchmarWaitString(GetAlgorithmWaitString(showWaitTime)));
@@ -343,6 +366,7 @@ namespace NiceHashMiner.Forms {
         }
 
         void EndBenchmark() {
+            _benchmarkingTimer.Stop();
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
             BenchmarkStoppedGUISettings();
@@ -378,7 +402,8 @@ namespace NiceHashMiner.Forms {
 
         public void SetCurrentStatus(string status) {
             this.Invoke((MethodInvoker)delegate {
-                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
+                //algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, getDotsWaitString());
             });
         }
 
@@ -386,6 +411,7 @@ namespace NiceHashMiner.Forms {
             if (!_inBenchmark) return;
             this.Invoke((MethodInvoker)delegate {
                 _bechmarkedSuccessCount += success ? 1 : 0;
+                _benchmarkingTimer.Stop();
                 if (!success) {
                     // add new failed list
                     _benchmarkFailedAlgoPerDev.Add(
@@ -473,6 +499,17 @@ namespace NiceHashMiner.Forms {
             }
             // save already benchmarked algorithms
             ConfigManager.Instance.CommitBenchmarks();
+            // check devices without benchmarks
+            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+                bool Enabled = false;
+                foreach (var algo in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                    if (algo.Value.BenchmarkSpeed > 0) {
+                        Enabled = true;
+                        break;
+                    }
+                }
+                cdev.ComputeDeviceEnabledOption.IsEnabled = Enabled;
+            }
             devicesListViewEnableControl1.SaveOptions();
         }
 
@@ -483,10 +520,6 @@ namespace NiceHashMiner.Forms {
             var _selectedComputeDevice = ComputeDevice.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
             //groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", _selectedComputeDevice.Name);
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e) {
-
         }
 
         private void radioButton_SelectedUnbenchmarked_CheckedChanged_1(object sender, EventArgs e) {

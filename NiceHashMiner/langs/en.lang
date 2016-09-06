@@ -238,6 +238,13 @@
         "Form_Settings_APIBindPortStart": "API Bind port pool start",
         "Form_Settings_ToolTip_APIBindPortStart": "Set starting port number from which miner API Bind ports will be set for comunication.",
         "Form_Settings_DagGeneration": "Dag Load Mode",
-        "Form_Settings_ToolTip_DagGeneration": "Sets Dag Load Mode for ethminers."
+        "Form_Settings_ToolTip_DagGeneration": "Sets Dag Load Mode for ethminers.",
+        "AlgorithmsListView_Enabled" : "Enabled",
+        "AlgorithmsListView_Algorithm" : "Algorithm",
+        "AlgorithmsListView_Speed" : "Speed",
+        "AlgorithmsListView_Ratio": "Ratio BTC/GH/Day",
+        "AlgorithmsListView_Rate": "BTC/Day",
+        "AlgorithmSettingsControl_IntensityWaringn": "Intensity values for selected algorithm must be in range from {0} to {1}",
+        "EnabledUnbenchmarkedAlgorithmsWarning" :  "There are unbenchmarked algorithms for selected enabled devices. Click Yes to benchmark and start mining",
     }
 }

@@ -69,12 +69,12 @@
             // 
             // columnHeader3
             // 
-            this.columnHeader3.Text = "Ratio";
+            this.columnHeader3.Text = "Ratio BTC/GH/Day";
             this.columnHeader3.Width = 97;
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Text = "Rate";
+            this.columnHeader4.Text = "BTC/Day";
             this.columnHeader4.Width = 134;
             // 
             // AlgorithmsListView

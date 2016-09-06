@@ -107,8 +107,9 @@ namespace NiceHashMiner.Forms.Components {
             // set devices
             foreach (var computeDevice in computeDevices) {
                 ListViewItem lvi = new ListViewItem();
-                lvi.SubItems.Add(computeDevice.Name);
+                //lvi.SubItems.Add(computeDevice.Name);
                 lvi.Checked = computeDevice.Enabled || SetAllEnabled;
+                lvi.Text = computeDevice.Name;
                 ComputeDeviceEnabledOption newTag = new ComputeDeviceEnabledOption() {
                     IsEnabled = computeDevice.Enabled || SetAllEnabled,
                     CDevice = computeDevice
@@ -132,7 +133,7 @@ namespace NiceHashMiner.Forms.Components {
 
         public void InitLocale() {
             listViewDevices.Columns[ENABLED].Text = International.GetText("ListView_Enabled");
-            listViewDevices.Columns[DEVICE].Text = International.GetText("ListView_Device");
+            //listViewDevices.Columns[DEVICE].Text = International.GetText("ListView_Device");
         }
 
         private void listViewDevicesItemChecked(object sender, ItemCheckedEventArgs e) {

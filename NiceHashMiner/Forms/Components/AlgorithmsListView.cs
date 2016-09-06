@@ -74,6 +74,14 @@ namespace NiceHashMiner.Forms.Components {
             IsInBenchmark = false;
         }
 
+        public void InitLocale() {
+            listViewAlgorithms.Columns[ENABLED].Text = International.GetText("AlgorithmsListView_Enabled");
+            listViewAlgorithms.Columns[ALGORITHM].Text = International.GetText("AlgorithmsListView_Algorithm");
+            listViewAlgorithms.Columns[SPEED].Text = International.GetText("AlgorithmsListView_Speed");
+            listViewAlgorithms.Columns[RATIO].Text = International.GetText("AlgorithmsListView_Ratio");
+            listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
+        }
+
         //public void RemoveRatioRates() {
         //    listViewAlgorithms.Columns.RemoveAt(RATE);
         //    listViewAlgorithms.Columns.RemoveAt(RATIO);

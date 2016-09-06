@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner.Forms.Components {
     public partial class AlgorithmSettingsControl : UserControl, AlgorithmsListView.IAlgorithmsListView {
@@ -20,10 +21,11 @@ namespace NiceHashMiner.Forms.Components {
         public AlgorithmSettingsControl() {
             InitializeComponent();
             fieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
+            fieldIntensity.SetInputModeDoubleOnly();
             field_LessThreads.SetInputModeIntOnly();
 
             // TODO make sure intensity accepts valid ints based on Device and algo, miner...
-            //fieldIntensity.SetOnTextChanged(textChangedIntensity);
+            fieldIntensity.SetOnTextLeave(textLeaveIntensity);
             field_LessThreads.SetOnTextLeave(LessThreads_Leave);
             fieldBoxBenchmarkSpeed.SetOnTextChanged(textChangedBenchmarkSpeed);
             richTextBoxExtraLaunchParameters.TextChanged += textChangedExtraLaunchParameters;
@@ -35,7 +37,7 @@ namespace NiceHashMiner.Forms.Components {
             groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm: NONE";
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
-            //fieldIntensity.EntryText = "";
+            fieldIntensity.EntryText = "";
             field_LessThreads.EntryText = "";
             richTextBoxExtraLaunchParameters.Text = "";
         }
@@ -44,6 +46,10 @@ namespace NiceHashMiner.Forms.Components {
             field_LessThreads.InitLocale(toolTip1,
                 International.GetText("Form_Settings_General_CPU_LessThreads") + ":",
                 International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
+            fieldIntensity.InitLocale(toolTip1,
+                //International.GetText("Form_Settings_General_CPU_LessThreads") + ":",
+                //International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
+                "TODO_1", "TODO_2");
             fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
                 International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
                 International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
@@ -73,11 +79,23 @@ namespace NiceHashMiner.Forms.Components {
 
                 groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm: " + algorithm.NiceHashName;
 
-                //fieldIntensity.EntryText = ParseStringDefault(algorithm.Intensity);
-                //// no intensity for cpu miners and ccminer_cryptonight
-                //fieldIntensity.Enabled = !(_computeDevice.DeviceGroupType == DeviceGroupType.CPU
-                //    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.CryptoNight
-                //    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto);
+                
+                // no intensity for cpu miners and ccminer_cryptonight
+                fieldIntensity.Enabled = !(
+                    _computeDevice.DeviceGroupType == DeviceGroupType.CPU
+                    || _computeDevice.DeviceGroupType == DeviceGroupType.AMD_OpenCL
+                    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.CryptoNight
+                    || _currentlySelectedAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto);
+                if (fieldIntensity.Enabled) {
+                    if (algorithm.Intensity == 0) {
+                        fieldIntensity.EntryText = "0";
+                    } else {
+                        fieldIntensity.EntryText = algorithm.Intensity.ToString("F8");
+                    }
+                } else {
+                    fieldIntensity.EntryText = "";
+                }
+
                 field_LessThreads.Enabled = _computeDevice.DeviceGroupType == DeviceGroupType.CPU;
                 if (field_LessThreads.Enabled) {
                     field_LessThreads.EntryText = algorithm.LessThreads.ToString();
@@ -102,9 +120,32 @@ namespace NiceHashMiner.Forms.Components {
 
         #region Callbacks Events
         // TODO Intensity
-        private void textChangedIntensity(object sender, EventArgs e) {
+        private void textLeaveIntensity(object sender, EventArgs e) {
             if (!CanEdit()) return;
-            //_currentlySelectedAlgorithm.Intensity = fieldIntensity.EntryText.Trim();
+            var deviceType = _computeDevice.DeviceGroupType;
+            var minerPath = MinersManager.Instance.MinerPathChecker[deviceType].GetOptimizedMinerPath(_currentlySelectedAlgorithm.NiceHashID);
+            if (MinersManager.Instance.CCMinersIntensitiesBoundries.ContainsKey(minerPath)) {
+                double min = MinersManager.Instance.CCMinersIntensitiesBoundries[minerPath].Item1;
+                double max = MinersManager.Instance.CCMinersIntensitiesBoundries[minerPath].Item2;
+                // parse 
+                double value;
+                if (Double.TryParse(fieldIntensity.EntryText, out value)) {
+                    if (min <= value && value <= max) {
+                        _currentlySelectedAlgorithm.Intensity = value;
+                    } else if (value != 0) {
+                        _currentlySelectedAlgorithm.Intensity = 0;
+                        MessageBox.Show(
+                            String.Format(International.GetText("AlgorithmSettingsControl_IntensityWaringn"),
+                            min.ToString("F2"),
+                            max.ToString("F2")),
+                                        International.GetText("Warning_with_Exclamation"),
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                } else {
+                    _currentlySelectedAlgorithm.Intensity = 0;
+                }
+                //_currentlySelectedAlgorithm.Intensity = fieldIntensity.EntryText.Trim();
+            }
         }
         private void textChangedBenchmarkSpeed(object sender, EventArgs e) {
             if (!CanEdit()) return;
@@ -150,7 +191,7 @@ namespace NiceHashMiner.Forms.Components {
             device.Add(_computeDevice);
             var BenchmarkForm = new FormBenchmark(
                         BenchmarkPerformanceType.Standard,
-                        false, device, _currentlySelectedAlgorithm.NiceHashID);
+                        false, _currentlySelectedAlgorithm.NiceHashID);
             BenchmarkForm.ShowDialog();
             fieldBoxBenchmarkSpeed.EntryText = _currentlySelectedAlgorithm.BenchmarkSpeed.ToString();
             // update lvi speed

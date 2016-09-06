@@ -250,6 +250,7 @@ namespace NiceHashMiner.Forms {
 
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
+            algorithmsListView1.InitLocale();
 
             // Setup Tooltips CPU
             label_CPU0_ForceCPUExtension.Text = International.GetText("Form_Settings_General_CPU_ForceCPUExtension") + ":";

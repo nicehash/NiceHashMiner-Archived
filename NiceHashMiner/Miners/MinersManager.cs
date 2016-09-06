@@ -48,7 +48,16 @@ namespace NiceHashMiner.Miners {
         };
 
         // these miners are just used for binary path checking
-        readonly Dictionary<DeviceGroupType, Miner> _minerPathChecker;
+        public readonly Dictionary<DeviceGroupType, Miner> MinerPathChecker;
+
+        // ccminers intensity checking
+        public readonly Dictionary<string, Tuple<double, double>> CCMinersIntensitiesBoundries = new Dictionary<string, Tuple<double, double>>() {
+            { MinerPaths.ccminer_decred,     Tuple.Create(8.0, 25.0) },
+            { MinerPaths.ccminer_nanashi,    Tuple.Create(8.0, 25.0) },
+            { MinerPaths.ccminer_tpruvot,    Tuple.Create(8.0, 25.0) },
+            { MinerPaths.ccminer_neoscrypt,  Tuple.Create(8.0, 31.0) },
+            { MinerPaths.ccminer_sp,         Tuple.Create(8.0, 31.0) },
+        };
 
         // GroupDevices hash code doesn't work correctly use string instead
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;
@@ -81,9 +90,9 @@ namespace NiceHashMiner.Miners {
             _preventSleepTimer.Interval = 20 * 1000; // leave this interval, it works
 
             // path checker
-            _minerPathChecker = new Dictionary<DeviceGroupType, Miner>();
+            MinerPathChecker = new Dictionary<DeviceGroupType, Miner>();
             foreach (var gpuGroup in _gpuTypes) {
-                _minerPathChecker.Add(gpuGroup, CreateMiner(gpuGroup, AlgorithmType.NONE));
+                MinerPathChecker.Add(gpuGroup, CreateMiner(gpuGroup, AlgorithmType.NONE));
             }
         }
 
@@ -430,8 +439,8 @@ namespace NiceHashMiner.Miners {
                 var a_algoType = a.MostProfitableAlgorithm.NiceHashID;
                 var b_algoType = b.MostProfitableAlgorithm.NiceHashID;
                 // a and b algorithm settings should be the same if we call this function
-                return _minerPathChecker[a.DeviceGroupType].GetOptimizedMinerPath(a_algoType, a.Codename, a.IsOptimizedVersion)
-                    == _minerPathChecker[b.DeviceGroupType].GetOptimizedMinerPath(b_algoType, b.Codename, b.IsOptimizedVersion);
+                return MinerPathChecker[a.DeviceGroupType].GetOptimizedMinerPath(a_algoType, a.Codename, a.IsOptimizedVersion)
+                    == MinerPathChecker[b.DeviceGroupType].GetOptimizedMinerPath(b_algoType, b.Codename, b.IsOptimizedVersion);
             }
 
             return true;
