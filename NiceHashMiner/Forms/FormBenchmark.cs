@@ -208,7 +208,9 @@ namespace NiceHashMiner.Forms {
                     }
                 }
                 if (noneSelected) {
-                    MessageBox.Show("No device has been selected there is nothing to benchmark", "No device selected", MessageBoxButtons.OK);
+                    MessageBox.Show(International.GetText("FormBenchmark_No_Devices_Selected_Msg"),
+                        International.GetText("FormBenchmark_No_Devices_Selected_Title"),
+                        MessageBoxButtons.OK);
                     return false;
                 }
             }
@@ -222,7 +224,9 @@ namespace NiceHashMiner.Forms {
                     }
                 }
                 if (nothingToBench) {
-                    MessageBox.Show("Current benchmark settings are already executed. There is nothing to do.", "Nothing to benchmark", MessageBoxButtons.OK);
+                    MessageBox.Show(International.GetText("FormBenchmark_Nothing_to_Benchmark_Msg"),
+                        International.GetText("FormBenchmark_Nothing_to_Benchmark_Title"),
+                        MessageBoxButtons.OK);
                     return false;
                 }
             }

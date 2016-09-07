@@ -36,7 +36,7 @@ namespace NiceHashMiner {
         [JsonIgnore]
         public string CurPayingRatio {
             get {
-                string ratio = "N/A";
+                string ratio = International.GetText("BenchmarkRatioRateN_A");
                 if (Globals.NiceHashData != null) {
                     ratio = Globals.NiceHashData[NiceHashID].paying.ToString("F8");
                 }
@@ -46,7 +46,7 @@ namespace NiceHashMiner {
         [JsonIgnore]
         public string CurPayingRate {
             get {
-                string rate = "N/A";
+                string rate = International.GetText("BenchmarkRatioRateN_A");
                 if (BenchmarkSpeed > 0 && Globals.NiceHashData != null) {
                     rate = (BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001).ToString("F8");
                 }
@@ -69,7 +69,7 @@ namespace NiceHashMiner {
 
         public void SetBenchmarkPending() {
             IsBenchmarkPending = true;
-            BenchmarkStatus = "Waiting benchmark";
+            BenchmarkStatus = International.GetText("Algorithm_Waiting_Benchmark");
         }
         public void ClearBenchmarkPending() {
             IsBenchmarkPending = false;
@@ -82,7 +82,7 @@ namespace NiceHashMiner {
             } else if (BenchmarkSpeed > 0) {
                 return Helpers.FormatSpeedOutput(BenchmarkSpeed);
             }
-            return "none";
+            return International.GetText("BenchmarkSpeedStringNone");
         }
     }
 }

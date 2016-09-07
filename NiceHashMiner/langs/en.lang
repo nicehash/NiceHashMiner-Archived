@@ -282,6 +282,13 @@
         "FormSettings_AlgorithmsSettings": "Algorithm settings for {0} :",
         "FormSettings_ButtonProfitSingle": "Select device first",
         "Form_Settings_General_BenchmarkTimeLimits_Title": "Benchmark Time Limits",
-        "Form_Settings_Title": "Settings"
+        "Form_Settings_Title": "Settings",
+        "FormBenchmark_No_Devices_Selected_Msg": "No device has been selected there is nothing to benchmark",
+        "FormBenchmark_No_Devices_Selected_Title": "No device selected",
+        "FormBenchmark_Nothing_to_Benchmark_Msg": "Current benchmark settings are already executed. There is nothing to do.",
+        "FormBenchmark_Nothing_to_Benchmark_Title": "Nothing to benchmark",
+        "Algorithm_Waiting_Benchmark": "Waiting benchmark",
+        "BenchmarkSpeedStringNone": "none",
+        "BenchmarkRatioRateN_A" :  "N/A",
     }
 }
