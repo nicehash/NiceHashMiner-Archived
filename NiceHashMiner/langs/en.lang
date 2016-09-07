@@ -278,6 +278,10 @@
         "MinersDownloadManager_Title_Settup_Unzipping": "Unzipping {0} %",
         "DeviceListView_ContextMenu_DisableDevice": "Disable Device",
         "DeviceListView_ContextMenu_EnableDevice": "Enable Device",
-        "DeviceListView_ContextMenu_CopyBenchmark" :  "Copy Benchmark From",
+        "DeviceListView_ContextMenu_CopyBenchmark": "Copy Benchmark From",
+        "FormSettings_AlgorithmsSettings": "Algorithm settings for {0} :",
+        "FormSettings_ButtonProfitSingle": "Select device first",
+        "Form_Settings_General_BenchmarkTimeLimits_Title": "Benchmark Time Limits",
+        "Form_Settings_Title": "Settings"
     }
 }

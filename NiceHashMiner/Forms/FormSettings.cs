@@ -186,6 +186,8 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(label_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
             toolTip1.SetToolTip(pictureBox_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
 
+            this.Text = International.GetText("Form_Settings_Title");
+
             algorithmSettingsControl1.InitLocale(toolTip1);
         }
 
@@ -239,7 +241,7 @@ namespace NiceHashMiner.Forms {
 
             // Benchmark time limits
             // TODO internationalization change
-            groupBoxBenchmarkTimeLimits.Text = "Benchmark Time Limits:"; //International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
+            groupBoxBenchmarkTimeLimits.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimits_Title") + ":";
             benchmarkLimitControlCPU.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
             benchmarkLimitControlNVIDIA.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group") + ":";
             benchmarkLimitControlAMD.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Group") + ":";
@@ -557,7 +559,7 @@ namespace NiceHashMiner.Forms {
             // show algorithms
             _selectedComputeDevice = ComputeDevice.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
-            groupBoxAlgorithmSettings.Text = String.Format("Algorithm settings for {0} :", _selectedComputeDevice.Name);
+            groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
         }
 
         // TODO IMPORTANT get back to this div thing
@@ -589,7 +591,7 @@ namespace NiceHashMiner.Forms {
 
         private void buttonSelectedProfit_Click(object sender, EventArgs e) {
             if (_selectedComputeDevice == null) {
-                MessageBox.Show("Select device first",
+                MessageBox.Show(International.GetText("FormSettings_ButtonProfitSingle"),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK);
                 return;
