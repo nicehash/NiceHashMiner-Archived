@@ -45,7 +45,7 @@
             this.listViewDevices.Size = new System.Drawing.Size(374, 226);
             this.listViewDevices.TabIndex = 5;
             this.listViewDevices.UseCompatibleStateImageBehavior = false;
-            this.listViewDevices.View = System.Windows.Forms.View.SmallIcon;
+            this.listViewDevices.View = System.Windows.Forms.View.List;
             this.listViewDevices.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewDevices_MouseClick);
             // 
             // columnHeader0
