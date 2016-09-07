@@ -26,7 +26,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.splitContainerTabControlButtons = new System.Windows.Forms.SplitContainer();
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -85,6 +84,14 @@
             this.label_displayCurrency = new System.Windows.Forms.Label();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.pictureBox_SwitchMinSecondsFixed = new System.Windows.Forms.PictureBox();
+            this.pictureBox_MinerRestartDelayMS = new System.Windows.Forms.PictureBox();
+            this.pictureBox_APIBindPortStart = new System.Windows.Forms.PictureBox();
+            this.pictureBox_SwitchMinSecondsDynamic = new System.Windows.Forms.PictureBox();
+            this.pictureBox_ethminerDefaultBlockHeight = new System.Windows.Forms.PictureBox();
+            this.pictureBox_DagGeneration = new System.Windows.Forms.PictureBox();
+            this.pictureBox_CPU0_ForceCPUExtension = new System.Windows.Forms.PictureBox();
+            this.pictureBox_MinerAPIQueryInterval = new System.Windows.Forms.PictureBox();
             this.pictureBox_SwitchMinSecondsAMD = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
             this.comboBox_DagLoadMode = new System.Windows.Forms.ComboBox();
@@ -108,31 +115,19 @@
             this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.textBox_MinerAPIQueryInterval = new System.Windows.Forms.TextBox();
             this.groupBoxBenchmarkTimeLimits = new System.Windows.Forms.GroupBox();
+            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.buttonAllProfit = new System.Windows.Forms.Button();
             this.buttonSelectedProfit = new System.Windows.Forms.Button();
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.pictureBox_MinerAPIQueryInterval = new System.Windows.Forms.PictureBox();
-            this.pictureBox_CPU0_ForceCPUExtension = new System.Windows.Forms.PictureBox();
-            this.pictureBox_DagGeneration = new System.Windows.Forms.PictureBox();
-            this.pictureBox_ethminerDefaultBlockHeight = new System.Windows.Forms.PictureBox();
-            this.pictureBox_SwitchMinSecondsDynamic = new System.Windows.Forms.PictureBox();
-            this.pictureBox_MinerRestartDelayMS = new System.Windows.Forms.PictureBox();
-            this.pictureBox_APIBindPortStart = new System.Windows.Forms.PictureBox();
-            this.pictureBox_SwitchMinSecondsFixed = new System.Windows.Forms.PictureBox();
-            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTabControlButtons)).BeginInit();
-            this.splitContainerTabControlButtons.Panel1.SuspendLayout();
-            this.splitContainerTabControlButtons.Panel2.SuspendLayout();
-            this.splitContainerTabControlButtons.SuspendLayout();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -163,19 +158,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).BeginInit();
             this.tabPageAdvanced.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsFixed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerRestartDelayMS)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_APIBindPortStart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsDynamic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ethminerDefaultBlockHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DagGeneration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CPU0_ForceCPUExtension)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerAPIQueryInterval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsAMD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).BeginInit();
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerAPIQueryInterval)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CPU0_ForceCPUExtension)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DagGeneration)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ethminerDefaultBlockHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsDynamic)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerRestartDelayMS)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_APIBindPortStart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsFixed)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -183,36 +178,12 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
-            // splitContainerTabControlButtons
-            // 
-            this.splitContainerTabControlButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerTabControlButtons.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainerTabControlButtons.IsSplitterFixed = true;
-            this.splitContainerTabControlButtons.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerTabControlButtons.Name = "splitContainerTabControlButtons";
-            this.splitContainerTabControlButtons.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainerTabControlButtons.Panel1
-            // 
-            this.splitContainerTabControlButtons.Panel1.Controls.Add(this.tabControlGeneral);
-            this.splitContainerTabControlButtons.Panel1.Padding = new System.Windows.Forms.Padding(6);
-            // 
-            // splitContainerTabControlButtons.Panel2
-            // 
-            this.splitContainerTabControlButtons.Panel2.Controls.Add(this.buttonSaveClose);
-            this.splitContainerTabControlButtons.Panel2.Controls.Add(this.buttonDefaults);
-            this.splitContainerTabControlButtons.Panel2.Controls.Add(this.buttonCloseNoSave);
-            this.splitContainerTabControlButtons.Size = new System.Drawing.Size(624, 441);
-            this.splitContainerTabControlButtons.SplitterDistance = 392;
-            this.splitContainerTabControlButtons.TabIndex = 1;
-            // 
             // tabControlGeneral
             // 
             this.tabControlGeneral.Controls.Add(this.tabPageGeneral);
             this.tabControlGeneral.Controls.Add(this.tabPageAdvanced);
             this.tabControlGeneral.Controls.Add(this.tabPageDevicesAlgos);
-            this.tabControlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlGeneral.Location = new System.Drawing.Point(6, 6);
+            this.tabControlGeneral.Location = new System.Drawing.Point(12, 12);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
             this.tabControlGeneral.Size = new System.Drawing.Size(612, 380);
@@ -887,6 +858,86 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Miners:";
             // 
+            // pictureBox_SwitchMinSecondsFixed
+            // 
+            this.pictureBox_SwitchMinSecondsFixed.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchMinSecondsFixed.Location = new System.Drawing.Point(563, 15);
+            this.pictureBox_SwitchMinSecondsFixed.Name = "pictureBox_SwitchMinSecondsFixed";
+            this.pictureBox_SwitchMinSecondsFixed.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_SwitchMinSecondsFixed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_SwitchMinSecondsFixed.TabIndex = 385;
+            this.pictureBox_SwitchMinSecondsFixed.TabStop = false;
+            // 
+            // pictureBox_MinerRestartDelayMS
+            // 
+            this.pictureBox_MinerRestartDelayMS.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinerRestartDelayMS.Location = new System.Drawing.Point(363, 15);
+            this.pictureBox_MinerRestartDelayMS.Name = "pictureBox_MinerRestartDelayMS";
+            this.pictureBox_MinerRestartDelayMS.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_MinerRestartDelayMS.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_MinerRestartDelayMS.TabIndex = 385;
+            this.pictureBox_MinerRestartDelayMS.TabStop = false;
+            // 
+            // pictureBox_APIBindPortStart
+            // 
+            this.pictureBox_APIBindPortStart.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_APIBindPortStart.Location = new System.Drawing.Point(563, 59);
+            this.pictureBox_APIBindPortStart.Name = "pictureBox_APIBindPortStart";
+            this.pictureBox_APIBindPortStart.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_APIBindPortStart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_APIBindPortStart.TabIndex = 385;
+            this.pictureBox_APIBindPortStart.TabStop = false;
+            // 
+            // pictureBox_SwitchMinSecondsDynamic
+            // 
+            this.pictureBox_SwitchMinSecondsDynamic.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(363, 59);
+            this.pictureBox_SwitchMinSecondsDynamic.Name = "pictureBox_SwitchMinSecondsDynamic";
+            this.pictureBox_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_SwitchMinSecondsDynamic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_SwitchMinSecondsDynamic.TabIndex = 385;
+            this.pictureBox_SwitchMinSecondsDynamic.TabStop = false;
+            // 
+            // pictureBox_ethminerDefaultBlockHeight
+            // 
+            this.pictureBox_ethminerDefaultBlockHeight.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(363, 102);
+            this.pictureBox_ethminerDefaultBlockHeight.Name = "pictureBox_ethminerDefaultBlockHeight";
+            this.pictureBox_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ethminerDefaultBlockHeight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ethminerDefaultBlockHeight.TabIndex = 385;
+            this.pictureBox_ethminerDefaultBlockHeight.TabStop = false;
+            // 
+            // pictureBox_DagGeneration
+            // 
+            this.pictureBox_DagGeneration.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DagGeneration.Location = new System.Drawing.Point(363, 146);
+            this.pictureBox_DagGeneration.Name = "pictureBox_DagGeneration";
+            this.pictureBox_DagGeneration.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_DagGeneration.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_DagGeneration.TabIndex = 385;
+            this.pictureBox_DagGeneration.TabStop = false;
+            // 
+            // pictureBox_CPU0_ForceCPUExtension
+            // 
+            this.pictureBox_CPU0_ForceCPUExtension.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(168, 146);
+            this.pictureBox_CPU0_ForceCPUExtension.Name = "pictureBox_CPU0_ForceCPUExtension";
+            this.pictureBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_CPU0_ForceCPUExtension.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_CPU0_ForceCPUExtension.TabIndex = 385;
+            this.pictureBox_CPU0_ForceCPUExtension.TabStop = false;
+            // 
+            // pictureBox_MinerAPIQueryInterval
+            // 
+            this.pictureBox_MinerAPIQueryInterval.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinerAPIQueryInterval.Location = new System.Drawing.Point(168, 102);
+            this.pictureBox_MinerAPIQueryInterval.Name = "pictureBox_MinerAPIQueryInterval";
+            this.pictureBox_MinerAPIQueryInterval.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_MinerAPIQueryInterval.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_MinerAPIQueryInterval.TabIndex = 385;
+            this.pictureBox_MinerAPIQueryInterval.TabStop = false;
+            // 
             // pictureBox_SwitchMinSecondsAMD
             // 
             this.pictureBox_SwitchMinSecondsAMD.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
@@ -1094,162 +1145,6 @@
             this.groupBoxBenchmarkTimeLimits.TabStop = false;
             this.groupBoxBenchmarkTimeLimits.Text = "Benchmark Time Limits:";
             // 
-            // tabPageDevicesAlgos
-            // 
-            this.tabPageDevicesAlgos.Controls.Add(this.devicesListViewEnableControl1);
-            this.tabPageDevicesAlgos.Controls.Add(this.algorithmSettingsControl1);
-            this.tabPageDevicesAlgos.Controls.Add(this.groupBoxAlgorithmSettings);
-            this.tabPageDevicesAlgos.Controls.Add(this.buttonAllProfit);
-            this.tabPageDevicesAlgos.Controls.Add(this.buttonSelectedProfit);
-            this.tabPageDevicesAlgos.Location = new System.Drawing.Point(4, 22);
-            this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
-            this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(604, 354);
-            this.tabPageDevicesAlgos.TabIndex = 1;
-            this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
-            this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxAlgorithmSettings
-            // 
-            this.groupBoxAlgorithmSettings.Controls.Add(this.algorithmsListView1);
-            this.groupBoxAlgorithmSettings.Location = new System.Drawing.Point(6, 123);
-            this.groupBoxAlgorithmSettings.Name = "groupBoxAlgorithmSettings";
-            this.groupBoxAlgorithmSettings.Size = new System.Drawing.Size(351, 225);
-            this.groupBoxAlgorithmSettings.TabIndex = 395;
-            this.groupBoxAlgorithmSettings.TabStop = false;
-            this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
-            // 
-            // buttonAllProfit
-            // 
-            this.buttonAllProfit.Location = new System.Drawing.Point(364, 6);
-            this.buttonAllProfit.Name = "buttonAllProfit";
-            this.buttonAllProfit.Size = new System.Drawing.Size(226, 23);
-            this.buttonAllProfit.TabIndex = 394;
-            this.buttonAllProfit.Text = "Check All Profitability";
-            this.buttonAllProfit.UseVisualStyleBackColor = true;
-            // 
-            // buttonSelectedProfit
-            // 
-            this.buttonSelectedProfit.Location = new System.Drawing.Point(364, 35);
-            this.buttonSelectedProfit.Name = "buttonSelectedProfit";
-            this.buttonSelectedProfit.Size = new System.Drawing.Size(226, 23);
-            this.buttonSelectedProfit.TabIndex = 393;
-            this.buttonSelectedProfit.Text = "Check Selected Profitability";
-            this.buttonSelectedProfit.UseVisualStyleBackColor = true;
-            // 
-            // buttonSaveClose
-            // 
-            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(351, 10);
-            this.buttonSaveClose.Name = "buttonSaveClose";
-            this.buttonSaveClose.Size = new System.Drawing.Size(110, 23);
-            this.buttonSaveClose.TabIndex = 44;
-            this.buttonSaveClose.Text = "&Save and Close";
-            this.buttonSaveClose.UseVisualStyleBackColor = true;
-            this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
-            // 
-            // buttonDefaults
-            // 
-            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(270, 10);
-            this.buttonDefaults.Name = "buttonDefaults";
-            this.buttonDefaults.Size = new System.Drawing.Size(75, 23);
-            this.buttonDefaults.TabIndex = 43;
-            this.buttonDefaults.Text = "&Defaults";
-            this.buttonDefaults.UseVisualStyleBackColor = true;
-            this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
-            // 
-            // buttonCloseNoSave
-            // 
-            this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(467, 10);
-            this.buttonCloseNoSave.Name = "buttonCloseNoSave";
-            this.buttonCloseNoSave.Size = new System.Drawing.Size(135, 23);
-            this.buttonCloseNoSave.TabIndex = 45;
-            this.buttonCloseNoSave.Text = "&Close without Saving";
-            this.buttonCloseNoSave.UseVisualStyleBackColor = true;
-            this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
-            // 
-            // pictureBox_MinerAPIQueryInterval
-            // 
-            this.pictureBox_MinerAPIQueryInterval.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinerAPIQueryInterval.Location = new System.Drawing.Point(168, 102);
-            this.pictureBox_MinerAPIQueryInterval.Name = "pictureBox_MinerAPIQueryInterval";
-            this.pictureBox_MinerAPIQueryInterval.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_MinerAPIQueryInterval.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_MinerAPIQueryInterval.TabIndex = 385;
-            this.pictureBox_MinerAPIQueryInterval.TabStop = false;
-            // 
-            // pictureBox_CPU0_ForceCPUExtension
-            // 
-            this.pictureBox_CPU0_ForceCPUExtension.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(168, 146);
-            this.pictureBox_CPU0_ForceCPUExtension.Name = "pictureBox_CPU0_ForceCPUExtension";
-            this.pictureBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_CPU0_ForceCPUExtension.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_CPU0_ForceCPUExtension.TabIndex = 385;
-            this.pictureBox_CPU0_ForceCPUExtension.TabStop = false;
-            // 
-            // pictureBox_DagGeneration
-            // 
-            this.pictureBox_DagGeneration.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DagGeneration.Location = new System.Drawing.Point(363, 146);
-            this.pictureBox_DagGeneration.Name = "pictureBox_DagGeneration";
-            this.pictureBox_DagGeneration.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DagGeneration.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DagGeneration.TabIndex = 385;
-            this.pictureBox_DagGeneration.TabStop = false;
-            // 
-            // pictureBox_ethminerDefaultBlockHeight
-            // 
-            this.pictureBox_ethminerDefaultBlockHeight.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(363, 102);
-            this.pictureBox_ethminerDefaultBlockHeight.Name = "pictureBox_ethminerDefaultBlockHeight";
-            this.pictureBox_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_ethminerDefaultBlockHeight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_ethminerDefaultBlockHeight.TabIndex = 385;
-            this.pictureBox_ethminerDefaultBlockHeight.TabStop = false;
-            // 
-            // pictureBox_SwitchMinSecondsDynamic
-            // 
-            this.pictureBox_SwitchMinSecondsDynamic.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(363, 59);
-            this.pictureBox_SwitchMinSecondsDynamic.Name = "pictureBox_SwitchMinSecondsDynamic";
-            this.pictureBox_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_SwitchMinSecondsDynamic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_SwitchMinSecondsDynamic.TabIndex = 385;
-            this.pictureBox_SwitchMinSecondsDynamic.TabStop = false;
-            // 
-            // pictureBox_MinerRestartDelayMS
-            // 
-            this.pictureBox_MinerRestartDelayMS.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinerRestartDelayMS.Location = new System.Drawing.Point(363, 15);
-            this.pictureBox_MinerRestartDelayMS.Name = "pictureBox_MinerRestartDelayMS";
-            this.pictureBox_MinerRestartDelayMS.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_MinerRestartDelayMS.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_MinerRestartDelayMS.TabIndex = 385;
-            this.pictureBox_MinerRestartDelayMS.TabStop = false;
-            // 
-            // pictureBox_APIBindPortStart
-            // 
-            this.pictureBox_APIBindPortStart.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_APIBindPortStart.Location = new System.Drawing.Point(563, 59);
-            this.pictureBox_APIBindPortStart.Name = "pictureBox_APIBindPortStart";
-            this.pictureBox_APIBindPortStart.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_APIBindPortStart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_APIBindPortStart.TabIndex = 385;
-            this.pictureBox_APIBindPortStart.TabStop = false;
-            // 
-            // pictureBox_SwitchMinSecondsFixed
-            // 
-            this.pictureBox_SwitchMinSecondsFixed.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchMinSecondsFixed.Location = new System.Drawing.Point(563, 15);
-            this.pictureBox_SwitchMinSecondsFixed.Name = "pictureBox_SwitchMinSecondsFixed";
-            this.pictureBox_SwitchMinSecondsFixed.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_SwitchMinSecondsFixed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_SwitchMinSecondsFixed.TabIndex = 385;
-            this.pictureBox_SwitchMinSecondsFixed.TabStop = false;
-            // 
             // benchmarkLimitControlNVIDIA
             // 
             this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
@@ -1280,6 +1175,21 @@
             this.benchmarkLimitControlAMD.TabIndex = 5;
             this.benchmarkLimitControlAMD.TimeLimits = null;
             // 
+            // tabPageDevicesAlgos
+            // 
+            this.tabPageDevicesAlgos.Controls.Add(this.devicesListViewEnableControl1);
+            this.tabPageDevicesAlgos.Controls.Add(this.algorithmSettingsControl1);
+            this.tabPageDevicesAlgos.Controls.Add(this.groupBoxAlgorithmSettings);
+            this.tabPageDevicesAlgos.Controls.Add(this.buttonAllProfit);
+            this.tabPageDevicesAlgos.Controls.Add(this.buttonSelectedProfit);
+            this.tabPageDevicesAlgos.Location = new System.Drawing.Point(4, 22);
+            this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
+            this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(604, 354);
+            this.tabPageDevicesAlgos.TabIndex = 1;
+            this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
+            this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
+            // 
             // devicesListViewEnableControl1
             // 
             this.devicesListViewEnableControl1.AutoSaveChange = true;
@@ -1294,10 +1204,20 @@
             // 
             // algorithmSettingsControl1
             // 
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(363, 84);
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(363, 64);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 258);
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 278);
             this.algorithmSettingsControl1.TabIndex = 396;
+            // 
+            // groupBoxAlgorithmSettings
+            // 
+            this.groupBoxAlgorithmSettings.Controls.Add(this.algorithmsListView1);
+            this.groupBoxAlgorithmSettings.Location = new System.Drawing.Point(6, 123);
+            this.groupBoxAlgorithmSettings.Name = "groupBoxAlgorithmSettings";
+            this.groupBoxAlgorithmSettings.Size = new System.Drawing.Size(351, 225);
+            this.groupBoxAlgorithmSettings.TabIndex = 395;
+            this.groupBoxAlgorithmSettings.TabStop = false;
+            this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
             // 
             // algorithmsListView1
             // 
@@ -1308,12 +1228,66 @@
             this.algorithmsListView1.Size = new System.Drawing.Size(336, 200);
             this.algorithmsListView1.TabIndex = 2;
             // 
+            // buttonAllProfit
+            // 
+            this.buttonAllProfit.Location = new System.Drawing.Point(364, 6);
+            this.buttonAllProfit.Name = "buttonAllProfit";
+            this.buttonAllProfit.Size = new System.Drawing.Size(226, 23);
+            this.buttonAllProfit.TabIndex = 394;
+            this.buttonAllProfit.Text = "Check All Profitability";
+            this.buttonAllProfit.UseVisualStyleBackColor = true;
+            // 
+            // buttonSelectedProfit
+            // 
+            this.buttonSelectedProfit.Location = new System.Drawing.Point(364, 35);
+            this.buttonSelectedProfit.Name = "buttonSelectedProfit";
+            this.buttonSelectedProfit.Size = new System.Drawing.Size(226, 23);
+            this.buttonSelectedProfit.TabIndex = 393;
+            this.buttonSelectedProfit.Text = "Check Selected Profitability";
+            this.buttonSelectedProfit.UseVisualStyleBackColor = true;
+            // 
+            // buttonSaveClose
+            // 
+            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSaveClose.Location = new System.Drawing.Point(371, 397);
+            this.buttonSaveClose.Name = "buttonSaveClose";
+            this.buttonSaveClose.Size = new System.Drawing.Size(110, 23);
+            this.buttonSaveClose.TabIndex = 44;
+            this.buttonSaveClose.Text = "&Save and Close";
+            this.buttonSaveClose.UseVisualStyleBackColor = true;
+            this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
+            // 
+            // buttonDefaults
+            // 
+            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDefaults.Location = new System.Drawing.Point(290, 397);
+            this.buttonDefaults.Name = "buttonDefaults";
+            this.buttonDefaults.Size = new System.Drawing.Size(75, 23);
+            this.buttonDefaults.TabIndex = 43;
+            this.buttonDefaults.Text = "&Defaults";
+            this.buttonDefaults.UseVisualStyleBackColor = true;
+            this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
+            // 
+            // buttonCloseNoSave
+            // 
+            this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(487, 397);
+            this.buttonCloseNoSave.Name = "buttonCloseNoSave";
+            this.buttonCloseNoSave.Size = new System.Drawing.Size(135, 23);
+            this.buttonCloseNoSave.TabIndex = 45;
+            this.buttonCloseNoSave.Text = "&Close without Saving";
+            this.buttonCloseNoSave.UseVisualStyleBackColor = true;
+            this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 441);
-            this.Controls.Add(this.splitContainerTabControlButtons);
+            this.ClientSize = new System.Drawing.Size(634, 432);
+            this.Controls.Add(this.buttonDefaults);
+            this.Controls.Add(this.buttonSaveClose);
+            this.Controls.Add(this.tabControlGeneral);
+            this.Controls.Add(this.buttonCloseNoSave);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -1321,10 +1295,6 @@
             this.Name = "FormSettings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
-            this.splitContainerTabControlButtons.Panel1.ResumeLayout(false);
-            this.splitContainerTabControlButtons.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTabControlButtons)).EndInit();
-            this.splitContainerTabControlButtons.ResumeLayout(false);
             this.tabControlGeneral.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
@@ -1360,26 +1330,25 @@
             this.tabPageAdvanced.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsFixed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerRestartDelayMS)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_APIBindPortStart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsDynamic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ethminerDefaultBlockHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DagGeneration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CPU0_ForceCPUExtension)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerAPIQueryInterval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsAMD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).EndInit();
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerAPIQueryInterval)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CPU0_ForceCPUExtension)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DagGeneration)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ethminerDefaultBlockHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsDynamic)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerRestartDelayMS)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_APIBindPortStart)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsFixed)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainerTabControlButtons;
         private System.Windows.Forms.Button buttonSaveClose;
         private System.Windows.Forms.Button buttonDefaults;
         private System.Windows.Forms.Button buttonCloseNoSave;
