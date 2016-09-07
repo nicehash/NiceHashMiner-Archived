@@ -305,6 +305,9 @@ namespace NiceHashMiner.Miners
 
             _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
             FillAlgorithm(aname, ref ad);
+            // check if speed zero
+            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+
             return ad;
         }
     }

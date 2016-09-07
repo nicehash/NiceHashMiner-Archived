@@ -175,14 +175,19 @@ namespace NiceHashMiner
 
 
         abstract protected void _Stop(bool willswitch);
-        virtual public void Stop(bool willswitch)
+        virtual public void Stop(bool willswitch, bool needsRestart = false)
         {
-            // TODO stop here timer
-            _cooldownCheckTimer.Stop();
-            _Stop(willswitch);
-
-            PreviousTotalMH = 0.0;
-            IsRunning = false;
+            if (!needsRestart) {
+                // TODO stop here timer
+                _cooldownCheckTimer.Stop();
+                _Stop(willswitch);
+                PreviousTotalMH = 0.0;
+                IsRunning = false;
+            } else {
+                //_currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                Helpers.ConsolePrint(MinerDeviceName, "Manually closed, will restart");
+                Restart();
+            }
         }
 
         public void End() {
@@ -504,7 +509,7 @@ namespace NiceHashMiner
 
         virtual protected void Miner_Exited() {
             bool willswitch = _isEthMinerExit ? false : true;
-            Stop(willswitch);
+            Stop(willswitch, true);
             //Stop(true);
         }
         //virtual protected void ethMiner_Exited()
@@ -529,6 +534,7 @@ namespace NiceHashMiner
         private void Restart() {
             Helpers.ConsolePrint(MinerDeviceName, "Restarting miner..");
             Stop(false); // stop miner first
+            System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
             ProcessHandle = _Start(); // start with old command line
         }
 
@@ -621,6 +627,9 @@ namespace NiceHashMiner
 
             _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
             FillAlgorithm(aname, ref ad);
+            // check if speed zero
+            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+
             return ad;
         }
 
@@ -656,6 +665,11 @@ namespace NiceHashMiner
             if (_currentCooldownTimeInSecondsLeft <= 0) {
                 if (_currentMinerReadStatus == MinerAPIReadStatus.GOT_READ) {
                     CoolDown();
+                } else if (_currentMinerReadStatus == MinerAPIReadStatus.READ_SPEED_ZERO) {
+                    Helpers.ConsolePrint(MinerDeviceName, "READ SPEED ZERO, will cool up");
+                    CoolUp();
+                } else if (_currentMinerReadStatus == MinerAPIReadStatus.RESTART) {
+                    Restart();
                 } else {
                     CoolUp();
                 }

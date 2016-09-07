@@ -189,6 +189,8 @@ namespace NiceHashMiner.Miners
                 CryptoNightData.AlgorithmName = "cryptonight";
                 CryptoNightData.Speed = totalSpeed;
                 _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                // check if speed zero
+                if (CryptoNightData.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
                 return CryptoNightData;
             }
             return GetSummaryCPU_CCMINER();

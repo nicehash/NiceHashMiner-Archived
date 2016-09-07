@@ -120,6 +120,8 @@ namespace NiceHashMiner.Miners {
                 // fix MH/s
                 ad.Speed *= 1000 * 1000;
                 _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                // check if speed zero
+                if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
                 return ad;
             } else if (GetSpeedStatus.NONE == getSpeedStatus) {
                 ad.Speed = 0;
@@ -129,7 +131,7 @@ namespace NiceHashMiner.Miners {
             // else if (GetSpeedStatus.EXCEPTION == getSpeedStatus) {
             // we don't restart unles not responding for long time check cooldown logic in Miner
             //Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
-            IsRunning = false;
+            //IsRunning = false;
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             return null;
         }
