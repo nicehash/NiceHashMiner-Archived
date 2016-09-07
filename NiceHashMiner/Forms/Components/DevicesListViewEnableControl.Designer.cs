@@ -45,7 +45,7 @@
             this.listViewDevices.Size = new System.Drawing.Size(374, 226);
             this.listViewDevices.TabIndex = 5;
             this.listViewDevices.UseCompatibleStateImageBehavior = false;
-            this.listViewDevices.View = System.Windows.Forms.View.Details;
+            this.listViewDevices.View = System.Windows.Forms.View.SmallIcon;
             this.listViewDevices.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewDevices_MouseClick);
             // 
             // columnHeader0
@@ -59,7 +59,7 @@
             this.toolStripMenuItemEnable,
             this.toolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 48);
             // 
             // toolStripMenuItemEnable
             // 
