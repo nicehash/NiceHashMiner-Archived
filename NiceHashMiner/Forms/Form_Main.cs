@@ -708,7 +708,7 @@ namespace NiceHashMiner
             buttonBenchmark.Enabled = false;
             buttonStartMining.Enabled = false;
             buttonSettings.Enabled = false;
-            devicesListViewEnableControl1.Enabled = false;
+            devicesListViewEnableControl1.IsMining = true;
             buttonStopMining.Enabled = true;
 
             ConfigManager.Instance.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
@@ -743,7 +743,7 @@ namespace NiceHashMiner
             buttonBenchmark.Enabled = true;
             buttonStartMining.Enabled = true;
             buttonSettings.Enabled = true;
-            devicesListViewEnableControl1.Enabled = true;
+            devicesListViewEnableControl1.IsMining = false;
             buttonStopMining.Enabled = false;
 
             if (DemoMode)

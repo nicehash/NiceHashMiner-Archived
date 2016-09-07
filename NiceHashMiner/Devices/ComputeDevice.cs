@@ -33,6 +33,14 @@ namespace NiceHashMiner.Devices
         readonly public string UUID;
 
 
+        public enum __DeviceType {
+            CPU,
+            NVIDIA,
+            AMD
+        }
+        [JsonIgnore]
+        public __DeviceType __DeviceTypeT { get; private set; }
+
         [JsonIgnore]
         public string BenchmarkCopyUUID { get; set; }
 
@@ -83,6 +91,7 @@ namespace NiceHashMiner.Devices
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
+            __DeviceTypeT = __DeviceType.CPU;
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -115,6 +124,7 @@ namespace NiceHashMiner.Devices
             DeviceGroupType = GroupNames.GetType(Group);
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
+            __DeviceTypeT = __DeviceType.NVIDIA;
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -147,6 +157,7 @@ namespace NiceHashMiner.Devices
             _nameNoNums = amdDevice.DeviceName;
             Enabled = enabled;
             IsEtherumCapale = amdDevice.IsEtherumCapable();
+            __DeviceTypeT = __DeviceType.AMD;
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -246,7 +257,7 @@ namespace NiceHashMiner.Devices
             List<ComputeDevice> sameTypes = new List<ComputeDevice>();
             var compareDev = GetDeviceWithUUID(uuid);
             foreach (var dev in AllAvaliableDevices) {
-                if (uuid != dev.UUID && compareDev._nameNoNums == dev._nameNoNums) {
+                if (uuid != dev.UUID && compareDev.__DeviceTypeT == dev.__DeviceTypeT) {
                     sameTypes.Add(GetDeviceWithUUID(dev.UUID));
                 }
             }

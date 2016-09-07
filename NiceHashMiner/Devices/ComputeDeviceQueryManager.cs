@@ -85,7 +85,7 @@ namespace NiceHashMiner.Devices
                         int numID = 1;
                         foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
                             if (cDev.Name == name) {
-                                cDev.Name = cDev.Name + "#" + numID.ToString();
+                                cDev.Name = cDev.Name + " #" + numID.ToString();
                                 ++numID;
                             }
                         }

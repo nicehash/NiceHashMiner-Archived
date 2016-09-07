@@ -49,6 +49,7 @@ namespace NiceHashMiner.Forms.Components {
                 }
             }
         }
+        public bool IsMining { get; set; }
 
         public bool IsBenchmarkForm = false;
 
@@ -83,6 +84,7 @@ namespace NiceHashMiner.Forms.Components {
             // intialize ListView callbacks
             //listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
             listViewDevices.CheckBoxes = false;
+            IsMining = false;
         }
 
         public void SetIListItemCheckColorSetter(IListItemCheckColorSetter listItemCheckColorSetter) {
@@ -165,6 +167,7 @@ namespace NiceHashMiner.Forms.Components {
 
         private void listViewDevices_MouseClick(object sender, MouseEventArgs e) {
             if (IsInBenchmark) return;
+            if (IsMining) return; 
             if (e.Button == MouseButtons.Right) {
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location) == true) {
                     contextMenuStrip1.Items.Clear();
@@ -172,33 +175,33 @@ namespace NiceHashMiner.Forms.Components {
                     if (G.IsEnabled) {
                         var disableItem = new ToolStripMenuItem();
                         disableItem.Text = International.GetText("DeviceListView_ContextMenu_DisableDevice");
-                        disableItem.Checked = true;
+                        //disableItem.Checked = true;
                         disableItem.Click += toolStripMenuItemEnable_Click;
                         contextMenuStrip1.Items.Add(disableItem);
                     } else {
                         var disableItem = new ToolStripMenuItem();
                         disableItem.Text = International.GetText("DeviceListView_ContextMenu_EnableDevice");
-                        disableItem.Checked = false;
+                        //disableItem.Checked = false;
                         disableItem.Click += toolStripMenuItemEnable_Click;
                         contextMenuStrip1.Items.Add(disableItem);
-                        if (IsBenchmarkForm) {
-                            var sameDevTypes = ComputeDevice.GetSameDevicesTypeAsDeviceWithUUID(G.CDevice.UUID);
-                            if(sameDevTypes.Count > 0) {
-                                var copyBenchItem = new ToolStripMenuItem();
-                                //copyBenchItem.DropDownItems
-                                foreach (var cDev in sameDevTypes) {
-                                    if (cDev.ComputeDeviceEnabledOption.IsEnabled) {
-                                        var copyBenchDropDownItem = new ToolStripMenuItem();
-                                        copyBenchDropDownItem.Text = cDev.Name;
-                                        copyBenchDropDownItem.Checked = cDev.UUID == G.CDevice.BenchmarkCopyUUID;
-                                        copyBenchDropDownItem.Click += toolStripMenuItemCopyBenchmark_Click;
-                                        copyBenchDropDownItem.Tag = cDev.UUID;
-                                        copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
-                                    }
+                    }
+                    if (IsBenchmarkForm) {
+                        var sameDevTypes = ComputeDevice.GetSameDevicesTypeAsDeviceWithUUID(G.CDevice.UUID);
+                        if (sameDevTypes.Count > 0) {
+                            var copyBenchItem = new ToolStripMenuItem();
+                            //copyBenchItem.DropDownItems
+                            foreach (var cDev in sameDevTypes) {
+                                if (cDev.ComputeDeviceEnabledOption.IsEnabled) {
+                                    var copyBenchDropDownItem = new ToolStripMenuItem();
+                                    copyBenchDropDownItem.Text = cDev.Name;
+                                    copyBenchDropDownItem.Checked = cDev.UUID == G.CDevice.BenchmarkCopyUUID;
+                                    copyBenchDropDownItem.Click += toolStripMenuItemCopyBenchmark_Click;
+                                    copyBenchDropDownItem.Tag = cDev.UUID;
+                                    copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
                                 }
-                                copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopyBenchmark");
-                                contextMenuStrip1.Items.Add(copyBenchItem);
                             }
+                            copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopyBenchmark");
+                            contextMenuStrip1.Items.Add(copyBenchItem);
                         }
                     }
                     contextMenuStrip1.Show(Cursor.Position);
