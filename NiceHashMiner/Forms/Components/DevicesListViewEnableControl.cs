@@ -164,6 +164,7 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         private void listViewDevices_MouseClick(object sender, MouseEventArgs e) {
+            if (IsInBenchmark) return;
             if (e.Button == MouseButtons.Right) {
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location) == true) {
                     contextMenuStrip1.Items.Clear();
