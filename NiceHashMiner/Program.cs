@@ -23,7 +23,7 @@ namespace NiceHashMiner
             Application.SetCompatibleTextRenderingDefault(false);
 
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            //Console.OutputEncoding = System.Text.Encoding.Unicode;
             // #0 set this first so data parsing will work correctly
             Globals.JsonSettings = new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore,
