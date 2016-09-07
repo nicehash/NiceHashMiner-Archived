@@ -85,6 +85,7 @@ namespace NiceHashMiner.Forms.Components {
             //listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
             listViewDevices.CheckBoxes = false;
             IsMining = false;
+            listViewDevices.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
         public void SetIListItemCheckColorSetter(IListItemCheckColorSetter listItemCheckColorSetter) {
