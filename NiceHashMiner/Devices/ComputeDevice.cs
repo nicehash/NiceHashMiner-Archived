@@ -17,7 +17,9 @@ namespace NiceHashMiner.Devices
         [JsonIgnore]
         readonly public int ID;
         readonly public string Group;
-        readonly public string Name;
+        public string Name { get; set; }
+        // to identify equality;
+        readonly public string _nameNoNums;
         public bool Enabled;
 
         [JsonIgnore]
@@ -30,13 +32,17 @@ namespace NiceHashMiner.Devices
         // UUID now used for saving
         readonly public string UUID;
 
+
+        [JsonIgnore]
+        public string BenchmarkCopyUUID { get; set; }
+
         [JsonIgnore]
         public static readonly ulong MEMORY_2GB = 2147483648;
 
         [JsonIgnore]
-        CudaDevice _cudaDevice;
+        CudaDevice _cudaDevice = null;
         [JsonIgnore]
-        AmdGpuDevice _amdDevice;
+        AmdGpuDevice _amdDevice = null;
         // sgminer extra quickfix
         [JsonIgnore]
         public bool IsOptimizedVersion { get; private set; }
@@ -56,13 +62,14 @@ namespace NiceHashMiner.Devices
 
         // 
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
-        //readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
+        readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
 
         [JsonConstructor]
         public ComputeDevice(int id, string group, string name, string uuid, bool enabled = true) {
             ID = id;
             Group = group;
             Name = name;
+            _nameNoNums = name;
             UUID = uuid;
             Enabled = enabled;
         }
@@ -72,25 +79,26 @@ namespace NiceHashMiner.Devices
             ID = id;
             Group = group;
             Name = name;
+            _nameNoNums = name;
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
-                //// compare new device with unique list scope
-                //{
-                //    bool isNewUnique = true;
-                //    foreach (var d in UniqueAvaliableDevices) {
-                //        if(this.Name == d.Name) {
-                //            isNewUnique = false;
-                //            break;
-                //        }
-                //    }
-                //    if (isNewUnique) {
-                //        UniqueAvaliableDevices.Add(this);
-                //    }
-                //}
+                // compare new device with unique list scope
+                {
+                    bool isNewUnique = true;
+                    foreach (var d in UniqueAvaliableDevices) {
+                        if (this.Name == d.Name) {
+                            isNewUnique = false;
+                            break;
+                        }
+                    }
+                    if (isNewUnique) {
+                        UniqueAvaliableDevices.Add(this);
+                    }
+                }
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
@@ -102,6 +110,7 @@ namespace NiceHashMiner.Devices
             ID = (int)cudaDevice.DeviceID;
             Group = group;
             Name = cudaDevice.GetName();
+            _nameNoNums = cudaDevice.GetName();
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
@@ -109,19 +118,19 @@ namespace NiceHashMiner.Devices
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
-                //// compare new device with unique list scope
-                //{
-                //    bool isNewUnique = true;
-                //    foreach (var d in UniqueAvaliableDevices) {
-                //        if (this.Name == d.Name) {
-                //            isNewUnique = false;
-                //            break;
-                //        }
-                //    }
-                //    if (isNewUnique) {
-                //        UniqueAvaliableDevices.Add(this);
-                //    }
-                //}
+                // compare new device with unique list scope
+                {
+                    bool isNewUnique = true;
+                    foreach (var d in UniqueAvaliableDevices) {
+                        if (this.Name == d.Name) {
+                            isNewUnique = false;
+                            break;
+                        }
+                    }
+                    if (isNewUnique) {
+                        UniqueAvaliableDevices.Add(this);
+                    }
+                }
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
@@ -135,24 +144,25 @@ namespace NiceHashMiner.Devices
             Group = GroupNames.GetName(DeviceGroupType.AMD_OpenCL);
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             Name = amdDevice.DeviceName;
+            _nameNoNums = amdDevice.DeviceName;
             Enabled = enabled;
             IsEtherumCapale = amdDevice.IsEtherumCapable();
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
-                //// compare new device with unique list scope
-                //{
-                //    bool isNewUnique = true;
-                //    foreach (var d in UniqueAvaliableDevices) {
-                //        if (this.Name == d.Name) {
-                //            isNewUnique = false;
-                //            break;
-                //        }
-                //    }
-                //    if (isNewUnique) {
-                //        UniqueAvaliableDevices.Add(this);
-                //    }
-                //}
+                // compare new device with unique list scope
+                {
+                    bool isNewUnique = true;
+                    foreach (var d in UniqueAvaliableDevices) {
+                        if (this.Name == d.Name) {
+                            isNewUnique = false;
+                            break;
+                        }
+                    }
+                    if (isNewUnique) {
+                        UniqueAvaliableDevices.Add(this);
+                    }
+                }
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
@@ -230,6 +240,17 @@ namespace NiceHashMiner.Devices
             }
             // GEN indicates the UUID has been generated and cannot be presumed to be immutable
             return "GEN-" + hash.ToString();
+        }
+
+        public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUUID(string uuid) {
+            List<ComputeDevice> sameTypes = new List<ComputeDevice>();
+            var compareDev = GetDeviceWithUUID(uuid);
+            foreach (var dev in AllAvaliableDevices) {
+                if (uuid != dev.UUID && compareDev._nameNoNums == dev._nameNoNums) {
+                    sameTypes.Add(GetDeviceWithUUID(dev.UUID));
+                }
+            }
+            return sameTypes;
         }
 
         public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique) {

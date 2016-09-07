@@ -66,6 +66,34 @@ namespace NiceHashMiner.Devices
             QueryAMD();
             // #5 uncheck CPU if GPUs present, call it after we Query all devices
             UncheckedCPU();
+            // add numberings to same devices
+            if (ComputeDevice.AllAvaliableDevices.Count != ComputeDevice.UniqueAvaliableDevices.Count) {
+                // name count
+                Dictionary<string, int> namesCount = new Dictionary<string, int>();
+                // init keys and counters
+                foreach (var uniqueCdev in ComputeDevice.UniqueAvaliableDevices) {
+                    namesCount.Add(uniqueCdev.Name, 0);
+                }
+                // count 
+                foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                    namesCount[cDev.Name]++;
+                }
+                foreach (var nameCount in namesCount) {
+                    string name = nameCount.Key;
+                    int deviceCount = nameCount.Value;
+                    if (deviceCount > 1) {
+                        int numID = 1;
+                        foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                            if (cDev.Name == name) {
+                                cDev.Name = cDev.Name + "#" + numID.ToString();
+                                ++numID;
+                            }
+                        }
+                    }
+                }
+            }
+
+
             // TODO update this to report undetected hardware
             // #6 check NVIDIA, AMD devices count
             {

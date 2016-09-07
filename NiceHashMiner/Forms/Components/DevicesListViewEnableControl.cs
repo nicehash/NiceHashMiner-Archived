@@ -15,6 +15,8 @@ namespace NiceHashMiner.Forms.Components {
         private const int ENABLED = 0;
         private const int DEVICE = 1;
 
+        private const int CM_ENABLE_DISABLE = 0;
+
         private class DefaultDevicesColorSeter : IListItemCheckColorSetter {
             private static Color ENABLED_COLOR = Color.White;
             private static Color DISABLED_COLOR = Color.DarkGray;
@@ -42,13 +44,15 @@ namespace NiceHashMiner.Forms.Components {
             set {
                 if (value) {
                     _isInBenchmark = value;
-                    listViewDevices.CheckBoxes = false;
+                    //listViewDevices.CheckBoxes = false;
                 } else {
                     _isInBenchmark = value;
-                    listViewDevices.CheckBoxes = true;
+                    //listViewDevices.CheckBoxes = true;
                 }
             }
         }
+
+        public bool IsBenchmarkForm = false;
 
         [Serializable]
         public class ComputeDeviceEnabledOption {
@@ -79,7 +83,8 @@ namespace NiceHashMiner.Forms.Components {
             SetAllEnabled = false;
             Options = new List<ComputeDeviceEnabledOption>();
             // intialize ListView callbacks
-            listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
+            //listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
+            listViewDevices.CheckBoxes = false;
         }
 
         public void SetIListItemCheckColorSetter(IListItemCheckColorSetter listItemCheckColorSetter) {
@@ -160,5 +165,83 @@ namespace NiceHashMiner.Forms.Components {
             listViewDevices.ItemSelectionChanged += callback;
         }
 
+        private void listViewDevices_MouseClick(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Right) {
+                if (listViewDevices.FocusedItem.Bounds.Contains(e.Location) == true) {
+                    contextMenuStrip1.Items.Clear();
+                    ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
+                    if (G.IsEnabled) {
+                        var disableItem = new ToolStripMenuItem();
+                        disableItem.Text = "Disable Device";
+                        disableItem.Checked = true;
+                        disableItem.Click += toolStripMenuItemEnable_Click;
+                        contextMenuStrip1.Items.Add(disableItem);
+                    } else {
+                        var disableItem = new ToolStripMenuItem();
+                        disableItem.Text = "Enable Device";
+                        disableItem.Checked = false;
+                        disableItem.Click += toolStripMenuItemEnable_Click;
+                        contextMenuStrip1.Items.Add(disableItem);
+                        if (IsBenchmarkForm) {
+                            var sameDevTypes = ComputeDevice.GetSameDevicesTypeAsDeviceWithUUID(G.CDevice.UUID);
+                            if(sameDevTypes.Count > 0) {
+                                var copyBenchItem = new ToolStripMenuItem();
+                                //copyBenchItem.DropDownItems
+                                foreach (var cDev in sameDevTypes) {
+                                    if (cDev.ComputeDeviceEnabledOption.IsEnabled) {
+                                        var copyBenchDropDownItem = new ToolStripMenuItem();
+                                        copyBenchDropDownItem.Text = cDev.Name;
+                                        copyBenchDropDownItem.Checked = cDev.UUID == G.CDevice.BenchmarkCopyUUID;
+                                        copyBenchDropDownItem.Click += toolStripMenuItemCopyBenchmark_Click;
+                                        copyBenchDropDownItem.Tag = cDev.UUID;
+                                        copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
+                                    }
+                                }
+                                copyBenchItem.Text = "Copy Benchmark From";
+                                contextMenuStrip1.Items.Add(copyBenchItem);
+                            }
+                        }
+                    }
+                    contextMenuStrip1.Show(Cursor.Position);
+                }
+            } 
+        }
+
+        private void toolStripMenuItemEnable_Click(object sender, EventArgs e) {
+            ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
+            var isEnabled = !G.IsEnabled;
+            G.IsEnabled = isEnabled;
+            if (AutoSaveChange) {
+                G.SaveOption();
+            }
+            if (SaveToGeneralConfig) {
+                ConfigManager.Instance.GeneralConfig.Commit();
+            }
+            var lvi = listViewDevices.FocusedItem as ListViewItem;
+            if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
+            if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
+        }
+
+        private void toolStripMenuItemCopyBenchmark_Click(object sender, EventArgs e) {
+            ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            if(item != null) {
+                var uuid = item.Tag as string;
+                if (uuid != null) {
+                    var copyBenchCDev = ComputeDevice.GetDeviceWithUUID(uuid);
+                    G.CDevice.BenchmarkCopyUUID = uuid;
+                    // just copy
+                    foreach (var copyAlgSpeeds in copyBenchCDev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                        if (G.CDevice.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(copyAlgSpeeds.Key)) {
+                            var setAlgo = G.CDevice.DeviceBenchmarkConfig.AlgorithmSettings[copyAlgSpeeds.Key];
+                            setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
+                            setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
+                            setAlgo.Intensity = copyAlgSpeeds.Value.Intensity;
+                            setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -103,6 +103,7 @@ namespace NiceHashMiner.Forms {
             devicesListViewEnableControl1.ResetListItemColors();
 
             devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
+            devicesListViewEnableControl1.IsBenchmarkForm = true;
 
             // use this to track miner benchmark statuses
             _benchmarkMiners = new List<Miner>();
@@ -369,6 +370,7 @@ namespace NiceHashMiner.Forms {
             _benchmarkingTimer.Stop();
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
+
             BenchmarkStoppedGUISettings();
             // check if all ok
             if(_benchmarkFailedAlgoPerDev.Count == 0) {

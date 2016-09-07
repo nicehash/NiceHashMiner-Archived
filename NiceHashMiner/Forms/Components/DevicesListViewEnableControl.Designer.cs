@@ -23,8 +23,13 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.listViewDevices = new System.Windows.Forms.ListView();
             this.columnHeader0 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemEnable = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // listViewDevices
@@ -41,11 +46,33 @@
             this.listViewDevices.TabIndex = 5;
             this.listViewDevices.UseCompatibleStateImageBehavior = false;
             this.listViewDevices.View = System.Windows.Forms.View.Details;
+            this.listViewDevices.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewDevices_MouseClick);
             // 
             // columnHeader0
             // 
             this.columnHeader0.Text = "Enabled";
             this.columnHeader0.Width = 295;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemEnable,
+            this.toolStripMenuItem1});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 70);
+            // 
+            // toolStripMenuItemEnable
+            // 
+            this.toolStripMenuItemEnable.Name = "toolStripMenuItemEnable";
+            this.toolStripMenuItemEnable.Size = new System.Drawing.Size(196, 22);
+            this.toolStripMenuItemEnable.Text = "Enable Benchmark";
+            this.toolStripMenuItemEnable.Click += new System.EventHandler(this.toolStripMenuItemEnable_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
+            this.toolStripMenuItem1.Text = "Copy Benchmark From";
             // 
             // DevicesListViewEnableControl
             // 
@@ -54,6 +81,7 @@
             this.Controls.Add(this.listViewDevices);
             this.Name = "DevicesListViewEnableControl";
             this.Size = new System.Drawing.Size(374, 226);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -62,5 +90,8 @@
 
         private System.Windows.Forms.ListView listViewDevices;
         private System.Windows.Forms.ColumnHeader columnHeader0;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEnable;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
