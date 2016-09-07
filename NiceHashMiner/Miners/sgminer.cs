@@ -266,7 +266,7 @@ namespace NiceHashMiner.Miners
                     for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
                         if (!checkGPUStatus[i].Contains("Status=Alive")) {
                             Helpers.ConsolePrint(MinerDeviceName, "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
-                            _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                            _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
                             return null;
                         }
                     }
