@@ -15,8 +15,6 @@ namespace NiceHashMiner.Forms.Components {
         private const int ENABLED = 0;
         private const int DEVICE = 1;
 
-        private const int CM_ENABLE_DISABLE = 0;
-
         private class DefaultDevicesColorSeter : IListItemCheckColorSetter {
             private static Color ENABLED_COLOR = Color.White;
             private static Color DISABLED_COLOR = Color.DarkGray;
@@ -172,13 +170,13 @@ namespace NiceHashMiner.Forms.Components {
                     ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
                     if (G.IsEnabled) {
                         var disableItem = new ToolStripMenuItem();
-                        disableItem.Text = "Disable Device";
+                        disableItem.Text = International.GetText("DeviceListView_ContextMenu_DisableDevice");
                         disableItem.Checked = true;
                         disableItem.Click += toolStripMenuItemEnable_Click;
                         contextMenuStrip1.Items.Add(disableItem);
                     } else {
                         var disableItem = new ToolStripMenuItem();
-                        disableItem.Text = "Enable Device";
+                        disableItem.Text = International.GetText("DeviceListView_ContextMenu_EnableDevice");
                         disableItem.Checked = false;
                         disableItem.Click += toolStripMenuItemEnable_Click;
                         contextMenuStrip1.Items.Add(disableItem);
@@ -197,7 +195,7 @@ namespace NiceHashMiner.Forms.Components {
                                         copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
                                     }
                                 }
-                                copyBenchItem.Text = "Copy Benchmark From";
+                                copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopyBenchmark");
                                 contextMenuStrip1.Items.Add(copyBenchItem);
                             }
                         }

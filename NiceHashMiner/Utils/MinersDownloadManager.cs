@@ -59,7 +59,7 @@ namespace NiceHashMiner.Utils {
 
         // #2 download the file
         private void Downlaod() {
-            _minerUpdateIndicator.SetTitle("Downloading miners");
+            _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Downloading"));
             _stopwatch = new Stopwatch();
             using (_webClient = new WebClient()) {
                 _webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
@@ -120,7 +120,7 @@ namespace NiceHashMiner.Utils {
 
 
         private void UnzipStart() {
-            _minerUpdateIndicator.SetTitle("Setting up miners");
+            _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Settup"));
             Thread BenchmarkThread = new Thread(UnzipThreadRoutine);
             BenchmarkThread.Start();
         }
@@ -139,7 +139,7 @@ namespace NiceHashMiner.Utils {
                             Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
                             Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
                             Directory.CreateDirectory(entry.FullName);
-                            _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format("Unzipping {0} %", ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
+                            _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
                         }
                     }
                     // unzip files
@@ -148,7 +148,7 @@ namespace NiceHashMiner.Utils {
                             Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
                             Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
                             entry.ExtractToFile(entry.FullName);
-                            _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format("Unzipping {0} %", ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
+                            _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
                         }
                     }
                 }

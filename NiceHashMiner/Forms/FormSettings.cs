@@ -254,6 +254,20 @@ namespace NiceHashMiner.Forms {
 
             // Setup Tooltips CPU
             label_CPU0_ForceCPUExtension.Text = International.GetText("Form_Settings_General_CPU_ForceCPUExtension") + ":";
+            // new translations
+            tabControlGeneral.TabPages[0].Text = International.GetText("FormSettings_Tab_General");
+            tabControlGeneral.TabPages[1].Text = International.GetText("FormSettings_Tab_Advanced");
+            tabControlGeneral.TabPages[2].Text = International.GetText("FormSettings_Tab_Devices_Algorithms");
+            groupBox_Main.Text = International.GetText("FormSettings_Tab_General_Group_Main");
+            groupBox_Localization.Text = International.GetText("FormSettings_Tab_General_Group_Localization");
+            groupBox_Logging.Text = International.GetText("FormSettings_Tab_General_Group_Logging");
+            groupBox_Misc.Text = International.GetText("FormSettings_Tab_General_Group_Misc");
+            // advanced
+            groupBox_Miners.Text = International.GetText("FormSettings_Tab_Advanced_Group_Miners");
+            groupBoxBenchmarkTimeLimits.Text = International.GetText("FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits");
+
+            buttonAllProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability");
+            buttonSelectedProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability");
         }
 
         private void InitializeGeneralTabCallbacks() {

@@ -122,11 +122,11 @@ namespace NiceHashMiner
 
         public void FinishMsg(bool success) {
             this.Invoke((MethodInvoker)delegate {
-                if (success) {
-                    label_LoadingText.Text = "Init Finished!";
-                } else {
-                    label_LoadingText.Text = "Init Failed!";
-                }
+                //if (success) {
+                //    label_LoadingText.Text = "Init Finished!";
+                //} else {
+                //    label_LoadingText.Text = "Init Failed!";
+                //}
                 System.Threading.Thread.Sleep(1000);
                 Close();
             });

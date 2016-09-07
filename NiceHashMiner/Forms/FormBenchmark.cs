@@ -144,6 +144,9 @@ namespace NiceHashMiner.Forms {
             devicesListViewEnableControl1.InitLocale();
             benchmarkOptions1.InitLocale();
             algorithmsListView1.InitLocale();
+            groupBoxBenchmarkProgress.Text = International.GetText("FormBenchmark_Benchmark_GroupBoxStatus");
+            radioButton_SelectedUnbenchmarked.Text = International.GetText("FormBenchmark_Benchmark_All_Selected_Unbenchmarked");
+            radioButton_RE_SelectedUnbenchmarked.Text = International.GetText("FormBenchmark_Benchmark_All_Selected_ReUnbenchmarked");
         }
 
         private void StartStopBtn_Click(object sender, EventArgs e) {
@@ -359,7 +362,7 @@ namespace NiceHashMiner.Forms {
 
                 _currentMiner.BenchmarkStart(_currentDevice, _currentAlgorithm, time, this);
                 algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID,
-                    GetBenchmarWaitString(GetAlgorithmWaitString(showWaitTime)));
+                    getDotsWaitString());
             } else {
                 NextBenchmark();
             }
@@ -374,14 +377,15 @@ namespace NiceHashMiner.Forms {
             BenchmarkStoppedGUISettings();
             // check if all ok
             if(_benchmarkFailedAlgoPerDev.Count == 0) {
-                MessageBox.Show("All benchmakrs have been successful", "Benchmark finished report", MessageBoxButtons.OK);
+                MessageBox.Show(
+                    International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
+                    International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
+                    MessageBoxButtons.OK);
             } else {
-                string msg = "Not all benchmarks finished successfuly. Failed list: " + Environment.NewLine;
-                foreach (var failed in _benchmarkFailedAlgoPerDev) {
-                    msg += String.Format("{0} : {1}{2}", failed.Device, failed.Algorithm, Environment.NewLine);
-                }
-                msg += "Retry to rebenchmark unbenchmarked algos or Cancel to disable unbenchmarked.";
-                var result = MessageBox.Show(msg, "Benchmark finished report", MessageBoxButtons.RetryCancel);
+                var result = MessageBox.Show(
+                    International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
+                    International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
+                    MessageBoxButtons.RetryCancel);
 
                 if (result == System.Windows.Forms.DialogResult.Retry) {
                     StartButonClick();
@@ -434,25 +438,7 @@ namespace NiceHashMiner.Forms {
         #region Benchmark progress GUI stuff
 
         private void SetLabelBenchmarkSteps(int current, int max) {
-            labelBenchmarkSteps.Text = String.Format("Benchmark step ( {0} / {1} )", current, max);
-        }
-
-        private string GetBenchmarWaitString(string timeExtraString = "") {
-            return String.Format("Benchmarking {0}", timeExtraString);
-        }
-
-        private string GetAlgorithmWaitString(int timeInSeconds) {
-            int num;
-            string metric;
-            // expect seconds or minutes
-            if (timeInSeconds < 60) {
-                metric = "seconds";
-                num = timeInSeconds;
-            } else {
-                metric = "minutes";
-                num = timeInSeconds / 60;
-            }
-            return String.Format("(Please wait about {0} {1})", num.ToString(), metric);
+            labelBenchmarkSteps.Text = String.Format(International.GetText("FormBenchmark_Benchmark_Step"), current, max);
         }
 
         private void StepUpBenchmarkStepProgress() {
