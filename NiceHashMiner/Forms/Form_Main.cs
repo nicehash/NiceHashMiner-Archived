@@ -679,7 +679,7 @@ namespace NiceHashMiner
             if (!isBenchInit) {
                 DialogResult result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
                                                           International.GetText("Warning_with_Exclamation"),
-                                                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                                                          MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == System.Windows.Forms.DialogResult.Yes) {
                     SMACheck.Stop();
                     List<ComputeDevice> enabledDevices = new List<ComputeDevice>();
@@ -697,6 +697,18 @@ namespace NiceHashMiner
                     BenchmarkForm = null;
                     InitMainConfigGUIData();
                     SMACheck.Start();
+                } else if (result == System.Windows.Forms.DialogResult.No) {
+                    // check devices without benchmarks
+                    foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+                        bool Enabled = false;
+                        foreach (var algo in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                            if (algo.Value.BenchmarkSpeed > 0) {
+                                Enabled = true;
+                                break;
+                            }
+                        }
+                        cdev.ComputeDeviceEnabledOption.IsEnabled = Enabled;
+                    }
                 } else {
                     return;
                 }

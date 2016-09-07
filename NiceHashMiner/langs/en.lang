@@ -245,7 +245,7 @@
         "AlgorithmsListView_Ratio": "Ratio BTC/GH/Day",
         "AlgorithmsListView_Rate": "BTC/Day",
         "AlgorithmSettingsControl_IntensityWaringn": "Intensity values for selected algorithm must be in range from {0} to {1}",
-        "EnabledUnbenchmarkedAlgorithmsWarning": "There are unbenchmarked algorithms for selected enabled devices. Click Yes to benchmark and start mining",
+        "EnabledUnbenchmarkedAlgorithmsWarning": "There are unbenchmarked algorithms for selected enabled devices. Click Yes to benchmark and start mining, No to skip benchmark and continue mining, Cancel to abort",
         "AlgorithmSettingsControl_Label_Intensity": "Intensity",
         "AlgorithmSettingsControl_ToolTip_Intensity": "Sets Intensity for selected algorithm (values betweeen 8.0 - 25.0 or 31.0 depending on algorithm). Intensity 0 uses default intensity. ADVANCED USER FEATURE.",
         "AlgorithmsListView_GroupBox": "Selected Algorithm: {0}",
