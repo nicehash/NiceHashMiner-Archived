@@ -72,6 +72,9 @@ namespace NiceHashMiner
             label_NotProfitable.Visible = false;
 
             InitMainConfigGUIData();
+            // TODO
+            InitFlowPanelStart();
+            ClearRatesALL();
         }
 
         private void InitLocalization() {
@@ -379,7 +382,13 @@ namespace NiceHashMiner
                     ++hideIndex;
                 }
             }
+
+            var oldHeight = groupBox1.Size.Height;
             flowLayoutPanelRatesIndex = 0;
+            if (groupCount < 0) groupCount = 0;
+            groupBox1.Size = new Size(groupBox1.Size.Width, (groupCount + 1) * 40);
+            // set new height
+            this.Size = new Size(this.Size.Width, this.Size.Height - (oldHeight - groupBox1.Size.Height));
         }
 
         public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException) {
@@ -707,6 +716,7 @@ namespace NiceHashMiner
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             InitFlowPanelStart();
+            ClearRatesALL();
 
             var btcAdress = DemoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
             var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim(), btcAdress);

@@ -238,6 +238,7 @@ namespace NiceHashMiner.Forms.Components {
                             setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
                         }
                     }
+                    if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
                 }
             }
         }
