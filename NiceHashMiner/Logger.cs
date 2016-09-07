@@ -48,6 +48,7 @@ namespace NiceHashMiner
             appender.MaxSizeRollBackups = 1;
             appender.MaxFileSize = ConfigManager.Instance.GeneralConfig.LogMaxFileSize;
             appender.PreserveLogFileNameExtension = true;
+            appender.Encoding = System.Text.Encoding.Unicode;
 
             PatternLayout layout = new PatternLayout();
             layout.ConversionPattern = "[%date{yyyy-MM-dd HH:mm:ss}] [%level] %message%newline";
