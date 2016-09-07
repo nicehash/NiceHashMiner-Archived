@@ -132,7 +132,7 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         public void InitLocale() {
-            listViewDevices.Columns[ENABLED].Text = International.GetText("ListView_Enabled");
+            listViewDevices.Columns[ENABLED].Text = International.GetText("ListView_Device");//International.GetText("ListView_Enabled");
             //listViewDevices.Columns[DEVICE].Text = International.GetText("ListView_Device");
         }
 

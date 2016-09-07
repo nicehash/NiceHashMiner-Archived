@@ -35,7 +35,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SWITCH_TESTING</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -126,12 +126,6 @@
     </Compile>
     <Compile Include="Forms\Components\BenchmarkOptions.Designer.cs">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesListView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesListView.Designer.cs">
-      <DependentUpon>DevicesListView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Components\DevicesListViewEnableControl.cs">
       <SubType>UserControl</SubType>
@@ -248,9 +242,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\DevicesListView.resx">
-      <DependentUpon>DevicesListView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl.resx">
       <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
