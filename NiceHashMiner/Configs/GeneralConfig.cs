@@ -107,6 +107,8 @@ namespace NiceHashMiner.Configs {
         public double MinimumProfit { get; set; }
         public string hwid { get; set; }
 
+        public bool DownloadInit { get; set; }
+
 
         [JsonIgnore]
         public bool hwidOK { get; private set; }
@@ -160,6 +162,7 @@ namespace NiceHashMiner.Configs {
             ApiBindPortPoolStart = 4000;
             MinimumProfit = 0;
             EthminerDagGenerationType = DagGenerationType.SingleKeep;
+            DownloadInit = false;
         }
 
         public GeneralConfig(bool initDefaults = false) {
@@ -235,6 +238,8 @@ namespace NiceHashMiner.Configs {
             ApiBindPortPoolStart = _file.ApiBindPortPoolStart;
             MinimumProfit = _file.MinimumProfit;
 
+            DownloadInit = _file.DownloadInit;
+
             hwidLoadFromFile = true;
             hwidOK = this.hwid == _file.hwid;
         }
@@ -254,6 +259,13 @@ namespace NiceHashMiner.Configs {
             }
 
             LastDevicesSettup = ComputeDevice.AllAvaliableDevices;
+        }
+
+        public void Delete() {
+            try {
+                File.Delete(FilePath);
+            } catch {
+            }
         }
     }
 }

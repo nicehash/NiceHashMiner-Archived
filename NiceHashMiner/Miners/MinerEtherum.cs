@@ -140,6 +140,8 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override void _Stop(bool willswitch) {
+            // prevent logging non runing miner
+            if (!IsRunning) return;
             if (willswitch) {
                 // daggerhashimoto - we only "pause" mining
                 Helpers.ConsolePrint(MinerDeviceName, "Pausing ethminer..");

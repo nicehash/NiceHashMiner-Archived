@@ -14,7 +14,7 @@ namespace NiceHashMiner.Miners {
         // globals testing variables
         static int seconds = 60;
         public static int SMAMinerCheckInterval = seconds * 1000; // 30s
-        public static bool ForcePerCardMiners = true;
+        public static bool ForcePerCardMiners = false;
 
 
         private class SwitchTesting : BaseLazySingleton<SwitchTesting> {
@@ -31,29 +31,29 @@ namespace NiceHashMiner.Miners {
                 _curStepCheck = new Dictionary<string, int>();
                 _allAvaliableAlgoKeys = new Dictionary<string, List<AlgorithmType>>();
 
-                foreach (var cDev in ComputeDevice.UniqueAvaliableDevices) {
-                    _curStepCheck[cDev.Name] = 0;
-                    _allAvaliableAlgoKeys[cDev.Name] = new List<AlgorithmType>(cDev.DeviceBenchmarkConfig.AlgorithmSettings.Keys);
-                    //_allAvaliableAlgoKeys[cDev.Name] = new List<AlgorithmType>(new []{AlgorithmType.DaggerHashimoto, AlgorithmType.CryptoNight, AlgorithmType.Lyra2RE, AlgorithmType.Lyra2REv2});
+                foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                    _curStepCheck[cDev.UUID] = 0;
+                    //_allAvaliableAlgoKeys[cDev.Name] = new List<AlgorithmType>(cDev.DeviceBenchmarkConfig.AlgorithmSettings.Keys);
+                    _allAvaliableAlgoKeys[cDev.UUID] = new List<AlgorithmType>(new[] { AlgorithmType.DaggerHashimoto, AlgorithmType.Lyra2RE });
                 }
             }
 
             public void SetNext(ref PerDeviceProifitDictionary devProfits, List<ComputeDevice> enabledDevices) {
 
                 foreach (var cDev in enabledDevices) {
-                    var devName = cDev.Name;
-                    var curStepCheckIndex = _curStepCheck[devName];
-                    var _mostProfitKey = _allAvaliableAlgoKeys[devName][curStepCheckIndex];
+                    var devUUID = cDev.UUID;
+                    var curStepCheckIndex = _curStepCheck[devUUID];
+                    var _mostProfitKey = _allAvaliableAlgoKeys[devUUID][curStepCheckIndex];
                     var mostProfitKeyName = AlgorithmNiceHashNames.GetName(_mostProfitKey);
                     Helpers.ConsolePrint(TAG, String.Format("Setting most MostProfitKey to {0}", mostProfitKeyName));
 
                     // set new most profit
-                    Helpers.ConsolePrint(TAG, String.Format("Setting device {0} to {1}", devName, mostProfitKeyName));
-                    devProfits[devName][_mostProfitKey] = MOST_PROFIT_REPLACE_VAL;
+                    Helpers.ConsolePrint(TAG, String.Format("Setting device {0} to {1}", devUUID, mostProfitKeyName));
+                    devProfits[devUUID][_mostProfitKey] = MOST_PROFIT_REPLACE_VAL;
 
                     ++curStepCheckIndex;
-                    if (curStepCheckIndex >= _allAvaliableAlgoKeys[devName].Count) curStepCheckIndex = 0;
-                    _curStepCheck[devName] = curStepCheckIndex;
+                    if (curStepCheckIndex >= _allAvaliableAlgoKeys[devUUID].Count) curStepCheckIndex = 0;
+                    _curStepCheck[devUUID] = curStepCheckIndex;
                 }
 
                 

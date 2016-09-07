@@ -270,10 +270,23 @@ namespace NiceHashMiner
             LoadingScreen.FinishLoad();
 
             // check if download needed
-            if (!MinersDownloadManager.Instance.IsMinersBinsInit()) {
+            if (!MinersDownloadManager.Instance.IsMinersBinsInit() && !ConfigManager.Instance.GeneralConfig.DownloadInit) {
                 _downloadUnzipForm = new Form_Loading();
                 SetChildFormCenter(_downloadUnzipForm);
                 _downloadUnzipForm.ShowDialog();
+            }
+            // check if files are mising
+            if (!MinersDownloadManager.Instance.IsMinersBinsInit()) {
+                var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                    International.GetText("Warning_with_Exclamation"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes) {
+                    ConfigManager.Instance.GeneralConfig.Delete();
+                    Process PHandle = new Process();
+                    PHandle.StartInfo.FileName = Application.ExecutablePath;
+                    PHandle.Start();
+                    Close();
+                }
             }
             // TODO no bots please
             if (ConfigManager.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager.Instance.GeneralConfig.hwidOK) {

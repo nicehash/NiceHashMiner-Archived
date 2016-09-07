@@ -59,8 +59,8 @@
             this.labelDemoMode = new System.Windows.Forms.Label();
             this.flowLayoutPanelRates = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.label_NotProfitable = new System.Windows.Forms.Label();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -129,7 +129,7 @@
             this.toolStripStatusLabelBalanceDollarText,
             this.toolStripStatusLabelBalanceDollarValue,
             this.toolStripStatusLabel10});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 345);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(565, 25);
             this.statusStrip1.TabIndex = 8;
@@ -323,7 +323,7 @@
             this.flowLayoutPanelRates.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelRates.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelRates.Name = "flowLayoutPanelRates";
-            this.flowLayoutPanelRates.Size = new System.Drawing.Size(536, 204);
+            this.flowLayoutPanelRates.Size = new System.Drawing.Size(536, 123);
             this.flowLayoutPanelRates.TabIndex = 107;
             this.flowLayoutPanelRates.WrapContents = false;
             // 
@@ -333,10 +333,21 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
             this.groupBox1.Location = new System.Drawing.Point(11, 202);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(542, 223);
+            this.groupBox1.Size = new System.Drawing.Size(542, 142);
             this.groupBox1.TabIndex = 108;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Group/Device Rates:";
+            // 
+            // label_NotProfitable
+            // 
+            this.label_NotProfitable.AutoSize = true;
+            this.label_NotProfitable.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label_NotProfitable.ForeColor = System.Drawing.Color.Red;
+            this.label_NotProfitable.Location = new System.Drawing.Point(6, 0);
+            this.label_NotProfitable.Name = "label_NotProfitable";
+            this.label_NotProfitable.Size = new System.Drawing.Size(366, 24);
+            this.label_NotProfitable.TabIndex = 110;
+            this.label_NotProfitable.Text = "CURRENTLY MINING NOT PROFITABLE.";
             // 
             // devicesListViewEnableControl1
             // 
@@ -350,22 +361,11 @@
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 105);
             this.devicesListViewEnableControl1.TabIndex = 109;
             // 
-            // label_NotProfitable
-            // 
-            this.label_NotProfitable.AutoSize = true;
-            this.label_NotProfitable.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label_NotProfitable.ForeColor = System.Drawing.Color.Red;
-            this.label_NotProfitable.Location = new System.Drawing.Point(6, 0);
-            this.label_NotProfitable.Name = "label_NotProfitable";
-            this.label_NotProfitable.Size = new System.Drawing.Size(366, 24);
-            this.label_NotProfitable.TabIndex = 110;
-            this.label_NotProfitable.Text = "CURRENTLY MINING NOT PROFITABLE.";
-            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 453);
+            this.ClientSize = new System.Drawing.Size(565, 370);
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);

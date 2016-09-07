@@ -11,6 +11,7 @@ using System.IO.Compression;
 using System.Windows.Forms;
 using NiceHashMiner.Interfaces;
 using System.Threading;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Utils {
     public partial class MinersDownloadManager : BaseLazySingleton<MinersDownloadManager> {
@@ -152,6 +153,8 @@ namespace NiceHashMiner.Utils {
                     }
                 }
             }
+            ConfigManager.Instance.GeneralConfig.DownloadInit = true;
+            ConfigManager.Instance.GeneralConfig.Commit();
             _minerUpdateIndicator.FinishMsg(IsMinersBinsInit());
             // remove bins zip
             try {

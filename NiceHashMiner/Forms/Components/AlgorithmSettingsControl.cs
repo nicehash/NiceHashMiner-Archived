@@ -34,7 +34,8 @@ namespace NiceHashMiner.Forms.Components {
 
         public void Deselect() {
             _selected = false;
-            groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm: NONE";
+            groupBoxSelectedAlgorithmSettings.Text = String.Format(International.GetText("AlgorithmsListView_GroupBox"),
+                International.GetText("AlgorithmsListView_GroupBox_NONE"));
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
             fieldIntensity.EntryText = "";
@@ -47,9 +48,8 @@ namespace NiceHashMiner.Forms.Components {
                 International.GetText("Form_Settings_General_CPU_LessThreads") + ":",
                 International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
             fieldIntensity.InitLocale(toolTip1,
-                //International.GetText("Form_Settings_General_CPU_LessThreads") + ":",
-                //International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
-                "TODO_1", "TODO_2");
+                International.GetText("AlgorithmSettingsControl_Label_Intensity") + ":",
+                International.GetText("AlgorithmSettingsControl_ToolTip_Intensity"));
             fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
                 International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
                 International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
@@ -77,7 +77,8 @@ namespace NiceHashMiner.Forms.Components {
                 _currentlySelectedLvi = lvi;
                 this.Enabled = lvi.Checked;
 
-                groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm: " + algorithm.NiceHashName;
+                groupBoxSelectedAlgorithmSettings.Text = String.Format(International.GetText("AlgorithmsListView_GroupBox"),
+                algorithm.NiceHashName); ;
 
                 
                 // no intensity for cpu miners and ccminer_cryptonight

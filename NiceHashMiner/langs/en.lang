@@ -245,6 +245,13 @@
         "AlgorithmsListView_Ratio": "Ratio BTC/GH/Day",
         "AlgorithmsListView_Rate": "BTC/Day",
         "AlgorithmSettingsControl_IntensityWaringn": "Intensity values for selected algorithm must be in range from {0} to {1}",
-        "EnabledUnbenchmarkedAlgorithmsWarning" :  "There are unbenchmarked algorithms for selected enabled devices. Click Yes to benchmark and start mining",
+        "EnabledUnbenchmarkedAlgorithmsWarning": "There are unbenchmarked algorithms for selected enabled devices. Click Yes to benchmark and start mining",
+        "AlgorithmSettingsControl_Label_Intensity": "Intensity",
+        "AlgorithmSettingsControl_ToolTip_Intensity": "Sets Intensity for selected algorithm (values betweeen 8.0 - 25.0 or 31.0 depending on algorithm). Intensity 0 uses default intensity. ADVANCED USER FEATURE.",
+        "AlgorithmsListView_GroupBox": "Selected Algorithm: {0}",
+        "AlgorithmsListView_GroupBox_NONE": "NONE",
+        "BenchmarkOptions_Benchmark_Type": "Benchmark Type:",
+        "Form_Main_MiningDevices": "Mining Devices {0}:",
+        "Form_Main_bins_folder_files_missing" : "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Click Yes to reinitialize NiceHash Miner to try to fix this issue."
     }
 }
