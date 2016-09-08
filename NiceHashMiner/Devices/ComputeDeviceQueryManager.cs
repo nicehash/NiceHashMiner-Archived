@@ -420,6 +420,10 @@ namespace NiceHashMiner.Devices
                                                             var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
                                                             var uuid = udid.Substring(0, pciVen_id_strSize);
                                                             if (!_amdDeviceUUID.Contains(uuid)) {
+                                                                Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}\tNAME:{1}\tUUID:{2}"), 
+                                                                    OSAdapterInfoData.ADLAdapterInfo[i].BusNumber,
+                                                                    devName,
+                                                                    uuid);
                                                                 _amdDeviceUUID.Add(uuid);
                                                                 //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                 _amdDeviceName.Add(devName);
@@ -453,22 +457,28 @@ namespace NiceHashMiner.Devices
                             } else {
                                 Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS DIFFERENT/BAD");
                             }
+                            StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.AppendLine("");
+                            stringBuilder.AppendLine("QueryAMD devices: ");
                             for (int i_id = 0; i_id < amdGpus.Count; ++i_id) {
                                 var deviceName = _amdDeviceName[i_id];
                                 var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName]);
                                 newAmdDev.DeviceName = deviceName;
                                 newAmdDev.UUID = _amdDeviceUUID[i_id];
-                                string skipOrAdd = false ? "SKIPED" : "ADDED";
+                                bool isDisabledGroup = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
+                                string skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
+                                string isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
                                 string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
-                                string logMessage = String.Format("AMD OpenCL {0} device: {1}",
-                                    skipOrAdd,
-                                    String.Format("ID: {0}, NAME: {1}, UUID: {2}, MEMORY: {3}, ETHEREUM: {4}",
-                                    newAmdDev.DeviceID.ToString(), newAmdDev.DeviceName, newAmdDev.UUID, 
-                                    newAmdDev.DeviceGlobalMemory.ToString(), etherumCapableStr)
-                                    );
+
+                                stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
+                                stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
+                                stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
+                                stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
+                                stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
+                                stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
                                 new ComputeDevice(newAmdDev, true, true);
-                                Helpers.ConsolePrint(TAG, logMessage);
                             }
+                            Helpers.ConsolePrint(TAG, stringBuilder.ToString());
                         }
                     }
                 }
@@ -676,24 +686,17 @@ namespace NiceHashMiner.Devices
                 stringBuilder.AppendLine("");
                 stringBuilder.AppendLine("OpenCLDeviceDetection found devices success:");
                 foreach (var kvp in OpenCLJSONData.OCLPlatformDevices) {
-                    stringBuilder.AppendLine(String.Format("\tFound devices for platform: {0}", RemoveNullTerminator(kvp.Key)));
+                    stringBuilder.AppendLine(String.Format("\tFound devices for platform: {0}", kvp.Key));
                     foreach (var oclDev in kvp.Value) {
                         stringBuilder.AppendLine("\t\tDevice:");
                         stringBuilder.AppendLine(String.Format("\t\t\tDevice ID {0}", oclDev.DeviceID));
-                        stringBuilder.AppendLine(String.Format("\t\t\tDevice NAME {0}", RemoveNullTerminator(oclDev._CL_DEVICE_NAME)));
-                        stringBuilder.AppendLine(String.Format("\t\t\tDevice TYPE {0}", RemoveNullTerminator(oclDev._CL_DEVICE_TYPE)));
+                        stringBuilder.AppendLine(String.Format("\t\t\tDevice NAME {0}", oclDev._CL_DEVICE_NAME));
+                        stringBuilder.AppendLine(String.Format("\t\t\tDevice TYPE {0}", oclDev._CL_DEVICE_TYPE));
                     }
                 }
                 Helpers.ConsolePrint(TAG, stringBuilder.ToString());
             }
         }
-
-        private string RemoveNullTerminator(string inOut) {
-            while (inOut.Contains("\0")) {
-                inOut = inOut.Substring(0, inOut.Length - 1);
-            }
-            return inOut;
-        } 
 
         #endregion OpenCL Query
 

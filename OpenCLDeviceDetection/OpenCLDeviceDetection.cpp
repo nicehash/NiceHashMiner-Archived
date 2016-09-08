@@ -42,6 +42,10 @@ vector<Device> OpenCLDeviceDetection::getDevices(vector<Platform> const& _platfo
 	return devices;
 }
 
+string OpenCLDeviceDetection::StringnNullTerminatorFix(const string& str) {
+	return string(str.c_str(), strlen(str.c_str()));
+}
+
 bool OpenCLDeviceDetection::QueryDevices() {
 	try {
 		// get platforms
@@ -52,14 +56,14 @@ bool OpenCLDeviceDetection::QueryDevices() {
 		}
 		else {
 			for (auto i_pId = 0u; i_pId < platforms.size(); ++i_pId) {
-				string platformName = platforms[i_pId].getInfo<CL_PLATFORM_NAME>();
+				string platformName = StringnNullTerminatorFix(platforms[i_pId].getInfo<CL_PLATFORM_NAME>());
 				_platformNumbers.emplace(make_pair(platformName, i_pId));
 				vector<OpenCLDevice> platformDevs;
 				auto clDevs = getDevices(platforms, i_pId);
 				for (auto i_devId = 0u; i_devId < clDevs.size(); ++i_devId) {
 					OpenCLDevice curDevice;
 					curDevice.DeviceID = i_devId;
-					curDevice._CL_DEVICE_NAME = clDevs[i_devId].getInfo<CL_DEVICE_NAME>();
+					curDevice._CL_DEVICE_NAME = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_NAME>());
 					switch (clDevs[i_devId].getInfo<CL_DEVICE_TYPE>()) {
 					case CL_DEVICE_TYPE_CPU:
 						curDevice._CL_DEVICE_TYPE = "CPU";
@@ -75,9 +79,9 @@ bool OpenCLDeviceDetection::QueryDevices() {
 						break;
 					}
 					curDevice._CL_DEVICE_GLOBAL_MEM_SIZE = clDevs[i_devId].getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>();
-					curDevice._CL_DEVICE_VENDOR = clDevs[i_devId].getInfo<CL_DEVICE_VENDOR>();
-					curDevice._CL_DEVICE_VERSION = clDevs[i_devId].getInfo<CL_DEVICE_VERSION>();
-					curDevice._CL_DRIVER_VERSION = clDevs[i_devId].getInfo<CL_DRIVER_VERSION>();
+					curDevice._CL_DEVICE_VENDOR = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_VENDOR>());
+					curDevice._CL_DEVICE_VERSION = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_VERSION>());
+					curDevice._CL_DRIVER_VERSION = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DRIVER_VERSION>());
 					platformDevs.push_back(curDevice);
 				}
 				_devicesPerPlatform.emplace(make_pair(platformName, platformDevs));

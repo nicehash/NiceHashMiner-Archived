@@ -34,4 +34,6 @@ private:
 
 	std::map<std::string, std::vector<OpenCLDevice>> _devicesPerPlatform;
 	std::map<std::string, int> _platformNumbers;
+
+	static std::string StringnNullTerminatorFix(const std::string& str);
 };
