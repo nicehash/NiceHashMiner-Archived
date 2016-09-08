@@ -112,15 +112,16 @@ namespace NiceHashMiner.Miners {
 
                 var MaxProfitKey = algorithm.NiceHashID;
 
+                // TODO check wait
+                // wait 0.5 seconds before going on
+                System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+
                 m.Start(algorithm,
                     "stratum+tcp://"
                     + Globals.NiceHashData[MaxProfitKey].name
                     + "." + miningLocation
                     + ".nicehash.com:"
                     + Globals.NiceHashData[MaxProfitKey].port, worker);
-
-                // wait 0.5 seconds before going on
-                System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
             }
 
         }

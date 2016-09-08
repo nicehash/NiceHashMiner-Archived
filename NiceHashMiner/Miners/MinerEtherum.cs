@@ -77,14 +77,14 @@ namespace NiceHashMiner.Miners {
             if (ProcessHandle == null) {
                 CurrentMiningAlgorithm = miningAlgorithm;
                 if (miningAlgorithm == null && miningAlgorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
-                    Helpers.ConsolePrint("MinerEtherum", "Algorithm is null or not DaggerHashimoto");
+                    Helpers.ConsolePrint(MinerTAG(), "Algorithm is null or not DaggerHashimoto");
                     return;
                 }
 
                 LastCommandLine = GetStartCommandStringPart(miningAlgorithm, url, username) + GetDevicesCommandString();
                 ProcessHandle = _Start();
             } else {
-                Helpers.ConsolePrint(MinerTAG(), "Resuming ethminer..");
+                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Resuming ethminer..");
                 StartMining();
             }
         }
@@ -130,7 +130,7 @@ namespace NiceHashMiner.Miners {
             }
             // else if (GetSpeedStatus.EXCEPTION == getSpeedStatus) {
             // we don't restart unles not responding for long time check cooldown logic in Miner
-            //Helpers.ConsolePrint(MinerDeviceName, "ethminer is not running.. restarting..");
+            //Helpers.ConsolePrint(MinerTAG(), "ethminer is not running.. restarting..");
             //IsRunning = false;
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             return null;
@@ -146,12 +146,12 @@ namespace NiceHashMiner.Miners {
             if (!IsRunning) return;
             if (willswitch) {
                 // daggerhashimoto - we only "pause" mining
-                Helpers.ConsolePrint(MinerTAG(), "Pausing ethminer..");
+                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Pausing ethminer..");
                 StopMining();
                 return;
             }
 
-            Helpers.ConsolePrint(MinerTAG(), "Shutting down miner");
+            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             ChangeToNextAvaliablePort();
             if (!willswitch && ProcessHandle != null) {
                 try {
@@ -257,7 +257,7 @@ namespace NiceHashMiner.Miners {
                         else speed = 0;
                         return GetSpeedStatus.GOT;
                     } catch {
-                        Helpers.ConsolePrint(MinerTAG(), "Could not read data from API bind port");
+                        Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from API bind port");
                         return GetSpeedStatus.EXCEPTION;
                     }
                 } else

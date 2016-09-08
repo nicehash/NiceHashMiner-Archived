@@ -11,17 +11,30 @@ namespace NiceHashMiner.Miners {
     public class MinerEtherumCUDA : MinerEtherum {
 
         // reference to all MinerEtherumCUDA make sure to clear this after miner Stop
-        // we make sure only ONE instance of 
-        public static List<MinerEtherumCUDA> MinerEtherumCUDAList = new List<MinerEtherumCUDA>();
+        // we make sure only ONE instance of MinerEtherumCUDA is running
+        private static List<MinerEtherumCUDA> MinerEtherumCUDAList = new List<MinerEtherumCUDA>();
 
         public MinerEtherumCUDA()
             : base(DeviceType.NVIDIA, "MinerEtherumCUDA", "NVIDIA") {
             // TODO add to static miners
+                MinerEtherumCUDAList.Add(this);
         }
 
         ~MinerEtherumCUDA() {
             // remove from list
             MinerEtherumCUDAList.Remove(this);
+        }
+
+        public override void Start(Algorithm miningAlgorithm, string url, string username) {
+            Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumCUDA, checking existing MinerEtherumCUDA to stop");
+            foreach (var ethminer in MinerEtherumCUDAList) {
+                if (ethminer.MINER_ID != MINER_ID && ethminer.IsRunning) {
+                    Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}",ethminer.MinerTAG(), ethminer.ProcessTag()));
+                    ethminer.End();
+                    System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+                } 
+            }
+            base.Start(miningAlgorithm, url, username);
         }
 
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {

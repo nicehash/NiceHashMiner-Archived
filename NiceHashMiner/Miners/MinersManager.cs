@@ -79,9 +79,6 @@ namespace NiceHashMiner.Miners {
 
         readonly string DOUBLE_FORMAT = "F12";
 
-        static MinerEtherumCUDA _MinerEtherumCUDA = null;
-        static MinerEtherumOCL _MinerEtherumOCL = null;
-
         protected MinersManager() {
             TAG = this.GetType().Name;
             _preventSleepTimer = new Timer();
@@ -115,8 +112,7 @@ namespace NiceHashMiner.Miners {
             if (_mainFormRatesComunication != null) {
                 _mainFormRatesComunication.ClearRatesALL();
             }
-            _MinerEtherumCUDA = null;
-            _MinerEtherumOCL = null;
+
             // restroe/enable sleep
             _preventSleepTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
@@ -131,8 +127,6 @@ namespace NiceHashMiner.Miners {
             if (_mainFormRatesComunication != null) {
                 _mainFormRatesComunication.ClearRates(-1);
             }
-            _MinerEtherumCUDA = null;
-            _MinerEtherumOCL = null;
         }
 
         public string GetActiveMinersGroup() {
@@ -162,27 +156,9 @@ namespace NiceHashMiner.Miners {
         public static Miner CreateMiner(DeviceGroupType deviceGroupType, AlgorithmType algorithmType) {
             if (AlgorithmType.DaggerHashimoto == algorithmType) {
                 if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
-                    // make sure only one instance is running
-                    if (_MinerEtherumOCL != null) {
-                        _MinerEtherumOCL.End();
-                        _MinerEtherumOCL.ClearCDevs();
-                        Helpers.ConsolePrint(Instance.TAG, String.Format("Reseting {0} instance, with new devices", "MinerEtherumOCL"));
-                    } else {
-                        _MinerEtherumOCL = new MinerEtherumOCL();
-                        Helpers.ConsolePrint(Instance.TAG, String.Format("CreateMiner Creating {0} instance", "MinerEtherumOCL"));
-                    }
-                    return _MinerEtherumOCL;
+                    return new MinerEtherumOCL();
                 } else {
-                    // make sure only one instance is running
-                    if (_MinerEtherumCUDA != null) {
-                        _MinerEtherumCUDA.End();
-                        _MinerEtherumCUDA.ClearCDevs();
-                        Helpers.ConsolePrint(Instance.TAG, String.Format("Reseting {0} instance, with new devices", "MinerEtherumCUDA"));
-                    } else {
-                        _MinerEtherumCUDA = new MinerEtherumCUDA();
-                        Helpers.ConsolePrint(Instance.TAG, String.Format("CreateMiner Creating {0} instance", "MinerEtherumCUDA"));
-                    }
-                    return _MinerEtherumCUDA;
+                    return new MinerEtherumCUDA();
                 }
             } else {
                 switch (deviceGroupType) {

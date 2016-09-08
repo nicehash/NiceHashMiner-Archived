@@ -84,7 +84,7 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine += GetDevicesCommandString();
 
-            // TODO shouldn't this be true?
+            // TODO IMPORTANT this should be in params since no checkbox anymore
             if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
                 LastCommandLine += TemperatureParam;
 
@@ -217,7 +217,7 @@ namespace NiceHashMiner.Miners
             }
             if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTimeInSeconds + 2) {
                 _benchmarkTimer.Stop();
-                KillSGMiner();
+                KillAllUsedMinerProcesses();
                 BenchmarkSignalHanged = true;
             }
             if (!BenchmarkSignalFinnished) {
@@ -240,63 +240,48 @@ namespace NiceHashMiner.Miners
             }
 
             try {
-                string[] resps;
+                // Checks if all the GPUs are Alive first
+                string resp2 = GetAPIData(APIPort, "devs");
+                if (resp2 == null) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                    return null;
+                }
 
-                // TODO this is all wrong here not AMD
-                if (DeviceType != DeviceType.AMD /*!MinerDeviceName.Equals("AMD_OpenCL")*/) {
-                    resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < resps.Length; i++) {
-                        string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (optval.Length != 2) continue;
-                        if (optval[0] == "ALGO")
-                            aname = optval[1];
-                        else if (optval[0] == "KHS")
-                            ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                string[] checkGPUStatus = resp2.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
+                    if (!checkGPUStatus[i].Contains("Status=Alive")) {
+                        Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
+                        _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
+                        return null;
                     }
-                } else {
-                    // Checks if all the GPUs are Alive first
-                    string resp2 = GetAPIData(APIPort, "devs");
-                    if (resp2 == null) {
+                }
+
+                string[] resps = resp.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (resps[1].Contains("SUMMARY")) {
+                    string[] data = resps[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    // Get miner's current total speed
+                    string[] speed = data[4].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                    // Get miner's current total MH
+                    double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1], new CultureInfo("en-US"));
+
+                    ad.Speed = Double.Parse(speed[1]) * 1000;
+
+                    aname = CurrentMiningAlgorithm.MinerName;
+
+
+                    if (total_mh <= PreviousTotalMH) {
+                        Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " SGMiner might be stuck as no new hashes are being produced");
+                        Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
                         _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                         return null;
                     }
 
-                    string[] checkGPUStatus = resp2.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
-                        if (!checkGPUStatus[i].Contains("Status=Alive")) {
-                            Helpers.ConsolePrint(MinerTAG(), "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
-                            _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
-                            return null;
-                        }
-                    }
-
-                    resps = resp.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (resps[1].Contains("SUMMARY")) {
-                        string[] data = resps[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        // Get miner's current total speed
-                        string[] speed = data[4].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                        // Get miner's current total MH
-                        double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1], new CultureInfo("en-US"));
-
-                        ad.Speed = Double.Parse(speed[1]) * 1000;
-
-                        aname = CurrentMiningAlgorithm.MinerName;
-
-
-                        if (total_mh <= PreviousTotalMH) {
-                            Helpers.ConsolePrint(MinerTAG(), "SGMiner might be stuck as no new hashes are being produced");
-                            Helpers.ConsolePrint(MinerTAG(), "Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
-                            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-                            return null;
-                        }
-
-                        PreviousTotalMH = total_mh;
-                    } else {
-                        ad.Speed = 0;
-                    }
+                    PreviousTotalMH = total_mh;
+                } else {
+                    ad.Speed = 0;
                 }
             } catch {
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
