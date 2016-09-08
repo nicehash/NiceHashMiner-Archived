@@ -52,7 +52,7 @@ namespace NiceHashMiner.Miners {
 
             private void StopMiner(Miner miner) {
                 if (miner.IsRunning) {
-                    miner.Stop(true);
+                    miner.Stop(MinerStopType.SWITCH);
                     // wait 0.5 seconds before going on
                     System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                 }
@@ -105,7 +105,7 @@ namespace NiceHashMiner.Miners {
                 }
 
                 if (m.CurrentAlgorithmType != AlgorithmType.NONE && m.CurrentAlgorithmType != AlgorithmType.INVALID) {
-                    m.Stop(true);
+                    m.Stop(MinerStopType.SWITCH);
                     // wait 0.5 seconds before going on
                     System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                 }

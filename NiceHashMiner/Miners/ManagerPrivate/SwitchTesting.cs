@@ -14,7 +14,7 @@ namespace NiceHashMiner.Miners {
         // globals testing variables
         static int seconds = 60;
         public static int SMAMinerCheckInterval = seconds * 1000; // 30s
-        public static bool ForcePerCardMiners = false;
+        public static bool ForcePerCardMiners = true;
 
 
         private class SwitchTesting : BaseLazySingleton<SwitchTesting> {

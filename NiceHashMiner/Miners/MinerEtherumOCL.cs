@@ -34,7 +34,7 @@ namespace NiceHashMiner.Miners {
             foreach (var ethminer in MinerEtherumOCLList) {
                 if (ethminer.MINER_ID != MINER_ID) {
                     Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}", ethminer.MinerTAG(), ethminer.ProcessTag()));
-                    ethminer.ForceEnd();
+                    ethminer.End();
                     System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                 }
             }

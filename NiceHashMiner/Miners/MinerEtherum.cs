@@ -142,36 +142,18 @@ namespace NiceHashMiner.Miners {
             return base._Start();
         }
 
-        protected override void _Stop(bool willswitch) {
+        protected override void _Stop(MinerStopType willswitch) {
             // prevent logging non runing miner
-            if (!IsRunning) return;
-            if (willswitch) {
+            if (IsRunning && willswitch == MinerStopType.SWITCH) {
                 // daggerhashimoto - we only "pause" mining
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Pausing ethminer..");
                 StopMining();
                 return;
+            } else if(IsRunning) {
+                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }
-
-            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
-            ChangeToNextAvaliablePort();
-            if (!willswitch && ProcessHandle != null) {
-                try {
-                    ProcessHandle.Kill();
-                } catch {
-                } finally {
-                    ProcessHandle = null;
-                }
-            }
-        }
-
-        protected void ForceEnd() {
-            if (IsRunning) {
-                StopMining();
-            }
-            IsRunning = false;
-            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " ForceEnd Shutting by other instance");
-            ChangeToNextAvaliablePort();
-            if (ProcessHandle != null) {
+            if (willswitch != MinerStopType.FORCE_END) ChangeToNextAvaliablePort();
+            if ((willswitch == MinerStopType.FORCE_END || willswitch == MinerStopType.END) && ProcessHandle != null) {
                 try {
                     ProcessHandle.Kill();
                 } catch {

@@ -104,6 +104,7 @@
     <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerAPIReadStatus.cs" />
+    <Compile Include="Enums\MinerStopType.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>

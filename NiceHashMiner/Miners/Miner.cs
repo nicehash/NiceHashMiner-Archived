@@ -238,8 +238,8 @@ namespace NiceHashMiner
         abstract public void Start(Algorithm miningAlgorithm, string url, string username);
 
 
-        abstract protected void _Stop(bool willswitch);
-        virtual public void Stop(bool willswitch, bool needsRestart = false)
+        abstract protected void _Stop(MinerStopType willswitch);
+        virtual public void Stop(MinerStopType willswitch = MinerStopType.SWITCH, bool needsRestart = false)
         {
             if (!needsRestart) {
                 // TODO stop here timer
@@ -255,7 +255,7 @@ namespace NiceHashMiner
         }
 
         public void End() {
-            Stop(false);
+            Stop(MinerStopType.FORCE_END);
             CurrentAlgorithmType = AlgorithmType.NONE;
             CurrentRate = 0;
         }
@@ -277,10 +277,11 @@ namespace NiceHashMiner
             }
         }
 
-        protected void Stop_cpu_ccminer_sgminer(bool willswitch) {
-            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
-            ChangeToNextAvaliablePort();
-
+        protected void Stop_cpu_ccminer_sgminer(MinerStopType willswitch) {
+            if (IsRunning) {
+                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
+            }
+            if (willswitch != MinerStopType.FORCE_END) ChangeToNextAvaliablePort();
             if (ProcessHandle != null) {
                 try { ProcessHandle.Kill(); } catch { }
                 ProcessHandle.Close();
@@ -586,9 +587,10 @@ namespace NiceHashMiner
 
 
         virtual protected void Miner_Exited() {
-            bool willswitch = _isEthMinerExit ? false : true;
-            Stop(willswitch, true);
-            //Stop(true);
+            //bool willswitch = _isEthMinerExit ? false : true;
+            //Stop(willswitch, true);
+
+            Stop(MinerStopType.END, true);
         }
         //virtual protected void ethMiner_Exited()
         //{
@@ -611,7 +613,7 @@ namespace NiceHashMiner
 
         private void Restart() {
             Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Restarting miner..");
-            Stop(false); // stop miner first
+            Stop(MinerStopType.END); // stop miner first
             System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
             ProcessHandle = _Start(); // start with old command line
         }

@@ -129,7 +129,7 @@ namespace NiceHashMiner.Miners {
             return GetSummaryCPU_CCMINER();
         }
 
-        protected override void _Stop(bool willswitch) {
+        protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer(willswitch);
         }
 

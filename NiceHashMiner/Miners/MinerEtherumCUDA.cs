@@ -31,7 +31,7 @@ namespace NiceHashMiner.Miners {
                 // TODO IMPORTANT ethminer.IsRunning will not suffice here, make a new STATE ENDED
                 if (ethminer.MINER_ID != MINER_ID) {
                     Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}",ethminer.MinerTAG(), ethminer.ProcessTag()));
-                    ethminer.ForceEnd();
+                    ethminer.End();
                     System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                 } 
             }
