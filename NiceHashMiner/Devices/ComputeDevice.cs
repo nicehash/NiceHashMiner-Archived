@@ -248,6 +248,15 @@ namespace NiceHashMiner.Devices
             return "GEN-" + hash.ToString();
         }
 
+        public static string GetNameForUUID(string uuid) {
+            foreach (var dev in AllAvaliableDevices) {
+                if (uuid == dev.UUID) {
+                    return dev.Name;
+                }
+            }
+            return "NONE";
+        }
+
         public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUUID(string uuid) {
             List<ComputeDevice> sameTypes = new List<ComputeDevice>();
             var compareDev = GetDeviceWithUUID(uuid);

@@ -33,7 +33,7 @@ namespace NiceHashMiner.CurrencyConverter
                 return amount;
             }
 
-            Helpers.ConsolePrint("CurrencyConverter", "Current Currency: " + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
+            //Helpers.ConsolePrint("CurrencyConverter", "Current Currency: " + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
             double usdExchangeRate = 1.0;
             if (LastResponse.rates.TryGetValue(ConfigManager.Instance.GeneralConfig.DisplayCurrency, out usdExchangeRate))
                 return amount * usdExchangeRate;

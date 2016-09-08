@@ -322,10 +322,10 @@ namespace NiceHashMiner.Miners {
             stringBuilderFull.AppendLine("Current device profits:");
 
             foreach (var nameBenchKvp in speedDict) {
-                var deviceName = nameBenchKvp.Key;
+                var deviceUUID = nameBenchKvp.Key;
                 var curDevProfits = new Dictionary<AlgorithmType, double>();
                 StringBuilder stringBuilderDevice = new StringBuilder();
-                stringBuilderDevice.AppendLine(String.Format("\tProfits for {0}:", deviceName));
+                stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", deviceUUID, ComputeDevice.GetNameForUUID(deviceUUID)));
                 AlgorithmType mostProfitKey = AlgorithmType.NONE;
                 double mostProfitAlgoVal = -1;
                 foreach (var algoSpeedKvp in nameBenchKvp.Value) {
@@ -361,7 +361,7 @@ namespace NiceHashMiner.Miners {
                     ));
                 }
                 // add profits
-                profitDict.Add(deviceName, curDevProfits);
+                profitDict.Add(deviceUUID, curDevProfits);
                 // log stuff
                 stringBuilderDevice.AppendLine(String.Format("\t\tMOST PROFITABLE (ENABLED) ALGO: {0}, PROFIT: {1}",
                     AlgorithmNiceHashNames.GetName(mostProfitKey),

@@ -32,9 +32,9 @@ namespace NiceHashMiner.Miners {
         public override void Start(Algorithm miningAlgorithm, string url, string username) {
             Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumOCL, checking existing MinerEtherumOCL to stop");
             foreach (var ethminer in MinerEtherumOCLList) {
-                if (ethminer.MINER_ID != MINER_ID && ethminer.IsRunning) {
+                if (ethminer.MINER_ID != MINER_ID) {
                     Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}", ethminer.MinerTAG(), ethminer.ProcessTag()));
-                    ethminer.End();
+                    ethminer.ForceEnd();
                     System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                 }
             }

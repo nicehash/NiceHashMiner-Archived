@@ -163,6 +163,23 @@ namespace NiceHashMiner.Miners {
             }
         }
 
+        protected void ForceEnd() {
+            if (IsRunning) {
+                StopMining();
+            }
+            IsRunning = false;
+            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " ForceEnd Shutting by other instance");
+            ChangeToNextAvaliablePort();
+            if (ProcessHandle != null) {
+                try {
+                    ProcessHandle.Kill();
+                } catch {
+                } finally {
+                    ProcessHandle = null;
+                }
+            }
+        }
+
         public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename, bool isOptimized) {
             return Ethereum.EtherMinerPath;
         }

@@ -28,9 +28,10 @@ namespace NiceHashMiner.Miners {
         public override void Start(Algorithm miningAlgorithm, string url, string username) {
             Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumCUDA, checking existing MinerEtherumCUDA to stop");
             foreach (var ethminer in MinerEtherumCUDAList) {
-                if (ethminer.MINER_ID != MINER_ID && ethminer.IsRunning) {
+                // TODO IMPORTANT ethminer.IsRunning will not suffice here, make a new STATE ENDED
+                if (ethminer.MINER_ID != MINER_ID) {
                     Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}",ethminer.MinerTAG(), ethminer.ProcessTag()));
-                    ethminer.End();
+                    ethminer.ForceEnd();
                     System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
                 } 
             }
