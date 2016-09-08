@@ -478,6 +478,7 @@ namespace NiceHashMiner.Devices
                                     stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
                                     stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
                                     stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
+                                    stringBuilder.AppendLine(String.Format("\t\tCODE_NAME: {0}", newAmdDev.Codename));
                                     stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
                                     stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
                                     stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));

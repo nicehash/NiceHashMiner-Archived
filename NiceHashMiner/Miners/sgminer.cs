@@ -38,6 +38,13 @@ namespace NiceHashMiner.Miners
             GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
         }
 
+        // use ONLY for exiting a benchmark
+        public void KillSGMiner() {
+            foreach (Process process in Process.GetProcessesByName("sgminer")) {
+                try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+            }
+        }
+
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
         }
@@ -217,7 +224,8 @@ namespace NiceHashMiner.Miners
             }
             if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTimeInSeconds + 2) {
                 _benchmarkTimer.Stop();
-                KillAllUsedMinerProcesses();
+                // this is safe in a benchmark
+                KillSGMiner();
                 BenchmarkSignalHanged = true;
             }
             if (!BenchmarkSignalFinnished) {

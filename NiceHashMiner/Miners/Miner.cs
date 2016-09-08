@@ -215,7 +215,7 @@ namespace NiceHashMiner
         // TODO IMPORTNATN!!! check this
         public void KillAllUsedMinerProcesses() {
             List<MinerPID_Data> toRemovePidData = new List<MinerPID_Data>();
-            Helpers.ConsolePrint(MinerTAG(), "Trying to kill all miner used miner processes for this miner instance:");
+            Helpers.ConsolePrint(MinerTAG(), "Trying to kill all miner processes for this instance:");
             foreach (var PidData in _allPidData) {
                 try {
                     Process process = Process.GetProcessById(PidData.PID);
@@ -344,6 +344,7 @@ namespace NiceHashMiner
             BenchmarkHandle.StartInfo.FileName = GetOptimizedMinerPath(BenchmarkAlgorithm.NiceHashID);
 
             // TODO sgminer quickfix
+
             if (this is sgminer) {
                 BenchmarkProcessPath = "cmd / " + BenchmarkHandle.StartInfo.FileName;
                 BenchmarkHandle.StartInfo.FileName = "cmd";
