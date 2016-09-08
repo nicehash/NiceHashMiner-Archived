@@ -25,14 +25,23 @@ namespace NiceHashMiner
         public double Speed;
     }
 
-    public abstract class Miner
-    {
-        public string MinerDeviceName { get; protected set; }
+    public abstract class Miner {
+
+
+        // MINER_ID_COUNT used to identify miners creation
+        protected static long MINER_ID_COUNT { get; private set; }
+
+        // used to identify miner instance
+        protected readonly long MINER_ID;
+        private string _minetTag = null;
+        public string MinerDeviceName { get; private set; }
         protected int APIPort { get; private set; }
         // if miner has no API bind port for reading curentlly only CryptoNight on ccminer
         public bool IsAPIReadException { get; protected set; }
         protected List<ComputeDevice> CDevs;
-        
+        public DeviceType DeviceType { get; private set; }
+
+        // mining algorithm stuff
         public AlgorithmType CurrentAlgorithmType { get; protected set; }
         private Algorithm _currentMiningAlgorithm;
         protected Algorithm CurrentMiningAlgorithm {
@@ -48,17 +57,19 @@ namespace NiceHashMiner
         }
         public double CurrentRate;
         public bool IsRunning { get; protected set; }
+        protected string Path;
+        protected string LastCommandLine { get; set; }
+        // TODO check this 
+        protected double PreviousTotalMH;
+        protected string WorkingDirectory;
+        protected NiceHashProcess ProcessHandle;
+
+        // Benchmark stuff
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
         Stopwatch BenchmarkTimeOutStopWatch = null;
         public bool BenchmarkSignalTimedout = false;
         protected bool BenchmarkSignalFinnished;
-        protected string Path;
-
-        protected string WorkingDirectory;
-        protected NiceHashProcess ProcessHandle;
-
-        // Benchmark stuff
         IBenchmarkComunicator BenchmarkComunicator;
         private bool OnBenchmarkCompleteCalled = false; 
         protected AlgorithmType CurrentBenchmarkAlgorithmType { get; private set; }
@@ -79,8 +90,6 @@ namespace NiceHashMiner
         private Process BenchmarkHandle = null;
         protected Exception BenchmarkException = null;
         protected int BenchmarkTimeInSeconds;
-        protected string LastCommandLine { get; set; }
-        protected double PreviousTotalMH;
 
         
         protected bool _isEthMinerExit = false;
@@ -101,9 +110,12 @@ namespace NiceHashMiner
         private int _currentCooldownTimeInSecondsLeft = _MIN_CooldownTimeInMilliseconds;
 
 
-        public Miner()
+        public Miner(DeviceType deviceType, string minerDeviceName)
         {
+            MINER_ID = MINER_ID_COUNT++;
             CDevs = new List<ComputeDevice>();
+            DeviceType = deviceType;
+            MinerDeviceName = minerDeviceName;
 
             WorkingDirectory = "";
 
@@ -124,11 +136,14 @@ namespace NiceHashMiner
                 Interval = _MIN_CooldownTimeInMilliseconds
             };
             _cooldownCheckTimer.Tick += MinerCoolingCheck_Tick;
+            // 
+            Helpers.ConsolePrint(MinerTAG(), "NEW MINER CREATED");
         }
 
         ~Miner() {
             // free the port
             MinersApiPortsManager.Instance.RemovePort(APIPort);
+            Helpers.ConsolePrint(MinerTAG(), "MINER DESTROYED");
         }
 
         virtual public void SetCDevs(string[] deviceUUIDs) {
@@ -141,6 +156,22 @@ namespace NiceHashMiner
 
         public void ClearCDevs() {
             CDevs.Clear();
+        }
+
+        // TAG for identifying miner
+        public string MinerTAG() {
+            if (_minetTag == null) {
+                const string MASK = "{0}-MINER_ID({1})-DEVICE_IDs({2})";
+                // no devices set
+                if (CDevs.Count == 0) {
+                    return String.Format(MASK, MinerDeviceName, MINER_ID, "NOT_SET");
+                }
+                // contains ids
+                List<int> ids = new List<int>();
+                foreach (var cdevs in CDevs) ids.Add(cdevs.ID);
+                _minetTag = String.Format(MASK, MinerDeviceName, MINER_ID, string.Join(",", ids));
+            }
+            return _minetTag;
         }
 
         public bool IsSupportedMinerAlgorithms(AlgorithmType algorithmType) {
@@ -162,12 +193,12 @@ namespace NiceHashMiner
         /// <returns></returns>
         abstract public string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = true);
 
+        // TODO IMPORTANT!!! this kills all sgminers
         public void KillSGMiner()
         {
             foreach (Process process in Process.GetProcessesByName("sgminer"))
             {
-                try { process.Kill(); }
-                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+                try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerTAG(), e.ToString()); }
             }
         }
 
@@ -185,7 +216,7 @@ namespace NiceHashMiner
                 IsRunning = false;
             } else {
                 //_currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerDeviceName, "Manually closed, will restart");
+                Helpers.ConsolePrint(MinerTAG(), "Manually closed, will restart");
                 Restart();
             }
         }
@@ -202,7 +233,7 @@ namespace NiceHashMiner
             var newApiPort = MinersApiPortsManager.Instance.GetAvaliablePort();
             // check if update last command port
             if (UpdateBindPortCommand(oldApiPort, newApiPort)) {
-                Helpers.ConsolePrint(MinerDeviceName, String.Format("Changing miner port from {0} to {1}",
+                Helpers.ConsolePrint(MinerTAG(), String.Format("Changing miner port from {0} to {1}",
                     oldApiPort.ToString(),
                     newApiPort.ToString()));
                 // free old set new
@@ -214,7 +245,7 @@ namespace NiceHashMiner
         }
 
         protected void Stop_cpu_ccminer_sgminer(bool willswitch) {
-            Helpers.ConsolePrint(MinerDeviceName, "Shutting down miner");
+            Helpers.ConsolePrint(MinerTAG(), "Shutting down miner");
             ChangeToNextAvaliablePort();
 
             if (ProcessHandle != null) {
@@ -222,7 +253,8 @@ namespace NiceHashMiner
                 ProcessHandle.Close();
                 ProcessHandle = null;
 
-                if (MinerDeviceName == "AMD_OpenCL") KillSGMiner();
+                // TODO this KillSGminer needs to be removed and kill by PID
+                if (DeviceType == DeviceType.AMD /*MinerDeviceName == "AMD_OpenCL"*/) KillSGMiner();
             }
         }
 
@@ -273,7 +305,7 @@ namespace NiceHashMiner
         }
 
         virtual protected Process BenchmarkStartProcess(string CommandLine) {
-            Helpers.ConsolePrint(MinerDeviceName, "Starting benchmark: " + CommandLine);
+            Helpers.ConsolePrint(MinerTAG(), "Starting benchmark: " + CommandLine);
 
             Process BenchmarkHandle = new Process();
             
@@ -285,7 +317,7 @@ namespace NiceHashMiner
                 BenchmarkHandle.StartInfo.FileName = "cmd";
             } else {
                 BenchmarkProcessPath = BenchmarkHandle.StartInfo.FileName;
-                Helpers.ConsolePrint(MinerDeviceName, "Using miner: " + BenchmarkHandle.StartInfo.FileName);
+                Helpers.ConsolePrint(MinerTAG(), "Using miner: " + BenchmarkHandle.StartInfo.FileName);
             }
 
             BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;
@@ -443,7 +475,7 @@ namespace NiceHashMiner
             } catch (Exception ex) {
                 BenchmarkAlgorithm.BenchmarkSpeed = 0;
 
-                Helpers.ConsolePrint(MinerDeviceName, "Benchmark Exception: " + ex.Message);
+                Helpers.ConsolePrint(MinerTAG(), "Benchmark Exception: " + ex.Message);
                 if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                     OnBenchmarkCompleteCalled = true;
                     BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? "Timedout" : "Terminated");
@@ -482,7 +514,7 @@ namespace NiceHashMiner
             P.StartInfo.CreateNoWindow = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
             P.StartInfo.UseShellExecute = false;
 
-            Helpers.ConsolePrint(MinerDeviceName, "Starting miner (" + P.StartInfo.FileName + "): " + LastCommandLine);
+            Helpers.ConsolePrint(MinerTAG(), "Starting miner (" + P.StartInfo.FileName + "): " + LastCommandLine);
 
             // TODO start here timer
             _cooldownCheckTimer.Start();
@@ -501,7 +533,7 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint(MinerDeviceName, "_Start: " + ex.Message);
+                Helpers.ConsolePrint(MinerTAG(), "_Start: " + ex.Message);
                 return null;
             }
         }
@@ -532,7 +564,7 @@ namespace NiceHashMiner
         }
 
         private void Restart() {
-            Helpers.ConsolePrint(MinerDeviceName, "Restarting miner..");
+            Helpers.ConsolePrint(MinerTAG(), "Restarting miner..");
             Stop(false); // stop miner first
             System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
             ProcessHandle = _Start(); // start with old command line
@@ -556,7 +588,7 @@ namespace NiceHashMiner
                                     "User-Agent: NiceHashMiner/" + Application.ProductVersion + "\r\n" +
                                     "\r\n";
 
-                if (MinerDeviceName.Equals("AMD_OpenCL"))
+                if (DeviceType == DeviceType.AMD /*MinerDeviceName.Equals("AMD_OpenCL")*/)
                     DataToSend = cmd;
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
@@ -604,7 +636,7 @@ namespace NiceHashMiner
 
             resp = GetAPIData(APIPort, "summary");
             if (resp == null) {
-                Helpers.ConsolePrint(MinerDeviceName, "summary is null");
+                Helpers.ConsolePrint(MinerTAG(), "summary is null");
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
@@ -620,7 +652,7 @@ namespace NiceHashMiner
                         ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                 }
             } catch {
-                Helpers.ConsolePrint(MinerDeviceName, "Could not read data from API bind port");
+                Helpers.ConsolePrint(MinerTAG(), "Could not read data from API bind port");
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
@@ -643,7 +675,7 @@ namespace NiceHashMiner
             if (_currentCooldownTimeInSeconds < _MIN_CooldownTimeInMilliseconds) {
                 _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
             } else {
-                Helpers.ConsolePrint(MinerDeviceName, String.Format("Cooling DOWN, cool time is {0} ms", _currentCooldownTimeInSeconds.ToString()));
+                Helpers.ConsolePrint(MinerTAG(), String.Format("Cooling DOWN, cool time is {0} ms", _currentCooldownTimeInSeconds.ToString()));
             }
         }
         /// <summary>
@@ -651,10 +683,10 @@ namespace NiceHashMiner
         /// </summary>
         private void CoolUp() {
             _currentCooldownTimeInSeconds *= 2;
-            Helpers.ConsolePrint(MinerDeviceName, String.Format("Cooling UP, cool time is {0} ms", _currentCooldownTimeInSeconds.ToString()));
+            Helpers.ConsolePrint(MinerTAG(), String.Format("Cooling UP, cool time is {0} ms", _currentCooldownTimeInSeconds.ToString()));
             if (_currentCooldownTimeInSeconds > _MAX_CooldownTimeInMilliseconds) {
                 _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerDeviceName, "MAX cool time exceeded. RESTARTING");
+                Helpers.ConsolePrint(MinerTAG(), "MAX cool time exceeded. RESTARTING");
                 Restart();
             }
         }
@@ -666,7 +698,7 @@ namespace NiceHashMiner
                 if (_currentMinerReadStatus == MinerAPIReadStatus.GOT_READ) {
                     CoolDown();
                 } else if (_currentMinerReadStatus == MinerAPIReadStatus.READ_SPEED_ZERO) {
-                    Helpers.ConsolePrint(MinerDeviceName, "READ SPEED ZERO, will cool up");
+                    Helpers.ConsolePrint(MinerTAG(), "READ SPEED ZERO, will cool up");
                     CoolUp();
                 } else if (_currentMinerReadStatus == MinerAPIReadStatus.RESTART) {
                     Restart();

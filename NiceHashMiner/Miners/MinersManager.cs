@@ -90,6 +90,7 @@ namespace NiceHashMiner.Miners {
             _preventSleepTimer.Interval = 20 * 1000; // leave this interval, it works
 
             // path checker
+            Helpers.ConsolePrint(TAG, "Creating MinerPathChecker miners");
             MinerPathChecker = new Dictionary<DeviceGroupType, Miner>();
             foreach (var gpuGroup in _gpuTypes) {
                 MinerPathChecker.Add(gpuGroup, CreateMiner(gpuGroup, AlgorithmType.NONE));
@@ -627,7 +628,7 @@ namespace NiceHashMiner.Miners {
 
                 APIData AD = m.GetSummary();
                 if (AD == null) {
-                    Helpers.ConsolePrint(m.MinerDeviceName, "GetSummary returned null..");
+                    Helpers.ConsolePrint(m.MinerTAG(), "GetSummary returned null..");
                 }
                 // set rates
                 if (NiceHashData != null && AD != null) {
@@ -643,7 +644,7 @@ namespace NiceHashMiner.Miners {
                 }
 
                 // Update GUI
-                _mainFormRatesComunication.AddRateInfo(m.MinerDeviceName, groupMiners.DevicesInfoString, AD, m.CurrentRate, m.IsAPIReadException);
+                _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), groupMiners.DevicesInfoString, AD, m.CurrentRate, m.IsAPIReadException);
             }
         }
 

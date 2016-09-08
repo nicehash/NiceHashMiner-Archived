@@ -9,9 +9,8 @@ namespace NiceHashMiner.Miners
 {
     class ccminer_sm3x : ccminer
     {
-        public ccminer_sm3x() : base()
+        public ccminer_sm3x() : base("NVIDIA3.x")
         {
-            MinerDeviceName = "NVIDIA3.x";
             Path = MinerPaths.ccminer_tpruvot;
         }
 

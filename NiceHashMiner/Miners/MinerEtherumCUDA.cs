@@ -10,9 +10,18 @@ using System.Threading.Tasks;
 namespace NiceHashMiner.Miners {
     public class MinerEtherumCUDA : MinerEtherum {
 
+        // reference to all MinerEtherumCUDA make sure to clear this after miner Stop
+        // we make sure only ONE instance of 
+        public static List<MinerEtherumCUDA> MinerEtherumCUDAList = new List<MinerEtherumCUDA>();
+
         public MinerEtherumCUDA()
-            : base("NVIDIA") {
-            MinerDeviceName = this.GetType().Name;
+            : base(DeviceType.NVIDIA, "MinerEtherumCUDA", "NVIDIA") {
+            // TODO add to static miners
+        }
+
+        ~MinerEtherumCUDA() {
+            // remove from list
+            MinerEtherumCUDAList.Remove(this);
         }
 
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {

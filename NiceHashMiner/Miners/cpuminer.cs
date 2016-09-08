@@ -14,8 +14,7 @@ namespace NiceHashMiner.Miners {
         private string CPUMinerPath;
 
         public cpuminer(int id, int threads, ulong affinity)
-            : base() {
-            MinerDeviceName = "CPU" + id.ToString();
+            : base(DeviceType.CPU, "CPU" + id.ToString()) {
             Threads = threads;
             AffinityMask = affinity;
 
@@ -39,6 +38,10 @@ namespace NiceHashMiner.Miners {
             if (isInitialized) {
                 CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), true));
             }
+        }
+
+        public override void SetCDevs(string[] deviceUUIDs) {
+            // DO NOTHING, CPU MINER DEVICES ARE SET ONLY AT THE BEGINING
         }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {

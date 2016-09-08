@@ -15,7 +15,7 @@ namespace NiceHashMiner.Miners
 {
     abstract public class ccminer : Miner
     {
-        public ccminer() : base() { }
+        public ccminer(string minerDeviceName) : base(DeviceType.NVIDIA, minerDeviceName) { }
 
         // cryptonight benchmark exception
         int _cryptonightTotalCount = 0;
@@ -158,24 +158,24 @@ namespace NiceHashMiner.Miners
                 // check if running
                 if (ProcessHandle == null) {
                     _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess is null");
+                    Helpers.ConsolePrint(MinerTAG(), "Could not read data from CryptoNight Proccess is null");
                     return null;
                 }
                 try {
                     var runningProcess = Process.GetProcessById(ProcessHandle.Id);
                 } catch (ArgumentException ex) {
                     _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
+                    Helpers.ConsolePrint(MinerTAG(), "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
                     return null; // will restart outside
                 } catch (InvalidOperationException ex) {
                     _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
+                    Helpers.ConsolePrint(MinerTAG(), "Could not read data from CryptoNight Proccess id: " + ProcessHandle.Id.ToString());
                     return null; // will restart outside
                 }
                 // extra check
                 if (CurrentMiningAlgorithm == null) {
                     _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerDeviceName, "Could not read data from CryptoNight Proccess CurrentMiningAlgorithm is NULL");
+                    Helpers.ConsolePrint(MinerTAG(), "Could not read data from CryptoNight Proccess CurrentMiningAlgorithm is NULL");
                     return null;
                 }
 

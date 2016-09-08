@@ -22,8 +22,8 @@ namespace NiceHashMiner.Miners {
         readonly protected string CurrentBlockString;
         readonly private DagGenerationType DagGenerationType;
 
-        public MinerEtherum(string blockString)
-            : base() {
+        public MinerEtherum(DeviceType deviceType, string minerDeviceName, string blockString)
+            : base(deviceType, minerDeviceName) {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
             CurrentBlockString = blockString;
@@ -84,7 +84,7 @@ namespace NiceHashMiner.Miners {
                 LastCommandLine = GetStartCommandStringPart(miningAlgorithm, url, username) + GetDevicesCommandString();
                 ProcessHandle = _Start();
             } else {
-                Helpers.ConsolePrint(MinerDeviceName, "Resuming ethminer..");
+                Helpers.ConsolePrint(MinerTAG(), "Resuming ethminer..");
                 StartMining();
             }
         }
@@ -146,12 +146,12 @@ namespace NiceHashMiner.Miners {
             if (!IsRunning) return;
             if (willswitch) {
                 // daggerhashimoto - we only "pause" mining
-                Helpers.ConsolePrint(MinerDeviceName, "Pausing ethminer..");
+                Helpers.ConsolePrint(MinerTAG(), "Pausing ethminer..");
                 StopMining();
                 return;
             }
 
-            Helpers.ConsolePrint(MinerDeviceName, "Shutting down miner");
+            Helpers.ConsolePrint(MinerTAG(), "Shutting down miner");
             ChangeToNextAvaliablePort();
             if (!willswitch && ProcessHandle != null) {
                 try {
@@ -257,7 +257,7 @@ namespace NiceHashMiner.Miners {
                         else speed = 0;
                         return GetSpeedStatus.GOT;
                     } catch {
-                        Helpers.ConsolePrint(MinerDeviceName, "Could not read data from API bind port");
+                        Helpers.ConsolePrint(MinerTAG(), "Could not read data from API bind port");
                         return GetSpeedStatus.EXCEPTION;
                     }
                 } else

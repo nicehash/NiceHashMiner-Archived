@@ -101,6 +101,7 @@
     <Compile Include="Enums\CPUExtensionType.cs" />
     <Compile Include="Enums\DagGenerationType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
+    <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerAPIReadStatus.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">

@@ -9,9 +9,8 @@ namespace NiceHashMiner.Miners
 {
     class ccminer_sm21 : ccminer
     {
-        public ccminer_sm21() : base()
+        public ccminer_sm21() : base("NVIDIA2.1")
         {
-            MinerDeviceName = "NVIDIA2.1";
             Path = MinerPaths.ccminer_tpruvot;
         }
 

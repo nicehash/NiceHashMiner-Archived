@@ -10,10 +10,9 @@ namespace NiceHashMiner.Miners
 {
     class ccminer_sm5x : ccminer
     {
-        public ccminer_sm5x() :
-            base()
+        public ccminer_sm5x(string minerDeviceName = "NVIDIA5.x") :
+            base(minerDeviceName)
         {
-            MinerDeviceName = "NVIDIA5.x";
             Path = MinerPaths.ccminer_sp;
         }
 

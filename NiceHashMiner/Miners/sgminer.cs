@@ -31,9 +31,8 @@ namespace NiceHashMiner.Miners
         Stopwatch _benchmarkTimer = new Stopwatch();
 
         public sgminer()
-            : base()
+            : base(DeviceType.AMD, "AMD_OpenCL")
         {            
-            MinerDeviceName = "AMD_OpenCL";
             Path = MinerPaths.sgminer_5_4_0_general;
             EnableOptimizedVersion = true;
             GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
@@ -67,7 +66,7 @@ namespace NiceHashMiner.Miners
             CurrentMiningAlgorithm = miningAlgorithm;
             if (miningAlgorithm == null)
             {
-                Helpers.ConsolePrint(MinerDeviceName, "GetMinerAlgorithm(" + miningAlgorithm.NiceHashID + "): Algo equals to null");
+                Helpers.ConsolePrint(MinerTAG(), "GetMinerAlgorithm(" + miningAlgorithm.NiceHashID + "): Algo equals to null");
                 return;
             }
 
@@ -187,26 +186,26 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkThreadRoutineStartSettup() {
-            if (MinerDeviceName.Equals("AMD_OpenCL")) {
-                AlgorithmType NHDataIndex = BenchmarkAlgorithm.NiceHashID;
+            // sgminer extra settings
+            AlgorithmType NHDataIndex = BenchmarkAlgorithm.NiceHashID;
 
-                if (Globals.NiceHashData == null) {
-                    Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
-                        "connection. Sgminer needs internet connection to do benchmarking.");
+            if (Globals.NiceHashData == null) {
+                Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
+                    "connection. Sgminer needs internet connection to do benchmarking.");
 
-                    throw new Exception("No internet connection");
-                }
-
-                if (Globals.NiceHashData[NHDataIndex].paying == 0) {
-                    Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
-                        "[algo: " + BenchmarkAlgorithm.NiceHashName + "(" + NHDataIndex + ")]");
-
-                    throw new Exception("No work can be used for benchmarking");
-                }
-
-                _benchmarkTimer.Reset();
-                _benchmarkTimer.Start();
+                throw new Exception("No internet connection");
             }
+
+            if (Globals.NiceHashData[NHDataIndex].paying == 0) {
+                Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
+                    "[algo: " + BenchmarkAlgorithm.NiceHashName + "(" + NHDataIndex + ")]");
+
+                throw new Exception("No work can be used for benchmarking");
+            }
+
+            _benchmarkTimer.Reset();
+            _benchmarkTimer.Start();
+            // call base
             base.BenchmarkThreadRoutineStartSettup();
         }
 
@@ -243,7 +242,8 @@ namespace NiceHashMiner.Miners
             try {
                 string[] resps;
 
-                if (!MinerDeviceName.Equals("AMD_OpenCL")) {
+                // TODO this is all wrong here not AMD
+                if (DeviceType != DeviceType.AMD /*!MinerDeviceName.Equals("AMD_OpenCL")*/) {
                     resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < resps.Length; i++) {
                         string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
@@ -265,7 +265,7 @@ namespace NiceHashMiner.Miners
 
                     for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
                         if (!checkGPUStatus[i].Contains("Status=Alive")) {
-                            Helpers.ConsolePrint(MinerDeviceName, "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
+                            Helpers.ConsolePrint(MinerTAG(), "GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
                             _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
                             return null;
                         }
@@ -287,8 +287,8 @@ namespace NiceHashMiner.Miners
 
 
                         if (total_mh <= PreviousTotalMH) {
-                            Helpers.ConsolePrint(MinerDeviceName, "SGMiner might be stuck as no new hashes are being produced");
-                            Helpers.ConsolePrint(MinerDeviceName, "Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
+                            Helpers.ConsolePrint(MinerTAG(), "SGMiner might be stuck as no new hashes are being produced");
+                            Helpers.ConsolePrint(MinerTAG(), "Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
                             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                             return null;
                         }

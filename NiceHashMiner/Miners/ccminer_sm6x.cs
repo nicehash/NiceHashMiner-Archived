@@ -11,9 +11,8 @@ using System.Threading.Tasks;
 namespace NiceHashMiner.Miners {
     class ccminer_sm6x : ccminer_sm5x {
         public ccminer_sm6x() :
-            base()
+            base("NVIDIA6.x")
         {
-            MinerDeviceName = "NVIDIA6.x";
             Path = MinerPaths.ccminer_nanashi;
         }
 
