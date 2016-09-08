@@ -369,7 +369,7 @@ namespace NiceHashMiner.Devices
                         // ADL
                         bool isAdlInit = true;
                         // ADL should get our devices in order
-                        HashSet<int> _busIds = new HashSet<int>();
+                        //HashSet<int> _busIds = new HashSet<int>();
                         List<string> _amdDeviceName = new List<string>();
                         List<string> _amdDeviceUUID = new List<string>();
                         try {
@@ -407,20 +407,22 @@ namespace NiceHashMiner.Devices
                                                         ADLRet = ADL.ADL_Adapter_Active_Get(OSAdapterInfoData.ADLAdapterInfo[i].AdapterIndex, ref IsActive);
 
                                                     if (ADL.ADL_SUCCESS == ADLRet) {
-                                                        if (!_busIds.Contains(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber)) {
-                                                            // we are looking for amd
-                                                            // TODO check discrete and integrated GPU separation
-                                                            var vendorID = OSAdapterInfoData.ADLAdapterInfo[i].VendorID;
-                                                            var devName = OSAdapterInfoData.ADLAdapterInfo[i].AdapterName;
-                                                            if (vendorID == AMD_VENDOR_ID
-                                                                || devName.ToLower().Contains("amd")
-                                                                || devName.ToLower().Contains("radeon")
-                                                                || devName.ToLower().Contains("firepro")) {
-                                                                _busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
+                                                        // we are looking for amd
+                                                        // TODO check discrete and integrated GPU separation
+                                                        var vendorID = OSAdapterInfoData.ADLAdapterInfo[i].VendorID;
+                                                        var devName = OSAdapterInfoData.ADLAdapterInfo[i].AdapterName;
+                                                        if (vendorID == AMD_VENDOR_ID
+                                                            || devName.ToLower().Contains("amd")
+                                                            || devName.ToLower().Contains("radeon")
+                                                            || devName.ToLower().Contains("firepro")) {
+                                                            
+                                                            var udid = OSAdapterInfoData.ADLAdapterInfo[i].UDID;
+                                                            var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
+                                                            var uuid = udid.Substring(0, pciVen_id_strSize);
+                                                            if (!_amdDeviceUUID.Contains(uuid)) {
+                                                                _amdDeviceUUID.Add(uuid);
+                                                                //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                 _amdDeviceName.Add(devName);
-                                                                var udid = OSAdapterInfoData.ADLAdapterInfo[i].UDID;
-                                                                var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
-                                                                _amdDeviceUUID.Add(udid.Substring(0, pciVen_id_strSize));
                                                             }
                                                         }
                                                     }
