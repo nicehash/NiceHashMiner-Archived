@@ -420,10 +420,12 @@ namespace NiceHashMiner.Devices
                                                             var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
                                                             var uuid = udid.Substring(0, pciVen_id_strSize);
                                                             if (!_amdDeviceUUID.Contains(uuid)) {
-                                                                Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}\tNAME:{1}\tUUID:{2}"), 
-                                                                    OSAdapterInfoData.ADLAdapterInfo[i].BusNumber,
-                                                                    devName,
-                                                                    uuid);
+                                                                try {
+                                                                    Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}\tNAME:{1}\tUUID:{2}"),
+                                                                        OSAdapterInfoData.ADLAdapterInfo[i].BusNumber,
+                                                                        devName,
+                                                                        uuid);
+                                                                } catch { }
                                                                 _amdDeviceUUID.Add(uuid);
                                                                 //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                 _amdDeviceName.Add(devName);
@@ -470,13 +472,16 @@ namespace NiceHashMiner.Devices
                                 string isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
                                 string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
-                                stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
-                                stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
-                                stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
-                                stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
-                                stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
-                                stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
                                 new ComputeDevice(newAmdDev, true, true);
+                                // just in case 
+                                try {
+                                    stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
+                                    stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
+                                    stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
+                                    stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
+                                    stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
+                                    stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
+                                } catch { }
                             }
                             Helpers.ConsolePrint(TAG, stringBuilder.ToString());
                         }
