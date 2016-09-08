@@ -116,7 +116,8 @@ namespace NiceHashMiner
         protected MinerAPIReadStatus _currentMinerReadStatus { get; set; }
         private int _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
         private int _currentCooldownTimeInSecondsLeft = _MIN_CooldownTimeInMilliseconds;
-
+        private int _isCooldownCheckTimerAliveCount = 0;
+        private const int IS_COOLDOWN_CHECK_TIMER_ALIVE_CAP = 15;
 
         public Miner(DeviceType deviceType, string minerDeviceName)
         {
@@ -559,11 +560,7 @@ namespace NiceHashMiner
 
                     Helpers.ConsolePrint(MinerTAG(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
 
-                    // TODO start here timer
-                    _cooldownCheckTimer.Start();
-                    _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
-                    _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
-                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                    StartCoolDownTimerChecker();
 
                     return P;
                 } else {
@@ -577,6 +574,15 @@ namespace NiceHashMiner
                 return null;
             }
         }
+
+        protected void StartCoolDownTimerChecker() {
+            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Starting cooldown checker");
+            _cooldownCheckTimer.Start();
+            _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
+            _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            _isCooldownCheckTimerAliveCount = 0;
+        } 
 
 
         virtual protected void Miner_Exited() {
@@ -714,6 +720,11 @@ namespace NiceHashMiner
             _currentCooldownTimeInSeconds /= 2;
             if (_currentCooldownTimeInSeconds < _MIN_CooldownTimeInMilliseconds) {
                 _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
+                if (_isCooldownCheckTimerAliveCount == 0) {
+                    _isCooldownCheckTimerAliveCount = IS_COOLDOWN_CHECK_TIMER_ALIVE_CAP;
+                    Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Cooling DOWN, cool time is {1} ms", ProcessTag(), _currentCooldownTimeInSeconds.ToString()));
+                }
+                --_isCooldownCheckTimerAliveCount;
             } else {
                 Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Cooling DOWN, cool time is {1} ms", ProcessTag(), _currentCooldownTimeInSeconds.ToString()));
             }

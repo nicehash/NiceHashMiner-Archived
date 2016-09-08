@@ -85,6 +85,7 @@ namespace NiceHashMiner.Miners {
                 ProcessHandle = _Start();
             } else {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Resuming ethminer..");
+                StartCoolDownTimerChecker();
                 StartMining();
             }
         }
