@@ -216,6 +216,7 @@ namespace NiceHashMiner.Devices
             public string Description { get; set; }
             public string PNPDeviceID { get; set; }
             public string DriverVersion { get; set; }
+            public string Status { get; set; }
         }
 
         private List<VideoControllerData> AvaliableVideoControllers = new List<VideoControllerData>();
@@ -225,17 +226,42 @@ namespace NiceHashMiner.Devices
             stringBuilder.AppendLine("");
             stringBuilder.AppendLine("QueryVideoControllers: ");
             ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get();
+            bool allVideoContollersOK = true;
             foreach (var manObj in moc) {
-                stringBuilder.AppendLine(String.Format("\tGPU Name (Driver Ver): {0} ({1})", manObj["Name"] , manObj["DriverVersion"]));
-                AvaliableVideoControllers.Add(
-                    new VideoControllerData() {
-                        Name = manObj["Name"] as string,
-                        Description = manObj["Description"] as string,
-                        PNPDeviceID = manObj["PNPDeviceID"] as string,
-                        DriverVersion = manObj["DriverVersion"] as string
-                    });
+                var vidController = new VideoControllerData() {
+                    Name = manObj["Name"] as string,
+                    Description = manObj["Description"] as string,
+                    PNPDeviceID = manObj["PNPDeviceID"] as string,
+                    DriverVersion = manObj["DriverVersion"] as string,
+                    Status = manObj["Status"] as string
+                };
+                stringBuilder.AppendLine("\tWin32_VideoController detected:");
+                stringBuilder.AppendLine(String.Format("\t\tName {0}", vidController.Name));
+                stringBuilder.AppendLine(String.Format("\t\tDescription {0}", vidController.Description));
+                stringBuilder.AppendLine(String.Format("\t\tPNPDeviceID {0}", vidController.PNPDeviceID));
+                stringBuilder.AppendLine(String.Format("\t\tDriverVersion {0}", vidController.DriverVersion));
+                stringBuilder.AppendLine(String.Format("\t\tStatus {0}", vidController.Status));
+
+                // check if controller ok
+                if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok")) {
+                    allVideoContollersOK = false;
+                }
+
+                AvaliableVideoControllers.Add(vidController);
             }
             Helpers.ConsolePrint(TAG, stringBuilder.ToString());
+            if (!allVideoContollersOK) {
+                string msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
+                foreach (var vc in AvaliableVideoControllers) {
+                    if(!vc.Status.ToLower().Equals("ok")) {
+                        msg += Environment.NewLine
+                            + String.Format(International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"), vc.Name, vc.Status, vc.PNPDeviceID);
+                    }
+                }
+                MessageBox.Show(msg,
+                                International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private bool HasNvidiaVideoController() {

@@ -289,6 +289,9 @@
         "FormBenchmark_Nothing_to_Benchmark_Title": "Nothing to benchmark",
         "Algorithm_Waiting_Benchmark": "Waiting benchmark",
         "BenchmarkSpeedStringNone": "none",
-        "BenchmarkRatioRateN_A" :  "N/A",
+        "BenchmarkRatioRateN_A": "N/A",
+        "QueryVideoControllers_NOT_ALL_OK_Msg": "We have detected a Video Controller that is not working OK. NiceHash Miner will not be able to use This Video Controller for mining. We advise you to restart your computer, or reinstall Video Controller drivers.",
+        "QueryVideoControllers_NOT_ALL_OK_Msg_Append": "Name: {0}, Status {1}, PNPDeviceID {2}",
+        "QueryVideoControllers_NOT_ALL_OK_Title":  "Warning! Video Controller not OK"
     }
 }
