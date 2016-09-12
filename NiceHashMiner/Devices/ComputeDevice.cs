@@ -20,6 +20,8 @@ namespace NiceHashMiner.Devices
         public string Name { get; set; }
         // to identify equality;
         readonly public string _nameNoNums;
+        // name count is the short name for displaying in moning groups
+        readonly public string NameCount;
         public bool Enabled;
 
         [JsonIgnore]
@@ -77,16 +79,7 @@ namespace NiceHashMiner.Devices
             Enabled = enabled;
         }
 
-        public ComputeDevice(int id, string group, string name, bool addToGlobalList = false, bool enabled = true)
-        {
-            ID = id;
-            Group = group;
-            Name = name;
-            _nameNoNums = name;
-            Enabled = enabled;
-            DeviceGroupType = GroupNames.GetType(Group);
-            DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
-            DeviceType = DeviceType.CPU;
+        private void InitGlobalsList(bool addToGlobalList) {
             if (addToGlobalList) {
                 // add to all devices
                 AllAvaliableDevices.Add(this);
@@ -106,6 +99,20 @@ namespace NiceHashMiner.Devices
                 // add to group manager
                 ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
+        }
+
+        public ComputeDevice(int id, string group, string name, bool addToGlobalList = false, bool enabled = true)
+        {
+            ID = id;
+            Group = group;
+            Name = name;
+            _nameNoNums = name;
+            Enabled = enabled;
+            DeviceGroupType = GroupNames.GetType(Group);
+            DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
+            DeviceType = DeviceType.CPU;
+            InitGlobalsList(addToGlobalList);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name"), AllAvaliableDevices.Count);
             UUID = GetUUID(ID, Group, Name, DeviceGroupType);
         }
 
@@ -120,25 +127,8 @@ namespace NiceHashMiner.Devices
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
             DeviceType = DeviceType.NVIDIA;
-            if (addToGlobalList) {
-                // add to all devices
-                AllAvaliableDevices.Add(this);
-                // compare new device with unique list scope
-                {
-                    bool isNewUnique = true;
-                    foreach (var d in UniqueAvaliableDevices) {
-                        if (this.Name == d.Name) {
-                            isNewUnique = false;
-                            break;
-                        }
-                    }
-                    if (isNewUnique) {
-                        UniqueAvaliableDevices.Add(this);
-                    }
-                }
-                // add to group manager
-                ComputeDeviceGroupManager.Instance.AddDevice(this);
-            }
+            InitGlobalsList(addToGlobalList);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name"), AllAvaliableDevices.Count);
             UUID = cudaDevice.UUID;
         }
 
@@ -153,29 +143,17 @@ namespace NiceHashMiner.Devices
             Enabled = enabled;
             IsEtherumCapale = amdDevice.IsEtherumCapable();
             DeviceType = DeviceType.AMD;
-            if (addToGlobalList) {
-                // add to all devices
-                AllAvaliableDevices.Add(this);
-                // compare new device with unique list scope
-                {
-                    bool isNewUnique = true;
-                    foreach (var d in UniqueAvaliableDevices) {
-                        if (this.Name == d.Name) {
-                            isNewUnique = false;
-                            break;
-                        }
-                    }
-                    if (isNewUnique) {
-                        UniqueAvaliableDevices.Add(this);
-                    }
-                }
-                // add to group manager
-                ComputeDeviceGroupManager.Instance.AddDevice(this);
-            }
+            InitGlobalsList(addToGlobalList);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name"), AllAvaliableDevices.Count);
             UUID = amdDevice.UUID;
             // sgminer extra
             IsOptimizedVersion = amdDevice.UseOptimizedVersion;
             Codename = amdDevice.Codename;
+        }
+
+        // combines long and short name
+        public string GetFullName() {
+            return String.Format("{0} {1}", NameCount, Name);
         }
 
         // TODO add file check and stuff like that

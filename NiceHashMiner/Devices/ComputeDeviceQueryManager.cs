@@ -394,8 +394,9 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint(TAG, "AMD Getting device name and serial from ADL");
                         // ADL
                         bool isAdlInit = true;
-                        // ADL should get our devices in order
-                        //HashSet<int> _busIds = new HashSet<int>();
+                        // ADL does not get devices in order map devices by bus number
+                        // bus id, <name, uuid>
+                        Dictionary<int, Tuple<string, string>> _busIdsInfo = new Dictionary<int, Tuple<string, string>>();
                         List<string> _amdDeviceName = new List<string>();
                         List<string> _amdDeviceUUID = new List<string>();
                         try {
@@ -445,16 +446,22 @@ namespace NiceHashMiner.Devices
                                                             var udid = OSAdapterInfoData.ADLAdapterInfo[i].UDID;
                                                             var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
                                                             var uuid = udid.Substring(0, pciVen_id_strSize);
+                                                            int budId = OSAdapterInfoData.ADLAdapterInfo[i].BusNumber;
                                                             if (!_amdDeviceUUID.Contains(uuid)) {
                                                                 try {
-                                                                    Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}\tNAME:{1}\tUUID:{2}"),
-                                                                        OSAdapterInfoData.ADLAdapterInfo[i].BusNumber,
+                                                                    Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}  NAME:{1}  UUID:{2}"),
+                                                                        budId,
                                                                         devName,
                                                                         uuid);
                                                                 } catch { }
+                                                                
                                                                 _amdDeviceUUID.Add(uuid);
                                                                 //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                 _amdDeviceName.Add(devName);
+                                                                if (!_busIdsInfo.ContainsKey(budId)) {
+                                                                    var nameUuid = new Tuple<string, string>(devName, uuid);
+                                                                    _busIdsInfo.Add(budId, nameUuid);
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -489,26 +496,31 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine("");
                             stringBuilder.AppendLine("QueryAMD devices: ");
                             for (int i_id = 0; i_id < amdGpus.Count; ++i_id) {
-                                var deviceName = _amdDeviceName[i_id];
-                                var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName]);
-                                newAmdDev.DeviceName = deviceName;
-                                newAmdDev.UUID = _amdDeviceUUID[i_id];
-                                bool isDisabledGroup = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
-                                string skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
-                                string isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
-                                string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
+                                int busID = amdGpus[i_id].AMD_BUS_ID;
+                                if (busID != -1 && _busIdsInfo.ContainsKey(busID)) {
+                                    var deviceName = _busIdsInfo[busID].Item1;
+                                    var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName]);
+                                    newAmdDev.DeviceName = deviceName;
+                                    newAmdDev.UUID = _busIdsInfo[busID].Item2;
+                                    bool isDisabledGroup = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
+                                    string skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
+                                    string isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
+                                    string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
-                                new ComputeDevice(newAmdDev, true, true);
-                                // just in case 
-                                try {
-                                    stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
-                                    stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
-                                    stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
-                                    stringBuilder.AppendLine(String.Format("\t\tCODE_NAME: {0}", newAmdDev.Codename));
-                                    stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
-                                    stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
-                                    stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
-                                } catch { }
+                                    new ComputeDevice(newAmdDev, true, true);
+                                    // just in case 
+                                    try {
+                                        stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
+                                        stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
+                                        stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
+                                        stringBuilder.AppendLine(String.Format("\t\tCODE_NAME: {0}", newAmdDev.Codename));
+                                        stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
+                                        stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
+                                        stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
+                                    } catch { }
+                                } else {
+                                    stringBuilder.AppendLine(String.Format("\tDevice not added, Bus No. {0} not found:", busID));
+                                }
                             }
                             Helpers.ConsolePrint(TAG, stringBuilder.ToString());
                         }
@@ -680,7 +692,7 @@ namespace NiceHashMiner.Devices
 
         private void QueryOpenCLDevices() {
             Process OpenCLDevicesDetection = new Process();
-            OpenCLDevicesDetection.StartInfo.FileName = "OpenCLDeviceDetection.exe";
+            OpenCLDevicesDetection.StartInfo.FileName = "AMDOpenCLDeviceDetection.exe";
             OpenCLDevicesDetection.StartInfo.UseShellExecute = false;
             OpenCLDevicesDetection.StartInfo.RedirectStandardError = true;
             OpenCLDevicesDetection.StartInfo.RedirectStandardOutput = true;
@@ -691,7 +703,7 @@ namespace NiceHashMiner.Devices
             const int waitTime = 5 * 1000; // 5seconds
             try {
                 if (!OpenCLDevicesDetection.Start()) {
-                    Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection process could not start");
+                    Helpers.ConsolePrint(TAG, "AMDOpenCLDeviceDetection process could not start");
                 } else {
                     OpenCLDevicesDetection.BeginErrorReadLine();
                     OpenCLDevicesDetection.BeginOutputReadLine();
@@ -701,7 +713,7 @@ namespace NiceHashMiner.Devices
                 }
             } catch(Exception ex) {
                 // TODO
-                Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection threw Exception: " + ex.Message);
+                Helpers.ConsolePrint(TAG, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
             } finally {
                 if (QueryOpenCLDevicesString != "") {
                     try {
@@ -711,12 +723,12 @@ namespace NiceHashMiner.Devices
             }
             // TODO
             if (OpenCLJSONData == null) {
-                Helpers.ConsolePrint(TAG, "OpenCLDeviceDetection found no devices. OpenCLDeviceDetection returned: " + QueryOpenCLDevicesString);
+                Helpers.ConsolePrint(TAG, "AMDOpenCLDeviceDetection found no devices. AMDOpenCLDeviceDetection returned: " + QueryOpenCLDevicesString);
             } else {
                 IsOpenCLQuerrySuccess = true;
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine("");
-                stringBuilder.AppendLine("OpenCLDeviceDetection found devices success:");
+                stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
                 foreach (var kvp in OpenCLJSONData.OCLPlatformDevices) {
                     stringBuilder.AppendLine(String.Format("\tFound devices for platform: {0}", kvp.Key));
                     foreach (var oclDev in kvp.Value) {

@@ -115,7 +115,7 @@ namespace NiceHashMiner.Forms.Components {
                 ListViewItem lvi = new ListViewItem();
                 //lvi.SubItems.Add(computeDevice.Name);
                 lvi.Checked = computeDevice.Enabled || SetAllEnabled;
-                lvi.Text = computeDevice.Name;
+                lvi.Text = computeDevice.GetFullName();
                 ComputeDeviceEnabledOption newTag = new ComputeDeviceEnabledOption() {
                     IsEnabled = computeDevice.Enabled || SetAllEnabled,
                     CDevice = computeDevice

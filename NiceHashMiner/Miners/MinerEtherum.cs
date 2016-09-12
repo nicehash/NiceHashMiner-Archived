@@ -22,6 +22,8 @@ namespace NiceHashMiner.Miners {
         readonly protected string CurrentBlockString;
         readonly private DagGenerationType DagGenerationType;
 
+        protected bool IsPaused = false;
+
         public MinerEtherum(DeviceType deviceType, string minerDeviceName, string blockString)
             : base(deviceType, minerDeviceName) {
             Path = Ethereum.EtherMinerPath;
@@ -74,6 +76,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public override void Start(Algorithm miningAlgorithm, string url, string username) {
+            IsPaused = false;
             if (ProcessHandle == null) {
                 CurrentMiningAlgorithm = miningAlgorithm;
                 if (miningAlgorithm == null && miningAlgorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
@@ -146,14 +149,16 @@ namespace NiceHashMiner.Miners {
             // prevent logging non runing miner
             if (IsRunning && willswitch == MinerStopType.SWITCH) {
                 // daggerhashimoto - we only "pause" mining
+                IsPaused = true;
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Pausing ethminer..");
                 StopMining();
                 return;
-            } else if(IsRunning) {
+            } else if (IsRunning || IsPaused) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }
             if (willswitch != MinerStopType.FORCE_END) ChangeToNextAvaliablePort();
             if ((willswitch == MinerStopType.FORCE_END || willswitch == MinerStopType.END) && ProcessHandle != null) {
+                IsPaused = false; // shutting down means it is not paused
                 try {
                     ProcessHandle.Kill();
                 } catch {
