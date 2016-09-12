@@ -69,6 +69,8 @@ namespace NiceHashMiner.Miners {
         IMainFormRatesComunication _mainFormRatesComunication;
 
         private Timer _preventSleepTimer;
+        // check internet connection 
+        private Timer _internetCheckTimer;
 
         // we save cpu miners string group name
         Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
@@ -86,12 +88,25 @@ namespace NiceHashMiner.Miners {
              // sleep time is minimal 1 minute
             _preventSleepTimer.Interval = 20 * 1000; // leave this interval, it works
 
+            // set internet checking
+            _internetCheckTimer = new Timer();
+            _internetCheckTimer.Tick += InternetCheckTimer_Tick;
+            _internetCheckTimer.Interval = 1000 * 60 * 5;
+
             // path checker
             Helpers.ConsolePrint(TAG, "Creating MinerPathChecker miners");
             MinerPathChecker = new Dictionary<DeviceGroupType, Miner>();
             foreach (var gpuGroup in _gpuTypes) {
                 MinerPathChecker.Add(gpuGroup, CreateMiner(gpuGroup, AlgorithmType.NONE));
             }
+        }
+
+        private void InternetCheckTimer_Tick(object sender, EventArgs e) {
+            //if () {
+
+            //} else {
+
+            //}
         }
 
         private void PreventSleepTimer_Tick(object sender, EventArgs e) {

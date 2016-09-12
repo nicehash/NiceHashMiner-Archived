@@ -12,6 +12,9 @@ containsFilesC_SHARP_Code = "private static string[] ALL_FILES_BINS = {"
 root = "."
 
 outFile = "BINS_CODEGEN.cs"
+outFile_shared = "BINS_CODEGEN_SHARED.cs"
+outFile_amd = "BINS_CODEGEN_AMD.cs"
+outFile_nvidia = "BINS_CODEGEN_NVIDIA.cs"
 inFile = "genBins.py"
 
 for path, subdirs, files in os.walk(root):

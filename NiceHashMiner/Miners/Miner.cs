@@ -67,6 +67,7 @@ namespace NiceHashMiner
         protected string LastCommandLine { get; set; }
         // TODO check this 
         protected double PreviousTotalMH;
+        // the defaults will be 
         protected string WorkingDirectory;
         protected NiceHashProcess ProcessHandle;
         private MinerPID_Data _currentPidData;
@@ -126,6 +127,7 @@ namespace NiceHashMiner
             DeviceType = deviceType;
             MinerDeviceName = minerDeviceName;
 
+            //WorkingDirectory = @"bin\dlls";
             WorkingDirectory = "";
 
             CurrentAlgorithmType = AlgorithmType.NONE;

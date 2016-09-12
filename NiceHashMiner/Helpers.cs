@@ -161,5 +161,18 @@ namespace NiceHashMiner
             }
             return id;
         }
+
+        public static bool WebRequestTestGoogle() {
+            string url = "http://www.google.com";
+            try {
+                System.Net.WebRequest myRequest = System.Net.WebRequest.Create(url);
+                myRequest.Timeout = Globals.FirstNetworkCheckTimeoutTimeMS;
+                System.Net.WebResponse myResponse = myRequest.GetResponse();
+            } catch (System.Net.WebException) {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

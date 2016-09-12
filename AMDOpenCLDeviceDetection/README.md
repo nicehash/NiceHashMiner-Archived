@@ -1,3 +1,3 @@
 # AMDOpenCLDeviceDetection
 
-AMDOpenCLDeviceDetection is a win32 program that prints OpenCl platform numbers and avaliable OpenCL GPU devices in JSON format, with aditional AMD topology detection. In order to build this project you should have [AMD APP SDK 3.0](http://developer.amd.com/tools-and-sdks/opencl-zone/amd-accelerated-parallel-processing-app-sdk/) installed. Supports Windows x86, x64. Make sure that the binary can link to **amdocl12cl.dll**
+AMDOpenCLDeviceDetection is a win32 program that prints OpenCl platform numbers and avaliable OpenCL GPU devices in JSON format, with aditional AMD topology detection. In order to build this project you should have [AMD APP SDK 3.0](http://developer.amd.com/tools-and-sdks/opencl-zone/amd-accelerated-parallel-processing-app-sdk/) installed. Supports Windows x86, x64. Make sure that the binary can link to **OpenCL.dll**

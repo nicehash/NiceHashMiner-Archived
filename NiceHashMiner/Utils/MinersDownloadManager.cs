@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using NiceHashMiner.Interfaces;
 using System.Threading;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Utils {
     public partial class MinersDownloadManager : BaseLazySingleton<MinersDownloadManager> {
@@ -25,12 +26,50 @@ namespace NiceHashMiner.Utils {
         public string BinsDownloadURL = d_01;
         public string BinsZipLocation = "bins.zip";
 
+        private class DownloadData {
+            public string url { get; set; }
+            public string zipLocation { get; set; }
+            public bool shouldDownload { get; set; }
+        }
+        // shared
+        DownloadData dl_shared = new DownloadData() {
+            url = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_cpu_shared.zip",
+            zipLocation = "bins_shared.zip"
+        };
+        // nvidia
+        DownloadData dl_nvidia = new DownloadData() {
+            url = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_nvidia.zip",
+            zipLocation = "bins_nvidia.zip"
+        };
+        // amd
+        DownloadData dl_amd = new DownloadData() {
+            url = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_amd.zip",
+            zipLocation = "bins_amd.zip"
+        };
+        // all
+        DownloadData dl_all = new DownloadData() {
+            url = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_all.zip",
+            zipLocation = "bins_all.zip"
+        };
+
+        List<DownloadData> _downloadsData;
+
         bool isDownloadSizeInit = false;
 
         IMinerUpdateIndicator _minerUpdateIndicator;
 
         protected MinersDownloadManager() {
             TAG = this.GetType().Name;
+        }
+
+        public void InitDownloadPaths() {
+            _downloadsData = new List<DownloadData>();
+            dl_shared.shouldDownload = !IsMinersBins_SHARED_Init();
+            dl_nvidia.shouldDownload = !IsMinersBins_NVIDIA_Init() && ComputeDeviceQueryManager.Instance.HasNVIDIA;
+            dl_amd.shouldDownload = !IsMinersBins_AMD_Init() && ComputeDeviceQueryManager.Instance.HasAMD;
+            _downloadsData.Add(dl_shared);
+            _downloadsData.Add(dl_nvidia);
+            _downloadsData.Add(dl_amd);
         }
 
         public void Start(IMinerUpdateIndicator minerUpdateIndicator) {
@@ -164,7 +203,8 @@ namespace NiceHashMiner.Utils {
             } catch { }
         }
 
-        public bool IsMinersBinsInit() {
+
+        public bool IsMinersBins_ALL_Init() {
             foreach (var filePath in ALL_FILES_BINS) {
                 if (!File.Exists(String.Format("bin{0}", filePath))) {
                     return false;
@@ -172,5 +212,48 @@ namespace NiceHashMiner.Utils {
             }
             return true;
         }
+
+        // this one is mandatory download it regardles of CPU avaliability
+        private bool IsMinersBins_SHARED_Init() {
+            foreach (var filePath in ALL_FILES_BINS_SHARED) {
+                if (!File.Exists(String.Format("bin{0}", filePath))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool IsMinersBins_NVIDIA_Init() {
+            foreach (var filePath in ALL_FILES_BINS_NVIDIA) {
+                if (!File.Exists(String.Format("bin{0}", filePath))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool IsMinersBins_AMD_Init() {
+            foreach (var filePath in ALL_FILES_BINS_AMD) {
+                if (!File.Exists(String.Format("bin{0}", filePath))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool IsMinersBinsInit() {
+            // in the future or 2.0
+            //bool isOk = IsMinersBins_SHARED_Init();
+            //if (isOk && ComputeDeviceQueryManager.Instance.HasNVIDIA) {
+            //    isOk = IsMinersBins_NVIDIA_Init();
+            //}
+            //if (isOk && ComputeDeviceQueryManager.Instance.HasAMD) {
+            //    isOk = IsMinersBins_AMD_Init();
+            //}
+
+            //return isOk;
+            return IsMinersBins_ALL_Init();
+        }
+
     }
 }

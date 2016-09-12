@@ -31,9 +31,15 @@ namespace NiceHashMiner.Devices
         const double NVIDIA_MIN_DETECTION_DRIVER = 362.61;
         double _currentNvidiaOpenCLDriver = -1;
         JsonSerializerSettings _jsonSettings = null;
+
+        // for downloading
+        public bool HasNVIDIA { get; private set; }
+        public bool HasAMD { get; private set; }
             
         protected ComputeDeviceQueryManager() {
             TAG = this.GetType().Name;
+            HasNVIDIA = false;
+            HasAMD = false;
             _jsonSettings = new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
@@ -496,6 +502,8 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine("");
                             stringBuilder.AppendLine("QueryAMD devices: ");
                             for (int i_id = 0; i_id < amdGpus.Count; ++i_id) {
+                                HasAMD = true;
+
                                 int busID = amdGpus[i_id].AMD_BUS_ID;
                                 if (busID != -1 && _busIdsInfo.ContainsKey(busID)) {
                                     var deviceName = _busIdsInfo[busID].Item1;
@@ -595,6 +603,7 @@ namespace NiceHashMiner.Devices
                 }
             }
             if (CudaDevices != null && CudaDevices.Count != 0) {
+                HasNVIDIA = true;
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine("");
                 stringBuilder.AppendLine("CudaDevicesDetection:");

@@ -11,5 +11,9 @@ namespace NiceHashMiner {
         public static string DemoUser = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
         public static JsonSerializerSettings JsonSettings = null;
         public static int ThreadsPerCPU;
+        // quickfix guard for checking internet conection
+        public static bool IsFirstNetworkCheckTimeout = true;
+        public static int FirstNetworkCheckTimeoutTimeMS = 500;
+        public static int FirstNetworkCheckTimeoutTries = 10;
     }
 }

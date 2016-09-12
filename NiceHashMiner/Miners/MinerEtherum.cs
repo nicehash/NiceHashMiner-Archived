@@ -147,16 +147,16 @@ namespace NiceHashMiner.Miners {
 
         protected override void _Stop(MinerStopType willswitch) {
             // prevent logging non runing miner
-            if (IsRunning && willswitch == MinerStopType.SWITCH) {
+            if (IsRunning && !IsPaused && willswitch == MinerStopType.SWITCH) {
                 // daggerhashimoto - we only "pause" mining
                 IsPaused = true;
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Pausing ethminer..");
                 StopMining();
                 return;
-            } else if (IsRunning || IsPaused) {
+            } else if ((IsRunning || IsPaused) && willswitch != MinerStopType.SWITCH) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }
-            if (willswitch != MinerStopType.FORCE_END) ChangeToNextAvaliablePort();
+            if (willswitch == MinerStopType.END) ChangeToNextAvaliablePort();
             if ((willswitch == MinerStopType.FORCE_END || willswitch == MinerStopType.END) && ProcessHandle != null) {
                 IsPaused = false; // shutting down means it is not paused
                 try {

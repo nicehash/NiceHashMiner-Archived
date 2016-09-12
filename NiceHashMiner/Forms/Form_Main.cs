@@ -16,6 +16,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Utils;
+using NiceHashMiner.PInvoke;
 
 namespace NiceHashMiner
 {
@@ -223,6 +224,14 @@ namespace NiceHashMiner
             SMACheck.Tick += SMACheck_Tick;
             SMACheck.Interval = 60 * 1000; // every 60 seconds
             SMACheck.Start();
+
+            // increase timeout
+            if (Globals.IsFirstNetworkCheckTimeout) {
+                while (!Helpers.WebRequestTestGoogle() && Globals.FirstNetworkCheckTimeoutTries > 0) {
+                    --Globals.FirstNetworkCheckTimeoutTries;
+                }
+            }
+
             SMACheck_Tick(null, null);
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_GetBTCRate"));

@@ -230,6 +230,9 @@
     <Compile Include="Miners\sgminer.cs" />
     <Compile Include="TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
+    <Compile Include="Utils\BINS_CODEGEN_AMD.cs" />
+    <Compile Include="Utils\BINS_CODEGEN_NVIDIA.cs" />
+    <Compile Include="Utils\BINS_CODEGEN_SHARED.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
     <Compile Include="Utils\MinersDownloadManager.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
