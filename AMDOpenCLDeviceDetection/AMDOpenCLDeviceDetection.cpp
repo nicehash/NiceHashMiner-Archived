@@ -85,8 +85,6 @@ bool AMDOpenCLDeviceDetection::QueryDevices() {
 					curDevice._CL_DEVICE_VENDOR = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_VENDOR>());
 					curDevice._CL_DEVICE_VERSION = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_VERSION>());
 					curDevice._CL_DRIVER_VERSION = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DRIVER_VERSION>());
-					platformDevs.push_back(curDevice);
-
 
 					// AMD topology get Bus No
 					if (isAMD) {
@@ -95,6 +93,8 @@ bool AMDOpenCLDeviceDetection::QueryDevices() {
 							curDevice.AMD_BUS_ID = (int)topology.pcie.bus;
 						}
 					}
+
+					platformDevs.push_back(curDevice);
 				}
 				_devicesPerPlatform.emplace(make_pair(platformName, platformDevs));
 			}
