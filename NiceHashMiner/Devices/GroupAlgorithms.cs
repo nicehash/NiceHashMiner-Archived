@@ -21,7 +21,8 @@ namespace NiceHashMiner.Devices {
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
-                string DefaultParam = AmdGpuDevice.DefaultParam;
+                // DisableAMDTempControl = false; so temperature params are enabled by default, not sure if TemperatureParam should be lastly appended
+                string DefaultParam = AmdGpuDevice.DefaultParam + AmdGpuDevice.TemperatureParam;
                 return new Dictionary<AlgorithmType, Algorithm>() { 
                 { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13,  "x13")
                     { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2" } },

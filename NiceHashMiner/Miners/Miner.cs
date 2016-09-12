@@ -604,7 +604,7 @@ namespace NiceHashMiner
             const string MASK = "--api-bind={0}";
             var oldApiBindStr = String.Format(MASK, oldPort);
             var newApiBindStr = String.Format(MASK, newPort);
-            if (LastCommandLine.Contains(oldApiBindStr)) {
+            if (LastCommandLine != null && LastCommandLine.Contains(oldApiBindStr)) {
                 LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
                 return true;
             }

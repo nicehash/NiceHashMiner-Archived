@@ -65,8 +65,6 @@ namespace NiceHashMiner.Configs {
         public BenchmarkTimeLimitsConfig BenchmarkTimeLimits { get; set; }
         public DeviceDetectionConfig DeviceDetection { get; set; }
         
-        // TODO remove
-        public bool DisableAMDTempControl { get; set; }
         public bool AutoScaleBTCValues { get; set; }
         public bool StartMiningWhenIdle { get; set; }
 
@@ -144,7 +142,6 @@ namespace NiceHashMiner.Configs {
             MinimizeToTray = false;
             BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             DeviceDetection = new DeviceDetectionConfig();
-            DisableAMDTempControl = false;
             AutoScaleBTCValues = true;
             StartMiningWhenIdle = false;
             LogToFile = true;
@@ -224,7 +221,6 @@ namespace NiceHashMiner.Configs {
             if (_file.DeviceDetection != null) {
                 this.DeviceDetection = _file.DeviceDetection;
             }
-            DisableAMDTempControl = _file.DisableAMDTempControl;
             AutoScaleBTCValues = _file.AutoScaleBTCValues;
             StartMiningWhenIdle = _file.StartMiningWhenIdle;
             MinIdleSeconds = _file.MinIdleSeconds;

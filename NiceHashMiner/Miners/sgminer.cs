@@ -19,8 +19,6 @@ namespace NiceHashMiner.Miners
     class sgminer : Miner
     {
         private readonly int GPUPlatformNumber;
-        const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90" +
-                                        " --temp-target 75 --auto-fan --auto-gpu";
         
         // we only group devices that are compatible. for sgminer we have gpucodename and enabled optimized vesrion as mandatory extra parameters
         private string CommonGpuCodenameSetting = "";
@@ -91,10 +89,6 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine += GetDevicesCommandString();
 
-            // TODO IMPORTANT this should be in params since no checkbox anymore
-            if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
-                LastCommandLine += TemperatureParam;
-
             ProcessHandle = _Start();
         }
 
@@ -162,8 +156,6 @@ namespace NiceHashMiner.Miners
 
             CommandLine += GetDevicesCommandString();
 
-            if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl == false)
-                CommandLine += TemperatureParam;
             CommandLine += " && del dump.txt\"";
 
             return CommandLine;

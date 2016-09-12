@@ -40,7 +40,7 @@ namespace NiceHashMiner.Configs {
                 GeneralConfig.DeviceDetection.DisableDetectionNVidia3X = Config.ConfigData.DisableDetectionNVidia3X;
                 GeneralConfig.DeviceDetection.DisableDetectionNVidia2X = Config.ConfigData.DisableDetectionNVidia2X;
                 GeneralConfig.DeviceDetection.DisableDetectionAMD = Config.ConfigData.DisableDetectionAMD;
-                GeneralConfig.DisableAMDTempControl = Config.ConfigData.DisableAMDTempControl;
+                //GeneralConfig.DisableAMDTempControl = Config.ConfigData.DisableAMDTempControl;
                 GeneralConfig.AutoScaleBTCValues = Config.ConfigData.AutoScaleBTCValues;
                 GeneralConfig.StartMiningWhenIdle = Config.ConfigData.StartMiningWhenIdle;
                 GeneralConfig.LogToFile = Config.ConfigData.LogToFile;
@@ -74,9 +74,14 @@ namespace NiceHashMiner.Configs {
 
         private void LoadBenchmarks() {
             foreach (var CDev in ComputeDevice.AllAvaliableDevices) {
-                var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.UUID, CDev.Name);
-                benchConfig.InitializeConfig();
-                BenchmarkConfigs.Add(CDev.UUID, benchConfig);
+                // doubly check if not added
+                if (BenchmarkConfigs.ContainsKey(CDev.UUID)) {
+                    Helpers.ConsolePrint(TAG, "BUG - LoadBenchmarks() already added for {0}", CDev.UUID);
+                } else {
+                    var benchConfig = DeviceBenchmarkConfigManager.Instance.GetConfig(CDev.DeviceGroupType, CDev.UUID, CDev.Name);
+                    benchConfig.InitializeConfig();
+                    BenchmarkConfigs.Add(CDev.UUID, benchConfig);
+                }
             }
         }
 
