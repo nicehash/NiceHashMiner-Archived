@@ -82,7 +82,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form_Loading";
-            this.TopMost = true;
             this.Shown += new System.EventHandler(this.Form_Loading_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
