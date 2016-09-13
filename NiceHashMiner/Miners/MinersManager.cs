@@ -200,9 +200,11 @@ namespace NiceHashMiner.Miners {
         public double GetTotalRate() {
             double TotalRate = 0;
 
-            foreach (var group in _currentAllGroupedDevices) {
-                var groupMiners = _groupedDevicesMiners[CalcGroupedDevicesKey(group)];
-                TotalRate += groupMiners.CurrentWorkingMiner.CurrentRate;
+            if (_currentAllGroupedDevices != null) {
+                foreach (var group in _currentAllGroupedDevices) {
+                    var groupMiners = _groupedDevicesMiners[CalcGroupedDevicesKey(group)];
+                    TotalRate += groupMiners.CurrentWorkingMiner.CurrentRate;
+                }
             }
 
             return TotalRate;
@@ -311,14 +313,12 @@ namespace NiceHashMiner.Miners {
                     foreach (var kvp in deviceConfig.AlgorithmSettings) {
                         var key = kvp.Key;
                         var algorithm = kvp.Value;
-                        // TODO instead of cumulative speeds get just if enabled or not count x > 0 => enabled; x < 0 => disabled
+                        // instead of cumulative speeds get just if enabled or not count x > 0 => enabled; x < 0 => disabled
                         if (cumulativeSpeeds[key] > 0) {
                             cumulativeSpeeds[key] = algorithm.BenchmarkSpeed;
                         } else {
                             cumulativeSpeeds[key] = -1 * algorithm.BenchmarkSpeed;
                         }
-                        // TODO OLD
-                        //cumulativeSpeeds[key] *= algorithm.BenchmarkSpeed;
                     }
                 }
             }

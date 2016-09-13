@@ -40,7 +40,7 @@ NiceHash Miner is essentially the only tool a miner needs. No need to go through
 
 # <a name="requirements"></a> Requirements
 
-- **Windows** 7 or newer operating system (preferably 64-bit)
+- **Windows** 7 or newer operating system **64-bit**
 - For CPU mining a modern CPU with SSE2 support
 - For AMD mining any AMD GPU with OpenCL support
 - For NVIDIA mining any NVIDIA GPU with Compute capability (SM) 2.1 or newer
@@ -52,7 +52,7 @@ NiceHash Miner is essentially the only tool a miner needs. No need to go through
 
 All you have to do is download, extract and run the miner (no installation needed), choose the server location that is the **closest to your location**, run built-in benchmark and enter your Bitcoin wallet address where you want to get your coins sent at - and you are ready to start mining and maximizing your profit.
 
-<i>**Note**: .NET Framework 2.0 or higher and Microsoft Visual C++ Redistributable 2013 is required. No additional installations should be needed if you use Windows 7 or later. However, if you encounter any issues when starting application (application would fail to start or errors/warnings about missing DLL files are displayed) you should download and install <a href="https://www.microsoft.com/en-us/download/details.aspx?id=1639" target="_blank">Microsoft **.NET Framework 2.0**</a> and <a href="https://www.microsoft.com/en-us/download/details.aspx?id=40784" target="_blank">Microsoft **Visual C++ Redistributable 2013**</a> (after installation a reboot might be required).</i>
+<i>**Note**: .NET Framework 4.5 or higher and Microsoft Visual C++ Redistributable 2013 is required. No additional installations should be needed if you use Windows 7 or later. However, if you encounter any issues when starting application (application would fail to start or errors/warnings about missing DLL files are displayed) you should download and install <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30653" target="_blank">Microsoft **.NET Framework 4.5**</a> and <a href="https://www.microsoft.com/en-us/download/details.aspx?id=40784" target="_blank">Microsoft **Visual C++ Redistributable 2013 (vcredist_x64.exe)**</a> (after installation a reboot might be required).</i>
 
 Detailed instructions:
 - Download binaries from here: https://github.com/nicehash/NiceHashMiner/releases
@@ -73,36 +73,34 @@ Profitability of mining can go up and down that may be unprofitable to mine espe
 
 # <a name="options"></a> Additional options
 
-Click 'Settings' button. NiceHash Miner will be relaunched with the ability to modify configs. Alternatively, you can manually modify config.json file (close NiceHash Miner first).
+Click 'Settings' button. NiceHash Miner will be relaunched with the ability to modify configs. Alternatively, you can manually modify \configs\General.json for general settings and \configs\benchmark_XXX.json (XXX is your device UUID) files for device benchmark settings (close NiceHash Miner first).
 
+## General settings
 Parameter | Range | Description
 -----------------|----------|-------------------
 ConfigFileVersion | Version | This is to identify which version of NiceHashMiner did the config file is made from.
 Language | number | Language selection for NiceHashMiner GUI.
-DebugConsole | true or false | When set to true, it displays debug console.
 DisplayCurrency | valid 3 letter code | Converts to selected currency via http://fixer.io valid options are any supported via fixer.
+DebugConsole | true or false | When set to true, it displays debug console.
 BitcoinAddress | valid BTC address | The address that NiceHashMiner will mine to.
 WorkerName | text | To identify the computer on NiceHash web UI.
-Location | number | Used to select the location of the mining server.
-AutoStartMining | true or false | When set to true, NiceHashMiner will automatically start mining when launched.
+ServiceLocation | number | Used to select the location of the mining server.
 HideMiningWindows | true or false | When set to true, sgminer, ccminer and cpuminer console windows will be hidden.
 MinimizeToTray | true or false | When set to true, NiceHashMiner will minimize to the system tray.
-LessThreads | 0 .. 64 | Reduce number of threads used on each CPU by LessThreads.
-ForceCPUExtension | 0, 1, 2 or 3 | Force certain CPU extension miner. 0 is automatic, 1 for SSE2, 2 for AVX and 3 for AVX2.
+ForceCPUExtension | 0, 1, 2, 3 or 4 | Force certain CPU extension miner. 0 is automatic, 1 for SSE2, 2 for AVX, 3 for AVX2 and  4 for AES.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
 SwitchMinSecondsAMD | number | Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.
 MinerAPIQueryInterval | number | Amount of time between each API call to get the latest stats from miner.
 MinerRestartDelayMS | number | Amount of time to delay before trying to restart the miner.
-MinerAPIGraceSeconds | number | This is to give time for the miner's API to start up properly.
-BenchmarkTimeLimitsCPU | numbers | List of benchmarking time (in seconds). The first one is for "Quick benchmark", second one is for "Standard benchmark" and third one is for "Precise benchmark".
-BenchmarkTimeLimitsNVIDIA | numbers | List of benchmarking time (in seconds). The first one is for "Quick benchmark", second one is for "Standard benchmark" and third one is for "Precise benchmark".
-BenchmarkTimeLimitsAMD | numbers | List of benchmarking time (in seconds). The first one is for "Quick benchmark", second one is for "Standard benchmark" and third one is for "Precise benchmark".
-DisableDetectionNVidia5X | true or false | Set it to true if you would like to skip the detection of NVidia5.X GPUs.
-DisableDetectionNVidia3X | true or false | Set it to true if you would like to skip the detection of NVidia3.X GPUs.
-DisableDetectionNVidia2X | true or false | Set it to true if you would like to skip the detection of NVidia2.X GPUs.
-DisableDetectionAMD | true or false | Set it to true if you would like to skip the detection of AMD GPUs.
-DisableAMDTempControl | true or false | Set it to true if you would like to disable the built-in temperature control for AMD GPUs.
+BenchmarkTimeLimits\CPU | numbers | List of benchmarking time (in seconds). The first one is for "Quick benchmark", second one is for "Standard benchmark" and third one is for "Precise benchmark".
+BenchmarkTimeLimits\NVIDIA | numbers | List of benchmarking time (in seconds). The first one is for "Quick benchmark", second one is for "Standard benchmark" and third one is for "Precise benchmark".
+BenchmarkTimeLimits\AMD | numbers | List of benchmarking time (in seconds). The first one is for "Quick benchmark", second one is for "Standard benchmark" and third one is for "Precise benchmark".
+DeviceDetection\DisableDetectionNVidia6X | true or false | Set it to true if you would like to skip the detection of NVidia6.X GPUs.
+DeviceDetection\DisableDetectionNVidia5X | true or false | Set it to true if you would like to skip the detection of NVidia5.X GPUs.
+DeviceDetection\DisableDetectionNVidia3X | true or false | Set it to true if you would like to skip the detection of NVidia3.X GPUs.
+DeviceDetection\DisableDetectionNVidia2X | true or false | Set it to true if you would like to skip the detection of NVidia2.X GPUs.
+DeviceDetection\DisableDetectionAMD | true or false | Set it to true if you would like to skip the detection of AMD GPUs.
 AutoScaleBTCValues | true or false | Set it to true if you wish to see the BTC values autoscale to the appropriate scale.
 StartMiningWhenIdle | true or false | Automatically start mining when computer is idle and stop mining when computer is being used.
 MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.
@@ -112,37 +110,33 @@ ShowDriverVersionWarning | true or false | Set to true if you would like to get 
 DisableWindowsErrorReporting | true or false | Set it to true if you would like to disable windows error reporting. This will allow NiceHashMiner to restart the miner in the case of the miner crashes.
 UseNewSettingsPage | true or false | Set to true if you would like to use the new Settings form.
 NVIDIAP0State | true or false | When set to true, NiceHashMiner would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.
-ethminerAPIPortNvidia | number | Ethminer API port that will be used to get the status of the miner.
-ethminerAPIPortAMD | number | Ethminer API port that will be used to get the status of the miner.
 ethminerDefaultBlockHeight | number | A fallback number that will be used if API call fails. This is only used for benchmarking.
-Groups\Name | text | Used for identification purposes in the config file
-Groups\APIBindPort | number | API port that will be used by this group.
-Groups\ExtraLaunchParameters | text | Additional launch parameters when launching miner.
-Groups\UsePassword | text or null | Use this password when launching miner. If null, default password 'x' is used.
-Groups\MinimumProfit | number | If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.
-Groups\DaggerHashimotoGenerateDevice | number | Choose which GPU that will create the on GPU DAG file. As a rule of thumb, choose the fastest GPU that is available.
-Groups\DisabledDevices | numbers | List of GPUs that will be disabled and will not be used for benchmarking and mining by NiceHashMiner.
-Groups\Algorithms\Name | text | Used for identification purposes in the config file.
-Groups\Algorithms\ExtraLaunchParameters | text | Additional launch parameters when launching miner and this algorithm.
-Groups\Algorithms\UsePassword | text or null | Use this password when launching miner and this algorithm. If null, Groups\UsePassword is used.
-Groups\Algorithms\BenchmarkSpeed | number | Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.
-Groups\Algorithms\Skip | true or false | Set to true if you would like to skip & disable a particular algorithm. Benchmarking as well as actual mining will be disabled for this particular algorithm. That said, auto-switching will skip this algorithm when mining will be running.
-Groups\Algorithms\DisabledDevices | numbers | List of GPUs that will be disabled and will not be used for benchmarking and mining by NiceHashMiner for this algorithm only.
+EthminerDagGenerationType | 0, 1, 2, 3 | Set ethminer DAG mode generation 0 - SingleKeep, 1 - Single, 2 - Sequential, 3 - Parallel.
+ApiBindPortPoolStart | number | Set the starting value (default is 5100) for miners API ports. When a new miner is created it will use an avaliable API port starting from the ApiBindPortPoolStart and higher.
+MinimumProfit | number | If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.
+LastDevicesSettup | device settup list | This list is used for setting if a device is enabled or disabled.
+LastDevicesSettup\Enabled | true or false | Set to false if you would like to disable this device for benchmarking and mining by NiceHashMiner.
+LastDevicesSettup\UUID | text | Used for unique identification purposes in the config file (**DO NOT EDIT**)
+LastDevicesSettup\Name | text | Used for identification purposes in the config file (**DO NOT EDIT**)
 
-Do not change any 'Name' parameters - changing them will not have any effect. 'Name' parameters are there only for easier config management.
+## Benchmark settings (per device)
+Parameter | Range | Description
+-----------------|----------|-------------------
+DeviceUUID | text | Used for unique identification purposes in the config file (**DO NOT EDIT**)
+DeviceName | text | Used for identification purposes in the config file (**DO NOT EDIT**)
+AlgorithmSettings | dictionary {key: text, value: Algorithm } | Key value paired dictionary with avaliable device algorithms settings. Keys should not be edited only Algorithm data.
+AlgorithmSettings\Algorithm\NiceHashID | number | Algorithm ID (**DO NOT EDIT**)
+AlgorithmSettings\Algorithm\MinerName | text | specific miner name setting (**DO NOT EDIT**)
+AlgorithmSettings\Algorithm\BenchmarkSpeed | number | Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.
+AlgorithmSettings\Algorithm\ExtraLaunchParameters | text | Additional launch parameters when launching miner and this algorithm.
+AlgorithmSettings\Algorithm\Intensity | number | Set algorithm Intensity setting for this algorithm (**Setting works only for supported NVIDIA miners**).
+AlgorithmSettings\Algorithm\LessThreads | 0 .. 64 | Reduce number of threads used on CPU by LessThreads (**Setting works only on CPU miners**).
+AlgorithmSettings\Algorithm\Skip | true or false | Set to true if you would like to skip & disable a particular algorithm. Benchmarking as well as actual mining will be disabled for this particular algorithm. That said, auto-switching will skip this algorithm when mining will be running.
 
 Examples:
 --------
 If your CPU has 8 virtual cores and you would like to mine only with 7:
 > Set LessThreads to 1.
-
-If you would like to set lower starting difficulty for ScryptJaneNf16 algorithm because your CPU is slow:
-> Set UsePassword to "d=0.1" under Algorithms item that has Name 
-"scryptjanenf16" for all groups with Name "CPUx".
-
-If you would like to manually configure intensity parameters for your three NVIDIA video cards (Quark algorithm):
-> Set ExtraLaunchParameters to "-i 19,19,19" under Algorithms item that 
-has Name "quark" for group with Name "NVIDIA5.x" or "NVIDIA3.x".
 
 # <a name="troubleshooting"></a> Troubleshooting
 

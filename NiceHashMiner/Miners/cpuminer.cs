@@ -89,7 +89,6 @@ namespace NiceHashMiner.Miners {
             return isInitialized;
         }
 
-        // TODO only AVX2 tested
         public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = false) {
             return CPUMinerPath;
         }

@@ -278,7 +278,9 @@
         "MinersDownloadManager_Title_Settup_Unzipping": "Unzipping {0} %",
         "DeviceListView_ContextMenu_DisableDevice": "Disable Device",
         "DeviceListView_ContextMenu_EnableDevice": "Enable Device",
-        "DeviceListView_ContextMenu_CopyBenchmark": "Copy Benchmark From",
+        "DeviceListView_ContextMenu_CopySettings": "Copy Settings From (Benchmarks, algorithm parameters, ...)",
+        "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg" : "Are you sure you wabnt to copy settings from {0} to {1}?",
+        "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title" : "Confirm Settings Copy",
         "FormSettings_AlgorithmsSettings": "Algorithm settings for {0} :",
         "FormSettings_ButtonProfitSingle": "Select device first",
         "Form_Settings_General_BenchmarkTimeLimits_Title": "Benchmark Time Limits",
@@ -293,6 +295,9 @@
         "QueryVideoControllers_NOT_ALL_OK_Msg": "We have detected a Video Controller that is not working OK. NiceHash Miner will not be able to use This Video Controller for mining. We advise you to restart your computer, or reinstall Video Controller drivers.",
         "QueryVideoControllers_NOT_ALL_OK_Msg_Append": "Name: {0}, Status {1}, PNPDeviceID {2}",
         "QueryVideoControllers_NOT_ALL_OK_Title": "Warning! Video Controller not OK",
-        "ComputeDevice_Short_Name" :  "CDev#{0}"
+        "Form_Main_Restart_Required_Msg" : "Settings change requires NiceHash Miner to restart.",
+        "Form_Main_Restart_Required_Title" : "Restart Notice",
+        "ComputeDevice_Short_Name": "CDev#{0}",
+        "Form_Main_x64_Support_Only" : "NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86",
     }
 }

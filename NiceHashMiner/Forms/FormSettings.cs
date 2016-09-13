@@ -240,7 +240,7 @@ namespace NiceHashMiner.Forms {
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
 
             // Benchmark time limits
-            // TODO internationalization change
+            // internationalization change
             groupBoxBenchmarkTimeLimits.Text = International.GetText("Form_Settings_General_BenchmarkTimeLimits_Title") + ":";
             benchmarkLimitControlCPU.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
             benchmarkLimitControlNVIDIA.GroupName = International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group") + ":";
@@ -325,10 +325,9 @@ namespace NiceHashMiner.Forms {
                 this.comboBox_DagLoadMode.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
             }
 
-            // TODO CPU exceptions
+            // CPU exceptions
             comboBox_CPU0_ForceCPUExtension.SelectedIndex = (int)ConfigManager.Instance.GeneralConfig.ForceCPUExtension;
             comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged;
-            // TODO 
             // fill dag dropdown
             comboBox_DagLoadMode.Items.Clear();
             for (int i = 0; i < (int)DagGenerationType.END; ++i) {
@@ -383,6 +382,7 @@ namespace NiceHashMiner.Forms {
                 devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
                 devicesListViewEnableControl1.AutoSaveChange = false;
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
+                devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
             }
 
             // Add language selections list
@@ -530,7 +530,6 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart = Int32.Parse(textBox_APIBindPortStart.Text);
             textBox_APIBindPortStart.Text = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart.ToString();
 
-            // TODO maybe make to parse double check
             ConfigManager.Instance.GeneralConfig.MinimumProfit = Double.Parse(textBox_MinProfit.Text, CultureInfo.InvariantCulture);
             textBox_MinProfit.Text = ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma
         }
@@ -552,7 +551,6 @@ namespace NiceHashMiner.Forms {
 
 
         #region Tab Device
-        // TODO indicate change
         private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
 
             algorithmSettingsControl1.Deselect();
@@ -637,7 +635,6 @@ namespace NiceHashMiner.Forms {
 
         #region Form Buttons
         private void buttonDefaults_Click(object sender, EventArgs e) {
-            // TODO change translation NHM will not restart, unless restart changes made
             DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonDefaultsMsg"),
                                                   International.GetText("Form_Settings_buttonDefaultsTitle"),
                                                   MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -647,7 +644,6 @@ namespace NiceHashMiner.Forms {
                 IsChangeSaved = true;
                 ConfigManager.Instance.GeneralConfig.SetDefaults();
 
-                // TODO reset International
                 International.Initialize(ConfigManager.Instance.GeneralConfig.Language);
                 InitializeGeneralTabFieldValuesReferences();
                 InitializeGeneralTabTranslations();

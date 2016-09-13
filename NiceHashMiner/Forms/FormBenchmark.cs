@@ -104,6 +104,7 @@ namespace NiceHashMiner.Forms {
 
             devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
             devicesListViewEnableControl1.IsBenchmarkForm = true;
+            devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
 
             // use this to track miner benchmark statuses
             _benchmarkMiners = new List<Miner>();
@@ -357,6 +358,7 @@ namespace NiceHashMiner.Forms {
 
                 var time = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits
                     .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
+                //currentConfig.TimeLimit = time;
                 
                 // dagger about 4 minutes
                 var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;

@@ -36,7 +36,6 @@ namespace NiceHashMiner
             { AlgorithmType.Hodl , "hodl" },
             { AlgorithmType.DaggerHashimoto , "daggerhashimoto" },
             { AlgorithmType.Decred , "decred" },
-            // TODO check
             { AlgorithmType.CryptoNight , "cryptonight" },
         };
 

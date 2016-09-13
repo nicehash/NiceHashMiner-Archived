@@ -16,7 +16,6 @@ namespace NiceHashMiner.Miners {
 
         public MinerEtherumCUDA()
             : base(DeviceType.NVIDIA, "MinerEtherumCUDA", "NVIDIA") {
-            // TODO add to static miners
                 MinerEtherumCUDAList.Add(this);
         }
 
@@ -28,7 +27,6 @@ namespace NiceHashMiner.Miners {
         public override void Start(Algorithm miningAlgorithm, string url, string username) {
             Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumCUDA, checking existing MinerEtherumCUDA to stop");
             foreach (var ethminer in MinerEtherumCUDAList) {
-                // TODO IMPORTANT ethminer.IsRunning will not suffice here, make a new STATE ENDED
                 if (ethminer.MINER_ID != MINER_ID && (ethminer.IsRunning || ethminer.IsPaused)) {
                     Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}",ethminer.MinerTAG(), ethminer.ProcessTag()));
                     ethminer.End();

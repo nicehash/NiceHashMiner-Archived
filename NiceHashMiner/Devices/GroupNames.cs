@@ -17,7 +17,7 @@ namespace NiceHashMiner.Devices
                                                   };
 
         private static readonly string[] _namesGeneral = {
-                                        "CPU", // TODO we can have more then one CPU
+                                        "CPU",
                                         "AMD",
                                         "NVIDIA",
                                         "NVIDIA",

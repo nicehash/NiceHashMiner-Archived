@@ -109,7 +109,6 @@ namespace NiceHashMiner
         private const int _MIN_CooldownTimeInMilliseconds = 5 * 1000; // 5 seconds
         //private const int _MIN_CooldownTimeInMilliseconds = 1000; // TESTING
 
-        // TODO maybe less time
         //private const int _MAX_CooldownTimeInMilliseconds = 60 * 1000; // 1 minute max, whole waiting time 75seconds
         private readonly int _MAX_CooldownTimeInMilliseconds; // = GET_MAX_CooldownTimeInMilliseconds();
         protected abstract int GET_MAX_CooldownTimeInMilliseconds();
@@ -215,7 +214,6 @@ namespace NiceHashMiner
         /// <returns></returns>
         abstract public string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = true);
 
-        // TODO IMPORTNATN!!! check this
         public void KillAllUsedMinerProcesses() {
             List<MinerPID_Data> toRemovePidData = new List<MinerPID_Data>();
             Helpers.ConsolePrint(MinerTAG(), "Trying to kill all miner processes for this instance:");
@@ -243,9 +241,8 @@ namespace NiceHashMiner
         abstract protected void _Stop(MinerStopType willswitch);
         virtual public void Stop(MinerStopType willswitch = MinerStopType.SWITCH, bool needsRestart = false)
         {
+            _cooldownCheckTimer.Stop();
             if (!needsRestart) {
-                // TODO stop here timer
-                _cooldownCheckTimer.Stop();
                 _Stop(willswitch);
                 PreviousTotalMH = 0.0;
                 IsRunning = false;

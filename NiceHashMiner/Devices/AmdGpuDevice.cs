@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices {
-    // TODO trim strings
     [Serializable]
     public class AmdGpuDevice {
 

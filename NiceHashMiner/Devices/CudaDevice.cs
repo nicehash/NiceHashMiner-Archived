@@ -33,7 +33,6 @@ namespace NiceHashMiner.Devices {
         public bool IsEtherumCapable() {
             if (!_isEtherumCapableInit) {
                 _isEtherumCapableInit = true;
-                // TODO check if new Ethminer is SM 6 capable
                 _isEtherumCapable = SM_major == 3 || SM_major == 5 || SM_major == 6;
                 // check if 2GB device memory
                 _isEtherumCapable = _isEtherumCapable && DeviceGlobalMemory >= ComputeDevice.MEMORY_2GB;

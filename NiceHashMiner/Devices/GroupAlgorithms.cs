@@ -71,7 +71,6 @@ namespace NiceHashMiner.Devices {
                 { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla") },
                 { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
                 { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred") },
-                // TODO new added for now for all groups
                 { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") }
                 };
                 if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
@@ -80,7 +79,7 @@ namespace NiceHashMiner.Devices {
                     // disable/remove neoscrypt, daggerhashimoto
                     ret.Remove(AlgorithmType.NeoScrypt);
                     ret.Remove(AlgorithmType.DaggerHashimoto);
-                    // TODO check if remove needed
+
                     ret.Remove(AlgorithmType.Lyra2RE);
                     ret.Remove(AlgorithmType.Lyra2REv2);
                     //ret.Remove(AlgorithmType.CryptoNight);

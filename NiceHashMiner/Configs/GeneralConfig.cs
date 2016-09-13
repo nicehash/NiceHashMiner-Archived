@@ -120,7 +120,6 @@ namespace NiceHashMiner.Configs {
         /// The changes can be of two scenarios:
         /// #1 Detect if the device is enabled/disabled,
         /// #2 Detect hardware changes/upgrades such as CPUs and GPUs.
-        /// TODO change #2 with UUID methods
         /// </summary>
         public List<ComputeDevice> LastDevicesSettup { get; set; }
 
@@ -213,8 +212,6 @@ namespace NiceHashMiner.Configs {
             SwitchMinSecondsAMD = _file.SwitchMinSecondsAMD;
             MinerAPIQueryInterval = _file.MinerAPIQueryInterval;
             MinerRestartDelayMS = _file.MinerRestartDelayMS;
-            //MinerAPIGraceSeconds = _file.MinerAPIGraceSeconds;
-            //MinerAPIGraceSecondsAMD = _file.MinerAPIGraceSecondsAMD;
             if (_file.BenchmarkTimeLimits != null) {
                 this.BenchmarkTimeLimits = _file.BenchmarkTimeLimits;
             }
@@ -243,7 +240,6 @@ namespace NiceHashMiner.Configs {
         public void AfterDeviceQueryInitialization() {
 
             if (_file != null && _file.LastDevicesSettup != null) {
-                // TODO reinit devices this is going to need serials upgrade
                 foreach (var configDevice in _file.LastDevicesSettup) {
                     foreach (var usedDevice in ComputeDevice.AllAvaliableDevices) {
                         if (configDevice.UUID == usedDevice.UUID) {

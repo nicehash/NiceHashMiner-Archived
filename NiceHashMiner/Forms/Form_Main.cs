@@ -73,9 +73,6 @@ namespace NiceHashMiner
             label_NotProfitable.Visible = false;
 
             InitMainConfigGUIData();
-            // TODO
-            InitFlowPanelStart();
-            ClearRatesALL();
         }
 
         private void InitLocalization() {
@@ -133,9 +130,7 @@ namespace NiceHashMiner
 
         public void AfterLoadComplete()
         {
-            // TODO dispose object, check LoadingScreen 
             LoadingScreen = null;
-
             this.Enabled = true;
 
             IdleCheck = new Timer();
@@ -176,7 +171,7 @@ namespace NiceHashMiner
             StartupTimer = null;
 
             if (!Helpers.InternalCheckIsWow64()) {
-                MessageBox.Show("NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86",
+                MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK);
 
@@ -303,7 +298,7 @@ namespace NiceHashMiner
                     Close();
                 }
             }
-            // TODO no bots please
+            // no bots please
             if (ConfigManager.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager.Instance.GeneralConfig.hwidOK) {
                 MessageBox.Show(International.GetText("form1_msgbox_anti_botnet_msgbox"),
                     International.GetText("Warning_with_Exclamation"),
@@ -319,7 +314,6 @@ namespace NiceHashMiner
         private void Form_Main_Shown(object sender, EventArgs e)
         {
             // general loading indicator
-            // TODO fix loading steps
             int TotalLoadSteps = 12;
             LoadingScreen = new Form_Loading(this,
                 International.GetText("form3_label_LoadingText"),
@@ -349,19 +343,6 @@ namespace NiceHashMiner
 
         private void MinerStatsCheck_Tick(object sender, EventArgs e) {
             MinersManager.Instance.MinerStatsCheck(Globals.NiceHashData);
-        }
-
-        private void SetDeviceGroupStats(
-            ref Label labelSpeed,
-            ref Label labelRateBTC,
-            ref Label labelRateCurrency,
-            string aname, double speed, double paying)
-        {
-            labelSpeed.Text = Helpers.FormatSpeedOutput(speed) + aname;
-            labelRateBTC.Text = FormatPayingOutput(paying);
-            labelRateCurrency.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
-                + String.Format(" {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
-            UpdateGlobalRate();
         }
 
         private void InitFlowPanelStart() {
@@ -632,14 +613,14 @@ namespace NiceHashMiner
         private void buttonSettings_Click(object sender, EventArgs e)
         {
             FormSettings Settings = new FormSettings();
-            // TODO location not working for settings dialog
             SetChildFormCenter(Settings);
             Settings.ShowDialog();
 
             if (Settings.IsChange && Settings.IsChangeSaved && Settings.IsRestartNeeded) {
-                MessageBox.Show("Settings change requires NiceHash Miner to restart.",
-                            "Info",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    International.GetText("Form_Main_Restart_Required_Msg"),
+                    International.GetText("Form_Main_Restart_Required_Title"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Process PHandle = new Process();
                 PHandle.StartInfo.FileName = Application.ExecutablePath;
                 PHandle.Start();
@@ -647,6 +628,7 @@ namespace NiceHashMiner
             } else if (Settings.IsChange && Settings.IsChangeSaved) {
                 InitLocalization();
                 InitMainConfigGUIData();
+                UpdateGlobalRate(); // update currency changes
             }
         }
 

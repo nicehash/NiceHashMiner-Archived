@@ -10,16 +10,16 @@ namespace NiceHashMiner.Configs
 {
     [Serializable]
     public class DeviceBenchmarkConfig : BaseConfigFile<DeviceBenchmarkConfig> {
-        [JsonIgnore]
+        
         public string DeviceUUID { get; private set; }
         [JsonIgnore]
         public DeviceGroupType DeviceGroupType { get; private set; }
 
         public string DeviceName { get; private set; }
-        public int TimeLimit { get; set; }
+        //public int TimeLimit { get; set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
 
-        public List<string> DeviceUUIDs;
+        // TODO remove in furure releases
 
         [field: NonSerialized]
         readonly public static string BENCHMARK_PREFIX = "benchmark_";
@@ -41,7 +41,6 @@ namespace NiceHashMiner.Configs
                 AlgorithmSettings = GroupAlgorithms.CreateDefaultsForGroup(deviceGroupType);
             }
 
-            DeviceUUIDs = new List<string>();
             IsAlgorithmSettingsInit = false;
 
             // calculate ID
@@ -85,9 +84,9 @@ namespace NiceHashMiner.Configs
                 && */this.DeviceName == _file.DeviceName
                 );
 
-            this.TimeLimit = _file.TimeLimit;
-            if (_file.DeviceUUIDs != null) {
-                this.DeviceUUIDs = _file.DeviceUUIDs;
+            //this.TimeLimit = _file.TimeLimit;
+            if (_file.DeviceUUID != null) {
+                this.DeviceUUID = _file.DeviceUUID;
             }
 
             if (_file.AlgorithmSettings != null) {
@@ -100,6 +99,8 @@ namespace NiceHashMiner.Configs
                     }
                 }
             }
+            // if read fromfile then it is initialized
+            IsAlgorithmSettingsInit = true;
         }
     }
 }

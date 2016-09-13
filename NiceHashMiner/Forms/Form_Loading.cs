@@ -17,7 +17,6 @@ namespace NiceHashMiner
         }
 
         private int LoadCounter = 0;
-        // TODO find out what are the 13 loading steps, think if this should really be hardcoded
         private int TotalLoadSteps = 12;
         private readonly IAfterInitializationCaller AfterInitCaller;
 
@@ -28,7 +27,6 @@ namespace NiceHashMiner
             label_LoadingText.Text = loadFormTitle;
             label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
 
-            // TODO assert that this is never null
             AfterInitCaller = initCaller;
 
             TotalLoadSteps = totalLoadSteps;
@@ -50,7 +48,6 @@ namespace NiceHashMiner
             IncreaseLoadCounter();
         }
 
-        // TODO maybe remove this method
         public void SetProgressMaxValue(int maxValue) {
             this.progressBar1.Maximum = maxValue;
         }

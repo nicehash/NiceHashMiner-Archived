@@ -52,6 +52,7 @@ namespace NiceHashMiner.Forms.Components {
         public bool IsMining { get; set; }
 
         public bool IsBenchmarkForm = false;
+        public bool IsSettingsCopyEnabled = false;
 
         [Serializable]
         public class ComputeDeviceEnabledOption {
@@ -186,7 +187,7 @@ namespace NiceHashMiner.Forms.Components {
                         disableItem.Click += toolStripMenuItemEnable_Click;
                         contextMenuStrip1.Items.Add(disableItem);
                     }
-                    if (IsBenchmarkForm) {
+                    if (IsSettingsCopyEnabled) {
                         var sameDevTypes = ComputeDevice.GetSameDevicesTypeAsDeviceWithUUID(G.CDevice.UUID);
                         if (sameDevTypes.Count > 0) {
                             var copyBenchItem = new ToolStripMenuItem();
@@ -196,12 +197,12 @@ namespace NiceHashMiner.Forms.Components {
                                     var copyBenchDropDownItem = new ToolStripMenuItem();
                                     copyBenchDropDownItem.Text = cDev.Name;
                                     copyBenchDropDownItem.Checked = cDev.UUID == G.CDevice.BenchmarkCopyUUID;
-                                    copyBenchDropDownItem.Click += toolStripMenuItemCopyBenchmark_Click;
+                                    copyBenchDropDownItem.Click += toolStripMenuItemCopySettings_Click;
                                     copyBenchDropDownItem.Tag = cDev.UUID;
                                     copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
                                 }
                             }
-                            copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopyBenchmark");
+                            copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopySettings");
                             contextMenuStrip1.Items.Add(copyBenchItem);
                         }
                     }
@@ -225,7 +226,7 @@ namespace NiceHashMiner.Forms.Components {
             if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
         }
 
-        private void toolStripMenuItemCopyBenchmark_Click(object sender, EventArgs e) {
+        private void toolStripMenuItemCopySettings_Click(object sender, EventArgs e) {
             ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             if(item != null) {
@@ -233,17 +234,25 @@ namespace NiceHashMiner.Forms.Components {
                 if (uuid != null) {
                     var copyBenchCDev = ComputeDevice.GetDeviceWithUUID(uuid);
                     G.CDevice.BenchmarkCopyUUID = uuid;
-                    // just copy
-                    foreach (var copyAlgSpeeds in copyBenchCDev.DeviceBenchmarkConfig.AlgorithmSettings) {
-                        if (G.CDevice.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(copyAlgSpeeds.Key)) {
-                            var setAlgo = G.CDevice.DeviceBenchmarkConfig.AlgorithmSettings[copyAlgSpeeds.Key];
-                            setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
-                            setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
-                            setAlgo.Intensity = copyAlgSpeeds.Value.Intensity;
-                            setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
+
+                    var result = MessageBox.Show(
+                        String.Format(
+                        International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"), copyBenchCDev.GetFullName(), G.CDevice.GetFullName()),
+                                International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title"),
+                                MessageBoxButtons.YesNo);
+                    if(result == DialogResult.Yes) {
+                        // just copy
+                        foreach (var copyAlgSpeeds in copyBenchCDev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                            if (G.CDevice.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(copyAlgSpeeds.Key)) {
+                                var setAlgo = G.CDevice.DeviceBenchmarkConfig.AlgorithmSettings[copyAlgSpeeds.Key];
+                                setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
+                                setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
+                                setAlgo.Intensity = copyAlgSpeeds.Value.Intensity;
+                                setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
+                            }
                         }
+                        if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
                     }
-                    if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
                 }
             }
         }

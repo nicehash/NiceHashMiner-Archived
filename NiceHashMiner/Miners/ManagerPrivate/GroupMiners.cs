@@ -111,8 +111,7 @@ namespace NiceHashMiner.Miners {
 
                 var MaxProfitKey = algorithm.NiceHashID;
 
-                // TODO check wait
-                // wait 0.5 seconds before going on
+                // Wait before new start
                 System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
 
                 m.Start(algorithm,

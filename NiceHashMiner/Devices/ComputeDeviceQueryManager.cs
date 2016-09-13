@@ -616,7 +616,6 @@ namespace NiceHashMiner.Devices
                         isUnderSM21 = isUnderSM2_major && isUnderSM1_minor;
                     }
                     //bool isOverSM6 = cudaDev.SM_major > 6;
-                    // TODO write that disabled group
                     bool isDisabledGroup = IsSMGroupSkip(cudaDev.SM_major);
                     bool skip = isUnderSM21 || isDisabledGroup;
                     string skipOrAdd = skip ? "SKIPED" : "ADDED";
@@ -730,7 +729,7 @@ namespace NiceHashMiner.Devices
                     } catch { }
                 }
             }
-            // TODO
+
             if (OpenCLJSONData == null) {
                 Helpers.ConsolePrint(TAG, "AMDOpenCLDeviceDetection found no devices. AMDOpenCLDeviceDetection returned: " + QueryOpenCLDevicesString);
             } else {

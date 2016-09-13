@@ -94,14 +94,12 @@ namespace NiceHashMiner.Configs {
             // check ethminers and remove from settings if no device supports it in config
             foreach (var config in BenchmarkConfigs) {
                 bool removeDagger = true;
-                foreach (var devUUID in config.Value.DeviceUUIDs) {
-                    var cDev = ComputeDevice.GetDeviceWithUUID(devUUID);
-                    if (cDev != null) {
-                        // if only one dev ing roup supports terminate
-                        if (cDev.IsEtherumCapale) {
-                            removeDagger = false;
-                            break;
-                        }
+                var cDev = ComputeDevice.GetDeviceWithUUID(config.Value.DeviceUUID);
+                if (cDev != null) {
+                    // if only one dev ing roup supports terminate
+                    if (cDev.IsEtherumCapale) {
+                        removeDagger = false;
+                        break;
                     }
                 }
                 if (removeDagger) {

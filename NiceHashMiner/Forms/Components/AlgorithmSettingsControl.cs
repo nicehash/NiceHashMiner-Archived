@@ -183,7 +183,9 @@ namespace NiceHashMiner.Forms.Components {
 
         private void textChangedExtraLaunchParameters(object sender, EventArgs e) {
             if (!CanEdit()) return;
-            _currentlySelectedAlgorithm.ExtraLaunchParameters = richTextBoxExtraLaunchParameters.Text;
+            var ExtraLaunchParams = richTextBoxExtraLaunchParameters.Text.Replace("\r\n", " ");
+            ExtraLaunchParams = ExtraLaunchParams.Replace("\n", " ");
+            _currentlySelectedAlgorithm.ExtraLaunchParameters = ExtraLaunchParams;
         }
         #endregion
 
