@@ -112,6 +112,9 @@ namespace NiceHashMiner.Configs {
         public bool hwidOK { get; private set; }
         [JsonIgnore]
         public bool hwidLoadFromFile { get; private set; }
+        [JsonIgnore]
+        public bool IsNewVersion { get; private set; }
+
 
         // After Device initialization
 
@@ -168,6 +171,7 @@ namespace NiceHashMiner.Configs {
 
             hwidOK = false;
             hwidLoadFromFile = false;
+            IsNewVersion = false;
 
             // only init defaults for created config not read
             if (initDefaults) {
@@ -183,6 +187,7 @@ namespace NiceHashMiner.Configs {
         protected override void InitializeObject() {
             if (_file.ConfigFileVersion == null ||
                 _file.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0) {
+                IsNewVersion = true;
                 Helpers.ConsolePrint("GeneralConfig", "Config file is from an older version of NiceHashMiner..");
                 Helpers.ConsolePrint("GeneralConfig", String.Format("Backing up {0} to {1}..", FilePath, FilePathOld));
                 try {

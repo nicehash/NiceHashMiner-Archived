@@ -5,6 +5,7 @@ using System.Text;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace NiceHashMiner.Configs
 {
@@ -72,11 +73,22 @@ namespace NiceHashMiner.Configs
             }
             const string extension = ".json";
             FilePath = fileName + extension;
-            FilePathOld = fileName + "_old" + extension;
+            FilePathOld = fileName + "_OLD" + extension;
         }
 
         // TODO make generic initializations
         protected override void InitializeObject() {
+            // if new backup benchmarks
+            if (ConfigManager.Instance.GeneralConfig.IsNewVersion) {
+                Helpers.ConsolePrint("DeviceBenchmarkConfig", String.Format("Backing up {0} to {1}..", FilePath, FilePathOld));
+                try {
+                    if (File.Exists(FilePathOld))
+                        File.Delete(FilePathOld);
+                    File.Move(FilePath, FilePathOld);
+                } catch { }
+            }
+
+
             // check if data tampered
             bool IsDataTampered = !(
                 /*this.ID == _file.ID
