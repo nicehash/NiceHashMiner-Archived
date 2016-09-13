@@ -681,7 +681,11 @@ namespace NiceHashMiner.Forms {
             // check restart parameters change
             IsRestartNeeded = ConfigManager.Instance.GeneralConfig.DebugConsole != _generalConfigBackup.DebugConsole
                 || ConfigManager.Instance.GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
-                || ConfigManager.Instance.GeneralConfig.LogToFile != _generalConfigBackup.LogToFile;
+                || ConfigManager.Instance.GeneralConfig.LogToFile != _generalConfigBackup.LogToFile
+                || ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed != _generalConfigBackup.SwitchMinSecondsFixed
+                || ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD != _generalConfigBackup.SwitchMinSecondsAMD
+                || ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic != _generalConfigBackup.SwitchMinSecondsDynamic
+                || ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval != _generalConfigBackup.MinerAPIQueryInterval;
 
             if (IsChangeSaved) {
                 devicesListViewEnableControl1.SaveOptions();
