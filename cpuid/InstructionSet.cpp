@@ -291,6 +291,11 @@ extern "C"
 		return InstructionSet::AVX2();
 	}
 
+	__declspec(dllexport) int __cdecl SupportsAES()
+	{
+		return InstructionSet::AES();
+	}
+
 	__declspec(dllexport) int __cdecl GetPhysicalProcessorCount()
 	{
 		ULONG p;

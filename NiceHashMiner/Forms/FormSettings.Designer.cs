@@ -989,7 +989,8 @@
             "Automatic",
             "SSE2",
             "AVX",
-            "AVX2"});
+            "AVX2",
+            "AES"});
             this.comboBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(9, 165);
             this.comboBox_CPU0_ForceCPUExtension.Name = "comboBox_CPU0_ForceCPUExtension";
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(177, 21);
@@ -1195,6 +1196,7 @@
             this.devicesListViewEnableControl1.AutoSaveChange = true;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
             this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;

@@ -24,6 +24,9 @@ namespace NiceHashMiner
         public static extern int SupportsAVX2();
 
         [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SupportsAES();
+
+        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetPhysicalProcessorCount();
 
         public static string GetCPUName()
