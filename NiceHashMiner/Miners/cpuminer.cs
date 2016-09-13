@@ -170,6 +170,9 @@ namespace NiceHashMiner.Miners {
         #region Decoupled benchmarking routines
 
         protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
+            // to set miner paths
+            InitializeMinerPaths();
+
             Path = GetOptimizedMinerPath(algorithm.NiceHashID);
 
             return "--algo=" + algorithm.MinerName +
