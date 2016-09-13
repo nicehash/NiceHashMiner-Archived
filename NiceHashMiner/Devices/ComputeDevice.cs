@@ -68,8 +68,9 @@ namespace NiceHashMiner.Devices
         [field: NonSerialized]
         public NiceHashMiner.Forms.Components.DevicesListViewEnableControl.ComputeDeviceEnabledOption ComputeDeviceEnabledOption { get; set; }
 
-        // 
+        // used for ewverythinf
         readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
+        // used for numbering
         readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
 
         [JsonConstructor]
@@ -194,6 +195,18 @@ namespace NiceHashMiner.Devices
                             }
                         }
                     }
+                }
+            }
+        }
+
+        public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) {
+            foreach (var copyAlgSpeeds in copyBenchCDev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                if (this.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(copyAlgSpeeds.Key)) {
+                    var setAlgo = this.DeviceBenchmarkConfig.AlgorithmSettings[copyAlgSpeeds.Key];
+                    setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
+                    setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
+                    setAlgo.Intensity = copyAlgSpeeds.Value.Intensity;
+                    setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
                 }
             }
         }

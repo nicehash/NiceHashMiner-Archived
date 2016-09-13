@@ -99,9 +99,6 @@ namespace NiceHashMiner.Forms {
             devicesListViewEnableControl1.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
 
-            CalcBenchmarkDevicesAlgorithmQueue();
-            devicesListViewEnableControl1.ResetListItemColors();
-
             devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
             devicesListViewEnableControl1.IsBenchmarkForm = true;
             devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
@@ -109,17 +106,48 @@ namespace NiceHashMiner.Forms {
             // use this to track miner benchmark statuses
             _benchmarkMiners = new List<Miner>();
 
-            ResetBenchmarkProgressStatus();
-
             InitLocale();
 
             _benchmarkingTimer = new Timer();
             _benchmarkingTimer.Tick += BenchmarkingTimer_Tick;
             _benchmarkingTimer.Interval = 1000; // 1s
 
+            // name, UUID
+            Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
+            // initialize benchmark settings for same cards to only copy settings
+            foreach (var GdevSetting in devicesListViewEnableControl1.Options) {
+                var plainDevName = GdevSetting.CDevice._nameNoNums;
+                if (benchNamesUUIDs.ContainsKey(plainDevName)) {
+                    GdevSetting.IsEnabled = false;
+                    GdevSetting.CDevice.BenchmarkCopyUUID = benchNamesUUIDs[plainDevName];
+                } else {
+                    benchNamesUUIDs.Add(plainDevName, GdevSetting.CDevice.UUID);
+                    GdevSetting.IsEnabled = true; // enable benchmark
+                    GdevSetting.CDevice.BenchmarkCopyUUID = null;
+                }
+            }
+
+            ResetBenchmarkProgressStatus();
+            CalcBenchmarkDevicesAlgorithmQueue();
+            devicesListViewEnableControl1.ResetListItemColors();
+
             if (autostart) {
                 ExitWhenFinished = true;
                 StartStopBtn_Click(null, null);
+            }
+        }
+
+        private void CopyBenchmarks() {
+            Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
+            foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                // check if copy
+                if (cDev.BenchmarkCopyUUID != null) {
+                    var copyCdevSettings = ComputeDevice.GetDeviceWithUUID(cDev.BenchmarkCopyUUID);
+                    if (copyCdevSettings != null) {
+                        Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", cDev.UUID, cDev.BenchmarkCopyUUID));
+                        cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
+                    }
+                } 
             }
         }
 
@@ -189,6 +217,8 @@ namespace NiceHashMiner.Forms {
             _benchmarkingTimer.Stop();
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
+            // copy benchmarked
+            CopyBenchmarks();
             if (_currentMiner != null) {
                 _currentMiner.BenchmarkSignalQuit = true;
             }
@@ -379,6 +409,8 @@ namespace NiceHashMiner.Forms {
             _benchmarkingTimer.Stop();
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
+
+            CopyBenchmarks();
 
             BenchmarkStoppedGUISettings();
             // check if all ok

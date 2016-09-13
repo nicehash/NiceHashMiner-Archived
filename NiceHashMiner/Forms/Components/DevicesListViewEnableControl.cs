@@ -242,15 +242,7 @@ namespace NiceHashMiner.Forms.Components {
                                 MessageBoxButtons.YesNo);
                     if(result == DialogResult.Yes) {
                         // just copy
-                        foreach (var copyAlgSpeeds in copyBenchCDev.DeviceBenchmarkConfig.AlgorithmSettings) {
-                            if (G.CDevice.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(copyAlgSpeeds.Key)) {
-                                var setAlgo = G.CDevice.DeviceBenchmarkConfig.AlgorithmSettings[copyAlgSpeeds.Key];
-                                setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
-                                setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
-                                setAlgo.Intensity = copyAlgSpeeds.Value.Intensity;
-                                setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
-                            }
-                        }
+                        G.CDevice.CopyBenchmarkSettingsFrom(copyBenchCDev);
                         if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
                     }
                 }
