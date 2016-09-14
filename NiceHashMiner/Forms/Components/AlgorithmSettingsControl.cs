@@ -53,6 +53,7 @@ namespace NiceHashMiner.Forms.Components {
             fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
                 International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
                 International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
+            groupBoxExtraLaunchParameters.Text = International.GetText("Form_Settings_General_ExtraLaunchParameters");
             toolTip1.SetToolTip(groupBoxExtraLaunchParameters, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
             toolTip1.SetToolTip(pictureBox1, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
         }

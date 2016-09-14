@@ -49,7 +49,19 @@ namespace NiceHashMiner.Forms.Components {
                 }
             }
         }
-        public bool IsMining { get; set; }
+        private bool _isMining = false;
+        public bool IsMining {
+            get { return _isMining; }
+            set {
+                if (value) {
+                    _isMining = value;
+                    listViewDevices.CheckBoxes = false;
+                } else {
+                    _isMining = value;
+                    listViewDevices.CheckBoxes = true;
+                }
+            }
+        }
 
         public bool IsBenchmarkForm = false;
         public bool IsSettingsCopyEnabled = false;

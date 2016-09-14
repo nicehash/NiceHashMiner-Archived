@@ -707,5 +707,9 @@ namespace NiceHashMiner.Forms {
 
         #endregion Form Callbacks        
 
+        private void Form_Settings_Resize(object sender, EventArgs e) {
+            pictureBox_MinProfit.Location = new Point(label_MinProfit.Location.X + label_MinProfit.Size.Width, pictureBox_MinProfit.Location.Y);
+        }
+
     }
 }
