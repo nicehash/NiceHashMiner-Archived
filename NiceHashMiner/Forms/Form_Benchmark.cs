@@ -93,7 +93,7 @@ namespace NiceHashMiner.Forms {
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
             devicesListViewEnableControl1.SetAllEnabled = true;
-            devicesListViewEnableControl1.SaveToGeneralConfig = true;
+            //devicesListViewEnableControl1.SaveToGeneralConfig = true;
             devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
 
             // use this to track miner benchmark statuses
