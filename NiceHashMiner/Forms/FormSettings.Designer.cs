@@ -1238,6 +1238,7 @@
             this.buttonAllProfit.TabIndex = 394;
             this.buttonAllProfit.Text = "Check All Profitability";
             this.buttonAllProfit.UseVisualStyleBackColor = true;
+            this.buttonAllProfit.Click += new System.EventHandler(this.buttonAllProfit_Click);
             // 
             // buttonSelectedProfit
             // 
@@ -1247,6 +1248,7 @@
             this.buttonSelectedProfit.TabIndex = 393;
             this.buttonSelectedProfit.Text = "Check Selected Profitability";
             this.buttonSelectedProfit.UseVisualStyleBackColor = true;
+            this.buttonSelectedProfit.Click += new System.EventHandler(this.buttonSelectedProfit_Click);
             // 
             // buttonSaveClose
             // 
