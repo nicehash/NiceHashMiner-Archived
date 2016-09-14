@@ -71,6 +71,12 @@
       <AdditionalOptions>/NODEFAULTLIB:LIBCMTD %(AdditionalOptions)</AdditionalOptions>
       <LinkStatus>true</LinkStatus>
     </Link>
+    <PostBuildEvent>
+      <Command>REM the path is absolute maybe fix
+copy /Y "C:\Program Files\NVIDIA Corporation\NVSMI\nvml.dll" "$(SolutionDir)$(Configuration)\nvml.dll"
+copy /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\msvcp120.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
+copy /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\msvcr120.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -102,6 +108,12 @@
       <LinkStatus>false</LinkStatus>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
+    <PostBuildEvent>
+      <Command>REM the path is absolute maybe fix
+copy /Y "C:\Program Files\NVIDIA Corporation\NVSMI\nvml.dll" "$(SolutionDir)$(Configuration)\nvml.dll"
+copy /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\msvcp120.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
+copy /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\msvcr120.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CudaDetection.h" />
