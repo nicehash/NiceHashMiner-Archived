@@ -294,7 +294,8 @@ namespace NiceHashMiner
                     International.GetText("Warning_with_Exclamation"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes) {
-                    ConfigManager.Instance.GeneralConfig.Delete();
+                    ConfigManager.Instance.GeneralConfig.DownloadInit = false;
+                    ConfigManager.Instance.GeneralConfig.Commit();
                     Process PHandle = new Process();
                     PHandle.StartInfo.FileName = Application.ExecutablePath;
                     PHandle.Start();

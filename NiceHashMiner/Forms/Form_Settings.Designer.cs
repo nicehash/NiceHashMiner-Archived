@@ -987,10 +987,10 @@
             this.comboBox_CPU0_ForceCPUExtension.FormattingEnabled = true;
             this.comboBox_CPU0_ForceCPUExtension.Items.AddRange(new object[] {
             "Automatic",
-            "SSE2",
-            "AVX",
             "AVX2",
-            "AES"});
+            "AVX",
+            "AES",
+            "SSE2"});
             this.comboBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(9, 165);
             this.comboBox_CPU0_ForceCPUExtension.Name = "comboBox_CPU0_ForceCPUExtension";
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(177, 21);
@@ -1283,7 +1283,7 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // FormSettings
+            // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1296,7 +1296,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormSettings";
+            this.Name = "Form_Settings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             this.tabControlGeneral.ResumeLayout(false);
