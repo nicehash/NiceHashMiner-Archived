@@ -512,7 +512,7 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint(MinerTAG(), "Benchmark Exception: " + ex.Message);
                 if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                     OnBenchmarkCompleteCalled = true;
-                    BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? "Timedout" : "Terminated");
+                    BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated"));
                 }
             } finally {
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Success;

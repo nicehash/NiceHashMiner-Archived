@@ -165,7 +165,7 @@ namespace NiceHashMiner.Forms.Components {
             int val;
             if (Int32.TryParse(txtbox.Text, out val)) {
                 if (Globals.ThreadsPerCPU - val < 1) {
-                    MessageBox.Show(International.GetText("form1_msgbox_CPUMiningLessThreadMsg"),
+                    MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMiningLessThreadMsg"),
                                     International.GetText("Warning_with_Exclamation"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 } else {
@@ -192,7 +192,7 @@ namespace NiceHashMiner.Forms.Components {
         private void buttonBenchmark_Click(object sender, EventArgs e) {
             var device = new List<ComputeDevice>();
             device.Add(_computeDevice);
-            var BenchmarkForm = new FormBenchmark(
+            var BenchmarkForm = new Form_Benchmark(
                         BenchmarkPerformanceType.Standard,
                         false, _currentlySelectedAlgorithm.NiceHashID);
             BenchmarkForm.ShowDialog();

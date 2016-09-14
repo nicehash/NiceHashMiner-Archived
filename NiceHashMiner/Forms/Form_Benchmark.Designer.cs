@@ -1,5 +1,5 @@
 ﻿namespace NiceHashMiner.Forms {
-    partial class FormBenchmark {
+    partial class Form_Benchmark {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBenchmark));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Benchmark));
             this.StartStopBtn = new System.Windows.Forms.Button();
             this.CloseBtn = new System.Windows.Forms.Button();
             this.groupBoxBenchmarkProgress = new System.Windows.Forms.GroupBox();
@@ -104,6 +104,8 @@
             // 
             this.devicesListViewEnableControl1.AutoSaveChange = false;
             this.devicesListViewEnableControl1.FirstColumnText = "Benckmark";
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(12, 15);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
@@ -135,7 +137,7 @@
             this.radioButton_RE_SelectedUnbenchmarked.UseVisualStyleBackColor = true;
             this.radioButton_RE_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.radioButton_RE_SelectedUnbenchmarked_CheckedChanged);
             // 
-            // FormBenchmark
+            // Form_Benchmark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -152,7 +154,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormBenchmark";
+            this.Name = "Form_Benchmark";
             this.Text = "Benchmark";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBenchmark_New_FormClosing);
             this.groupBoxBenchmarkProgress.ResumeLayout(false);

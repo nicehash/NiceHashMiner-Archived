@@ -23,7 +23,7 @@ namespace NiceHashMiner.Devices {
         // more accuare description
         public string GetName() {
             if (VendorName == "UNKNOWN") {
-                VendorName = String.Format("V_ID_{0}", VendorID);
+                VendorName = String.Format(International.GetText("ComputeDevice_UNKNOWN_VENDOR_REPLACE"), VendorID);
             }
             return String.Format("{0} {1}", VendorName, DeviceName);
         }

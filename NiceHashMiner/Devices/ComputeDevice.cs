@@ -137,7 +137,7 @@ namespace NiceHashMiner.Devices
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
             DeviceType = DeviceType.NVIDIA;
             InitGlobalsList(addToGlobalList);
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_GPU"), ++GPUCount);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), ++GPUCount);
             UUID = cudaDevice.UUID;
         }
 
@@ -154,7 +154,7 @@ namespace NiceHashMiner.Devices
             IsEtherumCapale = amdDevice.IsEtherumCapable();
             DeviceType = DeviceType.AMD;
             InitGlobalsList(addToGlobalList);
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_GPU"), ++GPUCount);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), ++GPUCount);
             UUID = amdDevice.UUID;
             // sgminer extra
             IsOptimizedVersion = amdDevice.UseOptimizedVersion;
@@ -163,7 +163,7 @@ namespace NiceHashMiner.Devices
 
         // combines long and short name
         public string GetFullName() {
-            return String.Format("{0} {1}", NameCount, Name);
+            return String.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
         }
 
         // TODO add file check and stuff like that
@@ -251,7 +251,7 @@ namespace NiceHashMiner.Devices
                     return dev.Name;
                 }
             }
-            return "NONE";
+            return International.GetText("ComputeDevice_Get_With_UUID_NONE");
         }
 
         public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUUID(string uuid) {

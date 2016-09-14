@@ -63,10 +63,10 @@ namespace NiceHashMiner.Devices
             // #1 CPU
             QueryCPUs();
             // #2 CUDA
-            showMessageAndStep("Querying CUDA devices");
+            showMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
             QueryCudaDevices();
             // #3 OpenCL
-            showMessageAndStep("Querying OpenCL devices");
+            showMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
             QueryOpenCLDevices();
             // #4 AMD query AMD from OpenCL devices, get serial and add devices
             QueryAMD();
@@ -170,22 +170,24 @@ namespace NiceHashMiner.Devices
             // allerts
             _currentNvidiaOpenCLDriver = GetNvidiaOpenCLDriver();
             // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
+            bool isNvidiaErrorShown = false; // to prevent showing twice
             if (HasNvidiaVideoController() && CudaDevices.Count == 0) {
+                isNvidiaErrorShown = true;
                 var minDriver = NVIDIA_MIN_DETECTION_DRIVER.ToString();
                 var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
-                MessageBox.Show(String.Format("We have detected that your system has Nvidia GPUs, but your driver is older then {0}. In order for NiceHash Miner to work correctly you should upgrade your drivers to recomended {1} or newer.",
+                MessageBox.Show(String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Detection"),
                     minDriver, recomendDrvier),
-                                                      "Nvidia Recomended driver",
+                                                      International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
                                                       MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             // recomended driver
-            if (HasNvidiaVideoController() && _currentNvidiaOpenCLDriver < NVIDIA_RECOMENDED_DRIVER) {
+            if (HasNvidiaVideoController() && _currentNvidiaOpenCLDriver < NVIDIA_RECOMENDED_DRIVER && !isNvidiaErrorShown) {
                 var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
-                var nvdriverString = _currentNvidiaOpenCLDriver > -1 ? String.Format(" (current {0})", _currentNvidiaOpenCLDriver.ToString())
+                var nvdriverString = _currentNvidiaOpenCLDriver > -1 ? String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"), _currentNvidiaOpenCLDriver.ToString())
                 : "";
-                MessageBox.Show(String.Format("We have detected that your Nvidia Driver is older then {0}{1}. We recommend you to update to {2} or newer.",
+                MessageBox.Show(String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
                     recomendDrvier, nvdriverString, recomendDrvier),
-                                                      "Nvidia Recomended driver",
+                                                      International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
                                                       MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
@@ -288,7 +290,7 @@ namespace NiceHashMiner.Devices
 
             if (!Helpers.InternalCheckIsWow64())
             {
-                MessageBox.Show(International.GetText("form1_msgbox_CPUMining64bitMsg"),
+                MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CPUs = 0;
@@ -296,7 +298,7 @@ namespace NiceHashMiner.Devices
 
             if (ThreadsPerCPU * CPUs > 64)
             {
-                MessageBox.Show(International.GetText("form1_msgbox_CPUMining64CoresMsg"),
+                MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CPUs = 0;
@@ -319,12 +321,12 @@ namespace NiceHashMiner.Devices
 
         List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
         private void QueryAMD() {
-            //showMessageAndStep(International.GetText("form1_loadtext_AMD"));
+            //showMessageAndStep(International.GetText("Form_Main_loadtext_AMD"));
             //var dump = new sgminer(true);
 
             if(ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD) {
                 Helpers.ConsolePrint(TAG, "Skipping AMD device detection, settings set to disabled");
-                showMessageAndStep("Skip check for AMD OpenCL GPUs");
+                showMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
                 return;
             }
 
@@ -369,7 +371,7 @@ namespace NiceHashMiner.Devices
             #endregion // AMD driver check
 
             // get platform version
-            showMessageAndStep("Checking AMD OpenCL GPUs");
+            showMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
             if (IsOpenCLQuerrySuccess) {
                 bool amdPlatformNumFound = false;
                 foreach (var kvp in OpenCLJSONData.OCLPlatforms) {

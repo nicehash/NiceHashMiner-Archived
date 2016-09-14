@@ -12,7 +12,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms {
-    public partial class FormBenchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator {
+    public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator {
 
         private bool _inBenchmark = false;
         private int _bechmarkCurrentIndex = 0;
@@ -80,7 +80,7 @@ namespace NiceHashMiner.Forms {
             }
         }
 
-        public FormBenchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+        public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false,
             //List<ComputeDevice> enabledDevices = null,
             AlgorithmType singleBenchmarkType = AlgorithmType.NONE) {
@@ -164,7 +164,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void InitLocale() {
-            this.Text = International.GetText("form2_title"); //International.GetText("SubmitResultDialog_title");
+            this.Text = International.GetText("Form_Benchmark_title"); //International.GetText("SubmitResultDialog_title");
             //labelInstruction.Text = International.GetText("SubmitResultDialog_labelInstruction");
             StartStopBtn.Text = International.GetText("SubmitResultDialog_StartBtn");
             CloseBtn.Text = International.GetText("SubmitResultDialog_CloseBtn");
@@ -183,12 +183,12 @@ namespace NiceHashMiner.Forms {
                 StopButonClick();
                 BenchmarkStoppedGUISettings();
             } else if (StartButonClick()) {
-                StartStopBtn.Text = International.GetText("form2_buttonStopBenchmark");
+                StartStopBtn.Text = International.GetText("Form_Benchmark_buttonStopBenchmark");
             }
         }
 
         private void BenchmarkStoppedGUISettings() {
-            StartStopBtn.Text = International.GetText("form2_buttonStartBenchmark");
+            StartStopBtn.Text = International.GetText("Form_Benchmark_buttonStartBenchmark");
             // clear benchmark pending status
             if (_currentAlgorithm != null) _currentAlgorithm.ClearBenchmarkPending();
             foreach (var deviceAlgosTuple in _benchmarkDevicesAlgorithmQueue) {

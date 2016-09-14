@@ -45,13 +45,13 @@
             this.listViewDevices.Size = new System.Drawing.Size(374, 226);
             this.listViewDevices.TabIndex = 5;
             this.listViewDevices.UseCompatibleStateImageBehavior = false;
-            this.listViewDevices.View = System.Windows.Forms.View.List;
+            this.listViewDevices.View = System.Windows.Forms.View.Details;
             this.listViewDevices.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewDevices_MouseClick);
             // 
             // columnHeader0
             // 
             this.columnHeader0.Text = "Enabled";
-            this.columnHeader0.Width = 295;
+            this.columnHeader0.Width = 350;
             // 
             // contextMenuStrip1
             // 
@@ -81,6 +81,7 @@
             this.Controls.Add(this.listViewDevices);
             this.Name = "DevicesListViewEnableControl";
             this.Size = new System.Drawing.Size(374, 226);
+            this.Resize += new System.EventHandler(this.DevicesListViewEnableControl_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 

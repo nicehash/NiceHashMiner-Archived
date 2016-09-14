@@ -354,6 +354,7 @@
             this.devicesListViewEnableControl1.AutoSaveChange = false;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
             this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(11, 91);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
@@ -434,8 +435,8 @@
         private System.Windows.Forms.Label labelDemoMode;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         private System.Windows.Forms.GroupBox groupBox1;
-        private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.Label label_NotProfitable;
+        private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
     }
 }
 

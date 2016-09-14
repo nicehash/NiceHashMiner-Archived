@@ -11,7 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms {
-    public partial class FormSettings : Form {
+    public partial class Form_Settings : Form {
 
 
         private bool _isInitFinished = false;
@@ -38,7 +38,7 @@ namespace NiceHashMiner.Forms {
         private GeneralConfig _generalConfigBackup;
         private Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigsBackup;
 
-        public FormSettings() {
+        public Form_Settings() {
             InitializeComponent();
 
             //ret = 1; // default

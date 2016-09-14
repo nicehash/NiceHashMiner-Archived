@@ -147,17 +147,17 @@
     <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormBenchmark.cs">
+    <Compile Include="Forms\Form_Benchmark.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormBenchmark.Designer.cs">
-      <DependentUpon>FormBenchmark.cs</DependentUpon>
+    <Compile Include="Forms\Form_Benchmark.Designer.cs">
+      <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormSettings.cs">
+    <Compile Include="Forms\Form_Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormSettings.Designer.cs">
-      <DependentUpon>FormSettings.cs</DependentUpon>
+    <Compile Include="Forms\Form_Settings.Designer.cs">
+      <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
@@ -257,11 +257,11 @@
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormBenchmark.resx">
-      <DependentUpon>FormBenchmark.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_Benchmark.resx">
+      <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormSettings.resx">
-      <DependentUpon>FormSettings.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_Settings.resx">
+      <DependentUpon>Form_Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>

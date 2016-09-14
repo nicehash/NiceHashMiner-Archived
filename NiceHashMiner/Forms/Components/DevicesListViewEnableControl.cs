@@ -42,10 +42,10 @@ namespace NiceHashMiner.Forms.Components {
             set {
                 if (value) {
                     _isInBenchmark = value;
-                    //listViewDevices.CheckBoxes = false;
+                    listViewDevices.CheckBoxes = false;
                 } else {
                     _isInBenchmark = value;
-                    //listViewDevices.CheckBoxes = true;
+                    listViewDevices.CheckBoxes = true;
                 }
             }
         }
@@ -83,10 +83,9 @@ namespace NiceHashMiner.Forms.Components {
             SetAllEnabled = false;
             Options = new List<ComputeDeviceEnabledOption>();
             // intialize ListView callbacks
-            //listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
-            listViewDevices.CheckBoxes = false;
+            listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
+            //listViewDevices.CheckBoxes = false;
             IsMining = false;
-            listViewDevices.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
         public void SetIListItemCheckColorSetter(IListItemCheckColorSetter listItemCheckColorSetter) {
@@ -139,7 +138,7 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         public void InitLocale() {
-            listViewDevices.Columns[ENABLED].Text = International.GetText("ListView_Device");//International.GetText("ListView_Enabled");
+            listViewDevices.Columns[ENABLED].Text = International.GetText("ListView_Device");  //International.GetText("ListView_Enabled");
             //listViewDevices.Columns[DEVICE].Text = International.GetText("ListView_Device");
         }
 
@@ -174,19 +173,19 @@ namespace NiceHashMiner.Forms.Components {
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location) == true) {
                     contextMenuStrip1.Items.Clear();
                     ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
-                    if (G.IsEnabled) {
-                        var disableItem = new ToolStripMenuItem();
-                        disableItem.Text = International.GetText("DeviceListView_ContextMenu_DisableDevice");
-                        //disableItem.Checked = true;
-                        disableItem.Click += toolStripMenuItemEnable_Click;
-                        contextMenuStrip1.Items.Add(disableItem);
-                    } else {
-                        var disableItem = new ToolStripMenuItem();
-                        disableItem.Text = International.GetText("DeviceListView_ContextMenu_EnableDevice");
-                        //disableItem.Checked = false;
-                        disableItem.Click += toolStripMenuItemEnable_Click;
-                        contextMenuStrip1.Items.Add(disableItem);
-                    }
+                    //if (G.IsEnabled) {
+                    //    var disableItem = new ToolStripMenuItem();
+                    //    disableItem.Text = International.GetText("DeviceListView_ContextMenu_DisableDevice");
+                    //    //disableItem.Checked = true;
+                    //    disableItem.Click += toolStripMenuItemEnable_Click;
+                    //    contextMenuStrip1.Items.Add(disableItem);
+                    //} else {
+                    //    var disableItem = new ToolStripMenuItem();
+                    //    disableItem.Text = International.GetText("DeviceListView_ContextMenu_EnableDevice");
+                    //    //disableItem.Checked = false;
+                    //    disableItem.Click += toolStripMenuItemEnable_Click;
+                    //    contextMenuStrip1.Items.Add(disableItem);
+                    //}
                     if (IsSettingsCopyEnabled) {
                         var sameDevTypes = ComputeDevice.GetSameDevicesTypeAsDeviceWithUUID(G.CDevice.UUID);
                         if (sameDevTypes.Count > 0) {
@@ -246,6 +245,13 @@ namespace NiceHashMiner.Forms.Components {
                         if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
                     }
                 }
+            }
+        }
+
+        private void DevicesListViewEnableControl_Resize(object sender, EventArgs e) {
+            // only one 
+            foreach (ColumnHeader ch in listViewDevices.Columns) {
+                ch.Width = this.Width - 10;
             }
         }
     }

@@ -86,25 +86,25 @@ namespace NiceHashMiner
             labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
 
-            linkLabelVisitUs.Text = International.GetText("form1_visit_us");
-            linkLabelCheckStats.Text = International.GetText("form1_check_stats");
-            linkLabelChooseBTCWallet.Text = International.GetText("form1_choose_bitcoin_wallet");
+            linkLabelVisitUs.Text = International.GetText("Form_Main_visit_us");
+            linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
+            linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
 
             // these strings are no longer used, check and use them as base
             string rateString = International.GetText("Rate") + ":";
             string ratesBTCInitialString = "0.00000000 BTC/" + International.GetText("Day");
             string ratesDollarInitialString = String.Format("0.00 {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
 
-            toolStripStatusLabelGlobalRateText.Text = International.GetText("form1_global_rate") + ":";
+            toolStripStatusLabelGlobalRateText.Text = International.GetText("Form_Main_global_rate") + ":";
             toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
-            toolStripStatusLabelBalanceText.Text = (ConfigManager.Instance.GeneralConfig.DisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("form1_balance") + ":";
+            toolStripStatusLabelBalanceText.Text = (ConfigManager.Instance.GeneralConfig.DisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("Form_Main_balance") + ":";
 
             devicesListViewEnableControl1.InitLocale();
 
-            buttonBenchmark.Text = International.GetText("form1_benchmark");
-            buttonSettings.Text = International.GetText("form1_settings");
-            buttonStartMining.Text = International.GetText("form1_start");
-            buttonStopMining.Text = International.GetText("form1_stop");
+            buttonBenchmark.Text = International.GetText("Form_Main_benchmark");
+            buttonSettings.Text = International.GetText("Form_Main_settings");
+            buttonStartMining.Text = International.GetText("Form_Main_start");
+            buttonStopMining.Text = International.GetText("Form_Main_stop");
 
             label_NotProfitable.Text = International.GetText("Form_Main_MINING_NOT_PROFITABLE");
             groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
@@ -186,7 +186,7 @@ namespace NiceHashMiner
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.Instance.AfterDeviceQueryInitialization();
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SaveConfig"));
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
             
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDevice.AllAvaliableDevices);
@@ -194,7 +194,7 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.AutoSaveChange = true;
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_CheckLatestVersion"));
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
 
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -213,7 +213,7 @@ namespace NiceHashMiner
             UpdateCheck.Start();
             UpdateCheck_Tick(null, null);
 
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_GetNiceHashSMA"));
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
 
             SMACheck = new Timer();
             SMACheck.Tick += SMACheck_Tick;
@@ -229,7 +229,7 @@ namespace NiceHashMiner
 
             SMACheck_Tick(null, null);
 
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_GetBTCRate"));
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
 
             BitcoinExchangeCheck = new Timer();
             BitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
@@ -237,7 +237,7 @@ namespace NiceHashMiner
             BitcoinExchangeCheck.Start();
             BitcoinExchangeCheck_Tick(null, null);
 
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_GetNiceHashBalance"));
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashBalance"));
 
             BalanceCheck = new Timer();
             BalanceCheck.Tick += BalanceCheck_Tick;
@@ -245,18 +245,18 @@ namespace NiceHashMiner
             BalanceCheck.Start();
             BalanceCheck_Tick(null, null);
 
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SetEnvironmentVariable"));
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
 
             SetEnvironmentVariables();
 
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("form1_loadtext_SetWindowsErrorReporting"));
+            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
             
             Helpers.DisableWindowsErrorReporting(ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting);
 
             LoadingScreen.IncreaseLoadCounter();
             if (ConfigManager.Instance.GeneralConfig.NVIDIAP0State)
             {
-                LoadingScreen.SetInfoMsg(International.GetText("form1_loadtext_NVIDIAP0State"));
+                LoadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
                 try
                 {
                     ProcessStartInfo psi = new ProcessStartInfo();
@@ -300,7 +300,7 @@ namespace NiceHashMiner
             }
             // no bots please
             if (ConfigManager.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager.Instance.GeneralConfig.hwidOK) {
-                MessageBox.Show(International.GetText("form1_msgbox_anti_botnet_msgbox"),
+                MessageBox.Show(International.GetText("Form_Main_msgbox_anti_botnet_msgbox"),
                     International.GetText("Warning_with_Exclamation"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             }
@@ -316,8 +316,8 @@ namespace NiceHashMiner
             // general loading indicator
             int TotalLoadSteps = 12;
             LoadingScreen = new Form_Loading(this,
-                International.GetText("form3_label_LoadingText"),
-                International.GetText("form1_loadtext_CPU"), TotalLoadSteps);
+                International.GetText("Form_Loading_label_LoadingText"),
+                International.GetText("Form_Main_loadtext_CPU"), TotalLoadSteps);
             SetChildFormCenter(LoadingScreen);
             LoadingScreen.Show();
 
@@ -482,8 +482,8 @@ namespace NiceHashMiner
             if (t == null && Globals.NiceHashData == null && ShowWarningNiceHashData)
             {
                 ShowWarningNiceHashData = false;
-                DialogResult dialogResult = MessageBox.Show(International.GetText("form1_msgbox_NoInternetMsg"),
-                                                            International.GetText("form1_msgbox_NoInternetTitle"),
+                DialogResult dialogResult = MessageBox.Show(International.GetText("Form_Main_msgbox_NoInternetMsg"),
+                                                            International.GetText("Form_Main_msgbox_NoInternetTitle"),
                                                             MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                 if (dialogResult == DialogResult.Yes)
@@ -507,7 +507,7 @@ namespace NiceHashMiner
 
             if (ret < 0)
             {
-                linkLabelVisitUs.Text = String.Format(International.GetText("form1_new_version_released"), ver);
+                linkLabelVisitUs.Text = String.Format(International.GetText("Form_Main_new_version_released"), ver);
                 VisitURL = "https://github.com/nicehash/NiceHashMiner/releases/tag/" + ver;
             }
         }
@@ -544,7 +544,7 @@ namespace NiceHashMiner
         {
             if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress.Text.Trim()) && ShowError)
             {
-                DialogResult result = MessageBox.Show(International.GetText("form1_msgbox_InvalidBTCAddressMsg"),
+                DialogResult result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
                                                       International.GetText("Error_with_Exclamation"),
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                 
@@ -556,7 +556,7 @@ namespace NiceHashMiner
             }
             else if (!BitcoinAddress.ValidateWorkerName(textBoxWorkerName.Text.Trim()) && ShowError)
             {
-                DialogResult result = MessageBox.Show(International.GetText("form1_msgbox_InvalidWorkerNameMsg"),
+                DialogResult result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidWorkerNameMsg"),
                                                       International.GetText("Error_with_Exclamation"),
                                                       MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -600,7 +600,7 @@ namespace NiceHashMiner
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             SMACheck.Stop();
-            BenchmarkForm = new FormBenchmark();
+            BenchmarkForm = new Form_Benchmark();
             SetChildFormCenter(BenchmarkForm);
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
@@ -612,7 +612,7 @@ namespace NiceHashMiner
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            FormSettings Settings = new FormSettings();
+            Form_Settings Settings = new Form_Settings();
             SetChildFormCenter(Settings);
             Settings.ShowDialog();
 
@@ -637,15 +637,15 @@ namespace NiceHashMiner
         {
             if (textBoxBTCAddress.Text.Equals(""))
             {
-                DialogResult result = MessageBox.Show(International.GetText("form1_DemoModeMsg"),
-                                                      International.GetText("form1_DemoModeTitle"),
+                DialogResult result = MessageBox.Show(International.GetText("Form_Main_DemoModeMsg"),
+                                                      International.GetText("Form_Main_DemoModeTitle"),
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == System.Windows.Forms.DialogResult.Yes)
                 {
                     DemoMode = true;
                     labelDemoMode.Visible = true;
-                    labelDemoMode.Text = International.GetText("form1_DemoModeLabel");
+                    labelDemoMode.Text = International.GetText("Form_Main_DemoModeLabel");
 
                     //textBoxBTCAddress.Text = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
                 }
@@ -656,7 +656,7 @@ namespace NiceHashMiner
 
             if (Globals.NiceHashData == null)
             {
-                MessageBox.Show(International.GetText("form1_msgbox_NullNiceHashDataMsg"),
+                MessageBox.Show(International.GetText("Form_Main_msgbox_NullNiceHashDataMsg"),
                                 International.GetText("Error_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -681,7 +681,7 @@ namespace NiceHashMiner
                             enabledDevices.Add(cdev);
                         }
                     }
-                    BenchmarkForm = new FormBenchmark(
+                    BenchmarkForm = new Form_Benchmark(
                         BenchmarkPerformanceType.Standard,
                         true);
                     BenchmarkForm.ShowDialog();
