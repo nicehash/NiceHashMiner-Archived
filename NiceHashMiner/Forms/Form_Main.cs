@@ -303,6 +303,7 @@ namespace NiceHashMiner
                     return;
                 }
             }
+
             // no bots please
             if (ConfigManager.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager.Instance.GeneralConfig.hwidOK) {
                 var result = MessageBox.Show("NiceHash Miner has detected change of hardware ID. If you did not download and install NiceHash Miner, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall your Windows.\r\n\r\nContinue with NiceHash Miner?",
