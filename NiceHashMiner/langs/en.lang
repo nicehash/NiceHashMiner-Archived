@@ -298,6 +298,8 @@
         "Form_Main_Restart_Required_Msg" : "Settings change requires NiceHash Miner to restart.",
         "Form_Main_Restart_Required_Title" : "Restart Notice",
         "ComputeDevice_Short_Name": "CDev#{0}",
+        "ComputeDevice_Short_Name_CPU": "CPU#{0}",
+        "ComputeDevice_Short_Name_GPU": "GPU#{0}",
         "Form_Main_x64_Support_Only" : "NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86",
     }
 }

@@ -73,6 +73,9 @@ namespace NiceHashMiner.Devices
         // used for numbering
         readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
 
+        private static int CPUCount = 0;
+        private static int GPUCount = 0;
+
         [JsonConstructor]
         public ComputeDevice(int id, string group, string name, string uuid, bool enabled = true) {
             ID = id;
@@ -105,6 +108,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        // CPU 
         public ComputeDevice(int id, string group, string name, bool addToGlobalList = false, bool enabled = true)
         {
             ID = id;
@@ -116,10 +120,11 @@ namespace NiceHashMiner.Devices
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             DeviceType = DeviceType.CPU;
             InitGlobalsList(addToGlobalList);
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name"), AllAvaliableDevices.Count);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_CPU"), ++CPUCount);
             UUID = GetUUID(ID, Group, Name, DeviceGroupType);
         }
 
+        // GPU NVIDIA
         public ComputeDevice(CudaDevice cudaDevice, string group, bool addToGlobalList = false, bool enabled = true) {
             _cudaDevice = cudaDevice;
             ID = (int)cudaDevice.DeviceID;
@@ -132,10 +137,11 @@ namespace NiceHashMiner.Devices
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
             DeviceType = DeviceType.NVIDIA;
             InitGlobalsList(addToGlobalList);
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name"), AllAvaliableDevices.Count);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_GPU"), ++GPUCount);
             UUID = cudaDevice.UUID;
         }
 
+        // GPU AMD
         public ComputeDevice(AmdGpuDevice amdDevice, bool addToGlobalList = false, bool enabled = true) {
             _amdDevice = amdDevice;
             ID = amdDevice.DeviceID;
@@ -148,7 +154,7 @@ namespace NiceHashMiner.Devices
             IsEtherumCapale = amdDevice.IsEtherumCapable();
             DeviceType = DeviceType.AMD;
             InitGlobalsList(addToGlobalList);
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name"), AllAvaliableDevices.Count);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_GPU"), ++GPUCount);
             UUID = amdDevice.UUID;
             // sgminer extra
             IsOptimizedVersion = amdDevice.UseOptimizedVersion;

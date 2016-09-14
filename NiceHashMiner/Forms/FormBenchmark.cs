@@ -139,13 +139,13 @@ namespace NiceHashMiner.Forms {
 
         private void CopyBenchmarks() {
             Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
-            foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var GdevSetting in devicesListViewEnableControl1.Options) {
                 // check if copy
-                if (cDev.BenchmarkCopyUUID != null) {
-                    var copyCdevSettings = ComputeDevice.GetDeviceWithUUID(cDev.BenchmarkCopyUUID);
+                if (!GdevSetting.IsEnabled && GdevSetting.CDevice.BenchmarkCopyUUID != null) {
+                    var copyCdevSettings = ComputeDevice.GetDeviceWithUUID(GdevSetting.CDevice.BenchmarkCopyUUID);
                     if (copyCdevSettings != null) {
-                        Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", cDev.UUID, cDev.BenchmarkCopyUUID));
-                        cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
+                        Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", GdevSetting.CDevice.UUID, GdevSetting.CDevice.BenchmarkCopyUUID));
+                        GdevSetting.CDevice.CopyBenchmarkSettingsFrom(copyCdevSettings);
                     }
                 } 
             }

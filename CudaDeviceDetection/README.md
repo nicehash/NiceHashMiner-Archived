@@ -1,3 +1,0 @@
-# CudaDeviceDetection
-
-CudaDeviceDetection is a win32 program that prints avaliable CUDA GPU devices in JSON format. In order to compile this project **CUDA SDK 6.5** is needed. The default nvml for SDK 6.5 should be under **C:\Program Files\NVIDIA Corporation\GDK\nvml(lin/include)**, if your system has a different installation path change the project properties to that one. Supports Windows x64 only. 
