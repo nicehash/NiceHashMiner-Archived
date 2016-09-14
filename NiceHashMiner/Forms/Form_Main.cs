@@ -684,6 +684,7 @@ namespace NiceHashMiner
                     BenchmarkForm = new Form_Benchmark(
                         BenchmarkPerformanceType.Standard,
                         true);
+                    SetChildFormCenter(BenchmarkForm);
                     BenchmarkForm.ShowDialog();
                     BenchmarkForm = null;
                     InitMainConfigGUIData();
