@@ -293,7 +293,7 @@ extern "C"
 
 	__declspec(dllexport) int __cdecl SupportsAES()
 	{
-		return InstructionSet::AES();
+		return (int)(InstructionSet::AES() && InstructionSet::SSE42());
 	}
 
 	__declspec(dllexport) int __cdecl GetPhysicalProcessorCount()
