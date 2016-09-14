@@ -81,6 +81,8 @@ namespace NiceHashMiner.Miners {
 
         readonly string DOUBLE_FORMAT = "F12";
 
+        private bool IsCurrentlyIdle = true;
+
         protected MinersManager() {
             TAG = this.GetType().Name;
             _preventSleepTimer = new Timer();
@@ -119,6 +121,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public void StopAllMiners() {
+            IsCurrentlyIdle = true;
             if (_groupedDevicesMiners != null) {
                 foreach (var kv in _groupedDevicesMiners) {
                     kv.Value.End();
@@ -134,6 +137,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public void StopAllMinersNonProfitable() {
+            IsCurrentlyIdle = true;
             if (_groupedDevicesMiners != null) {
                 foreach (var kv in _groupedDevicesMiners) {
                     kv.Value.End();
@@ -145,6 +149,10 @@ namespace NiceHashMiner.Miners {
         }
 
         public string GetActiveMinersGroup() {
+            if (IsCurrentlyIdle) {
+                return "IDLE";
+            }
+
             string ActiveMinersGroup = "";
 
             //get unique miner groups like CPU, NVIDIA, AMD,...
@@ -262,6 +270,8 @@ namespace NiceHashMiner.Miners {
             if (isMiningEnabled) {
                 _preventSleepTimer.Start();
             }
+
+            IsCurrentlyIdle = !isMiningEnabled;
 
             return isMiningEnabled;
         }
@@ -524,6 +534,7 @@ namespace NiceHashMiner.Miners {
             if (ConfigManager.Instance.GeneralConfig.MinimumProfit > 0
                     && currentProfitUSD < ConfigManager.Instance.GeneralConfig.MinimumProfit) {
                 IsProfitable = false;
+                IsCurrentlyIdle = true;
                 _mainFormRatesComunication.ShowNotProfitable();
                 // return don't group
                 StopAllMinersNonProfitable();
@@ -531,6 +542,7 @@ namespace NiceHashMiner.Miners {
                 return;
             } else {
                 IsProfitable = true;
+                IsCurrentlyIdle = false;
                 _mainFormRatesComunication.HideNotProfitable();
                 string profitabilityInfo = ConfigManager.Instance.GeneralConfig.MinimumProfit == 0 ? "mine always regardless of profit" : ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
                 Helpers.ConsolePrint(TAG, "Current Global profit: IS PROFITABLE MinProfit " + profitabilityInfo);

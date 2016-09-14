@@ -183,11 +183,6 @@ namespace NiceHashMiner
             {
                 string ActiveMinersGroup = MinersManager.Instance.GetActiveMinersGroup();
 
-                if (ActiveMinersGroup.Length > 0)
-                    ActiveMinersGroup = ActiveMinersGroup.Remove(ActiveMinersGroup.Length - 1);
-                else
-                    ActiveMinersGroup = "IDLE";
-
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
                 WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
                 if (worker.Length > 64) worker = worker.Substring(0, 64);
