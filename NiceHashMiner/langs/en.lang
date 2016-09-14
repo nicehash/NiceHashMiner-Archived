@@ -279,7 +279,7 @@
         "DeviceListView_ContextMenu_DisableDevice": "Disable Device",
         "DeviceListView_ContextMenu_EnableDevice": "Enable Device",
         "DeviceListView_ContextMenu_CopySettings": "Copy Settings From (Benchmarks, algorithm parameters, ...)",
-        "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg" : "Are you sure you wabnt to copy settings from {0} to {1}?",
+        "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg" : "Are you sure you want to copy settings from {0} to {1}?",
         "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title" : "Confirm Settings Copy",
         "FormSettings_AlgorithmsSettings": "Algorithm settings for {0} :",
         "FormSettings_ButtonProfitSingle": "Select device first",
