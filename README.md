@@ -87,7 +87,7 @@ WorkerName | text | To identify the computer on NiceHash web UI.
 ServiceLocation | number | Used to select the location of the mining server.
 HideMiningWindows | true or false | When set to true, sgminer, ccminer and cpuminer console windows will be hidden.
 MinimizeToTray | true or false | When set to true, NiceHashMiner will minimize to the system tray.
-ForceCPUExtension | 0, 1, 2, 3 or 4 | Force certain CPU extension miner. 0 is automatic, 1 for SSE2, 2 for AVX, 3 for AVX2 and  4 for AES.
+ForceCPUExtension | 0, 1, 2, 3 or 4 | Force certain CPU extension miner. 0 is automatic, 1 for AVX2, 2 for AVX, 3 for AES and  4 for SSE2.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
 SwitchMinSecondsAMD | number | Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.
@@ -183,7 +183,8 @@ To report bugs and issues please use the GitHub issue reporting tool: https://gi
 
 # <a name="references"></a> References
 
-- For CPU mining our tpruvot's forked cpuminer has been used from here: https://github.com/nicehash/cpuminer-multi (compiled with MingW64).
+- For CPU mining our joblo's forked cpuminer-opt has been used from here: https://github.com/nicehash/cpuminer-opt (compiled with MingW64).
+- For NVIDIA 2.1, 3.x, 5.x and 6.x cryptonight mining our tsiv's forked ccminer-cryptonight has been used from here: https://github.com/nicehash/ccminer-cryptonight
 - For NVIDIA 5.x and 6.x cards, sp's fork of ccminer has been used from here: https://github.com/sp-hash/ccminer.
 - For NVIDIA 2.1 and 3.x (older cards), tpruvot's fork of ccminer has been used from here: https://github.com/tpruvot/ccminer.
 - Special Decred ccminer forked from tpruvot's ccminer has been used from here: https://github.com/nicehash/ccminer-tpruvot.
