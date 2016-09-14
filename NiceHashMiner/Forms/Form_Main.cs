@@ -300,14 +300,19 @@ namespace NiceHashMiner
                     PHandle.StartInfo.FileName = Application.ExecutablePath;
                     PHandle.Start();
                     Close();
+                    return;
                 }
             }
             // no bots please
             if (ConfigManager.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager.Instance.GeneralConfig.hwidOK) {
-                MessageBox.Show("NiceHash Miner has detected change of hardware ID. If you did not download and install NiceHash Miner, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall your Windows.\r\n\r\nContinue with NiceHash Miner?",
+                var result = MessageBox.Show("NiceHash Miner has detected change of hardware ID. If you did not download and install NiceHash Miner, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall your Windows.\r\n\r\nContinue with NiceHash Miner?",
                     //International.GetText("Form_Main_msgbox_anti_botnet_msgbox"),
                     International.GetText("Warning_with_Exclamation"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == System.Windows.Forms.DialogResult.No) {
+                    Close();
+                    return;
+                }
             }
         }
 
