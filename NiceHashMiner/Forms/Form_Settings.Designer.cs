@@ -592,7 +592,7 @@
             // pictureBox_MinProfit
             // 
             this.pictureBox_MinProfit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinProfit.Location = new System.Drawing.Point(130, 103);
+            this.pictureBox_MinProfit.Location = new System.Drawing.Point(229, 103);
             this.pictureBox_MinProfit.Name = "pictureBox_MinProfit";
             this.pictureBox_MinProfit.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_MinProfit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -623,7 +623,7 @@
             // 
             this.textBox_MinProfit.Location = new System.Drawing.Point(10, 123);
             this.textBox_MinProfit.Name = "textBox_MinProfit";
-            this.textBox_MinProfit.Size = new System.Drawing.Size(138, 20);
+            this.textBox_MinProfit.Size = new System.Drawing.Size(237, 20);
             this.textBox_MinProfit.TabIndex = 334;
             // 
             // label_BitcoinAddress
