@@ -92,16 +92,9 @@ namespace NiceHashMiner.Forms {
             
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
-            //devicesListViewEnableControl1.SetAllEnabled = true;
+            devicesListViewEnableControl1.SetAllEnabled = true;
+            devicesListViewEnableControl1.SaveToGeneralConfig = true;
             devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
-
-            //groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
-            devicesListViewEnableControl1.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
-            devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
-
-            devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
-            devicesListViewEnableControl1.IsBenchmarkForm = true;
-            devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
 
             // use this to track miner benchmark statuses
             _benchmarkMiners = new List<Miner>();
@@ -126,6 +119,14 @@ namespace NiceHashMiner.Forms {
                     GdevSetting.CDevice.BenchmarkCopyUUID = null;
                 }
             }
+
+            //groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
+            devicesListViewEnableControl1.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
+            devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
+
+            devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
+            devicesListViewEnableControl1.IsBenchmarkForm = true;
+            devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
 
             ResetBenchmarkProgressStatus();
             CalcBenchmarkDevicesAlgorithmQueue();
