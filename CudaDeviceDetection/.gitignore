@@ -284,9 +284,3 @@ FakesAssemblies/
 # test files produced by ./configure
 tmptest.c
 tmptest.dll
-
-# OpenCL lib exception
-!ocl_lib/*.lib
-#!ocl_lib/Win32/OpenCL.lib
-!x64
-!ocl_lib/x64/OpenCL.lib
