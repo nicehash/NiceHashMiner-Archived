@@ -9,6 +9,7 @@ private static string[] ALL_FILES_BINS = {
 @"\ccminer_neoscrypt.exe",
 @"\ccminer_sp.exe",
 @"\ccminer_tpruvot.exe",
+@"\cpuminer_opt_AES.exe",
 @"\cpuminer_opt_AVX.exe",
 @"\cpuminer_opt_AVX2.exe",
 @"\cpuminer_opt_SSE2.exe",

@@ -73,6 +73,9 @@ namespace NiceHashMiner
             label_NotProfitable.Visible = false;
 
             InitMainConfigGUIData();
+            // for resizing
+            InitFlowPanelStart();
+            ClearRatesALL();
         }
 
         private void InitLocalization() {

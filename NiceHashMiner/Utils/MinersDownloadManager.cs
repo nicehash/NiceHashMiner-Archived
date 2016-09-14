@@ -23,7 +23,8 @@ namespace NiceHashMiner.Utils {
         private Stopwatch _stopwatch;
 
         const string d_01 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin.zip";
-        public string BinsDownloadURL = d_01;
+        const string d_v1_7_0_4 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_0_4.zip";
+        public string BinsDownloadURL = d_v1_7_0_4;
         public string BinsZipLocation = "bins.zip";
 
         private class DownloadData {
