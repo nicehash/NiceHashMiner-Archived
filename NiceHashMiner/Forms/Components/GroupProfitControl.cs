@@ -12,6 +12,9 @@ namespace NiceHashMiner.Forms.Components {
     public partial class GroupProfitControl : UserControl {
         public GroupProfitControl() {
             InitializeComponent();
+
+            labelSpeedIndicator.Text = International.GetText("GroupProfitControl_Speed");
+            labelBTCRateIndicator.Text = International.GetText("GroupProfitControl_Rate");
         }
 
 
