@@ -79,7 +79,7 @@
             // labelBTCRateIndicator
             // 
             this.labelBTCRateIndicator.AutoSize = true;
-            this.labelBTCRateIndicator.Location = new System.Drawing.Point(257, 16);
+            this.labelBTCRateIndicator.Location = new System.Drawing.Point(247, 16);
             this.labelBTCRateIndicator.Name = "labelBTCRateIndicator";
             this.labelBTCRateIndicator.Size = new System.Drawing.Size(33, 13);
             this.labelBTCRateIndicator.TabIndex = 106;
@@ -89,7 +89,7 @@
             // 
             this.labelSpeedValue.AutoSize = true;
             this.labelSpeedValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelSpeedValue.Location = new System.Drawing.Point(56, 16);
+            this.labelSpeedValue.Location = new System.Drawing.Point(81, 16);
             this.labelSpeedValue.Name = "labelSpeedValue";
             this.labelSpeedValue.Size = new System.Drawing.Size(71, 13);
             this.labelSpeedValue.TabIndex = 107;
