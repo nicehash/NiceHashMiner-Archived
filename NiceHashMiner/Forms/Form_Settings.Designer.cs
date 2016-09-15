@@ -1164,9 +1164,9 @@
             // groupBoxAlgorithmSettings
             // 
             this.groupBoxAlgorithmSettings.Controls.Add(this.algorithmsListView1);
-            this.groupBoxAlgorithmSettings.Location = new System.Drawing.Point(6, 123);
+            this.groupBoxAlgorithmSettings.Location = new System.Drawing.Point(7, 142);
             this.groupBoxAlgorithmSettings.Name = "groupBoxAlgorithmSettings";
-            this.groupBoxAlgorithmSettings.Size = new System.Drawing.Size(351, 225);
+            this.groupBoxAlgorithmSettings.Size = new System.Drawing.Size(351, 206);
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
@@ -1278,9 +1278,9 @@
             // 
             this.algorithmsListView1.ComunicationInterface = null;
             this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 19);
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 15);
             this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(336, 200);
+            this.algorithmsListView1.Size = new System.Drawing.Size(339, 191);
             this.algorithmsListView1.TabIndex = 2;
             // 
             // Form_Settings

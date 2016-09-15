@@ -450,10 +450,18 @@ namespace NiceHashMiner.Devices
                                                             || devName.ToLower().Contains("amd")
                                                             || devName.ToLower().Contains("radeon")
                                                             || devName.ToLower().Contains("firepro")) {
-                                                            
+
+                                                            string PNPStr = OSAdapterInfoData.ADLAdapterInfo[i].PNPString;
+                                                            var backSlashLast = PNPStr.LastIndexOf('\\');
+                                                            var serial = PNPStr.Substring(backSlashLast, PNPStr.Length - backSlashLast);
+                                                            var end_0 = serial.IndexOf('&');
+                                                            var end_1 = serial.IndexOf('&', end_0 + 1);
+                                                            // get serial
+                                                            serial = serial.Substring(end_0 + 1, (end_1 - end_0) - 1);
+
                                                             var udid = OSAdapterInfoData.ADLAdapterInfo[i].UDID;
                                                             var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
-                                                            var uuid = udid.Substring(0, pciVen_id_strSize);
+                                                            var uuid = udid.Substring(0, pciVen_id_strSize) + "_" + serial;
                                                             int budId = OSAdapterInfoData.ADLAdapterInfo[i].BusNumber;
                                                             if (!_amdDeviceUUID.Contains(uuid)) {
                                                                 try {
