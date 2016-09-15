@@ -187,6 +187,16 @@ namespace NiceHashMiner.Forms.Components {
             var ExtraLaunchParams = richTextBoxExtraLaunchParameters.Text.Replace("\r\n", " ");
             ExtraLaunchParams = ExtraLaunchParams.Replace("\n", " ");
             _currentlySelectedAlgorithm.ExtraLaunchParameters = ExtraLaunchParams;
+            // if dagger copy for all devices group CUDA or AMD
+            if (_currentlySelectedAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto) {
+                foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                    if (_computeDevice.DeviceType == cDev.DeviceType) {
+                        if (cDev.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(AlgorithmType.DaggerHashimoto)) {
+                            cDev.DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.DaggerHashimoto].ExtraLaunchParameters = ExtraLaunchParams;
+                        }
+                    }
+                }
+            }
         }
         #endregion
 

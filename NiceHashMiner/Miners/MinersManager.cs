@@ -422,7 +422,7 @@ namespace NiceHashMiner.Miners {
         // checks if dagger algo, same settings and if compute platform is same
         private bool IsDaggerAndSameComputePlatform(ComputeDevice a, ComputeDevice b) {
             return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto
-                && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
+                && a.MostProfitableAlgorithm.NiceHashID == b.MostProfitableAlgorithm.NiceHashID //IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
                 // check if both etherum capable
                 && a.IsEtherumCapale && b.IsEtherumCapale
                 // compute platforms must be same
