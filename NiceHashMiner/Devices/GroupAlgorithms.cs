@@ -22,35 +22,35 @@ namespace NiceHashMiner.Devices {
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
                 // DisableAMDTempControl = false; so temperature params are enabled by default, not sure if TemperatureParam should be lastly appended
-                string DefaultParam = AmdGpuDevice.DefaultParam + AmdGpuDevice.TemperatureParam;
+                string DefaultParam = AmdGpuDevice.DefaultParam;
                 return new Dictionary<AlgorithmType, Algorithm>() { 
                 { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13,  "x13")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2" } },
+                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Keccak , new Algorithm(AlgorithmType.Keccak,  "keccak")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },
+                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  300 --thread-concurrency    0 --worksize  64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.X15 , new Algorithm(AlgorithmType.X15,  "x15")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2" } },
+                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize  64 --gpu-threads 2"  + AmdGpuDevice.TemperatureParam} },
                 { AlgorithmType.Nist5 , new Algorithm(AlgorithmType.Nist5,  "nist5")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2" } },
+                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   16 --thread-concurrency    0 --worksize  64 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.NeoScrypt , new Algorithm(AlgorithmType.NeoScrypt, "neoscrypt")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4" } },
+                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.WhirlpoolX , new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2" } },
+                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity   64 --thread-concurrency    0 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Qubit , new Algorithm(AlgorithmType.Qubit,  "qubitcoin")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2" } },
+                    { ExtraLaunchParameters = DefaultParam + "--intensity 18 --worksize 64 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Quark , new Algorithm(AlgorithmType.Quark,  "quarkcoin")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },
+                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency    0 --worksize  64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Lyra2REv2 , new Algorithm(AlgorithmType.Lyra2REv2,  "Lyra2REv2")
-                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1" } },
+                    { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blakecoin")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" } },
+                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" } },
+                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" } },
+                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
                 { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred")
-                    { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" } }
+                    { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" + AmdGpuDevice.TemperatureParam } }
                 };
             }
             // NVIDIA
