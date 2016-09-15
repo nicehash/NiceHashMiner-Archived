@@ -152,6 +152,12 @@ namespace NiceHashMiner.Utils {
             } else {
                 // TODO handle Success
                 Helpers.ConsolePrint(TAG, "DownloadCompleted Success");
+                // wait one second for binary to exist
+                System.Threading.Thread.Sleep(1000);
+                // extra check dirty
+                int try_count = 50;
+                while (!File.Exists(BinsZipLocation) && try_count > 0) { --try_count; }
+
                 UnzipStart();
             }
         }
@@ -192,16 +198,19 @@ namespace NiceHashMiner.Utils {
                         }
                     }
                 }
+                // after unzip stuff
+                ConfigManager.Instance.GeneralConfig.DownloadInit = true;
+                ConfigManager.Instance.GeneralConfig.Commit();
+                _minerUpdateIndicator.FinishMsg(IsMinersBinsInit());
+                // remove bins zip
+                try {
+                    if (File.Exists(BinsZipLocation)) {
+                        File.Delete(BinsZipLocation);
+                    }
+                } catch { }
+            } else {
+                Helpers.ConsolePrint(TAG, "UnzipThreadRoutine bin.zip file not found");
             }
-            ConfigManager.Instance.GeneralConfig.DownloadInit = true;
-            ConfigManager.Instance.GeneralConfig.Commit();
-            _minerUpdateIndicator.FinishMsg(IsMinersBinsInit());
-            // remove bins zip
-            try {
-                if (File.Exists(BinsZipLocation)) {
-                    File.Delete(BinsZipLocation);
-                }
-            } catch { }
         }
 
 

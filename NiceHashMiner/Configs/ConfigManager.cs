@@ -91,6 +91,8 @@ namespace NiceHashMiner.Configs {
 
             SetDeviceBenchmarkReferences();
 
+            
+
             // check ethminers and remove from settings if no device supports it in config
             foreach (var config in BenchmarkConfigs) {
                 bool removeDagger = true;
