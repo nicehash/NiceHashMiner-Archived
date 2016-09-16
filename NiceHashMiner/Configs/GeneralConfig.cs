@@ -24,6 +24,7 @@ namespace NiceHashMiner.Configs {
         public string BitcoinAddress { get; set; }
         public string WorkerName { get; set; }
         public int ServiceLocation { get; set; }
+        public bool AutoStartMining { get; set; }
         public bool HideMiningWindows { get; set; }
         public bool MinimizeToTray { get; set; }
         //public int LessThreads { get; set; }
@@ -138,6 +139,7 @@ namespace NiceHashMiner.Configs {
             BitcoinAddress = "";
             WorkerName = "worker1";
             ServiceLocation = 0;
+            AutoStartMining = false;
             //LessThreads = 0;
             DebugConsole = false;
             HideMiningWindows = false;
@@ -207,7 +209,7 @@ namespace NiceHashMiner.Configs {
             BitcoinAddress = _file.BitcoinAddress;
             WorkerName = _file.WorkerName;
             ServiceLocation = _file.ServiceLocation;
-            //AutoStartMining = _file.AutoStartMining;
+            AutoStartMining = _file.AutoStartMining;
             HideMiningWindows = _file.HideMiningWindows;
             MinimizeToTray = _file.MinimizeToTray;
             //LessThreads = _file.LessThreads;

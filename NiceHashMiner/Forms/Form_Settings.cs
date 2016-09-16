@@ -172,6 +172,11 @@ namespace NiceHashMiner.Forms {
             
             toolTip1.SetToolTip(this.checkBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
             toolTip1.SetToolTip(this.pictureBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
+
+
+            toolTip1.SetToolTip(this.checkBox_AutoStartMining, International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
+            toolTip1.SetToolTip(this.pictureBox_AutoStartMining, International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
+
             
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
@@ -203,6 +208,7 @@ namespace NiceHashMiner.Forms {
 
         private void InitializeGeneralTabTranslations() {
             checkBox_DebugConsole.Text = International.GetText("Form_Settings_General_DebugConsole");
+            checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
             checkBox_DisableDetectionNVidia6X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA6.x");
@@ -289,6 +295,7 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_StartMiningWhenIdle.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_NVIDIAP0State.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_LogToFile.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -341,6 +348,7 @@ namespace NiceHashMiner.Forms {
             // Checkboxes set checked value
             {
                 checkBox_DebugConsole.Checked = ConfigManager.Instance.GeneralConfig.DebugConsole;
+                checkBox_AutoStartMining.Checked = ConfigManager.Instance.GeneralConfig.AutoStartMining;
                 checkBox_HideMiningWindows.Checked = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.Instance.GeneralConfig.MinimizeToTray;
                 checkBox_DisableDetectionNVidia6X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
@@ -470,6 +478,7 @@ namespace NiceHashMiner.Forms {
             // indicate there has been a change
             IsChange = true;
             ConfigManager.Instance.GeneralConfig.DebugConsole = checkBox_DebugConsole.Checked;
+            ConfigManager.Instance.GeneralConfig.AutoStartMining = checkBox_AutoStartMining.Checked;
             ConfigManager.Instance.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             ConfigManager.Instance.GeneralConfig.MinimizeToTray = checkBox_MinimizeToTray.Checked;
             ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X = checkBox_DisableDetectionNVidia6X.Checked;

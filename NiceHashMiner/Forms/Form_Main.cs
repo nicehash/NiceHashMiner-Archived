@@ -313,6 +313,13 @@ namespace NiceHashMiner
                 if (result == System.Windows.Forms.DialogResult.No) {
                     Close();
                     return;
+                } else {
+                    // users agrees he installed it so commit changes
+                    ConfigManager.Instance.GeneralConfig.Commit();
+                }
+            } else {
+                if (ConfigManager.Instance.GeneralConfig.AutoStartMining) {
+                    buttonStartMining_Click(null, null);
                 }
             }
         }
