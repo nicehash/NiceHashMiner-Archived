@@ -43,6 +43,11 @@ namespace NiceHashMiner.Miners
             }
         }
 
+        public override void EndBenchmarkProcces() {
+            base.EndBenchmarkProcces();
+            KillSGMiner();
+        }
+
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
         }

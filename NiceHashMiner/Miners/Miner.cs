@@ -450,7 +450,7 @@ namespace NiceHashMiner
         //}
 
         // killing proccesses can take time
-        public void EndBenchmarkProcces() {
+        virtual public void EndBenchmarkProcces() {
             if (BenchmarkHandle != null && BenchmarkProcessStatus != BenchmarkProcessStatus.Killing) {
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
                 try {
