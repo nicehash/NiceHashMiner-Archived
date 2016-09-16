@@ -12,7 +12,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms {
-    public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator {
+    public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator, IBenchmarkCalculation {
 
         private bool _inBenchmark = false;
         private int _bechmarkCurrentIndex = 0;
@@ -131,6 +131,10 @@ namespace NiceHashMiner.Forms {
             ResetBenchmarkProgressStatus();
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
+
+            // to update laclulation status
+            devicesListViewEnableControl1.BenchmarkCalculation = this;
+            algorithmsListView1.BenchmarkCalculation = this;
 
             if (autostart) {
                 ExitWhenFinished = true;
@@ -288,7 +292,7 @@ namespace NiceHashMiner.Forms {
             return true;
         }
 
-        private void CalcBenchmarkDevicesAlgorithmQueue() {
+        public void CalcBenchmarkDevicesAlgorithmQueue() {
 
             _benchmarkAlgorithmsCount = 0;
             _benchmarkDevicesAlgorithmStatus = new Dictionary<string, BenchmarkSettingsStatus>();
@@ -299,6 +303,9 @@ namespace NiceHashMiner.Forms {
                     foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
                         if (ShoulBenchmark(kvpAlgorithm.Value)) {
                             algorithmQueue.Enqueue(kvpAlgorithm.Value);
+                            kvpAlgorithm.Value.SetBenchmarkPendingNoMsg();
+                        } else {
+                            kvpAlgorithm.Value.ClearBenchmarkPending();
                         }
                     }
                 } else { // single bench
@@ -524,6 +531,14 @@ namespace NiceHashMiner.Forms {
                 e.Cancel = true;
                 return;
             }
+
+            // disable all pending benchmark
+            foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
+                    algorithm.ClearBenchmarkPending();
+                }
+            }
+
             // save already benchmarked algorithms
             ConfigManager.Instance.CommitBenchmarks();
             // check devices without benchmarks
@@ -553,12 +568,14 @@ namespace NiceHashMiner.Forms {
             _algorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
+            algorithmsListView1.ResetListItemColors();
         }
 
         private void radioButton_RE_SelectedUnbenchmarked_CheckedChanged(object sender, EventArgs e) {
             _algorithmOption = AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms;
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
+            algorithmsListView1.ResetListItemColors();
         }
 
     }

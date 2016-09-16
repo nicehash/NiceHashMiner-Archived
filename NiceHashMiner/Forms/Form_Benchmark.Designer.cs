@@ -86,6 +86,7 @@
             // 
             // algorithmsListView1
             // 
+            this.algorithmsListView1.BenchmarkCalculation = null;
             this.algorithmsListView1.ComunicationInterface = null;
             this.algorithmsListView1.IsInBenchmark = false;
             this.algorithmsListView1.Location = new System.Drawing.Point(12, 133);
@@ -103,6 +104,7 @@
             // devicesListViewEnableControl1
             // 
             this.devicesListViewEnableControl1.AutoSaveChange = false;
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
             this.devicesListViewEnableControl1.FirstColumnText = "Benckmark";
             this.devicesListViewEnableControl1.IsInBenchmark = false;
             this.devicesListViewEnableControl1.IsMining = false;

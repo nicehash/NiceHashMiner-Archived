@@ -28,6 +28,8 @@ namespace NiceHashMiner.Forms.Components {
 
         public IAlgorithmsListView ComunicationInterface { get; set; }
 
+        public IBenchmarkCalculation BenchmarkCalculation { get; set; }
+
         ComputeDevice _computeDevice;
 
         private class DefaultAlgorithmColorSeter : IListItemCheckColorSetter {
@@ -90,6 +92,7 @@ namespace NiceHashMiner.Forms.Components {
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled) {
             _computeDevice = computeDevice;
             var config = computeDevice.DeviceBenchmarkConfig;
+            listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
             foreach (var alg in config.AlgorithmSettings) {
                 ListViewItem lvi = new ListViewItem();
@@ -105,6 +108,9 @@ namespace NiceHashMiner.Forms.Components {
                 _listItemCheckColorSetter.LviSetColor(lvi);
                 listViewAlgorithms.Items.Add(lvi);
             }
+            listViewAlgorithms.EndUpdate();
+            ResetListItemColors();
+            listViewAlgorithms.Invalidate(true);
             this.Enabled = isEnabled;
         }
 
@@ -140,8 +146,18 @@ namespace NiceHashMiner.Forms.Components {
             }
             var lvi = e.Item as ListViewItem;
             _listItemCheckColorSetter.LviSetColor(lvi);
+            // update benchmark status data
+            if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
         }
         #endregion //Callbacks Events
+
+        public void ResetListItemColors() {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                if (_listItemCheckColorSetter != null) {
+                    _listItemCheckColorSetter.LviSetColor(lvi);
+                }
+            }
+        }
 
         // benchmark settings
         public void SetSpeedStatus(ComputeDevice computeDevice, AlgorithmType algorithmType, string status) {

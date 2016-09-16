@@ -32,6 +32,8 @@ namespace NiceHashMiner.Forms.Components {
 
         IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultDevicesColorSeter();
 
+        public IBenchmarkCalculation BenchmarkCalculation { get; set; }
+
         private AlgorithmsListView _algorithmsListView = null;
 
         // disable checkboxes when in benchmark mode
@@ -98,6 +100,7 @@ namespace NiceHashMiner.Forms.Components {
             listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
             //listViewDevices.CheckBoxes = false;
             IsMining = false;
+            BenchmarkCalculation = null;
         }
 
         public void SetIListItemCheckColorSetter(IListItemCheckColorSetter listItemCheckColorSetter) {
@@ -122,6 +125,8 @@ namespace NiceHashMiner.Forms.Components {
             bool tmp_SaveToGeneralConfig = SaveToGeneralConfig;
             AutoSaveChange = false;
             SaveToGeneralConfig = false;
+            listViewDevices.BeginUpdate();
+            listViewDevices.Items.Clear();
             // set devices
             foreach (var computeDevice in computeDevices) {
                 ListViewItem lvi = new ListViewItem();
@@ -138,6 +143,8 @@ namespace NiceHashMiner.Forms.Components {
                 listViewDevices.Items.Add(lvi);
                 _listItemCheckColorSetter.LviSetColor(lvi);
             }
+            listViewDevices.EndUpdate();
+            listViewDevices.Invalidate(true);
             // reset properties
             AutoSaveChange = tmp_AutoSaveChange;
             SaveToGeneralConfig = tmp_SaveToGeneralConfig;
@@ -145,7 +152,6 @@ namespace NiceHashMiner.Forms.Components {
 
         public void ResetComputeDevices(List<ComputeDevice> computeDevices) {
             Options.Clear();
-            listViewDevices.Items.Clear();
             SetComputeDevices(computeDevices);
         }
 
@@ -166,6 +172,7 @@ namespace NiceHashMiner.Forms.Components {
             var lvi = e.Item as ListViewItem;
             if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
             if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
+            if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
         }
 
         public void SaveOptions() {
@@ -222,20 +229,21 @@ namespace NiceHashMiner.Forms.Components {
             } 
         }
 
-        private void toolStripMenuItemEnable_Click(object sender, EventArgs e) {
-            ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
-            var isEnabled = !G.IsEnabled;
-            G.IsEnabled = isEnabled;
-            if (AutoSaveChange) {
-                G.SaveOption();
-            }
-            if (SaveToGeneralConfig) {
-                ConfigManager.Instance.GeneralConfig.Commit();
-            }
-            var lvi = listViewDevices.FocusedItem as ListViewItem;
-            if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
-            if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
-        }
+        //private void toolStripMenuItemEnable_Click(object sender, EventArgs e) {
+        //    ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
+        //    var isEnabled = !G.IsEnabled;
+        //    G.IsEnabled = isEnabled;
+        //    if (AutoSaveChange) {
+        //        G.SaveOption();
+        //    }
+        //    if (SaveToGeneralConfig) {
+        //        ConfigManager.Instance.GeneralConfig.Commit();
+        //    }
+        //    var lvi = listViewDevices.FocusedItem as ListViewItem;
+        //    if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
+        //    if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
+        //    if (BenchmarkCalculation != null) _benchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+        //}
 
         private void toolStripMenuItemCopySettings_Click(object sender, EventArgs e) {
             ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;

@@ -71,6 +71,9 @@ namespace NiceHashMiner {
             IsBenchmarkPending = true;
             BenchmarkStatus = International.GetText("Algorithm_Waiting_Benchmark");
         }
+        public void SetBenchmarkPendingNoMsg() {
+            IsBenchmarkPending = true;
+        }
         public void ClearBenchmarkPending() {
             IsBenchmarkPending = false;
             BenchmarkStatus = "";
