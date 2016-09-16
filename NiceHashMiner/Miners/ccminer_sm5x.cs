@@ -34,7 +34,10 @@ namespace NiceHashMiner.Miners
             }
             if (AlgorithmType.CryptoNight == algorithmType) {
                 return MinerPaths.ccminer_cryptonight;
-            } 
+            }
+            if (AlgorithmType.Lbry == algorithmType) {
+                return MinerPaths.ccminer_tpruvot;
+            }
 
             return MinerPaths.ccminer_sp;
         }

@@ -37,6 +37,7 @@ namespace NiceHashMiner
             { AlgorithmType.DaggerHashimoto , "daggerhashimoto" },
             { AlgorithmType.Decred , "decred" },
             { AlgorithmType.CryptoNight , "cryptonight" },
+            { AlgorithmType.Lbry , "lbry" },
         };
 
         static private List<AlgorithmType> _keys = null;

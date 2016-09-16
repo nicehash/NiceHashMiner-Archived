@@ -333,7 +333,7 @@ namespace NiceHashMiner.Devices
             #region AMD driver check, ADL returns 0
             // check the driver version bool EnableOptimizedVersion = true;
             Dictionary<string, bool> deviceDriverOld = new Dictionary<string, bool>();
-            string minerPath = MinerPaths.sgminer_5_4_0_general;
+            string minerPath = MinerPaths.sgminer_5_5_0_general;
             bool ShowWarningDialog = false;
 
             foreach (var vidContrllr in AvaliableVideoControllers) {

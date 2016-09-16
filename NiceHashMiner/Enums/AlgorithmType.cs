@@ -35,8 +35,8 @@ namespace NiceHashMiner.Enums
         Hodl = 19,
         DaggerHashimoto = 20,
         Decred = 21,
-        // TODO check CryptoNight
         CryptoNight = 22,
+        Lbry = 23
         #endregion // NiceHashAPI
     }
 }

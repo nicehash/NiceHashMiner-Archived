@@ -51,7 +51,9 @@ namespace NiceHashMiner.Devices {
                     { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
                 { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred")
-                    { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" + AmdGpuDevice.TemperatureParam } }
+                    { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" + AmdGpuDevice.TemperatureParam } },
+                { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") 
+                    { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 };
             }
             // NVIDIA
@@ -72,7 +74,8 @@ namespace NiceHashMiner.Devices {
                 { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla") },
                 { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
                 { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred") },
-                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") }
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") },
+                { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") },
                 };
                 if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
                     // minerName change => "whirlpoolx" => "whirlpool"

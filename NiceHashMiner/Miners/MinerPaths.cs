@@ -37,7 +37,7 @@ namespace NiceHashMiner.Miners
         /// </summary>
         public const string sgminer_5_1_0_optimized =   _bin + @"\sgminer-5-1-0-optimized\sgminer.exe";
         public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
-        public const string sgminer_5_4_0_general =     _bin + @"\sgminer-5-4-0-general\sgminer.exe";
+        public const string sgminer_5_5_0_general =     _bin + @"\sgminer-5-5-0-general\sgminer.exe";
         public const string sgminer_5_4_0_tweaked =     _bin + @"\sgminer-5-4-0-tweaked\sgminer.exe";
 
     }
