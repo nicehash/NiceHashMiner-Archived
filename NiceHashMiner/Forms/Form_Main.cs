@@ -173,6 +173,15 @@ namespace NiceHashMiner
             StartupTimer.Stop();
             StartupTimer = null;
 
+            if (!Helpers.Is45NetOrHigher()) {
+                MessageBox.Show(International.GetText("NET45_Not_Intsalled_msg"),
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK);
+
+                this.Close();
+                return;
+            } 
+
             if (!Helpers.InternalCheckIsWow64()) {
                 MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
                                 International.GetText("Warning_with_Exclamation"),

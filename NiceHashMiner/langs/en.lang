@@ -315,5 +315,6 @@
         "Compute_Device_Query_Manager_NVIDIA_Driver_Detection": "We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner to work correctly you should upgrade your drivers to recomended {1} or newer.",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART" : " (current {0})",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended": "We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer.",
+        "NET45_Not_Intsalled_msg" : "NiceHash Miner requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5"
     }
 }
