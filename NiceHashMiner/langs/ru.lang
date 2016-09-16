@@ -315,5 +315,6 @@
         "Compute_Device_Query_Manager_NVIDIA_Driver_Detection": "Мы обнаружили, что в вашей системе есть Nvidia GPU, но ваш драйвер старее {0}. Для корректной работы NiceHash Miner, вам необходимо обновить драйверы до рекомендуемого {1} или новее.",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART" : " (текущий {0})",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended": "Мы обнаружили, что ваш драйвер старее {0}{1}. Мы рекомендуем вам обновиться до {2} или новее.",
+	"NET45_Not_Intsalled_msg" : "Для корректной работы NiceHash Miner требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
     }
 }
