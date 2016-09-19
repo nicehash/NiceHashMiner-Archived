@@ -171,7 +171,7 @@ namespace NiceHashMiner.Devices
             _currentNvidiaOpenCLDriver = GetNvidiaOpenCLDriver();
             // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
             bool isNvidiaErrorShown = false; // to prevent showing twice
-            if (HasNvidiaVideoController() && CudaDevices.Count == 0) {
+            if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && HasNvidiaVideoController() && CudaDevices.Count == 0) {
                 isNvidiaErrorShown = true;
                 var minDriver = NVIDIA_MIN_DETECTION_DRIVER.ToString();
                 var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
@@ -181,7 +181,7 @@ namespace NiceHashMiner.Devices
                                                       MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             // recomended driver
-            if (HasNvidiaVideoController() && _currentNvidiaOpenCLDriver < NVIDIA_RECOMENDED_DRIVER && !isNvidiaErrorShown) {
+            if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && HasNvidiaVideoController() && _currentNvidiaOpenCLDriver < NVIDIA_RECOMENDED_DRIVER && !isNvidiaErrorShown) {
                 var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
                 var nvdriverString = _currentNvidiaOpenCLDriver > -1 ? String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"), _currentNvidiaOpenCLDriver.ToString())
                 : "";
@@ -258,7 +258,7 @@ namespace NiceHashMiner.Devices
                 AvaliableVideoControllers.Add(vidController);
             }
             Helpers.ConsolePrint(TAG, stringBuilder.ToString());
-            if (!allVideoContollersOK) {
+            if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK) {
                 string msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
                 foreach (var vc in AvaliableVideoControllers) {
                     if(!vc.Status.ToLower().Equals("ok")) {
@@ -363,7 +363,7 @@ namespace NiceHashMiner.Devices
                     }
                 }
             }
-            if (ShowWarningDialog == true && ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning == true) {
+            if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && ShowWarningDialog == true) {
                 Form WarningDialog = new DriverVersionConfirmationDialog();
                 WarningDialog.ShowDialog();
                 WarningDialog = null;
