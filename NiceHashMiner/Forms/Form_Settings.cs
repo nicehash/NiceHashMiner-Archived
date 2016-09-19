@@ -569,33 +569,6 @@ namespace NiceHashMiner.Forms {
             groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
         }
 
-        // TODO IMPORTANT get back to this div thing
-        static double[] div = new double[] {
-                                 1000000,       //   0 (MH/s) Scrypt
-                                 1000000000000, //   1 (TH/s) SHA256
-                                 1000000,       //   2 (MH/s) ScryptNf
-                                 1000000,       //   3 (MH/s) X11
-                                 1000000,       //   4 (MH/s) X13
-                                 1000000,       //   5 (MH/s) Keccak
-                                 1000000,       //   6 (MH/s) X15
-                                 1000000,       //   7 (MH/s) Nist5
-                                 1000000,       //   8 (MH/s) NeoScrypt
-                                 1000000,       //   9 (MH/s) Lyra2RE
-                                 1000000,       //  10 (MH/s) WhirlpoolX
-                                 1000000,       //  11 (MH/s) Qubit
-                                 1000000,       //  12 (MH/s) Quark
-                                 1000,          //  13 (kH/s) Axiom
-                                 1000000,       //  14 (MH/s) Lyra2REv2
-                                 1000,          //  15 (kH/s) ScryptJaneNf16
-                                 1000000000,    //  16 (GH/s) Blake256r8
-                                 1000000000,    //  17 (GH/s) Blake256r14
-                                 1000000000,    //  18 (GH/s) Blake256r8vnl
-                                 1000,          //  19 (kH/s) Hodl
-                                 1000000,       //  20 (MH/s) Daggerhashimoto
-                                 1000000000,    //  21 (GH/s) Decred
-                                 1000,          //  22 (kH/s) CryptoNight
-                                 1000000 }; // 999 (MH/s) Ethereum
-
         private void buttonSelectedProfit_Click(object sender, EventArgs e) {
             if (_selectedComputeDevice == null) {
                 MessageBox.Show(International.GetText("FormSettings_ButtonProfitSingle"),
@@ -606,7 +579,7 @@ namespace NiceHashMiner.Forms {
             var url = "https://www.nicehash.com/?p=calc&name=" + _selectedComputeDevice.Name;
             foreach (var algorithm in _selectedComputeDevice.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
                 var id = (int)algorithm.NiceHashID;
-                url += "&speed" + id + "=" + (algorithm.BenchmarkSpeed / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+                url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
             }
             url += "&nhmver=" + Application.ProductVersion.ToString();  // Add version info
             url += "&cost=1&power=1"; // Set default power and cost to 1
@@ -628,7 +601,7 @@ namespace NiceHashMiner.Forms {
             }
             foreach (var algorithm in total) {
                 var id = (int)algorithm.Key;
-                url += "&speed" + id + "=" + (algorithm.Value / div[id]).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+                url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.Value, algorithm.Key).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
             }
             url += "&nhmver=" + Application.ProductVersion.ToString();  // Add version info
             url += "&cost=1&power=1"; // Set default power and cost to 1
