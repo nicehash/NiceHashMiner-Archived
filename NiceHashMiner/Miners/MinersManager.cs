@@ -356,7 +356,11 @@ namespace NiceHashMiner.Miners {
                 foreach (var algoSpeedKvp in nameBenchKvp.Value) {
                     // Log stuff and calculation
                     string name = AlgorithmNiceHashNames.GetName(algoSpeedKvp.Key);
-                    string namePreaty = name + new String(' ', MAX_NAME_LEN - name.Length);
+                    int namePreatyCount = MAX_NAME_LEN - name.Length;
+                    if (namePreatyCount <= 0) {
+                        namePreatyCount = 1;
+                    }
+                    string namePreaty = name + new String(' ', namePreatyCount);
                     bool isEnabled = algoSpeedKvp.Value > 0;
                     double nhmSMADataVal = NiceHashData[algoSpeedKvp.Key].paying;
                     // TODO what is the constant at the end?
@@ -376,7 +380,11 @@ namespace NiceHashMiner.Miners {
                     }
                     // log stuff
                     string speedStr = algoSpeedKvp.Value.ToString("F3");
-                    string speedPreaty = new String(' ', MAX_SPEED_LEN - speedStr.Length) + speedStr;
+                    int speedStrCount = MAX_SPEED_LEN - speedStr.Length;
+                    if (speedStrCount <= 0) {
+                        speedStrCount = 1;
+                    }
+                    string speedPreaty = new String(' ', speedStrCount) + speedStr;
                     stringBuilderDevice.AppendLine(String.Format("\t\t{0}\t:\tPROFIT = {1}  ({2}, SPEED = {3}, NHSMA = {4})",
                     namePreaty, // Name
                     algoProfit.ToString(DOUBLE_FORMAT), // Profit
@@ -456,30 +464,30 @@ namespace NiceHashMiner.Miners {
         }
         #endregion //Groupping logic
 
-        private string GetDevProfitString(string deviceName, Dictionary<AlgorithmType, double> deviceProfits) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(String.Format("\tProfits for {0}:", deviceName));
-            // TODO make parameter
-            int MAX_NAME_LEN = "daggerhashimoto".Length;
-            foreach (var kvp in deviceProfits) {
-                string name = AlgorithmNiceHashNames.GetName(kvp.Key);
-                string namePreaty = name + new String(' ', MAX_NAME_LEN - name.Length);
-                stringBuilder.AppendLine(String.Format("\t\t{0}\t:\t{1},",
-                    namePreaty,
-                    kvp.Value.ToString(DOUBLE_FORMAT)));
-            }
+        //private string GetDevProfitString(string deviceName, Dictionary<AlgorithmType, double> deviceProfits) {
+        //    StringBuilder stringBuilder = new StringBuilder();
+        //    stringBuilder.AppendLine(String.Format("\tProfits for {0}:", deviceName));
+        //    // TODO make parameter
+        //    int MAX_NAME_LEN = "daggerhashimoto".Length;
+        //    foreach (var kvp in deviceProfits) {
+        //        string name = AlgorithmNiceHashNames.GetName(kvp.Key);
+        //        string namePreaty = name + new String(' ', MAX_NAME_LEN - name.Length);
+        //        stringBuilder.AppendLine(String.Format("\t\t{0}\t:\t{1},",
+        //            namePreaty,
+        //            kvp.Value.ToString(DOUBLE_FORMAT)));
+        //    }
 
-            return stringBuilder.ToString();
-        }
+        //    return stringBuilder.ToString();
+        //}
 
-        private string GetProfitsSummery(PerDeviceProifitDictionary devProfits) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("Current device profits:");
-            foreach (var kvp in devProfits) {
-                stringBuilder.AppendLine(GetDevProfitString(kvp.Key, kvp.Value));
-            }
-            return stringBuilder.ToString();
-        }
+        //private string GetProfitsSummery(PerDeviceProifitDictionary devProfits) {
+        //    StringBuilder stringBuilder = new StringBuilder();
+        //    stringBuilder.AppendLine("Current device profits:");
+        //    foreach (var kvp in devProfits) {
+        //        stringBuilder.AppendLine(GetDevProfitString(kvp.Key, kvp.Value));
+        //    }
+        //    return stringBuilder.ToString();
+        //}
 
         /// <summary>
         /// SwichMostProfitable should check the best combination for most profit.
@@ -573,10 +581,13 @@ namespace NiceHashMiner.Miners {
                 newGroup.Add(firstDev.UUID);
                 for (int second = first + 1; second < _enabledDevices.Count; ++second) {
                     var secondDev = _enabledDevices[second];
-                    // check if we should group
-                    if(IsDaggerAndSameComputePlatform(firstDev, secondDev)
-                        || IsGroupBinaryAndAlgorithmSame(firstDev, secondDev)) {
-                        newGroup.Add(secondDev.UUID);
+                    // first check if second device has profitable algorithm
+                    if (secondDev.MostProfitableAlgorithm != null) {
+                        // check if we should group
+                        if (IsDaggerAndSameComputePlatform(firstDev, secondDev)
+                            || IsGroupBinaryAndAlgorithmSame(firstDev, secondDev)) {
+                            newGroup.Add(secondDev.UUID);
+                        }
                     }
                 }
 
