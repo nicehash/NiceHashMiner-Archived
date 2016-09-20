@@ -106,11 +106,6 @@ namespace NiceHashMiner.Configs
                 foreach (var key in _file.AlgorithmSettings.Keys) {
                     if(this.AlgorithmSettings.ContainsKey(key)) {
                         this.AlgorithmSettings[key] = _file.AlgorithmSettings[key];
-                        // AMD extra params fix
-                        if (this.AlgorithmSettings[key].ExtraLaunchParameters.Contains(AmdGpuDevice.TemperatureParam)) {
-                            this.AlgorithmSettings[key].ExtraLaunchParameters = this.AlgorithmSettings[key].ExtraLaunchParameters.Replace(AmdGpuDevice.TemperatureParam, "");
-                            this.AlgorithmSettings[key].ExtraLaunchParameters = this.AlgorithmSettings[key].ExtraLaunchParameters + AmdGpuDevice.TemperatureParam;
-                        }  
                     } else {
                         // TODO think if we let tamnpered data
                     }

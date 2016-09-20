@@ -18,7 +18,7 @@ namespace NiceHashMiner.Miners {
         };
         // ccminer CryptoNight
         private static List<MinerOption> _ccimerCryptoNightOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Ccminer_CryptoNightLaunch, "-l", "--launch=", "8x40"),
+            new MinerOption(MinerOptionType.Ccminer_CryptoNightLaunch, "-l", "--launch=", "0"), // default is 8x40
             new MinerOption(MinerOptionType.Ccminer_CryptoNightBfactor, "", "--bfactor=", "0"),
             new MinerOption(MinerOptionType.Ccminer_CryptoNightBsleep, "", "--bsleep=", "0") // TODO check default
         };
@@ -35,19 +35,18 @@ namespace NiceHashMiner.Miners {
             new MinerOption(MinerOptionType.HamsiExpandBig, "", "--hamsi-expand-big", "4", MinerOptionFlagType.SingleParam),
             new MinerOption(MinerOptionType.Nfactor, "", "--nfactor", "10", MinerOptionFlagType.SingleParam),
             // MultiParam TODO IMPORTANT check defaults
-            new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "-1"), // default is "d" check if -1 works
-            new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1"),
-            new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1"),
-            new MinerOption(MinerOptionType.ThreadConcurrency, "", "--thread-concurrency", "-1"),
-            new MinerOption(MinerOptionType.Worksize, "-w", "--worksize", "-1"),
+            new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "d"), // default is "d" check if -1 works
+            new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1"), // default none
+            new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1"), // default none
+            new MinerOption(MinerOptionType.ThreadConcurrency, "", "--thread-concurrency", "-1"), // default none
+            new MinerOption(MinerOptionType.Worksize, "-w", "--worksize", "-1"), // default none
             new MinerOption(MinerOptionType.GpuThreads, "-g", "--gpu-threads", "1"),
-            new MinerOption(MinerOptionType.LookupGap, "", "--lookup-gap", "-1"),
+            new MinerOption(MinerOptionType.LookupGap, "", "--lookup-gap", "-1"), // default none
             // Uni
-            new MinerOption(MinerOptionType.RemoveDisabled, "", "--remove-disabled", null, MinerOptionFlagType.Uni),
         };
         private static List<MinerOption> _sgminerTemperatureOptions = new List<MinerOption>() {
             // temperature stuff
-            new MinerOption(MinerOptionType.GpuFan, "", "--gpu-fan", "-1"), // default none
+            new MinerOption(MinerOptionType.GpuFan, "", "--gpu-fan", "30-60"), // default none
             new MinerOption(MinerOptionType.TempCutoff, "", "--temp-cutoff", "95"),
             new MinerOption(MinerOptionType.TempOverheat, "", "--temp-overheat", "85"),
             new MinerOption(MinerOptionType.TempTarget, "", "--temp-target", "75"),
@@ -56,10 +55,11 @@ namespace NiceHashMiner.Miners {
         };
 
         private static string Parse(List<ComputeDevice> CDevs, List<MinerOption> options, bool useIfDefaults = false) {
+            const string IGNORE_PARAM = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             List<MinerOptionType> optionsOrder = new List<MinerOptionType>();
             Dictionary<MinerOptionType, string> paramsFlags = new Dictionary<MinerOptionType, string>();
             Dictionary<string, Dictionary<MinerOptionType, string>> cdevOptions = new Dictionary<string, Dictionary<MinerOptionType, string>>();
-
+            Dictionary<MinerOptionType, bool> isOptionDefaults = new Dictionary<MinerOptionType, bool>();
             // init devs options, and defaults
             foreach (var cDev in CDevs) {
                 var defaults = new Dictionary<MinerOptionType, string>();
@@ -73,6 +73,7 @@ namespace NiceHashMiner.Miners {
                 MinerOptionType optionType = option.Type;
                 optionsOrder.Add(optionType);
                 paramsFlags.Add(optionType, option.LongName);
+                isOptionDefaults.Add(option.Type, true);
             }
             // parse
             foreach (var cDev in CDevs) {
@@ -96,13 +97,13 @@ namespace NiceHashMiner.Miners {
                             }
                         }
                         if (isIngored) { // ignored
-                            Helpers.ConsolePrint(TAG, String.Format("Cannot parse \"{0}\", not supported or wrong extra launch parameter settings", param));
+                            Helpers.ConsolePrint(TAG, String.Format(IGNORE_PARAM, param));
                         }
                     } else if (currentFlag != MinerOptionType.NONE) {
                         cdevOptions[cDev.UUID][currentFlag] = param;
                         currentFlag = MinerOptionType.NONE;
                     } else { // problem
-                        Helpers.ConsolePrint(TAG, String.Format("Cannot parse \"{0}\", not supported or wrong extra launch parameter settings", param));
+                        Helpers.ConsolePrint(TAG, String.Format(IGNORE_PARAM, param));
                     }
                 }
             }
@@ -115,15 +116,15 @@ namespace NiceHashMiner.Miners {
                 foreach (var option in options) {
                     if (option.Default != cdevOptions[cDev.UUID][option.Type]) {
                         isAllDefault = false;
-                        break;
+                        isOptionDefaults[option.Type] = false;
                     }
                 }
-                if (!isAllDefault) break;
             }
 
             if (!isAllDefault || useIfDefaults) {
                 foreach (var option in options) {
-                    if(option.FlagType == MinerOptionFlagType.Uni) {
+                    if (!isOptionDefaults[option.Type] || useIfDefaults) { // if options all default ignore
+                        if(option.FlagType == MinerOptionFlagType.Uni) {
                         // uni params if one exist use or all must exist?
                         bool isOptionInUse = false;
                         foreach (var cDev in CDevs) {
@@ -160,6 +161,7 @@ namespace NiceHashMiner.Miners {
                         }
                         retVal += String.Format(MASK, option.LongName, setValue);
                     }
+                    }
                 }
             }
 
@@ -173,7 +175,7 @@ namespace NiceHashMiner.Miners {
                 if (algorithmType != AlgorithmType.DaggerHashimoto && algorithmType != AlgorithmType.CryptoNight) {
                     return Parse(CDevs, _ccimerOptions);
                 } else if (algorithmType == AlgorithmType.CryptoNight) {
-                    return Parse(CDevs, _ccimerCryptoNightOptions);
+                    return Parse(CDevs, _ccimerCryptoNightOptions, true);
                 } else { // ethminer dagger
                     return ""; // TODO
                 }
@@ -184,6 +186,7 @@ namespace NiceHashMiner.Miners {
                 } else { // ethminer dagger
                     return ""; // TODO
                 }
+            } else if (deviceType == DeviceType.CPU) {
             }
 
             return "";

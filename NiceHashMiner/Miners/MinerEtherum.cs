@@ -41,7 +41,7 @@ namespace NiceHashMiner.Miners {
         }
 
         protected abstract string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username);
-        protected abstract string GetBenchmarkCommandStringPart(ComputeDevice benchmarkDevice, Algorithm algorithm);
+        protected abstract string GetBenchmarkCommandStringPart(Algorithm algorithm);
 
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " ";
@@ -93,8 +93,8 @@ namespace NiceHashMiner.Miners {
             }
         }
 
-        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
-            string CommandLine = GetBenchmarkCommandStringPart(benchmarkDevice, algorithm) + GetDevicesCommandString();
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+            string CommandLine = GetBenchmarkCommandStringPart(algorithm) + GetDevicesCommandString();
             Ethereum.GetCurrentBlock(CurrentBlockString);
             CommandLine += " --benchmark " + Ethereum.CurrentBlockNum;
 

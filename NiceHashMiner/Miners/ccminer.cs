@@ -26,25 +26,6 @@ namespace NiceHashMiner.Miners
             return 60 * 1000; // 1 minute max, whole waiting time 75seconds
         }
 
-        protected string getIntensityString() {
-            List<string> intensityString = new List<string>();
-            bool ignore = true;
-            foreach (var cdev in CDevs) {
-                // TODO refactoring ExtraLaunchParameters
-                double intensity = 0; // cdev.DeviceBenchmarkConfig.AlgorithmSettings[CurrentAlgorithmType].Intensity;
-                if (intensity < 8.0d) { // all have minimum of 8
-                    intensityString.Add("0");
-                } else {
-                    intensityString.Add(intensity.ToString("F8"));
-                    ignore = false;
-                }
-            }
-            if (!ignore && intensityString.Count > 0) {
-                return "--intensity="+string.Join(",", intensityString);
-            }
-            return "";
-        }
-
         public override void Start(Algorithm miningAlgorithm, string url, string username)
         {
             CurrentMiningAlgorithm = miningAlgorithm;
@@ -52,11 +33,9 @@ namespace NiceHashMiner.Miners
 
             string algo = "";
             string apiBind = "";
-            string intensity = "";
             if (CurrentMiningAlgorithm.NiceHashID != AlgorithmType.CryptoNight) {
                 algo = "--algo=" + miningAlgorithm.MinerName;
                 apiBind = " --api-bind=" + APIPort.ToString();
-                intensity = getIntensityString();
             }
 
             IsAPIReadException = CurrentMiningAlgorithm.NiceHashID == AlgorithmType.CryptoNight;
@@ -64,9 +43,11 @@ namespace NiceHashMiner.Miners
             LastCommandLine = algo +
                                   " --url=" + url +
                                   " --userpass=" + username + ":" + Algorithm.PasswordDefault +
-                                  apiBind +
-                                  " " + miningAlgorithm.ExtraLaunchParameters +
-                                  intensity +
+                                  apiBind + " " +
+                                  ExtraLaunchParametersParser.ParseForCDevs(
+                                                                CDevs,
+                                                                CurrentMiningAlgorithm.NiceHashID,
+                                                                DeviceType.NVIDIA) +
                                   " --devices ";
 
             LastCommandLine += GetDevicesCommandString();
@@ -87,12 +68,15 @@ namespace NiceHashMiner.Miners
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             string timeLimit = algorithm.NiceHashID == AlgorithmType.CryptoNight ? "" : " --time-limit " + time.ToString();
             string CommandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
-                              timeLimit +
-                              " " + algorithm.ExtraLaunchParameters +
+                              timeLimit + " " +
+                              ExtraLaunchParametersParser.ParseForCDevs(
+                                                                CDevs,
+                                                                algorithm.NiceHashID,
+                                                                DeviceType.NVIDIA) +
                               " --devices ";
 
             CommandLine += GetDevicesCommandString();

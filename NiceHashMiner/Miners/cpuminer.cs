@@ -130,8 +130,13 @@ namespace NiceHashMiner.Miners {
             LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
                               " --url=" + url +
                               " --userpass=" + username + ":" + Algorithm.PasswordDefault +
-                              " --threads=" + GetThreads(miningAlgorithm.LessThreads).ToString() +
-                              " " + miningAlgorithm.ExtraLaunchParameters +
+                              // TODO IMPORTANT HANDLE
+                              //" --threads=" + GetThreads(miningAlgorithm.LessThreads).ToString() +
+                              //" " + miningAlgorithm.ExtraLaunchParameters +
+                              ExtraLaunchParametersParser.ParseForCDevs(
+                                                                CDevs,
+                                                                CurrentMiningAlgorithm.NiceHashID,
+                                                                DeviceType.CPU) +
                               " --api-bind=" + APIPort.ToString();
 
             ProcessHandle = _Start();
@@ -168,7 +173,7 @@ namespace NiceHashMiner.Miners {
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // to set miner paths
             InitializeMinerPaths();
 
@@ -176,8 +181,12 @@ namespace NiceHashMiner.Miners {
 
             return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
-                         " --threads=" + GetThreads(algorithm.LessThreads).ToString() +
-                         " " + algorithm.ExtraLaunchParameters +
+                         //" --threads=" + GetThreads(algorithm.LessThreads).ToString() +
+                         //" " + algorithm.ExtraLaunchParameters +
+                         ExtraLaunchParametersParser.ParseForCDevs(
+                                                                CDevs,
+                                                                algorithm.NiceHashID,
+                                                                DeviceType.CPU) +
                          " --time-limit " + time.ToString();
         }
 
