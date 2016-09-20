@@ -138,7 +138,12 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            double lastSpeed = 0;
+            double lastSpeed = BenchmarkParseLine_cpu_ccminer_extra(outdata);
+            if (lastSpeed > 0.0d) {
+                BenchmarkAlgorithm.BenchmarkSpeed = lastSpeed;
+                return true;
+            }
+
             if (double.TryParse(outdata, out lastSpeed)) {
                 BenchmarkAlgorithm.BenchmarkSpeed = lastSpeed;
                 return true;

@@ -367,16 +367,6 @@ namespace NiceHashMiner
             return BenchmarkHandle;
         }
 
-
-        private string ElapsedTimeString(long timeMillies) {
-            if (timeMillies < 1000) {
-                return timeMillies.ToString() + " milliseconds";
-            } else if (timeMillies < 60 * 1000) {
-                return (timeMillies / 1000).ToString() + " seconds";
-            }
-            return (timeMillies / (60 * 1000)).ToString() + " minutes";
-        }
-
         private void BenchmarkOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
             if (BenchmarkTimeOutStopWatch == null) {
                 BenchmarkTimeOutStopWatch = new Stopwatch();
@@ -426,28 +416,28 @@ namespace NiceHashMiner
             }
         }
 
-        //protected double BenchmarkParseLine_cpu_ccminer_extra(string outdata) {
-        //    // parse line
-        //    if (outdata.Contains("Benchmark: ") && outdata.Contains("/s")) {
-        //        int i = outdata.IndexOf("Benchmark:");
-        //        int k = outdata.IndexOf("/s");
-        //        string hashspeed = outdata.Substring(i + 11, k - i - 9);
-        //        Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
+        protected double BenchmarkParseLine_cpu_ccminer_extra(string outdata) {
+            // parse line
+            if (outdata.Contains("Benchmark: ") && outdata.Contains("/s")) {
+                int i = outdata.IndexOf("Benchmark:");
+                int k = outdata.IndexOf("/s");
+                string hashspeed = outdata.Substring(i + 11, k - i - 9);
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashspeed);
 
-        //        // save speed
-        //        int b = hashspeed.IndexOf(" ");
-        //        double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
-        //        if (hashspeed.Contains("kH/s"))
-        //            spd *= 1000;
-        //        else if (hashspeed.Contains("MH/s"))
-        //            spd *= 1000000;
-        //        else if (hashspeed.Contains("GH/s"))
-        //            spd *= 1000000000;
+                // save speed
+                int b = hashspeed.IndexOf(" ");
+                double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
+                if (hashspeed.Contains("kH/s"))
+                    spd *= 1000;
+                else if (hashspeed.Contains("MH/s"))
+                    spd *= 1000000;
+                else if (hashspeed.Contains("GH/s"))
+                    spd *= 1000000000;
 
-        //        return spd;
-        //    }
-        //    return 0.0d;
-        //}
+                return spd;
+            }
+            return 0.0d;
+        }
 
         // killing proccesses can take time
         virtual public void EndBenchmarkProcces() {
