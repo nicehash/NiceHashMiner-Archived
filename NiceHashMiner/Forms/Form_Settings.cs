@@ -65,6 +65,12 @@ namespace NiceHashMiner.Forms {
             //algorithmsListView1.RemoveRatioRates();
 
 
+            // set first device selected {
+            if (ComputeDevice.AllAvaliableDevices.Count > 0) {
+                var firstComputedevice = ComputeDevice.AllAvaliableDevices[0];
+                algorithmsListView1.SetAlgorithms(firstComputedevice, firstComputedevice.ComputeDeviceEnabledOption.IsEnabled);
+            }
+
             // At the very end set to true
             _isInitFinished = true;
         }
