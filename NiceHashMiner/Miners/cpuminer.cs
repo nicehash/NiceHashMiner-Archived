@@ -130,9 +130,6 @@ namespace NiceHashMiner.Miners {
             LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
                               " --url=" + url +
                               " --userpass=" + username + ":" + Algorithm.PasswordDefault +
-                              // TODO IMPORTANT HANDLE
-                              //" --threads=" + GetThreads(miningAlgorithm.LessThreads).ToString() +
-                              //" " + miningAlgorithm.ExtraLaunchParameters +
                               ExtraLaunchParametersParser.ParseForCDevs(
                                                                 CDevs,
                                                                 CurrentMiningAlgorithm.NiceHashID,
@@ -174,8 +171,6 @@ namespace NiceHashMiner.Miners {
 
             return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
-                         //" --threads=" + GetThreads(algorithm.LessThreads).ToString() +
-                         //" " + algorithm.ExtraLaunchParameters +
                          ExtraLaunchParametersParser.ParseForCDevs(
                                                                 CDevs,
                                                                 algorithm.NiceHashID,

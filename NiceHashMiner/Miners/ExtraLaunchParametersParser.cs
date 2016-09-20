@@ -221,17 +221,19 @@ namespace NiceHashMiner.Miners {
                             }
                         }
                     }
-                    // TODO IMPORTANT
-                    //// replace
-                    //MinerOptionType prevKey = MinerOptionType.NONE;
-                    //foreach (var intensityOption in sgminer_intensities) {
-                    //    if (prevKey != MinerOptionType.NONE) {
-                    //        foreach (var cDev in CDevs) {
-                    //            cDev.CurrentExtraLaunchParameters
-                    //        }
-                    //    }
-                    //    prevKey = intensityOption.Type;
-                    //}
+                    
+                    // replace
+                    if(contains_intensity[MinerOptionType.Intensity] && contains_intensity[MinerOptionType.Xintensity]) {
+                        foreach (var cDev in CDevs) {
+                            cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--intensity", "--xintensity");
+                        }
+                    }
+                    if (contains_intensity[MinerOptionType.Xintensity] && contains_intensity[MinerOptionType.Rawintensity]) {
+                        foreach (var cDev in CDevs) {
+                            cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--xintensity", "--rawintensity");
+                        }
+                    }
+                    
 
                     // temp control and parse
                     string temperatureControl = ConfigManager.Instance.GeneralConfig.DisableAMDTempControl ? "" : Parse(CDevs, _sgminerTemperatureOptions, true);
