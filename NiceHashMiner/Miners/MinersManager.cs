@@ -464,31 +464,6 @@ namespace NiceHashMiner.Miners {
         }
         #endregion //Groupping logic
 
-        //private string GetDevProfitString(string deviceName, Dictionary<AlgorithmType, double> deviceProfits) {
-        //    StringBuilder stringBuilder = new StringBuilder();
-        //    stringBuilder.AppendLine(String.Format("\tProfits for {0}:", deviceName));
-        //    // TODO make parameter
-        //    int MAX_NAME_LEN = "daggerhashimoto".Length;
-        //    foreach (var kvp in deviceProfits) {
-        //        string name = AlgorithmNiceHashNames.GetName(kvp.Key);
-        //        string namePreaty = name + new String(' ', MAX_NAME_LEN - name.Length);
-        //        stringBuilder.AppendLine(String.Format("\t\t{0}\t:\t{1},",
-        //            namePreaty,
-        //            kvp.Value.ToString(DOUBLE_FORMAT)));
-        //    }
-
-        //    return stringBuilder.ToString();
-        //}
-
-        //private string GetProfitsSummery(PerDeviceProifitDictionary devProfits) {
-        //    StringBuilder stringBuilder = new StringBuilder();
-        //    stringBuilder.AppendLine("Current device profits:");
-        //    foreach (var kvp in devProfits) {
-        //        stringBuilder.AppendLine(GetDevProfitString(kvp.Key, kvp.Value));
-        //    }
-        //    return stringBuilder.ToString();
-        //}
-
         /// <summary>
         /// SwichMostProfitable should check the best combination for most profit.
         /// Calculate profit for each supported algorithm per device group.

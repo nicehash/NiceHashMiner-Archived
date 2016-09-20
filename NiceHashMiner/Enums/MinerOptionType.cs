@@ -35,5 +35,10 @@ namespace NiceHashMiner.Enums {
         Ethminer_OCL_LocalWork,
         Ethminer_OCL_GlobalWork,
         // CUDA ethminer
+        // TODO
+        // cpuminer
+        Threads,
+        CpuAffinity,
+        CpuPriority
     }
 }

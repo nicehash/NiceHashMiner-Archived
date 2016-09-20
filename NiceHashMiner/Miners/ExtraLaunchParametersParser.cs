@@ -54,6 +54,13 @@ namespace NiceHashMiner.Miners {
             new MinerOption(MinerOptionType.AutoGpu, "", "--auto-gpu", null, MinerOptionFlagType.Uni)
         };
 
+        private static List<MinerOption> _cpuminerOptions = new List<MinerOption>() {
+            // temperature stuff
+            new MinerOption(MinerOptionType.Threads, "-t", "--threads=", "-1"), // default none
+            new MinerOption(MinerOptionType.CpuAffinity, "", "--cpu-affinity", "-1"), // default none
+            new MinerOption(MinerOptionType.CpuPriority, "", "--cpu-priority", "-1"), // default none
+        };
+
         private static string Parse(List<ComputeDevice> CDevs, List<MinerOption> options, bool useIfDefaults = false) {
             const string IGNORE_PARAM = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             List<MinerOptionType> optionsOrder = new List<MinerOptionType>();
@@ -77,8 +84,8 @@ namespace NiceHashMiner.Miners {
             }
             // parse
             foreach (var cDev in CDevs) {
-                Helpers.ConsolePrint(TAG, String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", cDev.MostProfitableAlgorithm.ExtraLaunchParameters, cDev.UUID));
-                var parameters = cDev.MostProfitableAlgorithm.ExtraLaunchParameters.Replace("=", "= ").Split(' ');
+                Helpers.ConsolePrint(TAG, String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", cDev.CurrentExtraLaunchParameters, cDev.UUID));
+                var parameters = cDev.CurrentExtraLaunchParameters.Replace("=", "= ").Split(' ');
                 
                 MinerOptionType currentFlag = MinerOptionType.NONE;
                 foreach (var param in parameters) {
@@ -136,31 +143,31 @@ namespace NiceHashMiner.Miners {
                         if (isOptionInUse) {
                             retVal += String.Format(" {0}", option.LongName);
                         }
-                    } else if(option.FlagType == MinerOptionFlagType.MultiParam) {
-                        List<string> values = new List<string>();
-                        foreach (var cDev in CDevs) {
-                            values.Add(cdevOptions[cDev.UUID][option.Type]);
+                        } else if(option.FlagType == MinerOptionFlagType.MultiParam) {
+                            List<string> values = new List<string>();
+                            foreach (var cDev in CDevs) {
+                                values.Add(cdevOptions[cDev.UUID][option.Type]);
+                            }
+                            string MASK = " {0} {1}";
+                            if(option.LongName.Contains('=')) {
+                                MASK = " {0}{1}";
+                            }
+                            retVal += String.Format(MASK, option.LongName, string.Join(option.Separator, values));
+                        } else if (option.FlagType == MinerOptionFlagType.SingleParam) {
+                            HashSet<string> values = new HashSet<string>();
+                            foreach (var cDev in CDevs) {
+                                values.Add(cdevOptions[cDev.UUID][option.Type]);
+                            }
+                            string setValue = option.Default;
+                            if (values.Count == 1) {
+                                setValue = values.First();
+                            }
+                            string MASK = " {0} {1}";
+                            if (option.LongName.Contains('=')) {
+                                MASK = " {0}{1}";
+                            }
+                            retVal += String.Format(MASK, option.LongName, setValue);
                         }
-                        string MASK = " {0} {1}";
-                        if(option.LongName.Contains('=')) {
-                            MASK = " {0}{1}";
-                        }
-                        retVal += String.Format(MASK, option.LongName, string.Join(option.Separator, values));
-                    } else if (option.FlagType == MinerOptionFlagType.SingleParam) {
-                        HashSet<string> values = new HashSet<string>();
-                        foreach (var cDev in CDevs) {
-                            values.Add(cdevOptions[cDev.UUID][option.Type]);
-                        }
-                        string setValue = option.Default;
-                        if (values.Count == 1) {
-                            setValue = values.First();
-                        }
-                        string MASK = " {0} {1}";
-                        if (option.LongName.Contains('=')) {
-                            MASK = " {0}{1}";
-                        }
-                        retVal += String.Format(MASK, option.LongName, setValue);
-                    }
                     }
                 }
             }
@@ -170,30 +177,96 @@ namespace NiceHashMiner.Miners {
             return retVal;
         }
 
+
         public static string ParseForCDevs(List<ComputeDevice> CDevs, AlgorithmType algorithmType, DeviceType deviceType) {
+            // init cdevs extra launch parameters
+            foreach (var cDev in CDevs) {
+                cDev.CurrentExtraLaunchParameters = cDev.MostProfitableAlgorithm.ExtraLaunchParameters;
+            }
+            // parse for device
             if (deviceType == DeviceType.NVIDIA) {
                 if (algorithmType != AlgorithmType.DaggerHashimoto && algorithmType != AlgorithmType.CryptoNight) {
                     return Parse(CDevs, _ccimerOptions);
                 } else if (algorithmType == AlgorithmType.CryptoNight) {
                     return Parse(CDevs, _ccimerCryptoNightOptions, true);
                 } else { // ethminer dagger
+                    Helpers.ConsolePrint(TAG, "ExtraLaunch params ethminer CUDA not implemented");
+                    if (CDevs.Count > 0) {
+                        return CDevs.First().MostProfitableAlgorithm.ExtraLaunchParameters;
+                    }
                     return ""; // TODO
                 }
             } else if (deviceType == DeviceType.AMD) {
                 if (algorithmType != AlgorithmType.DaggerHashimoto) {
+                    // rawIntensity overrides xintensity, xintensity overrides intensity
+                    var sgminer_intensities = new List<MinerOption>() {
+                        new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "d"), // default is "d" check if -1 works
+                        new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1"), // default none
+                        new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1"), // default none
+                    };
+                    var contains_intensity = new Dictionary<MinerOptionType, bool>() {
+                        { MinerOptionType.Intensity, false },
+                        { MinerOptionType.Xintensity, false },
+                        { MinerOptionType.Rawintensity, false },
+                    };
+                    // check intensity and xintensity, the latter overrides so change accordingly
+                    foreach (var cDev in CDevs) {
+                        foreach (var intensityOption in sgminer_intensities) {
+                            if (cDev.CurrentExtraLaunchParameters.Contains(intensityOption.ShortName)) {
+                                cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace(intensityOption.ShortName, intensityOption.LongName);
+                                contains_intensity[intensityOption.Type] = true; 
+                            }
+                            if (cDev.CurrentExtraLaunchParameters.Contains(intensityOption.LongName)) {
+                                contains_intensity[intensityOption.Type] = true;
+                            }
+                        }
+                    }
+                    // TODO IMPORTANT
+                    //// replace
+                    //MinerOptionType prevKey = MinerOptionType.NONE;
+                    //foreach (var intensityOption in sgminer_intensities) {
+                    //    if (prevKey != MinerOptionType.NONE) {
+                    //        foreach (var cDev in CDevs) {
+                    //            cDev.CurrentExtraLaunchParameters
+                    //        }
+                    //    }
+                    //    prevKey = intensityOption.Type;
+                    //}
+
+                    // temp control and parse
                     string temperatureControl = ConfigManager.Instance.GeneralConfig.DisableAMDTempControl ? "" : Parse(CDevs, _sgminerTemperatureOptions, true);
                     return String.Format("{0} {1}", Parse(CDevs, _sgminerOptions), temperatureControl);
                 } else { // ethminer dagger
+                    Helpers.ConsolePrint(TAG, "ExtraLaunch params ethminer AMD not implemented");
+                    if (CDevs.Count > 0) {
+                        return CDevs.First().MostProfitableAlgorithm.ExtraLaunchParameters;
+                    }
                     return ""; // TODO
                 }
             } else if (deviceType == DeviceType.CPU) {
+                foreach (var cDev in CDevs) {
+                    // extra thread check
+                    if (cDev.CurrentExtraLaunchParameters.Contains("--threads=") || cDev.CurrentExtraLaunchParameters.Contains("-t")) {
+                        // nothing
+                    } else { // add threads params mandatory
+                        cDev.CurrentExtraLaunchParameters += " --threads=" + GetThreads(cDev.Threads, cDev.MostProfitableAlgorithm.LessThreads).ToString();
+                    }
+                }
+                return Parse(CDevs, _cpuminerOptions);
             }
 
             return "";
         }
 
+        private static int GetThreads(int Threads, int LessThreads) {
+            if (Threads > LessThreads) {
+                return Threads - LessThreads;
+            }
+            return Threads;
+        }
 
-        // testing 
+
+        /////////////////////////////////////////////////////////////////// testing 
         private static List<ComputeDevice> CreateFakeCDevs(List<Algorithm> algos) {
             List<ComputeDevice> CDevs = new List<ComputeDevice>();
             int uuid = 0;

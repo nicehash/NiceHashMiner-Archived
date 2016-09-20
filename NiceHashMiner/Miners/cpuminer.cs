@@ -22,7 +22,7 @@ namespace NiceHashMiner.Miners {
             // if our CPU is supported add it to devices
             // TODO if Miner and ComputeDevice decoupling redo this this is going to be at detecting CPUs
             if (isInitialized) {
-                CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), true));
+                CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), Threads, true));
             }
         }
 
@@ -161,13 +161,6 @@ namespace NiceHashMiner.Miners {
 
         protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
             return UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
-        }
-
-        private int GetThreads(int LessThreads) {
-            if (Threads > LessThreads) {
-                return Threads - LessThreads;
-            }
-            return Threads;
         }
 
         // new decoupled benchmarking routines
