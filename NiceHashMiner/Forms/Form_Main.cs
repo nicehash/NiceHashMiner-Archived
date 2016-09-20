@@ -45,6 +45,9 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
+        const int MINIMUM_HEIGHT = 330 - 50;
+        const int MINIMUM_WIDTH = 581;
+
         
         const string _betaAlphaPostfixString = "";
 
@@ -399,13 +402,14 @@ namespace NiceHashMiner
                     ++hideIndex;
                 }
             }
+            flowLayoutPanelRatesIndex = 0;
+            int visibleGroupCount = groupCount + 1;
+            if (visibleGroupCount <= 0) visibleGroupCount = 1;
 
             var oldHeight = groupBox1.Size.Height;
-            flowLayoutPanelRatesIndex = 0;
-            if (groupCount < 0) groupCount = 0;
-            groupBox1.Size = new Size(groupBox1.Size.Width, (groupCount + 1) * 40);
+            groupBox1.Size = new Size(groupBox1.Size.Width, (visibleGroupCount) * 40);
             // set new height
-            this.Size = new Size(this.Size.Width, this.Size.Height - (oldHeight - groupBox1.Size.Height));
+            this.Size = new Size(MINIMUM_WIDTH, MINIMUM_HEIGHT + groupBox1.Size.Height);
         }
 
         public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException) {
