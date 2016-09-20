@@ -412,13 +412,13 @@ namespace NiceHashMiner.Miners {
 #if (SWITCH_TESTING)
  && (!ForcePerCardMiners) // this will force individual miners
 #endif
-                && SafeStrCompare(a.ExtraLaunchParameters, b.ExtraLaunchParameters);
+;
         }
 
-        private bool SafeStrCompare(string a, string b) {
-            if (string.IsNullOrEmpty(a) == true && string.IsNullOrEmpty(a) == string.IsNullOrEmpty(b)) return true;
-            return a == b;
-        }
+        //private bool SafeStrCompare(string a, string b) {
+        //    if (string.IsNullOrEmpty(a) == true && string.IsNullOrEmpty(a) == string.IsNullOrEmpty(b)) return true;
+        //    return a == b;
+        //}
 
         private bool IsNvidiaDevice(ComputeDevice a) {
             foreach (var type in _nvidiaTypes) {

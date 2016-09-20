@@ -164,10 +164,6 @@ namespace NiceHashMiner
             CDevs.Sort((a, b) =>  a.ID - b.ID);
         }
 
-        public void ClearCDevs() {
-            CDevs.Clear();
-        }
-
         // TAG for identifying miner
         public string MinerTAG() {
             if (_minetTag == null) {
@@ -666,8 +662,6 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                return null;
-            } catch { // all
                 return null;
             }
 

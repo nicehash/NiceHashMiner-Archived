@@ -30,7 +30,8 @@ namespace NiceHashMiner.Miners
             List<string> intensityString = new List<string>();
             bool ignore = true;
             foreach (var cdev in CDevs) {
-                double intensity = cdev.DeviceBenchmarkConfig.AlgorithmSettings[CurrentAlgorithmType].Intensity;
+                // TODO refactoring ExtraLaunchParameters
+                double intensity = 0; // cdev.DeviceBenchmarkConfig.AlgorithmSettings[CurrentAlgorithmType].Intensity;
                 if (intensity < 8.0d) { // all have minimum of 8
                     intensityString.Add("0");
                 } else {

@@ -211,7 +211,6 @@ namespace NiceHashMiner.Devices
                     var setAlgo = this.DeviceBenchmarkConfig.AlgorithmSettings[copyAlgSpeeds.Key];
                     setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
-                    setAlgo.Intensity = copyAlgSpeeds.Value.Intensity;
                     setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
                 }
             }
