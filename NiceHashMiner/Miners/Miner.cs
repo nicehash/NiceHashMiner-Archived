@@ -338,6 +338,7 @@ namespace NiceHashMiner
         }
 
         virtual protected Process BenchmarkStartProcess(string CommandLine) {
+            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             Helpers.ConsolePrint(MinerTAG(), "Starting benchmark: " + CommandLine);
 
             Process BenchmarkHandle = new Process();

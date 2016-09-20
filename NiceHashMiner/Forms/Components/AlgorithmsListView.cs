@@ -84,11 +84,6 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
         }
 
-        //public void RemoveRatioRates() {
-        //    listViewAlgorithms.Columns.RemoveAt(RATE);
-        //    listViewAlgorithms.Columns.RemoveAt(RATIO);
-        //}
-
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled) {
             _computeDevice = computeDevice;
             var config = computeDevice.DeviceBenchmarkConfig;

@@ -22,6 +22,9 @@ namespace NiceHashMiner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+
+            CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             //Console.OutputEncoding = System.Text.Encoding.Unicode;
             // #0 set this first so data parsing will work correctly
