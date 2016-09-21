@@ -24,8 +24,14 @@ namespace NiceHashMiner.Miners {
         };
         // OCL ethminer
         private static List<MinerOption> _oclEthminerOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Ethminer_OCL_LocalWork, "", "--cl-local-work", "64"),
-            new MinerOption(MinerOptionType.Ethminer_OCL_GlobalWork, "", "--cl-global-work", "262144"),
+            new MinerOption(MinerOptionType.Ethminer_OCL_LocalWork, "", "--cl-local-work", "0"),
+            new MinerOption(MinerOptionType.Ethminer_OCL_GlobalWork, "", "--cl-global-work", "0"),
+        };
+
+        // CUDA ethminer
+        private static List<MinerOption> _cudaEthminerOptions = new List<MinerOption>() {
+            new MinerOption(MinerOptionType.CudaBlockSize, "", "--cuda-block-size", "0"),
+            new MinerOption(MinerOptionType.CudaGridSize, "", "--cuda-grid-size", "0"),
         };
 
         // sgminer
@@ -236,11 +242,18 @@ namespace NiceHashMiner.Miners {
                     }
                     return Parse(CDevs, _ccimerCryptoNightOptions, true);
                 } else { // ethminer dagger
-                    LogParser("ExtraLaunch params ethminer CUDA not implemented");
-                    if (CDevs.Count > 0) {
-                        return CDevs.First().MostProfitableAlgorithm.ExtraLaunchParameters;
+                    // use if missing compute device for correct mapping
+                    int id = -1;
+                    var cdevs_mappings = new List<ComputeDevice>();
+                    foreach (var cDev in CDevs) {
+                        while(++id != cDev.ID) {
+                            var fakeCdev = new ComputeDevice(id, "", "", "");
+                            fakeCdev.CurrentExtraLaunchParameters = ""; // empty
+                            cdevs_mappings.Add(fakeCdev);
+                        }
+                        cdevs_mappings.Add(cDev);
                     }
-                    return ""; // TODO
+                    return Parse(cdevs_mappings, _cudaEthminerOptions);
                 }
             } else if (deviceType == DeviceType.AMD) {
                 if (algorithmType != AlgorithmType.DaggerHashimoto) {
@@ -296,11 +309,18 @@ namespace NiceHashMiner.Miners {
                     LogParser("Sgminer extra launch parameters merged: " + returnStr);
                     return returnStr;
                 } else { // ethminer dagger
-                    LogParser("ExtraLaunch params ethminer AMD not implemented");
-                    if (CDevs.Count > 0) {
-                        return CDevs.First().MostProfitableAlgorithm.ExtraLaunchParameters;
+                    // use if missing compute device for correct mapping
+                    int id = -1;
+                    var cdevs_mappings = new List<ComputeDevice>();
+                    foreach (var cDev in CDevs) {
+                        while (++id != cDev.ID) {
+                            var fakeCdev = new ComputeDevice(id, "", "", "");
+                            fakeCdev.CurrentExtraLaunchParameters = ""; // empty
+                            cdevs_mappings.Add(fakeCdev);
+                        }
+                        cdevs_mappings.Add(cDev);
                     }
-                    return ""; // TODO
+                    return Parse(cdevs_mappings, _oclEthminerOptions);
                 }
             } else if (deviceType == DeviceType.CPU) {
                 foreach (var cDev in CDevs) {
