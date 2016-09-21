@@ -250,6 +250,8 @@
         "AlgorithmSettingsControl_ToolTip_Intensity": "Устанавливает интенсивность для выбранного алгоритма (значения между 8.0 - 25.0 или 31.0, в зависимости от алгоритма). Интенсивность 0 использует интенсивность по умолчанию. ФУНКЦИЯ ДЛЯ ПРОДВИНУТЫХ ПОЛЬЗОВАТЕЛЕЙ.",
         "AlgorithmsListView_GroupBox": "Выбранный алгоритм: {0}",
         "AlgorithmsListView_GroupBox_NONE": "NONE",
+	"AlgorithmsListView_ContextMenu_DisableAll": "Отключить все алгоритмы",
+        "AlgorithmsListView_ContextMenu_EnableAll" : "Включить все алгоритмы",
         "BenchmarkOptions_Benchmark_Type": "Тип бенчмарка:",
         "Form_Main_MiningDevices": "Устройства {0}:",
         "Form_Main_bins_folder_files_missing": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner может не работать правильно без недостающих файлов. Нажмите Да для переустановки NiceHash Miner, чтобы попробовать исправить ошибку.",
