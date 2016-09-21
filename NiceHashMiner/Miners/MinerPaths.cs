@@ -23,10 +23,12 @@ namespace NiceHashMiner.Miners
         /// <summary>
         /// cpuminers opt new
         /// </summary>
-        public const string cpuminer_opt_AVX = _bin  + @"\cpuminer_opt_AVX.exe";
-        public const string cpuminer_opt_AVX2 = _bin + @"\cpuminer_opt_AVX2.exe";
-        public const string cpuminer_opt_SSE2 = _bin + @"\cpuminer_opt_SSE2.exe";
-        public const string cpuminer_opt_AES =  _bin + @"\cpuminer_opt_AES.exe"; // TODO check
+        public const string cpuminer_opt_AVX2_AES =     _bin + @"\cpuminer_opt_AVX2_AES.exe";    
+        public const string cpuminer_opt_AVX2 =         _bin + @"\cpuminer_opt_AVX2.exe";
+        public const string cpuminer_opt_AVX_AES =      _bin + @"\cpuminer_opt_AVX_AES.exe";    
+        public const string cpuminer_opt_AVX =          _bin + @"\cpuminer_opt_AVX.exe";
+        public const string cpuminer_opt_AES =          _bin + @"\cpuminer_opt_AES.exe";
+        public const string cpuminer_opt_SSE2 =         _bin + @"\cpuminer_opt_SSE2.exe";
         /// <summary>
         /// ethminers
         /// </summary>

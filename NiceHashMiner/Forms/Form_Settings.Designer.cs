@@ -29,6 +29,7 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.checkBox_HideMiningWindows = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeToTray = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDetectionNVidia6X = new System.Windows.Forms.CheckBox();
@@ -43,6 +44,7 @@
             this.pictureBox_DisableDetectionNVidia3X = new System.Windows.Forms.PictureBox();
             this.pictureBox_DisableDetectionNVidia5X = new System.Windows.Forms.PictureBox();
             this.pictureBox_DisableDetectionNVidia6X = new System.Windows.Forms.PictureBox();
+            this.pictureBox_AutoStartMining = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinimizeToTray = new System.Windows.Forms.PictureBox();
             this.pictureBox_HideMiningWindows = new System.Windows.Forms.PictureBox();
             this.checkBox_DisableDetectionNVidia3X = new System.Windows.Forms.CheckBox();
@@ -128,8 +130,6 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.pictureBox_AutoStartMining = new System.Windows.Forms.PictureBox();
-            this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -143,6 +143,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia3X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia5X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia6X)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideMiningWindows)).BeginInit();
             this.groupBox_Logging.SuspendLayout();
@@ -173,7 +174,6 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -240,6 +240,16 @@
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // checkBox_AutoStartMining
+            // 
+            this.checkBox_AutoStartMining.AutoSize = true;
+            this.checkBox_AutoStartMining.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_AutoStartMining.Name = "checkBox_AutoStartMining";
+            this.checkBox_AutoStartMining.Size = new System.Drawing.Size(102, 17);
+            this.checkBox_AutoStartMining.TabIndex = 315;
+            this.checkBox_AutoStartMining.Text = "Autostart Mining";
+            this.checkBox_AutoStartMining.UseVisualStyleBackColor = true;
             // 
             // checkBox_HideMiningWindows
             // 
@@ -380,6 +390,16 @@
             this.pictureBox_DisableDetectionNVidia6X.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox_DisableDetectionNVidia6X.TabIndex = 364;
             this.pictureBox_DisableDetectionNVidia6X.TabStop = false;
+            // 
+            // pictureBox_AutoStartMining
+            // 
+            this.pictureBox_AutoStartMining.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_AutoStartMining.Location = new System.Drawing.Point(205, 19);
+            this.pictureBox_AutoStartMining.Name = "pictureBox_AutoStartMining";
+            this.pictureBox_AutoStartMining.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_AutoStartMining.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_AutoStartMining.TabIndex = 364;
+            this.pictureBox_AutoStartMining.TabStop = false;
             // 
             // pictureBox_MinimizeToTray
             // 
@@ -992,7 +1012,9 @@
             this.comboBox_CPU0_ForceCPUExtension.FormattingEnabled = true;
             this.comboBox_CPU0_ForceCPUExtension.Items.AddRange(new object[] {
             "Automatic",
+            "AVX2_AES",
             "AVX2",
+            "AVX_AES",
             "AVX",
             "AES",
             "SSE2"});
@@ -1290,26 +1312,6 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // pictureBox_AutoStartMining
-            // 
-            this.pictureBox_AutoStartMining.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_AutoStartMining.Location = new System.Drawing.Point(205, 19);
-            this.pictureBox_AutoStartMining.Name = "pictureBox_AutoStartMining";
-            this.pictureBox_AutoStartMining.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_AutoStartMining.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_AutoStartMining.TabIndex = 364;
-            this.pictureBox_AutoStartMining.TabStop = false;
-            // 
-            // checkBox_AutoStartMining
-            // 
-            this.checkBox_AutoStartMining.AutoSize = true;
-            this.checkBox_AutoStartMining.Location = new System.Drawing.Point(6, 19);
-            this.checkBox_AutoStartMining.Name = "checkBox_AutoStartMining";
-            this.checkBox_AutoStartMining.Size = new System.Drawing.Size(102, 17);
-            this.checkBox_AutoStartMining.TabIndex = 315;
-            this.checkBox_AutoStartMining.Text = "Autostart Mining";
-            this.checkBox_AutoStartMining.UseVisualStyleBackColor = true;
-            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1341,6 +1343,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia3X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia5X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia6X)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideMiningWindows)).EndInit();
             this.groupBox_Logging.ResumeLayout(false);
@@ -1375,7 +1378,6 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).EndInit();
             this.ResumeLayout(false);
 
         }

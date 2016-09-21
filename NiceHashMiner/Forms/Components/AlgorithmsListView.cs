@@ -91,8 +91,6 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Items.Clear();
             foreach (var alg in config.AlgorithmSettings) {
                 ListViewItem lvi = new ListViewItem();
-                lvi.Checked = !alg.Value.Skip;
-                //lvi.Text = alg.Value.NiceHashName;
                 ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
 
                 //sub.Tag = alg.Value;
@@ -100,12 +98,10 @@ namespace NiceHashMiner.Forms.Components {
                 lvi.SubItems.Add(alg.Value.CurPayingRatio);
                 lvi.SubItems.Add(alg.Value.CurPayingRate);
                 lvi.Tag = alg.Value;
-                _listItemCheckColorSetter.LviSetColor(lvi);
+                lvi.Checked = !alg.Value.Skip;
                 listViewAlgorithms.Items.Add(lvi);
             }
             listViewAlgorithms.EndUpdate();
-            ResetListItemColors();
-            listViewAlgorithms.Invalidate(true);
             this.Enabled = isEnabled;
         }
 

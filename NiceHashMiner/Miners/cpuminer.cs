@@ -28,7 +28,14 @@ namespace NiceHashMiner.Miners {
 
         private bool InitializeMinerPaths() {
             // this is the order we check and initialize if automatic
-            CPUExtensionType[] detectOrder = new CPUExtensionType[] { CPUExtensionType.AVX2, CPUExtensionType.AVX, CPUExtensionType.AES, CPUExtensionType.SSE2 };
+            CPUExtensionType[] detectOrder = new CPUExtensionType[] { 
+                CPUExtensionType.AVX2_AES,
+                CPUExtensionType.AVX2,
+                CPUExtensionType.AVX_AES,
+                CPUExtensionType.AVX,
+                CPUExtensionType.AES,
+                CPUExtensionType.SSE2,
+            };
 
             // #1 try to initialize with Configured extension
             bool isInitialized = InitializeMinerPaths(ConfigManager.Instance.GeneralConfig.ForceCPUExtension);
@@ -70,17 +77,23 @@ namespace NiceHashMiner.Miners {
             if (HasExtensionSupport(type)) {
                 isInitialized = true;
                 switch (type) {
-                    case CPUExtensionType.SSE2:
-                        CPUMinerPath = MinerPaths.cpuminer_opt_SSE2;
-                        break;
-                    case CPUExtensionType.AVX:
-                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX;
+                    case CPUExtensionType.AVX2_AES:
+                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX2_AES;
                         break;
                     case CPUExtensionType.AVX2:
                         CPUMinerPath = MinerPaths.cpuminer_opt_AVX2;
                         break;
+                    case CPUExtensionType.AVX_AES:
+                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX_AES;
+                        break;
+                    case CPUExtensionType.AVX:
+                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX;
+                        break;
                     case CPUExtensionType.AES:
                         CPUMinerPath = MinerPaths.cpuminer_opt_AES;
+                        break;
+                    case CPUExtensionType.SSE2:
+                        CPUMinerPath = MinerPaths.cpuminer_opt_SSE2;
                         break;
                     default: // CPUExtensionType.Automatic
                         break;
@@ -100,14 +113,12 @@ namespace NiceHashMiner.Miners {
         /// <returns>False if type Automatic otherwise True if supported</returns>
         private bool HasExtensionSupport(CPUExtensionType type) {
             switch (type) {
-                case CPUExtensionType.SSE2:
-                    return CPUID.SupportsSSE2() == 1;
-                case CPUExtensionType.AVX:
-                    return CPUID.SupportsAVX() == 1;
-                case CPUExtensionType.AVX2:
-                    return CPUID.SupportsAVX2() == 1;
-                case CPUExtensionType.AES:
-                    return CPUID.SupportsAES() == 1;
+                case CPUExtensionType.AVX2_AES: return (CPUID.SupportsAVX2() == 1) && (CPUID.SupportsAES() == 1);
+                case CPUExtensionType.AVX2: return CPUID.SupportsAVX2() == 1;
+                case CPUExtensionType.AVX_AES: return (CPUID.SupportsAVX() == 1) && (CPUID.SupportsAES() == 1);
+                case CPUExtensionType.AVX: return CPUID.SupportsAVX() == 1;
+                case CPUExtensionType.AES: return CPUID.SupportsAES() == 1;
+                case CPUExtensionType.SSE2: return CPUID.SupportsSSE2() == 1;
                 default: // CPUExtensionType.Automatic
                     break;
             }
