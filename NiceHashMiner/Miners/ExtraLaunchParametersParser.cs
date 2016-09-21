@@ -61,6 +61,14 @@ namespace NiceHashMiner.Miners {
             new MinerOption(MinerOptionType.CpuPriority, "", "--cpu-priority", "-1"), // default none
         };
 
+        private static bool _showLog = true;
+
+        private static void LogParser(string msg) {
+            if (_showLog) {
+                Helpers.ConsolePrint(TAG, msg);
+            }
+        }
+
         private static string Parse(List<ComputeDevice> CDevs, List<MinerOption> options, bool useIfDefaults = false, List<MinerOption> ignoreLogOpions = null) {
             const string IGNORE_PARAM = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             List<MinerOptionType> optionsOrder = new List<MinerOptionType>();
@@ -86,7 +94,7 @@ namespace NiceHashMiner.Miners {
             }
             // parse
             foreach (var cDev in CDevs) {
-                Helpers.ConsolePrint(TAG, String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", cDev.CurrentExtraLaunchParameters, cDev.UUID));
+                LogParser(String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", cDev.CurrentExtraLaunchParameters, cDev.UUID));
                 var parameters = cDev.CurrentExtraLaunchParameters.Replace("=", "= ").Split(' ');
 
                 bool prevHasIgnoreParam = false;
@@ -105,7 +113,7 @@ namespace NiceHashMiner.Miners {
                         }
                     }
                     if (printIgnore && !prevHasIgnoreParam) {
-                        Helpers.ConsolePrint(TAG, String.Format(IGNORE_PARAM, param));
+                        LogParser(String.Format(IGNORE_PARAM, param));
                     }
                     if (logCount == 1) {
                         prevHasIgnoreParam = false;
@@ -202,13 +210,14 @@ namespace NiceHashMiner.Miners {
                 }
             }
 
-            Helpers.ConsolePrint(TAG, String.Format("Final extra launch params parse \"{0}\"", retVal));
+            LogParser(String.Format("Final extra launch params parse \"{0}\"", retVal));
 
             return retVal;
         }
 
 
-        public static string ParseForCDevs(List<ComputeDevice> CDevs, AlgorithmType algorithmType, DeviceType deviceType) {
+        public static string ParseForCDevs(List<ComputeDevice> CDevs, AlgorithmType algorithmType, DeviceType deviceType, bool showLog = true) {
+            _showLog = showLog;
             // init cdevs extra launch parameters
             foreach (var cDev in CDevs) {
                 cDev.CurrentExtraLaunchParameters = cDev.MostProfitableAlgorithm.ExtraLaunchParameters;
@@ -220,7 +229,7 @@ namespace NiceHashMiner.Miners {
                 } else if (algorithmType == AlgorithmType.CryptoNight) {
                     return Parse(CDevs, _ccimerCryptoNightOptions, true);
                 } else { // ethminer dagger
-                    Helpers.ConsolePrint(TAG, "ExtraLaunch params ethminer CUDA not implemented");
+                    LogParser("ExtraLaunch params ethminer CUDA not implemented");
                     if (CDevs.Count > 0) {
                         return CDevs.First().MostProfitableAlgorithm.ExtraLaunchParameters;
                     }
@@ -254,13 +263,13 @@ namespace NiceHashMiner.Miners {
                     
                     // replace
                     if(contains_intensity[MinerOptionType.Intensity] && contains_intensity[MinerOptionType.Xintensity]) {
-                        Helpers.ConsolePrint(TAG, "Sgminer replacing --intensity with --xintensity");
+                        LogParser("Sgminer replacing --intensity with --xintensity");
                         foreach (var cDev in CDevs) {
                             cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--intensity", "--xintensity");
                         }
                     }
                     if (contains_intensity[MinerOptionType.Xintensity] && contains_intensity[MinerOptionType.Rawintensity]) {
-                        Helpers.ConsolePrint(TAG, "Sgminer replacing --xintensity with --rawintensity");
+                        LogParser("Sgminer replacing --xintensity with --rawintensity");
                         foreach (var cDev in CDevs) {
                             cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--xintensity", "--rawintensity");
                         }
@@ -270,17 +279,17 @@ namespace NiceHashMiner.Miners {
                     string temperatureControl = "";
                     // temp control and parse
                     if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl) {
-                        Helpers.ConsolePrint(TAG, "DisableAMDTempControl is TRUE, temp control parameters will be ignored");
+                        LogParser("DisableAMDTempControl is TRUE, temp control parameters will be ignored");
                     } else {
-                        Helpers.ConsolePrint(TAG, "Sgminer parsing temperature control parameters");
+                        LogParser("Sgminer parsing temperature control parameters");
                         temperatureControl = Parse(CDevs, _sgminerTemperatureOptions, true, _sgminerOptions);
                     }
-                    Helpers.ConsolePrint(TAG, "Sgminer parsing default parameters");
+                    LogParser("Sgminer parsing default parameters");
                     string returnStr = String.Format("{0} {1}", Parse(CDevs, _sgminerOptions, false, _sgminerTemperatureOptions), temperatureControl);
-                    Helpers.ConsolePrint(TAG, "Sgminer extra launch parameters merged: " + returnStr);
+                    LogParser("Sgminer extra launch parameters merged: " + returnStr);
                     return returnStr;
                 } else { // ethminer dagger
-                    Helpers.ConsolePrint(TAG, "ExtraLaunch params ethminer AMD not implemented");
+                    LogParser("ExtraLaunch params ethminer AMD not implemented");
                     if (CDevs.Count > 0) {
                         return CDevs.First().MostProfitableAlgorithm.ExtraLaunchParameters;
                     }

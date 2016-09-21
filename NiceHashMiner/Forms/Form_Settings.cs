@@ -201,6 +201,10 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(checkBox_AMD_DisableAMDTempControl, International.GetText("Form_Settings_ToolTip_DisableAMDTempControl"));
             toolTip1.SetToolTip(pictureBox_AMD_DisableAMDTempControl, International.GetText("Form_Settings_ToolTip_DisableAMDTempControl"));
 
+            // disable default optimizations
+            toolTip1.SetToolTip(checkBox_DisableDefaultOptimizations, International.GetText("Form_Settings_ToolTip_DisableDefaultOptimizations"));
+            toolTip1.SetToolTip(pictureBox_DisableDefaultOptimizations, International.GetText("Form_Settings_ToolTip_DisableDefaultOptimizations"));
+
             this.Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -287,6 +291,8 @@ namespace NiceHashMiner.Forms {
 
             buttonAllProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability");
             buttonSelectedProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability");
+
+            checkBox_DisableDefaultOptimizations.Text = International.GetText("Form_Settings_Text_DisableDefaultOptimizations");
         }
 
         private void InitializeGeneralTabCallbacks() {
@@ -307,7 +313,6 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_NVIDIAP0State.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_LogToFile.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-                this.checkBox_AMD_DisableAMDTempControl.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -375,6 +380,7 @@ namespace NiceHashMiner.Forms {
                 checkBox_NVIDIAP0State.Checked = ConfigManager.Instance.GeneralConfig.NVIDIAP0State;
                 checkBox_LogToFile.Checked = ConfigManager.Instance.GeneralConfig.LogToFile;
                 checkBox_AMD_DisableAMDTempControl.Checked = ConfigManager.Instance.GeneralConfig.DisableAMDTempControl;
+                checkBox_DisableDefaultOptimizations.Checked = ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations;
             }
 
             // Textboxes
@@ -505,7 +511,64 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
             ConfigManager.Instance.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.Instance.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
+        }
+
+        private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {
+            if (!_isInitFinished) return;
             ConfigManager.Instance.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
+            foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                var thisListDev = new List<ComputeDevice>() { cDev };
+                if (cDev.DeviceType == DeviceType.AMD) {
+                    foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                        if (algorithm.Key != AlgorithmType.DaggerHashimoto) {
+                            algorithm.Value.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
+                            cDev.MostProfitableAlgorithm = algorithm.Value;
+                            algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
+                                thisListDev, algorithm.Key, DeviceType.AMD, false
+                                );
+                        }
+                    }
+                }
+            }
+        }
+
+        private void checkBox_DisableDefaultOptimizations_CheckedChanged(object sender, EventArgs e) {
+            if (!_isInitFinished) return;
+            ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
+            if (ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations) {
+                foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                    var thisListDev = new List<ComputeDevice>() { cDev };
+                    foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                        algorithm.Value.ExtraLaunchParameters = "";
+                        if (cDev.DeviceType == DeviceType.AMD && algorithm.Key != AlgorithmType.DaggerHashimoto) {
+                            algorithm.Value.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
+                            cDev.MostProfitableAlgorithm = algorithm.Value;
+                            algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
+                                thisListDev, algorithm.Key, cDev.DeviceType, false
+                                );
+                        }
+                    }
+                }
+            } else {
+                foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                    if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults 
+                    var thisListDev = new List<ComputeDevice>() { cDev };
+                    var deviceDefaults = GroupAlgorithms.CreateDefaultsForGroup(cDev.DeviceGroupType);
+                    foreach (var defaultAlgoSettings in deviceDefaults) {
+                        if (cDev.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(defaultAlgoSettings.Key)) {
+                            var algorithmKey = defaultAlgoSettings.Key;
+                            var algorithm = cDev.DeviceBenchmarkConfig.AlgorithmSettings[algorithmKey];
+                            algorithm.ExtraLaunchParameters = defaultAlgoSettings.Value.ExtraLaunchParameters;
+                            cDev.MostProfitableAlgorithm = algorithm;
+                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
+                                thisListDev, algorithmKey, cDev.DeviceType, false
+                                );
+                        }
+                    }
+                    // set extra optimizations based on device
+                    cDev.SetDeviceBenchmarkConfig(cDev.DeviceBenchmarkConfig, true);
+                }
+            }
         }
 
         private void GeneralTextBoxes_Leave(object sender, EventArgs e) {

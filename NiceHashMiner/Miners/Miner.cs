@@ -711,6 +711,7 @@ namespace NiceHashMiner
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             }
         }
+
         /// <summary>
         /// increment time for half current half time, if more then max set restart
         /// </summary>

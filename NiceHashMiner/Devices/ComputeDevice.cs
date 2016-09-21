@@ -176,11 +176,11 @@ namespace NiceHashMiner.Devices
         }
 
         // TODO add file check and stuff like that
-        public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig) {
+        public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig, bool forceSet = false) {
 
             DeviceBenchmarkConfig = deviceBenchmarkConfig;
             // check initialization
-            if (!DeviceBenchmarkConfig.IsAlgorithmSettingsInit) {
+            if (!DeviceBenchmarkConfig.IsAlgorithmSettingsInit || forceSet) {
                 DeviceBenchmarkConfig.IsAlgorithmSettingsInit = true;
                 // only AMD has extra initialization
                 if (_amdDevice != null) {
@@ -204,10 +204,8 @@ namespace NiceHashMiner.Devices
                 if (_cudaDevice != null) {
                     if (DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(AlgorithmType.CryptoNight)) {
                         var CryptoNightAlgo = DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.CryptoNight];
-                        if (CryptoNightAlgo.ExtraLaunchParameters == "") { 
-                            if (_cudaDevice.SM_major >= 5) {
-                                CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x" + _cudaDevice.SMX.ToString();
-                            }
+                        if (_cudaDevice.SM_major >= 5) {
+                            CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x" + _cudaDevice.SMX.ToString();
                         }
                     }
                 }
