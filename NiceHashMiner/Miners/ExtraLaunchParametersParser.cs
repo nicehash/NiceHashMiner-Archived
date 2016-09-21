@@ -18,7 +18,7 @@ namespace NiceHashMiner.Miners {
         };
         // ccminer CryptoNight
         private static List<MinerOption> _ccimerCryptoNightOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Ccminer_CryptoNightLaunch, "-l", "--launch=", "0"), // default is 8x40
+            new MinerOption(MinerOptionType.Ccminer_CryptoNightLaunch, "-l", "--launch=", "8x40"), // default is 8x40
             new MinerOption(MinerOptionType.Ccminer_CryptoNightBfactor, "", "--bfactor=", "0"),
             new MinerOption(MinerOptionType.Ccminer_CryptoNightBsleep, "", "--bsleep=", "0") // TODO check default
         };
@@ -227,6 +227,13 @@ namespace NiceHashMiner.Miners {
                 if (algorithmType != AlgorithmType.DaggerHashimoto && algorithmType != AlgorithmType.CryptoNight) {
                     return Parse(CDevs, _ccimerOptions);
                 } else if (algorithmType == AlgorithmType.CryptoNight) {
+                    // check if any device is SM21 or SM3.x if yes return empty for stability reasons
+                    foreach (var cDev in CDevs) {
+                        if (cDev.DeviceGroupType == DeviceGroupType.NVIDIA_2_1
+                            || cDev.DeviceGroupType == DeviceGroupType.NVIDIA_3_x) {
+                            return "";
+                        }
+                    }
                     return Parse(CDevs, _ccimerCryptoNightOptions, true);
                 } else { // ethminer dagger
                     LogParser("ExtraLaunch params ethminer CUDA not implemented");
