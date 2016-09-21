@@ -89,7 +89,11 @@ namespace NiceHashMiner.Miners
                               " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                               " --api-listen" +
                               " --api-port=" + APIPort.ToString() +
-                              " " + miningAlgorithm.ExtraLaunchParameters +
+                              " " +
+                              ExtraLaunchParametersParser.ParseForCDevs(
+                                                                CDevs,
+                                                                CurrentMiningAlgorithm.NiceHashID,
+                                                                DeviceType.AMD) +
                               " --device ";
 
             LastCommandLine += GetDevicesCommandString();
@@ -131,7 +135,7 @@ namespace NiceHashMiner.Miners
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             string CommandLine;
             Path = "cmd";
             string MinerPath = GetOptimizedMinerPath(algorithm.NiceHashID, CommonGpuCodenameSetting, EnableOptimizedVersion);
@@ -156,7 +160,11 @@ namespace NiceHashMiner.Miners
                           " --userpass=" + username + ":" + Algorithm.PasswordDefault +
                           " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
                           " -T --log 10 --log-file dump.txt" +
-                          " " + algorithm.ExtraLaunchParameters +
+                          " " +
+                          ExtraLaunchParametersParser.ParseForCDevs(
+                                                                CDevs,
+                                                                algorithm.NiceHashID,
+                                                                DeviceType.AMD) +
                           " --device ";
 
             CommandLine += GetDevicesCommandString();

@@ -45,16 +45,24 @@ namespace NiceHashMiner.Miners {
             // set directory
             WorkingDirectory = "";
             return " --opencl --opencl-platform " + GPUPlatformNumber
-                + " " + miningAlgorithm.ExtraLaunchParameters
+                + " "
+                + ExtraLaunchParametersParser.ParseForCDevs(
+                                                    CDevs,
+                                                    AlgorithmType.DaggerHashimoto,
+                                                    DeviceType.AMD)
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":" + Algorithm.PasswordDefault
                 + " --api-port " + APIPort.ToString()
                 + " --opencl-devices ";
         }
 
-        protected override string GetBenchmarkCommandStringPart(ComputeDevice benchmarkDevice, Algorithm algorithm) {
+        protected override string GetBenchmarkCommandStringPart(Algorithm algorithm) {
             return " --opencl --opencl-platform " + GPUPlatformNumber
-                + " " + algorithm.ExtraLaunchParameters
+                + " "
+                + ExtraLaunchParametersParser.ParseForCDevs(
+                                                    CDevs,
+                                                    AlgorithmType.DaggerHashimoto,
+                                                    DeviceType.AMD)
                 + " --benchmark-warmup 40 --benchmark-trial 20"
                 + " --opencl-devices ";
         }

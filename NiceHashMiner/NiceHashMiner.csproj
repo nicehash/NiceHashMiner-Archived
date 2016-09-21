@@ -104,6 +104,8 @@
     <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerAPIReadStatus.cs" />
+    <Compile Include="Enums\MinerOptionType.cs" />
+    <Compile Include="Enums\MinerOptionFlagType.cs" />
     <Compile Include="Enums\MinerStopType.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
@@ -177,12 +179,14 @@
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
     <Compile Include="MemoryHelper.cs" />
     <Compile Include="Miners\ccminer_sm6x.cs" />
+    <Compile Include="Miners\ExtraLaunchParametersParser.cs" />
     <Compile Include="Miners\ManagerPrivate\CpuGroupMiner.cs" />
     <Compile Include="Miners\ManagerPrivate\GroupMiners.cs" />
     <Compile Include="Miners\ManagerPrivate\SwitchTesting.cs" />
     <Compile Include="Miners\MinerEtherum.cs" />
     <Compile Include="Miners\MinerEtherumCUDA.cs" />
     <Compile Include="Miners\MinerEtherumOCL.cs" />
+    <Compile Include="Miners\MinerOption.cs" />
     <Compile Include="Miners\MinerPaths.cs" />
     <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager.cs" />

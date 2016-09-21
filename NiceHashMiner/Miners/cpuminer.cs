@@ -22,7 +22,7 @@ namespace NiceHashMiner.Miners {
             // if our CPU is supported add it to devices
             // TODO if Miner and ComputeDevice decoupling redo this this is going to be at detecting CPUs
             if (isInitialized) {
-                CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), true));
+                CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), Threads, true));
             }
         }
 
@@ -141,8 +141,10 @@ namespace NiceHashMiner.Miners {
             LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
                               " --url=" + url +
                               " --userpass=" + username + ":" + Algorithm.PasswordDefault +
-                              " --threads=" + GetThreads(miningAlgorithm.LessThreads).ToString() +
-                              " " + miningAlgorithm.ExtraLaunchParameters +
+                              ExtraLaunchParametersParser.ParseForCDevs(
+                                                                CDevs,
+                                                                CurrentMiningAlgorithm.NiceHashID,
+                                                                DeviceType.CPU) +
                               " --api-bind=" + APIPort.ToString();
 
             ProcessHandle = _Start();
@@ -169,17 +171,10 @@ namespace NiceHashMiner.Miners {
             return UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
         }
 
-        private int GetThreads(int LessThreads) {
-            if (Threads > LessThreads) {
-                return Threads - LessThreads;
-            }
-            return Threads;
-        }
-
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // to set miner paths
             InitializeMinerPaths();
 
@@ -187,8 +182,10 @@ namespace NiceHashMiner.Miners {
 
             return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
-                         " --threads=" + GetThreads(algorithm.LessThreads).ToString() +
-                         " " + algorithm.ExtraLaunchParameters +
+                         ExtraLaunchParametersParser.ParseForCDevs(
+                                                                CDevs,
+                                                                algorithm.NiceHashID,
+                                                                DeviceType.CPU) +
                          " --time-limit " + time.ToString();
         }
 

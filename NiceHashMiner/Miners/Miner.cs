@@ -164,10 +164,6 @@ namespace NiceHashMiner
             CDevs.Sort((a, b) =>  a.ID - b.ID);
         }
 
-        public void ClearCDevs() {
-            CDevs.Clear();
-        }
-
         // TAG for identifying miner
         public string MinerTAG() {
             if (_minetTag == null) {
@@ -315,13 +311,15 @@ namespace NiceHashMiner
             return timeInSeconds + 120; // wait time plus two minutes
         }
 
-        abstract protected string BenchmarkCreateCommandLine(ComputeDevice benchmarkDevice, Algorithm algorithm, int time);
+        abstract protected string BenchmarkCreateCommandLine(Algorithm algorithm, int time);
 
         // The benchmark config and algorithm must guarantee that they are compatible with miner
         // we guarantee algorithm is supported
         // we will not have empty benchmark configs, all benchmark configs will have device list
         virtual public void BenchmarkStart(ComputeDevice benchmarkDevice, Algorithm algorithm, int time, IBenchmarkComunicator benchmarkComunicator) {
-            
+            // for extra launch parameters parsing purposes
+            benchmarkDevice.MostProfitableAlgorithm = algorithm;
+
             BenchmarkComunicator = benchmarkComunicator;
             BenchmarkAlgorithm = algorithm;
             BenchmarkTimeInSeconds = time;
@@ -331,7 +329,7 @@ namespace NiceHashMiner
             OnBenchmarkCompleteCalled = false;
             BenchmarkTimeOutStopWatch = null;
 
-            string CommandLine = BenchmarkCreateCommandLine(benchmarkDevice, algorithm, time);
+            string CommandLine = BenchmarkCreateCommandLine(algorithm, time);
 
             Thread BenchmarkThread = new Thread(BenchmarkThreadRoutine);
             BenchmarkThread.Start(CommandLine);
@@ -657,8 +655,6 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                return null;
-            } catch { // all
                 return null;
             }
 

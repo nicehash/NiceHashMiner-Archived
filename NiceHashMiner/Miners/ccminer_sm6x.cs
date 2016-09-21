@@ -12,9 +12,7 @@ namespace NiceHashMiner.Miners {
     class ccminer_sm6x : ccminer_sm5x {
         public ccminer_sm6x() :
             base("NVIDIA6.x")
-        {
-            Path = MinerPaths.ccminer_nanashi;
-        }
+        { }
 
     }
 }

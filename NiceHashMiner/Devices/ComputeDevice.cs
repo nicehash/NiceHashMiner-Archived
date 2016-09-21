@@ -37,6 +37,14 @@ namespace NiceHashMiner.Devices
         // UUID now used for saving
         readonly public string UUID;
 
+        // Current Extra Launch Parameters copied from most profitable algorithm for benchmarking
+        [JsonIgnore]
+        public string CurrentExtraLaunchParameters { get; set; }
+
+        // CPU, NVIDIA, AMD
+        [JsonIgnore]
+        readonly public int Threads;
+
         // CPU, NVIDIA, AMD
         [JsonIgnore]
         public DeviceType DeviceType { get; private set; }
@@ -109,11 +117,12 @@ namespace NiceHashMiner.Devices
         }
 
         // CPU 
-        public ComputeDevice(int id, string group, string name, bool addToGlobalList = false, bool enabled = true)
+        public ComputeDevice(int id, string group, string name, int threads, bool addToGlobalList = false, bool enabled = true)
         {
             ID = id;
             Group = group;
             Name = name;
+            Threads = threads;
             _nameNoNums = name;
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);
@@ -211,7 +220,6 @@ namespace NiceHashMiner.Devices
                     var setAlgo = this.DeviceBenchmarkConfig.AlgorithmSettings[copyAlgSpeeds.Key];
                     setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
-                    setAlgo.Intensity = copyAlgSpeeds.Value.Intensity;
                     setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
                 }
             }

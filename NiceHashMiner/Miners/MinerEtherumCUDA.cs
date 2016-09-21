@@ -38,16 +38,24 @@ namespace NiceHashMiner.Miners {
 
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {
             return " --cuda"
-                + " " + miningAlgorithm.ExtraLaunchParameters
+                + " "
+                + ExtraLaunchParametersParser.ParseForCDevs(
+                                                    CDevs,
+                                                    AlgorithmType.DaggerHashimoto,
+                                                    DeviceType.NVIDIA)
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":" + Algorithm.PasswordDefault
                 + " --api-port " + APIPort.ToString()
                 + " --cuda-devices ";
         }
 
-        protected override string GetBenchmarkCommandStringPart(ComputeDevice benchmarkDevice, Algorithm algorithm) {
+        protected override string GetBenchmarkCommandStringPart(Algorithm algorithm) {
             return " --benchmark-warmup 40 --benchmark-trial 20"
-                + " " + algorithm.ExtraLaunchParameters
+                + " "
+                + ExtraLaunchParametersParser.ParseForCDevs(
+                                                    CDevs,
+                                                    AlgorithmType.DaggerHashimoto,
+                                                    DeviceType.NVIDIA)
                 + " --cuda --cuda-devices ";
         }
 
