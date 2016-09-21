@@ -515,6 +515,9 @@ namespace NiceHashMiner.Forms {
 
         private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
+
+            // indicate there has been a change
+            IsChange = true;
             ConfigManager.Instance.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
             foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
                 var thisListDev = new List<ComputeDevice>() { cDev };
@@ -534,6 +537,9 @@ namespace NiceHashMiner.Forms {
 
         private void checkBox_DisableDefaultOptimizations_CheckedChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
+
+            // indicate there has been a change
+            IsChange = true;
             ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
             if (ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations) {
                 foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
