@@ -173,5 +173,40 @@ namespace NiceHashMiner.Forms.Components {
                 }
             }
         }
+
+        private void listViewAlgorithms_MouseClick(object sender, MouseEventArgs e) {
+            if (IsInBenchmark) return;
+            if (e.Button == MouseButtons.Right) {
+                contextMenuStrip1.Items.Clear();
+                // disable all
+                {
+                    var disableAllItems = new ToolStripMenuItem();
+                    disableAllItems.Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll");
+                    disableAllItems.Click += toolStripMenuItemDisableAll_Click;
+                    contextMenuStrip1.Items.Add(disableAllItems);
+                }
+                // enable all
+                {
+                    var enableAllItems = new ToolStripMenuItem();
+                    enableAllItems.Text = International.GetText("AlgorithmsListView_ContextMenu_EnableAll");
+                    enableAllItems.Click += toolStripMenuItemEnableAll_Click;
+                    contextMenuStrip1.Items.Add(enableAllItems);
+                }
+                contextMenuStrip1.Show(Cursor.Position);
+            }
+        }
+
+        private void toolStripMenuItemEnableAll_Click(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                lvi.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemDisableAll_Click(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                lvi.Checked = false;
+            }
+        }
+
     }
 }

@@ -232,7 +232,7 @@ namespace NiceHashMiner
         abstract protected void _Stop(MinerStopType willswitch);
         virtual public void Stop(MinerStopType willswitch = MinerStopType.SWITCH, bool needsRestart = false)
         {
-            _cooldownCheckTimer.Stop();
+            if (_cooldownCheckTimer != null) _cooldownCheckTimer.Stop();
             if (!needsRestart) {
                 _Stop(willswitch);
                 PreviousTotalMH = 0.0;

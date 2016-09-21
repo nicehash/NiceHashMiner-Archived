@@ -318,5 +318,7 @@
         "NET45_Not_Intsalled_msg": "NiceHash Miner requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5",
         "Form_Settings_ToolTip_DisableDefaultOptimizations": "When checked it disables all default optimization settings, making mining potentially more stable but significantly slower (especially for AMD cards).",
         "Form_Settings_Text_DisableDefaultOptimizations": "Disable Default Optimizations",
+        "AlgorithmsListView_ContextMenu_DisableAll": "Disable All Algorithms",
+        "AlgorithmsListView_ContextMenu_EnableAll" : "Enable All Algorithms",
     }
 }
