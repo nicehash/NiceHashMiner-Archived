@@ -212,7 +212,7 @@ namespace NiceHashMiner.Miners {
                     // check intensity and xintensity, the latter overrides so change accordingly
                     foreach (var cDev in CDevs) {
                         foreach (var intensityOption in sgminer_intensities) {
-                            if (cDev.CurrentExtraLaunchParameters.Contains(intensityOption.ShortName)) {
+                            if (!string.IsNullOrEmpty(intensityOption.ShortName) && cDev.CurrentExtraLaunchParameters.Contains(intensityOption.ShortName)) {
                                 cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace(intensityOption.ShortName, intensityOption.LongName);
                                 contains_intensity[intensityOption.Type] = true; 
                             }

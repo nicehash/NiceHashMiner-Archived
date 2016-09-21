@@ -29,6 +29,7 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.checkBox_HideMiningWindows = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeToTray = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDetectionNVidia6X = new System.Windows.Forms.CheckBox();
@@ -43,6 +44,7 @@
             this.pictureBox_DisableDetectionNVidia3X = new System.Windows.Forms.PictureBox();
             this.pictureBox_DisableDetectionNVidia5X = new System.Windows.Forms.PictureBox();
             this.pictureBox_DisableDetectionNVidia6X = new System.Windows.Forms.PictureBox();
+            this.pictureBox_AutoStartMining = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinimizeToTray = new System.Windows.Forms.PictureBox();
             this.pictureBox_HideMiningWindows = new System.Windows.Forms.PictureBox();
             this.checkBox_DisableDetectionNVidia3X = new System.Windows.Forms.CheckBox();
@@ -115,21 +117,21 @@
             this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.textBox_MinerAPIQueryInterval = new System.Windows.Forms.TextBox();
             this.groupBoxBenchmarkTimeLimits = new System.Windows.Forms.GroupBox();
-            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.buttonAllProfit = new System.Windows.Forms.Button();
             this.buttonSelectedProfit = new System.Windows.Forms.Button();
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.pictureBox_AutoStartMining = new System.Windows.Forms.PictureBox();
-            this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
+            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
+            this.checkBox_AMD_DisableAMDTempControl = new System.Windows.Forms.CheckBox();
+            this.pictureBox_AMD_DisableAMDTempControl = new System.Windows.Forms.PictureBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -143,6 +145,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia3X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia5X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia6X)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideMiningWindows)).BeginInit();
             this.groupBox_Logging.SuspendLayout();
@@ -173,7 +176,7 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -208,6 +211,8 @@
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.checkBox_AMD_DisableAMDTempControl);
+            this.groupBox_Misc.Controls.Add(this.pictureBox_AMD_DisableAMDTempControl);
             this.groupBox_Misc.Controls.Add(this.checkBox_AutoStartMining);
             this.groupBox_Misc.Controls.Add(this.checkBox_HideMiningWindows);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeToTray);
@@ -236,10 +241,20 @@
             this.groupBox_Misc.Controls.Add(this.checkBox_ShowDriverVersionWarning);
             this.groupBox_Misc.Location = new System.Drawing.Point(357, 6);
             this.groupBox_Misc.Name = "groupBox_Misc";
-            this.groupBox_Misc.Size = new System.Drawing.Size(229, 304);
+            this.groupBox_Misc.Size = new System.Drawing.Size(229, 330);
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // checkBox_AutoStartMining
+            // 
+            this.checkBox_AutoStartMining.AutoSize = true;
+            this.checkBox_AutoStartMining.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_AutoStartMining.Name = "checkBox_AutoStartMining";
+            this.checkBox_AutoStartMining.Size = new System.Drawing.Size(102, 17);
+            this.checkBox_AutoStartMining.TabIndex = 315;
+            this.checkBox_AutoStartMining.Text = "Autostart Mining";
+            this.checkBox_AutoStartMining.UseVisualStyleBackColor = true;
             // 
             // checkBox_HideMiningWindows
             // 
@@ -380,6 +395,16 @@
             this.pictureBox_DisableDetectionNVidia6X.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox_DisableDetectionNVidia6X.TabIndex = 364;
             this.pictureBox_DisableDetectionNVidia6X.TabStop = false;
+            // 
+            // pictureBox_AutoStartMining
+            // 
+            this.pictureBox_AutoStartMining.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_AutoStartMining.Location = new System.Drawing.Point(205, 19);
+            this.pictureBox_AutoStartMining.Name = "pictureBox_AutoStartMining";
+            this.pictureBox_AutoStartMining.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_AutoStartMining.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_AutoStartMining.TabIndex = 364;
+            this.pictureBox_AutoStartMining.TabStop = false;
             // 
             // pictureBox_MinimizeToTray
             // 
@@ -1151,36 +1176,6 @@
             this.groupBoxBenchmarkTimeLimits.TabStop = false;
             this.groupBoxBenchmarkTimeLimits.Text = "Benchmark Time Limits:";
             // 
-            // benchmarkLimitControlNVIDIA
-            // 
-            this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
-            this.benchmarkLimitControlNVIDIA.Location = new System.Drawing.Point(9, 17);
-            this.benchmarkLimitControlNVIDIA.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlNVIDIA.Name = "benchmarkLimitControlNVIDIA";
-            this.benchmarkLimitControlNVIDIA.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlNVIDIA.TabIndex = 4;
-            this.benchmarkLimitControlNVIDIA.TimeLimits = null;
-            // 
-            // benchmarkLimitControlCPU
-            // 
-            this.benchmarkLimitControlCPU.GroupName = "CPU";
-            this.benchmarkLimitControlCPU.Location = new System.Drawing.Point(209, 17);
-            this.benchmarkLimitControlCPU.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlCPU.Name = "benchmarkLimitControlCPU";
-            this.benchmarkLimitControlCPU.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlCPU.TabIndex = 3;
-            this.benchmarkLimitControlCPU.TimeLimits = null;
-            // 
-            // benchmarkLimitControlAMD
-            // 
-            this.benchmarkLimitControlAMD.GroupName = "AMD";
-            this.benchmarkLimitControlAMD.Location = new System.Drawing.Point(409, 17);
-            this.benchmarkLimitControlAMD.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlAMD.Name = "benchmarkLimitControlAMD";
-            this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlAMD.TabIndex = 5;
-            this.benchmarkLimitControlAMD.TimeLimits = null;
-            // 
             // tabPageDevicesAlgos
             // 
             this.tabPageDevicesAlgos.Controls.Add(this.devicesListViewEnableControl1);
@@ -1196,27 +1191,6 @@
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
             // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.AutoSaveChange = true;
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.SetAllEnabled = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(352, 130);
-            this.devicesListViewEnableControl1.TabIndex = 397;
-            // 
-            // algorithmSettingsControl1
-            // 
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(363, 64);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 278);
-            this.algorithmSettingsControl1.TabIndex = 396;
-            // 
             // groupBoxAlgorithmSettings
             // 
             this.groupBoxAlgorithmSettings.Controls.Add(this.algorithmsListView1);
@@ -1226,16 +1200,6 @@
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
-            // 
-            // algorithmsListView1
-            // 
-            this.algorithmsListView1.BenchmarkCalculation = null;
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 15);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(339, 191);
-            this.algorithmsListView1.TabIndex = 2;
             // 
             // buttonAllProfit
             // 
@@ -1290,25 +1254,86 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // pictureBox_AutoStartMining
+            // benchmarkLimitControlNVIDIA
             // 
-            this.pictureBox_AutoStartMining.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_AutoStartMining.Location = new System.Drawing.Point(205, 19);
-            this.pictureBox_AutoStartMining.Name = "pictureBox_AutoStartMining";
-            this.pictureBox_AutoStartMining.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_AutoStartMining.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_AutoStartMining.TabIndex = 364;
-            this.pictureBox_AutoStartMining.TabStop = false;
+            this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
+            this.benchmarkLimitControlNVIDIA.Location = new System.Drawing.Point(9, 17);
+            this.benchmarkLimitControlNVIDIA.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlNVIDIA.Name = "benchmarkLimitControlNVIDIA";
+            this.benchmarkLimitControlNVIDIA.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlNVIDIA.TabIndex = 4;
+            this.benchmarkLimitControlNVIDIA.TimeLimits = null;
             // 
-            // checkBox_AutoStartMining
+            // benchmarkLimitControlCPU
             // 
-            this.checkBox_AutoStartMining.AutoSize = true;
-            this.checkBox_AutoStartMining.Location = new System.Drawing.Point(6, 19);
-            this.checkBox_AutoStartMining.Name = "checkBox_AutoStartMining";
-            this.checkBox_AutoStartMining.Size = new System.Drawing.Size(102, 17);
-            this.checkBox_AutoStartMining.TabIndex = 315;
-            this.checkBox_AutoStartMining.Text = "Autostart Mining";
-            this.checkBox_AutoStartMining.UseVisualStyleBackColor = true;
+            this.benchmarkLimitControlCPU.GroupName = "CPU";
+            this.benchmarkLimitControlCPU.Location = new System.Drawing.Point(209, 17);
+            this.benchmarkLimitControlCPU.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlCPU.Name = "benchmarkLimitControlCPU";
+            this.benchmarkLimitControlCPU.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlCPU.TabIndex = 3;
+            this.benchmarkLimitControlCPU.TimeLimits = null;
+            // 
+            // benchmarkLimitControlAMD
+            // 
+            this.benchmarkLimitControlAMD.GroupName = "AMD";
+            this.benchmarkLimitControlAMD.Location = new System.Drawing.Point(409, 17);
+            this.benchmarkLimitControlAMD.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlAMD.Name = "benchmarkLimitControlAMD";
+            this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlAMD.TabIndex = 5;
+            this.benchmarkLimitControlAMD.TimeLimits = null;
+            // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.AutoSaveChange = true;
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.SetAllEnabled = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(352, 130);
+            this.devicesListViewEnableControl1.TabIndex = 397;
+            // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(363, 64);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 278);
+            this.algorithmSettingsControl1.TabIndex = 396;
+            // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.BenchmarkCalculation = null;
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.IsInBenchmark = false;
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 15);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(339, 191);
+            this.algorithmsListView1.TabIndex = 2;
+            // 
+            // checkBox_AMD_DisableAMDTempControl
+            // 
+            this.checkBox_AMD_DisableAMDTempControl.AutoSize = true;
+            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(6, 303);
+            this.checkBox_AMD_DisableAMDTempControl.Name = "checkBox_AMD_DisableAMDTempControl";
+            this.checkBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(145, 17);
+            this.checkBox_AMD_DisableAMDTempControl.TabIndex = 388;
+            this.checkBox_AMD_DisableAMDTempControl.Text = "DisableAMDTempControl";
+            this.checkBox_AMD_DisableAMDTempControl.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox_AMD_DisableAMDTempControl
+            // 
+            this.pictureBox_AMD_DisableAMDTempControl.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(205, 303);
+            this.pictureBox_AMD_DisableAMDTempControl.Name = "pictureBox_AMD_DisableAMDTempControl";
+            this.pictureBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_AMD_DisableAMDTempControl.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_AMD_DisableAMDTempControl.TabIndex = 387;
+            this.pictureBox_AMD_DisableAMDTempControl.TabStop = false;
             // 
             // Form_Settings
             // 
@@ -1341,6 +1366,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia3X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia5X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia6X)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideMiningWindows)).EndInit();
             this.groupBox_Logging.ResumeLayout(false);
@@ -1375,7 +1401,7 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1487,6 +1513,8 @@
         private System.Windows.Forms.PictureBox pictureBox_DagGeneration;
         private System.Windows.Forms.CheckBox checkBox_AutoStartMining;
         private System.Windows.Forms.PictureBox pictureBox_AutoStartMining;
+        private System.Windows.Forms.CheckBox checkBox_AMD_DisableAMDTempControl;
+        private System.Windows.Forms.PictureBox pictureBox_AMD_DisableAMDTempControl;
 
     }
 }
