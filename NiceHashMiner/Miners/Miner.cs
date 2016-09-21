@@ -14,7 +14,8 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 
-using Timer = System.Windows.Forms.Timer;
+using Timer = System.Timers.Timer;
+using System.Timers;
 
 namespace NiceHashMiner
 {
@@ -116,7 +117,6 @@ namespace NiceHashMiner
         protected MinerAPIReadStatus _currentMinerReadStatus { get; set; }
         private int _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
         private int _currentCooldownTimeInSecondsLeft = _MIN_CooldownTimeInMilliseconds;
-        private int _isCooldownCheckTimerAliveCount = 0;
         private const int IS_COOLDOWN_CHECK_TIMER_ALIVE_CAP = 15;
 
         public Miner(DeviceType deviceType, string minerDeviceName)
@@ -141,11 +141,6 @@ namespace NiceHashMiner
             APIPort = MinersApiPortsManager.Instance.GetAvaliablePort();
             IsAPIReadException = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
-            // cool down init
-            _cooldownCheckTimer = new Timer() {
-                Interval = _MIN_CooldownTimeInMilliseconds
-            };
-            _cooldownCheckTimer.Tick += MinerCoolingCheck_Tick;
             // 
             Helpers.ConsolePrint(MinerTAG(), "NEW MINER CREATED");
         }
@@ -566,11 +561,16 @@ namespace NiceHashMiner
 
         protected void StartCoolDownTimerChecker() {
             Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Starting cooldown checker");
+            if (_cooldownCheckTimer != null && _cooldownCheckTimer.Enabled) _cooldownCheckTimer.Stop();
+            // cool down init
+            _cooldownCheckTimer = new Timer() {
+                Interval = _MIN_CooldownTimeInMilliseconds
+            };
+            _cooldownCheckTimer.Elapsed += MinerCoolingCheck_Tick;
             _cooldownCheckTimer.Start();
             _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
             _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-            _isCooldownCheckTimerAliveCount = 0;
         } 
 
 
@@ -705,16 +705,10 @@ namespace NiceHashMiner
         /// decrement time for half current half time, if less then min ammend
         /// </summary>
         private void CoolDown() {
-            _currentCooldownTimeInSeconds /= 2;
-            if (_currentCooldownTimeInSeconds < _MIN_CooldownTimeInMilliseconds) {
+            if (_currentCooldownTimeInSeconds > _MIN_CooldownTimeInMilliseconds) {
                 _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
-                if (_isCooldownCheckTimerAliveCount == 0) {
-                    _isCooldownCheckTimerAliveCount = IS_COOLDOWN_CHECK_TIMER_ALIVE_CAP;
-                    Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Cooling DOWN, cool time is {1} ms", ProcessTag(), _currentCooldownTimeInSeconds.ToString()));
-                }
-                --_isCooldownCheckTimerAliveCount;
-            } else {
-                Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Cooling DOWN, cool time is {1} ms", ProcessTag(), _currentCooldownTimeInSeconds.ToString()));
+                Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Reseting cool time = {1} ms", ProcessTag(), _MIN_CooldownTimeInMilliseconds.ToString()));
+                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             }
         }
         /// <summary>
@@ -730,8 +724,8 @@ namespace NiceHashMiner
             }
         }
 
-        private void MinerCoolingCheck_Tick(object sender, EventArgs e) {
-            _currentCooldownTimeInSecondsLeft -= _cooldownCheckTimer.Interval;
+        private void MinerCoolingCheck_Tick(object sender, ElapsedEventArgs e) {
+            _currentCooldownTimeInSecondsLeft -= (int)_cooldownCheckTimer.Interval;
             // if times up
             if (_currentCooldownTimeInSecondsLeft <= 0) {
                 if (_currentMinerReadStatus == MinerAPIReadStatus.GOT_READ) {

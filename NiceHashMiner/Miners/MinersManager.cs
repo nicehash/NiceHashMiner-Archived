@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
+using Timer = System.Timers.Timer;
+using System.Timers;
+
 namespace NiceHashMiner.Miners {
     // typedefs
     using DeviceSubsetList = List<SortedSet<string>>;
@@ -18,7 +21,6 @@ namespace NiceHashMiner.Miners {
     using GroupedDevices = SortedSet<string>;
     using AllGroupedDevices = List<SortedSet<string>>;
     using NiceHashMiner.Interfaces;
-    using System.Windows.Forms;
     
     
 
@@ -86,13 +88,13 @@ namespace NiceHashMiner.Miners {
         protected MinersManager() {
             TAG = this.GetType().Name;
             _preventSleepTimer = new Timer();
-            _preventSleepTimer.Tick += PreventSleepTimer_Tick;
+            _preventSleepTimer.Elapsed += PreventSleepTimer_Tick;
              // sleep time is minimal 1 minute
             _preventSleepTimer.Interval = 20 * 1000; // leave this interval, it works
 
             // set internet checking
             _internetCheckTimer = new Timer();
-            _internetCheckTimer.Tick += InternetCheckTimer_Tick;
+            _internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
             _internetCheckTimer.Interval = 1000 * 60 * 5;
 
             // path checker
@@ -111,7 +113,7 @@ namespace NiceHashMiner.Miners {
             //}
         }
 
-        private void PreventSleepTimer_Tick(object sender, EventArgs e) {
+        private void PreventSleepTimer_Tick(object sender, ElapsedEventArgs e) {
             // when mining keep system awake, prevent sleep
             Helpers.PreventSleep();
         }
