@@ -61,12 +61,13 @@ namespace NiceHashMiner.Miners {
             new MinerOption(MinerOptionType.CpuPriority, "", "--cpu-priority", "-1"), // default none
         };
 
-        private static string Parse(List<ComputeDevice> CDevs, List<MinerOption> options, bool useIfDefaults = false) {
+        private static string Parse(List<ComputeDevice> CDevs, List<MinerOption> options, bool useIfDefaults = false, List<MinerOption> ignoreLogOpions = null) {
             const string IGNORE_PARAM = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             List<MinerOptionType> optionsOrder = new List<MinerOptionType>();
             Dictionary<MinerOptionType, string> paramsFlags = new Dictionary<MinerOptionType, string>();
             Dictionary<string, Dictionary<MinerOptionType, string>> cdevOptions = new Dictionary<string, Dictionary<MinerOptionType, string>>();
             Dictionary<MinerOptionType, bool> isOptionDefaults = new Dictionary<MinerOptionType, bool>();
+            Dictionary<MinerOptionType, bool> isOptionExist = new Dictionary<MinerOptionType, bool>();
             // init devs options, and defaults
             foreach (var cDev in CDevs) {
                 var defaults = new Dictionary<MinerOptionType, string>();
@@ -81,12 +82,39 @@ namespace NiceHashMiner.Miners {
                 optionsOrder.Add(optionType);
                 paramsFlags.Add(optionType, option.LongName);
                 isOptionDefaults.Add(option.Type, true);
+                isOptionExist.Add(option.Type, false);
             }
             // parse
             foreach (var cDev in CDevs) {
                 Helpers.ConsolePrint(TAG, String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", cDev.CurrentExtraLaunchParameters, cDev.UUID));
                 var parameters = cDev.CurrentExtraLaunchParameters.Replace("=", "= ").Split(' ');
-                
+
+                bool prevHasIgnoreParam = false;
+                int logCount = 0;
+                Func<string, string> ignorePrintLog = (string param) => {
+                    // AMD temp controll is separated and logs stuff that is ignored
+                    bool printIgnore = true;
+                    if (ignoreLogOpions != null) {
+                        foreach (var ignoreOption in ignoreLogOpions) {
+                            if (param.Equals(ignoreOption.ShortName) || param.Equals(ignoreOption.LongName)) {
+                                printIgnore = false;
+                                prevHasIgnoreParam = true;
+                                logCount = 0;
+                                break;
+                            }
+                        }
+                    }
+                    if (printIgnore && !prevHasIgnoreParam) {
+                        Helpers.ConsolePrint(TAG, String.Format(IGNORE_PARAM, param));
+                    }
+                    if (logCount == 1) {
+                        prevHasIgnoreParam = false;
+                        logCount = 0;
+                    }
+                    ++logCount;
+                    return ""; // fake crappy C# crap
+                };
+
                 MinerOptionType currentFlag = MinerOptionType.NONE;
                 foreach (var param in parameters) {
                     if (param.Equals("")) { // skip
@@ -97,6 +125,7 @@ namespace NiceHashMiner.Miners {
                             if (param.Equals(option.ShortName) || param.Equals(option.LongName)) {
                                 isIngored = false;
                                 if (option.FlagType == MinerOptionFlagType.Uni) {
+                                    isOptionExist[option.Type] = true;
                                     cdevOptions[cDev.UUID][option.Type] = "notNull"; // if Uni param is null it is not present
                                 } else { // Sinlge and Multi param
                                     currentFlag = option.Type;
@@ -104,13 +133,14 @@ namespace NiceHashMiner.Miners {
                             }
                         }
                         if (isIngored) { // ignored
-                            Helpers.ConsolePrint(TAG, String.Format(IGNORE_PARAM, param));
+                            ignorePrintLog(param);
                         }
                     } else if (currentFlag != MinerOptionType.NONE) {
+                        isOptionExist[currentFlag] = true;
                         cdevOptions[cDev.UUID][currentFlag] = param;
                         currentFlag = MinerOptionType.NONE;
                     } else { // problem
-                        Helpers.ConsolePrint(TAG, String.Format(IGNORE_PARAM, param));
+                        ignorePrintLog(param);
                     }
                 }
             }
@@ -130,7 +160,7 @@ namespace NiceHashMiner.Miners {
 
             if (!isAllDefault || useIfDefaults) {
                 foreach (var option in options) {
-                    if (!isOptionDefaults[option.Type] || useIfDefaults) { // if options all default ignore
+                    if (!isOptionDefaults[option.Type] || isOptionExist[option.Type] || useIfDefaults) { // if options all default ignore
                         if(option.FlagType == MinerOptionFlagType.Uni) {
                         // uni params if one exist use or all must exist?
                         bool isOptionInUse = false;
@@ -224,20 +254,31 @@ namespace NiceHashMiner.Miners {
                     
                     // replace
                     if(contains_intensity[MinerOptionType.Intensity] && contains_intensity[MinerOptionType.Xintensity]) {
+                        Helpers.ConsolePrint(TAG, "Sgminer replacing --intensity with --xintensity");
                         foreach (var cDev in CDevs) {
                             cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--intensity", "--xintensity");
                         }
                     }
                     if (contains_intensity[MinerOptionType.Xintensity] && contains_intensity[MinerOptionType.Rawintensity]) {
+                        Helpers.ConsolePrint(TAG, "Sgminer replacing --xintensity with --rawintensity");
                         foreach (var cDev in CDevs) {
                             cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--xintensity", "--rawintensity");
                         }
                     }
-                    
 
+                    List<MinerOption> sgminerOptionsNew = new List<MinerOption>();
+                    string temperatureControl = "";
                     // temp control and parse
-                    string temperatureControl = ConfigManager.Instance.GeneralConfig.DisableAMDTempControl ? "" : Parse(CDevs, _sgminerTemperatureOptions, true);
-                    return String.Format("{0} {1}", Parse(CDevs, _sgminerOptions), temperatureControl);
+                    if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl) {
+                        Helpers.ConsolePrint(TAG, "DisableAMDTempControl is TRUE, temp control parameters will be ignored");
+                    } else {
+                        Helpers.ConsolePrint(TAG, "Sgminer parsing temperature control parameters");
+                        temperatureControl = Parse(CDevs, _sgminerTemperatureOptions, true, _sgminerOptions);
+                    }
+                    Helpers.ConsolePrint(TAG, "Sgminer parsing default parameters");
+                    string returnStr = String.Format("{0} {1}", Parse(CDevs, _sgminerOptions, false, _sgminerTemperatureOptions), temperatureControl);
+                    Helpers.ConsolePrint(TAG, "Sgminer extra launch parameters merged: " + returnStr);
+                    return returnStr;
                 } else { // ethminer dagger
                     Helpers.ConsolePrint(TAG, "ExtraLaunch params ethminer AMD not implemented");
                     if (CDevs.Count > 0) {
