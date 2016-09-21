@@ -316,5 +316,7 @@
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART" : " (текущий {0})",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended": "Мы обнаружили, что ваш драйвер старее {0}{1}. Мы рекомендуем вам обновиться до {2} или новее.",
 	"NET45_Not_Intsalled_msg" : "Для корректной работы NiceHash Miner требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
+	"Form_Settings_ToolTip_DisableDefaultOptimizations": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг потенциально более стабильным, но значительно медленнее (особенно для карт  AMD).",
+        "Form_Settings_Text_DisableDefaultOptimizations": "Отключить оптимизацию",
     }
 }
