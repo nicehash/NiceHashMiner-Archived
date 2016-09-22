@@ -67,8 +67,9 @@ namespace NiceHashMiner.Forms {
 
             // set first device selected {
             if (ComputeDevice.AllAvaliableDevices.Count > 0) {
-                var firstComputedevice = ComputeDevice.AllAvaliableDevices[0];
-                algorithmsListView1.SetAlgorithms(firstComputedevice, firstComputedevice.ComputeDeviceEnabledOption.IsEnabled);
+                _selectedComputeDevice = ComputeDevice.AllAvaliableDevices[0];
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
+                groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
             }
 
             // At the very end set to true
@@ -774,6 +775,17 @@ namespace NiceHashMiner.Forms {
 
         private void Form_Settings_Resize(object sender, EventArgs e) {
             pictureBox_MinProfit.Location = new Point(label_MinProfit.Location.X + label_MinProfit.Size.Width, pictureBox_MinProfit.Location.Y);
+        }
+
+        private void tabControlGeneral_Selected(object sender, TabControlEventArgs e) {
+            // set first device selected {
+            if (ComputeDevice.AllAvaliableDevices.Count > 0) {
+                algorithmSettingsControl1.Deselect();
+                _selectedComputeDevice = ComputeDevice.AllAvaliableDevices[0];
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
+                groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
+                //devicesListViewEnableControl1.SetFirstSelected();
+            }
         }
 
     }

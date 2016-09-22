@@ -181,7 +181,7 @@ namespace NiceHashMiner.Devices
                                                       MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             // recomended driver
-            if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && HasNvidiaVideoController() && _currentNvidiaOpenCLDriver < NVIDIA_RECOMENDED_DRIVER && !isNvidiaErrorShown) {
+            if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && HasNvidiaVideoController() && _currentNvidiaOpenCLDriver < NVIDIA_RECOMENDED_DRIVER && !isNvidiaErrorShown && _currentNvidiaOpenCLDriver > -1) {
                 var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
                 var nvdriverString = _currentNvidiaOpenCLDriver > -1 ? String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"), _currentNvidiaOpenCLDriver.ToString())
                 : "";

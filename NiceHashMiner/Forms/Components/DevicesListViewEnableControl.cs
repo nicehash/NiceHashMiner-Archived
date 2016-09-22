@@ -274,5 +274,13 @@ namespace NiceHashMiner.Forms.Components {
                 ch.Width = this.Width - 10;
             }
         }
+
+        public void SetFirstSelected() {
+            if (listViewDevices.Items.Count > 0) {
+                this.listViewDevices.Items[0].Selected = true;
+                this.listViewDevices.Select();
+            }
+        }
+
     }
 }

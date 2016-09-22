@@ -29,11 +29,13 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_DisableDefaultOptimizations = new System.Windows.Forms.CheckBox();
             this.checkBox_AMD_DisableAMDTempControl = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.checkBox_HideMiningWindows = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeToTray = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDetectionNVidia6X = new System.Windows.Forms.CheckBox();
+            this.pictureBox_DisableDefaultOptimizations = new System.Windows.Forms.PictureBox();
             this.checkBox_DisableDetectionNVidia5X = new System.Windows.Forms.CheckBox();
             this.pictureBox_AMD_DisableAMDTempControl = new System.Windows.Forms.PictureBox();
             this.pictureBox_NVIDIAP0State = new System.Windows.Forms.PictureBox();
@@ -126,8 +128,6 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.pictureBox_DisableDefaultOptimizations = new System.Windows.Forms.PictureBox();
-            this.checkBox_DisableDefaultOptimizations = new System.Windows.Forms.CheckBox();
             this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
@@ -137,6 +137,7 @@
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_NVIDIAP0State)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableWindowsErrorReporting)).BeginInit();
@@ -179,7 +180,6 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -197,6 +197,7 @@
             this.tabControlGeneral.SelectedIndex = 0;
             this.tabControlGeneral.Size = new System.Drawing.Size(612, 380);
             this.tabControlGeneral.TabIndex = 0;
+            this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
             // 
             // tabPageGeneral
             // 
@@ -251,6 +252,17 @@
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             // 
+            // checkBox_DisableDefaultOptimizations
+            // 
+            this.checkBox_DisableDefaultOptimizations.AutoSize = true;
+            this.checkBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(6, 313);
+            this.checkBox_DisableDefaultOptimizations.Name = "checkBox_DisableDefaultOptimizations";
+            this.checkBox_DisableDefaultOptimizations.Size = new System.Drawing.Size(163, 17);
+            this.checkBox_DisableDefaultOptimizations.TabIndex = 365;
+            this.checkBox_DisableDefaultOptimizations.Text = "Disable Default Optimizations";
+            this.checkBox_DisableDefaultOptimizations.UseVisualStyleBackColor = true;
+            this.checkBox_DisableDefaultOptimizations.CheckedChanged += new System.EventHandler(this.checkBox_DisableDefaultOptimizations_CheckedChanged);
+            // 
             // checkBox_AMD_DisableAMDTempControl
             // 
             this.checkBox_AMD_DisableAMDTempControl.AutoSize = true;
@@ -301,6 +313,16 @@
             this.checkBox_DisableDetectionNVidia6X.TabIndex = 317;
             this.checkBox_DisableDetectionNVidia6X.Text = "DisableDetectionNVidia6X";
             this.checkBox_DisableDetectionNVidia6X.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox_DisableDefaultOptimizations
+            // 
+            this.pictureBox_DisableDefaultOptimizations.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(205, 312);
+            this.pictureBox_DisableDefaultOptimizations.Name = "pictureBox_DisableDefaultOptimizations";
+            this.pictureBox_DisableDefaultOptimizations.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_DisableDefaultOptimizations.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_DisableDefaultOptimizations.TabIndex = 364;
+            this.pictureBox_DisableDefaultOptimizations.TabStop = false;
             // 
             // checkBox_DisableDetectionNVidia5X
             // 
@@ -1282,27 +1304,6 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // pictureBox_DisableDefaultOptimizations
-            // 
-            this.pictureBox_DisableDefaultOptimizations.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(205, 312);
-            this.pictureBox_DisableDefaultOptimizations.Name = "pictureBox_DisableDefaultOptimizations";
-            this.pictureBox_DisableDefaultOptimizations.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DisableDefaultOptimizations.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DisableDefaultOptimizations.TabIndex = 364;
-            this.pictureBox_DisableDefaultOptimizations.TabStop = false;
-            // 
-            // checkBox_DisableDefaultOptimizations
-            // 
-            this.checkBox_DisableDefaultOptimizations.AutoSize = true;
-            this.checkBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(6, 313);
-            this.checkBox_DisableDefaultOptimizations.Name = "checkBox_DisableDefaultOptimizations";
-            this.checkBox_DisableDefaultOptimizations.Size = new System.Drawing.Size(163, 17);
-            this.checkBox_DisableDefaultOptimizations.TabIndex = 365;
-            this.checkBox_DisableDefaultOptimizations.Text = "Disable Default Optimizations";
-            this.checkBox_DisableDefaultOptimizations.UseVisualStyleBackColor = true;
-            this.checkBox_DisableDefaultOptimizations.CheckedChanged += new System.EventHandler(this.checkBox_DisableDefaultOptimizations_CheckedChanged);
-            // 
             // benchmarkLimitControlNVIDIA
             // 
             this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
@@ -1385,6 +1386,7 @@
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_NVIDIAP0State)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableWindowsErrorReporting)).EndInit();
@@ -1431,7 +1433,6 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).EndInit();
             this.ResumeLayout(false);
 
         }
