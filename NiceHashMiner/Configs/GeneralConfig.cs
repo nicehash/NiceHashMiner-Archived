@@ -246,7 +246,9 @@ namespace NiceHashMiner.Configs {
             DisableAMDTempControl = _file.DisableAMDTempControl;
             DisableDefaultOptimizations = _file.DisableDefaultOptimizations;
 
-            DownloadInit = _file.DownloadInit;
+            if (!IsNewVersion) {
+                DownloadInit = _file.DownloadInit;
+            }
 
             hwidLoadFromFile = true;
             hwidOK = this.hwid == _file.hwid;
