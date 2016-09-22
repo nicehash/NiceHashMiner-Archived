@@ -781,9 +781,9 @@ namespace NiceHashMiner.Forms {
             // set first device selected {
             if (ComputeDevice.AllAvaliableDevices.Count > 0) {
                 algorithmSettingsControl1.Deselect();
-                _selectedComputeDevice = ComputeDevice.AllAvaliableDevices[0];
-                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
-                groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
+                //_selectedComputeDevice = ComputeDevice.AllAvaliableDevices[0];
+                //algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
+                //groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
                 //devicesListViewEnableControl1.SetFirstSelected();
             }
         }
