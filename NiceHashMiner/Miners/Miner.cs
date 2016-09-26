@@ -95,8 +95,8 @@ namespace NiceHashMiner
                 _benchmarkAlgorithm = value;
             }
         }
-        public BenchmarkProcessStatus BenchmarkProcessStatus { get; private set; }
-        private string BenchmarkProcessPath;
+        public BenchmarkProcessStatus BenchmarkProcessStatus { get; protected set; }
+        protected string BenchmarkProcessPath { get; private set; }
         private Process BenchmarkHandle = null;
         protected Exception BenchmarkException = null;
         protected int BenchmarkTimeInSeconds;
@@ -435,7 +435,7 @@ namespace NiceHashMiner
 
         // killing proccesses can take time
         virtual public void EndBenchmarkProcces() {
-            if (BenchmarkHandle != null && BenchmarkProcessStatus != BenchmarkProcessStatus.Killing) {
+            if (BenchmarkHandle != null && BenchmarkProcessStatus != BenchmarkProcessStatus.Killing && BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling) {
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
                 try {
                     Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));

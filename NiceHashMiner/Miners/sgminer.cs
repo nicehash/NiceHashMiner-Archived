@@ -44,8 +44,17 @@ namespace NiceHashMiner.Miners
         }
 
         public override void EndBenchmarkProcces() {
-            base.EndBenchmarkProcces();
-            KillSGMiner();
+            if (BenchmarkProcessStatus != BenchmarkProcessStatus.Killing && BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling) {
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
+                try {
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));
+                    KillSGMiner();
+                } catch { } finally {
+                    BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));
+                    //BenchmarkHandle = null;
+                }
+            }
         }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {

@@ -78,7 +78,7 @@ namespace NiceHashMiner.Miners {
         private static string Parse(List<ComputeDevice> CDevs, List<MinerOption> options, bool useIfDefaults = false, List<MinerOption> ignoreLogOpions = null) {
             const string IGNORE_PARAM = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             List<MinerOptionType> optionsOrder = new List<MinerOptionType>();
-            Dictionary<MinerOptionType, string> paramsFlags = new Dictionary<MinerOptionType, string>();
+            //Dictionary<MinerOptionType, string> paramsFlags = new Dictionary<MinerOptionType, string>();
             Dictionary<string, Dictionary<MinerOptionType, string>> cdevOptions = new Dictionary<string, Dictionary<MinerOptionType, string>>();
             Dictionary<MinerOptionType, bool> isOptionDefaults = new Dictionary<MinerOptionType, bool>();
             Dictionary<MinerOptionType, bool> isOptionExist = new Dictionary<MinerOptionType, bool>();
@@ -86,17 +86,21 @@ namespace NiceHashMiner.Miners {
             foreach (var cDev in CDevs) {
                 var defaults = new Dictionary<MinerOptionType, string>();
                 foreach (var option in options) {
-                    defaults.Add(option.Type, option.Default);
+                    //defaults.Add(option.Type, option.Default);
+                    defaults[option.Type] = option.Default;
                 }
-                cdevOptions.Add(cDev.UUID, defaults);
+                //cdevOptions.Add(cDev.UUID, defaults);
+                cdevOptions[cDev.UUID] = defaults;
             }
             // init order and params flags, and params list
             foreach (var option in options) {
                 MinerOptionType optionType = option.Type;
                 optionsOrder.Add(optionType);
-                paramsFlags.Add(optionType, option.LongName);
-                isOptionDefaults.Add(option.Type, true);
-                isOptionExist.Add(option.Type, false);
+
+                //isOptionDefaults.Add(optionType, true);
+                //isOptionExist.Add(optionType, false);
+                isOptionDefaults[optionType] = true;
+                isOptionExist[optionType] = false;
             }
             // parse
             foreach (var cDev in CDevs) {
