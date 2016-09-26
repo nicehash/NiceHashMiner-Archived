@@ -18,15 +18,19 @@ using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Utils;
 using NiceHashMiner.PInvoke;
 
+using SystemTimer = System.Timers.Timer;
+using Timer = System.Windows.Forms.Timer;
+using System.Timers;
+
 namespace NiceHashMiner
 {
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
-        private static string VisitURL = "http://www.nicehash.com";
+        private static string VisitURL = Links.VisitURL;
 
         private Timer MinerStatsCheck;
         private Timer UpdateCheck;
-        private Timer SMACheck;
+        private SystemTimer SMACheck;
         private Timer BalanceCheck;
         private Timer SMAMinerCheck;
         private Timer BitcoinExchangeCheck;
@@ -230,8 +234,8 @@ namespace NiceHashMiner
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
 
-            SMACheck = new Timer();
-            SMACheck.Tick += SMACheck_Tick;
+            SMACheck = new SystemTimer();
+            SMACheck.Elapsed += SMACheck_Tick;
             SMACheck.Interval = 60 * 1000; // every 60 seconds
             SMACheck.Start();
 
@@ -539,7 +543,7 @@ namespace NiceHashMiner
             if (ret < 0)
             {
                 linkLabelVisitUs.Text = String.Format(International.GetText("Form_Main_new_version_released"), ver);
-                VisitURL = "https://github.com/nicehash/NiceHashMiner/releases/tag/" + ver;
+                VisitURL = Links.VisitURLNew + ver;
             }
         }
 
@@ -580,7 +584,7 @@ namespace NiceHashMiner
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                 
                 if (result == System.Windows.Forms.DialogResult.Yes)
-                    System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
+                    System.Diagnostics.Process.Start(Links.NHM_BTC_Wallet_Faq);
                 
                 textBoxBTCAddress.Focus();
                 return false;
@@ -609,13 +613,13 @@ namespace NiceHashMiner
         {
             if (!VerifyMiningAddress(true)) return;
 
-            System.Diagnostics.Process.Start("http://www.nicehash.com/index.jsp?p=miners&addr=" + textBoxBTCAddress.Text.Trim());
+            System.Diagnostics.Process.Start(Links.CheckStats + textBoxBTCAddress.Text.Trim());
         }
 
 
         private void linkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs15");
+            System.Diagnostics.Process.Start(Links.NHM_BTC_Wallet_Faq);
         }
 
 
@@ -630,12 +634,10 @@ namespace NiceHashMiner
         {
             ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
-            SMACheck.Stop();
             BenchmarkForm = new Form_Benchmark();
             SetChildFormCenter(BenchmarkForm);
             BenchmarkForm.ShowDialog();
             BenchmarkForm = null;
-            SMACheck.Start();
 
             InitMainConfigGUIData();
         }
@@ -703,7 +705,6 @@ namespace NiceHashMiner
                                                           International.GetText("Warning_with_Exclamation"),
                                                           MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == System.Windows.Forms.DialogResult.Yes) {
-                    SMACheck.Stop();
                     List<ComputeDevice> enabledDevices = new List<ComputeDevice>();
                     HashSet<string> deviceNames = new HashSet<string>();
                     foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
@@ -719,7 +720,6 @@ namespace NiceHashMiner
                     BenchmarkForm.ShowDialog();
                     BenchmarkForm = null;
                     InitMainConfigGUIData();
-                    SMACheck.Start();
                 } else if (result == System.Windows.Forms.DialogResult.No) {
                     // check devices without benchmarks
                     foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
@@ -808,12 +808,12 @@ namespace NiceHashMiner
 
         private void buttonHelp_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/nicehash/NiceHashMiner");
+            System.Diagnostics.Process.Start(Links.NHM_Help);
         }
 
         private void toolStripStatusLabel10_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.nicehash.com/index.jsp?p=faq#faqs6");
+            System.Diagnostics.Process.Start(Links.NHM_Paying_Faq);
         }
 
         private void toolStripStatusLabel10_MouseHover(object sender, EventArgs e)

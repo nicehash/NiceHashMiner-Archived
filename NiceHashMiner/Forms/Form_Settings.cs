@@ -660,7 +660,7 @@ namespace NiceHashMiner.Forms {
                                 MessageBoxButtons.OK);
                 return;
             }
-            var url = "https://www.nicehash.com/?p=calc&name=" + _selectedComputeDevice.Name;
+            var url = Links.NHM_Profit_Check + _selectedComputeDevice.Name;
             foreach (var algorithm in _selectedComputeDevice.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
                 var id = (int)algorithm.NiceHashID;
                 url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
@@ -671,7 +671,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void buttonAllProfit_Click(object sender, EventArgs e) {
-            var url = "https://www.nicehash.com/?p=calc&name=CUSTOM";
+            var url = Links.NHM_Profit_Check + "CUSTOM";
             Dictionary<AlgorithmType, double> total = new Dictionary<AlgorithmType,double>();
 
             foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {

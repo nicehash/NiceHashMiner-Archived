@@ -80,7 +80,7 @@ namespace NiceHashMiner
 
         public static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=simplemultialgo.info", worker);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_info, worker);
             if (r1 == null) return null;
 
             nicehash_json_2 nhjson_current;
@@ -106,7 +106,7 @@ namespace NiceHashMiner
 
         public static nicehash_stats GetStats(string btc, int algo, string worker)
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&addr=" + btc, worker);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_stats + btc, worker);
             if (r1 == null) return null;
 
             nicehash_json<nicehash_stats> nhjson_current;
@@ -132,7 +132,7 @@ namespace NiceHashMiner
         {
             double balance = 0;
 
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&addr=" + btc, worker);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_stats + btc, worker);
             if (r1 != null)
             {
                 nicehash_json<nicehash_stats> nhjson_current;
@@ -160,7 +160,7 @@ namespace NiceHashMiner
 
         public static string GetVersion(string worker)
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/nicehashminer?method=version", worker);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_version, worker);
             if (r1 == null) return null;
 
             nicehashminer_version nhjson;

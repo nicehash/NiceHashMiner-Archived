@@ -145,10 +145,9 @@ namespace NiceHashMiner.Miners
                          Globals.MiningLocation[ConfigManager.Instance.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
                          nhAlgorithmData.port;
 
-            string username = ConfigManager.Instance.GeneralConfig.BitcoinAddress.Trim();
-            if (String.IsNullOrEmpty(username) || String.IsNullOrWhiteSpace(username)) {
-                username = Globals.DemoUser;
-            } 
+            // demo for benchmark
+            string username = Globals.DemoUser;
+
             if (ConfigManager.Instance.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.Instance.GeneralConfig.WorkerName.Trim();
 

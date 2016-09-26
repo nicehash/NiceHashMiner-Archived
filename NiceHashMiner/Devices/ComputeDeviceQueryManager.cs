@@ -282,6 +282,7 @@ namespace NiceHashMiner.Devices
         #endregion // Video controllers, driver versions
 
         private void QueryCPUs() {
+            Helpers.ConsolePrint(TAG, "QueryCPUs START");
             // get all CPUs
             CPUs = CPUID.GetPhysicalProcessorCount();
 
@@ -317,10 +318,12 @@ namespace NiceHashMiner.Devices
                         i, CPUID.GetCPUName().Trim());
                 }
             }
+            Helpers.ConsolePrint(TAG, "QueryCPUs END");
         }
 
         List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
         private void QueryAMD() {
+            Helpers.ConsolePrint(TAG, "QueryAMD START");
             //showMessageAndStep(International.GetText("Form_Main_loadtext_AMD"));
             //var dump = new sgminer(true);
 
@@ -545,6 +548,7 @@ namespace NiceHashMiner.Devices
                     }
                 }
             }
+            Helpers.ConsolePrint(TAG, "QueryAMD END");
         }
 
         private void UncheckedCPU() {
@@ -582,6 +586,7 @@ namespace NiceHashMiner.Devices
         }
 
         private void QueryCudaDevices() {
+            Helpers.ConsolePrint(TAG, "QueryCudaDevices START");
             Process CudaDevicesDetection = new Process();
             CudaDevicesDetection.StartInfo.FileName = "CudaDeviceDetection.exe";
             CudaDevicesDetection.StartInfo.UseShellExecute = false;
@@ -666,6 +671,7 @@ namespace NiceHashMiner.Devices
             } else {
                 Helpers.ConsolePrint(TAG, "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " + QueryCudaDevicesString);
             }
+            Helpers.ConsolePrint(TAG, "QueryCudaDevices END");
         }
 
         #endregion // CUDA, NVIDIA Query
@@ -709,6 +715,7 @@ namespace NiceHashMiner.Devices
         }
 
         private void QueryOpenCLDevices() {
+            Helpers.ConsolePrint(TAG, "QueryOpenCLDevices START");
             Process OpenCLDevicesDetection = new Process();
             OpenCLDevicesDetection.StartInfo.FileName = "AMDOpenCLDeviceDetection.exe";
             OpenCLDevicesDetection.StartInfo.UseShellExecute = false;
@@ -758,6 +765,7 @@ namespace NiceHashMiner.Devices
                 }
                 Helpers.ConsolePrint(TAG, stringBuilder.ToString());
             }
+            Helpers.ConsolePrint(TAG, "QueryOpenCLDevices END");
         }
 
         #endregion OpenCL Query

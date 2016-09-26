@@ -177,6 +177,7 @@
     <Compile Include="Interfaces\IPathsProperties.cs" />
     <Compile Include="International.cs" />
     <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
+    <Compile Include="Links.cs" />
     <Compile Include="MemoryHelper.cs" />
     <Compile Include="Miners\ccminer_sm6x.cs" />
     <Compile Include="Miners\ExtraLaunchParametersParser.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Utils\MinersDownloadManager.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
       <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
