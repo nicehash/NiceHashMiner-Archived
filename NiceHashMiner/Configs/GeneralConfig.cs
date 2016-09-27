@@ -269,12 +269,5 @@ namespace NiceHashMiner.Configs {
 
             LastDevicesSettup = ComputeDevice.AllAvaliableDevices;
         }
-
-        public void Delete() {
-            try {
-                File.Delete(FilePath);
-            } catch {
-            }
-        }
     }
 }

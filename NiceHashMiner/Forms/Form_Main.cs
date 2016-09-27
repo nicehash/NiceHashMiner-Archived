@@ -48,11 +48,7 @@ namespace NiceHashMiner
 
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
-
-        const int MINIMUM_HEIGHT = 330 - 50;
-        const int MINIMUM_WIDTH = 581;
-
-        
+                
         const string _betaAlphaPostfixString = "";
 
         private bool _isDeviceDetectionInitialized = false;
@@ -80,6 +76,7 @@ namespace NiceHashMiner
             label_NotProfitable.Visible = false;
 
             InitMainConfigGUIData();
+
             // for resizing
             InitFlowPanelStart();
             ClearRatesALL();
@@ -187,7 +184,11 @@ namespace NiceHashMiner
 
                 this.Close();
                 return;
-            } 
+            }
+
+            // 
+            CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
 
             if (!Helpers.InternalCheckIsWow64()) {
                 MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
@@ -413,7 +414,7 @@ namespace NiceHashMiner
             var oldHeight = groupBox1.Size.Height;
             groupBox1.Size = new Size(groupBox1.Size.Width, (visibleGroupCount) * 40);
             // set new height
-            this.Size = new Size(MINIMUM_WIDTH, MINIMUM_HEIGHT + groupBox1.Size.Height);
+            this.Size = new Size(this.Size.Width, this.Size.Height + groupBox1.Size.Height - oldHeight);
         }
 
         public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException) {

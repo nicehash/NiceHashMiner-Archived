@@ -43,25 +43,6 @@ namespace NiceHashMiner.Configs
             }
 
             IsAlgorithmSettingsInit = false;
-
-            // calculate ID
-            //ID = GetId();
-        }
-
-        public static string GetId(DeviceGroupType deviceGroupType,
-            string deviceGroupName) {
-            var SHA256 = new SHA256Managed();
-            var hash = new StringBuilder();
-            string mixedAttr = ((int)deviceGroupType).ToString() + deviceGroupName;
-            byte[] hashedBytes = SHA256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0, Encoding.UTF8.GetByteCount(mixedAttr));
-            foreach (var b in hashedBytes) {
-                hash.Append(b.ToString("x2"));
-            }
-            return hash.ToString();
-        }
-
-        private string GetId() {
-            return GetId(DeviceGroupType, DeviceName);
         }
 
         protected override void InitializePaths() {

@@ -18,6 +18,7 @@ namespace NiceHashMiner.Configs {
             }
         }
 
+        // constructor has references don't delete it
         protected DeviceBenchmarkConfigManager() {
             _benchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
         }

@@ -12,6 +12,7 @@ namespace NiceHashMiner.Configs {
 
         private readonly string TAG;
 
+        // constructor has references don't delete it
         protected ConfigManager() {
             TAG = this.GetType().Name;
             GeneralConfig = new GeneralConfig(true);

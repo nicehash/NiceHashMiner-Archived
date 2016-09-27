@@ -87,11 +87,5 @@ namespace NiceHashMiner.Configs {
                 Helpers.ConsolePrint("BaseConfigFile", String.Format("Commit {0}: exception {1}", FilePath, ex.ToString()));
             }
         }
-
-        public bool ConfigFileExist() {
-            return File.Exists(FilePath);
-        }
-
-
     }
 }
