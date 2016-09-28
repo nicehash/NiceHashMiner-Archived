@@ -414,7 +414,7 @@ namespace NiceHashMiner
             if (panelHeight <= 0) {
                 if (flowLayoutPanelRates.Controls != null && flowLayoutPanelRates.Controls.Count > 0) {
                     var control = flowLayoutPanelRates.Controls[0];
-                    panelHeight = ((GroupProfitControl)control).Size.Height;
+                    panelHeight = ((GroupProfitControl)control).Size.Height * 1.2f;
                 } else {
                     panelHeight = 40;
                 }

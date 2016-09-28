@@ -320,6 +320,6 @@
         "Form_Settings_Text_DisableDefaultOptimizations": "Disable Default Optimizations",
         "AlgorithmsListView_ContextMenu_DisableAll": "Disable All Algorithms",
         "AlgorithmsListView_ContextMenu_EnableAll": "Enable All Algorithms",
-        "Form_Main_No_Device_Enabled_For_Mining":  "Warning no device has been enabled for mining, please enable all or some devices to proceed mining.",
+        "Form_Main_No_Device_Enabled_For_Mining":  "Warning no device has been enabled for mining, please enable at least 1 device to proceed mining.",
     }
 }
