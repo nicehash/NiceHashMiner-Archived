@@ -64,6 +64,7 @@
         "Form_Main_msgbox_buttonBenchmarkRestartWarningTitle":"Перезагрузка {0}",
         "Form_Main_msgbox_buttonBenchmarkRestartWarningMsg":"Работа {0} завершится. Этот новое диалоговое окно еще тестируется и {0} нужен перезапуск для результата.",
         "Form_Main_msgbox_anti_botnet_msgbox": "NiceHash Miner обнаружил изменение ID оборудования. Если вы не загружали и не устанавливали NiceHash Miner, ваш компьютер может быть взломан. В этом случае, мы советуем вам установить антивирус или переустановить ваш Windows.\r\n\r\nПродолжить работу с NiceHash Miner?",
+	"Form_Main_No_Device_Enabled_For_Mining":  "Предупреждение: устройства для майнинга не были включены. Включите, пожалуйста, хотя-бы одно устройство для запуска майнинга.",
 
 
         "Form_Benchmark_title":"Бенчмарк",
