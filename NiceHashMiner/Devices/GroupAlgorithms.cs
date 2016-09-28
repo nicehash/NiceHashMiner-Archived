@@ -10,9 +10,6 @@ namespace NiceHashMiner.Devices {
     /// </summary>
     public static class GroupAlgorithms {
 
-        private static Dictionary<DeviceGroupType, List<AlgorithmType>> _keys = new Dictionary<DeviceGroupType, List<AlgorithmType>>();
-
-
         public static Dictionary<AlgorithmType, Algorithm> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<AlgorithmType, Algorithm>() {

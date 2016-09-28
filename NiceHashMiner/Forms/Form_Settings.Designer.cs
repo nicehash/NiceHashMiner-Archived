@@ -1381,7 +1381,6 @@
             this.Name = "Form_Settings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
-            this.Resize += new System.EventHandler(this.Form_Settings_Resize);
             this.tabControlGeneral.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);

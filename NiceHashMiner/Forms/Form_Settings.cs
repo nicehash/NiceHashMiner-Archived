@@ -771,11 +771,7 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.DisplayCurrency = Selected;
         }
 
-        #endregion Form Callbacks        
-
-        private void Form_Settings_Resize(object sender, EventArgs e) {
-            pictureBox_MinProfit.Location = new Point(label_MinProfit.Location.X + label_MinProfit.Size.Width, pictureBox_MinProfit.Location.Y);
-        }
+        #endregion Form Callbacks
 
         private void tabControlGeneral_Selected(object sender, TabControlEventArgs e) {
             // set first device selected {

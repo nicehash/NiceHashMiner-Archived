@@ -51,7 +51,8 @@ namespace NiceHashMiner
             if (!ConfigManager.Instance.GeneralConfig.IsFileExist() && !commandLineArgs.IsLang)
             {
                 Helpers.ConsolePrint("NICEHASH", "No config file found. Running NiceHash Miner for the first time. Choosing a default language.");
-                Application.Run(new Form_ChooseLanguage());
+                //Application.Run(new Form_ChooseLanguage());
+                Application.Run(new Form_ChooseLanguage_r());
             }
 
             // Init languages

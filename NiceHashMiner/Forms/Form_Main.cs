@@ -398,6 +398,7 @@ namespace NiceHashMiner
         }
 
         public void ClearRates(int groupCount) {
+            float panelHeight = -1;
             if (flowLayoutPanelVisibleCount != groupCount) {
                 flowLayoutPanelVisibleCount = groupCount;
                 // hide some Controls
@@ -410,9 +411,17 @@ namespace NiceHashMiner
             flowLayoutPanelRatesIndex = 0;
             int visibleGroupCount = groupCount + 1;
             if (visibleGroupCount <= 0) visibleGroupCount = 1;
+            if (panelHeight <= 0) {
+                if (flowLayoutPanelRates.Controls != null && flowLayoutPanelRates.Controls.Count > 0) {
+                    var control = flowLayoutPanelRates.Controls[0];
+                    panelHeight = ((GroupProfitControl)control).Size.Height;
+                } else {
+                    panelHeight = 40;
+                }
+            }
 
             var oldHeight = groupBox1.Size.Height;
-            groupBox1.Size = new Size(groupBox1.Size.Width, (visibleGroupCount) * 40);
+            groupBox1.Size = new Size(groupBox1.Size.Width, (int)( (visibleGroupCount) * panelHeight ));
             // set new height
             this.Size = new Size(this.Size.Width, this.Size.Height + groupBox1.Size.Height - oldHeight);
         }

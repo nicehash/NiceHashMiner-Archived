@@ -155,6 +155,12 @@
     <Compile Include="Forms\Form_Benchmark.Designer.cs">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_ChooseLanguage_r.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_ChooseLanguage_r.Designer.cs">
+      <DependentUpon>Form_ChooseLanguage_r.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -267,6 +273,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Benchmark.resx">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_ChooseLanguage_r.resx">
+      <DependentUpon>Form_ChooseLanguage_r.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
