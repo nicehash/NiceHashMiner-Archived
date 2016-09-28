@@ -319,6 +319,7 @@
         "Form_Settings_ToolTip_DisableDefaultOptimizations": "When checked it disables all default optimization settings, making mining potentially more stable but significantly slower (especially for AMD cards).",
         "Form_Settings_Text_DisableDefaultOptimizations": "Disable Default Optimizations",
         "AlgorithmsListView_ContextMenu_DisableAll": "Disable All Algorithms",
-        "AlgorithmsListView_ContextMenu_EnableAll" : "Enable All Algorithms",
+        "AlgorithmsListView_ContextMenu_EnableAll": "Enable All Algorithms",
+        "Form_Main_No_Device_Enabled_For_Mining":  "Warning no device has been enabled for mining, please enable all or some devices to proceed mining.",
     }
 }

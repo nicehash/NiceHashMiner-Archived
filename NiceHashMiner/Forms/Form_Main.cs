@@ -747,6 +747,22 @@ namespace NiceHashMiner
                 }
             }
 
+            // check if any device enabled
+            // check devices without benchmarks
+            bool noDeviceEnabled = true;
+            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+                if (cdev.ComputeDeviceEnabledOption.IsEnabled) {
+                    noDeviceEnabled = false;
+                    break;
+                }
+            }
+            if (noDeviceEnabled) {
+                DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_For_Mining"),
+                                                          International.GetText("Warning_with_Exclamation"),
+                                                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             textBoxBTCAddress.Enabled = false;
             textBoxWorkerName.Enabled = false;
             comboBoxLocation.Enabled = false;
