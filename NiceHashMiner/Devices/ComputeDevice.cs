@@ -204,7 +204,7 @@ namespace NiceHashMiner.Devices
                 if (_cudaDevice != null) {
                     if (DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(AlgorithmType.CryptoNight)) {
                         var CryptoNightAlgo = DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.CryptoNight];
-                        if (_cudaDevice.SM_major >= 5) {
+                        if (_cudaDevice.SM_major >= 5 && Name.Contains("Ti") == false) {
                             CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x" + _cudaDevice.SMX.ToString();
                         }
                     }
