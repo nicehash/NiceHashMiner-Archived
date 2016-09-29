@@ -225,8 +225,8 @@ namespace NiceHashMiner.Miners
 
             _benchmarkTimer.Reset();
             _benchmarkTimer.Start();
-            // call base
-            base.BenchmarkThreadRoutineStartSettup();
+            // call base, read only outpus
+            BenchmarkHandle.BeginOutputReadLine();
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {

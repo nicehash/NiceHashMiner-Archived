@@ -97,7 +97,7 @@ namespace NiceHashMiner
         }
         public BenchmarkProcessStatus BenchmarkProcessStatus { get; protected set; }
         protected string BenchmarkProcessPath { get; private set; }
-        private Process BenchmarkHandle = null;
+        protected Process BenchmarkHandle { get; private set; }
         protected Exception BenchmarkException = null;
         protected int BenchmarkTimeInSeconds;
 
