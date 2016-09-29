@@ -119,6 +119,8 @@ namespace NiceHashMiner
         private int _currentCooldownTimeInSecondsLeft = _MIN_CooldownTimeInMilliseconds;
         private const int IS_COOLDOWN_CHECK_TIMER_ALIVE_CAP = 15;
 
+        private bool isEnded = false;
+
         public Miner(DeviceType deviceType, string minerDeviceName)
         {
             MINER_ID = MINER_ID_COUNT++;
@@ -245,6 +247,7 @@ namespace NiceHashMiner
         }
 
         public void End() {
+            isEnded = true;
             Stop(MinerStopType.FORCE_END);
             CurrentAlgorithmType = AlgorithmType.NONE;
             CurrentRate = 0;
@@ -545,6 +548,7 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint(MinerTAG(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
 
                     StartCoolDownTimerChecker();
+                    isEnded = false;
 
                     return P;
                 } else {
@@ -600,10 +604,12 @@ namespace NiceHashMiner
         }
 
         private void Restart() {
-            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Restarting miner..");
-            Stop(MinerStopType.END); // stop miner first
-            System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
-            ProcessHandle = _Start(); // start with old command line
+            if (!isEnded) {
+                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Restarting miner..");
+                Stop(MinerStopType.END); // stop miner first
+                System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+                ProcessHandle = _Start(); // start with old command line
+            }
         }
 
         protected void FillAlgorithm(string aname, ref APIData AD) {
