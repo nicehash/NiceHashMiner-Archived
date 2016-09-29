@@ -92,7 +92,7 @@ namespace NiceHashMiner.Forms {
             
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
-            devicesListViewEnableControl1.SetAllEnabled = true;
+            //devicesListViewEnableControl1.SetAllEnabled = true;
             //devicesListViewEnableControl1.SaveToGeneralConfig = true;
             devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
 
@@ -526,14 +526,16 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.CommitBenchmarks();
             // check devices without benchmarks
             foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
-                bool Enabled = false;
-                foreach (var algo in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
-                    if (algo.Value.BenchmarkSpeed > 0) {
-                        Enabled = true;
-                        break;
+                if (cdev.ComputeDeviceEnabledOption.IsEnabled) {
+                    bool Enabled = false;
+                    foreach (var algo in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                        if (algo.Value.BenchmarkSpeed > 0) {
+                            Enabled = true;
+                            break;
+                        }
                     }
+                    cdev.ComputeDeviceEnabledOption.IsEnabled = Enabled;
                 }
-                cdev.ComputeDeviceEnabledOption.IsEnabled = Enabled;
             }
             devicesListViewEnableControl1.SaveOptions();
         }
