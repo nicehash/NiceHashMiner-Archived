@@ -256,7 +256,7 @@
         "Form_Main_MINING_NOT_PROFITABLE": "CURRENTLY MINING NOT PROFITABLE.",
         "Form_Main_Group_Device_Rates": "Group/Device Rates:",
         "FormBenchmark_Benchmark_Step": "Benchmark step ( {0} / {1} )",
-        "FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg": "All benchmakrs have been successful",
+        "FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg": "All benchmarks have been successful",
         "FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg": "Not all benchmarks finished successfully. Retry to rebenchmark unbenchmarked algos or Cancel to disable unbenchmarked.",
         "FormBenchmark_Benchmark_Finish_MsgBox_Title": "Benchmark finished report",
         "FormBenchmark_Benchmark_GroupBoxStatus": "Benchmark progress status:",
