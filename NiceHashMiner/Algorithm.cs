@@ -23,9 +23,6 @@ namespace NiceHashMiner {
 
         public static readonly string PasswordDefault = "x";
 
-        [JsonIgnore]
-        public double CurrentProfit { get; set; }
-
         // benchmark info
         [JsonIgnore]
         public string BenchmarkStatus { get; set; }

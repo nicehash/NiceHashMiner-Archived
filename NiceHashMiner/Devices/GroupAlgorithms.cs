@@ -15,7 +15,7 @@ namespace NiceHashMiner.Devices {
                 return new Dictionary<AlgorithmType, Algorithm>() {
                 { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
                 { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") },
-                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") /* NOT NEDDED { ExtraLaunchParameters = "--no-extranonce"}*/ }
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") }
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {

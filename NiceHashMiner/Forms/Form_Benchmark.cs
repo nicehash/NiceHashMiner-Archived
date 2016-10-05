@@ -48,7 +48,19 @@ namespace NiceHashMiner.Forms {
 
         private string CurrentAlgoName;
 
-        
+        // CPU benchmarking helpers
+        private class CPUBenchmarkStatus {
+            public bool HasAlreadyBenchmarked = false; // after first benchmark set to true
+            public double BenchmarkSpeed;
+            public int LessTreads = 0;
+            public int Time;
+        }
+        private CPUBenchmarkStatus __CPUBenchmarkStatus = null;
+
+        // CPU sweet spots
+        private List<AlgorithmType> CPUAlgos = new List<AlgorithmType>() {
+            AlgorithmType.CryptoNight
+        };
 
         private static Color DISABLED_COLOR = Color.DarkGray;
         private static Color BENCHMARKED_COLOR = Color.LightGreen;
@@ -391,8 +403,13 @@ namespace NiceHashMiner.Forms {
             var currentConfig = _currentDevice.DeviceBenchmarkConfig;
             if (_currentDevice.DeviceGroupType == DeviceGroupType.CPU) {
                 _currentMiner = MinersManager.GetCpuMiner(_currentDevice.Group);
+                if (_currentAlgorithm != null && _currentAlgorithm.LessThreads == 0 && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
+                    __CPUBenchmarkStatus = new CPUBenchmarkStatus();
+                    _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
+                }
             } else {
                 _currentMiner = MinersManager.CreateMiner(currentConfig.DeviceGroupType, _currentAlgorithm.NiceHashID);
+                __CPUBenchmarkStatus = null;
             }
 
             if (_currentMiner != null && _currentAlgorithm != null) {
@@ -404,6 +421,9 @@ namespace NiceHashMiner.Forms {
                 var time = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits
                     .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
                 //currentConfig.TimeLimit = time;
+                if (__CPUBenchmarkStatus != null) {
+                    __CPUBenchmarkStatus.Time = time;
+                }
                 
                 // dagger about 4 minutes
                 var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;
@@ -470,8 +490,29 @@ namespace NiceHashMiner.Forms {
             if (!_inBenchmark) return;
             this.Invoke((MethodInvoker)delegate {
                 _bechmarkedSuccessCount += success ? 1 : 0;
-                _benchmarkingTimer.Stop();
-                if (!success) {
+                bool rebenchSame = false;
+                if(success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID)) {
+                    if (__CPUBenchmarkStatus.HasAlreadyBenchmarked && __CPUBenchmarkStatus.BenchmarkSpeed > _currentAlgorithm.BenchmarkSpeed) {
+                        rebenchSame = false;
+                        _currentAlgorithm.BenchmarkSpeed = __CPUBenchmarkStatus.BenchmarkSpeed;
+                    } else {
+                        __CPUBenchmarkStatus.HasAlreadyBenchmarked = true;
+                        __CPUBenchmarkStatus.BenchmarkSpeed = _currentAlgorithm.BenchmarkSpeed;
+                        __CPUBenchmarkStatus.LessTreads++;
+                        if(__CPUBenchmarkStatus.LessTreads < Globals.ThreadsPerCPU) {
+                            _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
+                            rebenchSame = true;
+                        } else {
+                            rebenchSame = false;
+                        }
+                    }
+                }
+
+                if(!rebenchSame) {
+                    _benchmarkingTimer.Stop();
+                }
+
+                if (!success && !rebenchSame) {
                     // add new failed list
                     _benchmarkFailedAlgoPerDev.Add(
                         new DeviceAlgo() {
@@ -479,12 +520,16 @@ namespace NiceHashMiner.Forms {
                             Algorithm = _currentAlgorithm.NiceHashName
                         } );
                     algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
-                } else {
+                } else if (!rebenchSame) {
                     // set status to empty string it will return speed
                     _currentAlgorithm.ClearBenchmarkPending();
                     algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, "");
                 }
-                NextBenchmark();
+                if (rebenchSame) {
+                    _currentMiner.BenchmarkStart(_currentDevice, _currentAlgorithm, __CPUBenchmarkStatus.Time, this);
+                } else {
+                    NextBenchmark();
+                }
             });
         }
 
