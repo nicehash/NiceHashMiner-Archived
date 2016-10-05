@@ -56,6 +56,7 @@ namespace NiceHashMiner
         public Form_Main()
         {
             InitializeComponent();
+            this.Icon = NiceHashMiner.Properties.Resources.logo;
 
             InitLocalization();
 

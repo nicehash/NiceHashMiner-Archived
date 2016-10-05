@@ -40,6 +40,7 @@ namespace NiceHashMiner.Forms {
 
         public Form_Settings() {
             InitializeComponent();
+            this.Icon = NiceHashMiner.Properties.Resources.logo;
 
             //ret = 1; // default
             IsChange = false;

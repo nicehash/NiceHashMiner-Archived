@@ -96,7 +96,9 @@ namespace NiceHashMiner.Forms {
             bool autostart = false,
             //List<ComputeDevice> enabledDevices = null,
             AlgorithmType singleBenchmarkType = AlgorithmType.NONE) {
+            
             InitializeComponent();
+            this.Icon = NiceHashMiner.Properties.Resources.logo;
 
             _singleBenchmarkType = singleBenchmarkType;
 
@@ -495,6 +497,7 @@ namespace NiceHashMiner.Forms {
                     if (__CPUBenchmarkStatus.HasAlreadyBenchmarked && __CPUBenchmarkStatus.BenchmarkSpeed > _currentAlgorithm.BenchmarkSpeed) {
                         rebenchSame = false;
                         _currentAlgorithm.BenchmarkSpeed = __CPUBenchmarkStatus.BenchmarkSpeed;
+                        _currentAlgorithm.LessThreads--;
                     } else {
                         __CPUBenchmarkStatus.HasAlreadyBenchmarked = true;
                         __CPUBenchmarkStatus.BenchmarkSpeed = _currentAlgorithm.BenchmarkSpeed;
