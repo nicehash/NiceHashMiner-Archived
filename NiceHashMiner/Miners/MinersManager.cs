@@ -78,6 +78,7 @@ namespace NiceHashMiner.Miners {
         Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
 
         private bool IsProfitable = true;
+        private bool IsConnectedToInternet = true;
 
         readonly string TAG;
 
@@ -95,7 +96,7 @@ namespace NiceHashMiner.Miners {
             // set internet checking
             _internetCheckTimer = new Timer();
             _internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
-            _internetCheckTimer.Interval = 1000 * 60 * 5;
+            _internetCheckTimer.Interval = 1000 * 30 * 1; // every minute or 5?? // 1000 * 60 * 1
 
             // path checker
             Helpers.ConsolePrint(TAG, "Creating MinerPathChecker miners");
@@ -106,11 +107,14 @@ namespace NiceHashMiner.Miners {
         }
 
         private void InternetCheckTimer_Tick(object sender, EventArgs e) {
-            //if () {
-
-            //} else {
-
-            //}
+            if (ConfigManager.Instance.GeneralConfig.ContinueMiningIfNoInternetAccess == false) {
+                IsConnectedToInternet = Helpers.IsConnectedToInternet();
+                if (IsConnectedToInternet) {
+                    Helpers.ConsolePrint(TAG, "Internet Conectivity Avaliable");
+                } else {
+                    Helpers.ConsolePrint(TAG, "NO INTERNET!!! WHOOOOOO. GO OUTSIDE???");
+                }
+            }
         }
 
         private void PreventSleepTimer_Tick(object sender, ElapsedEventArgs e) {
@@ -135,6 +139,7 @@ namespace NiceHashMiner.Miners {
 
             // restroe/enable sleep
             _preventSleepTimer.Stop();
+            _internetCheckTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
         }
 
@@ -240,6 +245,8 @@ namespace NiceHashMiner.Miners {
 
             // assume profitable
             IsProfitable = true;
+            // assume we have internet
+            IsConnectedToInternet = true;
 
 
             // this checks if there are enabled devices and enabled algorithms
@@ -271,6 +278,7 @@ namespace NiceHashMiner.Miners {
 
             if (isMiningEnabled) {
                 _preventSleepTimer.Start();
+                _internetCheckTimer.Start();
             }
 
             IsCurrentlyIdle = !isMiningEnabled;
@@ -516,11 +524,16 @@ namespace NiceHashMiner.Miners {
             // TODO FOR NOW USD ONLY
             var currentProfitUSD = (CurrentProfit * Globals.BitcoinRate);
             Helpers.ConsolePrint(TAG,  "Current Global profit: " + currentProfitUSD.ToString("F8") + " USD/Day");
-            if (ConfigManager.Instance.GeneralConfig.MinimumProfit > 0
-                    && currentProfitUSD < ConfigManager.Instance.GeneralConfig.MinimumProfit) {
+            if (!IsConnectedToInternet || (ConfigManager.Instance.GeneralConfig.MinimumProfit > 0
+                    && currentProfitUSD < ConfigManager.Instance.GeneralConfig.MinimumProfit)) {
                 IsProfitable = false;
                 IsCurrentlyIdle = true;
-                _mainFormRatesComunication.ShowNotProfitable();
+                if (!IsConnectedToInternet) {
+                    // change msg
+                    _mainFormRatesComunication.ShowNotProfitable(International.GetText("Form_Main_MINING_NO_INTERNET_CONNECTION"));
+                } else {
+                    _mainFormRatesComunication.ShowNotProfitable(International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
+                }
                 // return don't group
                 StopAllMinersNonProfitable();
                 Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");

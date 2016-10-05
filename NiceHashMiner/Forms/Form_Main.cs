@@ -440,8 +440,9 @@ namespace NiceHashMiner
             UpdateGlobalRate();
         }
 
-        public void ShowNotProfitable() {
+        public void ShowNotProfitable(string msg) {
             label_NotProfitable.Visible = true;
+            label_NotProfitable.Text = msg;
             label_NotProfitable.Invalidate();
         }
         public void HideNotProfitable() {

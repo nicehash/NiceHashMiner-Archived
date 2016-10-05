@@ -206,6 +206,10 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(checkBox_DisableDefaultOptimizations, International.GetText("Form_Settings_ToolTip_DisableDefaultOptimizations"));
             toolTip1.SetToolTip(pictureBox_DisableDefaultOptimizations, International.GetText("Form_Settings_ToolTip_DisableDefaultOptimizations"));
 
+            // internet connection mining check
+            toolTip1.SetToolTip(checkBox_ContinueMiningIfNoInternetAccess, International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
+            toolTip1.SetToolTip(pictureBox_ContinueMiningIfNoInternetAccess, International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
+
             this.Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -294,6 +298,7 @@ namespace NiceHashMiner.Forms {
             buttonSelectedProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability");
 
             checkBox_DisableDefaultOptimizations.Text = International.GetText("Form_Settings_Text_DisableDefaultOptimizations");
+            checkBox_ContinueMiningIfNoInternetAccess.Text = International.GetText("Form_Settings_Text_ContinueMiningIfNoInternetAccess");
         }
 
         private void InitializeGeneralTabCallbacks() {
@@ -382,6 +387,7 @@ namespace NiceHashMiner.Forms {
                 checkBox_LogToFile.Checked = ConfigManager.Instance.GeneralConfig.LogToFile;
                 checkBox_AMD_DisableAMDTempControl.Checked = ConfigManager.Instance.GeneralConfig.DisableAMDTempControl;
                 checkBox_DisableDefaultOptimizations.Checked = ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations;
+                checkBox_ContinueMiningIfNoInternetAccess.Checked = ConfigManager.Instance.GeneralConfig.ContinueMiningIfNoInternetAccess;
             }
 
             // Textboxes
@@ -512,6 +518,7 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
             ConfigManager.Instance.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.Instance.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
+            ConfigManager.Instance.GeneralConfig.ContinueMiningIfNoInternetAccess = checkBox_ContinueMiningIfNoInternetAccess.Checked;
         }
 
         private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {

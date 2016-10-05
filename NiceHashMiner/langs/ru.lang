@@ -65,6 +65,7 @@
         "Form_Main_msgbox_buttonBenchmarkRestartWarningMsg":"Работа {0} завершится. Этот новое диалоговое окно еще тестируется и {0} нужен перезапуск для результата.",
         "Form_Main_msgbox_anti_botnet_msgbox": "NiceHash Miner обнаружил изменение ID оборудования. Если вы не загружали и не устанавливали NiceHash Miner, ваш компьютер может быть взломан. В этом случае, мы советуем вам установить антивирус или переустановить ваш Windows.\r\n\r\nПродолжить работу с NiceHash Miner?",
 	"Form_Main_No_Device_Enabled_For_Mining":  "Предупреждение: устройства для майнинга не были включены. Включите, пожалуйста, хотя-бы одно устройство для запуска майнинга.",
+	"Form_Main_MINING_NO_INTERNET_CONNECTION": "НА ДАННЫЙ МОМЕНТ НЕ МАЙНИТ. НЕТ ПОДКЛЮЧЕНИЯ К ИНТЕРНЕТУ.",
 
 
         "Form_Benchmark_title":"Бенчмарк",
@@ -321,5 +322,7 @@
 	"NET45_Not_Intsalled_msg" : "Для корректной работы NiceHash Miner требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
 	"Form_Settings_ToolTip_DisableDefaultOptimizations": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг потенциально более стабильным, но значительно медленнее (особенно для карт  AMD).",
         "Form_Settings_Text_DisableDefaultOptimizations": "Отключить оптимизацию",
+	"Form_Settings_Text_ContinueMiningIfNoInternetAccess" : "Продолжить майнинг без доступа к интернету",
+        "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess" : "Если отмечено, NiceHashMiner продолжит майнинг вне зависимости от подключения к интернету.",
     }
 }

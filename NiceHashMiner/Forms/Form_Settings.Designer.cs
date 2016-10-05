@@ -68,11 +68,13 @@
             this.pictureBox_LogToFile = new System.Windows.Forms.PictureBox();
             this.checkBox_DebugConsole = new System.Windows.Forms.CheckBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
+            this.checkBox_ContinueMiningIfNoInternetAccess = new System.Windows.Forms.CheckBox();
             this.pictureBox_WorkerName = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinProfit = new System.Windows.Forms.PictureBox();
             this.pictureBox_ServiceLocation = new System.Windows.Forms.PictureBox();
             this.pictureBox_Info_BitcoinAddress = new System.Windows.Forms.PictureBox();
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
+            this.pictureBox_ContinueMiningIfNoInternetAccess = new System.Windows.Forms.PictureBox();
             this.label_BitcoinAddress = new System.Windows.Forms.Label();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.label_WorkerName = new System.Windows.Forms.Label();
@@ -161,6 +163,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ServiceLocation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Info_BitcoinAddress)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ContinueMiningIfNoInternetAccess)).BeginInit();
             this.groupBox_Localization.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).BeginInit();
@@ -563,7 +566,7 @@
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.checkBox_DebugConsole);
-            this.groupBox_Logging.Location = new System.Drawing.Point(6, 240);
+            this.groupBox_Logging.Location = new System.Drawing.Point(6, 268);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Size = new System.Drawing.Size(345, 70);
             this.groupBox_Logging.TabIndex = 388;
@@ -638,11 +641,13 @@
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.checkBox_ContinueMiningIfNoInternetAccess);
             this.groupBox_Main.Controls.Add(this.pictureBox_WorkerName);
             this.groupBox_Main.Controls.Add(this.pictureBox_MinProfit);
             this.groupBox_Main.Controls.Add(this.pictureBox_ServiceLocation);
             this.groupBox_Main.Controls.Add(this.pictureBox_Info_BitcoinAddress);
             this.groupBox_Main.Controls.Add(this.textBox_MinProfit);
+            this.groupBox_Main.Controls.Add(this.pictureBox_ContinueMiningIfNoInternetAccess);
             this.groupBox_Main.Controls.Add(this.label_BitcoinAddress);
             this.groupBox_Main.Controls.Add(this.label_MinProfit);
             this.groupBox_Main.Controls.Add(this.label_WorkerName);
@@ -652,10 +657,21 @@
             this.groupBox_Main.Controls.Add(this.textBox_WorkerName);
             this.groupBox_Main.Location = new System.Drawing.Point(6, 6);
             this.groupBox_Main.Name = "groupBox_Main";
-            this.groupBox_Main.Size = new System.Drawing.Size(345, 152);
+            this.groupBox_Main.Size = new System.Drawing.Size(345, 180);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
+            // 
+            // checkBox_ContinueMiningIfNoInternetAccess
+            // 
+            this.checkBox_ContinueMiningIfNoInternetAccess.AutoSize = true;
+            this.checkBox_ContinueMiningIfNoInternetAccess.Location = new System.Drawing.Point(10, 149);
+            this.checkBox_ContinueMiningIfNoInternetAccess.Name = "checkBox_ContinueMiningIfNoInternetAccess";
+            this.checkBox_ContinueMiningIfNoInternetAccess.Size = new System.Drawing.Size(205, 17);
+            this.checkBox_ContinueMiningIfNoInternetAccess.TabIndex = 365;
+            this.checkBox_ContinueMiningIfNoInternetAccess.Text = "Continue Mining If No Internet Access";
+            this.checkBox_ContinueMiningIfNoInternetAccess.UseVisualStyleBackColor = true;
+            this.checkBox_ContinueMiningIfNoInternetAccess.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             // 
             // pictureBox_WorkerName
             // 
@@ -703,6 +719,16 @@
             this.textBox_MinProfit.Name = "textBox_MinProfit";
             this.textBox_MinProfit.Size = new System.Drawing.Size(237, 20);
             this.textBox_MinProfit.TabIndex = 334;
+            // 
+            // pictureBox_ContinueMiningIfNoInternetAccess
+            // 
+            this.pictureBox_ContinueMiningIfNoInternetAccess.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ContinueMiningIfNoInternetAccess.Location = new System.Drawing.Point(302, 149);
+            this.pictureBox_ContinueMiningIfNoInternetAccess.Name = "pictureBox_ContinueMiningIfNoInternetAccess";
+            this.pictureBox_ContinueMiningIfNoInternetAccess.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ContinueMiningIfNoInternetAccess.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ContinueMiningIfNoInternetAccess.TabIndex = 364;
+            this.pictureBox_ContinueMiningIfNoInternetAccess.TabStop = false;
             // 
             // label_BitcoinAddress
             // 
@@ -777,7 +803,7 @@
             this.groupBox_Localization.Controls.Add(this.comboBox_Language);
             this.groupBox_Localization.Controls.Add(this.currencyConverterCombobox);
             this.groupBox_Localization.Controls.Add(this.label_displayCurrency);
-            this.groupBox_Localization.Location = new System.Drawing.Point(6, 164);
+            this.groupBox_Localization.Location = new System.Drawing.Point(6, 192);
             this.groupBox_Localization.Name = "groupBox_Localization";
             this.groupBox_Localization.Size = new System.Drawing.Size(345, 70);
             this.groupBox_Localization.TabIndex = 385;
@@ -1411,6 +1437,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ServiceLocation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Info_BitcoinAddress)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ContinueMiningIfNoInternetAccess)).EndInit();
             this.groupBox_Localization.ResumeLayout(false);
             this.groupBox_Localization.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
@@ -1547,6 +1574,8 @@
         private System.Windows.Forms.PictureBox pictureBox_AMD_DisableAMDTempControl;
         private System.Windows.Forms.CheckBox checkBox_DisableDefaultOptimizations;
         private System.Windows.Forms.PictureBox pictureBox_DisableDefaultOptimizations;
+        private System.Windows.Forms.CheckBox checkBox_ContinueMiningIfNoInternetAccess;
+        private System.Windows.Forms.PictureBox pictureBox_ContinueMiningIfNoInternetAccess;
 
     }
 }

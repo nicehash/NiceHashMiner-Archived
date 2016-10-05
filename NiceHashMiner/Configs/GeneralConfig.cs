@@ -107,6 +107,9 @@ namespace NiceHashMiner.Configs {
             }
         }
         public double MinimumProfit { get; set; }
+
+        public bool ContinueMiningIfNoInternetAccess { get; set; }
+
         public string hwid { get; set; }
 
         public bool DownloadInit { get; set; }
@@ -169,6 +172,7 @@ namespace NiceHashMiner.Configs {
             MinimumProfit = 0;
             EthminerDagGenerationType = DagGenerationType.SingleKeep;
             DownloadInit = false;
+            ContinueMiningIfNoInternetAccess = false;
         }
 
         public GeneralConfig(bool initDefaults = false) {
@@ -246,6 +250,7 @@ namespace NiceHashMiner.Configs {
             DisableAMDTempControl = _file.DisableAMDTempControl;
             DisableDefaultOptimizations = _file.DisableDefaultOptimizations;
 
+            ContinueMiningIfNoInternetAccess = _file.ContinueMiningIfNoInternetAccess;
             if (!IsNewVersion) {
                 DownloadInit = _file.DownloadInit;
             }
