@@ -109,11 +109,6 @@ namespace NiceHashMiner.Miners {
         private void InternetCheckTimer_Tick(object sender, EventArgs e) {
             if (ConfigManager.Instance.GeneralConfig.ContinueMiningIfNoInternetAccess == false) {
                 IsConnectedToInternet = Helpers.IsConnectedToInternet();
-                if (IsConnectedToInternet) {
-                    Helpers.ConsolePrint(TAG, "Internet Conectivity Avaliable");
-                } else {
-                    Helpers.ConsolePrint(TAG, "NO INTERNET!!! WHOOOOOO. GO OUTSIDE???");
-                }
             }
         }
 
@@ -530,6 +525,7 @@ namespace NiceHashMiner.Miners {
                 IsCurrentlyIdle = true;
                 if (!IsConnectedToInternet) {
                     // change msg
+                    Helpers.ConsolePrint(TAG, "NO INTERNET!!! Stopping mining.");
                     _mainFormRatesComunication.ShowNotProfitable(International.GetText("Form_Main_MINING_NO_INTERNET_CONNECTION"));
                 } else {
                     _mainFormRatesComunication.ShowNotProfitable(International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
