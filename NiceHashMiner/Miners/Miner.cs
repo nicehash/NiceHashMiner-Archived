@@ -575,7 +575,7 @@ namespace NiceHashMiner
             _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
             _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-        } 
+        }
 
 
         virtual protected void Miner_Exited() {

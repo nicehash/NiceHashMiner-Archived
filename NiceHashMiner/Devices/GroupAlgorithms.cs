@@ -19,7 +19,7 @@ namespace NiceHashMiner.Devices {
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
-                // DisableAMDTempControl = false; so temperature params are enabled by default, not sure if TemperatureParam should be lastly appended
+                // DisableAMDTempControl = false; TemperatureParam must be appended lastly
                 string DefaultParam = AmdGpuDevice.DefaultParam;
                 return new Dictionary<AlgorithmType, Algorithm>() { 
                 { AlgorithmType.X13 , new Algorithm(AlgorithmType.X13,  "x13")
@@ -42,8 +42,8 @@ namespace NiceHashMiner.Devices {
                     { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blakecoin")
                     { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
-                { AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake")
-                    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
+                //{ AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake")
+                //    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla")
                     { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
