@@ -12,6 +12,12 @@
 
 #include "OpenCLDevice.h"
 
+struct JsonLog {
+	std::string PlatformName;
+	int PlatformNum;
+	std::vector<OpenCLDevice> Devices;
+};
+
 class AMDOpenCLDeviceDetection {
 public:
 	AMDOpenCLDeviceDetection();
@@ -25,8 +31,8 @@ private:
 	static std::vector<cl::Device> getDevices(std::vector<cl::Platform> const& _platforms, unsigned _platformId);
 	static std::vector<cl::Platform> getPlatforms();
 
-	std::map<std::string, std::vector<OpenCLDevice>> _devicesPerPlatform;
-	std::map<std::string, int> _platformNumbers;
+	std::vector<std::string> _platformNames;
+	std::vector<JsonLog> _devicesPlatformsDevices;
 
 	static std::string StringnNullTerminatorFix(const std::string& str);
 };

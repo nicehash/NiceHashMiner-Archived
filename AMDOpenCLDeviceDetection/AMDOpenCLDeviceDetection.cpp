@@ -57,46 +57,52 @@ bool AMDOpenCLDeviceDetection::QueryDevices() {
 		else {
 			for (auto i_pId = 0u; i_pId < platforms.size(); ++i_pId) {
 				string platformName = StringnNullTerminatorFix(platforms[i_pId].getInfo<CL_PLATFORM_NAME>());
-				_platformNumbers.emplace(make_pair(platformName, i_pId));
-				// not the best way but it should work
-				bool isAMD = platformName.find("AMD", 0) != string::npos;
-				vector<OpenCLDevice> platformDevs;
-				auto clDevs = getDevices(platforms, i_pId);
-				for (auto i_devId = 0u; i_devId < clDevs.size(); ++i_devId) {
-					OpenCLDevice curDevice;
-					curDevice.DeviceID = i_devId;
-					curDevice._CL_DEVICE_NAME = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_NAME>());
-					switch (clDevs[i_devId].getInfo<CL_DEVICE_TYPE>()) {
-					case CL_DEVICE_TYPE_CPU:
-						curDevice._CL_DEVICE_TYPE = "CPU";
-						break;
-					case CL_DEVICE_TYPE_GPU:
-						curDevice._CL_DEVICE_TYPE = "GPU";
-						break;
-					case CL_DEVICE_TYPE_ACCELERATOR:
-						curDevice._CL_DEVICE_TYPE = "ACCELERATOR";
-						break;
-					default:
-						curDevice._CL_DEVICE_TYPE = "DEFAULT";
-						break;
-					}
+				if (std::find(_platformNames.begin(), _platformNames.end(), platformName) == _platformNames.end()) {
+					JsonLog current;
+					_platformNames.push_back(platformName);
+					// new
+					current.PlatformName = platformName;
+					current.PlatformNum = i_pId;
 
-					curDevice._CL_DEVICE_GLOBAL_MEM_SIZE = clDevs[i_devId].getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>();
-					curDevice._CL_DEVICE_VENDOR = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_VENDOR>());
-					curDevice._CL_DEVICE_VERSION = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_VERSION>());
-					curDevice._CL_DRIVER_VERSION = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DRIVER_VERSION>());
-
-					// AMD topology get Bus No
-					if (isAMD) {
-						cl_device_topology_amd topology = clDevs[i_devId].getInfo<CL_DEVICE_TOPOLOGY_AMD>();
-						if (topology.raw.type == CL_DEVICE_TOPOLOGY_TYPE_PCIE_AMD) {
-							curDevice.AMD_BUS_ID = (int)topology.pcie.bus;
+					// not the best way but it should work
+					bool isAMD = platformName.find("AMD", 0) != string::npos;
+					auto clDevs = getDevices(platforms, i_pId);
+					for (auto i_devId = 0u; i_devId < clDevs.size(); ++i_devId) {
+						OpenCLDevice curDevice;
+						curDevice.DeviceID = i_devId;
+						curDevice._CL_DEVICE_NAME = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_NAME>());
+						switch (clDevs[i_devId].getInfo<CL_DEVICE_TYPE>()) {
+						case CL_DEVICE_TYPE_CPU:
+							curDevice._CL_DEVICE_TYPE = "CPU";
+							break;
+						case CL_DEVICE_TYPE_GPU:
+							curDevice._CL_DEVICE_TYPE = "GPU";
+							break;
+						case CL_DEVICE_TYPE_ACCELERATOR:
+							curDevice._CL_DEVICE_TYPE = "ACCELERATOR";
+							break;
+						default:
+							curDevice._CL_DEVICE_TYPE = "DEFAULT";
+							break;
 						}
-					}
 
-					platformDevs.push_back(curDevice);
+						curDevice._CL_DEVICE_GLOBAL_MEM_SIZE = clDevs[i_devId].getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>();
+						curDevice._CL_DEVICE_VENDOR = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_VENDOR>());
+						curDevice._CL_DEVICE_VERSION = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DEVICE_VERSION>());
+						curDevice._CL_DRIVER_VERSION = StringnNullTerminatorFix(clDevs[i_devId].getInfo<CL_DRIVER_VERSION>());
+
+						// AMD topology get Bus No
+						if (isAMD) {
+							cl_device_topology_amd topology = clDevs[i_devId].getInfo<CL_DEVICE_TOPOLOGY_AMD>();
+							if (topology.raw.type == CL_DEVICE_TOPOLOGY_TYPE_PCIE_AMD) {
+								curDevice.AMD_BUS_ID = (int)topology.pcie.bus;
+							}
+						}
+
+						current.Devices.push_back(curDevice);
+					}
+					_devicesPlatformsDevices.push_back(current);
 				}
-				_devicesPerPlatform.emplace(make_pair(platformName, platformDevs));
 			}
 		}
 	}
@@ -113,28 +119,18 @@ bool AMDOpenCLDeviceDetection::QueryDevices() {
 
 // this function is hardcoded and horrable
 void AMDOpenCLDeviceDetection::PrintDevicesJson() {
-	cout << "{" << endl;
+	cout << "[" << endl;
 
-	// platforms array scope
 	{
-		cout << "\t\"OCLPlatforms\" : {" << endl;
-		int platformsComma = _platformNumbers.size();
-		for (const auto &plat_name_num : _platformNumbers) {
-			cout << "\t\t\"" + plat_name_num.first + "\" : "
-				<< plat_name_num.second << COMMA(platformsComma)
-				<< endl;
-		}
-		cout << "\t}," << endl;
-	}
-	// device per platform array scope
-	{
-		int devPlatformsComma = _devicesPerPlatform.size();
-		cout << "\t\"OCLPlatformDevices\" : {" << endl;
-		for (const auto &plat_name_devs : _devicesPerPlatform) {
-			cout << "\t\t\"" + plat_name_devs.first + "\" : [" << endl;
+		int devPlatformsComma = _devicesPlatformsDevices.size();
+		for (const auto &jsonLog : _devicesPlatformsDevices) {
+			cout << "\t{" << endl;
+			cout << "\t\t\"PlatformName\": \"" << jsonLog.PlatformName << "\"" << "," << endl;
+			cout << "\t\t\"PlatformNum\": " << jsonLog.PlatformNum << "," << endl;
+			cout << "\t\t\"Devices\" : [" << endl;
 			// device print
-			int devComma = plat_name_devs.second.size();
-			for (const auto &dev : plat_name_devs.second) {
+			int devComma = jsonLog.Devices.size();
+			for (const auto &dev : jsonLog.Devices) {
 				cout << "\t\t\t{" << endl;
 				cout << "\t\t\t\t\"" << "DeviceID" << "\" : " << dev.DeviceID << "," << endl; // num
 				cout << "\t\t\t\t\"" << "AMD_BUS_ID" << "\" : " << dev.AMD_BUS_ID << "," << endl; // num
@@ -146,10 +142,10 @@ void AMDOpenCLDeviceDetection::PrintDevicesJson() {
 				cout << "\t\t\t\t\"" << "_CL_DRIVER_VERSION" << "\" : \"" << dev._CL_DRIVER_VERSION << "\"" << endl;
 				cout << "\t\t\t}" << COMMA(devComma) << endl;
 			}
-			cout << "\t\t]" << COMMA(devPlatformsComma) << endl;
+			cout << "\t\t]" << endl;
+			cout << "\t}" << COMMA(devPlatformsComma) << endl;
 		}
-		cout << "\t}" << endl;
 	}
 
-	cout << "}" << endl;
+	cout << "]"; // << endl;
 }
