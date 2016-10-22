@@ -550,7 +550,7 @@ namespace NiceHashMiner.Devices
             CudaDevicesDetection.OutputDataReceived += QueryCudaDevicesOutputErrorDataReceived;
             CudaDevicesDetection.ErrorDataReceived += QueryCudaDevicesOutputErrorDataReceived;
 
-            const int waitTime = 5 * 1000; // 5seconds
+            const int waitTime = 30 * 1000; // 30seconds
             try {
                 if (!CudaDevicesDetection.Start()) {
                     Helpers.ConsolePrint(TAG, "CudaDevicesDetection process could not start");
@@ -680,7 +680,7 @@ namespace NiceHashMiner.Devices
             OpenCLDevicesDetection.OutputDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
             OpenCLDevicesDetection.ErrorDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
 
-            const int waitTime = 5 * 1000; // 5seconds
+            const int waitTime = 30 * 1000; // 30seconds
             try {
                 if (!OpenCLDevicesDetection.Start()) {
                     Helpers.ConsolePrint(TAG, "AMDOpenCLDeviceDetection process could not start");
