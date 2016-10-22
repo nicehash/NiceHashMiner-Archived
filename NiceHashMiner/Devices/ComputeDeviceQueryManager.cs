@@ -50,7 +50,6 @@ namespace NiceHashMiner.Devices
         public int CPUs { get; private set; }
 
         public int AMDOpenCLPlatformNum { get; private set; }
-        public string AMDOpenCLPlatformStringKey { get; private set; }
 
         public IMessageNotifier MessageNotifier { get; private set; }
 
@@ -118,53 +117,6 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint(TAG, "AMD GPU device count GOOD");
                 } else {
                     Helpers.ConsolePrint(TAG, "AMD GPU device count BAD!!!");
-                }
-            }
-            // #7 init ethminer ID mappings offset
-            if (OpenCLJSONData != null) {
-                // helper vars
-                Dictionary<ComputePlatformType, int> openCLGpuCount = new Dictionary<ComputePlatformType,int>();
-                Dictionary<ComputePlatformType, int> openCLPlatformIds = new Dictionary<ComputePlatformType,int>();
-                foreach (var oclPlatform in OpenCLJSONData.OCLPlatforms) {
-                    ComputePlatformType current = GetPlatformType(oclPlatform.Key);
-                    if(current != ComputePlatformType.NONE) {
-                        openCLPlatformIds[current] = oclPlatform.Value;
-                    } else {
-                        Helpers.ConsolePrint(TAG, "ethminer platforms mapping NONE");
-                    }
-                }
-                foreach (var oclDevs in OpenCLJSONData.OCLPlatformDevices) {
-                    ComputePlatformType current = GetPlatformType(oclDevs.Key);
-                    if (current != ComputePlatformType.NONE) {
-                        foreach (var oclDev in oclDevs.Value) {
-                            if (oclDev._CL_DEVICE_TYPE.Contains("GPU")) {
-                                if (openCLGpuCount.ContainsKey(current)) {
-                                    openCLGpuCount[current]++;
-                                } else {
-                                    openCLGpuCount[current] = 1;
-                                }
-                            }
-                        }
-                    } else {
-                        Helpers.ConsolePrint(TAG, "ethminer platforms mapping NONE");
-                    }
-                }
-                // sort platforms by platform values
-                Dictionary<int, ComputePlatformType> openCLPlatformIdsRev = new Dictionary<int,ComputePlatformType>();
-                List<int> platformIds = new List<int>();
-                foreach (var platId in openCLPlatformIds) {
-                    openCLPlatformIdsRev[platId.Value] = platId.Key;
-                    platformIds.Add(platId.Value);
-                }
-                platformIds.Sort();
-                // set mappings
-                int cumulativeCount = 0;
-                foreach (var curId in platformIds) {
-                    var key = openCLPlatformIdsRev[curId];
-                    if (openCLGpuCount.ContainsKey(key)) {
-                        _ethminerIdsOffet[key] = cumulativeCount;
-                        cumulativeCount += openCLGpuCount[key]; 
-                    }
                 }
             }
             // allerts
@@ -375,13 +327,16 @@ namespace NiceHashMiner.Devices
 
             // get platform version
             showMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
+            List<OpenCLDevice> amdOCLDevices = new List<OpenCLDevice>();
+            string AMDOpenCLPlatformStringKey = "";
             if (IsOpenCLQuerrySuccess) {
                 bool amdPlatformNumFound = false;
-                foreach (var kvp in OpenCLJSONData.OCLPlatforms) {
-                    if (kvp.Key.Contains("AMD") || kvp.Key.Contains("amd")) {
+                foreach (var oclEl in OpenCLJSONData) {
+                    if (oclEl.PlatformName.Contains("AMD") || oclEl.PlatformName.Contains("amd")) {
                         amdPlatformNumFound = true;
-                        AMDOpenCLPlatformStringKey = kvp.Key;
-                        AMDOpenCLPlatformNum = kvp.Value;
+                        AMDOpenCLPlatformStringKey = oclEl.PlatformName;
+                        AMDOpenCLPlatformNum = oclEl.PlatformNum;
+                        amdOCLDevices = oclEl.Devices;
                         Helpers.ConsolePrint(TAG, String.Format("AMD platform found: Key: {0}, Num: {1}",
                             AMDOpenCLPlatformStringKey,
                             AMDOpenCLPlatformNum.ToString()));
@@ -391,7 +346,6 @@ namespace NiceHashMiner.Devices
                 if (amdPlatformNumFound) {
                     // get only AMD gpus
                     {
-                        var amdOCLDevices = OpenCLJSONData.OCLPlatformDevices[AMDOpenCLPlatformStringKey];
                         foreach (var oclDev in amdOCLDevices) {
                             if (oclDev._CL_DEVICE_TYPE.Contains("GPU")) {
                                 amdGpus.Add(oclDev);
@@ -682,9 +636,9 @@ namespace NiceHashMiner.Devices
         private double GetNvidiaOpenCLDriver() {
             if (OpenCLJSONData != null) {
                 List<OpenCLDevice> nvidiaOCLs = null;
-                foreach (var oclPlatDevs in OpenCLJSONData.OCLPlatformDevices) {
-                    if (oclPlatDevs.Key.ToLower().Contains("nvidia")) {
-                        nvidiaOCLs = oclPlatDevs.Value;
+                foreach (var oclPlatDevs in OpenCLJSONData) {
+                    if (oclPlatDevs.PlatformName.ToLower().Contains("nvidia")) {
+                        nvidiaOCLs = oclPlatDevs.Devices;
                     }
                 }
 
@@ -701,12 +655,13 @@ namespace NiceHashMiner.Devices
             return -1;
         }
 
-        class OpenCLJSON {
-            public Dictionary<string, int> OCLPlatforms = new Dictionary<string,int>();
-            public Dictionary<string, List<OpenCLDevice>> OCLPlatformDevices = new Dictionary<string,List<OpenCLDevice>>();
+        class OpenCLJSONData_t {
+            public string PlatformName = "NONE";
+            public int PlatformNum = 0;
+            public List<OpenCLDevice> Devices = new List<OpenCLDevice>();
         }
         string QueryOpenCLDevicesString = "";
-        OpenCLJSON OpenCLJSONData = new OpenCLJSON();
+        List<OpenCLJSONData_t> OpenCLJSONData = new List<OpenCLJSONData_t>();
         bool IsOpenCLQuerrySuccess = false;
         private void QueryOpenCLDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
             if (e.Data != null) {
@@ -742,8 +697,10 @@ namespace NiceHashMiner.Devices
             } finally {
                 if (QueryOpenCLDevicesString != "") {
                     try {
-                        OpenCLJSONData = JsonConvert.DeserializeObject<OpenCLJSON>(QueryOpenCLDevicesString, Globals.JsonSettings);
-                    } catch { }
+                        OpenCLJSONData = JsonConvert.DeserializeObject<List<OpenCLJSONData_t>>(QueryOpenCLDevicesString, Globals.JsonSettings);
+                    } catch {
+                        OpenCLJSONData = null;
+                    }
                 }
             }
 
@@ -754,9 +711,9 @@ namespace NiceHashMiner.Devices
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine("");
                 stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
-                foreach (var kvp in OpenCLJSONData.OCLPlatformDevices) {
-                    stringBuilder.AppendLine(String.Format("\tFound devices for platform: {0}", kvp.Key));
-                    foreach (var oclDev in kvp.Value) {
+                foreach (var oclElem in OpenCLJSONData) {
+                    stringBuilder.AppendLine(String.Format("\tFound devices for platform: {0}", oclElem.PlatformName));
+                    foreach (var oclDev in oclElem.Devices) {
                         stringBuilder.AppendLine("\t\tDevice:");
                         stringBuilder.AppendLine(String.Format("\t\t\tDevice ID {0}", oclDev.DeviceID));
                         stringBuilder.AppendLine(String.Format("\t\t\tDevice NAME {0}", oclDev._CL_DEVICE_NAME));
