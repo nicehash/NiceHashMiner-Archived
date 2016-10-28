@@ -38,6 +38,7 @@ namespace NiceHashMiner
             { AlgorithmType.Decred , "decred" },
             { AlgorithmType.CryptoNight , "cryptonight" },
             { AlgorithmType.Lbry , "lbry" },
+            { AlgorithmType.Equihash , "equihash" },
         };
 
         static private List<AlgorithmType> _keys = null;

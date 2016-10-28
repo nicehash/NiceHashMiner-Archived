@@ -36,7 +36,8 @@ namespace NiceHashMiner.Enums
         DaggerHashimoto = 20,
         Decred = 21,
         CryptoNight = 22,
-        Lbry = 23
+        Lbry = 23,
+        Equihash = 24
         #endregion // NiceHashAPI
     }
 }

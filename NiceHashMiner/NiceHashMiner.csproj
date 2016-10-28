@@ -191,6 +191,7 @@
     <Compile Include="Miners\MinerPaths.cs" />
     <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager.cs" />
+    <Compile Include="Miners\nheqminer.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="BitcoinAddress.cs" />
     <Compile Include="Bitcoin.cs" />

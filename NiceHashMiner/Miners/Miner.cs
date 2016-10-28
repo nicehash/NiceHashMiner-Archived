@@ -270,7 +270,7 @@ namespace NiceHashMiner
             }
         }
 
-        protected void Stop_cpu_ccminer_sgminer(MinerStopType willswitch) {
+        protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch) {
             if (IsRunning) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }

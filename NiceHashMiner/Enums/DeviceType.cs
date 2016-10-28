@@ -8,6 +8,7 @@ namespace NiceHashMiner.Enums {
     public enum DeviceType {
         CPU,
         NVIDIA,
-        AMD
+        AMD,
+        ALL
     }
 }
