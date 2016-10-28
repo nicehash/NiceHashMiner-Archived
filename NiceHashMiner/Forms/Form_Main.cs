@@ -431,6 +431,10 @@ namespace NiceHashMiner
             string ApiGetExceptionString = isApiGetException ? "**" : "";
 
             string speedString = Helpers.FormatSpeedOutput(iAPIData.Speed) + iAPIData.AlgorithmName + ApiGetExceptionString;
+            if (iAPIData.AlgorithmID == AlgorithmType.Equihash) {
+                speedString = speedString.Replace("H/s", "Sols/s");
+            }
+            
             string rateBTCString = FormatPayingOutput(paying);
             string rateCurrencyString = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");

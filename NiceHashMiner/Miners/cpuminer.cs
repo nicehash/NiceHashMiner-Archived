@@ -9,24 +9,39 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Miners {
     public class cpuminer : Miner {
-        private int Threads;
-        private ulong AffinityMask;
-        private string CPUMinerPath;
+        //private int Threads;
+        //private ulong AffinityMask;
 
-        public cpuminer(int id, int threads, ulong affinity)
-            : base(DeviceType.CPU, "CPU" + id.ToString()) {
-            Threads = threads;
-            AffinityMask = affinity;
-
-            bool isInitialized = InitializeMinerPaths();
-            // if our CPU is supported add it to devices
-            // TODO if Miner and ComputeDevice decoupling redo this this is going to be at detecting CPUs
-            if (isInitialized) {
-                CDevs.Add(new ComputeDevice(0, MinerDeviceName, CPUID.GetCPUName().Trim(), Threads, true));
-            }
+        public cpuminer()
+            : base(DeviceType.CPU, "CPU") {
         }
 
-        private bool InitializeMinerPaths() {
+        public static CPUExtensionType GetMostOptimized() {
+            // this is the order we check and initialize if automatic
+            CPUExtensionType ret = CPUExtensionType.Automatic;
+            CPUExtensionType[] detectOrder = new CPUExtensionType[] { 
+                CPUExtensionType.AVX2_AES,
+                CPUExtensionType.AVX2,
+                CPUExtensionType.AVX_AES,
+                CPUExtensionType.AVX,
+                CPUExtensionType.AES,
+                CPUExtensionType.SSE2,
+            };
+
+            if (ConfigManager.Instance.GeneralConfig.ForceCPUExtension == CPUExtensionType.Automatic) {
+                for (int i = 0; i < detectOrder.Length; ++i) {
+                    if (HasExtensionSupport(detectOrder[i])) {
+                        return detectOrder[i];
+                    }
+                }
+            } else if (HasExtensionSupport(ConfigManager.Instance.GeneralConfig.ForceCPUExtension)) {
+                return ConfigManager.Instance.GeneralConfig.ForceCPUExtension;
+            }
+
+            return ret;
+        }
+
+        public static bool InitializeMinerPaths() {
             // this is the order we check and initialize if automatic
             CPUExtensionType[] detectOrder = new CPUExtensionType[] { 
                 CPUExtensionType.AVX2_AES,
@@ -38,22 +53,18 @@ namespace NiceHashMiner.Miners {
             };
 
             // #1 try to initialize with Configured extension
-            bool isInitialized = InitializeMinerPaths(ConfigManager.Instance.GeneralConfig.ForceCPUExtension);
+            bool isInitialized = "" != GetOptimizedMinerPath(ConfigManager.Instance.GeneralConfig.ForceCPUExtension);
             // #2 if automatic or does not support then initialize in order
             if (isInitialized == false) {
                 ConfigManager.Instance.GeneralConfig.ForceCPUExtension = CPUExtensionType.Automatic; // set to automatic if not supported
                 for (int i = 0; i < detectOrder.Length; ++i) {
-                    isInitialized = InitializeMinerPaths(detectOrder[i]);
+                    isInitialized = "" != GetOptimizedMinerPath(detectOrder[i]);
                     if (isInitialized) {
                         break; // stop if initialized
                     }
                 }
             }
             return isInitialized;
-        }
-
-        public override void SetCDevs(string[] deviceUUIDs) {
-            // DO NOTHING, CPU MINER DEVICES ARE SET ONLY AT THE BEGINING
         }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
@@ -71,39 +82,31 @@ namespace NiceHashMiner.Miners {
         /// </summary>
         /// <param name="type"></param>
         /// <returns>Returns False if CPUExtensionType.Automatic, otherwise True and initializes paths</returns>
-        private bool InitializeMinerPaths(CPUExtensionType type) {
-            bool isInitialized = false;
+        public static string GetOptimizedMinerPath(CPUExtensionType type) {
             // if type not automatic and has extension support set initialized
             if (HasExtensionSupport(type)) {
-                isInitialized = true;
                 switch (type) {
                     case CPUExtensionType.AVX2_AES:
-                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX2_AES;
-                        break;
+                        return MinerPaths.cpuminer_opt_AVX2_AES;
                     case CPUExtensionType.AVX2:
-                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX2;
-                        break;
+                        return MinerPaths.cpuminer_opt_AVX2;
                     case CPUExtensionType.AVX_AES:
-                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX_AES;
-                        break;
+                        return MinerPaths.cpuminer_opt_AVX_AES;
                     case CPUExtensionType.AVX:
-                        CPUMinerPath = MinerPaths.cpuminer_opt_AVX;
-                        break;
+                        return MinerPaths.cpuminer_opt_AVX;
                     case CPUExtensionType.AES:
-                        CPUMinerPath = MinerPaths.cpuminer_opt_AES;
-                        break;
+                        return MinerPaths.cpuminer_opt_AES;
                     case CPUExtensionType.SSE2:
-                        CPUMinerPath = MinerPaths.cpuminer_opt_SSE2;
-                        break;
+                        return MinerPaths.cpuminer_opt_SSE2;
                     default: // CPUExtensionType.Automatic
                         break;
                 }
             }
-            return isInitialized;
+            return "";
         }
 
         public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = false) {
-            return CPUMinerPath;
+            return GetOptimizedMinerPath(GetMostOptimized());
         }
 
         /// <summary>
@@ -111,7 +114,7 @@ namespace NiceHashMiner.Miners {
         /// </summary>
         /// <param name="type"></param>
         /// <returns>False if type Automatic otherwise True if supported</returns>
-        private bool HasExtensionSupport(CPUExtensionType type) {
+        public static bool HasExtensionSupport(CPUExtensionType type) {
             switch (type) {
                 case CPUExtensionType.AVX2_AES: return (CPUID.SupportsAVX2() == 1) && (CPUID.SupportsAES() == 1);
                 case CPUExtensionType.AVX2: return CPUID.SupportsAVX2() == 1;
@@ -161,8 +164,8 @@ namespace NiceHashMiner.Miners {
         protected override NiceHashProcess _Start() {
             NiceHashProcess P = base._Start();
 
-            if (AffinityMask != 0 && P != null)
-                CPUID.AdjustAffinity(P.Id, AffinityMask);
+            if (CDevs[0].AffinityMask != 0 && P != null)
+                CPUID.AdjustAffinity(P.Id, CDevs[0].AffinityMask);
 
             return P;
         }
@@ -192,8 +195,8 @@ namespace NiceHashMiner.Miners {
         protected override Process BenchmarkStartProcess(string CommandLine) {
             Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
 
-            if (AffinityMask != 0 && BenchmarkHandle != null)
-                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
+            if (CDevs[0].AffinityMask != 0 && BenchmarkHandle != null)
+                CPUID.AdjustAffinity(BenchmarkHandle.Id, CDevs[0].AffinityMask);
 
             return BenchmarkHandle;
         }

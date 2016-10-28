@@ -81,7 +81,7 @@ namespace NiceHashMiner.Miners {
                     }
                 }
                 // check if contains miner if not create one
-                if (!containsSupportedMiner && _deviceGroupType != DeviceGroupType.CPU) {
+                if (!containsSupportedMiner) {
                     startSwitchMiner = CreateMiner(_deviceGroupType, algorithmType);
                     startSwitchMiner.SetCDevs(_deviceUUIDs);
                     _miners.Add(startSwitchMiner);
@@ -114,12 +114,16 @@ namespace NiceHashMiner.Miners {
                 // Wait before new start
                 System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
 
-                m.Start(algorithm,
+                if (MaxProfitKey == AlgorithmType.Equihash) {
+                    m.Start(algorithm, miningLocation, worker);
+                } else {
+                    m.Start(algorithm,
                     "stratum+tcp://"
                     + Globals.NiceHashData[MaxProfitKey].name
                     + "." + miningLocation
                     + ".nicehash.com:"
                     + Globals.NiceHashData[MaxProfitKey].port, worker);
+                }
             }
 
         }

@@ -41,7 +41,7 @@ namespace NiceHashMiner
         // used to identify miner instance
         protected readonly long MINER_ID;
         private string _minetTag = null;
-        public string MinerDeviceName { get; private set; }
+        public string MinerDeviceName { get; set; }
         protected int APIPort { get; private set; }
         // if miner has no API bind port for reading curentlly only CryptoNight on ccminer
         public bool IsAPIReadException { get; protected set; }
@@ -349,6 +349,9 @@ namespace NiceHashMiner
             } else {
                 BenchmarkProcessPath = BenchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTAG(), "Using miner: " + BenchmarkHandle.StartInfo.FileName);
+                if (CurrentBenchmarkAlgorithmType == AlgorithmType.Equihash) {
+                    BenchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
+                }
             }
 
             BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;
@@ -630,7 +633,7 @@ namespace NiceHashMiner
                                     "User-Agent: NiceHashMiner/" + Application.ProductVersion + "\r\n" +
                                     "\r\n";
 
-                if (DeviceType == DeviceType.AMD /*MinerDeviceName.Equals("AMD_OpenCL")*/)
+                if (DeviceType == DeviceType.AMD || CurrentAlgorithmType == AlgorithmType.Equihash)
                     DataToSend = cmd;
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);

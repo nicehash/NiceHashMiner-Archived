@@ -15,7 +15,8 @@ namespace NiceHashMiner.Devices {
                 return new Dictionary<AlgorithmType, Algorithm>() {
                 { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
                 { AlgorithmType.Hodl, new Algorithm(AlgorithmType.Hodl, "hodl") },
-                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") }
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") },
+                { AlgorithmType.Equihash, new Algorithm(AlgorithmType.Equihash, "equihash") }
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
@@ -51,6 +52,7 @@ namespace NiceHashMiner.Devices {
                     { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") 
                     { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
+                { AlgorithmType.Equihash, new Algorithm(AlgorithmType.Equihash, "equihash") }
                 };
             }
             // NVIDIA
@@ -73,6 +75,7 @@ namespace NiceHashMiner.Devices {
                 { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred") },
                 { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") },
                 { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") },
+                { AlgorithmType.Equihash, new Algorithm(AlgorithmType.Equihash, "equihash") }
                 };
                 if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
                     // minerName change => "whirlpoolx" => "whirlpool"

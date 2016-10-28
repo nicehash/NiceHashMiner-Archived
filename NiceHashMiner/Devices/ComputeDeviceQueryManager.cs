@@ -260,16 +260,18 @@ namespace NiceHashMiner.Devices
             // TODO important move this to settings
             int ThreadsPerCPUMask = ThreadsPerCPU;
             Globals.ThreadsPerCPU = ThreadsPerCPU;
-            
-            if (CPUs == 1) {
-                MinersManager.Instance.AddCpuMiner(new cpuminer(0, ThreadsPerCPU, 0), 0, CPUID.GetCPUName().Trim());
-            }
-            else {
-                for (int i = 0; i < CPUs; i++) {
-                    MinersManager.Instance.AddCpuMiner(new cpuminer(i, ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask)),
-                        i, CPUID.GetCPUName().Trim());
+
+            if (cpuminer.InitializeMinerPaths()) {
+                if (CPUs == 1) {
+                    new ComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), ThreadsPerCPU, (ulong)0, true);
+                    //MinersManager.Instance.AddCpuMiner(new cpuminer(0, ThreadsPerCPU, 0), 0, CPUID.GetCPUName().Trim());
+                } else {
+                    for (int i = 0; i < CPUs; i++) {
+                        new ComputeDevice(0, "CPU"+i, CPUID.GetCPUName().Trim(), ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask), true);
+                    }
                 }
             }
+
             Helpers.ConsolePrint(TAG, "QueryCPUs END");
         }
 

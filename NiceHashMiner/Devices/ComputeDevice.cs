@@ -45,6 +45,9 @@ namespace NiceHashMiner.Devices
         [JsonIgnore]
         readonly public int Threads;
 
+        [JsonIgnore]
+        readonly public ulong AffinityMask;
+
         // CPU, NVIDIA, AMD
         [JsonIgnore]
         public DeviceType DeviceType { get; private set; }
@@ -117,12 +120,13 @@ namespace NiceHashMiner.Devices
         }
 
         // CPU 
-        public ComputeDevice(int id, string group, string name, int threads, bool addToGlobalList = false, bool enabled = true)
+        public ComputeDevice(int id, string group, string name, int threads, ulong affinityMask, bool addToGlobalList = false, bool enabled = true)
         {
             ID = id;
             Group = group;
             Name = name;
             Threads = threads;
+            AffinityMask = affinityMask;
             _nameNoNums = name;
             Enabled = enabled;
             DeviceGroupType = GroupNames.GetType(Group);

@@ -181,7 +181,6 @@
     <Compile Include="MemoryHelper.cs" />
     <Compile Include="Miners\ccminer_sm6x.cs" />
     <Compile Include="Miners\ExtraLaunchParametersParser.cs" />
-    <Compile Include="Miners\ManagerPrivate\CpuGroupMiner.cs" />
     <Compile Include="Miners\ManagerPrivate\GroupMiners.cs" />
     <Compile Include="Miners\ManagerPrivate\SwitchTesting.cs" />
     <Compile Include="Miners\MinerEtherum.cs" />

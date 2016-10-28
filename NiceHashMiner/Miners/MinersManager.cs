@@ -73,10 +73,7 @@ namespace NiceHashMiner.Miners {
         private Timer _preventSleepTimer;
         // check internet connection 
         private Timer _internetCheckTimer;
-
-        // we save cpu miners string group name
-        Dictionary<string, cpuminer> _cpuMiners = new Dictionary<string, cpuminer>();
-
+        
         private bool IsProfitable = true;
         private bool IsConnectedToInternet = true;
 
@@ -115,10 +112,6 @@ namespace NiceHashMiner.Miners {
         private void PreventSleepTimer_Tick(object sender, ElapsedEventArgs e) {
             // when mining keep system awake, prevent sleep
             Helpers.PreventSleep();
-        }
-
-        public void AddCpuMiner(cpuminer miner, int deviceID, string deviceName) {
-            _cpuMiners.Add(miner.MinerDeviceName, miner);
         }
 
         public void StopAllMiners() {
@@ -171,15 +164,11 @@ namespace NiceHashMiner.Miners {
             return ActiveMinersGroup;
         }
 
-        public static Miner GetCpuMiner(string groupName) {
-            if (Instance._cpuMiners.Count > 0) {
-                return Instance._cpuMiners[groupName];
-            }
-            return null;
-        }
         // create miner creates new miners, except cpuminer, those are saves and called from GetCpuMiner()
         public static Miner CreateMiner(DeviceGroupType deviceGroupType, AlgorithmType algorithmType) {
-            if (AlgorithmType.DaggerHashimoto == algorithmType) {
+            if (AlgorithmType.Equihash == algorithmType) {
+                return new nheqminer();
+            } else if (AlgorithmType.DaggerHashimoto == algorithmType) {
                 if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
                     return new MinerEtherumOCL();
                 } else {
@@ -197,6 +186,8 @@ namespace NiceHashMiner.Miners {
                         return new ccminer_sm5x();
                     case DeviceGroupType.NVIDIA_6_x:
                         return new ccminer_sm6x();
+                    case DeviceGroupType.CPU:
+                        return new cpuminer();
                 }
             }
             
@@ -250,14 +241,6 @@ namespace NiceHashMiner.Miners {
             foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
                 if (cdev.Enabled) {
                     _enabledDevices.Add(cdev);
-                    // check if in CPU group and add the saved CPU miners
-                    if (cdev.DeviceGroupType == DeviceGroupType.CPU) {
-                        GroupedDevices gdevs = new GroupedDevices();
-                        gdevs.Add(cdev.UUID);
-                        cpuminer miner = _cpuMiners[cdev.Group];
-                        CpuGroupMiner cpuGroupMiner = new CpuGroupMiner(gdevs, miner);
-                        _groupedDevicesMiners.Add(CalcGroupedDevicesKey(gdevs), cpuGroupMiner);
-                    }
                     // check if any algorithm enabled
                     if(!isMiningEnabled) {
                         foreach (var algorithm in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
@@ -267,7 +250,6 @@ namespace NiceHashMiner.Miners {
                             }
                         }
                     }
-
                 }
             }
 
@@ -432,6 +414,18 @@ namespace NiceHashMiner.Miners {
             return false;
         }
 
+        private bool IsEquihashAndOneCPU(ComputeDevice a, ComputeDevice b) {
+            return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.Equihash
+                && a.MostProfitableAlgorithm.NiceHashID == b.MostProfitableAlgorithm.NiceHashID
+                && ComputeDeviceQueryManager.Instance.CPUs == 1;
+        }
+
+        private bool IsEquihashAndOneNOTCPU(ComputeDevice a, ComputeDevice b) {
+            return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.Equihash
+                && a.MostProfitableAlgorithm.NiceHashID == b.MostProfitableAlgorithm.NiceHashID
+                && a.DeviceType != DeviceType.CPU && b.DeviceType != DeviceType.CPU;
+        }
+
         // checks if dagger algo, same settings and if compute platform is same
         private bool IsDaggerAndSameComputePlatform(ComputeDevice a, ComputeDevice b) {
             return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto
@@ -570,7 +564,9 @@ namespace NiceHashMiner.Miners {
                     // first check if second device has profitable algorithm
                     if (secondDev.MostProfitableAlgorithm != null) {
                         // check if we should group
-                        if (IsDaggerAndSameComputePlatform(firstDev, secondDev)
+                        if (IsEquihashAndOneCPU(firstDev, secondDev) // if one CPU group them all
+                            || IsEquihashAndOneNOTCPU(firstDev, secondDev)
+                            || IsDaggerAndSameComputePlatform(firstDev, secondDev)
                             || IsGroupBinaryAndAlgorithmSame(firstDev, secondDev)) {
                             newGroup.Add(secondDev.UUID);
                         }

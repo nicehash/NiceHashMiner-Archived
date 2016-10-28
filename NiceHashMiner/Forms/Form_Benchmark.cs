@@ -403,8 +403,8 @@ namespace NiceHashMiner.Forms {
             }
 
             var currentConfig = _currentDevice.DeviceBenchmarkConfig;
-            if (_currentDevice.DeviceGroupType == DeviceGroupType.CPU) {
-                _currentMiner = MinersManager.GetCpuMiner(_currentDevice.Group);
+            if (_currentDevice.DeviceGroupType == DeviceGroupType.CPU && (_currentAlgorithm != null && _currentAlgorithm.NiceHashID != AlgorithmType.Equihash)) {
+                _currentMiner = MinersManager.CreateMiner(DeviceGroupType.CPU, AlgorithmType.NONE);
                 if (_currentAlgorithm != null && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
                     __CPUBenchmarkStatus = new CPUBenchmarkStatus();
                     _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
