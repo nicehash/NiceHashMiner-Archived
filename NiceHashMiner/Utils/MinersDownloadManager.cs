@@ -22,12 +22,9 @@ namespace NiceHashMiner.Utils {
         private WebClient _webClient;
         private Stopwatch _stopwatch;
 
-        const string d_01 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin.zip";
-        const string d_v1_7_0_4 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_0_4.zip";
-        const string d_v1_7_1_3 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_1_3.zip";
-        const string d_v1_7_1_4 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_1_4.zip";
         const string d_v1_7_2_0 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_2_0.zip";
-        public string BinsDownloadURL = d_v1_7_2_0;
+        const string d_v1_7_3_0 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_0.zip";
+        public string BinsDownloadURL = d_v1_7_3_0;
         public string BinsZipLocation = "bins.zip";
 
         private class DownloadData {
