@@ -3,6 +3,8 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -15,6 +17,9 @@ namespace NiceHashMiner.Miners {
         List<ComputeDevice> CPUs = new List<ComputeDevice>();
         List<ComputeDevice> NVIDIAs = new List<ComputeDevice>();
         List<ComputeDevice> AMDs = new List<ComputeDevice>();
+
+        // extra benchmark stuff
+        double curSpeed = 0;
 
         private class Result {
             public double interval_seconds { get; set; }
@@ -60,6 +65,7 @@ namespace NiceHashMiner.Miners {
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // TODO nvidia extras
+            CurrentMiningAlgorithm = algorithm;
             String ret = "-b " + GetDevicesCommandString();
             return ret;
         }
@@ -68,7 +74,7 @@ namespace NiceHashMiner.Miners {
             string deviceStringCommand = " ";
 
             if (CPUs.Count > 0) {
-                deviceStringCommand += " -t " + CPUs[0].Threads;
+                deviceStringCommand += " -t " + (CPUs[0].Threads - CPUs[0].MostProfitableAlgorithm.LessThreads);
             } else {
                 // disable CPU
                 deviceStringCommand += " -t 0 ";
@@ -98,6 +104,7 @@ namespace NiceHashMiner.Miners {
             APIData ad = new APIData();
             ad.AlgorithmID = AlgorithmType.Equihash;
             ad.AlgorithmName = "equihash";
+            ad.Speed = 0;
 
             TcpClient client = null;
             JsonApiResponse resp = null;
@@ -110,10 +117,9 @@ namespace NiceHashMiner.Miners {
                 int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
                 string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                 resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
+                client.Close();
             } catch(Exception ex) {
                 Helpers.ConsolePrint("ERROR", ex.Message);
-            } finally {
-                client.Close();
             }
 
             if (resp != null && resp.error == null) {
@@ -133,7 +139,7 @@ namespace NiceHashMiner.Miners {
                 CPUID.AdjustAffinity(P.Id, CPUs[0].AffinityMask);
 
             return P;
-        }        
+        }
 
         // DONE
         protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
@@ -147,7 +153,7 @@ namespace NiceHashMiner.Miners {
             return false;
         }
         protected override void InitSupportedMinerAlgorithms() {
-            _supportedMinerAlgorithms = new AlgorithmType[] { AlgorithmType.DaggerHashimoto };
+            _supportedMinerAlgorithms = new AlgorithmType[] { AlgorithmType.Equihash };
         }
 
         protected override void _Stop(MinerStopType willswitch) {
@@ -158,20 +164,34 @@ namespace NiceHashMiner.Miners {
             return 60 * 1000; // 1 minute max, whole waiting time 75seconds
         }
 
+        private double getNumber(string outdata, string startF, string remF) {
+            try {
+                int speedStart = outdata.IndexOf(startF);
+                String speed = outdata.Substring(speedStart, outdata.Length - speedStart);
+                speed = speed.Replace(startF, "");
+                speed = speed.Replace(remF, "");
+                speed = speed.Trim();
+                return Double.Parse(speed, CultureInfo.InvariantCulture);
+            } catch {
+            }
+            return 0;
+        }
+
         // benchmark stuff
         static private readonly String Iter_PER_SEC = "I/s";
-        //static private readonly String Sols_PER_SEC = "Sols/s";
+        static private readonly String Sols_PER_SEC = "Sols/s";
         private const double SolMultFactor = 1.9;
         protected override bool BenchmarkParseLine(string outdata) {
 
             if (outdata.Contains(Iter_PER_SEC)) {
-                int speedStart = outdata.IndexOf("Speed: ");
-                String speed = outdata.Substring(speedStart, outdata.Length - speedStart);
-                speed = speed.Replace("Speed:", "");
-                speed = speed.Replace(Iter_PER_SEC, "");
-                speed = speed.Trim();
-                BenchmarkAlgorithm.BenchmarkSpeed = Double.Parse(speed) * SolMultFactor;
-                return true;
+                curSpeed = getNumber(outdata, "Speed: ", Iter_PER_SEC) * SolMultFactor;
+            }
+            if (outdata.Contains(Sols_PER_SEC)) {
+                var sols = getNumber(outdata, "Speed: ", Sols_PER_SEC);
+                if (sols > 0) {
+                    BenchmarkAlgorithm.BenchmarkSpeed = curSpeed;
+                    return true;
+                }
             }
             return false;
         }

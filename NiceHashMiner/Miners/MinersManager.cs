@@ -21,6 +21,7 @@ namespace NiceHashMiner.Miners {
     using GroupedDevices = SortedSet<string>;
     using AllGroupedDevices = List<SortedSet<string>>;
     using NiceHashMiner.Interfaces;
+    using System.IO;
     
     
 
@@ -129,6 +130,19 @@ namespace NiceHashMiner.Miners {
             _preventSleepTimer.Stop();
             _internetCheckTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
+
+            // delete generated bin files
+            // check for bins files
+            var dirInfo = new DirectoryInfo(MinerPaths.nheqminer.Replace("nheqminer.exe", ""));
+            var DONT_DELETE = "equiw200k9.bin";
+            var deleteContains = "equiw200k9";
+            if (dirInfo != null && dirInfo.Exists) {
+                foreach (FileInfo file in dirInfo.GetFiles()) {
+                    if (file.Name != DONT_DELETE && file.Name.Contains(deleteContains)) {
+                        file.Delete();
+                    }
+                }
+            }
         }
 
         public void StopAllMinersNonProfitable() {
