@@ -431,7 +431,7 @@ namespace NiceHashMiner.Miners {
         private bool IsEquihashAndOneCPU(ComputeDevice a, ComputeDevice b) {
             return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.Equihash
                 && a.MostProfitableAlgorithm.NiceHashID == b.MostProfitableAlgorithm.NiceHashID
-                && ComputeDeviceQueryManager.Instance.CPUs == 1;
+                && ComputeDeviceQueryManager.Instance.CPUs <= 1;
         }
 
         private bool IsEquihashAndOneNOTCPU(ComputeDevice a, ComputeDevice b) {
