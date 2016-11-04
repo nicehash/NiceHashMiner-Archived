@@ -45,6 +45,6 @@ namespace NiceHashMiner.Miners
         /// <summary>
         /// nheqminer
         /// </summary>
-        public const string nheqminer = _bin + @"\nheqminer_v0.3a\nheqminer.exe";
+        public const string nheqminer = _bin + @"\nheqminer_v0.4a\nheqminer.exe";
     }
 }

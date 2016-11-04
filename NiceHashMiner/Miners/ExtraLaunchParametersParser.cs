@@ -66,6 +66,7 @@ namespace NiceHashMiner.Miners {
             new MinerOption(MinerOptionType.CpuAffinity, "", "--cpu-affinity", "-1"), // default none
             new MinerOption(MinerOptionType.CpuPriority, "", "--cpu-priority", "-1"), // default none
         };
+        // nheqminer
 
         private static bool _showLog = true;
 

@@ -115,7 +115,12 @@ namespace NiceHashMiner.Miners {
                 System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
 
                 if (MaxProfitKey == AlgorithmType.Equihash) {
-                    m.Start(algorithm, miningLocation, worker);
+                    //m.Start(algorithm, miningLocation, worker);
+                    m.Start(algorithm,
+                    Globals.NiceHashData[MaxProfitKey].name
+                    + "." + miningLocation
+                    + ".nicehash.com:"
+                    + Globals.NiceHashData[MaxProfitKey].port, worker);
                 } else {
                     m.Start(algorithm,
                     "stratum+tcp://"
