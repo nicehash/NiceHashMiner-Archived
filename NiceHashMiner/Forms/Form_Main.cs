@@ -238,7 +238,7 @@ namespace NiceHashMiner
 
             SMACheck = new SystemTimer();
             SMACheck.Elapsed += SMACheck_Tick;
-            SMACheck.Interval = 60 * 1000; // every 60 seconds
+            SMACheck.Interval = 60 * 1000 * 5; // every 5 minutes
             SMACheck.Start();
 
             // increase timeout
