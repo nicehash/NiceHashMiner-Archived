@@ -161,7 +161,7 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
-            return 60 * 1000; // 1 minute max, whole waiting time 75seconds
+            return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
         }
 
         private double getNumber(string outdata, string startF, string remF) {
