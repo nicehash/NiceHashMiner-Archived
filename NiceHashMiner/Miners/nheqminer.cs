@@ -74,7 +74,7 @@ namespace NiceHashMiner.Miners {
             string deviceStringCommand = " ";
 
             if (CPUs.Count > 0) {
-                if (CPUs[0].MostProfitableAlgorithm.LessThreads > 0 || string.IsNullOrEmpty(CPUs[0].MostProfitableAlgorithm.ExtraLaunchParameters)) {
+                if (CPUs[0].MostProfitableAlgorithm.LessThreads > 0 || !string.IsNullOrEmpty(CPUs[0].MostProfitableAlgorithm.ExtraLaunchParameters)) {
                     // TODO parse
                     deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(CPUs, AlgorithmType.Equihash, DeviceType.CPU);
                 }
