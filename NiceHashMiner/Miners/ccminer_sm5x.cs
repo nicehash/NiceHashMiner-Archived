@@ -19,6 +19,7 @@ namespace NiceHashMiner.Miners
         protected override void InitSupportedMinerAlgorithms() {
             var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.NVIDIA_5_x);
             allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);
+            allGroupSupportedList.Remove(AlgorithmType.Equihash);
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
         }
 
