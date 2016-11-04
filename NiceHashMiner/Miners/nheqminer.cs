@@ -74,7 +74,10 @@ namespace NiceHashMiner.Miners {
             string deviceStringCommand = " ";
 
             if (CPUs.Count > 0) {
-                deviceStringCommand += " -t " + (CPUs[0].Threads - CPUs[0].MostProfitableAlgorithm.LessThreads);
+                if (CPUs[0].MostProfitableAlgorithm.LessThreads == 0 && string.IsNullOrEmpty(CPUs[0].MostProfitableAlgorithm.ExtraLaunchParameters)) {
+                    // TODO parse
+                    deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(CPUs, AlgorithmType.Equihash, DeviceType.CPU);
+                }
             } else {
                 // disable CPU
                 deviceStringCommand += " -t 0 ";
@@ -85,6 +88,9 @@ namespace NiceHashMiner.Miners {
                 foreach (var nvidia in NVIDIAs) {
                     deviceStringCommand += nvidia.ID + " ";
                 }
+                // use always -cv 1
+                deviceStringCommand += " -cv 1";
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(NVIDIAs, AlgorithmType.Equihash, DeviceType.NVIDIA);
             }
 
             if (AMDs.Count > 0) {
@@ -93,6 +99,7 @@ namespace NiceHashMiner.Miners {
                 foreach (var amd in AMDs) {
                     deviceStringCommand += amd.ID + " ";
                 }
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(AMDs, AlgorithmType.Equihash, DeviceType.AMD);
             }
 
             return deviceStringCommand;

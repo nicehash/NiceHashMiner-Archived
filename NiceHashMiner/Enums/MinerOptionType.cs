@@ -44,10 +44,11 @@ namespace NiceHashMiner.Enums {
         CpuPriority,
         // nheqminer
         // nheqminer CUDA
-        CUDA_Solver_Version,
-
+        CUDA_Solver_Version, // -cb
+        CUDA_Solver_Block, // -cb
+        CUDA_Solver_Thread, // -ct
         // nheqminer OpenCL
-        OpenCL_Solver_Version,
-        //OpenCL_
+        OpenCL_Solver_Version, //-ov
+        OpenCL_Solver_Dev_Thread // -ot
     }
 }

@@ -66,7 +66,23 @@ namespace NiceHashMiner.Miners {
             new MinerOption(MinerOptionType.CpuAffinity, "", "--cpu-affinity", "-1"), // default none
             new MinerOption(MinerOptionType.CpuPriority, "", "--cpu-priority", "-1"), // default none
         };
-        // nheqminer
+        // nheqminer 
+        private static List<MinerOption> _nheqminer_CPU_Options = new List<MinerOption>() {
+            // temperature stuff
+            new MinerOption(MinerOptionType.Threads, "-t", "-t", "-1"), // default none
+        };
+        private static List<MinerOption> _nheqminer_CUDA_Options = new List<MinerOption>() {
+            // temperature stuff
+            // use always -cv 1
+            //new MinerOption(MinerOptionType.CUDA_Solver_Version, "-cv", "-cv", "0", MinerOptionFlagType.SingleParam), // default 0
+            new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0"), // default 0
+            new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0"), // default 0
+        };
+        private static List<MinerOption> _nheqminer_AMD_Options = new List<MinerOption>() {
+            // temperature stuff
+            new MinerOption(MinerOptionType.OpenCL_Solver_Version, "-ov", "-ov", "0", MinerOptionFlagType.SingleParam), // default none
+            new MinerOption(MinerOptionType.OpenCL_Solver_Dev_Thread, "-ot", "-ot", "1"), // default none
+        };
 
         private static bool _showLog = true;
 
@@ -233,6 +249,20 @@ namespace NiceHashMiner.Miners {
             foreach (var cDev in CDevs) {
                 cDev.CurrentExtraLaunchParameters = cDev.MostProfitableAlgorithm.ExtraLaunchParameters;
             }
+
+            // parse for nheqminer
+            if (algorithmType == AlgorithmType.Equihash) {
+                if(deviceType == DeviceType.CPU) {
+                    return Parse(CDevs, _nheqminer_CPU_Options);
+                }
+                if (deviceType == DeviceType.NVIDIA) {
+                    return Parse(CDevs, _nheqminer_CUDA_Options);
+                }
+                if (deviceType == DeviceType.AMD) {
+                    return Parse(CDevs, _nheqminer_AMD_Options);
+                }
+            } 
+
             // parse for device
             if (deviceType == DeviceType.NVIDIA) {
                 if (algorithmType != AlgorithmType.DaggerHashimoto && algorithmType != AlgorithmType.CryptoNight) {
