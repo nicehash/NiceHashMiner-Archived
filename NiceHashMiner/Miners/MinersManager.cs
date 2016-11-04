@@ -136,9 +136,13 @@ namespace NiceHashMiner.Miners {
             var dirInfo = new DirectoryInfo(MinerPaths.nheqminer.Replace("nheqminer.exe", ""));
             var DONT_DELETE = "equiw200k9.bin";
             var deleteContains = "equiw200k9";
+            var alwaysDeleteContains2 = "silentarmy_gpu";
             if (dirInfo != null && dirInfo.Exists) {
                 foreach (FileInfo file in dirInfo.GetFiles()) {
                     if (file.Name != DONT_DELETE && file.Name.Contains(deleteContains)) {
+                        file.Delete();
+                    }
+                    if (file.Name.Contains(alwaysDeleteContains2)) {
                         file.Delete();
                     }
                 }
