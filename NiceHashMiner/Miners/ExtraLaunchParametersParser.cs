@@ -69,19 +69,19 @@ namespace NiceHashMiner.Miners {
         // nheqminer 
         private static List<MinerOption> _nheqminer_CPU_Options = new List<MinerOption>() {
             // temperature stuff
-            new MinerOption(MinerOptionType.Threads, "-t", "-t", "-1"), // default none
+            new MinerOption(MinerOptionType.Threads, "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " "), // default none
         };
         private static List<MinerOption> _nheqminer_CUDA_Options = new List<MinerOption>() {
             // temperature stuff
             // use always -cv 1
             //new MinerOption(MinerOptionType.CUDA_Solver_Version, "-cv", "-cv", "0", MinerOptionFlagType.SingleParam), // default 0
-            new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0"), // default 0
-            new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0"), // default 0
+            new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
+            new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
         };
         private static List<MinerOption> _nheqminer_AMD_Options = new List<MinerOption>() {
             // temperature stuff
-            new MinerOption(MinerOptionType.OpenCL_Solver_Version, "-ov", "-ov", "0", MinerOptionFlagType.SingleParam), // default none
-            new MinerOption(MinerOptionType.OpenCL_Solver_Dev_Thread, "-ot", "-ot", "1"), // default none
+            new MinerOption(MinerOptionType.OpenCL_Solver_Version, "-ov", "-ov", "0", MinerOptionFlagType.SingleParam, " "), // default none
+            new MinerOption(MinerOptionType.OpenCL_Solver_Dev_Thread, "-ot", "-ot", "1", MinerOptionFlagType.MultiParam, " "), // default none
         };
 
         private static bool _showLog = true;
@@ -253,6 +253,14 @@ namespace NiceHashMiner.Miners {
             // parse for nheqminer
             if (algorithmType == AlgorithmType.Equihash) {
                 if(deviceType == DeviceType.CPU) {
+                    foreach (var cDev in CDevs) {
+                        // extra thread check
+                        if (cDev.CurrentExtraLaunchParameters.Contains("-t")) {
+                            // nothing
+                        } else { // add threads params mandatory
+                            cDev.CurrentExtraLaunchParameters += " -t " + GetThreads(cDev.Threads, cDev.MostProfitableAlgorithm.LessThreads).ToString();
+                        }
+                    }
                     return Parse(CDevs, _nheqminer_CPU_Options);
                 }
                 if (deviceType == DeviceType.NVIDIA) {
