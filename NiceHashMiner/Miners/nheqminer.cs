@@ -88,8 +88,8 @@ namespace NiceHashMiner.Miners {
                 foreach (var nvidia in NVIDIAs) {
                     deviceStringCommand += nvidia.ID + " ";
                 }
-                // use always -cv 1
-                deviceStringCommand += " -cv 1";
+                // use always -cv 0
+                deviceStringCommand += " -cv 0";
                 deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(NVIDIAs, AlgorithmType.Equihash, DeviceType.NVIDIA);
             }
 
