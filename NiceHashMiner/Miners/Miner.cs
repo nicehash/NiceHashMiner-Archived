@@ -157,7 +157,7 @@ namespace NiceHashMiner
 
         virtual public void SetCDevs(string[] deviceUUIDs) {
             foreach (var uuid in deviceUUIDs) {
-                CDevs.Add(ComputeDevice.GetDeviceWithUUID(uuid));
+                CDevs.Add(ComputeDeviceManager.Avaliable.GetDeviceWithUUID(uuid));
             }
             // sort devices by id
             CDevs.Sort((a, b) =>  a.ID - b.ID);

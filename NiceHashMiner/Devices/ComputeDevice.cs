@@ -11,9 +11,6 @@ namespace NiceHashMiner.Devices
     [Serializable]
     public class ComputeDevice
     {
-        //[JsonIgnore]
-        //readonly public int PlatformId;
-        
         [JsonIgnore]
         readonly public int ID;
         [JsonIgnore]
@@ -79,14 +76,6 @@ namespace NiceHashMiner.Devices
         [field: NonSerialized]
         public NiceHashMiner.Forms.Components.DevicesListViewEnableControl.ComputeDeviceEnabledOption ComputeDeviceEnabledOption { get; set; }
 
-        // used for ewverythinf
-        readonly public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
-        // used for numbering
-        readonly public static List<ComputeDevice> UniqueAvaliableDevices = new List<ComputeDevice>();
-
-        private static int CPUCount = 0;
-        private static int GPUCount = 0;
-
         [JsonConstructor]
         public ComputeDevice(int id, string group, string name, string uuid, bool enabled = true) {
             ID = id;
@@ -97,28 +86,8 @@ namespace NiceHashMiner.Devices
             Enabled = enabled;
         }
 
-        private void InitGlobalsList(bool addToGlobalList) {
-            if (addToGlobalList) {
-                // add to all devices
-                AllAvaliableDevices.Add(this);
-                // compare new device with unique list scope
-                {
-                    bool isNewUnique = true;
-                    foreach (var d in UniqueAvaliableDevices) {
-                        if (this.Name == d.Name) {
-                            isNewUnique = false;
-                            break;
-                        }
-                    }
-                    if (isNewUnique) {
-                        UniqueAvaliableDevices.Add(this);
-                    }
-                }
-            }
-        }
-
         // CPU 
-        public ComputeDevice(int id, string group, string name, int threads, ulong affinityMask, bool addToGlobalList = false, bool enabled = true)
+        public ComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int CPUCount)
         {
             ID = id;
             Group = group;
@@ -126,34 +95,32 @@ namespace NiceHashMiner.Devices
             Threads = threads;
             AffinityMask = affinityMask;
             _nameNoNums = name;
-            Enabled = enabled;
+            Enabled = true;
             DeviceGroupType = GroupNames.GetType(Group);
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             DeviceType = DeviceType.CPU;
-            InitGlobalsList(addToGlobalList);
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_CPU"), ++CPUCount);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_CPU"), CPUCount);
             UUID = GetUUID(ID, Group, Name, DeviceGroupType);
         }
 
         // GPU NVIDIA
-        public ComputeDevice(CudaDevice cudaDevice, string group, bool addToGlobalList = false, bool enabled = true) {
+        public ComputeDevice(CudaDevice cudaDevice, string group, int GPUCount) {
             _cudaDevice = cudaDevice;
             ID = (int)cudaDevice.DeviceID;
             Group = group;
             Name = cudaDevice.GetName();
             _nameNoNums = cudaDevice.GetName();
-            Enabled = enabled;
+            Enabled = true;
             DeviceGroupType = GroupNames.GetType(Group);
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
             DeviceType = DeviceType.NVIDIA;
-            InitGlobalsList(addToGlobalList);
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), ++GPUCount);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), GPUCount);
             UUID = cudaDevice.UUID;
         }
 
         // GPU AMD
-        public ComputeDevice(AmdGpuDevice amdDevice, bool addToGlobalList = false, bool enabled = true) {
+        public ComputeDevice(AmdGpuDevice amdDevice, int GPUCount) {
             _amdDevice = amdDevice;
             ID = amdDevice.DeviceID;
             DeviceGroupType = DeviceGroupType.AMD_OpenCL;
@@ -161,11 +128,10 @@ namespace NiceHashMiner.Devices
             DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             Name = amdDevice.DeviceName;
             _nameNoNums = amdDevice.DeviceName;
-            Enabled = enabled;
+            Enabled = true;
             IsEtherumCapale = amdDevice.IsEtherumCapable();
             DeviceType = DeviceType.AMD;
-            InitGlobalsList(addToGlobalList);
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), ++GPUCount);
+            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), GPUCount);
             UUID = amdDevice.UUID;
             // sgminer extra
             IsOptimizedVersion = amdDevice.UseOptimizedVersion;
@@ -226,21 +192,7 @@ namespace NiceHashMiner.Devices
         }
 
         // static methods
-        public static ComputeDevice GetDeviceWithUUID(string uuid) {
-            foreach (var dev in AllAvaliableDevices) {
-                if (uuid == dev.UUID) return dev;
-            }
-            return null;
-        }
-
-        public static int GetEnabledDeviceNameCount(string name) {
-            int count = 0;
-            foreach (var dev in AllAvaliableDevices) {
-                if (dev.Enabled && name == dev.Name) ++count;
-            }
-            return count;
-        }
-
+        
         private static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
             var SHA256 = new SHA256Managed();
             var hash = new StringBuilder();
@@ -251,36 +203,6 @@ namespace NiceHashMiner.Devices
             }
             // GEN indicates the UUID has been generated and cannot be presumed to be immutable
             return "GEN-" + hash.ToString();
-        }
-
-        public static string GetNameForUUID(string uuid) {
-            foreach (var dev in AllAvaliableDevices) {
-                if (uuid == dev.UUID) {
-                    return dev.Name;
-                }
-            }
-            return International.GetText("ComputeDevice_Get_With_UUID_NONE");
-        }
-
-        public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUUID(string uuid) {
-            List<ComputeDevice> sameTypes = new List<ComputeDevice>();
-            var compareDev = GetDeviceWithUUID(uuid);
-            foreach (var dev in AllAvaliableDevices) {
-                if (uuid != dev.UUID && compareDev.DeviceType == dev.DeviceType) {
-                    sameTypes.Add(GetDeviceWithUUID(dev.UUID));
-                }
-            }
-            return sameTypes;
-        }
-
-        public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique) {
-            //// TODO index checking
-            //if (unique) {
-            //    return ComputeDevice.UniqueAvaliableDevices[index];
-            //} else {
-            //    return ComputeDevice.AllAvaliableDevices[index];
-            //}
-            return ComputeDevice.AllAvaliableDevices[index];
         }
     }
 }

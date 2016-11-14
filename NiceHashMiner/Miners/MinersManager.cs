@@ -145,7 +145,7 @@ namespace NiceHashMiner.Miners {
 
             //get unique miner groups like CPU, NVIDIA, AMD,...
             HashSet<string> UniqueMinerGroups = new HashSet<string>();
-            foreach (var curDevice in ComputeDevice.AllAvaliableDevices) {
+            foreach (var curDevice in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (curDevice.Enabled) {
                     UniqueMinerGroups.Add(curDevice.DeviceGroupString);
                 }
@@ -231,7 +231,7 @@ namespace NiceHashMiner.Miners {
             // this checks if there are enabled devices and enabled algorithms
             bool isMiningEnabled = false;
 
-            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.Enabled) {
                     _enabledDevices.Add(cdev);
                     // check if any algorithm enabled
@@ -265,7 +265,7 @@ namespace NiceHashMiner.Miners {
             PerDeviceSpeedDictionary perDeviceTypeBenchmarks = new PerDeviceSpeedDictionary();
 
             // init algorithms count 0
-            foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (curCDev.Enabled) {
                     Dictionary<AlgorithmType, double> cumulativeSpeeds = new Dictionary<AlgorithmType, double>();
                     var deviceConfig = curCDev.DeviceBenchmarkConfig;
@@ -277,7 +277,7 @@ namespace NiceHashMiner.Miners {
                 }
             }
             // set enabled algorithm count per device counts
-            foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (curCDev.Enabled) {
                     Dictionary<AlgorithmType, double> cumulativeSpeeds = perDeviceTypeBenchmarks[curCDev.UUID];
                     var deviceConfig = curCDev.DeviceBenchmarkConfig;
@@ -296,7 +296,7 @@ namespace NiceHashMiner.Miners {
                 }
             }
             // calculate benchmarks
-            foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (curCDev.Enabled) {
                     Dictionary<AlgorithmType, double> cumulativeSpeeds = perDeviceTypeBenchmarks[curCDev.UUID];
                     var deviceConfig = curCDev.DeviceBenchmarkConfig;
@@ -330,7 +330,7 @@ namespace NiceHashMiner.Miners {
                 var deviceUUID = nameBenchKvp.Key;
                 var curDevProfits = new Dictionary<AlgorithmType, double>();
                 StringBuilder stringBuilderDevice = new StringBuilder();
-                stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", deviceUUID, ComputeDevice.GetNameForUUID(deviceUUID)));
+                stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", deviceUUID, ComputeDeviceManager.Avaliable.GetNameForUUID(deviceUUID)));
                 AlgorithmType mostProfitKey = AlgorithmType.NONE;
                 double mostProfitAlgoVal = -1;
                 foreach (var algoSpeedKvp in nameBenchKvp.Value) {
@@ -407,7 +407,7 @@ namespace NiceHashMiner.Miners {
         private bool IsEquihashAndOneCPU(ComputeDevice a, ComputeDevice b) {
             return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.Equihash
                 && a.MostProfitableAlgorithm.NiceHashID == b.MostProfitableAlgorithm.NiceHashID
-                && ComputeDeviceQueryManager.Instance.CPUs <= 1;
+                && ComputeDeviceManager.Avaliable.CPUsCount <= 1;
         }
 
         private bool IsEquihashAndOneNOTCPU(ComputeDevice a, ComputeDevice b) {

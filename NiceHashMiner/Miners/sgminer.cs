@@ -33,7 +33,7 @@ namespace NiceHashMiner.Miners
         {            
             Path = MinerPaths.sgminer_5_5_0_general;
             EnableOptimizedVersion = true;
-            GPUPlatformNumber = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
+            GPUPlatformNumber = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
         }
 
         // use ONLY for exiting a benchmark

@@ -27,7 +27,7 @@ namespace NiceHashMiner.Miners {
                 _miners = new List<Miner>();
                 _deviceNames = new SortedSet<string>();
                 foreach (var uuid in deviceUUIDSet) {
-                    var tmpCdev = ComputeDevice.GetDeviceWithUUID(uuid);
+                    var tmpCdev = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(uuid);
                     _deviceNames.Add(tmpCdev.NameCount);
                     if (_deviceGroupType == DeviceGroupType.NONE) {
                         _deviceGroupType = tmpCdev.DeviceGroupType;
@@ -41,7 +41,7 @@ namespace NiceHashMiner.Miners {
                     int i = 0;
                     foreach (var devName in _deviceNames) {
                         _deviceNamesCount[i++] =
-                            ComputeDevice.GetEnabledDeviceNameCount(devName).ToString()
+                            ComputeDeviceManager.Avaliable.GetEnabledDeviceNameCount(devName).ToString()
                             + " * " + devName;
                     }
                 }

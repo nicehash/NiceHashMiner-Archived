@@ -22,40 +22,9 @@ namespace NiceHashMiner.Utils {
         private WebClient _webClient;
         private Stopwatch _stopwatch;
 
-        ////const string d_v1_7_2_0 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_2_0.zip";
-        //const string d_v1_7_3_0 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_0.zip";
-        //const string d_v1_7_3_1 = d_v1_7_3_0;
         const string d_v1_7_3_3 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_3.zip";
         public string BinsDownloadURL = d_v1_7_3_3;
         public string BinsZipLocation = "bins.zip";
-
-        private class DownloadData {
-            public string url { get; set; }
-            public string zipLocation { get; set; }
-            public bool shouldDownload { get; set; }
-        }
-        // shared
-        DownloadData dl_shared = new DownloadData() {
-            url = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_cpu_shared.zip",
-            zipLocation = "bins_shared.zip"
-        };
-        // nvidia
-        DownloadData dl_nvidia = new DownloadData() {
-            url = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_nvidia.zip",
-            zipLocation = "bins_nvidia.zip"
-        };
-        // amd
-        DownloadData dl_amd = new DownloadData() {
-            url = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_amd.zip",
-            zipLocation = "bins_amd.zip"
-        };
-        // all
-        DownloadData dl_all = new DownloadData() {
-            url = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_all.zip",
-            zipLocation = "bins_all.zip"
-        };
-
-        List<DownloadData> _downloadsData;
 
         bool isDownloadSizeInit = false;
 
@@ -63,16 +32,6 @@ namespace NiceHashMiner.Utils {
 
         protected MinersDownloadManager() {
             TAG = this.GetType().Name;
-        }
-
-        public void InitDownloadPaths() {
-            _downloadsData = new List<DownloadData>();
-            dl_shared.shouldDownload = !IsMinersBins_SHARED_Init();
-            dl_nvidia.shouldDownload = !IsMinersBins_NVIDIA_Init() && ComputeDeviceQueryManager.Instance.HasNVIDIA;
-            dl_amd.shouldDownload = !IsMinersBins_AMD_Init() && ComputeDeviceQueryManager.Instance.HasAMD;
-            _downloadsData.Add(dl_shared);
-            _downloadsData.Add(dl_nvidia);
-            _downloadsData.Add(dl_amd);
         }
 
         public void Start(IMinerUpdateIndicator minerUpdateIndicator) {
@@ -254,15 +213,6 @@ namespace NiceHashMiner.Utils {
         }
 
         public bool IsMinersBinsInit() {
-            // in the future or 2.0
-            //bool isOk = IsMinersBins_SHARED_Init();
-            //if (isOk && ComputeDeviceQueryManager.Instance.HasNVIDIA) {
-            //    isOk = IsMinersBins_NVIDIA_Init();
-            //}
-            //if (isOk && ComputeDeviceQueryManager.Instance.HasAMD) {
-            //    isOk = IsMinersBins_AMD_Init();
-            //}
-
             //return isOk;
             return IsMinersBins_ALL_Init();
         }

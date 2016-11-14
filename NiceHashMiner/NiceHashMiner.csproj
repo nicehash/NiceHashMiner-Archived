@@ -88,7 +88,7 @@
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\AmdGpuDevice.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
-    <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
+    <Compile Include="Devices\ComputeDeviceManager.cs" />
     <Compile Include="Devices\CPUUtils.cs" />
     <Compile Include="Devices\CudaDevice.cs" />
     <Compile Include="Devices\GroupAlgorithms.cs" />
@@ -177,7 +177,6 @@
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="Interfaces\IPathsProperties.cs" />
     <Compile Include="International.cs" />
-    <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
     <Compile Include="Links.cs" />
     <Compile Include="MemoryHelper.cs" />
     <Compile Include="Miners\ccminer\ccminer_sm6x.cs" />

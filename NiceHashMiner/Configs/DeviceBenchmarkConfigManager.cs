@@ -50,7 +50,7 @@ namespace NiceHashMiner.Configs {
             bool isEnabledBenchmarksInitialized = true;
             // first get all enabled devices names
             HashSet<string> enabledDevicesNames = new HashSet<string>();
-            foreach (var device in ComputeDevice.AllAvaliableDevices) {
+            foreach (var device in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (device.Enabled) {
                     enabledDevicesNames.Add(device.UUID);
                 }

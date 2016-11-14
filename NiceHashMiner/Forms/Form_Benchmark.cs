@@ -108,7 +108,7 @@ namespace NiceHashMiner.Forms {
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
             //devicesListViewEnableControl1.SetAllEnabled = true;
             //devicesListViewEnableControl1.SaveToGeneralConfig = true;
-            devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
+            devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
 
             // use this to track miner benchmark statuses
             _benchmarkMiners = new List<Miner>();
@@ -152,8 +152,8 @@ namespace NiceHashMiner.Forms {
 
 
             // set first device selected {
-            if (ComputeDevice.AllAvaliableDevices.Count > 0) {
-                var firstComputedevice = ComputeDevice.AllAvaliableDevices[0];
+            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {
+                var firstComputedevice = ComputeDeviceManager.Avaliable.AllAvaliableDevices[0];
                 algorithmsListView1.SetAlgorithms(firstComputedevice, firstComputedevice.ComputeDeviceEnabledOption.IsEnabled);
             }
 
@@ -168,7 +168,7 @@ namespace NiceHashMiner.Forms {
             foreach (var GdevSetting in devicesListViewEnableControl1.Options) {
                 // check if copy
                 if (!GdevSetting.IsEnabled && GdevSetting.CDevice.BenchmarkCopyUUID != null) {
-                    var copyCdevSettings = ComputeDevice.GetDeviceWithUUID(GdevSetting.CDevice.BenchmarkCopyUUID);
+                    var copyCdevSettings = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(GdevSetting.CDevice.BenchmarkCopyUUID);
                     if (copyCdevSettings != null) {
                         Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", GdevSetting.CDevice.UUID, GdevSetting.CDevice.BenchmarkCopyUUID));
                         GdevSetting.CDevice.CopyBenchmarkSettingsFrom(copyCdevSettings);
@@ -564,7 +564,7 @@ namespace NiceHashMiner.Forms {
             }
 
             // disable all pending benchmark
-            foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
                     algorithm.ClearBenchmarkPending();
                 }
@@ -573,7 +573,7 @@ namespace NiceHashMiner.Forms {
             // save already benchmarked algorithms
             ConfigManager.Instance.CommitBenchmarks();
             // check devices without benchmarks
-            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.ComputeDeviceEnabledOption.IsEnabled) {
                     bool Enabled = false;
                     foreach (var algo in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
@@ -592,7 +592,7 @@ namespace NiceHashMiner.Forms {
 
             //algorithmSettingsControl1.Deselect();
             // show algorithms
-            var _selectedComputeDevice = ComputeDevice.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
+            var _selectedComputeDevice = ComputeDeviceManager.Avaliable.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
         }
 

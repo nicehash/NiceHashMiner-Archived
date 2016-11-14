@@ -39,7 +39,7 @@ namespace NiceHashMiner.Miners {
             : base(DeviceType.ALL, DeviceGroupType.NONE, "nheqminer") {
                 Path = MinerPaths.nheqminer;
                 WorkingDirectory = MinerPaths.nheqminer.Replace("nheqminer.exe", "");
-                AMD_OCL_PLATFORM = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
+                AMD_OCL_PLATFORM = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
         }
 
         public override void Start(Algorithm miningAlgorithm, string url, string username) {

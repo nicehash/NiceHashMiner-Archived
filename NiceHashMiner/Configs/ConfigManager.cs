@@ -74,7 +74,7 @@ namespace NiceHashMiner.Configs {
         }
 
         private void LoadBenchmarks() {
-            foreach (var CDev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 // doubly check if not added
                 if (BenchmarkConfigs.ContainsKey(CDev.UUID)) {
                     Helpers.ConsolePrint(TAG, "BUG - LoadBenchmarks() already added for {0}", CDev.UUID);
@@ -97,7 +97,7 @@ namespace NiceHashMiner.Configs {
             // check ethminers and remove from settings if no device supports it in config
             foreach (var config in BenchmarkConfigs) {
                 bool removeDagger = true;
-                var cDev = ComputeDevice.GetDeviceWithUUID(config.Value.DeviceUUID);
+                var cDev = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(config.Value.DeviceUUID);
                 if (cDev != null) {
                     // if only one dev ing roup supports terminate
                     if (cDev.IsEtherumCapale) {
@@ -120,7 +120,7 @@ namespace NiceHashMiner.Configs {
             DeviceBenchmarkConfigManager.Instance.BenchmarkConfigs = BenchmarkConfigs;
             BenchmarkConfigs = DeviceBenchmarkConfigManager.Instance.BenchmarkConfigs;
             // set Benchmarks for devices
-            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 cdev.SetDeviceBenchmarkConfig(DeviceBenchmarkConfigManager.Instance.GetConfig(cdev.DeviceGroupType, cdev.UUID, cdev.Name));
             }
         }

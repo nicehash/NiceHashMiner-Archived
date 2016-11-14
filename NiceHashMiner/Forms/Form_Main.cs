@@ -132,7 +132,7 @@ namespace NiceHashMiner
             toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager.Instance.GeneralConfig.DisplayCurrency + ")";
 
             if (_isDeviceDetectionInitialized) {
-                devicesListViewEnableControl1.ResetComputeDevices(ComputeDevice.AllAvaliableDevices);
+                devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
             }
         }
 
@@ -201,7 +201,7 @@ namespace NiceHashMiner
             }
 
             // Query Avaliable ComputeDevices
-            ComputeDeviceQueryManager.Instance.QueryDevices(LoadingScreen);
+            ComputeDeviceManager.Query.QueryDevices(LoadingScreen);
             _isDeviceDetectionInitialized = true;
 
             /////////////////////////////////////////////
@@ -210,7 +210,7 @@ namespace NiceHashMiner
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
             
             // All devices settup should be initialized in AllDevices
-            devicesListViewEnableControl1.ResetComputeDevices(ComputeDevice.AllAvaliableDevices);
+            devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
             // set properties after
             devicesListViewEnableControl1.AutoSaveChange = true;
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
@@ -224,7 +224,7 @@ namespace NiceHashMiner
             SMAMinerCheck = new Timer();
             SMAMinerCheck.Tick += SMAMinerCheck_Tick;
             SMAMinerCheck.Interval = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            if (ComputeDeviceGroupManager.ContainsAMD_GPUs) {
+            if (ComputeDeviceManager.Group.ContainsAMD_GPUs) {
                 SMAMinerCheck.Interval = (ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
@@ -366,7 +366,7 @@ namespace NiceHashMiner
         private void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
             SMAMinerCheck.Interval = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            if (ComputeDeviceGroupManager.ContainsAMD_GPUs) {
+            if (ComputeDeviceManager.Group.ContainsAMD_GPUs) {
                 SMAMinerCheck.Interval = (ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
@@ -384,7 +384,7 @@ namespace NiceHashMiner
         private void InitFlowPanelStart() {
             flowLayoutPanelRates.Controls.Clear();
             // add for every cdev a 
-            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if(cdev.Enabled) {
                     var newGroupProfitControl = new GroupProfitControl();
                     newGroupProfitControl.Visible = false;
@@ -723,7 +723,7 @@ namespace NiceHashMiner
                 if (result == System.Windows.Forms.DialogResult.Yes) {
                     List<ComputeDevice> enabledDevices = new List<ComputeDevice>();
                     HashSet<string> deviceNames = new HashSet<string>();
-                    foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+                    foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                         if (cdev.Enabled && !deviceNames.Contains(cdev.Name)) {
                             deviceNames.Add(cdev.Name);
                             enabledDevices.Add(cdev);
@@ -738,7 +738,7 @@ namespace NiceHashMiner
                     InitMainConfigGUIData();
                 } else if (result == System.Windows.Forms.DialogResult.No) {
                     // check devices without benchmarks
-                    foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+                    foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                         bool Enabled = false;
                         foreach (var algo in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
                             if (algo.Value.BenchmarkSpeed > 0) {
@@ -756,7 +756,7 @@ namespace NiceHashMiner
             // check if any device enabled
             // check devices without benchmarks
             bool noDeviceEnabled = true;
-            foreach (var cdev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.ComputeDeviceEnabledOption.IsEnabled) {
                     noDeviceEnabled = false;
                     break;

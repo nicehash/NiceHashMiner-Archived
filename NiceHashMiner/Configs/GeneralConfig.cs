@@ -263,7 +263,7 @@ namespace NiceHashMiner.Configs {
 
             if (_file != null && _file.LastDevicesSettup != null) {
                 foreach (var configDevice in _file.LastDevicesSettup) {
-                    foreach (var usedDevice in ComputeDevice.AllAvaliableDevices) {
+                    foreach (var usedDevice in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                         if (configDevice.UUID == usedDevice.UUID) {
                             usedDevice.Enabled = configDevice.Enabled;
                             continue;
@@ -272,7 +272,7 @@ namespace NiceHashMiner.Configs {
                 }
             }
 
-            LastDevicesSettup = ComputeDevice.AllAvaliableDevices;
+            LastDevicesSettup = ComputeDeviceManager.Avaliable.AllAvaliableDevices;
         }
     }
 }

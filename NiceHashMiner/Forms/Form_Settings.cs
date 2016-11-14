@@ -67,8 +67,8 @@ namespace NiceHashMiner.Forms {
 
 
             // set first device selected {
-            if (ComputeDevice.AllAvaliableDevices.Count > 0) {
-                _selectedComputeDevice = ComputeDevice.AllAvaliableDevices[0];
+            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {
+                _selectedComputeDevice = ComputeDeviceManager.Avaliable.AllAvaliableDevices[0];
                 algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
                 groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
             }
@@ -414,7 +414,7 @@ namespace NiceHashMiner.Forms {
                 benchmarkLimitControlAMD.TimeLimits = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits.AMD;
 
                 // here we want all devices
-                devicesListViewEnableControl1.SetComputeDevices(ComputeDevice.AllAvaliableDevices);
+                devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
                 devicesListViewEnableControl1.AutoSaveChange = false;
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
                 devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
@@ -528,7 +528,7 @@ namespace NiceHashMiner.Forms {
             // indicate there has been a change
             IsChange = true;
             ConfigManager.Instance.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
-            foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 var thisListDev = new List<ComputeDevice>() { cDev };
                 if (cDev.DeviceType == DeviceType.AMD) {
                     foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings) {
@@ -551,7 +551,7 @@ namespace NiceHashMiner.Forms {
             IsChange = true;
             ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
             if (ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations) {
-                foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                     var thisListDev = new List<ComputeDevice>() { cDev };
                     foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings) {
                         algorithm.Value.ExtraLaunchParameters = "";
@@ -565,7 +565,7 @@ namespace NiceHashMiner.Forms {
                     }
                 }
             } else {
-                foreach (var cDev in ComputeDevice.AllAvaliableDevices) {
+                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                     if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults 
                     var thisListDev = new List<ComputeDevice>() { cDev };
                     var deviceDefaults = GroupAlgorithms.CreateDefaultsForGroup(cDev.DeviceGroupType);
@@ -656,7 +656,7 @@ namespace NiceHashMiner.Forms {
 
             algorithmSettingsControl1.Deselect();
             // show algorithms
-            _selectedComputeDevice = ComputeDevice.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
+            _selectedComputeDevice = ComputeDeviceManager.Avaliable.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
             groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
         }
@@ -682,7 +682,7 @@ namespace NiceHashMiner.Forms {
             var url = Links.NHM_Profit_Check + "CUSTOM";
             Dictionary<AlgorithmType, double> total = new Dictionary<AlgorithmType,double>();
 
-            foreach (var curCDev in ComputeDevice.AllAvaliableDevices) {
+            foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 foreach (var algorithm in curCDev.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
                     if (total.ContainsKey(algorithm.NiceHashID)) {
                         total[algorithm.NiceHashID] += algorithm.BenchmarkSpeed;
@@ -783,7 +783,7 @@ namespace NiceHashMiner.Forms {
 
         private void tabControlGeneral_Selected(object sender, TabControlEventArgs e) {
             // set first device selected {
-            if (ComputeDevice.AllAvaliableDevices.Count > 0) {
+            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {
                 algorithmSettingsControl1.Deselect();
                 //_selectedComputeDevice = ComputeDevice.AllAvaliableDevices[0];
                 //algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);

@@ -206,7 +206,7 @@ namespace NiceHashMiner.Forms.Components {
                     //    contextMenuStrip1.Items.Add(disableItem);
                     //}
                     if (IsSettingsCopyEnabled) {
-                        var sameDevTypes = ComputeDevice.GetSameDevicesTypeAsDeviceWithUUID(G.CDevice.UUID);
+                        var sameDevTypes = ComputeDeviceManager.Avaliable.GetSameDevicesTypeAsDeviceWithUUID(G.CDevice.UUID);
                         if (sameDevTypes.Count > 0) {
                             var copyBenchItem = new ToolStripMenuItem();
                             //copyBenchItem.DropDownItems
@@ -251,7 +251,7 @@ namespace NiceHashMiner.Forms.Components {
             if(item != null) {
                 var uuid = item.Tag as string;
                 if (uuid != null) {
-                    var copyBenchCDev = ComputeDevice.GetDeviceWithUUID(uuid);
+                    var copyBenchCDev = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(uuid);
                     G.CDevice.BenchmarkCopyUUID = uuid;
 
                     var result = MessageBox.Show(
