@@ -49,6 +49,11 @@ namespace NiceHashMiner.Miners
         /// </summary>
         public const string nheqminer = _bin + @"\nheqminer_v0.4b\nheqminer.exe";
 
+        /// <summary>
+        /// eqm
+        /// </summary>
+        public const string eqm = _bin + @"\eqm\eqm.exe";
+
         public const string NONE = "";
 
 

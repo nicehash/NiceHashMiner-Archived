@@ -35,14 +35,14 @@ namespace NiceHashMiner.Miners {
 
         string _workerBtcStringWorker;
 
-        // ccminers intensity checking
-        public readonly Dictionary<string, Tuple<double, double>> CCMinersIntensitiesBoundries = new Dictionary<string, Tuple<double, double>>() {
-            { MinerPaths.ccminer_decred,     Tuple.Create(8.0, 25.0) },
-            { MinerPaths.ccminer_nanashi,    Tuple.Create(8.0, 25.0) },
-            { MinerPaths.ccminer_tpruvot,    Tuple.Create(8.0, 25.0) },
-            { MinerPaths.ccminer_neoscrypt,  Tuple.Create(8.0, 31.0) },
-            { MinerPaths.ccminer_sp,         Tuple.Create(8.0, 31.0) },
-        };
+        //// ccminers intensity checking
+        //public readonly Dictionary<string, Tuple<double, double>> CCMinersIntensitiesBoundries = new Dictionary<string, Tuple<double, double>>() {
+        //    { MinerPaths.ccminer_decred,     Tuple.Create(8.0, 25.0) },
+        //    { MinerPaths.ccminer_nanashi,    Tuple.Create(8.0, 25.0) },
+        //    { MinerPaths.ccminer_tpruvot,    Tuple.Create(8.0, 25.0) },
+        //    { MinerPaths.ccminer_neoscrypt,  Tuple.Create(8.0, 31.0) },
+        //    { MinerPaths.ccminer_sp,         Tuple.Create(8.0, 31.0) },
+        //};
 
         // GroupDevices hash code doesn't work correctly use string instead
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;

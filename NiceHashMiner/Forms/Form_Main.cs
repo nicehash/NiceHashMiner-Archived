@@ -224,7 +224,7 @@ namespace NiceHashMiner
             SMAMinerCheck = new Timer();
             SMAMinerCheck.Tick += SMAMinerCheck_Tick;
             SMAMinerCheck.Interval = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            if (ComputeDeviceGroupManager.Instance.GetGroupCount(DeviceGroupType.AMD_OpenCL) > 0) {
+            if (ComputeDeviceGroupManager.ContainsAMD_GPUs) {
                 SMAMinerCheck.Interval = (ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
@@ -366,7 +366,7 @@ namespace NiceHashMiner
         private void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
             SMAMinerCheck.Interval = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            if (ComputeDeviceGroupManager.Instance.GetGroupCount(DeviceGroupType.AMD_OpenCL) > 0) {
+            if (ComputeDeviceGroupManager.ContainsAMD_GPUs) {
                 SMAMinerCheck.Interval = (ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 

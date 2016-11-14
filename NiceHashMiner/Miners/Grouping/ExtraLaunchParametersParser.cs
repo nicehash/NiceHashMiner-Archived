@@ -14,57 +14,57 @@ namespace NiceHashMiner.Miners {
         // Order of miner options tpyes is important make sure to implement it corectly
         // ccminer
         private static List<MinerOption> _ccimerOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Intensity, "-i", "--intensity=", "0")
+            new MinerOption(MinerOptionType.Intensity, "-i", "--intensity=", "0", MinerOptionFlagType.MultiParam, ",")
         };
         // ccminer CryptoNight
         private static List<MinerOption> _ccimerCryptoNightOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Ccminer_CryptoNightLaunch, "-l", "--launch=", "8x40"), // default is 8x40
-            new MinerOption(MinerOptionType.Ccminer_CryptoNightBfactor, "", "--bfactor=", "0"),
-            new MinerOption(MinerOptionType.Ccminer_CryptoNightBsleep, "", "--bsleep=", "0") // TODO check default
+            new MinerOption(MinerOptionType.Ccminer_CryptoNightLaunch, "-l", "--launch=", "8x40", MinerOptionFlagType.MultiParam, ","), // default is 8x40
+            new MinerOption(MinerOptionType.Ccminer_CryptoNightBfactor, "", "--bfactor=", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.Ccminer_CryptoNightBsleep, "", "--bsleep=", "0", MinerOptionFlagType.MultiParam, ",") // TODO check default
         };
         // OCL ethminer
         private static List<MinerOption> _oclEthminerOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Ethminer_OCL_LocalWork, "", "--cl-local-work", "0"),
-            new MinerOption(MinerOptionType.Ethminer_OCL_GlobalWork, "", "--cl-global-work", "0"),
+            new MinerOption(MinerOptionType.Ethminer_OCL_LocalWork, "", "--cl-local-work", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.Ethminer_OCL_GlobalWork, "", "--cl-global-work", "0", MinerOptionFlagType.MultiParam, ","),
         };
 
         // CUDA ethminer
         private static List<MinerOption> _cudaEthminerOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.CudaBlockSize, "", "--cuda-block-size", "0"),
-            new MinerOption(MinerOptionType.CudaGridSize, "", "--cuda-grid-size", "0"),
+            new MinerOption(MinerOptionType.CudaBlockSize, "", "--cuda-block-size", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.CudaGridSize, "", "--cuda-grid-size", "0", MinerOptionFlagType.MultiParam, ","),
         };
 
         // sgminer
         private static List<MinerOption> _sgminerOptions = new List<MinerOption>() {
             // SingleParam
-            new MinerOption(MinerOptionType.KeccakUnroll, "", "--keccak-unroll", "0", MinerOptionFlagType.SingleParam),
-            new MinerOption(MinerOptionType.HamsiExpandBig, "", "--hamsi-expand-big", "4", MinerOptionFlagType.SingleParam),
-            new MinerOption(MinerOptionType.Nfactor, "", "--nfactor", "10", MinerOptionFlagType.SingleParam),
+            new MinerOption(MinerOptionType.KeccakUnroll, "", "--keccak-unroll", "0", MinerOptionFlagType.SingleParam, ""),
+            new MinerOption(MinerOptionType.HamsiExpandBig, "", "--hamsi-expand-big", "4", MinerOptionFlagType.SingleParam, ""),
+            new MinerOption(MinerOptionType.Nfactor, "", "--nfactor", "10", MinerOptionFlagType.SingleParam, ""),
             // MultiParam TODO IMPORTANT check defaults
-            new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "d"), // default is "d" check if -1 works
-            new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1"), // default none
-            new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1"), // default none
-            new MinerOption(MinerOptionType.ThreadConcurrency, "", "--thread-concurrency", "-1"), // default none
-            new MinerOption(MinerOptionType.Worksize, "-w", "--worksize", "-1"), // default none
-            new MinerOption(MinerOptionType.GpuThreads, "-g", "--gpu-threads", "1"),
-            new MinerOption(MinerOptionType.LookupGap, "", "--lookup-gap", "-1"), // default none
+            new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "d", MinerOptionFlagType.MultiParam, ","), // default is "d" check if -1 works
+            new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+            new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+            new MinerOption(MinerOptionType.ThreadConcurrency, "", "--thread-concurrency", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+            new MinerOption(MinerOptionType.Worksize, "-w", "--worksize", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+            new MinerOption(MinerOptionType.GpuThreads, "-g", "--gpu-threads", "1", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.LookupGap, "", "--lookup-gap", "-1", MinerOptionFlagType.MultiParam, ","), // default none
             // Uni
         };
         private static List<MinerOption> _sgminerTemperatureOptions = new List<MinerOption>() {
             // temperature stuff
-            new MinerOption(MinerOptionType.GpuFan, "", "--gpu-fan", "30-60"), // default none
-            new MinerOption(MinerOptionType.TempCutoff, "", "--temp-cutoff", "95"),
-            new MinerOption(MinerOptionType.TempOverheat, "", "--temp-overheat", "85"),
-            new MinerOption(MinerOptionType.TempTarget, "", "--temp-target", "75"),
-            new MinerOption(MinerOptionType.AutoFan, "", "--auto-fan", null, MinerOptionFlagType.Uni),
-            new MinerOption(MinerOptionType.AutoGpu, "", "--auto-gpu", null, MinerOptionFlagType.Uni)
+            new MinerOption(MinerOptionType.GpuFan, "", "--gpu-fan", "30-60", MinerOptionFlagType.MultiParam, ","), // default none
+            new MinerOption(MinerOptionType.TempCutoff, "", "--temp-cutoff", "95", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.TempOverheat, "", "--temp-overheat", "85", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.TempTarget, "", "--temp-target", "75", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.AutoFan, "", "--auto-fan", null, MinerOptionFlagType.Uni, ""),
+            new MinerOption(MinerOptionType.AutoGpu, "", "--auto-gpu", null, MinerOptionFlagType.Uni, "")
         };
 
         private static List<MinerOption> _cpuminerOptions = new List<MinerOption>() {
             // temperature stuff
-            new MinerOption(MinerOptionType.Threads, "-t", "--threads=", "-1"), // default none
-            new MinerOption(MinerOptionType.CpuAffinity, "", "--cpu-affinity", "-1"), // default none
-            new MinerOption(MinerOptionType.CpuPriority, "", "--cpu-priority", "-1"), // default none
+            new MinerOption(MinerOptionType.Threads, "-t", "--threads=", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+            new MinerOption(MinerOptionType.CpuAffinity, "", "--cpu-affinity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+            new MinerOption(MinerOptionType.CpuPriority, "", "--cpu-priority", "-1", MinerOptionFlagType.MultiParam, ","), // default none
         };
         // nheqminer 
         private static List<MinerOption> _nheqminer_CPU_Options = new List<MinerOption>() {
@@ -74,7 +74,7 @@ namespace NiceHashMiner.Miners {
         private static List<MinerOption> _nheqminer_CUDA_Options = new List<MinerOption>() {
             // temperature stuff
             // use always -cv 1
-            //new MinerOption(MinerOptionType.CUDA_Solver_Version, "-cv", "-cv", "0", MinerOptionFlagType.SingleParam), // default 0
+            new MinerOption(MinerOptionType.CUDA_Solver_Version, "-cv", "-cv", "0", MinerOptionFlagType.SingleParam, " "), // default 0
             new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
             new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
         };
@@ -302,9 +302,9 @@ namespace NiceHashMiner.Miners {
                 if (algorithmType != AlgorithmType.DaggerHashimoto) {
                     // rawIntensity overrides xintensity, xintensity overrides intensity
                     var sgminer_intensities = new List<MinerOption>() {
-                        new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "d"), // default is "d" check if -1 works
-                        new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1"), // default none
-                        new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1"), // default none
+                        new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "d", MinerOptionFlagType.MultiParam, ","), // default is "d" check if -1 works
+                        new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+                        new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
                     };
                     var contains_intensity = new Dictionary<MinerOptionType, bool>() {
                         { MinerOptionType.Intensity, false },

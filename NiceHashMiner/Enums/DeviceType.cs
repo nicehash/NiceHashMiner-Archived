@@ -9,6 +9,8 @@ namespace NiceHashMiner.Enums {
         CPU,
         NVIDIA,
         AMD,
-        ALL
+        // combined types used for miner identification only
+        ALL,
+        NVIDIA_CPU
     }
 }

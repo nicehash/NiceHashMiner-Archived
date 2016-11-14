@@ -114,8 +114,6 @@ namespace NiceHashMiner.Devices
                         UniqueAvaliableDevices.Add(this);
                     }
                 }
-                // add to group manager
-                ComputeDeviceGroupManager.Instance.AddDevice(this);
             }
         }
 

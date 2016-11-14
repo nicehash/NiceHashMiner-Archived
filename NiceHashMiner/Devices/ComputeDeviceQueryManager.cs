@@ -509,8 +509,7 @@ namespace NiceHashMiner.Devices
 
         private void UncheckedCPU() {
             // Auto uncheck CPU if any GPU is found
-            var cdgm = ComputeDeviceGroupManager.Instance;
-            if (cdgm.ContainsGPUs) cdgm.DisableCpuGroup();
+            if (ComputeDeviceGroupManager.ContainsGPUs) ComputeDeviceGroupManager.DisableCpuGroup();
         }
 
         #region NEW IMPLEMENTATION

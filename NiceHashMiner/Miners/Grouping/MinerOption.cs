@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
     public class MinerOption {
-        public MinerOption(MinerOptionType iType, string iShortName, string iLongName, string iDefault, MinerOptionFlagType iFlagType = MinerOptionFlagType.MultiParam, string iSeparator = ",") {
+        public MinerOption(MinerOptionType iType, string iShortName, string iLongName, string iDefault, MinerOptionFlagType iFlagType, string iSeparator) {
             this.Type = iType;
             this.ShortName = iShortName;
             this.LongName = iLongName;

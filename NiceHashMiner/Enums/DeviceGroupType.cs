@@ -12,7 +12,6 @@ namespace NiceHashMiner.Enums
         NVIDIA_2_1,
         NVIDIA_3_x,
         NVIDIA_5_x,
-        NVIDIA_6_x,
-        LAST
+        NVIDIA_6_x
     }
 }
