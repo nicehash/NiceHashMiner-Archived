@@ -66,10 +66,11 @@ namespace NiceHashMiner.Miners
             }
             // AlgorithmType.Equihash special shared case
             if (algorithmType == AlgorithmType.Equihash) {
-                // TODO two different miners SM5.0+ and AVX+
-                //if (deviceType == DeviceType.ALL) {
-                //}
-                return MinerPaths.nheqminer;
+                if (deviceType == DeviceType.NVIDIA_CPU || deviceGroupType == DeviceGroupType.NVIDIA_5_x || deviceGroupType == DeviceGroupType.NVIDIA_6_x) {
+                    return MinerPaths.eqm;
+                } else {
+                    return MinerPaths.nheqminer;
+                }
             }
             // normal stuff
             // CPU

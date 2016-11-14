@@ -181,6 +181,7 @@
     <Compile Include="MemoryHelper.cs" />
     <Compile Include="Miners\ccminer\ccminer_sm6x.cs" />
     <Compile Include="Miners\Equihash\eqm.cs" />
+    <Compile Include="Miners\Equihash\nheqBase.cs" />
     <Compile Include="Miners\Grouping\ExtraLaunchParametersParser.cs" />
     <Compile Include="Miners\ManagerPrivate\GroupMiners.cs" />
     <Compile Include="Miners\ManagerPrivate\SwitchTesting.cs" />

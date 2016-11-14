@@ -42,13 +42,16 @@ namespace NiceHashMiner.Enums {
         Threads,
         CpuAffinity,
         CpuPriority,
-        // nheqminer
+        // nheqminer/eqm
         // nheqminer CUDA
         CUDA_Solver_Version, // -cb
         CUDA_Solver_Block, // -cb
         CUDA_Solver_Thread, // -ct
         // nheqminer OpenCL
         OpenCL_Solver_Version, //-ov
-        OpenCL_Solver_Dev_Thread // -ot
+        OpenCL_Solver_Dev_Thread, // -ot
+        // eqm
+        CUDA_Solver_AsyncMode, // -ca
+        CUDA_Solver_ParallelBuckets, // -cp
     }
 }

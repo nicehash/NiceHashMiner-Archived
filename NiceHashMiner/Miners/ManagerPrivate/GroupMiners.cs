@@ -35,16 +35,6 @@ namespace NiceHashMiner.Miners {
                 }
                 // init device uuids
                 _deviceUUIDs = deviceUUIDSet.ToArray();
-                // init DevicesInfoString
-                string[] _deviceNamesCount = new string[_deviceNames.Count];
-                {
-                    int i = 0;
-                    foreach (var devName in _deviceNames) {
-                        _deviceNamesCount[i++] =
-                            ComputeDeviceManager.Avaliable.GetEnabledDeviceNameCount(devName).ToString()
-                            + " * " + devName;
-                    }
-                }
 
                 DevicesInfoString = "{ " + string.Join(", ", _deviceNames) + " }";
             }

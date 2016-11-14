@@ -160,7 +160,11 @@ namespace NiceHashMiner.Miners {
         // create miner creates new miners, except cpuminer, those are saves and called from GetCpuMiner()
         public static Miner CreateMiner(DeviceGroupType deviceGroupType, AlgorithmType algorithmType) {
             if (AlgorithmType.Equihash == algorithmType) {
-                return new nheqminer();
+                if (DeviceGroupType.NVIDIA_5_x == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
+                    return new eqm();
+                } else {
+                    return new nheqminer();
+                }
             } else if (AlgorithmType.DaggerHashimoto == algorithmType) {
                 if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
                     return new MinerEtherumOCL();

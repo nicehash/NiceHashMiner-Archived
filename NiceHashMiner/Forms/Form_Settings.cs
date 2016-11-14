@@ -536,7 +536,7 @@ namespace NiceHashMiner.Forms {
                             algorithm.Value.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
                             cDev.MostProfitableAlgorithm = algorithm.Value;
                             algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
-                                thisListDev, algorithm.Key, DeviceType.AMD, false
+                                thisListDev, algorithm.Key, DeviceType.AMD, "", false
                                 );
                         }
                     }
@@ -559,7 +559,7 @@ namespace NiceHashMiner.Forms {
                             algorithm.Value.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
                             cDev.MostProfitableAlgorithm = algorithm.Value;
                             algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
-                                thisListDev, algorithm.Key, cDev.DeviceType, false
+                                thisListDev, algorithm.Key, cDev.DeviceType, "", false
                                 );
                         }
                     }
@@ -576,7 +576,7 @@ namespace NiceHashMiner.Forms {
                             algorithm.ExtraLaunchParameters = defaultAlgoSettings.Value.ExtraLaunchParameters;
                             cDev.MostProfitableAlgorithm = algorithm;
                             algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
-                                thisListDev, algorithmKey, cDev.DeviceType, false
+                                thisListDev, algorithmKey, cDev.DeviceType, "", false
                                 );
                         }
                     }

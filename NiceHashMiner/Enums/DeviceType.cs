@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Enums {
     public enum DeviceType {
-        CPU,
+        CPU = 0,
         NVIDIA,
         AMD,
         // combined types used for miner identification only
