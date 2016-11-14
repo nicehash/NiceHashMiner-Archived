@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -46,5 +48,117 @@ namespace NiceHashMiner.Miners
         /// nheqminer
         /// </summary>
         public const string nheqminer = _bin + @"\nheqminer_v0.4b\nheqminer.exe";
+
+        public const string NONE = "";
+
+
+        public static string GetOptimizedMinerPath(AlgorithmType algorithmType, DeviceType deviceType, DeviceGroupType deviceGroupType, string devCodename, bool isOptimized) {
+            // special cases
+            // AlgorithmType.DaggerHashimoto special shared case
+            if (algorithmType == AlgorithmType.DaggerHashimoto
+                && (deviceType == DeviceType.AMD || deviceType == DeviceType.NVIDIA)) {
+                return MinerPaths.ethminer;
+            }
+            // AlgorithmType.Equihash special shared case
+            if (algorithmType == AlgorithmType.Equihash) {
+                // TODO two different miners SM5.0+ and AVX+
+                //if (deviceType == DeviceType.ALL) {
+                //}
+                return MinerPaths.nheqminer;
+            }
+            // normal stuff
+            // CPU
+            if (deviceType == DeviceType.CPU) {
+                return CPU_GROUP.cpu_miner_opt(CPUUtils.GetMostOptimized());
+            }
+            // NVIDIA
+            if (deviceType == DeviceType.NVIDIA) {
+                var nvidiaGroup = deviceGroupType;
+                // sm21 and sm3x have same settings
+                if (nvidiaGroup == DeviceGroupType.NVIDIA_2_1 || nvidiaGroup == DeviceGroupType.NVIDIA_3_x) {
+                    return NVIDIA_GROUPS.ccminer_sm21_or_sm3x(algorithmType);
+                }
+                // sm5x and sm6x have same settings
+                if (nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) {
+                    return NVIDIA_GROUPS.ccminer_sm5x_or_sm6x(algorithmType);
+                }
+            }
+            // AMD
+            if (deviceType == DeviceType.AMD) {
+                return AMD_GROUP.sgminer_path(algorithmType, devCodename, isOptimized);
+            }
+
+            return NONE;
+        }
+
+        ////// private stuff from here on
+        static class NVIDIA_GROUPS {
+            public static string ccminer_sm21_or_sm3x(AlgorithmType algorithmType) {
+                if (AlgorithmType.Decred == algorithmType) {
+                    return MinerPaths.ccminer_decred;
+                }
+                if (AlgorithmType.CryptoNight == algorithmType) {
+                    return MinerPaths.ccminer_cryptonight;
+                }
+                return MinerPaths.ccminer_tpruvot;
+            }
+
+            public static string ccminer_sm5x_or_sm6x(AlgorithmType algorithmType) {
+                if (AlgorithmType.Decred == algorithmType) {
+                    return MinerPaths.ccminer_decred;
+                }
+                if (AlgorithmType.NeoScrypt == algorithmType) {
+                    return MinerPaths.ccminer_neoscrypt;
+                }
+                if (AlgorithmType.Lyra2RE == algorithmType || AlgorithmType.Lyra2REv2 == algorithmType) {
+                    return MinerPaths.ccminer_nanashi;
+                }
+                if (AlgorithmType.CryptoNight == algorithmType) {
+                    return MinerPaths.ccminer_cryptonight;
+                }
+                if (AlgorithmType.Lbry == algorithmType) {
+                    return MinerPaths.ccminer_tpruvot;
+                }
+
+                return MinerPaths.ccminer_sp;
+            }
+        }
+
+        static class AMD_GROUP {
+            public static string sgminer_path(AlgorithmType type, string gpuCodename, bool isOptimized) {
+                if (isOptimized) {
+                    if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
+                        if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
+                            if (!Helpers.InternalCheckIsWow64())
+                                return MinerPaths.sgminer_5_5_0_general;
+
+                            return MinerPaths.sgminer_5_4_0_tweaked;
+                        }
+                        if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
+                            return MinerPaths.sgminer_5_1_0_optimized;
+                        else
+                            return MinerPaths.sgminer_5_1_1_optimized;
+                    }
+                }
+
+                return MinerPaths.sgminer_5_5_0_general;
+            }
+        }
+
+        static class CPU_GROUP {
+            public static string cpu_miner_opt(CPUExtensionType type) {
+                // algorithmType is not needed ATM
+                // algorithmType: AlgorithmType
+                if (CPUExtensionType.AVX2_AES == type) { return MinerPaths.cpuminer_opt_AVX2_AES; }
+                if (CPUExtensionType.AVX2 == type) { return MinerPaths.cpuminer_opt_AVX2; }
+                if (CPUExtensionType.AVX_AES == type) { return MinerPaths.cpuminer_opt_AVX_AES; }
+                if (CPUExtensionType.AVX == type) { return MinerPaths.cpuminer_opt_AVX; }
+                if (CPUExtensionType.AES == type) { return MinerPaths.cpuminer_opt_AES; }
+                if (CPUExtensionType.SSE2 == type) { return MinerPaths.cpuminer_opt_SSE2; }
+
+                return NONE; // should not happen
+            }
+        }
+
     }
 }

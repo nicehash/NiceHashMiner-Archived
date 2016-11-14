@@ -36,7 +36,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public nheqminer()
-            : base(DeviceType.ALL, "nheqminer") {
+            : base(DeviceType.ALL, DeviceGroupType.NONE, "nheqminer") {
                 Path = MinerPaths.nheqminer;
                 WorkingDirectory = MinerPaths.nheqminer.Replace("nheqminer.exe", "");
                 AMD_OCL_PLATFORM = ComputeDeviceQueryManager.Instance.AMDOpenCLPlatformNum;
@@ -205,11 +205,6 @@ namespace NiceHashMiner.Miners {
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
             CheckOutdata(outdata);
-        }
-
-        // STUBS
-        public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename, bool isOptimized) {
-            return MinerPaths.nheqminer;
         }
     }
 }

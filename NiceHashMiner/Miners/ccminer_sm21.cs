@@ -9,7 +9,8 @@ namespace NiceHashMiner.Miners
 {
     class ccminer_sm21 : ccminer
     {
-        public ccminer_sm21() : base("NVIDIA2.1")
+        public ccminer_sm21()
+            : base(DeviceGroupType.NVIDIA_2_1, "NVIDIA2.1")
         {
             Path = MinerPaths.ccminer_tpruvot;
         }
@@ -19,16 +20,6 @@ namespace NiceHashMiner.Miners
             allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);
             allGroupSupportedList.Remove(AlgorithmType.Equihash);
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
-        }
-
-        public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename, bool isOptimized) {
-            if (AlgorithmType.Decred == algorithmType) {
-                return MinerPaths.ccminer_decred;
-            }
-            if (AlgorithmType.CryptoNight == algorithmType) {
-                return MinerPaths.ccminer_cryptonight;
-            } 
-            return MinerPaths.ccminer_tpruvot;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace NiceHashMiner.Miners
 {
     abstract public class ccminer : Miner
     {
-        public ccminer(string minerDeviceName) : base(DeviceType.NVIDIA, minerDeviceName) { }
+        public ccminer(DeviceGroupType deviceGroupType, string minerDeviceName) : base(DeviceType.NVIDIA, deviceGroupType, minerDeviceName) { }
 
         // cryptonight benchmark exception
         int _cryptonightTotalCount = 0;

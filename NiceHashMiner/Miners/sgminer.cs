@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners
         Stopwatch _benchmarkTimer = new Stopwatch();
 
         public sgminer()
-            : base(DeviceType.AMD, "AMD_OpenCL")
+            : base(DeviceType.AMD, DeviceGroupType.AMD_OpenCL, "AMD_OpenCL")
         {            
             Path = MinerPaths.sgminer_5_5_0_general;
             EnableOptimizedVersion = true;
@@ -120,25 +120,6 @@ namespace NiceHashMiner.Miners
                 return true;
             }
             return false;
-        }
-
-        public override string GetOptimizedMinerPath(AlgorithmType type, string gpuCodename, bool isOptimized) {
-            if (EnableOptimizedVersion) {
-                if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
-                    if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
-                        if (!Helpers.InternalCheckIsWow64())
-                            return MinerPaths.sgminer_5_5_0_general;
-
-                        return MinerPaths.sgminer_5_4_0_tweaked;
-                    }
-                    if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
-                        return MinerPaths.sgminer_5_1_0_optimized;
-                    else
-                        return MinerPaths.sgminer_5_1_1_optimized;
-                }
-            }
-
-            return MinerPaths.sgminer_5_5_0_general;
         }
 
         // new decoupled benchmarking routines

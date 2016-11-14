@@ -25,7 +25,7 @@ namespace NiceHashMiner.Miners {
         protected bool IsPaused = false;
 
         public MinerEtherum(DeviceType deviceType, string minerDeviceName, string blockString)
-            : base(deviceType, minerDeviceName) {
+            : base(deviceType, DeviceGroupType.NONE, minerDeviceName) {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
             CurrentBlockString = blockString;
@@ -174,10 +174,6 @@ namespace NiceHashMiner.Miners {
                     ProcessHandle = null;
                 }
             }
-        }
-
-        public override string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename, bool isOptimized) {
-            return Ethereum.EtherMinerPath;
         }
 
         protected override bool UpdateBindPortCommand(int oldPort, int newPort) {

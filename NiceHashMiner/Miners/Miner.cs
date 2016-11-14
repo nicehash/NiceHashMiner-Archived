@@ -47,6 +47,7 @@ namespace NiceHashMiner
         public bool IsAPIReadException { get; protected set; }
         protected List<ComputeDevice> CDevs;
         public DeviceType DeviceType { get; private set; }
+        public DeviceGroupType DeviceGroupType { get; private set; }
 
         // mining algorithm stuff
         public AlgorithmType CurrentAlgorithmType { get; protected set; }
@@ -121,11 +122,12 @@ namespace NiceHashMiner
 
         private bool isEnded = false;
 
-        public Miner(DeviceType deviceType, string minerDeviceName)
+        public Miner(DeviceType deviceType, DeviceGroupType deviceGroupType, string minerDeviceName)
         {
             MINER_ID = MINER_ID_COUNT++;
             CDevs = new List<ComputeDevice>();
             DeviceType = deviceType;
+            DeviceGroupType = deviceGroupType; // Group types are not always important refactoring needed
             MinerDeviceName = minerDeviceName;
 
             //WorkingDirectory = @"bin\dlls";
@@ -197,6 +199,7 @@ namespace NiceHashMiner
         
         protected abstract void InitSupportedMinerAlgorithms();
 
+        // TODO remove somehow
         /// <summary>
         /// GetOptimizedMinerPath returns optimized miner path based on algorithm type and device codename.
         /// Device codename is a quickfix for sgminer, other miners don't use it
@@ -205,7 +208,9 @@ namespace NiceHashMiner
         /// <param name="devCodename">sgminer extra</param>
         /// <param name="isOptimized">sgminer extra</param>
         /// <returns></returns>
-        abstract public string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = true);
+        protected string GetOptimizedMinerPath(AlgorithmType algorithmType, string devCodename = "", bool isOptimized = true) {
+            return MinerPaths.GetOptimizedMinerPath(algorithmType, DeviceType, DeviceGroupType, devCodename, isOptimized);
+        }
 
         public void KillAllUsedMinerProcesses() {
             List<MinerPID_Data> toRemovePidData = new List<MinerPID_Data>();

@@ -35,24 +35,6 @@ namespace NiceHashMiner.Miners {
 
         string _workerBtcStringWorker;
 
-        readonly DeviceGroupType[] _nvidiaTypes = new DeviceGroupType[] {
-            DeviceGroupType.NVIDIA_2_1,
-            DeviceGroupType.NVIDIA_3_x,
-            DeviceGroupType.NVIDIA_5_x,
-            DeviceGroupType.NVIDIA_6_x
-        };
-
-        readonly DeviceGroupType[] _gpuTypes = new DeviceGroupType[] {
-            DeviceGroupType.AMD_OpenCL,
-            DeviceGroupType.NVIDIA_2_1,
-            DeviceGroupType.NVIDIA_3_x,
-            DeviceGroupType.NVIDIA_5_x,
-            DeviceGroupType.NVIDIA_6_x
-        };
-
-        // these miners are just used for binary path checking
-        public readonly Dictionary<DeviceGroupType, Miner> MinerPathChecker;
-
         // ccminers intensity checking
         public readonly Dictionary<string, Tuple<double, double>> CCMinersIntensitiesBoundries = new Dictionary<string, Tuple<double, double>>() {
             { MinerPaths.ccminer_decred,     Tuple.Create(8.0, 25.0) },
@@ -95,13 +77,6 @@ namespace NiceHashMiner.Miners {
             _internetCheckTimer = new Timer();
             _internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
             _internetCheckTimer.Interval = 1000 * 30 * 1; // every minute or 5?? // 1000 * 60 * 1
-
-            // path checker
-            Helpers.ConsolePrint(TAG, "Creating MinerPathChecker miners");
-            MinerPathChecker = new Dictionary<DeviceGroupType, Miner>();
-            foreach (var gpuGroup in _gpuTypes) {
-                MinerPathChecker.Add(gpuGroup, CreateMiner(gpuGroup, AlgorithmType.NONE));
-            }
         }
 
         private void InternetCheckTimer_Tick(object sender, EventArgs e) {
@@ -426,10 +401,7 @@ namespace NiceHashMiner.Miners {
         //}
 
         private bool IsNvidiaDevice(ComputeDevice a) {
-            foreach (var type in _nvidiaTypes) {
-                if (a.DeviceGroupType == type) return true;
-            }
-            return false;
+            return a.DeviceType == DeviceType.NVIDIA;
         }
 
         private bool IsEquihashAndOneCPU(ComputeDevice a, ComputeDevice b) {
@@ -466,8 +438,8 @@ namespace NiceHashMiner.Miners {
                 var a_algoType = a.MostProfitableAlgorithm.NiceHashID;
                 var b_algoType = b.MostProfitableAlgorithm.NiceHashID;
                 // a and b algorithm settings should be the same if we call this function
-                return MinerPathChecker[a.DeviceGroupType].GetOptimizedMinerPath(a_algoType, a.Codename, a.IsOptimizedVersion)
-                    == MinerPathChecker[b.DeviceGroupType].GetOptimizedMinerPath(b_algoType, b.Codename, b.IsOptimizedVersion);
+                return MinerPaths.GetOptimizedMinerPath(a_algoType, a.DeviceType, a.DeviceGroupType, a.Codename, a.IsOptimizedVersion)
+                    == MinerPaths.GetOptimizedMinerPath(b_algoType, b.DeviceType, b.DeviceGroupType, b.Codename, b.IsOptimizedVersion);
             }
 
             return true;

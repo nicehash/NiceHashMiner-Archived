@@ -261,7 +261,7 @@ namespace NiceHashMiner.Devices
             int ThreadsPerCPUMask = ThreadsPerCPU;
             Globals.ThreadsPerCPU = ThreadsPerCPU;
 
-            if (cpuminer.InitializeMinerPaths()) {
+            if (CPUUtils.IsCPUMiningCapable()) {
                 if (CPUs == 1) {
                     new ComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), ThreadsPerCPU, (ulong)0, true);
                     //MinersManager.Instance.AddCpuMiner(new cpuminer(0, ThreadsPerCPU, 0), 0, CPUID.GetCPUName().Trim());
