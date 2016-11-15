@@ -8,6 +8,8 @@ using namespace std;
 CudaDetection::CudaDetection() { }
 CudaDetection::~CudaDetection() { }
 
+#define PCI_BUS_LEN 64
+
 bool CudaDetection::QueryDevices() {
 	const unsigned int UUID_SIZE = 128;
 	try {
@@ -19,11 +21,15 @@ bool CudaDetection::QueryDevices() {
 
 			cudaDeviceProp props;
 			CUDA_SAFE_CALL(cudaGetDeviceProperties(&props, i));
+			char pciBusID[PCI_BUS_LEN];
+			CUDA_SAFE_CALL(cudaDeviceGetPCIBusId(pciBusID, PCI_BUS_LEN, i));
+
 			// serial stuff
 			nvmlPciInfo_t pciInfo;
 			nvmlDevice_t device_t;
 			char uuid[UUID_SIZE];
-			NVML_SAFE_CALL(nvmlDeviceGetHandleByIndex(i, &device_t));
+			//NVML_SAFE_CALL(nvmlDeviceGetHandleByIndex(i, &device_t)); // this is wrong
+			NVML_SAFE_CALL(nvmlDeviceGetHandleByPciBusId(pciBusID, &device_t)); // use pciBusID to get the right version
 			NVML_SAFE_CALL(nvmlDeviceGetPciInfo(device_t, &pciInfo));
 			NVML_SAFE_CALL(nvmlDeviceGetUUID(device_t, uuid, UUID_SIZE));
 
