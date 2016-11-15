@@ -105,12 +105,17 @@ namespace NiceHashMiner.Miners {
                 System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
 
                 if (MaxProfitKey == AlgorithmType.Equihash) {
-                    //m.Start(algorithm, miningLocation, worker);
-                    m.Start(algorithm,
-                    Globals.NiceHashData[MaxProfitKey].name
-                    + "." + miningLocation
-                    + ".nicehash.com:"
-                    + Globals.NiceHashData[MaxProfitKey].port, worker);
+                    if (m.IsNHLocked) {
+                        // TODO worker name not working with eqm
+                        string BTC = worker.Substring(0, worker.IndexOf("."));
+                        m.Start(algorithm, miningLocation, BTC);
+                    } else {
+                        m.Start(algorithm,
+                        Globals.NiceHashData[MaxProfitKey].name
+                        + "." + miningLocation
+                        + ".nicehash.com:"
+                        + Globals.NiceHashData[MaxProfitKey].port, worker);
+                    }
                 } else {
                     m.Start(algorithm,
                     "stratum+tcp://"

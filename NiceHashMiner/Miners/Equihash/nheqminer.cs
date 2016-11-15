@@ -18,6 +18,16 @@ namespace NiceHashMiner.Miners {
                 WorkingDirectory = MinerPaths.nheqminer.Replace("nheqminer.exe", "");
         }
 
+        // CPU aff set from NHM
+        protected override NiceHashProcess _Start() {
+            NiceHashProcess P = base._Start();
+            if (CPUs.Count > 0 && CPUs[0].AffinityMask != 0 && P != null)
+                CPUID.AdjustAffinity(P.Id, CPUs[0].AffinityMask);
+
+            return P;
+        }
+
+
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " ";
 

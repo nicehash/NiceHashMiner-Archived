@@ -66,7 +66,8 @@ namespace NiceHashMiner.Miners
             }
             // AlgorithmType.Equihash special shared case
             if (algorithmType == AlgorithmType.Equihash) {
-                if (deviceType == DeviceType.NVIDIA_CPU || deviceGroupType == DeviceGroupType.NVIDIA_5_x || deviceGroupType == DeviceGroupType.NVIDIA_6_x) {
+                if (deviceType == DeviceType.NVIDIA_CPU || deviceGroupType == DeviceGroupType.NVIDIA_5_x || deviceGroupType == DeviceGroupType.NVIDIA_6_x
+                    || (MinersManager.EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
                     return MinerPaths.eqm;
                 } else {
                     return MinerPaths.nheqminer;

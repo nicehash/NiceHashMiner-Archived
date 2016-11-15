@@ -103,14 +103,6 @@ namespace NiceHashMiner.Miners {
             return ad;
         }
 
-        protected override NiceHashProcess _Start() {
-            NiceHashProcess P = base._Start();
-            if (CPUs.Count > 0 && CPUs[0].AffinityMask != 0 && P != null)
-                CPUID.AdjustAffinity(P.Id, CPUs[0].AffinityMask);
-
-            return P;
-        }
-
         // DONE
         protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
             const string MASK = "-a {0}";

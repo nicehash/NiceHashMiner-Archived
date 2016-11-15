@@ -11,6 +11,7 @@ namespace NiceHashMiner.Miners {
             : base(DeviceType.NVIDIA_CPU, "eqm") {
             Path = MinerPaths.eqm;
             WorkingDirectory = MinerPaths.eqm.Replace("eqm.exe", "");
+            IsNHLocked = true;
         }
 
 
@@ -19,8 +20,8 @@ namespace NiceHashMiner.Miners {
             string deviceStringCommand = " ";
 
             if (CPUs.Count > 0) {
+                deviceStringCommand += "-p " + CPUs.Count;
                 if (CPUs[0].MostProfitableAlgorithm.LessThreads > 0 || !string.IsNullOrEmpty(CPUs[0].MostProfitableAlgorithm.ExtraLaunchParameters)) {
-                    // TODO check parsing for dual CPU
                     deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(CPUs, AlgorithmType.Equihash, DeviceType.CPU, Path);
                 }
             } else {

@@ -84,11 +84,8 @@ namespace NiceHashMiner.Miners {
             new MinerOption(MinerOptionType.Threads, "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " "), // default none
         };
         private static List<MinerOption> _eqm_CUDA_Options = new List<MinerOption>() {
-            // TODO check what kind of parameter type is CUDA_Solver_AsyncMode
-            new MinerOption(MinerOptionType.CUDA_Solver_AsyncMode, "-ca", "-ca", "1", MinerOptionFlagType.SingleParam, " "), // default 1
             // TODO check what is the CUDA_Solver_ParallelBuckets default
             new MinerOption(MinerOptionType.CUDA_Solver_ParallelBuckets, "-cp", "-cp", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-
             new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
             new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
         };
@@ -233,7 +230,8 @@ namespace NiceHashMiner.Miners {
                                 values.Add(cdevOptions[cDev.UUID][option.Type]);
                             }
                             string setValue = option.Default;
-                            if (values.Count == 1) {
+                            if (values.Count >= 1) {
+                                // Always take first
                                 setValue = values.First();
                             }
                             string MASK = " {0} {1}";
@@ -289,6 +287,8 @@ namespace NiceHashMiner.Miners {
                             } else { // add threads params mandatory
                                 cDev.CurrentExtraLaunchParameters += " -t " + GetThreads(cDev.Threads, cDev.MostProfitableAlgorithm.LessThreads).ToString();
                             }
+                            // use only first CPU dev
+                            break;
                         }
                         return Parse(CDevs, _eqm_CPU_Options);
                     }

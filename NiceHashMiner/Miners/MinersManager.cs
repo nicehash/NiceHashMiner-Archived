@@ -157,10 +157,17 @@ namespace NiceHashMiner.Miners {
             return ActiveMinersGroup;
         }
 
+        public static bool EquihashCPU_USE_eqm() {
+            var mostOptimized = CPUUtils.GetMostOptimized();
+            return mostOptimized == CPUExtensionType.AVX || mostOptimized == CPUExtensionType.AVX2
+                || mostOptimized == CPUExtensionType.AVX_AES || mostOptimized == CPUExtensionType.AVX2_AES;
+        }
+
         // create miner creates new miners, except cpuminer, those are saves and called from GetCpuMiner()
         public static Miner CreateMiner(DeviceGroupType deviceGroupType, AlgorithmType algorithmType) {
             if (AlgorithmType.Equihash == algorithmType) {
-                if (DeviceGroupType.NVIDIA_5_x == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
+                if (DeviceGroupType.NVIDIA_5_x == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType
+                    || (EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
                     return new eqm();
                 } else {
                     return new nheqminer();
@@ -399,25 +406,48 @@ namespace NiceHashMiner.Miners {
 ;
         }
 
-        //private bool SafeStrCompare(string a, string b) {
-        //    if (string.IsNullOrEmpty(a) == true && string.IsNullOrEmpty(a) == string.IsNullOrEmpty(b)) return true;
-        //    return a == b;
-        //}
-
         private bool IsNvidiaDevice(ComputeDevice a) {
             return a.DeviceType == DeviceType.NVIDIA;
         }
 
-        private bool IsEquihashAndOneCPU(ComputeDevice a, ComputeDevice b) {
-            return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.Equihash
-                && a.MostProfitableAlgorithm.NiceHashID == b.MostProfitableAlgorithm.NiceHashID
-                && ComputeDeviceManager.Avaliable.CPUsCount <= 1;
+        private bool IsEquihashGroupLogic(ComputeDevice a, ComputeDevice b) {
+            // eqm
+            if (IsEquihashDevice_eqm(a) && IsEquihashDevice_eqm(b)) { // both eqm
+                return IsEquihashAnd_eqm(a, b);
+            }
+            // nheqmnier
+            else if (!IsEquihashDevice_eqm(a) && !IsEquihashDevice_eqm(b)) { // both NOT eqm
+                return IsEquihashAnd_nheqminer(a, b);
+            }
+            return false;
         }
 
-        private bool IsEquihashAndOneNOTCPU(ComputeDevice a, ComputeDevice b) {
+        // nheqminer
+        private bool IsEquihashAnd_nheqminer(ComputeDevice a, ComputeDevice b) {
             return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.Equihash
                 && a.MostProfitableAlgorithm.NiceHashID == b.MostProfitableAlgorithm.NiceHashID
-                && a.DeviceType != DeviceType.CPU && b.DeviceType != DeviceType.CPU;
+                && IsEquihashAnd_CPU_nheqminer(a)
+                && IsEquihashAnd_CPU_nheqminer(b);
+        }
+        // group only first CPU split
+        private bool IsEquihashAnd_CPU_nheqminer(ComputeDevice a) {
+            return a.DeviceType != DeviceType.CPU // if not cpu then ignore case always good
+                || a.ID == 0; // if CPU ID must be 0
+        }
+
+        // eqm
+        private bool IsEquihashAnd_eqm(ComputeDevice a, ComputeDevice b) {
+            return a.MostProfitableAlgorithm.NiceHashID == AlgorithmType.Equihash
+                && a.MostProfitableAlgorithm.NiceHashID == b.MostProfitableAlgorithm.NiceHashID;
+        }
+        private bool IsEquihashDevice_eqm(ComputeDevice a) {
+            return IsEquihashCPU_eqm(a) || IsEquihashNVIDIA_eqm(a);
+        }
+        private bool IsEquihashCPU_eqm(ComputeDevice a) {
+            return MinersManager.EquihashCPU_USE_eqm() && a.DeviceType == DeviceType.CPU;
+        }
+        private bool IsEquihashNVIDIA_eqm(ComputeDevice a) {
+            return a.DeviceGroupType == DeviceGroupType.NVIDIA_5_x || a.DeviceGroupType == DeviceGroupType.NVIDIA_6_x;
         }
 
         // checks if dagger algo, same settings and if compute platform is same
@@ -558,8 +588,7 @@ namespace NiceHashMiner.Miners {
                     // first check if second device has profitable algorithm
                     if (secondDev.MostProfitableAlgorithm != null) {
                         // check if we should group
-                        if (IsEquihashAndOneCPU(firstDev, secondDev) // if one CPU group them all
-                            || IsEquihashAndOneNOTCPU(firstDev, secondDev)
+                        if (IsEquihashGroupLogic(firstDev, secondDev)
                             || IsDaggerAndSameComputePlatform(firstDev, secondDev)
                             || IsGroupBinaryAndAlgorithmSame(firstDev, secondDev)) {
                             newGroup.Add(secondDev.UUID);

@@ -45,6 +45,8 @@ namespace NiceHashMiner
         protected int APIPort { get; private set; }
         // if miner has no API bind port for reading curentlly only CryptoNight on ccminer
         public bool IsAPIReadException { get; protected set; }
+        // inhouse miners that are locked on NH (our eqm)
+        public bool IsNHLocked { get; protected set; }
         protected List<ComputeDevice> CDevs;
         public DeviceType DeviceType { get; private set; }
         public DeviceGroupType DeviceGroupType { get; private set; }
@@ -144,6 +146,7 @@ namespace NiceHashMiner
 
             APIPort = MinersApiPortsManager.Instance.GetAvaliablePort();
             IsAPIReadException = false;
+            IsNHLocked = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
             // 
             Helpers.ConsolePrint(MinerTAG(), "NEW MINER CREATED");
