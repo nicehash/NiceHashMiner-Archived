@@ -680,23 +680,6 @@ namespace NiceHashMiner.Devices
                 return null;
             }
 
-            public static int GetEnabledDeviceNameCount(string name) {
-                int count = 0;
-                foreach (var dev in AllAvaliableDevices) {
-                    if (dev.Enabled && name == dev.Name) ++count;
-                }
-                return count;
-            }
-
-            public static string GetNameForUUID(string uuid) {
-                foreach (var dev in AllAvaliableDevices) {
-                    if (uuid == dev.UUID) {
-                        return dev.Name;
-                    }
-                }
-                return International.GetText("ComputeDevice_Get_With_UUID_NONE");
-            }
-
             public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUUID(string uuid) {
                 List<ComputeDevice> sameTypes = new List<ComputeDevice>();
                 var compareDev = GetDeviceWithUUID(uuid);
