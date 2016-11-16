@@ -183,6 +183,8 @@
     <Compile Include="Miners\Equihash\eqm.cs" />
     <Compile Include="Miners\Equihash\nheqBase.cs" />
     <Compile Include="Miners\Grouping\ExtraLaunchParametersParser.cs" />
+    <Compile Include="Miners\Grouping\GroupingLogic.cs" />
+    <Compile Include="Miners\Grouping\GroupMiners.cs" />
     <Compile Include="Miners\ManagerPrivate\GroupMiners.cs" />
     <Compile Include="Miners\ManagerPrivate\SwitchTesting.cs" />
     <Compile Include="Miners\ethminer\MinerEtherum.cs" />
@@ -191,8 +193,10 @@
     <Compile Include="Miners\Grouping\MinerOption.cs" />
     <Compile Include="Miners\Grouping\MinerPaths.cs" />
     <Compile Include="Miners\MinersApiPortsManager.cs" />
-    <Compile Include="Miners\MinersManager.cs" />
+    <Compile Include="Miners\MinersManager_NEW.cs" />
+    <Compile Include="Miners\ManagerPrivate\MinersManager_OLD.cs" />
     <Compile Include="Miners\Equihash\nheqminer.cs" />
+    <Compile Include="Miners\MiningSession.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="BitcoinAddress.cs" />
     <Compile Include="Bitcoin.cs" />

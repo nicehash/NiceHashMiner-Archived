@@ -15,7 +15,7 @@ namespace NiceHashMiner.Devices
         readonly public int ID;
         [JsonIgnore]
         readonly public string Group;
-        public string Name { get; set; }
+        readonly public string Name; // { get; set; }
         // to identify equality;
         [JsonIgnore]
         readonly public string _nameNoNums;

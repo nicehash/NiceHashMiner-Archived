@@ -43,7 +43,12 @@ namespace NiceHashMiner
 
         static private List<AlgorithmType> _keys = null;
 
-        public static string GetName(AlgorithmType type) { return _names[type]; }
+        public static string GetName(AlgorithmType type) {
+            if (_names.ContainsKey(type)) {
+                return _names[type];
+            }
+            return "NameNotFound type not supported";
+        }
 
         /// <summary>
         /// GetKey is used for Algorithm initialization, from config files.

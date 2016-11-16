@@ -8,8 +8,11 @@ using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 
+
+
 namespace NiceHashMiner
 {
+    using MinersManager = MinersManager_NEW;
 #pragma warning disable 649
     public class NiceHashSMA
     {

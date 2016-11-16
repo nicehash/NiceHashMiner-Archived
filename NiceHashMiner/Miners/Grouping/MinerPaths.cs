@@ -6,6 +6,8 @@ using System.Text;
 
 namespace NiceHashMiner.Miners
 {
+    using MinersManager = MinersManager_NEW;
+
     /// <summary>
     /// MinerPaths, used just to store miners paths strings. Only one instance needed
     /// </summary>

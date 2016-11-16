@@ -129,7 +129,7 @@ namespace NiceHashMiner
             MINER_ID = MINER_ID_COUNT++;
             CDevs = new List<ComputeDevice>();
             DeviceType = deviceType;
-            DeviceGroupType = deviceGroupType; // Group types are not always important refactoring needed
+            DeviceGroupType = deviceGroupType;
             MinerDeviceName = minerDeviceName;
 
             //WorkingDirectory = @"bin\dlls";

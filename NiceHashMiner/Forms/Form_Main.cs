@@ -24,6 +24,7 @@ using System.Timers;
 
 namespace NiceHashMiner
 {
+    using MinersManager = MinersManager_NEW;
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private static string VisitURL = Links.VisitURL;
@@ -49,7 +50,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
                 
-        const string _betaAlphaPostfixString = "";
+        const string _betaAlphaPostfixString = "_PENDING";
 
         private bool _isDeviceDetectionInitialized = false;
 
