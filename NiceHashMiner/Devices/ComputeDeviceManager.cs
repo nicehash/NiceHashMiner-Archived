@@ -26,34 +26,85 @@ namespace NiceHashMiner.Devices
         public static class Query {
             const string TAG = "ComputeDeviceManager.Query";
 
+            // format 372.54;
+            private class NVIDIA_SMI_DRIVER {
+                public NVIDIA_SMI_DRIVER(int left, int right) {
+                    leftPart = left;
+                    rightPart = right;
+                }
+                public bool IsLesserVersionThan(NVIDIA_SMI_DRIVER b) {
+                    if(leftPart < b.leftPart) {
+                        return true;
+                    }
+                    if(rightPart < b.rightPart) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                public string ToString2() {
+                    return String.Format("{0}.{1}", leftPart, rightPart);
+                }
+
+                public int leftPart;
+                public int rightPart;
+            }
+
             const int AMD_VENDOR_ID = 1002;
-            const double NVIDIA_RECOMENDED_DRIVER = 372.54;
-            const double NVIDIA_MIN_DETECTION_DRIVER = 362.61;
-            static double _currentNvidiaOpenCLDriver = -1;
+            static readonly NVIDIA_SMI_DRIVER NVIDIA_RECOMENDED_DRIVER = new NVIDIA_SMI_DRIVER(372, 54); // 372.54;
+            static readonly NVIDIA_SMI_DRIVER NVIDIA_MIN_DETECTION_DRIVER = new NVIDIA_SMI_DRIVER(362, 61); // 362.61;
+            static NVIDIA_SMI_DRIVER _currentNvidiaSMIDriver = new NVIDIA_SMI_DRIVER(-1, -1);
+            static NVIDIA_SMI_DRIVER INVALID_SMI_DRIVER = new NVIDIA_SMI_DRIVER(-1, -1);
 
             // naming purposes
             private static int CPUCount = 0;
             private static int GPUCount = 0;
 
-            static private double GetNvidiaOpenCLDriver() {
-                if (OpenCLJSONData != null) {
-                    List<OpenCLDevice> nvidiaOCLs = null;
-                    foreach (var oclPlatDevs in OpenCLJSONData) {
-                        if (oclPlatDevs.PlatformName.ToLower().Contains("nvidia")) {
-                            nvidiaOCLs = oclPlatDevs.Devices;
-                        }
-                    }
+            static private NVIDIA_SMI_DRIVER GetNvidiaSMIDriver() {
+                if (WindowsDisplayAdapters.HasNvidiaVideoController()) {
+                    string stdOut, stdErr, args, smiPath;
+                    stdOut = stdErr = args = String.Empty;
+                    smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
+                    if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
+                    try {
+                        Process P = new Process();
+                        P.StartInfo.FileName = smiPath;
+                        P.StartInfo.UseShellExecute = false;
+                        P.StartInfo.RedirectStandardOutput = true;
+                        P.StartInfo.RedirectStandardError = true;
+                        P.StartInfo.CreateNoWindow = true;
+                        P.Start();
+                        P.WaitForExit();
 
-                    if (nvidiaOCLs != null && nvidiaOCLs.Count > 0) {
-                        if (Double.TryParse(nvidiaOCLs[0]._CL_DRIVER_VERSION,
-                            NumberStyles.Any,
-                            CultureInfo.InvariantCulture,
-                            out _currentNvidiaOpenCLDriver)) {
-                            return _currentNvidiaOpenCLDriver;
+                        stdOut = P.StandardOutput.ReadToEnd();
+                        stdErr = P.StandardError.ReadToEnd();
+
+                        const string FIND_STRING = "Driver Version: ";
+                        using (StringReader reader = new StringReader(stdOut)) {
+                            string line = string.Empty;
+                            do {
+                                line = reader.ReadLine();
+                                if (line != null) {
+                                    if(line.Contains(FIND_STRING)) {
+                                        int start = line.IndexOf(FIND_STRING);
+                                        string driverVer = line.Substring(start, start + 7);
+                                        driverVer = driverVer.Replace(FIND_STRING, "").Substring(0, 7).Trim();
+                                        double drVerDouble = Double.Parse(driverVer, CultureInfo.InvariantCulture);
+                                        int dot = driverVer.IndexOf(".");
+                                        int leftPart = Int32.Parse(driverVer.Substring(0, 3));
+                                        int rightPart = Int32.Parse(driverVer.Substring(4, 2));
+                                        return new NVIDIA_SMI_DRIVER(leftPart, rightPart);
+                                    }
+                                }
+                            } while (line != null);
                         }
+
+                    } catch (Exception ex) {
+                        Helpers.ConsolePrint(TAG, "GetNvidiaSMIDriver Exception: " + ex.Message);
+                        return INVALID_SMI_DRIVER;
                     }
                 }
-                return -1;
+                return INVALID_SMI_DRIVER;
             }
 
             private static void showMessageAndStep(string infoMsg) {
@@ -101,10 +152,11 @@ namespace NiceHashMiner.Devices
                     }
                 }
                 // allerts
-                _currentNvidiaOpenCLDriver = GetNvidiaOpenCLDriver();
+                _currentNvidiaSMIDriver = GetNvidiaSMIDriver();
                 // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
                 bool isNvidiaErrorShown = false; // to prevent showing twice
-                if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && WindowsDisplayAdapters.HasNvidiaVideoController() && CudaDevices.Count == 0) {
+                bool showWarning = ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && WindowsDisplayAdapters.HasNvidiaVideoController();
+                if (showWarning && CudaDevices.Count == 0) {
                     isNvidiaErrorShown = true;
                     var minDriver = NVIDIA_MIN_DETECTION_DRIVER.ToString();
                     var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
@@ -114,9 +166,9 @@ namespace NiceHashMiner.Devices
                                                           MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 // recomended driver
-                if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && WindowsDisplayAdapters.HasNvidiaVideoController() && _currentNvidiaOpenCLDriver < NVIDIA_RECOMENDED_DRIVER && !isNvidiaErrorShown && _currentNvidiaOpenCLDriver > -1) {
+                if (showWarning && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_RECOMENDED_DRIVER) && !isNvidiaErrorShown && _currentNvidiaSMIDriver.leftPart > -1) {
                     var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
-                    var nvdriverString = _currentNvidiaOpenCLDriver > -1 ? String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"), _currentNvidiaOpenCLDriver.ToString())
+                    var nvdriverString = _currentNvidiaSMIDriver.leftPart > -1 ? String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"), _currentNvidiaSMIDriver.ToString2())
                     : "";
                     MessageBox.Show(String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
                         recomendDrvier, nvdriverString, recomendDrvier),
