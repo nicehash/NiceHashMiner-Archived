@@ -83,11 +83,12 @@ namespace NiceHashMiner.Miners {
         private static List<MinerOption> _eqm_CPU_Options = new List<MinerOption>() {
             new MinerOption(MinerOptionType.Threads, "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " "), // default none
         };
+        // EQM v1.0.1a has no optimization flags remove them
         private static List<MinerOption> _eqm_CUDA_Options = new List<MinerOption>() {
-            // TODO check what is the CUDA_Solver_ParallelBuckets default
-            new MinerOption(MinerOptionType.CUDA_Solver_ParallelBuckets, "-cp", "-cp", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-            new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-            new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
+            //// TODO check what is the CUDA_Solver_ParallelBuckets default
+            //new MinerOption(MinerOptionType.CUDA_Solver_ParallelBuckets, "-cp", "-cp", "0", MinerOptionFlagType.MultiParam, " "), // default 0
+            //new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
+            //new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
         };
 
         private static bool _showLog = true;
