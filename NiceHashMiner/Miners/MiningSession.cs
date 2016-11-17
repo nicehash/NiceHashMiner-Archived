@@ -433,9 +433,12 @@ namespace NiceHashMiner.Miners {
                     // first check if second device has profitable algorithm
                     if (secondDev.MostProfitableAlgorithm != null) {
                         // check if we should group
-                        if (GroupingLogic.IsEquihashGroupLogic(firstDev, secondDev)
-                            || GroupingLogic.IsDaggerAndSameComputePlatform(firstDev, secondDev)
-                            || GroupingLogic.IsGroupBinaryAndAlgorithmSame(firstDev, secondDev)) {
+                        bool isEquihashGroup = GroupingLogic.IsEquihashGroupLogic(firstDev, secondDev);
+                        bool isDaggerAndSameComputePlatform = GroupingLogic.IsDaggerAndSameComputePlatform(firstDev, secondDev);
+                        bool isGroupBinaryAndAlgorithmSame = GroupingLogic.IsGroupBinaryAndAlgorithmSame(firstDev, secondDev);
+                        if (isEquihashGroup
+                            || isDaggerAndSameComputePlatform
+                            || isGroupBinaryAndAlgorithmSame) {
                             newGroup.Add(secondDev.UUID);
                         }
                     }

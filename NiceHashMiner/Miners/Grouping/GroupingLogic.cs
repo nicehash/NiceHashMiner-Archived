@@ -94,7 +94,8 @@ namespace NiceHashMiner.Miners {
         public static bool IsGroupBinaryAndAlgorithmSame(ComputeDevice a, ComputeDevice b) {
             return IsNotCpuGroups(a, b)
                 && IsAlgorithmSettingsSame(a.MostProfitableAlgorithm, b.MostProfitableAlgorithm)
-                && IsSameBinPath(a, b);
+                && IsSameBinPath(a, b)
+                && a.DeviceType == b.DeviceType;
         }
     }
 }
