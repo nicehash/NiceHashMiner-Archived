@@ -99,6 +99,22 @@ namespace NiceHashMiner.Miners {
             }
         }
 
+        // exception...
+        public static int GetEqmThreadCount(ComputeDevice cDev) {
+            if (cDev.MostProfitableAlgorithm.ExtraLaunchParameters.Contains("-ct")) {
+                List<MinerOption> eqm_CUDA_Options = new List<MinerOption>() {
+                    new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "1", MinerOptionFlagType.MultiParam, " "),
+                };
+                cDev.CurrentExtraLaunchParameters = cDev.MostProfitableAlgorithm.ExtraLaunchParameters;
+                string parsedStr = Parse(new List<ComputeDevice>() { cDev }, eqm_CUDA_Options, true);
+                try {
+                    int threads = Int32.Parse(parsedStr.Trim().Replace("-ct", "").Trim());
+                    return threads;
+                } catch { }
+            }
+            return 1; // default 
+        }
+
         private static string Parse(List<ComputeDevice> CDevs, List<MinerOption> options, bool useIfDefaults = false, List<MinerOption> ignoreLogOpions = null) {
             const string IGNORE_PARAM = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             List<MinerOptionType> optionsOrder = new List<MinerOptionType>();

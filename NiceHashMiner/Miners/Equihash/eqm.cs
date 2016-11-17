@@ -32,9 +32,12 @@ namespace NiceHashMiner.Miners {
             if (NVIDIAs.Count > 0) {
                 deviceStringCommand += " -cd ";
                 foreach (var nvidia in NVIDIAs) {
-                    deviceStringCommand += nvidia.ID + " ";
+                    for (int i = 0; i < ExtraLaunchParametersParser.GetEqmThreadCount(nvidia); ++i) {
+                        deviceStringCommand += nvidia.ID + " ";
+                    }
                 }
-                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(NVIDIAs, AlgorithmType.Equihash, DeviceType.NVIDIA, Path);
+                // no extra launch params
+                //deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(NVIDIAs, AlgorithmType.Equihash, DeviceType.NVIDIA, Path);
             }
 
             return deviceStringCommand;

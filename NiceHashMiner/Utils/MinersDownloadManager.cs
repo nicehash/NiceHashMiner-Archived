@@ -22,8 +22,8 @@ namespace NiceHashMiner.Utils {
         private WebClient _webClient;
         private Stopwatch _stopwatch;
 
-        const string d_v1_7_3_3 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_3.zip";
-        public string BinsDownloadURL = d_v1_7_3_3;
+        const string d_v1_7_3_4 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_4.zip";
+        public string BinsDownloadURL = d_v1_7_3_4;
         public string BinsZipLocation = "bins.zip";
 
         bool isDownloadSizeInit = false;
