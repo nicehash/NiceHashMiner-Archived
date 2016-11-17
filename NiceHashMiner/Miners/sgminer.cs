@@ -80,8 +80,9 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string username)
+        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker)
         {
+            string username = GetUsername(btcAdress, worker);
             CurrentMiningAlgorithm = miningAlgorithm;
             if (miningAlgorithm == null)
             {

@@ -26,8 +26,9 @@ namespace NiceHashMiner.Miners
             return 60 * 1000; // 1 minute max, whole waiting time 75seconds
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string username)
+        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker)
         {
+            string username = GetUsername(btcAdress, worker);
             CurrentMiningAlgorithm = miningAlgorithm;
             if (miningAlgorithm == null) return;
 

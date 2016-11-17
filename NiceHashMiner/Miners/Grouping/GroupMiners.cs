@@ -58,7 +58,7 @@ namespace NiceHashMiner.Miners {
             }
         }
 
-        public void StartAlgorihtm(Algorithm algorithm, string miningLocation, string worker) {
+        public void StartAlgorihtm(Algorithm algorithm, string miningLocation, string btcAdress, string worker) {
             bool containsSupportedMiner = false;
             Miner startSwitchMiner = null;
             var algorithmType = algorithm.NiceHashID;
@@ -83,10 +83,10 @@ namespace NiceHashMiner.Miners {
             } else {
                 CurrentWorkingMiner = startSwitchMiner;
             }
-            SwitchMinerAlgorithm(ref startSwitchMiner, algorithm, miningLocation, worker);
+            SwitchMinerAlgorithm(ref startSwitchMiner, algorithm, miningLocation, btcAdress, worker);
         }
 
-        private void SwitchMinerAlgorithm(ref Miner m, Algorithm algorithm, string miningLocation, string worker) {
+        private void SwitchMinerAlgorithm(ref Miner m, Algorithm algorithm, string miningLocation, string btcAdress, string worker) {
             // if is running and the current algorithm is the same skip
             if (m.IsRunning && m.CurrentAlgorithmType == algorithm.NiceHashID) {
                 return;
@@ -105,15 +105,13 @@ namespace NiceHashMiner.Miners {
 
             if (MaxProfitKey == AlgorithmType.Equihash) {
                 if (m.IsNHLocked) {
-                    // TODO worker name not working with eqm
-                    string BTC = worker.Substring(0, worker.IndexOf("."));
-                    m.Start(algorithm, miningLocation, BTC);
+                    m.Start(algorithm, miningLocation, btcAdress, worker);
                 } else {
                     m.Start(algorithm,
                     Globals.NiceHashData[MaxProfitKey].name
                     + "." + miningLocation
                     + ".nicehash.com:"
-                    + Globals.NiceHashData[MaxProfitKey].port, worker);
+                    + Globals.NiceHashData[MaxProfitKey].port, btcAdress, worker);
                 }
             } else {
                 m.Start(algorithm,
@@ -121,7 +119,7 @@ namespace NiceHashMiner.Miners {
                 + Globals.NiceHashData[MaxProfitKey].name
                 + "." + miningLocation
                 + ".nicehash.com:"
-                + Globals.NiceHashData[MaxProfitKey].port, worker);
+                + Globals.NiceHashData[MaxProfitKey].port, btcAdress, worker);
             }
         }
     }

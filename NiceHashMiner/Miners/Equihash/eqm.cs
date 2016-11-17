@@ -14,8 +14,13 @@ namespace NiceHashMiner.Miners {
             IsNHLocked = true;
         }
 
+        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
+            CurrentMiningAlgorithm = miningAlgorithm;
+            LastCommandLine = GetDevicesCommandString() + " -a " + APIPort + " -l " + url + " -u " + btcAdress + " -w " + worker;
+            ProcessHandle = _Start();
+        }
 
-        // TODO fix extra paramteter parsing
+
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " ";
 

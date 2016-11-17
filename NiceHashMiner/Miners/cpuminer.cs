@@ -25,7 +25,8 @@ namespace NiceHashMiner.Miners {
             _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string username) {
+        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
+            string username = GetUsername(btcAdress, worker);
             CurrentMiningAlgorithm = miningAlgorithm;
             if (ProcessHandle != null) return; // ignore, already running
 

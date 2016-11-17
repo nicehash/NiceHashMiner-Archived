@@ -41,12 +41,6 @@ namespace NiceHashMiner.Miners {
                 AMD_OCL_PLATFORM = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string username) {
-            CurrentMiningAlgorithm = miningAlgorithm;
-            LastCommandLine = GetDevicesCommandString() + " -a " + APIPort + " -l " + url + " -u " + username;
-            ProcessHandle = _Start();
-        }
-
         public override void SetCDevs(string[] deviceUUIDs) {
             base.SetCDevs(deviceUUIDs);
             foreach (var cDev in CDevs) {

@@ -24,9 +24,9 @@ namespace NiceHashMiner.Miners {
             MinerEtherumCUDAList.Remove(this);
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string username) {
+        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
             Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumCUDA, checking existing MinerEtherumCUDA to stop");
-            base.Start(miningAlgorithm, url, username, MinerEtherumCUDAList);
+            base.Start(miningAlgorithm, url, btcAdress, worker, MinerEtherumCUDAList);
         }
 
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {

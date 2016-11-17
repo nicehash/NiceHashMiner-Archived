@@ -30,9 +30,9 @@ namespace NiceHashMiner.Miners {
             MinerEtherumOCLList.Remove(this);
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string username) {
+        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
             Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumOCL, checking existing MinerEtherumOCL to stop");
-            base.Start(miningAlgorithm, url, username, MinerEtherumOCLList);
+            base.Start(miningAlgorithm, url, btcAdress, worker, MinerEtherumOCLList);
         }
 
         protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {

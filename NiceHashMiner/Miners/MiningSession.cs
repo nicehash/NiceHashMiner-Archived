@@ -20,7 +20,8 @@ namespace NiceHashMiner.Miners {
 
         // session varibles fixed
         string _miningLocation = "";
-        string _workerBtcStringWorker = "";
+        string _btcAdress = "";
+        string _worker = "";
         List<MiningDevice> _miningDevices = new List<MiningDevice>();
         IMainFormRatesComunication _mainFormRatesComunication;
 
@@ -66,10 +67,8 @@ namespace NiceHashMiner.Miners {
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
 
-            if (worker.Length > 0)
-                _workerBtcStringWorker = btcAdress + "." + worker;
-            else
-                _workerBtcStringWorker = btcAdress;
+            _btcAdress = btcAdress;
+            _worker = worker;
 
             // initial settup
             {
@@ -475,7 +474,7 @@ namespace NiceHashMiner.Miners {
                     currentGroupMiners = new GroupMiners(group);
                     _groupedDevicesMiners.Add(groupStringKey, currentGroupMiners);
                 }
-                currentGroupMiners.StartAlgorihtm(algorithm, _miningLocation, _workerBtcStringWorker);
+                currentGroupMiners.StartAlgorihtm(algorithm, _miningLocation, _btcAdress, _worker);
             }
 
             // stats quick fix code

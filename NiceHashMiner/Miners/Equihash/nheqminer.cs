@@ -27,6 +27,13 @@ namespace NiceHashMiner.Miners {
             return P;
         }
 
+        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
+            string username = GetUsername(btcAdress, worker);
+            CurrentMiningAlgorithm = miningAlgorithm;
+            LastCommandLine = GetDevicesCommandString() + " -a " + APIPort + " -l " + url + " -u " + username;
+            ProcessHandle = _Start();
+        }
+
 
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " ";

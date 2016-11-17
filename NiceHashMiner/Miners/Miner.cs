@@ -236,8 +236,14 @@ namespace NiceHashMiner
             _allPidData.RemoveAll( x => toRemovePidData.Contains(x));
         }
 
-        abstract public void Start(Algorithm miningAlgorithm, string url, string username);
+        abstract public void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker);
 
+        protected string GetUsername(string btcAdress, string worker) {
+            if (worker.Length > 0) {
+                return btcAdress + "." + worker;
+            }
+            return btcAdress;
+        }
 
         abstract protected void _Stop(MinerStopType willswitch);
         virtual public void Stop(MinerStopType willswitch = MinerStopType.SWITCH, bool needsRestart = false)

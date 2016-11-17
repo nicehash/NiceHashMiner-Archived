@@ -75,7 +75,7 @@ namespace NiceHashMiner.Miners {
             return "singlekeep";
         }
 
-        public void Start(Algorithm miningAlgorithm, string url, string username, List<MinerEtherum> usedMiners) {
+        public void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker, List<MinerEtherum> usedMiners) {
             foreach (var ethminer in usedMiners) {
                 if (ethminer.MINER_ID != MINER_ID && (ethminer.IsRunning || ethminer.IsPaused)) {
                     Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}", ethminer.MinerTAG(), ethminer.ProcessTag()));
@@ -91,7 +91,7 @@ namespace NiceHashMiner.Miners {
                     Helpers.ConsolePrint(MinerTAG(), "Algorithm is null or not DaggerHashimoto");
                     return;
                 }
-
+                string username = GetUsername(btcAdress, worker);
                 LastCommandLine = GetStartCommandStringPart(miningAlgorithm, url, username) + GetDevicesCommandString();
                 ProcessHandle = _Start();
             } else {
