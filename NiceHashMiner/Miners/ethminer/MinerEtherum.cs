@@ -228,6 +228,7 @@ namespace NiceHashMiner.Miners {
         /// Call this to start ethminer. If ethminer is already running, nothing happens.
         /// </summary>
         private void StartMining() {
+            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Sending START UDP");
             SendUDP(2);
             IsRunning = true;
         }
@@ -236,6 +237,7 @@ namespace NiceHashMiner.Miners {
         /// Call this to stop ethminer. If ethminer is already stopped, nothing happens.
         /// </summary>
         private void StopMining() {
+            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Sending STOP UDP");
             SendUDP(1);
             IsRunning = false;
         }
