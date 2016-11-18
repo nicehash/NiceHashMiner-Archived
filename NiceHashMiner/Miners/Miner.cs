@@ -549,7 +549,11 @@ namespace NiceHashMiner
             P.ExitEvent = Miner_Exited;
 
             P.StartInfo.Arguments = LastCommandLine;
-            P.StartInfo.CreateNoWindow = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
+            if (Path != MinerPaths.eqm) {
+                P.StartInfo.CreateNoWindow = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
+            } else {
+                P.StartInfo.CreateNoWindow = false;
+            }
             P.StartInfo.UseShellExecute = false;
 
             try
