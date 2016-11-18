@@ -301,7 +301,7 @@ namespace NiceHashMiner.Miners {
             HashSet<string> UniqueMinerGroups = new HashSet<string>();
             foreach (var curDevice in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (curDevice.Enabled) {
-                    UniqueMinerGroups.Add(curDevice.DeviceGroupString);
+                    UniqueMinerGroups.Add(GroupNames.GetNameGeneral(curDevice.DeviceType));
                 }
             }
             if (UniqueMinerGroups.Count > 0 && IsProfitable) {

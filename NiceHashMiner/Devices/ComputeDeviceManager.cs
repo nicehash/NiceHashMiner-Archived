@@ -373,22 +373,22 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
 
                             if (!skip) {
-                                string group;
+                                DeviceGroupType group;
                                 switch (cudaDev.SM_major) {
                                     case 2:
-                                        group = GroupNames.GetName(DeviceGroupType.NVIDIA_2_1);
+                                        group = DeviceGroupType.NVIDIA_2_1;
                                         break;
                                     case 3:
-                                        group = GroupNames.GetName(DeviceGroupType.NVIDIA_3_x);
+                                        group = DeviceGroupType.NVIDIA_3_x;
                                         break;
                                     case 5:
-                                        group = GroupNames.GetName(DeviceGroupType.NVIDIA_5_x);
+                                        group = DeviceGroupType.NVIDIA_5_x;
                                         break;
                                     case 6:
-                                        group = GroupNames.GetName(DeviceGroupType.NVIDIA_6_x);
+                                        group = DeviceGroupType.NVIDIA_6_x;
                                         break;
                                     default:
-                                        group = GroupNames.GetName(DeviceGroupType.NVIDIA_6_x);
+                                        group = DeviceGroupType.NVIDIA_6_x;
                                         break;
                                 }
                                 Avaliable.AllAvaliableDevices.Add(

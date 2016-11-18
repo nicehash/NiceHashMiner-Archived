@@ -16,26 +16,24 @@ namespace NiceHashMiner.Devices
                                         "NVIDIA6.x",
                                                   };
 
-        private static readonly string[] _namesGeneral = {
-                                        "CPU",
-                                        "AMD",
-                                        "NVIDIA",
-                                        "NVIDIA",
-                                        "NVIDIA",
-                                        "NVIDIA",
-                                                  };
-
-        public static string GetName(DeviceGroupType type) { return _names[(int)type]; }
-
-        public static string GetNameGeneral(DeviceGroupType type) { return _namesGeneral[(int)type]; }
-
-        public static DeviceGroupType GetType(string name) {
-            int i = 0;
-            for (; i < _names.Length; ++i) {
-                if (name.Contains(_names[i])) break;
+        public static string GetGroupName(DeviceGroupType type, int id) {
+            if(DeviceGroupType.CPU == type) {
+                return "CPU"+id;
+            } else if ((int)type < _names.Length) {
+                return _names[(int)type];
             }
-            return (DeviceGroupType)i;
+            return "UnknownGroup";
         }
 
+        public static string GetNameGeneral(DeviceType type) {
+            if(DeviceType.CPU == type) {
+                return "CPU";
+            } else if(DeviceType.NVIDIA == type) {
+                return "NVIDIA";
+            } else if (DeviceType.AMD == type) {
+                return "AMD";
+            } 
+            return "UnknownDeviceType";
+        }
     }
 }

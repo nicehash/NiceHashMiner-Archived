@@ -13,8 +13,6 @@ namespace NiceHashMiner.Devices
     {
         [JsonIgnore]
         readonly public int ID;
-        [JsonIgnore]
-        readonly public string Group;
         readonly public string Name; // { get; set; }
         // to identify equality;
         [JsonIgnore]
@@ -26,9 +24,6 @@ namespace NiceHashMiner.Devices
 
         [JsonIgnore]
         public readonly bool IsEtherumCapale;
-
-        [JsonIgnore]
-        public string DeviceGroupString { get; private set; }
         [JsonIgnore]
         readonly public DeviceGroupType DeviceGroupType;
         // UUID now used for saving
@@ -77,9 +72,8 @@ namespace NiceHashMiner.Devices
         public NiceHashMiner.Forms.Components.DevicesListViewEnableControl.ComputeDeviceEnabledOption ComputeDeviceEnabledOption { get; set; }
 
         [JsonConstructor]
-        public ComputeDevice(int id, string group, string name, string uuid, bool enabled = true) {
+        public ComputeDevice(int id, string name, string uuid, bool enabled = true) {
             ID = id;
-            Group = group;
             Name = name;
             _nameNoNums = name;
             UUID = uuid;
@@ -90,29 +84,25 @@ namespace NiceHashMiner.Devices
         public ComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int CPUCount)
         {
             ID = id;
-            Group = group;
             Name = name;
             Threads = threads;
             AffinityMask = affinityMask;
             _nameNoNums = name;
             Enabled = true;
-            DeviceGroupType = GroupNames.GetType(Group);
-            DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
+            DeviceGroupType = DeviceGroupType.CPU;
             DeviceType = DeviceType.CPU;
             NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_CPU"), CPUCount);
-            UUID = GetUUID(ID, Group, Name, DeviceGroupType);
+            UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
         }
 
         // GPU NVIDIA
-        public ComputeDevice(CudaDevice cudaDevice, string group, int GPUCount) {
+        public ComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount) {
             _cudaDevice = cudaDevice;
             ID = (int)cudaDevice.DeviceID;
-            Group = group;
             Name = cudaDevice.GetName();
             _nameNoNums = cudaDevice.GetName();
             Enabled = true;
-            DeviceGroupType = GroupNames.GetType(Group);
-            DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
+            DeviceGroupType = group;
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
             DeviceType = DeviceType.NVIDIA;
             NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), GPUCount);
@@ -124,8 +114,6 @@ namespace NiceHashMiner.Devices
             _amdDevice = amdDevice;
             ID = amdDevice.DeviceID;
             DeviceGroupType = DeviceGroupType.AMD_OpenCL;
-            Group = GroupNames.GetName(DeviceGroupType.AMD_OpenCL);
-            DeviceGroupString = GroupNames.GetNameGeneral(DeviceGroupType);
             Name = amdDevice.DeviceName;
             _nameNoNums = amdDevice.DeviceName;
             Enabled = true;

@@ -334,7 +334,7 @@ namespace NiceHashMiner.Miners {
                     var cdevs_mappings = new List<ComputeDevice>();
                     foreach (var cDev in CDevs) {
                         while(++id != cDev.ID) {
-                            var fakeCdev = new ComputeDevice(id, "", "", "");
+                            var fakeCdev = new ComputeDevice(id, "", "");
                             fakeCdev.CurrentExtraLaunchParameters = ""; // empty
                             cdevs_mappings.Add(fakeCdev);
                         }
@@ -401,7 +401,7 @@ namespace NiceHashMiner.Miners {
                     var cdevs_mappings = new List<ComputeDevice>();
                     foreach (var cDev in CDevs) {
                         while (++id != cDev.ID) {
-                            var fakeCdev = new ComputeDevice(id, "", "", "");
+                            var fakeCdev = new ComputeDevice(id, "", "");
                             fakeCdev.CurrentExtraLaunchParameters = ""; // empty
                             cdevs_mappings.Add(fakeCdev);
                         }
@@ -438,7 +438,7 @@ namespace NiceHashMiner.Miners {
             int uuid = 0;
             foreach (var algo in algos) {
                 ++uuid;
-                ComputeDevice cDev = new ComputeDevice(0, "", String.Format("device_{0}", uuid.ToString()), uuid.ToString());
+                ComputeDevice cDev = new ComputeDevice(0, String.Format("device_{0}", uuid.ToString()), uuid.ToString());
                 cDev.MostProfitableAlgorithm = algo;
                 CDevs.Add(cDev);
             }
