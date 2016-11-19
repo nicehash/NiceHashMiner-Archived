@@ -42,7 +42,7 @@ namespace NiceHashMiner.Devices
                     return false;
                 }
 
-                public string ToString2() {
+                public string ToString() {
                     return String.Format("{0}.{1}", leftPart, rightPart);
                 }
 
@@ -50,7 +50,6 @@ namespace NiceHashMiner.Devices
                 public int rightPart;
             }
 
-            const int AMD_VENDOR_ID = 1002;
             static readonly NVIDIA_SMI_DRIVER NVIDIA_RECOMENDED_DRIVER = new NVIDIA_SMI_DRIVER(372, 54); // 372.54;
             static readonly NVIDIA_SMI_DRIVER NVIDIA_MIN_DETECTION_DRIVER = new NVIDIA_SMI_DRIVER(362, 61); // 362.61;
             static NVIDIA_SMI_DRIVER _currentNvidiaSMIDriver = new NVIDIA_SMI_DRIVER(-1, -1);
@@ -121,13 +120,23 @@ namespace NiceHashMiner.Devices
                 // #1 CPU
                 CPU.QueryCPUs();
                 // #2 CUDA
-                showMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
-                NVIDIA.QueryCudaDevices();
-                // #3 OpenCL
-                showMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
-                OpenCL.QueryOpenCLDevices();
-                // #4 AMD query AMD from OpenCL devices, get serial and add devices
-                AMD.QueryAMD();
+                if (NVIDIA.IsSkipNVIDIA()) {
+                    Helpers.ConsolePrint(TAG, "Skipping NVIDIA device detection, settings are set to disabled");
+                } else {
+                    showMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
+                    NVIDIA.QueryCudaDevices();
+                }
+                // OpenCL and AMD
+                if (ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD) {
+                    Helpers.ConsolePrint(TAG, "Skipping AMD device detection, settings set to disabled");
+                    showMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
+                } else {
+                    // #3 OpenCL
+                    showMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
+                    OpenCL.QueryOpenCLDevices();
+                    // #4 AMD query AMD from OpenCL devices, get serial and add devices
+                    AMD.QueryAMD();
+                }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
                 Group.UncheckedCPU();
 
@@ -156,7 +165,7 @@ namespace NiceHashMiner.Devices
                 // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
                 bool isNvidiaErrorShown = false; // to prevent showing twice
                 bool showWarning = ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && CudaDevices.Count == 0) {
+                if (showWarning && CudaDevices.Count == 0 && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_MIN_DETECTION_DRIVER)) {
                     isNvidiaErrorShown = true;
                     var minDriver = NVIDIA_MIN_DETECTION_DRIVER.ToString();
                     var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
@@ -168,7 +177,7 @@ namespace NiceHashMiner.Devices
                 // recomended driver
                 if (showWarning && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_RECOMENDED_DRIVER) && !isNvidiaErrorShown && _currentNvidiaSMIDriver.leftPart > -1) {
                     var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
-                    var nvdriverString = _currentNvidiaSMIDriver.leftPart > -1 ? String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"), _currentNvidiaSMIDriver.ToString2())
+                    var nvdriverString = _currentNvidiaSMIDriver.leftPart > -1 ? String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"), _currentNvidiaSMIDriver.ToString())
                     : "";
                     MessageBox.Show(String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
                         recomendDrvier, nvdriverString, recomendDrvier),
@@ -294,6 +303,13 @@ namespace NiceHashMiner.Devices
                     if (e.Data != null) {
                         QueryCudaDevicesString += e.Data;
                     }
+                }
+
+                public static bool IsSkipNVIDIA() {
+                    return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X
+                        && ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X
+                        && ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X
+                        && ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
                 }
 
                 static private bool IsSMGroupSkip(int sm_major) {
@@ -479,15 +495,8 @@ namespace NiceHashMiner.Devices
             static List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
             static class AMD {
                 static public void QueryAMD() {
+                    const int AMD_VENDOR_ID = 1002;
                     Helpers.ConsolePrint(TAG, "QueryAMD START");
-                    //showMessageAndStep(International.GetText("Form_Main_loadtext_AMD"));
-                    //var dump = new sgminer(true);
-
-                    if (ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD) {
-                        Helpers.ConsolePrint(TAG, "Skipping AMD device detection, settings set to disabled");
-                        showMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
-                        return;
-                    }
 
                     #region AMD driver check, ADL returns 0
                     // check the driver version bool EnableOptimizedVersion = true;
