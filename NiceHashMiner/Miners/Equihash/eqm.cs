@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners {
     public class eqm : nheqBase {
         public eqm()
-            : base(DeviceType.NVIDIA_CPU, "eqm") {
+            : base("eqm") {
             Path = MinerPaths.eqm;
             WorkingDirectory = MinerPaths.eqm.Replace("eqm.exe", "");
             IsNHLocked = true;
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
-            CurrentMiningAlgorithm = miningAlgorithm;
+        public override void Start(string url, string btcAdress, string worker) {
             LastCommandLine = GetDevicesCommandString() + " -a " + APIPort + " -l " + url + " -u " + btcAdress + " -w " + worker;
             ProcessHandle = _Start();
         }
@@ -24,25 +25,23 @@ namespace NiceHashMiner.Miners {
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " ";
 
-            if (CPUs.Count > 0) {
-                deviceStringCommand += "-p " + CPUs.Count;
-                if (CPUs[0].MostProfitableAlgorithm.LessThreads > 0 || !string.IsNullOrEmpty(CPUs[0].MostProfitableAlgorithm.ExtraLaunchParameters)) {
-                    deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(CPUs, AlgorithmType.Equihash, DeviceType.CPU, Path);
-                }
+            if (CPU_Setup.IsInit) {
+                deviceStringCommand += "-p " + CPU_Setup.MiningPairs.Count;
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(CPU_Setup, DeviceType.CPU);
             } else {
                 // disable CPU
                 deviceStringCommand += " -t 0 ";
             }
 
-            if (NVIDIAs.Count > 0) {
+            if (NVIDIA_Setup.IsInit) {
                 deviceStringCommand += " -cd ";
-                foreach (var nvidia in NVIDIAs) {
-                    for (int i = 0; i < ExtraLaunchParametersParser.GetEqmThreadCount(nvidia); ++i) {
-                        deviceStringCommand += nvidia.ID + " ";
+                foreach (var nvidia_pair in NVIDIA_Setup.MiningPairs) {
+                    for (int i = 0; i < ExtraLaunchParametersParser.GetEqmCudaThreadCount(nvidia_pair); ++i) {
+                        deviceStringCommand += nvidia_pair.Device.ID + " ";
                     }
                 }
                 // no extra launch params
-                //deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(NVIDIAs, AlgorithmType.Equihash, DeviceType.NVIDIA, Path);
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(NVIDIA_Setup, DeviceType.NVIDIA);
             }
 
             return deviceStringCommand;

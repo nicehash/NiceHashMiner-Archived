@@ -16,7 +16,8 @@ namespace NiceHashMiner.Miners {
     using PerDeviceSpeedDictionary = Dictionary<string, Dictionary<AlgorithmType, double>>;
 
     using GroupedDevices = SortedSet<string>;
-    public class MinersManager_NEW : BaseLazySingleton<MinersManager_NEW> {
+    using NiceHashMiner.Miners.Grouping;
+    public class MinersManager : BaseLazySingleton<MinersManager> {
 
         private MiningSession CurMiningSession;
 
@@ -43,37 +44,33 @@ namespace NiceHashMiner.Miners {
         }
 
         // create miner creates new miners, except cpuminer, those are saves and called from GetCpuMiner()
-        public static Miner CreateMiner(DeviceGroupType deviceGroupType, AlgorithmType algorithmType) {
-            if (AlgorithmType.Equihash == algorithmType) {
-                if (DeviceGroupType.NVIDIA_5_x == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType
-                    || (EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
-                    return new eqm();
-                } else {
-                    return new nheqminer();
-                }
-            } else if (AlgorithmType.DaggerHashimoto == algorithmType) {
-                if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
+        public static Miner CreateMiner(ComputeDevice device, Algorithm algorithm) {
+            var minerPath = MinerPaths.GetOptimizedMinerPath(device, algorithm);
+            if (minerPath != MinerPaths.NONE) {
+                return CreateMiner(device.DeviceType, minerPath);
+            }
+            return null;
+        }
+
+        public static Miner CreateMiner(DeviceType deviceType, string minerPath) {
+            if (minerPath.Contains("eqm") && DeviceType.AMD != deviceType) {
+                return new eqm();
+            } else if (minerPath.Contains("nheqminer")) {
+                return new nheqminer();
+            } else if (minerPath.Contains("ethminer") && DeviceType.CPU != deviceType) {
+                if (DeviceType.AMD == deviceType) {
                     return new MinerEtherumOCL();
                 } else {
                     return new MinerEtherumCUDA();
                 }
-            } else {
-                switch (deviceGroupType) {
-                    case DeviceGroupType.AMD_OpenCL:
-                        return new sgminer();
-                    case DeviceGroupType.NVIDIA_2_1:
-                        return new ccminer_sm21();
-                    case DeviceGroupType.NVIDIA_3_x:
-                        return new ccminer_sm3x();
-                    case DeviceGroupType.NVIDIA_5_x:
-                        return new ccminer_sm5x();
-                    case DeviceGroupType.NVIDIA_6_x:
-                        return new ccminer_sm6x();
-                    case DeviceGroupType.CPU:
-                        return new cpuminer();
-                }
+            } else if (minerPath.Contains("cpuminer") && DeviceType.CPU == deviceType) {
+                return new cpuminer();
+            } else if (minerPath.Contains("sgminer") && DeviceType.AMD == deviceType) {
+                return new sgminer();
+            } else if(minerPath.Contains("ccminer") && DeviceType.NVIDIA == deviceType) {
+                return new ccminer();
             }
-            
+
             return null;
         }
 

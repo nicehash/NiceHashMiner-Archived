@@ -12,7 +12,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms {
-    using MinersManager = MinersManager_NEW;
+    using NiceHashMiner.Miners.Grouping;
     public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator, IBenchmarkCalculation {
 
         private bool _inBenchmark = false;
@@ -403,23 +403,20 @@ namespace NiceHashMiner.Forms {
                 }
             }
 
-            var currentConfig = _currentDevice.DeviceBenchmarkConfig;
-            if (_currentDevice.DeviceGroupType == DeviceGroupType.CPU && (_currentAlgorithm != null && _currentAlgorithm.NiceHashID != AlgorithmType.Equihash)) {
-                _currentMiner = MinersManager.CreateMiner(DeviceGroupType.CPU, AlgorithmType.NONE);
-                if (_currentAlgorithm != null && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
+            if (_currentDevice != null && _currentAlgorithm != null) {
+                _currentMiner = MinersManager.CreateMiner(_currentDevice, _currentAlgorithm);
+                if(_currentDevice.DeviceType == DeviceType.CPU && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
                     __CPUBenchmarkStatus = new CPUBenchmarkStatus();
                     _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
+                } else {
+                    __CPUBenchmarkStatus = null;
                 }
-            } else {
-                _currentMiner = MinersManager.CreateMiner(currentConfig.DeviceGroupType, _currentAlgorithm.NiceHashID);
-                __CPUBenchmarkStatus = null;
             }
 
             if (_currentMiner != null && _currentAlgorithm != null) {
                 _benchmarkMiners.Add(_currentMiner);
                 CurrentAlgoName = AlgorithmNiceHashNames.GetName(_currentAlgorithm.NiceHashID);
-                // this has no effect for CPU miners
-                _currentMiner.SetCDevs(new string[] { _currentDevice.UUID });
+                _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
 
                 var time = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits
                     .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
@@ -434,7 +431,7 @@ namespace NiceHashMiner.Forms {
                 dotCount = 0;
                 _benchmarkingTimer.Start();
 
-                _currentMiner.BenchmarkStart(_currentDevice, _currentAlgorithm, time, this);
+                _currentMiner.BenchmarkStart(time, this);
                 algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID,
                     getDotsWaitString());
             } else {
@@ -530,7 +527,7 @@ namespace NiceHashMiner.Forms {
                     algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, "");
                 }
                 if (rebenchSame) {
-                    _currentMiner.BenchmarkStart(_currentDevice, _currentAlgorithm, __CPUBenchmarkStatus.Time, this);
+                    _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
                 } else {
                     NextBenchmark();
                 }

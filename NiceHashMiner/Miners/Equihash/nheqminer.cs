@@ -9,11 +9,14 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using NiceHashMiner.Miners.Grouping;
+using System.Diagnostics;
+using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners {
     public class nheqminer : nheqBase {
         public nheqminer()
-            : base(DeviceType.ALL, "nheqminer") {
+            : base("nheqminer") {
                 Path = MinerPaths.nheqminer;
                 WorkingDirectory = MinerPaths.nheqminer.Replace("nheqminer.exe", "");
         }
@@ -21,15 +24,18 @@ namespace NiceHashMiner.Miners {
         // CPU aff set from NHM
         protected override NiceHashProcess _Start() {
             NiceHashProcess P = base._Start();
-            if (CPUs.Count > 0 && CPUs[0].AffinityMask != 0 && P != null)
-                CPUID.AdjustAffinity(P.Id, CPUs[0].AffinityMask);
+            if (CPU_Setup.IsInit && P != null) {
+                var AffinityMask = CPU_Setup.MiningPairs[0].Device.AffinityMask;
+                if (AffinityMask != 0) {
+                    CPUID.AdjustAffinity(P.Id, AffinityMask);
+                }
+            }
 
             return P;
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
+        public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
-            CurrentMiningAlgorithm = miningAlgorithm;
             LastCommandLine = GetDevicesCommandString() + " -a " + APIPort + " -l " + url + " -u " + username;
             ProcessHandle = _Start();
         }
@@ -38,37 +44,47 @@ namespace NiceHashMiner.Miners {
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " ";
 
-            if (CPUs.Count > 0) {
-                if (CPUs[0].MostProfitableAlgorithm.LessThreads > 0 || !string.IsNullOrEmpty(CPUs[0].MostProfitableAlgorithm.ExtraLaunchParameters)) {
-                    // TODO parse
-                    deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(CPUs, AlgorithmType.Equihash, DeviceType.CPU, Path);
-                }
+            if (CPU_Setup.IsInit) {
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(CPU_Setup, DeviceType.CPU);
             } else {
                 // disable CPU
                 deviceStringCommand += " -t 0 ";
             }
 
-            if (NVIDIAs.Count > 0) {
+            if (NVIDIA_Setup.IsInit) {
                 deviceStringCommand += " -cd ";
-                foreach (var nvidia in NVIDIAs) {
-                    deviceStringCommand += nvidia.ID + " ";
+                foreach (var nvidia_pair in NVIDIA_Setup.MiningPairs) {
+                    deviceStringCommand += nvidia_pair.Device.ID + " ";
                 }
-                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(NVIDIAs, AlgorithmType.Equihash, DeviceType.NVIDIA, Path);
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(NVIDIA_Setup, DeviceType.NVIDIA);
             }
 
-            if (AMDs.Count > 0) {
+            if (AMD_Setup.IsInit) {
                 deviceStringCommand += " -op " + AMD_OCL_PLATFORM.ToString();
                 deviceStringCommand += " -od ";
-                foreach (var amd in AMDs) {
-                    deviceStringCommand += amd.ID + " ";
+                foreach (var amd_pair in AMD_Setup.MiningPairs) {
+                    deviceStringCommand += amd_pair.Device.ID + " ";
                 }
-                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForCDevs(AMDs, AlgorithmType.Equihash, DeviceType.AMD, Path);
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(AMD_Setup, DeviceType.AMD);
             }
 
             return deviceStringCommand;
         }
 
         // benchmark stuff
+        protected override Process BenchmarkStartProcess(string CommandLine) {
+            Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
+
+            if (CPU_Setup.IsInit && BenchmarkHandle != null) {
+                var AffinityMask = CPU_Setup.MiningPairs[0].Device.AffinityMask;
+                if (AffinityMask != 0) {
+                    CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
+                }
+            }
+
+            return BenchmarkHandle;
+        }
+
         protected override bool BenchmarkParseLine(string outdata) {
 
             if (outdata.Contains(Iter_PER_SEC)) {

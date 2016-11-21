@@ -11,29 +11,24 @@ using System.Management;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners
 {
-    // TODO IMPORTANT, Intensity not handled correctly
-    // for now AMD only
     class sgminer : Miner
     {
         private readonly int GPUPlatformNumber;
-        
-        // we only group devices that are compatible. for sgminer we have gpucodename and enabled optimized vesrion as mandatory extra parameters
-        private string CommonGpuCodenameSetting = "";
-        private bool EnableOptimizedVersion = true;
-
         // benchmark helper variables
         bool _benchmarkOnce = true;
         Stopwatch _benchmarkTimer = new Stopwatch();
 
         public sgminer()
-            : base(DeviceType.AMD, DeviceGroupType.AMD_OpenCL, "AMD_OpenCL")
+            : base("sgminer_AMD")
         {            
             Path = MinerPaths.sgminer_5_5_0_general;
-            EnableOptimizedVersion = true;
             GPUPlatformNumber = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
+            IsSgminer = true;
         }
 
         // use ONLY for exiting a benchmark
@@ -61,48 +56,30 @@ namespace NiceHashMiner.Miners
             return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
         }
 
-        protected override void InitSupportedMinerAlgorithms() {
-            var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.AMD_OpenCL);
-            allGroupSupportedList.Remove(AlgorithmType.DaggerHashimoto);
-            _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
-        }
-
-        public override void SetCDevs(string[] deviceUUIDs) {
-            base.SetCDevs(deviceUUIDs);
-            // now set extra sgminer settings, first dev is enough because of grouping logic
-            if(CDevs.Count != 0) {
-                CommonGpuCodenameSetting = CDevs[0].Codename;
-                EnableOptimizedVersion = CDevs[0].IsOptimizedVersion;
-            }
-        }
-
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker)
+        public override void Start(string url, string btcAdress, string worker)
         {
-            string username = GetUsername(btcAdress, worker);
-            CurrentMiningAlgorithm = miningAlgorithm;
-            if (miningAlgorithm == null)
-            {
-                Helpers.ConsolePrint(MinerTAG(), "GetMinerAlgorithm(" + miningAlgorithm.NiceHashID + "): Algo equals to null");
+            if (!IsInit) {
+                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
+            string username = GetUsername(btcAdress, worker);
 
-            Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID, CommonGpuCodenameSetting, EnableOptimizedVersion);
+            Path = MiningSetup.MinerPath;
             WorkingDirectory = Path.Replace("sgminer.exe", "");
 
             LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
-                              " -k " + miningAlgorithm.MinerName +
+                              " -k " + MiningSetup.MinerName +
                               " --url=" + url +
-                              " --userpass=" + username + ":" + Algorithm.PasswordDefault +
+                              " --userpass=" + username + ":" + Globals.PasswordDefault +
                               " --api-listen" +
                               " --api-port=" + APIPort.ToString() +
                               " " +
-                              ExtraLaunchParametersParser.ParseForCDevs(
-                                                                CDevs,
-                                                                CurrentMiningAlgorithm.NiceHashID,
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                                MiningSetup,
                                                                 DeviceType.AMD) +
                               " --device ";
 
@@ -129,7 +106,7 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             string CommandLine;
             Path = "cmd";
-            string MinerPath = GetOptimizedMinerPath(algorithm.NiceHashID, CommonGpuCodenameSetting, EnableOptimizedVersion);
+            string MinerPath = MiningSetup.MinerPath;
 
             var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
             string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
@@ -147,13 +124,12 @@ namespace NiceHashMiner.Miners
                           " --gpu-platform " + GPUPlatformNumber +
                           " -k " + algorithm.MinerName +
                           " --url=" + url +
-                          " --userpass=" + username + ":" + Algorithm.PasswordDefault +
+                          " --userpass=" + username + ":" + Globals.PasswordDefault +
                           " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
                           " -T --log 10 --log-file dump.txt" +
                           " " +
-                          ExtraLaunchParametersParser.ParseForCDevs(
-                                                                CDevs,
-                                                                algorithm.NiceHashID,
+                          ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                                MiningSetup,
                                                                 DeviceType.AMD) +
                           " --device ";
 
@@ -233,8 +209,7 @@ namespace NiceHashMiner.Miners
         // TODO _currentMinerReadStatus
         public override APIData GetSummary() {
             string resp;
-            string aname = null;
-            APIData ad = new APIData();
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
             resp = GetAPIData(APIPort, "summary");
             if (resp == null) {
@@ -272,9 +247,6 @@ namespace NiceHashMiner.Miners
 
                     ad.Speed = Double.Parse(speed[1]) * 1000;
 
-                    aname = CurrentMiningAlgorithm.MinerName;
-
-
                     if (total_mh <= PreviousTotalMH) {
                         Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " SGMiner might be stuck as no new hashes are being produced");
                         Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
@@ -292,7 +264,6 @@ namespace NiceHashMiner.Miners
             }
 
             _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-            FillAlgorithm(aname, ref ad);
             // check if speed zero
             if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
 

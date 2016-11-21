@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using NiceHashMiner.Miners.Grouping;
 
 namespace NiceHashMiner.Miners {
 
@@ -24,8 +25,8 @@ namespace NiceHashMiner.Miners {
 
         protected bool IsPaused = false;
 
-        public MinerEtherum(DeviceType deviceType, string minerDeviceName, string blockString)
-            : base(deviceType, DeviceGroupType.NONE, minerDeviceName) {
+        public MinerEtherum(string minerDeviceName, string blockString)
+            : base(minerDeviceName) {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
             CurrentBlockString = blockString;
@@ -36,19 +37,15 @@ namespace NiceHashMiner.Miners {
             return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
         }
 
-        protected override void InitSupportedMinerAlgorithms() {
-            _supportedMinerAlgorithms = new AlgorithmType[] { AlgorithmType.DaggerHashimoto };
-        }
-
-        protected abstract string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username);
+        protected abstract string GetStartCommandStringPart(string url, string username);
         protected abstract string GetBenchmarkCommandStringPart(Algorithm algorithm);
 
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " ";
 
             List<string> ids = new List<string>();
-            foreach (var cdev in CDevs) {
-                ids.Add(cdev.ID.ToString());
+            foreach (var mPair in MiningSetup.MiningPairs) {
+                ids.Add(mPair.Device.ID.ToString());
             }
             deviceStringCommand += string.Join(" ", ids);
             // set dag load mode
@@ -75,7 +72,11 @@ namespace NiceHashMiner.Miners {
             return "singlekeep";
         }
 
-        public void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker, List<MinerEtherum> usedMiners) {
+        public void Start(string url, string btcAdress, string worker, List<MinerEtherum> usedMiners) {
+            if (!IsInit) {
+                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
+                return;
+            }
             foreach (var ethminer in usedMiners) {
                 if (ethminer.MINER_ID != MINER_ID && (ethminer.IsRunning || ethminer.IsPaused)) {
                     Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}", ethminer.MinerTAG(), ethminer.ProcessTag()));
@@ -86,13 +87,8 @@ namespace NiceHashMiner.Miners {
 
             IsPaused = false;
             if (ProcessHandle == null) {
-                CurrentMiningAlgorithm = miningAlgorithm;
-                if (miningAlgorithm == null && miningAlgorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
-                    Helpers.ConsolePrint(MinerTAG(), "Algorithm is null or not DaggerHashimoto");
-                    return;
-                }
                 string username = GetUsername(btcAdress, worker);
-                LastCommandLine = GetStartCommandStringPart(miningAlgorithm, url, username) + GetDevicesCommandString();
+                LastCommandLine = GetStartCommandStringPart(url, username) + GetDevicesCommandString();
                 ProcessHandle = _Start();
             } else {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Resuming ethminer..");
@@ -109,23 +105,22 @@ namespace NiceHashMiner.Miners {
             return CommandLine;
         }
 
-        public override void SetCDevs(string[] deviceUUIDs) {
-            base.SetCDevs(deviceUUIDs);
+        public override void InitMiningSetup(MiningSetup miningSetup) {
+            base.InitMiningSetup(miningSetup);
             // now find the fastest for DAG generation
             double fastestSpeed = double.MinValue;
-            foreach (var cdev in CDevs) {
-                double compareSpeed = cdev.DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.DaggerHashimoto].BenchmarkSpeed;
+            foreach (var mPair in MiningSetup.MiningPairs) {
+                double compareSpeed = mPair.Device.DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.DaggerHashimoto].BenchmarkSpeed;
                 if (fastestSpeed < compareSpeed) {
-                    DaggerHashimotoGenerateDevice = cdev;
+                    DaggerHashimotoGenerateDevice = mPair.Device;
                     fastestSpeed = compareSpeed;
                 }
             }
         }
 
         public override APIData GetSummary() {
-            APIData ad = new APIData();
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
-            FillAlgorithm("daggerhashimoto", ref ad);
             bool ismining;
             var getSpeedStatus = GetSpeed(out ismining, out ad.Speed);
             if (GetSpeedStatus.GOT == getSpeedStatus) {

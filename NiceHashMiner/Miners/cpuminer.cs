@@ -6,42 +6,32 @@ using System.Globalization;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners {
     public class cpuminer : Miner {
-        //private int Threads;
-        //private ulong AffinityMask;
-
         public cpuminer()
-            : base(DeviceType.CPU, DeviceGroupType.CPU, "CPU") {
+            : base("cpuminer_CPU") {
         }        
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 60 * 1000; // 1 minute max, whole waiting time 75seconds
         }
 
-        protected override void InitSupportedMinerAlgorithms() {
-            var allGroupSupportedList = GroupAlgorithms.GetAlgorithmKeysForGroup(DeviceGroupType.CPU);
-            _supportedMinerAlgorithms = allGroupSupportedList.ToArray();
-        }
-
-        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
+        public override void Start(string url, string btcAdress, string worker) {
+            if(!IsInit) {
+                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
+                return;
+            }
             string username = GetUsername(btcAdress, worker);
-            CurrentMiningAlgorithm = miningAlgorithm;
-            if (ProcessHandle != null) return; // ignore, already running
+            Path = MiningSetup.MinerPath;
 
-            if (CDevs.Count == 0 || !CDevs[0].Enabled) return;
-
-            if (miningAlgorithm == null) return;
-
-            Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
-
-            LastCommandLine = "--algo=" + miningAlgorithm.MinerName +
+            LastCommandLine = "--algo=" + MiningSetup.MinerName +
                               " --url=" + url +
-                              " --userpass=" + username + ":" + Algorithm.PasswordDefault +
-                              ExtraLaunchParametersParser.ParseForCDevs(
-                                                                CDevs,
-                                                                CurrentMiningAlgorithm.NiceHashID,
+                              " --userpass=" + username + ":" + Globals.PasswordDefault +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                                MiningSetup,
                                                                 DeviceType.CPU) +
                               " --api-bind=" + APIPort.ToString();
 
@@ -59,8 +49,9 @@ namespace NiceHashMiner.Miners {
         protected override NiceHashProcess _Start() {
             NiceHashProcess P = base._Start();
 
-            if (CDevs[0].AffinityMask != 0 && P != null)
-                CPUID.AdjustAffinity(P.Id, CDevs[0].AffinityMask);
+            var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
+            if (AffinityMask != 0 && P != null)
+                CPUID.AdjustAffinity(P.Id, AffinityMask);
 
             return P;
         }
@@ -73,13 +64,12 @@ namespace NiceHashMiner.Miners {
         #region Decoupled benchmarking routines
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            Path = GetOptimizedMinerPath(algorithm.NiceHashID);
+            Path = MiningSetup.MinerPath;
 
             return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
-                         ExtraLaunchParametersParser.ParseForCDevs(
-                                                                CDevs,
-                                                                algorithm.NiceHashID,
+                         ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                                MiningSetup,
                                                                 DeviceType.CPU) +
                          " --time-limit " + time.ToString();
         }
@@ -87,8 +77,9 @@ namespace NiceHashMiner.Miners {
         protected override Process BenchmarkStartProcess(string CommandLine) {
             Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
 
-            if (CDevs[0].AffinityMask != 0 && BenchmarkHandle != null)
-                CPUID.AdjustAffinity(BenchmarkHandle.Id, CDevs[0].AffinityMask);
+            var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
+            if (AffinityMask != 0 && BenchmarkHandle != null)
+                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
 
             return BenchmarkHandle;
         }

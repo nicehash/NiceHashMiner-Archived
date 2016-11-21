@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Miners.Grouping;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
     public abstract class nheqBase : Miner {
-        protected List<ComputeDevice> CPUs = new List<ComputeDevice>();
-        protected List<ComputeDevice> NVIDIAs = new List<ComputeDevice>();
+        protected MiningSetup CPU_Setup = new MiningSetup(null);
+        protected MiningSetup NVIDIA_Setup = new MiningSetup(null);
         protected readonly int AMD_OCL_PLATFORM;
-        protected List<ComputeDevice> AMDs = new List<ComputeDevice>();
+        protected MiningSetup AMD_Setup = new MiningSetup(null);
 
         // extra benchmark stuff
         protected double curSpeed = 0;
@@ -36,39 +37,42 @@ namespace NiceHashMiner.Miners {
             public object error { get; set; }
         }
 
-        public nheqBase(DeviceType deviceType, string minerDeviceName)
-            : base(deviceType, DeviceGroupType.NONE, minerDeviceName) {
+        public nheqBase(string minerDeviceName)
+            : base(minerDeviceName) {
                 AMD_OCL_PLATFORM = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
         }
 
-        public override void SetCDevs(string[] deviceUUIDs) {
-            base.SetCDevs(deviceUUIDs);
-            foreach (var cDev in CDevs) {
-                if (cDev.DeviceType == DeviceType.CPU) {
-                    CPUs.Add(cDev);
+        public override void InitMiningSetup(MiningSetup miningSetup) {
+            base.InitMiningSetup(miningSetup);
+            List<MiningPair> CPUs = new List<MiningPair>();
+            List<MiningPair> NVIDIAs = new List<MiningPair>();
+            List<MiningPair> AMDs = new List<MiningPair>();
+            foreach (var pairs in MiningSetup.MiningPairs) {
+                if (pairs.Device.DeviceType == DeviceType.CPU) {
+                    CPUs.Add(pairs);
                 }
-                if (cDev.DeviceType == DeviceType.NVIDIA) {
-                    NVIDIAs.Add(cDev);
+                if (pairs.Device.DeviceType == DeviceType.NVIDIA) {
+                    NVIDIAs.Add(pairs);
                 }
-                if (cDev.DeviceType == DeviceType.AMD) {
-                    AMDs.Add(cDev);
+                if (pairs.Device.DeviceType == DeviceType.AMD) {
+                    AMDs.Add(pairs);
                 }
             }
+            // reinit
+            CPU_Setup = new MiningSetup(CPUs);
+            NVIDIA_Setup = new MiningSetup(NVIDIAs);
+            AMD_Setup = new MiningSetup(AMDs);
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // TODO nvidia extras
-            CurrentMiningAlgorithm = algorithm;
             String ret = "-b " + GetDevicesCommandString();
             return ret;
         }
 
         public override APIData GetSummary() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-            APIData ad = new APIData();
-            ad.AlgorithmID = AlgorithmType.Equihash;
-            ad.AlgorithmName = "equihash";
-            ad.Speed = 0;
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
             TcpClient client = null;
             JsonApiResponse resp = null;
@@ -92,6 +96,8 @@ namespace NiceHashMiner.Miners {
                 if (ad.Speed == 0) {
                     _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
                 }
+            } else if (resp == null) {
+                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             }
 
             return ad;
@@ -107,9 +113,6 @@ namespace NiceHashMiner.Miners {
                 return true;
             }
             return false;
-        }
-        protected override void InitSupportedMinerAlgorithms() {
-            _supportedMinerAlgorithms = new AlgorithmType[] { AlgorithmType.Equihash };
         }
 
         protected override void _Stop(MinerStopType willswitch) {

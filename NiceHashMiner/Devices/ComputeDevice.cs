@@ -29,10 +29,6 @@ namespace NiceHashMiner.Devices
         // UUID now used for saving
         readonly public string UUID;
 
-        // Current Extra Launch Parameters copied from most profitable algorithm for benchmarking
-        [JsonIgnore]
-        public string CurrentExtraLaunchParameters { get; set; }
-
         // CPU, NVIDIA, AMD
         [JsonIgnore]
         readonly public int Threads;
@@ -59,10 +55,6 @@ namespace NiceHashMiner.Devices
         public bool IsOptimizedVersion { get; private set; }
         [JsonIgnore]
         public string Codename { get; private set; }
-
-        // temp value for grouping new profits
-        [JsonIgnore]
-        public Algorithm MostProfitableAlgorithm { get; set; }
 
         [JsonIgnore]
         public DeviceBenchmarkConfig DeviceBenchmarkConfig { get; private set; }
@@ -154,15 +146,6 @@ namespace NiceHashMiner.Devices
                     if (!_amdDevice.Codename.Contains("Tahiti")) {
                         DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.NeoScrypt].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2" + AmdGpuDevice.TemperatureParam;
                         Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + _amdDevice.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
-                    }
-                }
-                // CUDA extra initializations
-                if (_cudaDevice != null) {
-                    if (DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(AlgorithmType.CryptoNight)) {
-                        var CryptoNightAlgo = DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.CryptoNight];
-                        if (_cudaDevice.SM_major >= 5 && Name.Contains("Ti") == false) {
-                            CryptoNightAlgo.ExtraLaunchParameters = "--bsleep=0 --bfactor=0 --launch=32x" + _cudaDevice.SMX.ToString();
-                        }
                     }
                 }
             }

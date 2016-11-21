@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners {
 
@@ -20,7 +22,7 @@ namespace NiceHashMiner.Miners {
         private readonly int GPUPlatformNumber;
 
         public MinerEtherumOCL()
-            : base(DeviceType.AMD, "MinerEtherumOCL", "AMD OpenCL") {
+            : base("MinerEtherumOCL", "AMD OpenCL") {
             GPUPlatformNumber = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
             MinerEtherumOCLList.Add(this);
         }
@@ -30,22 +32,21 @@ namespace NiceHashMiner.Miners {
             MinerEtherumOCLList.Remove(this);
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
+        public override void Start(string url, string btcAdress, string worker) {
             Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumOCL, checking existing MinerEtherumOCL to stop");
-            base.Start(miningAlgorithm, url, btcAdress, worker, MinerEtherumOCLList);
+            base.Start(url, btcAdress, worker, MinerEtherumOCLList);
         }
 
-        protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {
+        protected override string GetStartCommandStringPart(string url, string username) {
             // set directory
             WorkingDirectory = "";
             return " --opencl --opencl-platform " + GPUPlatformNumber
                 + " "
-                + ExtraLaunchParametersParser.ParseForCDevs(
-                                                    CDevs,
-                                                    AlgorithmType.DaggerHashimoto,
+                + ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                    MiningSetup,
                                                     DeviceType.AMD)
                 + " -S " + url.Substring(14)
-                + " -O " + username + ":" + Algorithm.PasswordDefault
+                + " -O " + username + ":" + Globals.PasswordDefault
                 + " --api-port " + APIPort.ToString()
                 + " --opencl-devices ";
         }
@@ -53,9 +54,8 @@ namespace NiceHashMiner.Miners {
         protected override string GetBenchmarkCommandStringPart(Algorithm algorithm) {
             return " --opencl --opencl-platform " + GPUPlatformNumber
                 + " "
-                + ExtraLaunchParametersParser.ParseForCDevs(
-                                                    CDevs,
-                                                    AlgorithmType.DaggerHashimoto,
+                + ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                    MiningSetup,
                                                     DeviceType.AMD)
                 + " --benchmark-warmup 40 --benchmark-trial 20"
                 + " --opencl-devices ";

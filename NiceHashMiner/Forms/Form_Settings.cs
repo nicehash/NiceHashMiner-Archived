@@ -2,6 +2,8 @@
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -529,15 +531,12 @@ namespace NiceHashMiner.Forms {
             IsChange = true;
             ConfigManager.Instance.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                var thisListDev = new List<ComputeDevice>() { cDev };
                 if (cDev.DeviceType == DeviceType.AMD) {
                     foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings) {
                         if (algorithm.Key != AlgorithmType.DaggerHashimoto) {
                             algorithm.Value.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-                            cDev.MostProfitableAlgorithm = algorithm.Value;
-                            algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
-                                thisListDev, algorithm.Key, DeviceType.AMD, "", false
-                                );
+                            algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+                                new MiningPair(cDev, algorithm.Value), algorithm.Key, DeviceType.AMD, false);
                         }
                     }
                 }
@@ -552,32 +551,26 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
             if (ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations) {
                 foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                    var thisListDev = new List<ComputeDevice>() { cDev };
                     foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings) {
                         algorithm.Value.ExtraLaunchParameters = "";
                         if (cDev.DeviceType == DeviceType.AMD && algorithm.Key != AlgorithmType.DaggerHashimoto) {
                             algorithm.Value.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-                            cDev.MostProfitableAlgorithm = algorithm.Value;
-                            algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
-                                thisListDev, algorithm.Key, cDev.DeviceType, "", false
-                                );
+                            algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+                                new MiningPair(cDev, algorithm.Value), algorithm.Key, cDev.DeviceType, false);
                         }
                     }
                 }
             } else {
                 foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                    if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults 
-                    var thisListDev = new List<ComputeDevice>() { cDev };
+                    if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
                     var deviceDefaults = GroupAlgorithms.CreateDefaultsForGroup(cDev.DeviceGroupType);
                     foreach (var defaultAlgoSettings in deviceDefaults) {
                         if (cDev.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(defaultAlgoSettings.Key)) {
                             var algorithmKey = defaultAlgoSettings.Key;
                             var algorithm = cDev.DeviceBenchmarkConfig.AlgorithmSettings[algorithmKey];
                             algorithm.ExtraLaunchParameters = defaultAlgoSettings.Value.ExtraLaunchParameters;
-                            cDev.MostProfitableAlgorithm = algorithm;
-                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForCDevs(
-                                thisListDev, algorithmKey, cDev.DeviceType, "", false
-                                );
+                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+                                new MiningPair(cDev, algorithm), algorithmKey, cDev.DeviceType, false);
                         }
                     }
                     // set extra optimizations based on device

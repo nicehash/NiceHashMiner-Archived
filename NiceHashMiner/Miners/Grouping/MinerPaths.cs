@@ -4,10 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NiceHashMiner.Miners
+namespace NiceHashMiner.Miners.Grouping
 {
-    using MinersManager = MinersManager_NEW;
-
     /// <summary>
     /// MinerPaths, used just to store miners paths strings. Only one instance needed
     /// </summary>
@@ -58,6 +56,21 @@ namespace NiceHashMiner.Miners
 
         public const string NONE = "";
 
+        public static string GetOptimizedMinerPath(MiningPair pair) {
+            return GetOptimizedMinerPath(pair.Device, pair.Algorithm);
+        }
+
+        public static string GetOptimizedMinerPath(ComputeDevice computeDevice, Algorithm algorithm) {
+            if (computeDevice == null || algorithm == null) {
+                return NONE;
+            }
+            AlgorithmType algoType = algorithm.NiceHashID;
+            DeviceType devType = computeDevice.DeviceType;
+            DeviceGroupType devGroupType = computeDevice.DeviceGroupType;
+            string devCodename = computeDevice.Codename;
+            bool isOptimized = computeDevice.IsOptimizedVersion;
+            return GetOptimizedMinerPath(algoType, devType, devGroupType, devCodename, isOptimized);
+        }
 
         public static string GetOptimizedMinerPath(AlgorithmType algorithmType, DeviceType deviceType, DeviceGroupType deviceGroupType, string devCodename, bool isOptimized) {
             // special cases
@@ -68,10 +81,10 @@ namespace NiceHashMiner.Miners
             }
             // AlgorithmType.Equihash special shared case
             if (algorithmType == AlgorithmType.Equihash) {
-                if (deviceType == DeviceType.NVIDIA_CPU || deviceGroupType == DeviceGroupType.NVIDIA_5_x || deviceGroupType == DeviceGroupType.NVIDIA_6_x
+                if (deviceGroupType == DeviceGroupType.NVIDIA_5_x || deviceGroupType == DeviceGroupType.NVIDIA_6_x
                     || (MinersManager.EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
                     return MinerPaths.eqm;
-                } else {
+                } else { // supports all DeviceTypes
                     return MinerPaths.nheqminer;
                 }
             }

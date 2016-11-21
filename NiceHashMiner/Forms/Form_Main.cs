@@ -24,7 +24,7 @@ using System.Timers;
 
 namespace NiceHashMiner
 {
-    using MinersManager = MinersManager_NEW;
+    using NiceHashMiner.Miners.Grouping;
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private static string VisitURL = Links.VisitURL;
@@ -372,7 +372,7 @@ namespace NiceHashMiner
             }
 
 #if (SWITCH_TESTING)
-            SMAMinerCheck.Interval = MinersManager.SMAMinerCheckInterval;
+            SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
 #endif
             MinersManager.Instance.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Miners {
+namespace NiceHashMiner.Miners.Parsing {
     public class MinerOption {
         public MinerOption(MinerOptionType iType, string iShortName, string iLongName, string iDefault, MinerOptionFlagType iFlagType, string iSeparator) {
             this.Type = iType;

@@ -10,12 +10,14 @@ using System.IO;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners
 {
-    abstract public class ccminer : Miner
+    public class ccminer : Miner
     {
-        public ccminer(DeviceGroupType deviceGroupType, string minerDeviceName) : base(DeviceType.NVIDIA, deviceGroupType, minerDeviceName) { }
+        public ccminer() : base("ccminer_NVIDIA") { }
 
         // cryptonight benchmark exception
         int _cryptonightTotalCount = 0;
@@ -26,34 +28,35 @@ namespace NiceHashMiner.Miners
             return 60 * 1000; // 1 minute max, whole waiting time 75seconds
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker)
+        public override void Start(string url, string btcAdress, string worker)
         {
+            if (!IsInit) {
+                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
+                return;
+            }
             string username = GetUsername(btcAdress, worker);
-            CurrentMiningAlgorithm = miningAlgorithm;
-            if (miningAlgorithm == null) return;
 
             string algo = "";
             string apiBind = "";
-            if (CurrentMiningAlgorithm.NiceHashID != AlgorithmType.CryptoNight) {
-                algo = "--algo=" + miningAlgorithm.MinerName;
+            if (MiningSetup.CurrentAlgorithmType != AlgorithmType.CryptoNight) {
+                algo = "--algo=" + MiningSetup.MinerName;
                 apiBind = " --api-bind=" + APIPort.ToString();
             }
 
-            IsAPIReadException = CurrentMiningAlgorithm.NiceHashID == AlgorithmType.CryptoNight;
+            IsAPIReadException = MiningSetup.CurrentAlgorithmType == AlgorithmType.CryptoNight;
 
             LastCommandLine = algo +
                                   " --url=" + url +
-                                  " --userpass=" + username + ":" + Algorithm.PasswordDefault +
+                                  " --userpass=" + username + ":" + Globals.PasswordDefault +
                                   apiBind + " " +
-                                  ExtraLaunchParametersParser.ParseForCDevs(
-                                                                CDevs,
-                                                                CurrentMiningAlgorithm.NiceHashID,
+                                  ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                                MiningSetup,
                                                                 DeviceType.NVIDIA) +
                                   " --devices ";
 
             LastCommandLine += GetDevicesCommandString();
 
-            Path = GetOptimizedMinerPath(miningAlgorithm.NiceHashID);
+            Path = MiningSetup.MinerPath;
 
             ProcessHandle = _Start();
         }
@@ -74,15 +77,14 @@ namespace NiceHashMiner.Miners
             string CommandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
                               timeLimit + " " +
-                              ExtraLaunchParametersParser.ParseForCDevs(
-                                                                CDevs,
-                                                                algorithm.NiceHashID,
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                                MiningSetup,
                                                                 DeviceType.NVIDIA) +
                               " --devices ";
 
             CommandLine += GetDevicesCommandString();
 
-            Path = GetOptimizedMinerPath(algorithm.NiceHashID);
+            Path = MiningSetup.MinerPath;
 
             // cryptonight exception helper variables
             _cryptonightTotalCount = BenchmarkTimeInSeconds / _cryptonightTotalDelim;
@@ -145,7 +147,7 @@ namespace NiceHashMiner.Miners
 
         public override APIData GetSummary() {
             // CryptoNight does not have api bind port
-            if (CurrentAlgorithmType == AlgorithmType.CryptoNight) {
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CryptoNight) {
                 // check if running
                 if (ProcessHandle == null) {
                     _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
@@ -156,28 +158,20 @@ namespace NiceHashMiner.Miners
                     var runningProcess = Process.GetProcessById(ProcessHandle.Id);
                 } catch (ArgumentException ex) {
                     _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight");
+                    Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight reason: " + ex.Message);
                     return null; // will restart outside
                 } catch (InvalidOperationException ex) {
                     _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight");
+                    Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight reason: " + ex.Message);
                     return null; // will restart outside
-                }
-                // extra check
-                if (CurrentMiningAlgorithm == null) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight Proccess CurrentMiningAlgorithm is NULL");
-                    return null;
                 }
 
                 var totalSpeed = 0.0d;
-                foreach (var cdev in CDevs) {
-                    totalSpeed += cdev.DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.CryptoNight].BenchmarkSpeed;
+                foreach (var miningPair in MiningSetup.MiningPairs) {
+                    totalSpeed += miningPair.Device.DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.CryptoNight].BenchmarkSpeed;
                 }
 
-                APIData CryptoNightData = new APIData();
-                CryptoNightData.AlgorithmID = AlgorithmType.CryptoNight;
-                CryptoNightData.AlgorithmName = "cryptonight";
+                APIData CryptoNightData = new APIData(MiningSetup.CurrentAlgorithmType);
                 CryptoNightData.Speed = totalSpeed;
                 _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                 // check if speed zero

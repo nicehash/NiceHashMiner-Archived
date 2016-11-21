@@ -15,13 +15,10 @@ namespace NiceHashMiner {
         readonly public string MinerName;
         public double BenchmarkSpeed { get; set; }
         public string ExtraLaunchParameters { get; set; }
+        public bool Skip { get; set; }
 
         // CPU miners only setting
         public int LessThreads { get; set; }
-
-        public bool Skip { get; set; }
-
-        public static readonly string PasswordDefault = "x";
 
         // benchmark info
         [JsonIgnore]

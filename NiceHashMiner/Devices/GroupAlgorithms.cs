@@ -103,8 +103,30 @@ namespace NiceHashMiner.Devices {
             return null;
         }
 
+        private static bool _IsAlgosInGroupInit = false;
+        private static Dictionary<DeviceGroupType, List<AlgorithmType>> _algosInGroup = new Dictionary<DeviceGroupType, List<AlgorithmType>>();
+        private static void InitAlgosInGroup() {
+            for (DeviceGroupType type = DeviceGroupType.CPU; type < DeviceGroupType.LAST; ++type) {
+                var supportedList = GetAlgorithmKeysForGroup(type);
+                if(supportedList != null) {
+                    _algosInGroup[type] = supportedList;
+                }
+            }
+            _IsAlgosInGroupInit = true;
+        }
 
-        public static List<AlgorithmType> GetAlgorithmKeysForGroup(DeviceGroupType deviceGroupType) {
+        public static bool IsAlgorithmSupportedForGroup(AlgorithmType algorithmType, DeviceGroupType deviceGroupType) {
+            // lazy init
+            if (_IsAlgosInGroupInit == false) {
+                InitAlgosInGroup();
+            }
+            if (_algosInGroup.ContainsKey(deviceGroupType)) {
+                return _algosInGroup[deviceGroupType].Contains(algorithmType);
+            }
+            return false;
+        }
+
+        private static List<AlgorithmType> GetAlgorithmKeysForGroup(DeviceGroupType deviceGroupType) {
             var ret = CreateDefaultsForGroup(deviceGroupType);
             if (ret != null) {
                 return new List <AlgorithmType>(ret.Keys);

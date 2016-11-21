@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Enums {
-    public enum DeviceType {
-        CPU = 0,
-        NVIDIA,
-        AMD
+    public enum DeviceMiningStatus {
+        Disabled,
+        NoEnabledAlgorithms,
+        DeviceNull,
+        CanMine
     }
 }

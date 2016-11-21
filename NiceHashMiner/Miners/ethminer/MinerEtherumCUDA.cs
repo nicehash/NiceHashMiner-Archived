@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners {
     public class MinerEtherumCUDA : MinerEtherum {
@@ -15,7 +17,7 @@ namespace NiceHashMiner.Miners {
         private static List<MinerEtherum> MinerEtherumCUDAList = new List<MinerEtherum>();
 
         public MinerEtherumCUDA()
-            : base(DeviceType.NVIDIA, "MinerEtherumCUDA", "NVIDIA") {
+            : base("MinerEtherumCUDA", "NVIDIA") {
                 MinerEtherumCUDAList.Add(this);
         }
 
@@ -24,20 +26,19 @@ namespace NiceHashMiner.Miners {
             MinerEtherumCUDAList.Remove(this);
         }
 
-        public override void Start(Algorithm miningAlgorithm, string url, string btcAdress, string worker) {
+        public override void Start(string url, string btcAdress, string worker) {
             Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumCUDA, checking existing MinerEtherumCUDA to stop");
-            base.Start(miningAlgorithm, url, btcAdress, worker, MinerEtherumCUDAList);
+            base.Start(url, btcAdress, worker, MinerEtherumCUDAList);
         }
 
-        protected override string GetStartCommandStringPart(Algorithm miningAlgorithm, string url, string username) {
+        protected override string GetStartCommandStringPart(string url, string username) {
             return " --cuda"
                 + " "
-                + ExtraLaunchParametersParser.ParseForCDevs(
-                                                    CDevs,
-                                                    AlgorithmType.DaggerHashimoto,
+                + ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                    MiningSetup,
                                                     DeviceType.NVIDIA)
                 + " -S " + url.Substring(14)
-                + " -O " + username + ":" + Algorithm.PasswordDefault
+                + " -O " + username + ":" + Globals.PasswordDefault
                 + " --api-port " + APIPort.ToString()
                 + " --cuda-devices ";
         }
@@ -45,9 +46,8 @@ namespace NiceHashMiner.Miners {
         protected override string GetBenchmarkCommandStringPart(Algorithm algorithm) {
             return " --benchmark-warmup 40 --benchmark-trial 20"
                 + " "
-                + ExtraLaunchParametersParser.ParseForCDevs(
-                                                    CDevs,
-                                                    AlgorithmType.DaggerHashimoto,
+                + ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                    MiningSetup,
                                                     DeviceType.NVIDIA)
                 + " --cuda --cuda-devices ";
         }

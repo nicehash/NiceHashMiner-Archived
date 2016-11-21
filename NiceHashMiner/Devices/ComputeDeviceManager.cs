@@ -14,6 +14,7 @@ using System.Management;
 using System.IO;
 using System.Globalization;
 using NiceHashMiner.Utils;
+using NiceHashMiner.Miners.Grouping;
 
 namespace NiceHashMiner.Devices
 {
@@ -42,7 +43,7 @@ namespace NiceHashMiner.Devices
                     return false;
                 }
 
-                public string ToString() {
+                public override string ToString() {
                     return String.Format("{0}.{1}", leftPart, rightPart);
                 }
 
