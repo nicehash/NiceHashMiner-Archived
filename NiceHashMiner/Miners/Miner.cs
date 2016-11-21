@@ -274,6 +274,7 @@ namespace NiceHashMiner
             return timeInSeconds + 120; // wait time plus two minutes
         }
 
+        // TODO remove algorithm
         abstract protected string BenchmarkCreateCommandLine(Algorithm algorithm, int time);
 
         // The benchmark config and algorithm must guarantee that they are compatible with miner

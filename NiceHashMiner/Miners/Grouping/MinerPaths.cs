@@ -56,6 +56,10 @@ namespace NiceHashMiner.Miners.Grouping
 
         public const string NONE = "";
 
+        // root binary folder
+        private const string _bin_3rdparty = @"bin_3rdparty";
+        public const string ClaymoreZcashMiner = _bin_3rdparty + @"\claymore_zcash\ZecMiner64.exe";
+
         public static string GetOptimizedMinerPath(MiningPair pair) {
             return GetOptimizedMinerPath(pair.Device, pair.Algorithm);
         }
@@ -84,7 +88,10 @@ namespace NiceHashMiner.Miners.Grouping
                 if (deviceGroupType == DeviceGroupType.NVIDIA_5_x || deviceGroupType == DeviceGroupType.NVIDIA_6_x
                     || (MinersManager.EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
                     return MinerPaths.eqm;
-                } else { // supports all DeviceTypes
+                } else if(deviceType == DeviceType.AMD) { // TODO and 3rdparty enabled
+                    return MinerPaths.ClaymoreZcashMiner;
+                }
+                else { // supports all DeviceTypes
                     return MinerPaths.nheqminer;
                 }
             }

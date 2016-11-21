@@ -180,6 +180,7 @@
     <Compile Include="International.cs" />
     <Compile Include="Links.cs" />
     <Compile Include="MemoryHelper.cs" />
+    <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
     <Compile Include="Miners\Equihash\eqm.cs" />
     <Compile Include="Miners\Equihash\nheqBase.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />

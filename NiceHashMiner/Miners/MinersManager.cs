@@ -53,10 +53,12 @@ namespace NiceHashMiner.Miners {
         }
 
         public static Miner CreateMiner(DeviceType deviceType, string minerPath) {
-            if (minerPath.Contains("eqm") && DeviceType.AMD != deviceType) {
+            if (minerPath == MinerPaths.eqm && DeviceType.AMD != deviceType) {
                 return new eqm();
-            } else if (minerPath.Contains("nheqminer")) {
+            } else if (minerPath == MinerPaths.nheqminer) {
                 return new nheqminer();
+            } else if (minerPath == MinerPaths.ClaymoreZcashMiner && DeviceType.AMD == deviceType) {
+                return new ClaymoreZcashMiner();
             } else if (minerPath.Contains("ethminer") && DeviceType.CPU != deviceType) {
                 if (DeviceType.AMD == deviceType) {
                     return new MinerEtherumOCL();
