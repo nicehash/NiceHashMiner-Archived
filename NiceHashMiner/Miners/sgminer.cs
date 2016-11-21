@@ -13,6 +13,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using System.Threading;
 
 namespace NiceHashMiner.Miners
 {
@@ -184,7 +185,7 @@ namespace NiceHashMiner.Miners
             _benchmarkTimer.Reset();
             _benchmarkTimer.Start();
             // call base, read only outpus
-            BenchmarkHandle.BeginOutputReadLine();
+            //BenchmarkHandle.BeginOutputReadLine();
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
@@ -199,8 +200,74 @@ namespace NiceHashMiner.Miners
                 KillSGMiner();
                 BenchmarkSignalHanged = true;
             }
-            if (!BenchmarkSignalFinnished) {
+            if (!BenchmarkSignalFinnished && outdata != null) {
                 CheckOutdata(outdata);
+            }
+        }
+
+        protected override void BenchmarkThreadRoutine(object CommandLine) {
+            Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+
+            try {
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
+                BenchmarkThreadRoutineStartSettup();
+                // wait a little longer then the benchmark routine if exit false throw
+                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
+                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
+                // don't use wait for it breaks everything
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                while(true) {
+                    string outdata = BenchmarkHandle.StandardOutput.ReadLine();
+                    BenchmarkOutputErrorDataReceivedImpl(outdata);
+                    // terminate process situations
+                    if (BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null) {
+                        //EndBenchmarkProcces();
+                        // this is safe in a benchmark
+                        KillSGMiner();
+                    }
+
+                    if (BenchmarkSignalTimedout) {
+                        throw new Exception("Benchmark timedout");
+                    }
+                    if (BenchmarkException != null) {
+                        throw BenchmarkException;
+                    }
+                    if (BenchmarkSignalQuit) {
+                        throw new Exception("Termined by user request");
+                    }
+                    if (BenchmarkSignalHanged) {
+                        throw new Exception("SGMiner is not responding");
+                    }
+                    if (BenchmarkSignalFinnished) {
+                        break;
+                    }
+                }
+            } catch (Exception ex) {
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
+
+                Helpers.ConsolePrint(MinerTAG(), "Benchmark Exception: " + ex.Message);
+                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
+                    OnBenchmarkCompleteCalled = true;
+                    BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated"));
+                }
+            } finally {
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Success;
+                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
+                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
+                    OnBenchmarkCompleteCalled = true;
+                    BenchmarkComunicator.OnBenchmarkComplete(true, "Success");
+                }
             }
         }
 

@@ -75,12 +75,12 @@ namespace NiceHashMiner
         Stopwatch BenchmarkTimeOutStopWatch = null;
         public bool BenchmarkSignalTimedout = false;
         protected bool BenchmarkSignalFinnished;
-        IBenchmarkComunicator BenchmarkComunicator;
-        private bool OnBenchmarkCompleteCalled = false;
+        protected IBenchmarkComunicator BenchmarkComunicator;
+        protected bool OnBenchmarkCompleteCalled = false;
         protected Algorithm BenchmarkAlgorithm { get; set; }
         public BenchmarkProcessStatus BenchmarkProcessStatus { get; protected set; }
         protected string BenchmarkProcessPath { get; private set; }
-        protected Process BenchmarkHandle { get; private set; }
+        protected Process BenchmarkHandle { get; set; }
         protected Exception BenchmarkException = null;
         protected int BenchmarkTimeInSeconds;
 
