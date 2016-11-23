@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Devices;
+﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
@@ -88,7 +89,7 @@ namespace NiceHashMiner.Miners.Grouping
                 if (deviceGroupType == DeviceGroupType.NVIDIA_5_x || deviceGroupType == DeviceGroupType.NVIDIA_6_x
                     || (MinersManager.EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
                     return MinerPaths.eqm;
-                } else if(deviceType == DeviceType.AMD) { // TODO and 3rdparty enabled
+                } else if(deviceType == DeviceType.AMD && ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) { // TODO remove state
                     return MinerPaths.ClaymoreZcashMiner;
                 }
                 else { // supports all DeviceTypes

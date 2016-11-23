@@ -2,6 +2,7 @@
 using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -45,7 +46,7 @@ namespace NiceHashMiner.Miners {
 
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
-            LastCommandLine = "-wd 1 -colors 0 -logfile cl_log_noappend.txt " + GetDevicesCommandString() + " -mport -" + APIPort + " -zpool " + url + " -zwal " + username;
+            LastCommandLine = "-logfile cl_log_noappend.txt " + GetDevicesCommandString() + " -mport -" + APIPort + " -zpool " + url + " -zwal " + username;
             ProcessHandle = _Start();
         }
 
@@ -116,6 +117,7 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override string GetDevicesCommandString() {
+            string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -di ";
             List<int> ids = new List<int>();
             foreach (var mPair in MiningSetup.MiningPairs) {
@@ -123,7 +125,7 @@ namespace NiceHashMiner.Miners {
             }
             deviceStringCommand += string.Join("", ids);
 
-            return deviceStringCommand;
+            return deviceStringCommand + extraParams;
         }
 
         // benchmark stuff

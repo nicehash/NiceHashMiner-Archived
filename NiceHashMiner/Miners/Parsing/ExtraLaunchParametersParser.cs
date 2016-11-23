@@ -91,6 +91,11 @@ namespace NiceHashMiner.Miners.Parsing {
             //new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
             //new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
         };
+        // Zcash claymore
+        private static List<MinerOption> _ClaymoreZcash_Options = new List<MinerOption>() {
+            //// TODO check what is the CUDA_Solver_ParallelBuckets default
+            new MinerOption(MinerOptionType.ClaymoreZcash_tt, "-tt", "-tt", "0", MinerOptionFlagType.MultiParam, ","), // default 0
+        };
 
         private static bool _showLog = true;
 
@@ -302,6 +307,8 @@ namespace NiceHashMiner.Miners.Parsing {
                     if (deviceType == DeviceType.NVIDIA) {
                         return Parse(MiningPairs, _eqm_CUDA_Options);
                     }
+                } else if (minerPath == MinerPaths.ClaymoreZcashMiner) {
+                    return Parse(MiningPairs, _ClaymoreZcash_Options);
                 }
             } else if (algorithmType == AlgorithmType.DaggerHashimoto) { // ethminer dagger
                 // use if missing compute device for correct mapping

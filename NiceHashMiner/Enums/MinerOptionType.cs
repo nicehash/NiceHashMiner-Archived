@@ -53,5 +53,7 @@ namespace NiceHashMiner.Enums {
         // eqm
         CUDA_Solver_AsyncMode, // -ca
         CUDA_Solver_ParallelBuckets, // -cp
+        // ClaymoreZcash
+        ClaymoreZcash_tt
     }
 }
