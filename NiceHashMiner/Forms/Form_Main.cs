@@ -327,35 +327,45 @@ namespace NiceHashMiner
             }
             // 3rdparty miners check scope
             {
-                //
-                // check if download needed
-                if (
-                    //!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.Instance.GeneralConfig.DownloadInit
-                    true
-                    ) {
-                    Form_Loading download3rdPartyUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.ThirdPartyDlSetup));
-                    SetChildFormCenter(download3rdPartyUnzipForm);
-                    download3rdPartyUnzipForm.ShowDialog();
+                // check if setting set
+                if (ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET) {
+                    // TODO
+                    var result = MessageBox.Show(International.GetText("Form_Main_3rdParty_Text"),
+                        International.GetText("Form_Main_3rdParty_Title"),
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == System.Windows.Forms.DialogResult.Yes) {
+                        ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
+                    } else {
+                        ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
+                    }
                 }
-                // check if files are mising
-                //if (!MinersExistanceChecker.IsMinersBinsInit()) {
-                //    var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                //        International.GetText("Warning_with_Exclamation"),
-                //        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                //    if (result == DialogResult.Yes) {
-                //        ConfigManager.Instance.GeneralConfig.DownloadInit = false;
-                //        ConfigManager.Instance.GeneralConfig.Commit();
-                //        Process PHandle = new Process();
-                //        PHandle.StartInfo.FileName = Application.ExecutablePath;
-                //        PHandle.Start();
-                //        Close();
-                //        return;
-                //    }
-                //} else {
-                //    // all good
-                //    ConfigManager.Instance.GeneralConfig.DownloadInit = true;
-                //    ConfigManager.Instance.GeneralConfig.Commit();
-                //}
+                // check if download needed
+                if (ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) {
+                    if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit() && !ConfigManager.Instance.GeneralConfig.DownloadInit3rdParty) {
+                        Form_Loading download3rdPartyUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.ThirdPartyDlSetup));
+                        SetChildFormCenter(download3rdPartyUnzipForm);
+                        download3rdPartyUnzipForm.ShowDialog();
+                    }
+                    // check if files are mising
+                    if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit()) {
+                        var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                            International.GetText("Warning_with_Exclamation"),
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if (result == DialogResult.Yes) {
+                            ConfigManager.Instance.GeneralConfig.DownloadInit = false;
+                            ConfigManager.Instance.GeneralConfig.Commit();
+                            Process PHandle = new Process();
+                            PHandle.StartInfo.FileName = Application.ExecutablePath;
+                            PHandle.Start();
+                            Close();
+                            return;
+                        }
+                    } else {
+                        // all good
+                        ConfigManager.Instance.GeneralConfig.DownloadInit3rdParty = true;
+                        ConfigManager.Instance.GeneralConfig.Commit();
+                    }
+                }
             }
 
             // no bots please

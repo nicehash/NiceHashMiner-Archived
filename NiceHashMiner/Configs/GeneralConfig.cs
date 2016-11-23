@@ -114,7 +114,8 @@ namespace NiceHashMiner.Configs {
 
         public bool DownloadInit { get; set; }
 
-        Use3rdPartyMiners Use3rdPartyMiners { get; set; }
+        public Use3rdPartyMiners Use3rdPartyMiners { get; set; }
+        public bool DownloadInit3rdParty { get; set; }
 
 
         [JsonIgnore]
@@ -176,6 +177,7 @@ namespace NiceHashMiner.Configs {
             DownloadInit = false;
             ContinueMiningIfNoInternetAccess = false;
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
+            DownloadInit3rdParty = false;
         }
 
         public GeneralConfig(bool initDefaults = false) {
@@ -258,6 +260,7 @@ namespace NiceHashMiner.Configs {
                 DownloadInit = _file.DownloadInit;
             }
             Use3rdPartyMiners = _file.Use3rdPartyMiners;
+            DownloadInit3rdParty = _file.DownloadInit3rdParty;
 
             hwidLoadFromFile = true;
             hwidOK = this.hwid == _file.hwid;

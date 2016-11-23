@@ -244,6 +244,7 @@
     <Compile Include="Miners\sgminer.cs" />
     <Compile Include="TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
+    <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
     <Compile Include="Utils\DownloadSetup.cs" />
     <Compile Include="Utils\MinersDownloader.cs" />
