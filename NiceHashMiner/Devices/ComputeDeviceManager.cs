@@ -37,7 +37,7 @@ namespace NiceHashMiner.Devices
                     if(leftPart < b.leftPart) {
                         return true;
                     }
-                    if(rightPart < b.rightPart) {
+                    if (getRightVal(rightPart) < getRightVal(b.rightPart)) {
                         return true;
                     }
                     return false;
@@ -49,6 +49,12 @@ namespace NiceHashMiner.Devices
 
                 public int leftPart;
                 public int rightPart;
+                private int getRightVal(int val) {
+                    if(val >= 10) {
+                        return val;
+                    }
+                    return val * 10;
+                } 
             }
 
             static readonly NVIDIA_SMI_DRIVER NVIDIA_RECOMENDED_DRIVER = new NVIDIA_SMI_DRIVER(372, 54); // 372.54;
