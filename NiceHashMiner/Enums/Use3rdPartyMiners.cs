@@ -5,13 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Enums {
-    public enum BenchmarkProcessStatus {
-        NONE,
-        Idle,
-        Running,
-        Killing,
-        DoneKilling,
-        Finished,
-        Success
+    public enum Use3rdPartyMiners {
+        NOT_SET = 0,
+        NO,
+        YES
     }
 }

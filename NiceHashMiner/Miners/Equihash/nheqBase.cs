@@ -96,8 +96,6 @@ namespace NiceHashMiner.Miners {
                 if (ad.Speed == 0) {
                     _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
                 }
-            } else if (resp == null) {
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             }
 
             return ad;

@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners
         {            
             Path = MinerPaths.sgminer_5_5_0_general;
             GPUPlatformNumber = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
-            IsSgminer = true;
+            IsKillAllUsedMinerProcs = true;
         }
 
         // use ONLY for exiting a benchmark
@@ -234,22 +234,21 @@ namespace NiceHashMiner.Miners
                         //EndBenchmarkProcces();
                         // this is safe in a benchmark
                         KillSGMiner();
-                    }
-
-                    if (BenchmarkSignalTimedout) {
-                        throw new Exception("Benchmark timedout");
-                    }
-                    if (BenchmarkException != null) {
-                        throw BenchmarkException;
-                    }
-                    if (BenchmarkSignalQuit) {
-                        throw new Exception("Termined by user request");
-                    }
-                    if (BenchmarkSignalHanged) {
-                        throw new Exception("SGMiner is not responding");
-                    }
-                    if (BenchmarkSignalFinnished) {
-                        break;
+                        if (BenchmarkSignalTimedout) {
+                            throw new Exception("Benchmark timedout");
+                        }
+                        if (BenchmarkException != null) {
+                            throw BenchmarkException;
+                        }
+                        if (BenchmarkSignalQuit) {
+                            throw new Exception("Termined by user request");
+                        }
+                        if (BenchmarkSignalHanged) {
+                            throw new Exception("SGMiner is not responding");
+                        }
+                        if (BenchmarkSignalFinnished) {
+                            break;
+                        }
                     }
                 }
             } catch (Exception ex) {

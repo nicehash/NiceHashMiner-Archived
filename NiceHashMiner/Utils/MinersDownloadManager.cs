@@ -22,8 +22,8 @@ namespace NiceHashMiner.Utils {
         private WebClient _webClient;
         private Stopwatch _stopwatch;
 
-        const string d_v1_7_3_4 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_4.zip";
-        public string BinsDownloadURL = d_v1_7_3_4;
+        const string d_v1_7_3_6 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_6.zip";
+        public string BinsDownloadURL = d_v1_7_3_6;
         public string BinsZipLocation = "bins.zip";
 
         bool isDownloadSizeInit = false;
@@ -177,34 +177,6 @@ namespace NiceHashMiner.Utils {
 
         public bool IsMinersBins_ALL_Init() {
             foreach (var filePath in ALL_FILES_BINS) {
-                if (!File.Exists(String.Format("bin{0}", filePath))) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // this one is mandatory download it regardles of CPU avaliability
-        private bool IsMinersBins_SHARED_Init() {
-            foreach (var filePath in ALL_FILES_BINS_SHARED) {
-                if (!File.Exists(String.Format("bin{0}", filePath))) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private bool IsMinersBins_NVIDIA_Init() {
-            foreach (var filePath in ALL_FILES_BINS_NVIDIA) {
-                if (!File.Exists(String.Format("bin{0}", filePath))) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private bool IsMinersBins_AMD_Init() {
-            foreach (var filePath in ALL_FILES_BINS_AMD) {
                 if (!File.Exists(String.Format("bin{0}", filePath))) {
                     return false;
                 }

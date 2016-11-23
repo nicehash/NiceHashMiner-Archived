@@ -114,6 +114,8 @@ namespace NiceHashMiner.Configs {
 
         public bool DownloadInit { get; set; }
 
+        Use3rdPartyMiners Use3rdPartyMiners { get; set; }
+
 
         [JsonIgnore]
         public bool hwidOK { get; private set; }
@@ -173,6 +175,7 @@ namespace NiceHashMiner.Configs {
             EthminerDagGenerationType = DagGenerationType.SingleKeep;
             DownloadInit = false;
             ContinueMiningIfNoInternetAccess = false;
+            Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         }
 
         public GeneralConfig(bool initDefaults = false) {
@@ -254,6 +257,7 @@ namespace NiceHashMiner.Configs {
             if (!IsNewVersion) {
                 DownloadInit = _file.DownloadInit;
             }
+            Use3rdPartyMiners = _file.Use3rdPartyMiners;
 
             hwidLoadFromFile = true;
             hwidOK = this.hwid == _file.hwid;

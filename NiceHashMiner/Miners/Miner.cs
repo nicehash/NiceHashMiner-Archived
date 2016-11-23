@@ -56,8 +56,8 @@ namespace NiceHashMiner
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
         protected MiningSetup MiningSetup { get; set; }
-        // sgminer workaround
-        protected bool IsSgminer { get; set; }
+        // sgminer/zcash claymore workaround
+        protected bool IsKillAllUsedMinerProcs { get; set; }
         public bool IsRunning { get; protected set; }
         protected string Path;
         protected string LastCommandLine { get; set; }
@@ -79,7 +79,7 @@ namespace NiceHashMiner
         protected bool OnBenchmarkCompleteCalled = false;
         protected Algorithm BenchmarkAlgorithm { get; set; }
         public BenchmarkProcessStatus BenchmarkProcessStatus { get; protected set; }
-        protected string BenchmarkProcessPath { get; private set; }
+        protected string BenchmarkProcessPath { get; set; }
         protected Process BenchmarkHandle { get; set; }
         protected Exception BenchmarkException = null;
         protected int BenchmarkTimeInSeconds;
@@ -123,7 +123,7 @@ namespace NiceHashMiner
             APIPort = MinersApiPortsManager.Instance.GetAvaliablePort();
             IsAPIReadException = false;
             IsNHLocked = false;
-            IsSgminer = false;
+            IsKillAllUsedMinerProcs = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
             // 
             Helpers.ConsolePrint(MinerTAG(), "NEW MINER CREATED");
@@ -246,7 +246,7 @@ namespace NiceHashMiner
                 ProcessHandle = null;
 
                 // sgminer needs to be removed and kill by PID
-                if (IsSgminer) KillAllUsedMinerProcesses();
+                if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
             }
         }
 
@@ -593,7 +593,7 @@ namespace NiceHashMiner
                                     "User-Agent: NiceHashMiner/" + Application.ProductVersion + "\r\n" +
                                     "\r\n";
 
-                if (IsSgminer)
+                if (IsKillAllUsedMinerProcs)
                     DataToSend = cmd;
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
