@@ -245,7 +245,10 @@
     <Compile Include="TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
+    <Compile Include="Utils\DownloadSetup.cs" />
+    <Compile Include="Utils\MinersDownloader.cs" />
     <Compile Include="Utils\MinersDownloadManager.cs" />
+    <Compile Include="Utils\MinersExistanceChecker.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
       <SubType>Designer</SubType>

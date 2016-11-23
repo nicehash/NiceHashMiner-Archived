@@ -15,178 +15,24 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Utils {
-    public partial class MinersDownloadManager : BaseLazySingleton<MinersDownloadManager> {
+    public static class MinersDownloadManager {
+        public static DownloadSetup StandardDlSetup = new DownloadSetup(
+            "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_6.zip",
+            "bins.zip",
+            "bin");
 
-        private readonly string TAG;
-
-        private WebClient _webClient;
-        private Stopwatch _stopwatch;
-
-        const string d_v1_7_3_6 = "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_3_6.zip";
-        public string BinsDownloadURL = d_v1_7_3_6;
-        public string BinsZipLocation = "bins.zip";
-
-        bool isDownloadSizeInit = false;
-
-        IMinerUpdateIndicator _minerUpdateIndicator;
-
-        protected MinersDownloadManager() {
-            TAG = this.GetType().Name;
-        }
-
-        public void Start(IMinerUpdateIndicator minerUpdateIndicator) {
-            _minerUpdateIndicator = minerUpdateIndicator;
-
-            // if something not right delete previous and download new
-            try {
-                if (File.Exists(BinsZipLocation)) {
-                    File.Delete(BinsZipLocation);
-                }
-                if (Directory.Exists("bin")) {
-                    Directory.Delete("bin", true);
-                }
-            } catch { }
-            Downlaod();
-        }
+        public static DownloadSetup ThirdPartyDlSetup = new DownloadSetup(
+            "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_3rdparty_1_7_3_6.zip",
+            "bins_3rdparty.zip",
+            "bin_3rdparty");
 
         // #1 check if miners exits
-        public bool IsMinerBinFolder() {
-            return Directory.Exists("bin");
+        public static bool IsMinerBinFolder() {
+            return Directory.Exists(StandardDlSetup.ZipedFolderName);
         }
 
-        bool IsMinerBinZip() {
-            return File.Exists(BinsZipLocation);
-        }
-
-        // #2 download the file
-        private void Downlaod() {
-            _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Downloading"));
-            _stopwatch = new Stopwatch();
-            using (_webClient = new WebClient()) {
-                _webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                _webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadCompleted);
-
-                Uri downloadURL = new Uri(BinsDownloadURL);
-
-                _stopwatch.Start();
-                try {
-                    _webClient.DownloadFileAsync(downloadURL, BinsZipLocation);
-                } catch (Exception ex) {
-                    Helpers.ConsolePrint("MinersDownloadManager", ex.Message);
-                }
-            }
-        }
-
-        #region Download delegates
-
-        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
-            if (!isDownloadSizeInit) {
-                isDownloadSizeInit = true;
-                _minerUpdateIndicator.SetMaxProgressValue((int)(e.TotalBytesToReceive / 1024));
-            }
-
-            // Calculate download speed and output it to labelSpeed.
-            var speedString = string.Format("{0} kb/s", (e.BytesReceived / 1024d / _stopwatch.Elapsed.TotalSeconds).ToString("0.00"));
-
-            // Show the percentage on our label.
-            var percString = e.ProgressPercentage.ToString() + "%";
-
-            // Update the label with how much data have been downloaded so far and the total size of the file we are currently downloading
-            var labelDownloaded = string.Format("{0} MB / {1} MB",
-                (e.BytesReceived / 1024d / 1024d).ToString("0.00"),
-                (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
-
-            _minerUpdateIndicator.SetProgressValueAndMsg(
-                (int)(e.BytesReceived / 1024d),
-                String.Format("{0}   {1}   {2}", speedString, percString,labelDownloaded));
-
-        }
-
-        // The event that will trigger when the WebClient is completed
-        private void DownloadCompleted(object sender, AsyncCompletedEventArgs e) {
-            _stopwatch.Stop();
-            _stopwatch = null;
-
-            if (e.Cancelled == true) {
-                // TODO handle Cancelled
-                Helpers.ConsolePrint(TAG, "DownloadCompleted Cancelled");
-            } else {
-                // TODO handle Success
-                Helpers.ConsolePrint(TAG, "DownloadCompleted Success");
-                // wait one second for binary to exist
-                System.Threading.Thread.Sleep(1000);
-                // extra check dirty
-                int try_count = 50;
-                while (!File.Exists(BinsZipLocation) && try_count > 0) { --try_count; }
-
-                UnzipStart();
-            }
-        }
-
-        #endregion Download delegates
-
-
-        private void UnzipStart() {
-            _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Settup"));
-            Thread BenchmarkThread = new Thread(UnzipThreadRoutine);
-            BenchmarkThread.Start();
-        }
-
-        private void UnzipThreadRoutine() {
-            if (File.Exists(BinsZipLocation)) {
-                Helpers.ConsolePrint(TAG, BinsZipLocation + " already downloaded");
-                Helpers.ConsolePrint(TAG, "unzipping");
-                using (ZipArchive archive = ZipFile.Open(BinsZipLocation, ZipArchiveMode.Read)) {
-                    //archive.ExtractToDirectory("bin");
-                    _minerUpdateIndicator.SetMaxProgressValue(archive.Entries.Count);
-                    int prog = 0;
-                    // first create dirs
-                    foreach (ZipArchiveEntry entry in archive.Entries) {
-                        if (entry.Length == 0) {
-                            Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
-                            Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
-                            Directory.CreateDirectory(entry.FullName);
-                            _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
-                        }
-                    }
-                    // unzip files
-                    foreach (ZipArchiveEntry entry in archive.Entries) {
-                        if (entry.Length > 0) {
-                            Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
-                            Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
-                            entry.ExtractToFile(entry.FullName);
-                            _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
-                        }
-                    }
-                }
-                // after unzip stuff
-                ConfigManager.Instance.GeneralConfig.DownloadInit = true;
-                ConfigManager.Instance.GeneralConfig.Commit();
-                _minerUpdateIndicator.FinishMsg(IsMinersBinsInit());
-                // remove bins zip
-                try {
-                    if (File.Exists(BinsZipLocation)) {
-                        File.Delete(BinsZipLocation);
-                    }
-                } catch { }
-            } else {
-                Helpers.ConsolePrint(TAG, "UnzipThreadRoutine bin.zip file not found");
-            }
-        }
-
-
-        public bool IsMinersBins_ALL_Init() {
-            foreach (var filePath in ALL_FILES_BINS) {
-                if (!File.Exists(String.Format("bin{0}", filePath))) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public bool IsMinersBinsInit() {
-            //return isOk;
-            return IsMinersBins_ALL_Init();
+        static bool IsMinerBinZip() {
+            return File.Exists(StandardDlSetup.BinsZipLocation);
         }
 
     }

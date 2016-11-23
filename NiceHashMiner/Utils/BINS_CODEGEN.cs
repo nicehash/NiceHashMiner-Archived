@@ -1,8 +1,8 @@
 
 namespace NiceHashMiner.Utils {
-    public partial class MinersDownloadManager : BaseLazySingleton<MinersDownloadManager> {
+    public static class Bins_Data {
     #region CODE_GEN STUFF // listFiles.py
-private static string[] ALL_FILES_BINS = {
+public static string[] ALL_FILES_BINS = {
 @"\ccminer_cryptonight.exe",
 @"\ccminer_decred.exe",
 @"\ccminer_nanashi.exe",

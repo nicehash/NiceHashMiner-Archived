@@ -94,11 +94,7 @@ namespace NiceHashMiner.Miners {
 
         /// <summary>
         /// SwichMostProfitable should check the best combination for most profit.
-        /// Calculate profit for each supported algorithm per device group.
-        /// Build from ground up compatible devices and algorithms.
-        /// See #region Groupping logic
-        /// Device groups are CPU, AMD_OpenCL and NVIDIA CUDA SM.x.x.
-        /// NVIDIA SMx.x should be paired separately except for daggerhashimoto.
+        /// Calculate profit for each supported algorithm per device and group.
         /// </summary>
         /// <param name="NiceHashData"></param>
         public void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {

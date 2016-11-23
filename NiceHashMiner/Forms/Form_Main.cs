@@ -43,7 +43,8 @@ namespace NiceHashMiner
 
         private Random R;
 
-        private Form_Loading _downloadUnzipForm;
+        //private Form_Loading _downloadUnzipForm;
+        //private Form_Loading _download3rdPartyUnzipForm;
         private Form_Loading LoadingScreen;
         private Form BenchmarkForm;
 
@@ -174,8 +175,7 @@ namespace NiceHashMiner
         }
 
         // This is a single shot _benchmarkTimer
-        private void StartupTimer_Tick(object sender, EventArgs e)
-        {
+        private void StartupTimer_Tick(object sender, EventArgs e) {
             StartupTimer.Stop();
             StartupTimer = null;
 
@@ -209,7 +209,7 @@ namespace NiceHashMiner
             /////// from here on we have our devices and Miners initialized
             ConfigManager.Instance.AfterDeviceQueryInitialization();
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
-            
+
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
             // set properties after
@@ -272,15 +272,13 @@ namespace NiceHashMiner
             SetEnvironmentVariables();
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
-            
+
             Helpers.DisableWindowsErrorReporting(ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting);
 
             LoadingScreen.IncreaseLoadCounter();
-            if (ConfigManager.Instance.GeneralConfig.NVIDIAP0State)
-            {
+            if (ConfigManager.Instance.GeneralConfig.NVIDIAP0State) {
                 LoadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
-                try
-                {
+                try {
                     ProcessStartInfo psi = new ProcessStartInfo();
                     psi.FileName = "nvidiasetp0state.exe";
                     psi.Verb = "runas";
@@ -292,35 +290,72 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode.ToString());
                     else
                         Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
                 }
             }
 
             LoadingScreen.FinishLoad();
 
-            // check if download needed
-            if (!MinersDownloadManager.Instance.IsMinersBinsInit() && !ConfigManager.Instance.GeneralConfig.DownloadInit) {
-                _downloadUnzipForm = new Form_Loading();
-                SetChildFormCenter(_downloadUnzipForm);
-                _downloadUnzipForm.ShowDialog();
-            }
-            // check if files are mising
-            if (!MinersDownloadManager.Instance.IsMinersBinsInit()) {
-                var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                    International.GetText("Warning_with_Exclamation"),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result == DialogResult.Yes) {
-                    ConfigManager.Instance.GeneralConfig.DownloadInit = false;
-                    ConfigManager.Instance.GeneralConfig.Commit();
-                    Process PHandle = new Process();
-                    PHandle.StartInfo.FileName = Application.ExecutablePath;
-                    PHandle.Start();
-                    Close();
-                    return;
+            // standard miners check scope
+            {
+                // check if download needed
+                if (!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.Instance.GeneralConfig.DownloadInit) {
+                    Form_Loading downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.StandardDlSetup));
+                    SetChildFormCenter(downloadUnzipForm);
+                    downloadUnzipForm.ShowDialog();
                 }
+                // check if files are mising
+                if (!MinersExistanceChecker.IsMinersBinsInit()) {
+                    var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                        International.GetText("Warning_with_Exclamation"),
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (result == DialogResult.Yes) {
+                        ConfigManager.Instance.GeneralConfig.DownloadInit = false;
+                        ConfigManager.Instance.GeneralConfig.Commit();
+                        Process PHandle = new Process();
+                        PHandle.StartInfo.FileName = Application.ExecutablePath;
+                        PHandle.Start();
+                        Close();
+                        return;
+                    }
+                } else {
+                    // all good
+                    ConfigManager.Instance.GeneralConfig.DownloadInit = true;
+                    ConfigManager.Instance.GeneralConfig.Commit();
+                }
+            }
+            // 3rdparty miners check scope
+            {
+                //
+                // check if download needed
+                if (
+                    //!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.Instance.GeneralConfig.DownloadInit
+                    true
+                    ) {
+                    Form_Loading download3rdPartyUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.ThirdPartyDlSetup));
+                    SetChildFormCenter(download3rdPartyUnzipForm);
+                    download3rdPartyUnzipForm.ShowDialog();
+                }
+                // check if files are mising
+                //if (!MinersExistanceChecker.IsMinersBinsInit()) {
+                //    var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                //        International.GetText("Warning_with_Exclamation"),
+                //        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                //    if (result == DialogResult.Yes) {
+                //        ConfigManager.Instance.GeneralConfig.DownloadInit = false;
+                //        ConfigManager.Instance.GeneralConfig.Commit();
+                //        Process PHandle = new Process();
+                //        PHandle.StartInfo.FileName = Application.ExecutablePath;
+                //        PHandle.Start();
+                //        Close();
+                //        return;
+                //    }
+                //} else {
+                //    // all good
+                //    ConfigManager.Instance.GeneralConfig.DownloadInit = true;
+                //    ConfigManager.Instance.GeneralConfig.Commit();
+                //}
             }
 
             // no bots please
