@@ -19,54 +19,6 @@ namespace NiceHashMiner.Configs {
             BenchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
         }
 
-        // TODO remove this eventually, keep for now
-        public void LegacyConfigMigration() {
-            // CHECK LEGACY config, migration logic
-            if (Config.ConfigFileExist()) {
-                Helpers.ConsolePrint(TAG, "Migrating LEGACY config");
-                Config.InitializeConfig();
-
-                // migrate relevant data
-                GeneralConfig.Language = (LanguageType)Config.ConfigData.Language;
-                GeneralConfig.BitcoinAddress = Config.ConfigData.BitcoinAddress;
-                GeneralConfig.WorkerName = Config.ConfigData.WorkerName;
-                GeneralConfig.ServiceLocation = Config.ConfigData.ServiceLocation;
-                //GeneralConfig.LessThreads = Config.ConfigData.LessThreads;
-                //GeneralConfig.Groups = new Group[0] = Config.ConfigData.Groups = new Group[0];
-                GeneralConfig.DebugConsole = Config.ConfigData.DebugConsole;
-                GeneralConfig.HideMiningWindows = Config.ConfigData.HideMiningWindows;
-                GeneralConfig.MinimizeToTray = Config.ConfigData.MinimizeToTray;
-                //GeneralConfig.AutoStartMining = Config.ConfigData.AutoStartMining;
-                GeneralConfig.DeviceDetection.DisableDetectionNVidia5X = Config.ConfigData.DisableDetectionNVidia5X;
-                GeneralConfig.DeviceDetection.DisableDetectionNVidia3X = Config.ConfigData.DisableDetectionNVidia3X;
-                GeneralConfig.DeviceDetection.DisableDetectionNVidia2X = Config.ConfigData.DisableDetectionNVidia2X;
-                GeneralConfig.DeviceDetection.DisableDetectionAMD = Config.ConfigData.DisableDetectionAMD;
-                //GeneralConfig.DisableAMDTempControl = Config.ConfigData.DisableAMDTempControl;
-                GeneralConfig.AutoScaleBTCValues = Config.ConfigData.AutoScaleBTCValues;
-                GeneralConfig.StartMiningWhenIdle = Config.ConfigData.StartMiningWhenIdle;
-                GeneralConfig.LogToFile = Config.ConfigData.LogToFile;
-                GeneralConfig.LogMaxFileSize = Config.ConfigData.LogMaxFileSize;
-                GeneralConfig.ShowDriverVersionWarning = Config.ConfigData.ShowDriverVersionWarning;
-                GeneralConfig.DisableWindowsErrorReporting = Config.ConfigData.DisableWindowsErrorReporting;
-                //GeneralConfig.UseNewSettingsPage = Config.ConfigData.UseNewSettingsPage;
-                GeneralConfig.NVIDIAP0State = Config.ConfigData.NVIDIAP0State;
-                GeneralConfig.MinerRestartDelayMS = Config.ConfigData.MinerRestartDelayMS;
-                GeneralConfig.ethminerDefaultBlockHeight = Config.ConfigData.ethminerDefaultBlockHeight;
-                //GeneralConfig.MinerAPIGraceSeconds = Config.ConfigData.MinerAPIGraceSeconds;
-                //GeneralConfig.MinerAPIGraceSecondsAMD = Config.ConfigData.MinerAPIGraceSecondsAMD;
-                GeneralConfig.SwitchMinSecondsFixed = Config.ConfigData.SwitchMinSecondsFixed;
-                GeneralConfig.SwitchMinSecondsDynamic = Config.ConfigData.SwitchMinSecondsDynamic;
-                GeneralConfig.SwitchMinSecondsAMD = Config.ConfigData.SwitchMinSecondsAMD;
-                GeneralConfig.MinIdleSeconds = Config.ConfigData.MinIdleSeconds;
-                GeneralConfig.DisplayCurrency = Config.ConfigData.DisplayCurrency;
-
-                // save migration
-                GeneralConfig.Commit();
-
-                Config.DeleteLegacy();
-            }
-        }
-
         public void CommitBenchmarks() {
             foreach (var benchConfig in BenchmarkConfigs) {
                 benchConfig.Value.Commit();

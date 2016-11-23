@@ -213,7 +213,6 @@
     </Compile>
     <Compile Include="Ethereum.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Configs\Legacy\Config.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
     <Compile Include="Miners\cpuminer.cs" />
     <Compile Include="Forms\Form_Main.cs">

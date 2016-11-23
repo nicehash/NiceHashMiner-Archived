@@ -145,15 +145,9 @@ namespace NiceHashMiner.Forms {
             benchmarkLimitControlNVIDIA.SetToolTip(ref toolTip1, "NVIDIA GPUs");
             benchmarkLimitControlAMD.SetToolTip(ref toolTip1, "AMD GPUs");
 
-            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia6X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA6.x"));
-            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia5X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA5.x"));
-            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia3X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA3.x"));
-            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVidia2X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA2.x"));
+            toolTip1.SetToolTip(this.checkBox_DisableDetectionNVIDIA, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
             toolTip1.SetToolTip(this.checkBox_DisableDetectionAMD, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
-            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVidia6X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA6.x"));
-            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVidia5X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA5.x"));
-            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVidia3X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA3.x"));
-            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVidia2X, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA2.x"));
+            toolTip1.SetToolTip(this.pictureBox_DisableDetectionNVIDIA, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
             toolTip1.SetToolTip(this.pictureBox_DisableDetectionAMD, String.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
 
             toolTip1.SetToolTip(this.checkBox_AutoScaleBTCValues, International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
@@ -233,10 +227,7 @@ namespace NiceHashMiner.Forms {
             checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
-            checkBox_DisableDetectionNVidia6X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA6.x");
-            checkBox_DisableDetectionNVidia5X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA5.x");
-            checkBox_DisableDetectionNVidia3X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA3.x");
-            checkBox_DisableDetectionNVidia2X.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA2.x");
+            checkBox_DisableDetectionNVIDIA.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA");
             checkBox_DisableDetectionAMD.Text = String.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
@@ -309,10 +300,7 @@ namespace NiceHashMiner.Forms {
             {
                 this.checkBox_AutoScaleBTCValues.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_DisableDetectionAMD.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-                this.checkBox_DisableDetectionNVidia2X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-                this.checkBox_DisableDetectionNVidia3X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-                this.checkBox_DisableDetectionNVidia5X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
-                this.checkBox_DisableDetectionNVidia6X.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_DisableDetectionNVIDIA.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_MinimizeToTray.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_HideMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_DebugConsole.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
@@ -377,10 +365,7 @@ namespace NiceHashMiner.Forms {
                 checkBox_AutoStartMining.Checked = ConfigManager.Instance.GeneralConfig.AutoStartMining;
                 checkBox_HideMiningWindows.Checked = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.Instance.GeneralConfig.MinimizeToTray;
-                checkBox_DisableDetectionNVidia6X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
-                checkBox_DisableDetectionNVidia5X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
-                checkBox_DisableDetectionNVidia3X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X;
-                checkBox_DisableDetectionNVidia2X.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X;
+                checkBox_DisableDetectionNVIDIA.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 checkBox_DisableDetectionAMD.Checked = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                 checkBox_AutoScaleBTCValues.Checked = ConfigManager.Instance.GeneralConfig.AutoScaleBTCValues;
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.Instance.GeneralConfig.StartMiningWhenIdle;
@@ -510,10 +495,7 @@ namespace NiceHashMiner.Forms {
             ConfigManager.Instance.GeneralConfig.AutoStartMining = checkBox_AutoStartMining.Checked;
             ConfigManager.Instance.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             ConfigManager.Instance.GeneralConfig.MinimizeToTray = checkBox_MinimizeToTray.Checked;
-            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X = checkBox_DisableDetectionNVidia6X.Checked;
-            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X = checkBox_DisableDetectionNVidia5X.Checked;
-            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X = checkBox_DisableDetectionNVidia3X.Checked;
-            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X = checkBox_DisableDetectionNVidia2X.Checked;
+            ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA = checkBox_DisableDetectionNVIDIA.Checked;
             ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD = checkBox_DisableDetectionAMD.Checked;
             ConfigManager.Instance.GeneralConfig.AutoScaleBTCValues = checkBox_AutoScaleBTCValues.Checked;
             ConfigManager.Instance.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;

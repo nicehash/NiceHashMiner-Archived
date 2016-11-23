@@ -24,7 +24,6 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Settings));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
@@ -34,9 +33,7 @@
             this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.checkBox_HideMiningWindows = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeToTray = new System.Windows.Forms.CheckBox();
-            this.checkBox_DisableDetectionNVidia6X = new System.Windows.Forms.CheckBox();
             this.pictureBox_DisableDefaultOptimizations = new System.Windows.Forms.PictureBox();
-            this.checkBox_DisableDetectionNVidia5X = new System.Windows.Forms.CheckBox();
             this.pictureBox_AMD_DisableAMDTempControl = new System.Windows.Forms.PictureBox();
             this.pictureBox_NVIDIAP0State = new System.Windows.Forms.PictureBox();
             this.pictureBox_DisableWindowsErrorReporting = new System.Windows.Forms.PictureBox();
@@ -44,15 +41,11 @@
             this.pictureBox_StartMiningWhenIdle = new System.Windows.Forms.PictureBox();
             this.pictureBox_AutoScaleBTCValues = new System.Windows.Forms.PictureBox();
             this.pictureBox_DisableDetectionAMD = new System.Windows.Forms.PictureBox();
-            this.pictureBox_DisableDetectionNVidia2X = new System.Windows.Forms.PictureBox();
-            this.pictureBox_DisableDetectionNVidia3X = new System.Windows.Forms.PictureBox();
-            this.pictureBox_DisableDetectionNVidia5X = new System.Windows.Forms.PictureBox();
-            this.pictureBox_DisableDetectionNVidia6X = new System.Windows.Forms.PictureBox();
+            this.pictureBox_DisableDetectionNVIDIA = new System.Windows.Forms.PictureBox();
             this.pictureBox_AutoStartMining = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinimizeToTray = new System.Windows.Forms.PictureBox();
             this.pictureBox_HideMiningWindows = new System.Windows.Forms.PictureBox();
-            this.checkBox_DisableDetectionNVidia3X = new System.Windows.Forms.CheckBox();
-            this.checkBox_DisableDetectionNVidia2X = new System.Windows.Forms.CheckBox();
+            this.checkBox_DisableDetectionNVIDIA = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDetectionAMD = new System.Windows.Forms.CheckBox();
             this.checkBox_NVIDIAP0State = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoScaleBTCValues = new System.Windows.Forms.CheckBox();
@@ -123,19 +116,21 @@
             this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.textBox_MinerAPIQueryInterval = new System.Windows.Forms.TextBox();
             this.groupBoxBenchmarkTimeLimits = new System.Windows.Forms.GroupBox();
-            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.buttonAllProfit = new System.Windows.Forms.Button();
             this.buttonSelectedProfit = new System.Windows.Forms.Button();
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.checkBoxEnable3rdPartyMiners = new System.Windows.Forms.CheckBox();
+            this.pictureBoxEnable3rdPartyMiners = new System.Windows.Forms.PictureBox();
+            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -147,10 +142,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartMiningWhenIdle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoScaleBTCValues)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionAMD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia2X)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia3X)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia5X)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia6X)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVIDIA)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideMiningWindows)).BeginInit();
@@ -183,6 +175,7 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEnable3rdPartyMiners)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -223,9 +216,7 @@
             this.groupBox_Misc.Controls.Add(this.checkBox_AutoStartMining);
             this.groupBox_Misc.Controls.Add(this.checkBox_HideMiningWindows);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeToTray);
-            this.groupBox_Misc.Controls.Add(this.checkBox_DisableDetectionNVidia6X);
             this.groupBox_Misc.Controls.Add(this.pictureBox_DisableDefaultOptimizations);
-            this.groupBox_Misc.Controls.Add(this.checkBox_DisableDetectionNVidia5X);
             this.groupBox_Misc.Controls.Add(this.pictureBox_AMD_DisableAMDTempControl);
             this.groupBox_Misc.Controls.Add(this.pictureBox_NVIDIAP0State);
             this.groupBox_Misc.Controls.Add(this.pictureBox_DisableWindowsErrorReporting);
@@ -233,15 +224,13 @@
             this.groupBox_Misc.Controls.Add(this.pictureBox_StartMiningWhenIdle);
             this.groupBox_Misc.Controls.Add(this.pictureBox_AutoScaleBTCValues);
             this.groupBox_Misc.Controls.Add(this.pictureBox_DisableDetectionAMD);
-            this.groupBox_Misc.Controls.Add(this.pictureBox_DisableDetectionNVidia2X);
-            this.groupBox_Misc.Controls.Add(this.pictureBox_DisableDetectionNVidia3X);
-            this.groupBox_Misc.Controls.Add(this.pictureBox_DisableDetectionNVidia5X);
-            this.groupBox_Misc.Controls.Add(this.pictureBox_DisableDetectionNVidia6X);
+            this.groupBox_Misc.Controls.Add(this.pictureBoxEnable3rdPartyMiners);
+            this.groupBox_Misc.Controls.Add(this.pictureBox_DisableDetectionNVIDIA);
             this.groupBox_Misc.Controls.Add(this.pictureBox_AutoStartMining);
             this.groupBox_Misc.Controls.Add(this.pictureBox_MinimizeToTray);
             this.groupBox_Misc.Controls.Add(this.pictureBox_HideMiningWindows);
-            this.groupBox_Misc.Controls.Add(this.checkBox_DisableDetectionNVidia3X);
-            this.groupBox_Misc.Controls.Add(this.checkBox_DisableDetectionNVidia2X);
+            this.groupBox_Misc.Controls.Add(this.checkBoxEnable3rdPartyMiners);
+            this.groupBox_Misc.Controls.Add(this.checkBox_DisableDetectionNVIDIA);
             this.groupBox_Misc.Controls.Add(this.checkBox_DisableDetectionAMD);
             this.groupBox_Misc.Controls.Add(this.checkBox_NVIDIAP0State);
             this.groupBox_Misc.Controls.Add(this.checkBox_AutoScaleBTCValues);
@@ -258,7 +247,7 @@
             // checkBox_DisableDefaultOptimizations
             // 
             this.checkBox_DisableDefaultOptimizations.AutoSize = true;
-            this.checkBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(6, 313);
+            this.checkBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(6, 268);
             this.checkBox_DisableDefaultOptimizations.Name = "checkBox_DisableDefaultOptimizations";
             this.checkBox_DisableDefaultOptimizations.Size = new System.Drawing.Size(163, 17);
             this.checkBox_DisableDefaultOptimizations.TabIndex = 365;
@@ -269,7 +258,7 @@
             // checkBox_AMD_DisableAMDTempControl
             // 
             this.checkBox_AMD_DisableAMDTempControl.AutoSize = true;
-            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(6, 292);
+            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(6, 247);
             this.checkBox_AMD_DisableAMDTempControl.Name = "checkBox_AMD_DisableAMDTempControl";
             this.checkBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(145, 17);
             this.checkBox_AMD_DisableAMDTempControl.TabIndex = 365;
@@ -307,40 +296,20 @@
             this.checkBox_MinimizeToTray.Text = "MinimizeToTray";
             this.checkBox_MinimizeToTray.UseVisualStyleBackColor = true;
             // 
-            // checkBox_DisableDetectionNVidia6X
-            // 
-            this.checkBox_DisableDetectionNVidia6X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia6X.Location = new System.Drawing.Point(6, 82);
-            this.checkBox_DisableDetectionNVidia6X.Name = "checkBox_DisableDetectionNVidia6X";
-            this.checkBox_DisableDetectionNVidia6X.Size = new System.Drawing.Size(151, 17);
-            this.checkBox_DisableDetectionNVidia6X.TabIndex = 317;
-            this.checkBox_DisableDetectionNVidia6X.Text = "DisableDetectionNVidia6X";
-            this.checkBox_DisableDetectionNVidia6X.UseVisualStyleBackColor = true;
-            // 
             // pictureBox_DisableDefaultOptimizations
             // 
             this.pictureBox_DisableDefaultOptimizations.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(205, 312);
+            this.pictureBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(205, 267);
             this.pictureBox_DisableDefaultOptimizations.Name = "pictureBox_DisableDefaultOptimizations";
             this.pictureBox_DisableDefaultOptimizations.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_DisableDefaultOptimizations.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox_DisableDefaultOptimizations.TabIndex = 364;
             this.pictureBox_DisableDefaultOptimizations.TabStop = false;
             // 
-            // checkBox_DisableDetectionNVidia5X
-            // 
-            this.checkBox_DisableDetectionNVidia5X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia5X.Location = new System.Drawing.Point(6, 103);
-            this.checkBox_DisableDetectionNVidia5X.Name = "checkBox_DisableDetectionNVidia5X";
-            this.checkBox_DisableDetectionNVidia5X.Size = new System.Drawing.Size(151, 17);
-            this.checkBox_DisableDetectionNVidia5X.TabIndex = 317;
-            this.checkBox_DisableDetectionNVidia5X.Text = "DisableDetectionNVidia5X";
-            this.checkBox_DisableDetectionNVidia5X.UseVisualStyleBackColor = true;
-            // 
             // pictureBox_AMD_DisableAMDTempControl
             // 
             this.pictureBox_AMD_DisableAMDTempControl.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(205, 291);
+            this.pictureBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(205, 246);
             this.pictureBox_AMD_DisableAMDTempControl.Name = "pictureBox_AMD_DisableAMDTempControl";
             this.pictureBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_AMD_DisableAMDTempControl.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -350,7 +319,7 @@
             // pictureBox_NVIDIAP0State
             // 
             this.pictureBox_NVIDIAP0State.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_NVIDIAP0State.Location = new System.Drawing.Point(205, 270);
+            this.pictureBox_NVIDIAP0State.Location = new System.Drawing.Point(205, 225);
             this.pictureBox_NVIDIAP0State.Name = "pictureBox_NVIDIAP0State";
             this.pictureBox_NVIDIAP0State.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_NVIDIAP0State.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -360,7 +329,7 @@
             // pictureBox_DisableWindowsErrorReporting
             // 
             this.pictureBox_DisableWindowsErrorReporting.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(205, 249);
+            this.pictureBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(205, 204);
             this.pictureBox_DisableWindowsErrorReporting.Name = "pictureBox_DisableWindowsErrorReporting";
             this.pictureBox_DisableWindowsErrorReporting.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_DisableWindowsErrorReporting.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -370,7 +339,7 @@
             // pictureBox_ShowDriverVersionWarning
             // 
             this.pictureBox_ShowDriverVersionWarning.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(205, 228);
+            this.pictureBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(205, 183);
             this.pictureBox_ShowDriverVersionWarning.Name = "pictureBox_ShowDriverVersionWarning";
             this.pictureBox_ShowDriverVersionWarning.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_ShowDriverVersionWarning.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -380,7 +349,7 @@
             // pictureBox_StartMiningWhenIdle
             // 
             this.pictureBox_StartMiningWhenIdle.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_StartMiningWhenIdle.Location = new System.Drawing.Point(205, 207);
+            this.pictureBox_StartMiningWhenIdle.Location = new System.Drawing.Point(205, 162);
             this.pictureBox_StartMiningWhenIdle.Name = "pictureBox_StartMiningWhenIdle";
             this.pictureBox_StartMiningWhenIdle.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_StartMiningWhenIdle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -390,7 +359,7 @@
             // pictureBox_AutoScaleBTCValues
             // 
             this.pictureBox_AutoScaleBTCValues.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_AutoScaleBTCValues.Location = new System.Drawing.Point(205, 186);
+            this.pictureBox_AutoScaleBTCValues.Location = new System.Drawing.Point(205, 141);
             this.pictureBox_AutoScaleBTCValues.Name = "pictureBox_AutoScaleBTCValues";
             this.pictureBox_AutoScaleBTCValues.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_AutoScaleBTCValues.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -400,52 +369,22 @@
             // pictureBox_DisableDetectionAMD
             // 
             this.pictureBox_DisableDetectionAMD.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDetectionAMD.Location = new System.Drawing.Point(205, 165);
+            this.pictureBox_DisableDetectionAMD.Location = new System.Drawing.Point(205, 120);
             this.pictureBox_DisableDetectionAMD.Name = "pictureBox_DisableDetectionAMD";
             this.pictureBox_DisableDetectionAMD.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_DisableDetectionAMD.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox_DisableDetectionAMD.TabIndex = 364;
             this.pictureBox_DisableDetectionAMD.TabStop = false;
             // 
-            // pictureBox_DisableDetectionNVidia2X
+            // pictureBox_DisableDetectionNVIDIA
             // 
-            this.pictureBox_DisableDetectionNVidia2X.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDetectionNVidia2X.Location = new System.Drawing.Point(205, 144);
-            this.pictureBox_DisableDetectionNVidia2X.Name = "pictureBox_DisableDetectionNVidia2X";
-            this.pictureBox_DisableDetectionNVidia2X.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DisableDetectionNVidia2X.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DisableDetectionNVidia2X.TabIndex = 364;
-            this.pictureBox_DisableDetectionNVidia2X.TabStop = false;
-            // 
-            // pictureBox_DisableDetectionNVidia3X
-            // 
-            this.pictureBox_DisableDetectionNVidia3X.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDetectionNVidia3X.Location = new System.Drawing.Point(205, 123);
-            this.pictureBox_DisableDetectionNVidia3X.Name = "pictureBox_DisableDetectionNVidia3X";
-            this.pictureBox_DisableDetectionNVidia3X.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DisableDetectionNVidia3X.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DisableDetectionNVidia3X.TabIndex = 364;
-            this.pictureBox_DisableDetectionNVidia3X.TabStop = false;
-            // 
-            // pictureBox_DisableDetectionNVidia5X
-            // 
-            this.pictureBox_DisableDetectionNVidia5X.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDetectionNVidia5X.Location = new System.Drawing.Point(205, 102);
-            this.pictureBox_DisableDetectionNVidia5X.Name = "pictureBox_DisableDetectionNVidia5X";
-            this.pictureBox_DisableDetectionNVidia5X.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DisableDetectionNVidia5X.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DisableDetectionNVidia5X.TabIndex = 364;
-            this.pictureBox_DisableDetectionNVidia5X.TabStop = false;
-            // 
-            // pictureBox_DisableDetectionNVidia6X
-            // 
-            this.pictureBox_DisableDetectionNVidia6X.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDetectionNVidia6X.Location = new System.Drawing.Point(205, 81);
-            this.pictureBox_DisableDetectionNVidia6X.Name = "pictureBox_DisableDetectionNVidia6X";
-            this.pictureBox_DisableDetectionNVidia6X.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DisableDetectionNVidia6X.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DisableDetectionNVidia6X.TabIndex = 364;
-            this.pictureBox_DisableDetectionNVidia6X.TabStop = false;
+            this.pictureBox_DisableDetectionNVIDIA.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DisableDetectionNVIDIA.Location = new System.Drawing.Point(205, 99);
+            this.pictureBox_DisableDetectionNVIDIA.Name = "pictureBox_DisableDetectionNVIDIA";
+            this.pictureBox_DisableDetectionNVIDIA.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_DisableDetectionNVIDIA.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_DisableDetectionNVIDIA.TabIndex = 364;
+            this.pictureBox_DisableDetectionNVIDIA.TabStop = false;
             // 
             // pictureBox_AutoStartMining
             // 
@@ -477,30 +416,20 @@
             this.pictureBox_HideMiningWindows.TabIndex = 364;
             this.pictureBox_HideMiningWindows.TabStop = false;
             // 
-            // checkBox_DisableDetectionNVidia3X
+            // checkBox_DisableDetectionNVIDIA
             // 
-            this.checkBox_DisableDetectionNVidia3X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia3X.Location = new System.Drawing.Point(6, 124);
-            this.checkBox_DisableDetectionNVidia3X.Name = "checkBox_DisableDetectionNVidia3X";
-            this.checkBox_DisableDetectionNVidia3X.Size = new System.Drawing.Size(151, 17);
-            this.checkBox_DisableDetectionNVidia3X.TabIndex = 318;
-            this.checkBox_DisableDetectionNVidia3X.Text = "DisableDetectionNVidia3X";
-            this.checkBox_DisableDetectionNVidia3X.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_DisableDetectionNVidia2X
-            // 
-            this.checkBox_DisableDetectionNVidia2X.AutoSize = true;
-            this.checkBox_DisableDetectionNVidia2X.Location = new System.Drawing.Point(6, 145);
-            this.checkBox_DisableDetectionNVidia2X.Name = "checkBox_DisableDetectionNVidia2X";
-            this.checkBox_DisableDetectionNVidia2X.Size = new System.Drawing.Size(151, 17);
-            this.checkBox_DisableDetectionNVidia2X.TabIndex = 319;
-            this.checkBox_DisableDetectionNVidia2X.Text = "DisableDetectionNVidia2X";
-            this.checkBox_DisableDetectionNVidia2X.UseVisualStyleBackColor = true;
+            this.checkBox_DisableDetectionNVIDIA.AutoSize = true;
+            this.checkBox_DisableDetectionNVIDIA.Location = new System.Drawing.Point(6, 100);
+            this.checkBox_DisableDetectionNVIDIA.Name = "checkBox_DisableDetectionNVIDIA";
+            this.checkBox_DisableDetectionNVIDIA.Size = new System.Drawing.Size(143, 17);
+            this.checkBox_DisableDetectionNVIDIA.TabIndex = 319;
+            this.checkBox_DisableDetectionNVIDIA.Text = "DisableDetectionNVIDIA";
+            this.checkBox_DisableDetectionNVIDIA.UseVisualStyleBackColor = true;
             // 
             // checkBox_DisableDetectionAMD
             // 
             this.checkBox_DisableDetectionAMD.AutoSize = true;
-            this.checkBox_DisableDetectionAMD.Location = new System.Drawing.Point(6, 166);
+            this.checkBox_DisableDetectionAMD.Location = new System.Drawing.Point(6, 121);
             this.checkBox_DisableDetectionAMD.Name = "checkBox_DisableDetectionAMD";
             this.checkBox_DisableDetectionAMD.Size = new System.Drawing.Size(131, 17);
             this.checkBox_DisableDetectionAMD.TabIndex = 320;
@@ -510,7 +439,7 @@
             // checkBox_NVIDIAP0State
             // 
             this.checkBox_NVIDIAP0State.AutoSize = true;
-            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 271);
+            this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 226);
             this.checkBox_NVIDIAP0State.Name = "checkBox_NVIDIAP0State";
             this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(100, 17);
             this.checkBox_NVIDIAP0State.TabIndex = 326;
@@ -520,7 +449,7 @@
             // checkBox_AutoScaleBTCValues
             // 
             this.checkBox_AutoScaleBTCValues.AutoSize = true;
-            this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(6, 187);
+            this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(6, 142);
             this.checkBox_AutoScaleBTCValues.Name = "checkBox_AutoScaleBTCValues";
             this.checkBox_AutoScaleBTCValues.Size = new System.Drawing.Size(128, 17);
             this.checkBox_AutoScaleBTCValues.TabIndex = 321;
@@ -530,7 +459,7 @@
             // checkBox_DisableWindowsErrorReporting
             // 
             this.checkBox_DisableWindowsErrorReporting.AutoSize = true;
-            this.checkBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(6, 250);
+            this.checkBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(6, 205);
             this.checkBox_DisableWindowsErrorReporting.Name = "checkBox_DisableWindowsErrorReporting";
             this.checkBox_DisableWindowsErrorReporting.Size = new System.Drawing.Size(173, 17);
             this.checkBox_DisableWindowsErrorReporting.TabIndex = 324;
@@ -540,7 +469,7 @@
             // checkBox_StartMiningWhenIdle
             // 
             this.checkBox_StartMiningWhenIdle.AutoSize = true;
-            this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 208);
+            this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 163);
             this.checkBox_StartMiningWhenIdle.Name = "checkBox_StartMiningWhenIdle";
             this.checkBox_StartMiningWhenIdle.Size = new System.Drawing.Size(125, 17);
             this.checkBox_StartMiningWhenIdle.TabIndex = 322;
@@ -550,7 +479,7 @@
             // checkBox_ShowDriverVersionWarning
             // 
             this.checkBox_ShowDriverVersionWarning.AutoSize = true;
-            this.checkBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(6, 229);
+            this.checkBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(6, 184);
             this.checkBox_ShowDriverVersionWarning.Name = "checkBox_ShowDriverVersionWarning";
             this.checkBox_ShowDriverVersionWarning.Size = new System.Drawing.Size(156, 17);
             this.checkBox_ShowDriverVersionWarning.TabIndex = 323;
@@ -1252,36 +1181,6 @@
             this.groupBoxBenchmarkTimeLimits.TabStop = false;
             this.groupBoxBenchmarkTimeLimits.Text = "Benchmark Time Limits:";
             // 
-            // benchmarkLimitControlNVIDIA
-            // 
-            this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
-            this.benchmarkLimitControlNVIDIA.Location = new System.Drawing.Point(9, 17);
-            this.benchmarkLimitControlNVIDIA.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlNVIDIA.Name = "benchmarkLimitControlNVIDIA";
-            this.benchmarkLimitControlNVIDIA.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlNVIDIA.TabIndex = 4;
-            this.benchmarkLimitControlNVIDIA.TimeLimits = null;
-            // 
-            // benchmarkLimitControlCPU
-            // 
-            this.benchmarkLimitControlCPU.GroupName = "CPU";
-            this.benchmarkLimitControlCPU.Location = new System.Drawing.Point(209, 17);
-            this.benchmarkLimitControlCPU.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlCPU.Name = "benchmarkLimitControlCPU";
-            this.benchmarkLimitControlCPU.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlCPU.TabIndex = 3;
-            this.benchmarkLimitControlCPU.TimeLimits = null;
-            // 
-            // benchmarkLimitControlAMD
-            // 
-            this.benchmarkLimitControlAMD.GroupName = "AMD";
-            this.benchmarkLimitControlAMD.Location = new System.Drawing.Point(409, 17);
-            this.benchmarkLimitControlAMD.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlAMD.Name = "benchmarkLimitControlAMD";
-            this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlAMD.TabIndex = 5;
-            this.benchmarkLimitControlAMD.TimeLimits = null;
-            // 
             // tabPageDevicesAlgos
             // 
             this.tabPageDevicesAlgos.Controls.Add(this.devicesListViewEnableControl1);
@@ -1297,27 +1196,6 @@
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
             // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.AutoSaveChange = true;
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.SetAllEnabled = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(352, 130);
-            this.devicesListViewEnableControl1.TabIndex = 397;
-            // 
-            // algorithmSettingsControl1
-            // 
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(363, 64);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 278);
-            this.algorithmSettingsControl1.TabIndex = 396;
-            // 
             // groupBoxAlgorithmSettings
             // 
             this.groupBoxAlgorithmSettings.Controls.Add(this.algorithmsListView1);
@@ -1327,16 +1205,6 @@
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
-            // 
-            // algorithmsListView1
-            // 
-            this.algorithmsListView1.BenchmarkCalculation = null;
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 15);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(339, 191);
-            this.algorithmsListView1.TabIndex = 2;
             // 
             // buttonAllProfit
             // 
@@ -1391,6 +1259,87 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
+            // checkBoxEnable3rdPartyMiners
+            // 
+            this.checkBoxEnable3rdPartyMiners.AutoSize = true;
+            this.checkBoxEnable3rdPartyMiners.Location = new System.Drawing.Point(6, 80);
+            this.checkBoxEnable3rdPartyMiners.Name = "checkBoxEnable3rdPartyMiners";
+            this.checkBoxEnable3rdPartyMiners.Size = new System.Drawing.Size(129, 17);
+            this.checkBoxEnable3rdPartyMiners.TabIndex = 319;
+            this.checkBoxEnable3rdPartyMiners.Text = "Enable3rdPartyMiners";
+            this.checkBoxEnable3rdPartyMiners.UseVisualStyleBackColor = true;
+            // 
+            // pictureBoxEnable3rdPartyMiners
+            // 
+            this.pictureBoxEnable3rdPartyMiners.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBoxEnable3rdPartyMiners.Location = new System.Drawing.Point(205, 79);
+            this.pictureBoxEnable3rdPartyMiners.Name = "pictureBoxEnable3rdPartyMiners";
+            this.pictureBoxEnable3rdPartyMiners.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxEnable3rdPartyMiners.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBoxEnable3rdPartyMiners.TabIndex = 364;
+            this.pictureBoxEnable3rdPartyMiners.TabStop = false;
+            // 
+            // benchmarkLimitControlNVIDIA
+            // 
+            this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
+            this.benchmarkLimitControlNVIDIA.Location = new System.Drawing.Point(9, 17);
+            this.benchmarkLimitControlNVIDIA.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlNVIDIA.Name = "benchmarkLimitControlNVIDIA";
+            this.benchmarkLimitControlNVIDIA.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlNVIDIA.TabIndex = 4;
+            this.benchmarkLimitControlNVIDIA.TimeLimits = null;
+            // 
+            // benchmarkLimitControlCPU
+            // 
+            this.benchmarkLimitControlCPU.GroupName = "CPU";
+            this.benchmarkLimitControlCPU.Location = new System.Drawing.Point(209, 17);
+            this.benchmarkLimitControlCPU.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlCPU.Name = "benchmarkLimitControlCPU";
+            this.benchmarkLimitControlCPU.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlCPU.TabIndex = 3;
+            this.benchmarkLimitControlCPU.TimeLimits = null;
+            // 
+            // benchmarkLimitControlAMD
+            // 
+            this.benchmarkLimitControlAMD.GroupName = "AMD";
+            this.benchmarkLimitControlAMD.Location = new System.Drawing.Point(409, 17);
+            this.benchmarkLimitControlAMD.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlAMD.Name = "benchmarkLimitControlAMD";
+            this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlAMD.TabIndex = 5;
+            this.benchmarkLimitControlAMD.TimeLimits = null;
+            // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.AutoSaveChange = true;
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.SetAllEnabled = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(352, 130);
+            this.devicesListViewEnableControl1.TabIndex = 397;
+            // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(363, 64);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 278);
+            this.algorithmSettingsControl1.TabIndex = 396;
+            // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.BenchmarkCalculation = null;
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.IsInBenchmark = false;
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 15);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(339, 191);
+            this.algorithmsListView1.TabIndex = 2;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1401,7 +1350,6 @@
             this.Controls.Add(this.tabControlGeneral);
             this.Controls.Add(this.buttonCloseNoSave);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form_Settings";
@@ -1419,10 +1367,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartMiningWhenIdle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoScaleBTCValues)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionAMD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia2X)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia3X)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia5X)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVidia6X)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVIDIA)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideMiningWindows)).EndInit();
@@ -1459,6 +1404,7 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEnable3rdPartyMiners)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1513,10 +1459,7 @@
         private System.Windows.Forms.GroupBox groupBox_Misc;
         private System.Windows.Forms.CheckBox checkBox_HideMiningWindows;
         private System.Windows.Forms.CheckBox checkBox_MinimizeToTray;
-        private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia6X;
-        private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia5X;
-        private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia3X;
-        private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVidia2X;
+        private System.Windows.Forms.CheckBox checkBox_DisableDetectionNVIDIA;
         private System.Windows.Forms.CheckBox checkBox_DisableDetectionAMD;
         private System.Windows.Forms.CheckBox checkBox_NVIDIAP0State;
         private System.Windows.Forms.CheckBox checkBox_AutoScaleBTCValues;
@@ -1542,10 +1485,7 @@
         private System.Windows.Forms.PictureBox pictureBox_StartMiningWhenIdle;
         private System.Windows.Forms.PictureBox pictureBox_AutoScaleBTCValues;
         private System.Windows.Forms.PictureBox pictureBox_DisableDetectionAMD;
-        private System.Windows.Forms.PictureBox pictureBox_DisableDetectionNVidia2X;
-        private System.Windows.Forms.PictureBox pictureBox_DisableDetectionNVidia3X;
-        private System.Windows.Forms.PictureBox pictureBox_DisableDetectionNVidia5X;
-        private System.Windows.Forms.PictureBox pictureBox_DisableDetectionNVidia6X;
+        private System.Windows.Forms.PictureBox pictureBox_DisableDetectionNVIDIA;
         private System.Windows.Forms.PictureBox pictureBox_MinimizeToTray;
         private System.Windows.Forms.PictureBox pictureBox_HideMiningWindows;
         private System.Windows.Forms.PictureBox pictureBox_DebugConsole;
@@ -1576,6 +1516,8 @@
         private System.Windows.Forms.PictureBox pictureBox_DisableDefaultOptimizations;
         private System.Windows.Forms.CheckBox checkBox_ContinueMiningIfNoInternetAccess;
         private System.Windows.Forms.PictureBox pictureBox_ContinueMiningIfNoInternetAccess;
+        private System.Windows.Forms.PictureBox pictureBoxEnable3rdPartyMiners;
+        private System.Windows.Forms.CheckBox checkBoxEnable3rdPartyMiners;
 
     }
 }

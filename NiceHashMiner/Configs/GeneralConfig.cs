@@ -64,6 +64,8 @@ namespace NiceHashMiner.Configs {
         }
 
         public BenchmarkTimeLimitsConfig BenchmarkTimeLimits { get; set; }
+
+        // TODO deprecate this
         public DeviceDetectionConfig DeviceDetection { get; set; }
 
         public bool DisableAMDTempControl { get; set; }

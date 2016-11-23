@@ -33,7 +33,6 @@ namespace NiceHashMiner
 
             // #1 first initialize config
             ConfigManager.Instance.GeneralConfig.InitializeConfig();
-            ConfigManager.Instance.LegacyConfigMigration();
 
             if (ConfigManager.Instance.GeneralConfig.LogToFile) {
                 Logger.ConfigureWithFile();

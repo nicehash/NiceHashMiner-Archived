@@ -307,26 +307,7 @@ namespace NiceHashMiner.Devices
                 }
 
                 public static bool IsSkipNVIDIA() {
-                    return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X
-                        && ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X
-                        && ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X
-                        && ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
-                }
-
-                static private bool IsSMGroupSkip(int sm_major) {
-                    if (sm_major == 6) {
-                        return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia6X;
-                    }
-                    if (sm_major == 5) {
-                        return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia5X;
-                    }
-                    if (sm_major == 3) {
-                        return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia3X;
-                    }
-                    if (sm_major == 2) {
-                        return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVidia2X;
-                    }
-                    return false;
+                    return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 }
 
                 static public void QueryCudaDevices() {
@@ -375,10 +356,9 @@ namespace NiceHashMiner.Devices
                                 isUnderSM21 = isUnderSM2_major && isUnderSM1_minor;
                             }
                             //bool isOverSM6 = cudaDev.SM_major > 6;
-                            bool isDisabledGroup = IsSMGroupSkip(cudaDev.SM_major);
-                            bool skip = isUnderSM21 || isDisabledGroup;
+                            bool skip = isUnderSM21;
                             string skipOrAdd = skip ? "SKIPED" : "ADDED";
-                            string isDisabledGroupStr = isDisabledGroup ? " (SM group disabled)" : "";
+                            string isDisabledGroupStr = ""; // TODO remove
                             string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
                             stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
                             stringBuilder.AppendLine(String.Format("\t\tID: {0}", cudaDev.DeviceID.ToString()));
