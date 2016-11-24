@@ -107,6 +107,9 @@ namespace NiceHashMiner.Forms {
             
             toolTip1.SetToolTip(this.checkBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
             toolTip1.SetToolTip(this.pictureBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
+
+            toolTip1.SetToolTip(this.checkBox_Use3rdPartyMiners, International.GetText("Form_Settings_General_3rdparty_ToolTip"));
+            toolTip1.SetToolTip(this.pictureBox_Use3rdPartyMiners, International.GetText("Form_Settings_General_3rdparty_ToolTip"));
             
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
@@ -233,7 +236,7 @@ namespace NiceHashMiner.Forms {
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
             checkBox_ShowDriverVersionWarning.Text = International.GetText("Form_Settings_General_ShowDriverVersionWarning");
             checkBox_DisableWindowsErrorReporting.Text = International.GetText("Form_Settings_General_DisableWindowsErrorReporting");
-            //checkBox_UseNewSettingsPage.Text = International.GetText("Form_Settings_General_UseNewSettingsPage");
+            checkBox_Use3rdPartyMiners.Text = International.GetText("Form_Settings_General_3rdparty_Text");
             checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
             checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
             checkBox_AMD_DisableAMDTempControl.Text = International.GetText("Form_Settings_General_DisableAMDTempControl");
@@ -376,6 +379,7 @@ namespace NiceHashMiner.Forms {
                 checkBox_AMD_DisableAMDTempControl.Checked = ConfigManager.Instance.GeneralConfig.DisableAMDTempControl;
                 checkBox_DisableDefaultOptimizations.Checked = ConfigManager.Instance.GeneralConfig.DisableDefaultOptimizations;
                 checkBox_ContinueMiningIfNoInternetAccess.Checked = ConfigManager.Instance.GeneralConfig.ContinueMiningIfNoInternetAccess;
+                this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             }
 
             // Textboxes
@@ -764,6 +768,18 @@ namespace NiceHashMiner.Forms {
                 //algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
                 //groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
                 //devicesListViewEnableControl1.SetFirstSelected();
+            }
+        }
+
+        private void checkBox_Use3rdPartyMiners_CheckedChanged(object sender, EventArgs e) {
+            if (!_isInitFinished) return;
+            if (this.checkBox_Use3rdPartyMiners.Checked) {
+                // Show TOS
+                Form tos = new Form_ClaymoreTOS();
+                tos.ShowDialog(this);
+                this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+            } else {
+                ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
             }
         }
 

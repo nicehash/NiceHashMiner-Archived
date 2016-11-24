@@ -329,15 +329,9 @@ namespace NiceHashMiner
             {
                 // check if setting set
                 if (ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET) {
-                    // TODO
-                    var result = MessageBox.Show(International.GetText("Form_Main_3rdParty_Text"),
-                        International.GetText("Form_Main_3rdParty_Title"),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == System.Windows.Forms.DialogResult.Yes) {
-                        ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
-                    } else {
-                        ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
-                    }
+                    // Show TOS
+                    Form tos = new Form_ClaymoreTOS();
+                    tos.ShowDialog(this);
                 }
                 // check if download needed
                 if (ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) {

@@ -164,6 +164,12 @@
     <Compile Include="Forms\Form_ChooseLanguage_r.Designer.cs">
       <DependentUpon>Form_ChooseLanguage_r.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_ClaymoreTOS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_ClaymoreTOS.Designer.cs">
+      <DependentUpon>Form_ClaymoreTOS.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -277,6 +283,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage_r.resx">
       <DependentUpon>Form_ChooseLanguage_r.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_ClaymoreTOS.resx">
+      <DependentUpon>Form_ClaymoreTOS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
