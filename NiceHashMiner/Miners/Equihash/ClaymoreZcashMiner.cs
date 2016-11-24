@@ -131,7 +131,7 @@ namespace NiceHashMiner.Miners {
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string ret = "-wd 0 -colors 0 -logfile " + LOG_FILE_NAME + " -benchmark 1 " + GetDevicesCommandString();
+            string ret = "-logfile " + LOG_FILE_NAME + " -benchmark 1 " + GetDevicesCommandString();
             return ret;
         }
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
