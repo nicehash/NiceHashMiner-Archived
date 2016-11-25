@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Interfaces;
 
-namespace NiceHashMiner.Configs {
+namespace NiceHashMiner.Configs.ConfigJsonFile {
     [Serializable]
     public abstract class BaseConfigFile<T> : IPathsProperties where T : class, IPathsProperties {
         #region Members

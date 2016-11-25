@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Configs {
-    public class GeneralConfigFile : ConfigFile<GeneralConfigData> {
+namespace NiceHashMiner.Configs.ConfigJsonFile {
+    public class GeneralConfigFile : ConfigFile<GeneralConfig> {
         public GeneralConfigFile()
             : base("General.json", "General_old.json") {
         }

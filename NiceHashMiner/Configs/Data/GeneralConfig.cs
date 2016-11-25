@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Configs.Data {
     [Serializable]
-    public class GeneralConfigData {
+    public class GeneralConfig {
 
         public Version ConfigFileVersion;
         public LanguageType Language = LanguageType.En;

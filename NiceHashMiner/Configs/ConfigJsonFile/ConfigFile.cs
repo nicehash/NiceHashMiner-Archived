@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Configs {
+namespace NiceHashMiner.Configs.ConfigJsonFile {
     public abstract class ConfigFile<T> where T : class {
         #region statics/consts
         // statics/consts
@@ -25,7 +25,7 @@ namespace NiceHashMiner.Configs {
         protected string _filePath = "";
         protected string _filePathOld = "";
 
-        protected T _file = null;
+        //protected T _file = null;
 
         public ConfigFile(string fileName, string fileNameOld) {
             if(fileName.Contains(CONF_FOLDER)) {
@@ -40,22 +40,25 @@ namespace NiceHashMiner.Configs {
             }
         }
 
-        protected void ReadFile() {
+        protected T ReadFile() {
             CheckAndCreateConfigsFolder();
+            T file = null;
             try {
                 if (new FileInfo(_filePath).Exists) {
-                    _file = JsonConvert.DeserializeObject<T>(File.ReadAllText(_filePath), Globals.JsonSettings);
+                    file = JsonConvert.DeserializeObject<T>(File.ReadAllText(_filePath), Globals.JsonSettings);
                 } else {
-                    Commit();
+                    Commit(file);
                 }
             } catch (Exception ex) {
                 Helpers.ConsolePrint(TAG, String.Format("ReadFile {0}: exception {1}", _filePath, ex.ToString()));
+                file = null;
             }
+            return file;
         }
 
-        public void Commit() {
+        public void Commit(T file) {
             try {
-                File.WriteAllText(_filePath, JsonConvert.SerializeObject(_file, Formatting.Indented));
+                File.WriteAllText(_filePath, JsonConvert.SerializeObject(file, Formatting.Indented));
             } catch (Exception ex) {
                 Helpers.ConsolePrint(TAG, String.Format("Commit {0}: exception {1}", _filePath, ex.ToString()));
             }

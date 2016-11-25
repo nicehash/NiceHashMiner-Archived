@@ -6,6 +6,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
 using Newtonsoft.Json;
 using System.IO;
+using NiceHashMiner.Configs.ConfigJsonFile;
 
 namespace NiceHashMiner.Configs
 {

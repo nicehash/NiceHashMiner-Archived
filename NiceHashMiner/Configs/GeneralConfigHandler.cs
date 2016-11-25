@@ -5,6 +5,8 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using Newtonsoft.Json;
 using System.IO;
+using NiceHashMiner.Configs.ConfigJsonFile;
+using NiceHashMiner.Configs.Data;
 
 namespace NiceHashMiner.Configs {
     [Serializable]
