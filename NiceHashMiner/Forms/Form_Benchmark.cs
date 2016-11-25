@@ -346,7 +346,7 @@ namespace NiceHashMiner.Forms {
                 } else {
                     status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.DISABLED_NONE : BenchmarkSettingsStatus.DISABLED_TODO;
                 }
-                _benchmarkDevicesAlgorithmStatus.Add(option.CDevice.UUID, status);
+                _benchmarkDevicesAlgorithmStatus[option.CDevice.UUID] =  status;
             }
             // GUI stuff
             progressBarBenchmarkSteps.Maximum = _benchmarkAlgorithmsCount;

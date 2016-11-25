@@ -12,9 +12,6 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Miners {
     // typedefs
-    using DeviceSubsetList = List<SortedSet<string>>;
-    using PerDeviceSpeedDictionary = Dictionary<string, Dictionary<AlgorithmType, double>>;
-
     using GroupedDevices = SortedSet<string>;
     using NiceHashMiner.Miners.Grouping;
     public class MinersManager : BaseLazySingleton<MinersManager> {

@@ -123,7 +123,6 @@ namespace NiceHashMiner.Miners.Parsing {
         private static string Parse(List<MiningPair> MiningPairs, List<MinerOption> options, bool useIfDefaults = false, List<MinerOption> ignoreLogOpions = null) {
             const string IGNORE_PARAM = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             List<MinerOptionType> optionsOrder = new List<MinerOptionType>();
-            //Dictionary<MinerOptionType, string> paramsFlags = new Dictionary<MinerOptionType, string>();
             Dictionary<string, Dictionary<MinerOptionType, string>> cdevOptions = new Dictionary<string, Dictionary<MinerOptionType, string>>();
             Dictionary<MinerOptionType, bool> isOptionDefaults = new Dictionary<MinerOptionType, bool>();
             Dictionary<MinerOptionType, bool> isOptionExist = new Dictionary<MinerOptionType, bool>();
