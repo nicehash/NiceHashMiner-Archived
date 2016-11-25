@@ -134,7 +134,7 @@ namespace NiceHashMiner.Devices
                     NVIDIA.QueryCudaDevices();
                 }
                 // OpenCL and AMD
-                if (ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD) {
+                if (ConfigManager_rem.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD) {
                     Helpers.ConsolePrint(TAG, "Skipping AMD device detection, settings set to disabled");
                     showMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
                 } else {
@@ -171,7 +171,7 @@ namespace NiceHashMiner.Devices
                 _currentNvidiaSMIDriver = GetNvidiaSMIDriver();
                 // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
                 bool isNvidiaErrorShown = false; // to prevent showing twice
-                bool showWarning = ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && WindowsDisplayAdapters.HasNvidiaVideoController();
+                bool showWarning = ConfigManager_rem.Instance.GeneralConfig.ShowDriverVersionWarning && WindowsDisplayAdapters.HasNvidiaVideoController();
                 if (showWarning && CudaDevices.Count == 0 && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_MIN_DETECTION_DRIVER)) {
                     isNvidiaErrorShown = true;
                     var minDriver = NVIDIA_MIN_DETECTION_DRIVER.ToString();
@@ -235,7 +235,7 @@ namespace NiceHashMiner.Devices
                         AvaliableVideoControllers.Add(vidController);
                     }
                     Helpers.ConsolePrint(TAG, stringBuilder.ToString());
-                    if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK) {
+                    if (ConfigManager_rem.Instance.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK) {
                         string msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
                         foreach (var vc in AvaliableVideoControllers) {
                             if (!vc.Status.ToLower().Equals("ok")) {
@@ -313,7 +313,7 @@ namespace NiceHashMiner.Devices
                 }
 
                 public static bool IsSkipNVIDIA() {
-                    return ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
+                    return ConfigManager_rem.Instance.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 }
 
                 static public void QueryCudaDevices() {
@@ -518,7 +518,7 @@ namespace NiceHashMiner.Devices
                             }
                         }
                     }
-                    if (ConfigManager.Instance.GeneralConfig.ShowDriverVersionWarning && ShowWarningDialog == true) {
+                    if (ConfigManager_rem.Instance.GeneralConfig.ShowDriverVersionWarning && ShowWarningDialog == true) {
                         Form WarningDialog = new DriverVersionConfirmationDialog();
                         WarningDialog.ShowDialog();
                         WarningDialog = null;
@@ -677,7 +677,7 @@ namespace NiceHashMiner.Devices
                                             var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName]);
                                             newAmdDev.DeviceName = deviceName;
                                             newAmdDev.UUID = _busIdsInfo[busID].Item2;
-                                            bool isDisabledGroup = ConfigManager.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
+                                            bool isDisabledGroup = ConfigManager_rem.Instance.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                                             string skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
                                             string isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
                                             string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";

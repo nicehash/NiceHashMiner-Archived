@@ -56,7 +56,7 @@ namespace NiceHashMiner.Miners.Grouping {
             if (Miner != null && Miner.IsRunning) {
                 Miner.Stop(MinerStopType.SWITCH);
                 // wait before going on
-                System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+                System.Threading.Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
             }
             CurrentRate = 0;
         }
@@ -73,7 +73,7 @@ namespace NiceHashMiner.Miners.Grouping {
                 return;
             }
             // Wait before new start
-            System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+            System.Threading.Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
 
             string name = Globals.NiceHashData[AlgorithmType].name;
             int port = Globals.NiceHashData[AlgorithmType].port;

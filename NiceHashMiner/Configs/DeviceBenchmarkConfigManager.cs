@@ -8,8 +8,8 @@ namespace NiceHashMiner.Configs {
     
     public class DeviceBenchmarkConfigManager : BaseLazySingleton<DeviceBenchmarkConfigManager> {
 
-        private Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigs;
-        public Dictionary<string, DeviceBenchmarkConfig> BenchmarkConfigs {
+        private Dictionary<string, DeviceBenchmarkConfig_rem> _benchmarkConfigs;
+        public Dictionary<string, DeviceBenchmarkConfig_rem> BenchmarkConfigs {
             get { return _benchmarkConfigs; }
             set {
                 if (value != null) {
@@ -20,22 +20,22 @@ namespace NiceHashMiner.Configs {
 
         // constructor has references don't delete it
         protected DeviceBenchmarkConfigManager() {
-            _benchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig>();
+            _benchmarkConfigs = new Dictionary<string, DeviceBenchmarkConfig_rem>();
         }
 
-        private DeviceBenchmarkConfig GetConfig(string deviceUUID) {
-            DeviceBenchmarkConfig retConfig = null;
+        private DeviceBenchmarkConfig_rem GetConfig(string deviceUUID) {
+            DeviceBenchmarkConfig_rem retConfig = null;
             if (_benchmarkConfigs.TryGetValue(deviceUUID, out retConfig) == false) {
                 retConfig = null;
             }
             return retConfig;
         }
 
-        public DeviceBenchmarkConfig GetConfig(DeviceGroupType deviceGroupType,
+        public DeviceBenchmarkConfig_rem GetConfig(DeviceGroupType deviceGroupType,
             string deviceUUID, string deviceName) {
-                DeviceBenchmarkConfig retConfig = GetConfig(deviceUUID);
+                DeviceBenchmarkConfig_rem retConfig = GetConfig(deviceUUID);
             if (retConfig == null) {
-                retConfig = new DeviceBenchmarkConfig(deviceGroupType, deviceUUID, deviceName);
+                retConfig = new DeviceBenchmarkConfig_rem(deviceGroupType, deviceUUID, deviceName);
                 _benchmarkConfigs.Add(deviceUUID, retConfig);
             }
 

@@ -44,14 +44,14 @@ namespace NiceHashMiner.Devices {
         /// </summary>
         /// <returns></returns>
         public static CPUExtensionType GetMostOptimized() {
-            if (ConfigManager.Instance.GeneralConfig.ForceCPUExtension == CPUExtensionType.Automatic) {
+            if (ConfigManager_rem.Instance.GeneralConfig.ForceCPUExtension == CPUExtensionType.Automatic) {
                 for (int i = 0; i < _detectOrder.Length; ++i) {
                     if (HasExtensionSupport(_detectOrder[i])) {
                         return _detectOrder[i];
                     }
                 }
-            } else if (HasExtensionSupport(ConfigManager.Instance.GeneralConfig.ForceCPUExtension)) {
-                return ConfigManager.Instance.GeneralConfig.ForceCPUExtension;
+            } else if (HasExtensionSupport(ConfigManager_rem.Instance.GeneralConfig.ForceCPUExtension)) {
+                return ConfigManager_rem.Instance.GeneralConfig.ForceCPUExtension;
             }
             return CPUExtensionType.Automatic;
         }

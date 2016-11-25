@@ -30,7 +30,7 @@ namespace NiceHashMiner.Miners {
             Path = Ethereum.EtherMinerPath;
             _isEthMinerExit = true;
             CurrentBlockString = blockString;
-            DagGenerationType = ConfigManager.Instance.GeneralConfig.EthminerDagGenerationType;
+            DagGenerationType = ConfigManager_rem.Instance.GeneralConfig.EthminerDagGenerationType;
         }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
@@ -81,7 +81,7 @@ namespace NiceHashMiner.Miners {
                 if (ethminer.MINER_ID != MINER_ID && (ethminer.IsRunning || ethminer.IsPaused)) {
                     Helpers.ConsolePrint(MinerTAG(), String.Format("Will end {0} {1}", ethminer.MinerTAG(), ethminer.ProcessTag()));
                     ethminer.End();
-                    System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+                    System.Threading.Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
                 }
             }
 

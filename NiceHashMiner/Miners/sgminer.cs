@@ -111,14 +111,14 @@ namespace NiceHashMiner.Miners
 
             var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
             string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
-                         Globals.MiningLocation[ConfigManager.Instance.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
+                         Globals.MiningLocation[ConfigManager_rem.Instance.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
                          nhAlgorithmData.port;
 
             // demo for benchmark
             string username = Globals.DemoUser;
 
-            if (ConfigManager.Instance.GeneralConfig.WorkerName.Length > 0)
-                username += "." + ConfigManager.Instance.GeneralConfig.WorkerName.Trim();
+            if (ConfigManager_rem.Instance.GeneralConfig.WorkerName.Length > 0)
+                username += "." + ConfigManager_rem.Instance.GeneralConfig.WorkerName.Trim();
 
             // cd to the cgminer for the process bins
             CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
@@ -206,7 +206,7 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkThreadRoutine(object CommandLine) {
-            Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+            Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
 
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;

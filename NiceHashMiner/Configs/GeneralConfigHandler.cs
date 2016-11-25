@@ -8,7 +8,7 @@ using System.IO;
 
 namespace NiceHashMiner.Configs {
     [Serializable]
-    public class GeneralConfig : BaseConfigFile<GeneralConfig> {
+    public class GeneralConfigHandler : BaseConfigFile<GeneralConfigHandler> {
 
         #region Members
         public Version ConfigFileVersion { get; set; }
@@ -182,7 +182,7 @@ namespace NiceHashMiner.Configs {
             DownloadInit3rdParty = false;
         }
 
-        public GeneralConfig(bool initDefaults = false) {
+        public GeneralConfigHandler(bool initDefaults = false) {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             DeviceDetection = new DeviceDetectionConfig();

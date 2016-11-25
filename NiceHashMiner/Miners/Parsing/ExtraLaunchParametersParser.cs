@@ -400,7 +400,7 @@ namespace NiceHashMiner.Miners.Parsing {
                     List<MinerOption> sgminerOptionsNew = new List<MinerOption>();
                     string temperatureControl = "";
                     // temp control and parse
-                    if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl) {
+                    if (ConfigManager_rem.Instance.GeneralConfig.DisableAMDTempControl) {
                         LogParser("DisableAMDTempControl is TRUE, temp control parameters will be ignored");
                     } else {
                         LogParser("Sgminer parsing temperature control parameters");

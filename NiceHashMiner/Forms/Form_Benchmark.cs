@@ -418,7 +418,7 @@ namespace NiceHashMiner.Forms {
                 CurrentAlgoName = AlgorithmNiceHashNames.GetName(_currentAlgorithm.NiceHashID);
                 _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
 
-                var time = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits
+                var time = ConfigManager_rem.Instance.GeneralConfig.BenchmarkTimeLimits
                     .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
                 //currentConfig.TimeLimit = time;
                 if (__CPUBenchmarkStatus != null) {
@@ -569,7 +569,7 @@ namespace NiceHashMiner.Forms {
             }
 
             // save already benchmarked algorithms
-            ConfigManager.Instance.CommitBenchmarks();
+            ConfigManager_rem.Instance.CommitBenchmarks();
             // check devices without benchmarks
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.ComputeDeviceEnabledOption.IsEnabled) {

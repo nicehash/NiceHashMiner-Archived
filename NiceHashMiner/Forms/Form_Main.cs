@@ -101,11 +101,11 @@ namespace NiceHashMiner
             // these strings are no longer used, check and use them as base
             string rateString = International.GetText("Rate") + ":";
             string ratesBTCInitialString = "0.00000000 BTC/" + International.GetText("Day");
-            string ratesDollarInitialString = String.Format("0.00 {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
+            string ratesDollarInitialString = String.Format("0.00 {0}/", ConfigManager_rem.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
 
             toolStripStatusLabelGlobalRateText.Text = International.GetText("Form_Main_global_rate") + ":";
             toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
-            toolStripStatusLabelBalanceText.Text = (ConfigManager.Instance.GeneralConfig.DisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("Form_Main_balance") + ":";
+            toolStripStatusLabelBalanceText.Text = (ConfigManager_rem.Instance.GeneralConfig.DisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("Form_Main_balance") + ":";
 
             devicesListViewEnableControl1.InitLocale();
 
@@ -119,17 +119,17 @@ namespace NiceHashMiner
         }
 
         private void InitMainConfigGUIData() {
-            if (ConfigManager.Instance.GeneralConfig.ServiceLocation >= 0 && ConfigManager.Instance.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
-                comboBoxLocation.SelectedIndex = ConfigManager.Instance.GeneralConfig.ServiceLocation;
+            if (ConfigManager_rem.Instance.GeneralConfig.ServiceLocation >= 0 && ConfigManager_rem.Instance.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
+                comboBoxLocation.SelectedIndex = ConfigManager_rem.Instance.GeneralConfig.ServiceLocation;
             else
                 comboBoxLocation.SelectedIndex = 0;
 
-            textBoxBTCAddress.Text = ConfigManager.Instance.GeneralConfig.BitcoinAddress;
-            textBoxWorkerName.Text = ConfigManager.Instance.GeneralConfig.WorkerName;
+            textBoxBTCAddress.Text = ConfigManager_rem.Instance.GeneralConfig.BitcoinAddress;
+            textBoxWorkerName.Text = ConfigManager_rem.Instance.GeneralConfig.WorkerName;
             ShowWarningNiceHashData = true;
             DemoMode = false;
 
-            toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager.Instance.GeneralConfig.DisplayCurrency + ")";
+            toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager_rem.Instance.GeneralConfig.DisplayCurrency + ")";
 
             if (_isDeviceDetectionInitialized) {
                 devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
@@ -150,13 +150,13 @@ namespace NiceHashMiner
 
         private void IdleCheck_Tick(object sender, EventArgs e)
         {
-            if (!ConfigManager.Instance.GeneralConfig.StartMiningWhenIdle) return;
+            if (!ConfigManager_rem.Instance.GeneralConfig.StartMiningWhenIdle) return;
 
             uint MSIdle = Helpers.GetIdleTime();
 
             if (MinerStatsCheck.Enabled)
             {
-                if (MSIdle < (ConfigManager.Instance.GeneralConfig.MinIdleSeconds * 1000))
+                if (MSIdle < (ConfigManager_rem.Instance.GeneralConfig.MinIdleSeconds * 1000))
                 {
                     buttonStopMining_Click(null, null);
                     Helpers.ConsolePrint("NICEHASH", "Resumed from idling");
@@ -164,7 +164,7 @@ namespace NiceHashMiner
             }
             else
             {
-                if (BenchmarkForm == null && (MSIdle > (ConfigManager.Instance.GeneralConfig.MinIdleSeconds * 1000)))
+                if (BenchmarkForm == null && (MSIdle > (ConfigManager_rem.Instance.GeneralConfig.MinIdleSeconds * 1000)))
                 {
                     Helpers.ConsolePrint("NICEHASH", "Entering idling state");
                     buttonStartMining_Click(null, null);
@@ -205,7 +205,7 @@ namespace NiceHashMiner
 
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
-            ConfigManager.Instance.AfterDeviceQueryInitialization();
+            ConfigManager_rem.Instance.AfterDeviceQueryInitialization();
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
 
             // All devices settup should be initialized in AllDevices
@@ -218,13 +218,13 @@ namespace NiceHashMiner
 
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
-            MinerStatsCheck.Interval = ConfigManager.Instance.GeneralConfig.MinerAPIQueryInterval * 1000;
+            MinerStatsCheck.Interval = ConfigManager_rem.Instance.GeneralConfig.MinerAPIQueryInterval * 1000;
 
             SMAMinerCheck = new Timer();
             SMAMinerCheck.Tick += SMAMinerCheck_Tick;
-            SMAMinerCheck.Interval = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+            SMAMinerCheck.Interval = ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             if (ComputeDeviceManager.Group.ContainsAMD_GPUs) {
-                SMAMinerCheck.Interval = (ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+                SMAMinerCheck.Interval = (ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
             UpdateCheck = new Timer();
@@ -271,10 +271,10 @@ namespace NiceHashMiner
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 
-            Helpers.DisableWindowsErrorReporting(ConfigManager.Instance.GeneralConfig.DisableWindowsErrorReporting);
+            Helpers.DisableWindowsErrorReporting(ConfigManager_rem.Instance.GeneralConfig.DisableWindowsErrorReporting);
 
             LoadingScreen.IncreaseLoadCounter();
-            if (ConfigManager.Instance.GeneralConfig.NVIDIAP0State) {
+            if (ConfigManager_rem.Instance.GeneralConfig.NVIDIAP0State) {
                 LoadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
                 try {
                     ProcessStartInfo psi = new ProcessStartInfo();
@@ -298,7 +298,7 @@ namespace NiceHashMiner
             // standard miners check scope
             {
                 // check if download needed
-                if (!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.Instance.GeneralConfig.DownloadInit) {
+                if (!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager_rem.Instance.GeneralConfig.DownloadInit) {
                     Form_Loading downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.StandardDlSetup));
                     SetChildFormCenter(downloadUnzipForm);
                     downloadUnzipForm.ShowDialog();
@@ -309,8 +309,8 @@ namespace NiceHashMiner
                         International.GetText("Warning_with_Exclamation"),
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (result == DialogResult.Yes) {
-                        ConfigManager.Instance.GeneralConfig.DownloadInit = false;
-                        ConfigManager.Instance.GeneralConfig.Commit();
+                        ConfigManager_rem.Instance.GeneralConfig.DownloadInit = false;
+                        ConfigManager_rem.Instance.GeneralConfig.Commit();
                         Process PHandle = new Process();
                         PHandle.StartInfo.FileName = Application.ExecutablePath;
                         PHandle.Start();
@@ -319,21 +319,21 @@ namespace NiceHashMiner
                     }
                 } else {
                     // all good
-                    ConfigManager.Instance.GeneralConfig.DownloadInit = true;
-                    ConfigManager.Instance.GeneralConfig.Commit();
+                    ConfigManager_rem.Instance.GeneralConfig.DownloadInit = true;
+                    ConfigManager_rem.Instance.GeneralConfig.Commit();
                 }
             }
             // 3rdparty miners check scope
             {
                 // check if setting set
-                if (ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET) {
+                if (ConfigManager_rem.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET) {
                     // Show TOS
                     Form tos = new Form_ClaymoreTOS();
                     tos.ShowDialog(this);
                 }
                 // check if download needed
-                if (ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) {
-                    if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit() && !ConfigManager.Instance.GeneralConfig.DownloadInit3rdParty) {
+                if (ConfigManager_rem.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) {
+                    if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit() && !ConfigManager_rem.Instance.GeneralConfig.DownloadInit3rdParty) {
                         Form_Loading download3rdPartyUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.ThirdPartyDlSetup));
                         SetChildFormCenter(download3rdPartyUnzipForm);
                         download3rdPartyUnzipForm.ShowDialog();
@@ -344,8 +344,8 @@ namespace NiceHashMiner
                             International.GetText("Warning_with_Exclamation"),
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (result == DialogResult.Yes) {
-                            ConfigManager.Instance.GeneralConfig.DownloadInit3rdParty = false;
-                            ConfigManager.Instance.GeneralConfig.Commit();
+                            ConfigManager_rem.Instance.GeneralConfig.DownloadInit3rdParty = false;
+                            ConfigManager_rem.Instance.GeneralConfig.Commit();
                             Process PHandle = new Process();
                             PHandle.StartInfo.FileName = Application.ExecutablePath;
                             PHandle.Start();
@@ -354,14 +354,14 @@ namespace NiceHashMiner
                         }
                     } else {
                         // all good
-                        ConfigManager.Instance.GeneralConfig.DownloadInit3rdParty = true;
-                        ConfigManager.Instance.GeneralConfig.Commit();
+                        ConfigManager_rem.Instance.GeneralConfig.DownloadInit3rdParty = true;
+                        ConfigManager_rem.Instance.GeneralConfig.Commit();
                     }
                 }
             }
 
             // no bots please
-            if (ConfigManager.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager.Instance.GeneralConfig.hwidOK) {
+            if (ConfigManager_rem.Instance.GeneralConfig.hwidLoadFromFile && !ConfigManager_rem.Instance.GeneralConfig.hwidOK) {
                 var result = MessageBox.Show("NiceHash Miner has detected change of hardware ID. If you did not download and install NiceHash Miner, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall your Windows.\r\n\r\nContinue with NiceHash Miner?",
                     //International.GetText("Form_Main_msgbox_anti_botnet_msgbox"),
                     International.GetText("Warning_with_Exclamation"),
@@ -371,10 +371,10 @@ namespace NiceHashMiner
                     return;
                 } else {
                     // users agrees he installed it so commit changes
-                    ConfigManager.Instance.GeneralConfig.Commit();
+                    ConfigManager_rem.Instance.GeneralConfig.Commit();
                 }
             } else {
-                if (ConfigManager.Instance.GeneralConfig.AutoStartMining) {
+                if (ConfigManager_rem.Instance.GeneralConfig.AutoStartMining) {
                     buttonStartMining_Click(null, null);
                 }
             }
@@ -403,9 +403,9 @@ namespace NiceHashMiner
 
         private void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
-            SMAMinerCheck.Interval = ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+            SMAMinerCheck.Interval = ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             if (ComputeDeviceManager.Group.ContainsAMD_GPUs) {
-                SMAMinerCheck.Interval = (ConfigManager.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+                SMAMinerCheck.Interval = (ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsAMD + ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager_rem.Instance.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
 #if (SWITCH_TESTING)
@@ -475,7 +475,7 @@ namespace NiceHashMiner
             
             string rateBTCString = FormatPayingOutput(paying);
             string rateCurrencyString = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
-                + String.Format(" {0}/", ConfigManager.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
+                + String.Format(" {0}/", ConfigManager_rem.Instance.GeneralConfig.DisplayCurrency) + International.GetText("Day");
             
             ((GroupProfitControl)flowLayoutPanelRates.Controls[flowLayoutPanelRatesIndex++])
                 .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBTCString, rateCurrencyString);
@@ -497,7 +497,7 @@ namespace NiceHashMiner
         {
             double TotalRate = MinersManager.Instance.GetTotalRate();
 
-            if (ConfigManager.Instance.GeneralConfig.AutoScaleBTCValues && TotalRate < 0.1)
+            if (ConfigManager_rem.Instance.GeneralConfig.AutoScaleBTCValues && TotalRate < 0.1)
             {
                 toolStripStatusLabelBTCDayText.Text = "mBTC/" + International.GetText("Day");
                 toolStripStatusLabelGlobalRateValue.Text = (TotalRate * 1000).ToString("F7", CultureInfo.InvariantCulture);
@@ -520,7 +520,7 @@ namespace NiceHashMiner
                 double Balance = NiceHashStats.GetBalance(textBoxBTCAddress.Text.Trim(), textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim());
                 if (Balance > 0)
                 {
-                    if (ConfigManager.Instance.GeneralConfig.AutoScaleBTCValues && Balance < 0.1)
+                    if (ConfigManager_rem.Instance.GeneralConfig.AutoScaleBTCValues && Balance < 0.1)
                     {
                         toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
                         toolStripStatusLabelBalanceBTCValue.Text = (Balance * 1000).ToString("F7", CultureInfo.InvariantCulture);
@@ -686,7 +686,7 @@ namespace NiceHashMiner
 
         private void buttonBenchmark_Click(object sender, EventArgs e)
         {
-            ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
+            ConfigManager_rem.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             BenchmarkForm = new Form_Benchmark();
             SetChildFormCenter(BenchmarkForm);
@@ -816,9 +816,9 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.IsMining = true;
             buttonStopMining.Enabled = true;
 
-            ConfigManager.Instance.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
-            ConfigManager.Instance.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
-            ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
+            ConfigManager_rem.Instance.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
+            ConfigManager_rem.Instance.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
+            ConfigManager_rem.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             InitFlowPanelStart();
             ClearRatesALL();
@@ -826,7 +826,7 @@ namespace NiceHashMiner
             var btcAdress = DemoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
             var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim(), btcAdress);
 
-            if (!DemoMode) ConfigManager.Instance.GeneralConfig.Commit();
+            if (!DemoMode) ConfigManager_rem.Instance.GeneralConfig.Commit();
 
             SMAMinerCheck.Interval = 100;
             SMAMinerCheck.Start();
@@ -867,7 +867,7 @@ namespace NiceHashMiner
         {
             string ret = "";
 
-            if (ConfigManager.Instance.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
+            if (ConfigManager_rem.Instance.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
                 ret = (paying * 1000).ToString("F7", CultureInfo.InvariantCulture) + " mBTC/" + International.GetText("Day");
             else
                 ret = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/" + International.GetText("Day");
@@ -901,10 +901,10 @@ namespace NiceHashMiner
             if (VerifyMiningAddress(false))
             {
                 // Commit to config.json
-                ConfigManager.Instance.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
-                ConfigManager.Instance.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
-                ConfigManager.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-                ConfigManager.Instance.GeneralConfig.Commit();
+                ConfigManager_rem.Instance.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
+                ConfigManager_rem.Instance.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
+                ConfigManager_rem.Instance.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
+                ConfigManager_rem.Instance.GeneralConfig.Commit();
             }
         }
 
@@ -914,7 +914,7 @@ namespace NiceHashMiner
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion + "\nDouble-click to restore..";
 
-            if (ConfigManager.Instance.GeneralConfig.MinimizeToTray && FormWindowState.Minimized == this.WindowState)
+            if (ConfigManager_rem.Instance.GeneralConfig.MinimizeToTray && FormWindowState.Minimized == this.WindowState)
             {
                 notifyIcon1.Visible = true;
                 this.Hide();

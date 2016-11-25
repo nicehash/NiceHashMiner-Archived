@@ -55,7 +55,7 @@ namespace NiceHashMiner.Miners {
             } else if (minerPath == MinerPaths.nheqminer) {
                 return new nheqminer();
             } else if (
-                ConfigManager.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
+                ConfigManager_rem.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
                 && minerPath == MinerPaths.ClaymoreZcashMiner && DeviceType.AMD == deviceType) {
                 return new ClaymoreZcashMiner();
             } else if (minerPath.Contains("ethminer") && DeviceType.CPU != deviceType) {

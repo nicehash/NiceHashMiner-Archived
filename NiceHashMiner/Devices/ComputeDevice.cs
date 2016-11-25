@@ -57,7 +57,7 @@ namespace NiceHashMiner.Devices
         public string Codename { get; private set; }
 
         [JsonIgnore]
-        public DeviceBenchmarkConfig DeviceBenchmarkConfig { get; private set; }
+        public DeviceBenchmarkConfig_rem DeviceBenchmarkConfig { get; private set; }
 
         [JsonIgnore]
         [field: NonSerialized]
@@ -124,7 +124,7 @@ namespace NiceHashMiner.Devices
         }
 
         // TODO add file check and stuff like that
-        public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig, bool forceSet = false) {
+        public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig_rem deviceBenchmarkConfig, bool forceSet = false) {
 
             DeviceBenchmarkConfig = deviceBenchmarkConfig;
             // check initialization

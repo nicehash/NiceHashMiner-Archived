@@ -103,12 +103,12 @@ namespace NiceHashMiner.Miners {
                 _miningStatusCheckTimer.Start();
             }
 
-            IsMiningRegardlesOfProfit = ConfigManager.Instance.GeneralConfig.MinimumProfit == 0;
+            IsMiningRegardlesOfProfit = ConfigManager_rem.Instance.GeneralConfig.MinimumProfit == 0;
         }
 
         #region Timers stuff
         private void InternetCheckTimer_Tick(object sender, EventArgs e) {
-            if (ConfigManager.Instance.GeneralConfig.ContinueMiningIfNoInternetAccess == false) {
+            if (ConfigManager_rem.Instance.GeneralConfig.ContinueMiningIfNoInternetAccess == false) {
                 IsConnectedToInternet = Helpers.IsConnectedToInternet();
             }
         }
@@ -225,13 +225,13 @@ namespace NiceHashMiner.Miners {
             var currentProfitUSD = (CurrentProfit * Globals.BitcoinRate);
             IsProfitable = 
                 IsMiningRegardlesOfProfit
-                || !IsMiningRegardlesOfProfit && currentProfitUSD >= ConfigManager.Instance.GeneralConfig.MinimumProfit;
+                || !IsMiningRegardlesOfProfit && currentProfitUSD >= ConfigManager_rem.Instance.GeneralConfig.MinimumProfit;
             if (log) {
                 Helpers.ConsolePrint(TAG, "Current Global profit: " + currentProfitUSD.ToString("F8") + " USD/Day");
                 if (!IsProfitable) {
-                    Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");
+                    Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager_rem.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");
                 } else {
-                    string profitabilityInfo = IsMiningRegardlesOfProfit ? "mine always regardless of profit" : ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
+                    string profitabilityInfo = IsMiningRegardlesOfProfit ? "mine always regardless of profit" : ConfigManager_rem.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
                     Helpers.ConsolePrint(TAG, "Current Global profit: IS PROFITABLE MinProfit " + profitabilityInfo);
                 }
             }

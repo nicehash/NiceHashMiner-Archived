@@ -31,7 +31,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void button_OK_Click(object sender, EventArgs e) {
-            ConfigManager.Instance.GeneralConfig.Language = (LanguageType)comboBox_Languages.SelectedIndex;
+            ConfigManager_rem.Instance.GeneralConfig.Language = (LanguageType)comboBox_Languages.SelectedIndex;
             this.Close();
         }
     }

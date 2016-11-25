@@ -425,7 +425,7 @@ namespace NiceHashMiner
         }
 
         virtual protected void BenchmarkThreadRoutine(object CommandLine) {
-            Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+            Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
 
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
@@ -498,7 +498,7 @@ namespace NiceHashMiner
 
             P.StartInfo.Arguments = LastCommandLine;
             if (Path != MinerPaths.eqm) {
-                P.StartInfo.CreateNoWindow = ConfigManager.Instance.GeneralConfig.HideMiningWindows;
+                P.StartInfo.CreateNoWindow = ConfigManager_rem.Instance.GeneralConfig.HideMiningWindows;
             } else {
                 P.StartInfo.CreateNoWindow = false;
             }
@@ -550,8 +550,8 @@ namespace NiceHashMiner
         virtual protected void Miner_Exited() {
             // TODO make miner restart in 5 seconds
             //Stop(MinerStopType.END, true);
-            var RestartInMS = ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS > 5000 ?
-                ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS : 5000;
+            var RestartInMS = ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS > 5000 ?
+                ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS : 5000;
             Helpers.ConsolePrint(MinerTAG(), ProcessTag() + String.Format(" Miner_Exited Will restart in {0} ms", RestartInMS));
             _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
             NeedsRestart = true;
@@ -577,7 +577,7 @@ namespace NiceHashMiner
             if (!isEnded) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Restarting miner..");
                 Stop(MinerStopType.END); // stop miner first
-                System.Threading.Thread.Sleep(ConfigManager.Instance.GeneralConfig.MinerRestartDelayMS);
+                System.Threading.Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
                 ProcessHandle = _Start(); // start with old command line
             }
         }

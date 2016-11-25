@@ -10,12 +10,9 @@ using System.IO;
 namespace NiceHashMiner.Configs
 {
     [Serializable]
-    public class DeviceBenchmarkConfig : BaseConfigFile<DeviceBenchmarkConfig> {
+    public class DeviceBenchmarkConfig_rem : BaseConfigFile<DeviceBenchmarkConfig_rem> {
         
         public string DeviceUUID { get; private set; }
-        [JsonIgnore]
-        public DeviceGroupType DeviceGroupType { get; private set; }
-
         public string DeviceName { get; private set; }
         //public int TimeLimit { get; set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
@@ -28,12 +25,11 @@ namespace NiceHashMiner.Configs
         [JsonIgnore]
         public bool IsAlgorithmSettingsInit { get; set; }
 
-        public DeviceBenchmarkConfig(DeviceGroupType deviceGroupType,
+        public DeviceBenchmarkConfig_rem(DeviceGroupType deviceGroupType,
             string deviceUUID,
             string deviceName,
             Dictionary<AlgorithmType, Algorithm> benchmarkSpeeds = null) {
 
-            DeviceGroupType = deviceGroupType;
             DeviceUUID = deviceUUID;
             DeviceName = deviceName;
             if (benchmarkSpeeds != null) {
@@ -60,7 +56,7 @@ namespace NiceHashMiner.Configs
         // TODO make generic initializations
         protected override void InitializeObject() {
             // if new backup benchmarks
-            if (ConfigManager.Instance.GeneralConfig.IsNewVersion) {
+            if (ConfigManager_rem.Instance.GeneralConfig.IsNewVersion) {
                 Helpers.ConsolePrint("DeviceBenchmarkConfig", String.Format("Backing up {0} to {1}..", FilePath, FilePathOld));
                 try {
                     if (File.Exists(FilePathOld))
