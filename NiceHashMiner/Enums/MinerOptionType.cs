@@ -51,9 +51,22 @@ namespace NiceHashMiner.Enums {
         OpenCL_Solver_Version, //-ov
         OpenCL_Solver_Dev_Thread, // -ot
         // eqm
-        CUDA_Solver_AsyncMode, // -ca
-        CUDA_Solver_ParallelBuckets, // -cp
+        CUDA_Solver_Mode, // -cm
         // ClaymoreZcash
-        ClaymoreZcash_tt
+        ClaymoreZcash_i,  // -i
+        ClaymoreZcash_wd, // -wd
+        ClaymoreZcash_r,
+        ClaymoreZcash_nofee,
+        ClaymoreZcash_li,
+        ClaymoreZcash_tt, // -tt
+        ClaymoreZcash_ttli,
+        ClaymoreZcash_tstop,
+        ClaymoreZcash_fanmax,
+        ClaymoreZcash_fanmin,
+        ClaymoreZcash_cclock,
+        ClaymoreZcash_mclock,
+        ClaymoreZcash_powlim,
+        ClaymoreZcash_cvddc,
+        ClaymoreZcash_mvddc
     }
 }

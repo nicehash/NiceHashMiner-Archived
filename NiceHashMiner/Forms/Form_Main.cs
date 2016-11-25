@@ -43,8 +43,6 @@ namespace NiceHashMiner
 
         private Random R;
 
-        //private Form_Loading _downloadUnzipForm;
-        //private Form_Loading _download3rdPartyUnzipForm;
         private Form_Loading LoadingScreen;
         private Form BenchmarkForm;
 

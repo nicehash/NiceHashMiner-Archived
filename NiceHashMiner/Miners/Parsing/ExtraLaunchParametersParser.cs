@@ -84,17 +84,29 @@ namespace NiceHashMiner.Miners.Parsing {
         private static List<MinerOption> _eqm_CPU_Options = new List<MinerOption>() {
             new MinerOption(MinerOptionType.Threads, "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " "), // default none
         };
-        // EQM v1.0.1a has no optimization flags remove them
+        // eqm CUDA
         private static List<MinerOption> _eqm_CUDA_Options = new List<MinerOption>() {
-            //// TODO check what is the CUDA_Solver_ParallelBuckets default
-            //new MinerOption(MinerOptionType.CUDA_Solver_ParallelBuckets, "-cp", "-cp", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-            //new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-            //new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
+            new MinerOption(MinerOptionType.CUDA_Solver_Mode, "-cm", "-cm", "0", MinerOptionFlagType.MultiParam, " "), // default 0
         };
         // Zcash claymore
         private static List<MinerOption> _ClaymoreZcash_Options = new List<MinerOption>() {
-            //// TODO check what is the CUDA_Solver_ParallelBuckets default
-            new MinerOption(MinerOptionType.ClaymoreZcash_tt, "-tt", "-tt", "0", MinerOptionFlagType.MultiParam, ","), // default 0
+            new MinerOption(MinerOptionType.ClaymoreZcash_i      , "-i", "-i", "4", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_wd     , "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
+            //new MinerOption(MinerOptionType.ClaymoreZcash_r      , , , , MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_nofee  , "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_li     , "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
+            // temperature stuff
+            //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
+            new MinerOption(MinerOptionType.ClaymoreZcash_tt     , "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","), 
+            new MinerOption(MinerOptionType.ClaymoreZcash_ttli   , "-ttli", "-ttli", "70", MinerOptionFlagType.SingleParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_tstop  , "-tstop", "-tstop", "0", MinerOptionFlagType.SingleParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_fanmax , "-fanmax", "-fanmax", "100", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_fanmin , "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_cclock , "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_mclock , "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_powlim , "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_cvddc  , "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreZcash_mvddc  , "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
         };
 
         private static bool _showLog = true;
