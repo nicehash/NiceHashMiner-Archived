@@ -43,7 +43,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public int GetAvaliablePort() {
-            int port = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart;
+            int port = ConfigManager.GeneralConfig.ApiBindPortPoolStart;
             int newPortEnd = port + 3000;
             for (; port < newPortEnd; ++port) {
                 if (IsPortAvaliable(port) && _usedPorts.Add(port)) {

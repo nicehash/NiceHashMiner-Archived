@@ -351,7 +351,6 @@
             // 
             // devicesListViewEnableControl1
             // 
-            this.devicesListViewEnableControl1.AutoSaveChange = false;
             this.devicesListViewEnableControl1.BenchmarkCalculation = null;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
             this.devicesListViewEnableControl1.IsInBenchmark = false;
@@ -359,7 +358,6 @@
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(11, 91);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.SetAllEnabled = false;
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 105);
             this.devicesListViewEnableControl1.TabIndex = 109;
             // 

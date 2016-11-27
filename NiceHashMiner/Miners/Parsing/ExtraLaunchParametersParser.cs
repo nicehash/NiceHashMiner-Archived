@@ -292,7 +292,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 MinerPaths.GetOptimizedMinerPath(miningPair), showLog);
         }
 
-        private static string ParseForMiningPairs(List<MiningPair> MiningPairs, AlgorithmType algorithmType, DeviceType deviceType, string minerPath = "", bool showLog = true) {
+        private static string ParseForMiningPairs(List<MiningPair> MiningPairs, AlgorithmType algorithmType, DeviceType deviceType, string minerPath, bool showLog = true) {
             _showLog = showLog;
 
             // parse for nheqminer
@@ -330,7 +330,7 @@ namespace NiceHashMiner.Miners.Parsing {
                     var fakeAlgo = new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto");
                     foreach (var pair in MiningPairs) {
                         while (++id != pair.Device.ID) {
-                            var fakeCdev = new ComputeDevice(id, "", "");
+                            var fakeCdev = new ComputeDevice(id);
                             cdevs_mappings.Add(new MiningPair(fakeCdev, fakeAlgo));
                         }
                         cdevs_mappings.Add(pair);
@@ -400,7 +400,7 @@ namespace NiceHashMiner.Miners.Parsing {
                     List<MinerOption> sgminerOptionsNew = new List<MinerOption>();
                     string temperatureControl = "";
                     // temp control and parse
-                    if (ConfigManager.Instance.GeneralConfig.DisableAMDTempControl) {
+                    if (ConfigManager.GeneralConfig.DisableAMDTempControl) {
                         LogParser("DisableAMDTempControl is TRUE, temp control parameters will be ignored");
                     } else {
                         LogParser("Sgminer parsing temperature control parameters");

@@ -19,9 +19,9 @@ namespace NiceHashMiner.Forms.Components {
             private static Color ENABLED_COLOR = Color.White;
             private static Color DISABLED_COLOR = Color.DarkGray;
             public void LviSetColor(ListViewItem lvi) {
-                ComputeDeviceEnabledOption cdvo = lvi.Tag as ComputeDeviceEnabledOption;
+                var cdvo = lvi.Tag as ComputeDevice;
                 if (cdvo != null) {
-                    if(cdvo.IsEnabled) {
+                    if(cdvo.Enabled) {
                         lvi.BackColor = ENABLED_COLOR;
                     } else {
                         lvi.BackColor = DISABLED_COLOR;
@@ -68,34 +68,18 @@ namespace NiceHashMiner.Forms.Components {
         public bool IsBenchmarkForm = false;
         public bool IsSettingsCopyEnabled = false;
 
-        [Serializable]
-        public class ComputeDeviceEnabledOption {
-            public bool IsEnabled { get; set; }
-            public ComputeDevice CDevice { get; set; }
-            public void SaveOption() {
-                CDevice.Enabled = IsEnabled;
-            }
-        }
-
         public string FirstColumnText {
             get { return listViewDevices.Columns[ENABLED].Text; }
             set { if (value != null) listViewDevices.Columns[ENABLED].Text = value; }
         }
 
-        public List<ComputeDeviceEnabledOption> Options { get; private set; }
 
-        // to automatically save on enabled click or not
-        public bool AutoSaveChange { get; set; }
         public bool SaveToGeneralConfig { get; set; }
-        public bool SetAllEnabled { get; set; }
 
         public DevicesListViewEnableControl() {
             InitializeComponent();
 
-            AutoSaveChange = false;
             SaveToGeneralConfig = false;
-            SetAllEnabled = false;
-            Options = new List<ComputeDeviceEnabledOption>();
             // intialize ListView callbacks
             listViewDevices.ItemChecked += new ItemCheckedEventHandler(listViewDevicesItemChecked);
             //listViewDevices.CheckBoxes = false;
@@ -121,9 +105,7 @@ namespace NiceHashMiner.Forms.Components {
 
         public void SetComputeDevices(List<ComputeDevice> computeDevices) {
             // to not run callbacks when setting new
-            bool tmp_AutoSaveChange = AutoSaveChange;
             bool tmp_SaveToGeneralConfig = SaveToGeneralConfig;
-            AutoSaveChange = false;
             SaveToGeneralConfig = false;
             listViewDevices.BeginUpdate();
             listViewDevices.Items.Clear();
@@ -131,27 +113,19 @@ namespace NiceHashMiner.Forms.Components {
             foreach (var computeDevice in computeDevices) {
                 ListViewItem lvi = new ListViewItem();
                 //lvi.SubItems.Add(computeDevice.Name);
-                lvi.Checked = computeDevice.Enabled || SetAllEnabled;
+                lvi.Checked = computeDevice.Enabled;
                 lvi.Text = computeDevice.GetFullName();
-                ComputeDeviceEnabledOption newTag = new ComputeDeviceEnabledOption() {
-                    IsEnabled = computeDevice.Enabled || SetAllEnabled,
-                    CDevice = computeDevice
-                };
-                computeDevice.ComputeDeviceEnabledOption = newTag;
-                Options.Add(newTag);
-                lvi.Tag = newTag;
+                lvi.Tag = computeDevice;
                 listViewDevices.Items.Add(lvi);
                 _listItemCheckColorSetter.LviSetColor(lvi);
             }
             listViewDevices.EndUpdate();
             listViewDevices.Invalidate(true);
             // reset properties
-            AutoSaveChange = tmp_AutoSaveChange;
             SaveToGeneralConfig = tmp_SaveToGeneralConfig;
         }
 
         public void ResetComputeDevices(List<ComputeDevice> computeDevices) {
-            Options.Clear();
             SetComputeDevices(computeDevices);
         }
 
@@ -161,24 +135,16 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         private void listViewDevicesItemChecked(object sender, ItemCheckedEventArgs e) {
-            ComputeDeviceEnabledOption G = e.Item.Tag as ComputeDeviceEnabledOption;
-            G.IsEnabled = e.Item.Checked;
-            if (AutoSaveChange) {
-                G.SaveOption();
-            }
+            var CDevice = e.Item.Tag as ComputeDevice;
+            CDevice.Enabled = e.Item.Checked;
+
             if (SaveToGeneralConfig) {
-                ConfigManager.Instance.GeneralConfig.Commit();
+                ConfigManager.GeneralConfigFileCommit();
             }
             var lvi = e.Item as ListViewItem;
             if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
-            if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
+            if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(CDevice.Enabled, CDevice.UUID);
             if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
-        }
-
-        public void SaveOptions() {
-            foreach (var option in Options) {
-                option.SaveOption();
-            }
         }
 
         public void SetDeviceSelectionChangedCallback(ListViewItemSelectionChangedEventHandler callback) {
@@ -191,30 +157,17 @@ namespace NiceHashMiner.Forms.Components {
             if (e.Button == MouseButtons.Right) {
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location) == true) {
                     contextMenuStrip1.Items.Clear();
-                    ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
-                    //if (G.IsEnabled) {
-                    //    var disableItem = new ToolStripMenuItem();
-                    //    disableItem.Text = International.GetText("DeviceListView_ContextMenu_DisableDevice");
-                    //    //disableItem.Checked = true;
-                    //    disableItem.Click += toolStripMenuItemEnable_Click;
-                    //    contextMenuStrip1.Items.Add(disableItem);
-                    //} else {
-                    //    var disableItem = new ToolStripMenuItem();
-                    //    disableItem.Text = International.GetText("DeviceListView_ContextMenu_EnableDevice");
-                    //    //disableItem.Checked = false;
-                    //    disableItem.Click += toolStripMenuItemEnable_Click;
-                    //    contextMenuStrip1.Items.Add(disableItem);
-                    //}
                     if (IsSettingsCopyEnabled) {
-                        var sameDevTypes = ComputeDeviceManager.Avaliable.GetSameDevicesTypeAsDeviceWithUUID(G.CDevice.UUID);
+                        var CDevice = listViewDevices.FocusedItem.Tag as ComputeDevice;
+                        var sameDevTypes = ComputeDeviceManager.Avaliable.GetSameDevicesTypeAsDeviceWithUUID(CDevice.UUID);
                         if (sameDevTypes.Count > 0) {
                             var copyBenchItem = new ToolStripMenuItem();
                             //copyBenchItem.DropDownItems
                             foreach (var cDev in sameDevTypes) {
-                                if (cDev.ComputeDeviceEnabledOption.IsEnabled) {
+                                if (cDev.Enabled) {
                                     var copyBenchDropDownItem = new ToolStripMenuItem();
                                     copyBenchDropDownItem.Text = cDev.Name;
-                                    copyBenchDropDownItem.Checked = cDev.UUID == G.CDevice.BenchmarkCopyUUID;
+                                    copyBenchDropDownItem.Checked = cDev.UUID == CDevice.BenchmarkCopyUUID;
                                     copyBenchDropDownItem.Click += toolStripMenuItemCopySettings_Click;
                                     copyBenchDropDownItem.Tag = cDev.UUID;
                                     copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
@@ -229,40 +182,24 @@ namespace NiceHashMiner.Forms.Components {
             } 
         }
 
-        //private void toolStripMenuItemEnable_Click(object sender, EventArgs e) {
-        //    ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
-        //    var isEnabled = !G.IsEnabled;
-        //    G.IsEnabled = isEnabled;
-        //    if (AutoSaveChange) {
-        //        G.SaveOption();
-        //    }
-        //    if (SaveToGeneralConfig) {
-        //        ConfigManager.Instance.GeneralConfig.Commit();
-        //    }
-        //    var lvi = listViewDevices.FocusedItem as ListViewItem;
-        //    if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
-        //    if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
-        //    if (BenchmarkCalculation != null) _benchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
-        //}
-
         private void toolStripMenuItemCopySettings_Click(object sender, EventArgs e) {
-            ComputeDeviceEnabledOption G = listViewDevices.FocusedItem.Tag as ComputeDeviceEnabledOption;
+            var CDevice = listViewDevices.FocusedItem.Tag as ComputeDevice;
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             if(item != null) {
                 var uuid = item.Tag as string;
                 if (uuid != null) {
                     var copyBenchCDev = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(uuid);
-                    G.CDevice.BenchmarkCopyUUID = uuid;
+                    CDevice.BenchmarkCopyUUID = uuid;
 
                     var result = MessageBox.Show(
                         String.Format(
-                        International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"), copyBenchCDev.GetFullName(), G.CDevice.GetFullName()),
+                        International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"), copyBenchCDev.GetFullName(), CDevice.GetFullName()),
                                 International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title"),
                                 MessageBoxButtons.YesNo);
                     if(result == DialogResult.Yes) {
                         // just copy
-                        G.CDevice.CopyBenchmarkSettingsFrom(copyBenchCDev);
-                        if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(G.IsEnabled, G.CDevice.UUID);
+                        CDevice.CopyBenchmarkSettingsFrom(copyBenchCDev);
+                        if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(CDevice.Enabled, CDevice.UUID);
                     }
                 }
             }

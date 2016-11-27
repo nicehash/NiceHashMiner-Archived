@@ -43,7 +43,7 @@ namespace NiceHashMiner
         {
             Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
 
-            if (ConfigManager.Instance.GeneralConfig.LogToFile)
+            if (ConfigManager.GeneralConfig.LogToFile)
                 Logger.log.Info("[" + grp + "] " + text);
         }
 
@@ -221,6 +221,29 @@ namespace NiceHashMiner
                 returnValue = false;
             }
             return returnValue;
+        }
+
+        // parsing helpers
+        public static int ParseInt(string text) {
+            int tmpVal = 0;
+            if (Int32.TryParse(text, out tmpVal)) {
+                return tmpVal;
+            }
+            return 0;
+        }
+        public static long ParseLong(string text) {
+            long tmpVal = 0;
+            if (Int64.TryParse(text, out tmpVal)) {
+                return tmpVal;
+            }
+            return 0;
+        }
+        public static double ParseDouble(string text) {
+            try {
+                return Double.Parse(text, CultureInfo.InvariantCulture);
+            } catch {
+                return 0;
+            }
         }
 
     }

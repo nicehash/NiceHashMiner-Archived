@@ -86,12 +86,11 @@ namespace NiceHashMiner.Forms.Components {
 
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled) {
             _computeDevice = computeDevice;
-            var config = computeDevice.DeviceBenchmarkConfig;
             listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
-            foreach (var alg in config.AlgorithmSettings) {
+            foreach (var alg in computeDevice.AlgorithmSettings) {
                 ListViewItem lvi = new ListViewItem();
-                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
+                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.GetName());
 
                 //sub.Tag = alg.Value;
                 lvi.SubItems.Add(alg.Value.BenchmarkSpeedString());
@@ -152,7 +151,7 @@ namespace NiceHashMiner.Forms.Components {
 
         // benchmark settings
         public void SetSpeedStatus(ComputeDevice computeDevice, AlgorithmType algorithmType, string status) {
-            var algorithm = computeDevice.DeviceBenchmarkConfig.AlgorithmSettings[algorithmType];
+            var algorithm = computeDevice.AlgorithmSettings[algorithmType];
             algorithm.BenchmarkStatus = status;
 
             

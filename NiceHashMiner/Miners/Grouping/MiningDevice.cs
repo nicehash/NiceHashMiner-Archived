@@ -49,14 +49,13 @@ namespace NiceHashMiner.Miners.Grouping {
 
         public MiningDevice(ComputeDevice device) {
             Device = device;
-            foreach (var kvp in Device.DeviceBenchmarkConfig.AlgorithmSettings) {
+            foreach (var kvp in Device.AlgorithmSettings) {
                 AlgorithmType key = kvp.Key;
                 Algorithm algo = kvp.Value;
                 bool isAlgoMiningCapable = GroupSetupUtils.IsAlgoMiningCapable(algo);
                 bool isValidMinerPath = GroupSetupUtils.IsValidMinerPath(device, algo);
                 if (isAlgoMiningCapable && isValidMinerPath) {
-                    var newMiningAlgo = new MiningAlgorithm(device, algo);
-                    Algorithms[key] = newMiningAlgo;
+                    Algorithms[key] = new MiningAlgorithm(device, algo);
                 }
             }
         }
@@ -75,7 +74,7 @@ namespace NiceHashMiner.Miners.Grouping {
         }
 
         public MiningPair GetMostProfitablePair() {
-            return new MiningPair(this.Device, Algorithms[MostProfitableKey].algoRef);
+            return new MiningPair(this.Device, Algorithms[MostProfitableKey].AlgoRef);
         }
 
         public bool HasProfitableAlgo() {

@@ -12,7 +12,7 @@ namespace NiceHashMiner.CurrencyConverter
         private static CurrencyAPIResponse LastResponse;
 
         private static bool ConverterActive  {
-            get { return ConfigManager.Instance.GeneralConfig.DisplayCurrency != "USD"; }
+            get { return ConfigManager.GeneralConfig.DisplayCurrency != "USD"; }
         }
 
 
@@ -35,12 +35,12 @@ namespace NiceHashMiner.CurrencyConverter
 
             //Helpers.ConsolePrint("CurrencyConverter", "Current Currency: " + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
             double usdExchangeRate = 1.0;
-            if (LastResponse.rates.TryGetValue(ConfigManager.Instance.GeneralConfig.DisplayCurrency, out usdExchangeRate))
+            if (LastResponse.rates.TryGetValue(ConfigManager.GeneralConfig.DisplayCurrency, out usdExchangeRate))
                 return amount * usdExchangeRate;
             else
             {
-                Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + ConfigManager.Instance.GeneralConfig.DisplayCurrency + " falling back to USD rates");
-                ConfigManager.Instance.GeneralConfig.DisplayCurrency = "USD";
+                Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + ConfigManager.GeneralConfig.DisplayCurrency + " falling back to USD rates");
+                ConfigManager.GeneralConfig.DisplayCurrency = "USD";
                 return amount;
             }
         }
@@ -57,7 +57,7 @@ namespace NiceHashMiner.CurrencyConverter
             {
                 Helpers.ConsolePrint("CurrencyConverter", E.Message);
                 Helpers.ConsolePrint("CurrencyConverter", "Unable to update API: reverting to usd");
-                ConfigManager.Instance.GeneralConfig.DisplayCurrency = "USD";
+                ConfigManager.GeneralConfig.DisplayCurrency = "USD";
             }
         }
     }

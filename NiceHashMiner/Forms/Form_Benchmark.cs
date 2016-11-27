@@ -67,10 +67,10 @@ namespace NiceHashMiner.Forms {
         private static Color BENCHMARKED_COLOR = Color.LightGreen;
         private static Color UNBENCHMARKED_COLOR = Color.LightBlue;
         public void LviSetColor(ListViewItem lvi) {
-            var cdvo = lvi.Tag as NiceHashMiner.Forms.Components.DevicesListViewEnableControl.ComputeDeviceEnabledOption;
-            if (cdvo != null && _benchmarkDevicesAlgorithmStatus != null) {
-                var uuid = cdvo.CDevice.UUID;
-                if (!cdvo.IsEnabled) {
+            var CDevice = lvi.Tag as ComputeDevice;
+            if (CDevice != null && _benchmarkDevicesAlgorithmStatus != null) {
+                var uuid = CDevice.UUID;
+                if (!CDevice.Enabled) {
                     lvi.BackColor = DISABLED_COLOR;
                 } else {
                     switch (_benchmarkDevicesAlgorithmStatus[uuid]) {
@@ -107,8 +107,6 @@ namespace NiceHashMiner.Forms {
             
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
-            //devicesListViewEnableControl1.SetAllEnabled = true;
-            //devicesListViewEnableControl1.SaveToGeneralConfig = true;
             devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
 
             // use this to track miner benchmark statuses
@@ -123,15 +121,15 @@ namespace NiceHashMiner.Forms {
             // name, UUID
             Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
             // initialize benchmark settings for same cards to only copy settings
-            foreach (var GdevSetting in devicesListViewEnableControl1.Options) {
-                var plainDevName = GdevSetting.CDevice._nameNoNums;
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                var plainDevName = cDev.Name;
                 if (benchNamesUUIDs.ContainsKey(plainDevName)) {
-                    GdevSetting.IsEnabled = false;
-                    GdevSetting.CDevice.BenchmarkCopyUUID = benchNamesUUIDs[plainDevName];
+                    cDev.Enabled = false;
+                    cDev.BenchmarkCopyUUID = benchNamesUUIDs[plainDevName];
                 } else {
-                    benchNamesUUIDs.Add(plainDevName, GdevSetting.CDevice.UUID);
-                    GdevSetting.IsEnabled = true; // enable benchmark
-                    GdevSetting.CDevice.BenchmarkCopyUUID = null;
+                    benchNamesUUIDs.Add(plainDevName, cDev.UUID);
+                    cDev.Enabled = true; // enable benchmark
+                    cDev.BenchmarkCopyUUID = null;
                 }
             }
 
@@ -155,7 +153,7 @@ namespace NiceHashMiner.Forms {
             // set first device selected {
             if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {
                 var firstComputedevice = ComputeDeviceManager.Avaliable.AllAvaliableDevices[0];
-                algorithmsListView1.SetAlgorithms(firstComputedevice, firstComputedevice.ComputeDeviceEnabledOption.IsEnabled);
+                algorithmsListView1.SetAlgorithms(firstComputedevice, firstComputedevice.Enabled);
             }
 
             if (autostart) {
@@ -166,13 +164,13 @@ namespace NiceHashMiner.Forms {
 
         private void CopyBenchmarks() {
             Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
-            foreach (var GdevSetting in devicesListViewEnableControl1.Options) {
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 // check if copy
-                if (!GdevSetting.IsEnabled && GdevSetting.CDevice.BenchmarkCopyUUID != null) {
-                    var copyCdevSettings = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(GdevSetting.CDevice.BenchmarkCopyUUID);
+                if (!cDev.Enabled && cDev.BenchmarkCopyUUID != null) {
+                    var copyCdevSettings = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(cDev.BenchmarkCopyUUID);
                     if (copyCdevSettings != null) {
-                        Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", GdevSetting.CDevice.UUID, GdevSetting.CDevice.BenchmarkCopyUUID));
-                        GdevSetting.CDevice.CopyBenchmarkSettingsFrom(copyCdevSettings);
+                        Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", cDev.UUID, cDev.BenchmarkCopyUUID));
+                        cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
                     }
                 } 
             }
@@ -225,15 +223,12 @@ namespace NiceHashMiner.Forms {
             }
             ResetBenchmarkProgressStatus();
             CalcBenchmarkDevicesAlgorithmQueue();
-            //groupBoxAlgorithmBenchmarkSettings.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
             benchmarkOptions1.Enabled = true;
 
             algorithmsListView1.IsInBenchmark = false;
             devicesListViewEnableControl1.IsInBenchmark = false;
-            // TODO make scrolable but not checkable
-            //devicesListViewEnableControl1.Enabled = true && _singleBenchmarkType == AlgorithmType.NONE;
             if (_currentDevice != null) {
-                algorithmsListView1.RepaintStatus(_currentDevice.ComputeDeviceEnabledOption.IsEnabled, _currentDevice.UUID);
+                algorithmsListView1.RepaintStatus(_currentDevice.Enabled, _currentDevice.UUID);
             }
 
             CloseBtn.Enabled = true;
@@ -259,8 +254,8 @@ namespace NiceHashMiner.Forms {
             // device selection check scope
             {
                 bool noneSelected = true;
-                foreach (var option in devicesListViewEnableControl1.Options) {
-                    if (option.IsEnabled) {
+                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                    if (cDev.Enabled) {
                         noneSelected = false;
                         break;
                     }
@@ -292,10 +287,7 @@ namespace NiceHashMiner.Forms {
             // current failed new list
             _benchmarkFailedAlgoPerDev = new List<DeviceAlgo>();
             // disable gui controls
-            //groupBoxAlgorithmBenchmarkSettings.Enabled = false;
             benchmarkOptions1.Enabled = false;
-            // TODO make scrolable but not checkable
-            //devicesListViewEnableControl1.Enabled = false;
             CloseBtn.Enabled = false;
             algorithmsListView1.IsInBenchmark = true;
             devicesListViewEnableControl1.IsInBenchmark = true;
@@ -306,7 +298,7 @@ namespace NiceHashMiner.Forms {
                 }
             }
             if (_currentDevice != null) {
-                algorithmsListView1.RepaintStatus(_currentDevice.ComputeDeviceEnabledOption.IsEnabled, _currentDevice.UUID);
+                algorithmsListView1.RepaintStatus(_currentDevice.Enabled, _currentDevice.UUID);
             }
 
             StartBenchmark();
@@ -319,10 +311,10 @@ namespace NiceHashMiner.Forms {
             _benchmarkAlgorithmsCount = 0;
             _benchmarkDevicesAlgorithmStatus = new Dictionary<string, BenchmarkSettingsStatus>();
             _benchmarkDevicesAlgorithmQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
-            foreach (var option in devicesListViewEnableControl1.Options) {
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 var algorithmQueue = new Queue<Algorithm>();
                 if (_singleBenchmarkType == AlgorithmType.NONE) {
-                    foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
+                    foreach (var kvpAlgorithm in cDev.AlgorithmSettings) {
                         if (ShoulBenchmark(kvpAlgorithm.Value)) {
                             algorithmQueue.Enqueue(kvpAlgorithm.Value);
                             kvpAlgorithm.Value.SetBenchmarkPendingNoMsg();
@@ -331,22 +323,22 @@ namespace NiceHashMiner.Forms {
                         }
                     }
                 } else { // single bench
-                    var algo = option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings[_singleBenchmarkType];
+                    var algo = cDev.AlgorithmSettings[_singleBenchmarkType];
                     algorithmQueue.Enqueue(algo);
                 }
                 
 
                 BenchmarkSettingsStatus status;
-                if (option.IsEnabled) {
+                if (cDev.Enabled) {
                     _benchmarkAlgorithmsCount += algorithmQueue.Count;
                     status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.NONE : BenchmarkSettingsStatus.TODO;
                     _benchmarkDevicesAlgorithmQueue.Add(
-                    new Tuple<ComputeDevice, Queue<Algorithm>>(option.CDevice, algorithmQueue)
+                    new Tuple<ComputeDevice, Queue<Algorithm>>(cDev, algorithmQueue)
                     );
                 } else {
                     status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.DISABLED_NONE : BenchmarkSettingsStatus.DISABLED_TODO;
                 }
-                _benchmarkDevicesAlgorithmStatus[option.CDevice.UUID] =  status;
+                _benchmarkDevicesAlgorithmStatus[cDev.UUID] = status;
             }
             // GUI stuff
             progressBarBenchmarkSteps.Maximum = _benchmarkAlgorithmsCount;
@@ -418,7 +410,7 @@ namespace NiceHashMiner.Forms {
                 CurrentAlgoName = AlgorithmNiceHashNames.GetName(_currentAlgorithm.NiceHashID);
                 _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
 
-                var time = ConfigManager.Instance.GeneralConfig.BenchmarkTimeLimits
+                var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
                     .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
                 //currentConfig.TimeLimit = time;
                 if (__CPUBenchmarkStatus != null) {
@@ -518,7 +510,7 @@ namespace NiceHashMiner.Forms {
                     _benchmarkFailedAlgoPerDev.Add(
                         new DeviceAlgo() {
                             Device = _currentDevice.Name,
-                            Algorithm = _currentAlgorithm.NiceHashName
+                            Algorithm = _currentAlgorithm.GetName()
                         } );
                     algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
                 } else if (!rebenchSame) {
@@ -563,35 +555,33 @@ namespace NiceHashMiner.Forms {
 
             // disable all pending benchmark
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
+                foreach (var algorithm in cDev.AlgorithmSettings.Values) {
                     algorithm.ClearBenchmarkPending();
                 }
             }
 
             // save already benchmarked algorithms
-            ConfigManager.Instance.CommitBenchmarks();
+            ConfigManager.CommitBenchmarks();
             // check devices without benchmarks
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                if (cdev.ComputeDeviceEnabledOption.IsEnabled) {
+                if (cdev.Enabled) {
                     bool Enabled = false;
-                    foreach (var algo in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                    foreach (var algo in cdev.AlgorithmSettings) {
                         if (algo.Value.BenchmarkSpeed > 0) {
                             Enabled = true;
                             break;
                         }
                     }
-                    cdev.ComputeDeviceEnabledOption.IsEnabled = Enabled;
+                    cdev.Enabled = Enabled;
                 }
             }
-            devicesListViewEnableControl1.SaveOptions();
         }
 
         private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
-
             //algorithmSettingsControl1.Deselect();
             // show algorithms
             var _selectedComputeDevice = ComputeDeviceManager.Avaliable.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
-            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.ComputeDeviceEnabledOption.IsEnabled);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
         }
 
         private void radioButton_SelectedUnbenchmarked_CheckedChanged_1(object sender, EventArgs e) {

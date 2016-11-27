@@ -30,7 +30,7 @@ namespace NiceHashMiner.Enums
         Lyra2REv2 = 14,
         ScryptJaneNf16_UNUSED = 15,
         Blake256r8 = 16,
-        Blake256r14 = 17,
+        Blake256r14 = 17, // NOT USED ANYMORE?
         Blake256r8vnl = 18,
         Hodl = 19,
         DaggerHashimoto = 20,

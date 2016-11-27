@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NiceHashMiner.Configs
+namespace NiceHashMiner.Configs.Data
 {
     /// <summary>
     /// BenchmarkTimeLimitsConfig is used to set the time limits for benchmarking.

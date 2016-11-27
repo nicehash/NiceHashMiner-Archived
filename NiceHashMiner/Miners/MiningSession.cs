@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Configs;
+using System.IO;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
 
 namespace NiceHashMiner.Miners {
     using GroupedDevices = SortedSet<string>;
-    using NiceHashMiner.Configs;
-    using System.IO;
     public class MiningSession {
         const string TAG = "MiningSession";
         const string DOUBLE_FORMAT = "F12";
@@ -103,12 +103,12 @@ namespace NiceHashMiner.Miners {
                 _miningStatusCheckTimer.Start();
             }
 
-            IsMiningRegardlesOfProfit = ConfigManager.Instance.GeneralConfig.MinimumProfit == 0;
+            IsMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
         }
 
         #region Timers stuff
         private void InternetCheckTimer_Tick(object sender, EventArgs e) {
-            if (ConfigManager.Instance.GeneralConfig.ContinueMiningIfNoInternetAccess == false) {
+            if (ConfigManager.GeneralConfig.ContinueMiningIfNoInternetAccess == false) {
                 IsConnectedToInternet = Helpers.IsConnectedToInternet();
             }
         }
@@ -225,13 +225,13 @@ namespace NiceHashMiner.Miners {
             var currentProfitUSD = (CurrentProfit * Globals.BitcoinRate);
             IsProfitable = 
                 IsMiningRegardlesOfProfit
-                || !IsMiningRegardlesOfProfit && currentProfitUSD >= ConfigManager.Instance.GeneralConfig.MinimumProfit;
+                || !IsMiningRegardlesOfProfit && currentProfitUSD >= ConfigManager.GeneralConfig.MinimumProfit;
             if (log) {
                 Helpers.ConsolePrint(TAG, "Current Global profit: " + currentProfitUSD.ToString("F8") + " USD/Day");
                 if (!IsProfitable) {
-                    Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");
+                    Helpers.ConsolePrint(TAG, "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day");
                 } else {
-                    string profitabilityInfo = IsMiningRegardlesOfProfit ? "mine always regardless of profit" : ConfigManager.Instance.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
+                    string profitabilityInfo = IsMiningRegardlesOfProfit ? "mine always regardless of profit" : ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
                     Helpers.ConsolePrint(TAG, "Current Global profit: IS PROFITABLE MinProfit " + profitabilityInfo);
                 }
             }
@@ -451,5 +451,6 @@ namespace NiceHashMiner.Miners {
                 }
             }
         }
+
     }
 }

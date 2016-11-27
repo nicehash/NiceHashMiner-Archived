@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms {
-    public partial class Form_ChooseLanguage_r : Form {
-        public Form_ChooseLanguage_r() {
+    public partial class Form_ChooseLanguage : Form {
+        public Form_ChooseLanguage() {
             InitializeComponent();
 
             // Add language selections list
@@ -31,7 +31,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void button_OK_Click(object sender, EventArgs e) {
-            ConfigManager.Instance.GeneralConfig.Language = (LanguageType)comboBox_Languages.SelectedIndex;
+            ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Languages.SelectedIndex;
             this.Close();
         }
     }

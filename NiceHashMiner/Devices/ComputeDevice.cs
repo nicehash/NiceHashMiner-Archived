@@ -5,71 +5,48 @@ using System.Text;
 using NiceHashMiner.Enums;
 using System.Security.Cryptography;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Configs.Data;
 
 namespace NiceHashMiner.Devices
 {
-    [Serializable]
     public class ComputeDevice
     {
-        [JsonIgnore]
         readonly public int ID;
-        readonly public string Name; // { get; set; }
         // to identify equality;
-        [JsonIgnore]
-        readonly public string _nameNoNums;
+        readonly public string Name; // { get; set; }
         // name count is the short name for displaying in moning groups
-        [JsonIgnore]
         readonly public string NameCount;
         public bool Enabled;
 
-        [JsonIgnore]
-        public readonly bool IsEtherumCapale;
-        [JsonIgnore]
         readonly public DeviceGroupType DeviceGroupType;
+        // CPU, NVIDIA, AMD
+        readonly public DeviceType DeviceType;
         // UUID now used for saving
         readonly public string UUID;
 
-        // CPU, NVIDIA, AMD
-        [JsonIgnore]
-        readonly public int Threads;
 
-        [JsonIgnore]
+        // CPU extras
+        readonly public int Threads;
         readonly public ulong AffinityMask;
 
-        // CPU, NVIDIA, AMD
-        [JsonIgnore]
-        public DeviceType DeviceType { get; private set; }
-
-        [JsonIgnore]
-        public string BenchmarkCopyUUID { get; set; }
-
-        [JsonIgnore]
+        // GPU extras
+        public readonly bool IsEtherumCapale;
         public static readonly ulong MEMORY_2GB = 2147483648;
 
-        [JsonIgnore]
-        CudaDevice _cudaDevice = null;
-        [JsonIgnore]
-        AmdGpuDevice _amdDevice = null;
+        //CudaDevice _cudaDevice = null;
+        //AmdGpuDevice _amdDevice = null;
         // sgminer extra quickfix
-        [JsonIgnore]
         public bool IsOptimizedVersion { get; private set; }
-        [JsonIgnore]
         public string Codename { get; private set; }
 
-        [JsonIgnore]
-        public DeviceBenchmarkConfig DeviceBenchmarkConfig { get; private set; }
+        //public DeviceBenchmarkConfig_rem DeviceBenchmarkConfig { get; private set; }
+        public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
 
-        [JsonIgnore]
-        [field: NonSerialized]
-        public NiceHashMiner.Forms.Components.DevicesListViewEnableControl.ComputeDeviceEnabledOption ComputeDeviceEnabledOption { get; set; }
+        public string BenchmarkCopyUUID { get; set; }
 
-        [JsonConstructor]
-        public ComputeDevice(int id, string name, string uuid, bool enabled = true) {
+        // Fake dev
+        public ComputeDevice(int id) {
             ID = id;
-            Name = name;
-            _nameNoNums = name;
-            UUID = uuid;
-            Enabled = enabled;
         }
 
         // CPU 
@@ -79,35 +56,33 @@ namespace NiceHashMiner.Devices
             Name = name;
             Threads = threads;
             AffinityMask = affinityMask;
-            _nameNoNums = name;
             Enabled = true;
             DeviceGroupType = DeviceGroupType.CPU;
             DeviceType = DeviceType.CPU;
             NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_CPU"), CPUCount);
             UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
+            IsEtherumCapale = false;
         }
 
         // GPU NVIDIA
         public ComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount) {
-            _cudaDevice = cudaDevice;
             ID = (int)cudaDevice.DeviceID;
             Name = cudaDevice.GetName();
-            _nameNoNums = cudaDevice.GetName();
             Enabled = true;
             DeviceGroupType = group;
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
             DeviceType = DeviceType.NVIDIA;
             NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), GPUCount);
             UUID = cudaDevice.UUID;
+            AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
         }
 
         // GPU AMD
         public ComputeDevice(AmdGpuDevice amdDevice, int GPUCount) {
-            _amdDevice = amdDevice;
             ID = amdDevice.DeviceID;
             DeviceGroupType = DeviceGroupType.AMD_OpenCL;
             Name = amdDevice.DeviceName;
-            _nameNoNums = amdDevice.DeviceName;
             Enabled = true;
             IsEtherumCapale = amdDevice.IsEtherumCapable();
             DeviceType = DeviceType.AMD;
@@ -116,6 +91,7 @@ namespace NiceHashMiner.Devices
             // sgminer extra
             IsOptimizedVersion = amdDevice.UseOptimizedVersion;
             Codename = amdDevice.Codename;
+            AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
         }
 
         // combines long and short name
@@ -123,38 +99,10 @@ namespace NiceHashMiner.Devices
             return String.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
         }
 
-        // TODO add file check and stuff like that
-        public void SetDeviceBenchmarkConfig(DeviceBenchmarkConfig deviceBenchmarkConfig, bool forceSet = false) {
-
-            DeviceBenchmarkConfig = deviceBenchmarkConfig;
-            // check initialization
-            if (!DeviceBenchmarkConfig.IsAlgorithmSettingsInit || forceSet) {
-                DeviceBenchmarkConfig.IsAlgorithmSettingsInit = true;
-                // only AMD has extra initialization
-                if (_amdDevice != null) {
-                    // Check for optimized version
-                    if (_amdDevice.UseOptimizedVersion) {
-                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Qubit].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam;
-                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Quark].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam;
-                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam;
-                    } else {
-                        // this is not the same as the constructor values?? check!
-                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Qubit].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 128 --gpu-threads 4" + AmdGpuDevice.TemperatureParam;
-                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Quark].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 256 --gpu-threads 1" + AmdGpuDevice.TemperatureParam;
-                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2" + AmdGpuDevice.TemperatureParam;
-                    }
-                    if (!_amdDevice.Codename.Contains("Tahiti")) {
-                        DeviceBenchmarkConfig.AlgorithmSettings[AlgorithmType.NeoScrypt].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2" + AmdGpuDevice.TemperatureParam;
-                        Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + _amdDevice.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
-                    }
-                }
-            }
-        }
-
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) {
-            foreach (var copyAlgSpeeds in copyBenchCDev.DeviceBenchmarkConfig.AlgorithmSettings) {
-                if (this.DeviceBenchmarkConfig.AlgorithmSettings.ContainsKey(copyAlgSpeeds.Key)) {
-                    var setAlgo = this.DeviceBenchmarkConfig.AlgorithmSettings[copyAlgSpeeds.Key];
+            foreach (var copyAlgSpeeds in copyBenchCDev.AlgorithmSettings) {
+                if (this.AlgorithmSettings.ContainsKey(copyAlgSpeeds.Key)) {
+                    var setAlgo = this.AlgorithmSettings[copyAlgSpeeds.Key];
                     setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
                     setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
@@ -162,6 +110,58 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        #region Config Setters/Getters
+        // settings
+        // setters
+        public void SetFromComputeDeviceConfig(ComputeDeviceConfig config) {
+            if (config != null && config.UUID == UUID) {
+                this.Enabled = config.Enabled;
+            }
+        }
+        public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config) {
+            if (config != null && config.DeviceUUID == UUID && config.AlgorithmSettings != null) {
+                foreach (var algoSetting in config.AlgorithmSettings) {
+                    AlgorithmType key = algoSetting.Key;
+                    AlgorithmConfig conf = algoSetting.Value;
+                    if (this.AlgorithmSettings.ContainsKey(key)) {
+                        this.AlgorithmSettings[key].BenchmarkSpeed = conf.BenchmarkSpeed;
+                        this.AlgorithmSettings[key].ExtraLaunchParameters = conf.ExtraLaunchParameters;
+                        this.AlgorithmSettings[key].Skip = conf.Skip;
+                        this.AlgorithmSettings[key].LessThreads = conf.LessThreads;
+                    }
+                }
+            }
+        }
+        // getters
+        public ComputeDeviceConfig GetComputeDeviceConfig() {
+            ComputeDeviceConfig ret = new ComputeDeviceConfig();
+            ret.Enabled = this.Enabled;
+            ret.Name = this.Name;
+            ret.UUID = this.UUID;
+            return ret;
+        }
+        public DeviceBenchmarkConfig GetAlgorithmDeviceConfig() {
+            DeviceBenchmarkConfig ret = new DeviceBenchmarkConfig();
+            ret.DeviceName = this.Name;
+            ret.DeviceUUID = this.UUID;
+            // init algo settings
+            foreach (var algo in this.AlgorithmSettings.Values) {
+                AlgorithmType key = algo.NiceHashID;
+                // create/setup
+                AlgorithmConfig conf = new AlgorithmConfig();
+                conf.NiceHashID = key;
+                conf.MinerName = algo.MinerName; // TODO probably not needed
+                conf.BenchmarkSpeed = algo.BenchmarkSpeed;
+                conf.ExtraLaunchParameters = algo.ExtraLaunchParameters;
+                conf.Skip = algo.Skip;
+                conf.LessThreads = algo.LessThreads;
+                // insert
+                ret.AlgorithmSettings[key] = conf;
+            }
+            return ret;
+        }
+        #endregion Config Setters/Getters
+        
         // static methods
         
         private static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {

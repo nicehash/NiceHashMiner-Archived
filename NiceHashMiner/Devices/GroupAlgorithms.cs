@@ -10,7 +10,54 @@ namespace NiceHashMiner.Devices {
     /// </summary>
     public static class GroupAlgorithms {
 
-        public static Dictionary<AlgorithmType, Algorithm> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
+
+        public static Dictionary<AlgorithmType, Algorithm> CreateForDevice(ComputeDevice device) {
+            if (device != null) {
+                var algoSettings = CreateDefaultsForGroup(device.DeviceGroupType);
+                if (algoSettings != null) {
+                    if (device.DeviceType == DeviceType.AMD) {
+                        // Check for optimized version
+                        if (device.IsOptimizedVersion) {
+                            if (algoSettings.ContainsKey(AlgorithmType.Qubit)) {
+                                algoSettings[AlgorithmType.Qubit].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam;
+                            }
+                            if (algoSettings.ContainsKey(AlgorithmType.Quark)) {
+                                algoSettings[AlgorithmType.Quark].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 1024 --thread-concurrency 0 --worksize 64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam;
+                            }
+                            if (algoSettings.ContainsKey(AlgorithmType.Lyra2REv2)) {
+                                algoSettings[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam;
+                            }
+                        } else {
+                            // this is not the same as the constructor values?? check!
+                            if (algoSettings.ContainsKey(AlgorithmType.Qubit)) {
+                                algoSettings[AlgorithmType.Qubit].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 128 --gpu-threads 4" + AmdGpuDevice.TemperatureParam;
+                            }
+                            if (algoSettings.ContainsKey(AlgorithmType.Quark)) {
+                                algoSettings[AlgorithmType.Quark].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 256 --gpu-threads 1" + AmdGpuDevice.TemperatureParam;
+                            }
+                            if (algoSettings.ContainsKey(AlgorithmType.Lyra2REv2)) {
+                                algoSettings[AlgorithmType.Lyra2REv2].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2" + AmdGpuDevice.TemperatureParam;
+                            }
+                        }
+                        if (!device.Codename.Contains("Tahiti")) {
+                            if (algoSettings.ContainsKey(AlgorithmType.NeoScrypt)) {
+                                algoSettings[AlgorithmType.NeoScrypt].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2" + AmdGpuDevice.TemperatureParam;
+                                Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + device.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
+                            }
+                        }
+                    }
+
+                    // check if it is Etherum capable
+                    if (algoSettings.ContainsKey(AlgorithmType.DaggerHashimoto) && device.IsEtherumCapale == false) {
+                        algoSettings.Remove(AlgorithmType.DaggerHashimoto);
+                    }
+                }
+                return algoSettings;
+            }
+            return null;
+        }
+
+        private static Dictionary<AlgorithmType, Algorithm> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<AlgorithmType, Algorithm>() {
                 { AlgorithmType.Lyra2RE, new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
@@ -43,8 +90,6 @@ namespace NiceHashMiner.Devices {
                     { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blakecoin")
                     { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
-                //{ AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake")
-                //    { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla")
                     { ExtraLaunchParameters = DefaultParam + "--intensity  24 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
@@ -77,25 +122,17 @@ namespace NiceHashMiner.Devices {
                 { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") },
                 { AlgorithmType.Equihash, new Algorithm(AlgorithmType.Equihash, "equihash") }
                 };
-                if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
-                    // minerName change => "whirlpoolx" => "whirlpool"
-                    ret[AlgorithmType.WhirlpoolX] = new Algorithm(AlgorithmType.WhirlpoolX, "whirlpool");     // Needed for new tpruvot's ccminer
-                    // disable/remove neoscrypt, daggerhashimoto
-                    ret.Remove(AlgorithmType.NeoScrypt);
-                    ret.Remove(AlgorithmType.DaggerHashimoto);
-
-                    ret.Remove(AlgorithmType.Lyra2RE);
-                    ret.Remove(AlgorithmType.Lyra2REv2);
-                    //ret.Remove(AlgorithmType.CryptoNight);
-                }
-                if (DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
+                if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     // minerName change => "whirlpoolx" => "whirlpool"
                     ret[AlgorithmType.WhirlpoolX] = new Algorithm(AlgorithmType.WhirlpoolX, "whirlpool");     // Needed for new tpruvot's ccminer
                     // disable/remove neoscrypt
                     ret.Remove(AlgorithmType.NeoScrypt);
                     ret.Remove(AlgorithmType.Lyra2RE);
                     ret.Remove(AlgorithmType.Lyra2REv2);
-                    //ret.Remove(AlgorithmType.CryptoNight);
+                }
+                if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
+                    // disable/remove daggerhashimoto
+                    ret.Remove(AlgorithmType.DaggerHashimoto);
                 }
                 return ret;
             }

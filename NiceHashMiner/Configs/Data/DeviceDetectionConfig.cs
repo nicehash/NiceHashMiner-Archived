@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NiceHashMiner.Configs
+namespace NiceHashMiner.Configs.Data
 { 
     /// <summary>
     /// DeviceDetectionConfig is used to enable/disable detection of certain GPU type devices 

@@ -78,13 +78,16 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmNiceHashNames.cs" />
     <Compile Include="BaseLazySingleton.cs" />
-    <Compile Include="Configs\DeviceBenchmarkConfig.cs" />
-    <Compile Include="Configs\DeviceBenchmarkConfigManager.cs" />
-    <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
-    <Compile Include="Configs\BaseConfigFile.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
-    <Compile Include="Configs\DeviceDetectionConfig.cs" />
-    <Compile Include="Configs\GeneralConfig.cs" />
+    <Compile Include="Configs\Data\AlgorithmConfig.cs" />
+    <Compile Include="Configs\Data\DeviceBenchmarkConfig.cs" />
+    <Compile Include="Configs\ConfigJsonFile\ConfigFile.cs" />
+    <Compile Include="Configs\Data\ComputeDeviceConfig.cs" />
+    <Compile Include="Configs\Data\GeneralConfig.cs" />
+    <Compile Include="Configs\Data\BenchmarkTimeLimitsConfig.cs" />
+    <Compile Include="Configs\Data\DeviceDetectionConfig.cs" />
+    <Compile Include="Configs\ConfigJsonFile\DeviceBenchmarkConfigFile.cs" />
+    <Compile Include="Configs\ConfigJsonFile\GeneralConfigFile.cs" />
     <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\AmdGpuDevice.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
@@ -158,11 +161,11 @@
     <Compile Include="Forms\Form_Benchmark.Designer.cs">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_ChooseLanguage_r.cs">
+    <Compile Include="Forms\Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form_ChooseLanguage_r.Designer.cs">
-      <DependentUpon>Form_ChooseLanguage_r.cs</DependentUpon>
+    <Compile Include="Forms\Form_ChooseLanguage.Designer.cs">
+      <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Form_ClaymoreTOS.cs">
       <SubType>Form</SubType>
@@ -183,7 +186,6 @@
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
-    <Compile Include="Interfaces\IPathsProperties.cs" />
     <Compile Include="International.cs" />
     <Compile Include="Links.cs" />
     <Compile Include="MemoryHelper.cs" />
@@ -281,8 +283,8 @@
     <EmbeddedResource Include="Forms\Form_Benchmark.resx">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_ChooseLanguage_r.resx">
-      <DependentUpon>Form_ChooseLanguage_r.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
+      <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ClaymoreTOS.resx">
       <DependentUpon>Form_ClaymoreTOS.cs</DependentUpon>

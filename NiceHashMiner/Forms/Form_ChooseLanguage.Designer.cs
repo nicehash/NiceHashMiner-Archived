@@ -1,5 +1,5 @@
 ﻿namespace NiceHashMiner.Forms {
-    partial class Form_ChooseLanguage_r {
+    partial class Form_ChooseLanguage {
         /// <summary>
         /// Required designer variable.
         /// </summary>
