@@ -211,7 +211,6 @@ namespace NiceHashMiner
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
             // set properties after
-            devicesListViewEnableControl1.AutoSaveChange = true;
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
@@ -785,7 +784,7 @@ namespace NiceHashMiner
             //                    break;
             //                }
             //            }
-            //            cdev.ComputeDeviceEnabledOption.IsEnabled = Enabled;
+            //            cdev.Enabled = Enabled;
             //        }
             //    } else {
             //        return;
@@ -796,7 +795,7 @@ namespace NiceHashMiner
             // check devices without benchmarks
             bool noDeviceEnabled = true;
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                if (cdev.ComputeDeviceEnabledOption.IsEnabled) {
+                if (cdev.Enabled) {
                     noDeviceEnabled = false;
                     break;
                 }
@@ -856,9 +855,6 @@ namespace NiceHashMiner
             {
                 DemoMode = false;
                 labelDemoMode.Visible = false;
-
-                //textBoxBTCAddress.Text = "";
-                //ConfigManager.Instance.GeneralConfig.BitcoinAddress = "";
             }
 
             UpdateGlobalRate();

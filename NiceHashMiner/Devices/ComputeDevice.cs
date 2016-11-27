@@ -18,20 +18,19 @@ namespace NiceHashMiner.Devices
         readonly public string NameCount;
         public bool Enabled;
 
-        public readonly bool IsEtherumCapale;
         readonly public DeviceGroupType DeviceGroupType;
+        // CPU, NVIDIA, AMD
+        readonly public DeviceType DeviceType;
         // UUID now used for saving
         readonly public string UUID;
+
 
         // CPU extras
         readonly public int Threads;
         readonly public ulong AffinityMask;
 
-        // CPU, NVIDIA, AMD
-        public DeviceType DeviceType { get; private set; }
-
-        public string BenchmarkCopyUUID { get; set; }
-
+        // GPU extras
+        public readonly bool IsEtherumCapale;
         public static readonly ulong MEMORY_2GB = 2147483648;
 
         //CudaDevice _cudaDevice = null;
@@ -43,7 +42,7 @@ namespace NiceHashMiner.Devices
         //public DeviceBenchmarkConfig_rem DeviceBenchmarkConfig { get; private set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
 
-        public NiceHashMiner.Forms.Components.DevicesListViewEnableControl.ComputeDeviceEnabledOption ComputeDeviceEnabledOption { get; set; }
+        public string BenchmarkCopyUUID { get; set; }
 
         // Fake dev
         public ComputeDevice(int id) {
@@ -111,6 +110,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        #region Config Setters/Getters
         // settings
         // setters
         public void SetFromComputeDeviceConfig(ComputeDeviceConfig config) {
@@ -160,7 +160,8 @@ namespace NiceHashMiner.Devices
             }
             return ret;
         }
-
+        #endregion Config Setters/Getters
+        
         // static methods
         
         private static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {

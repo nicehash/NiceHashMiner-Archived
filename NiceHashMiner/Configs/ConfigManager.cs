@@ -43,12 +43,13 @@ namespace NiceHashMiner.Configs {
                 ConfigManager.GeneralConfig = fromFile;
                 if (ConfigManager.GeneralConfig.ConfigFileVersion == null
                     || ConfigManager.GeneralConfig.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0) {
+                    if (ConfigManager.GeneralConfig.ConfigFileVersion == null) {
+                        Helpers.ConsolePrint(TAG, "Loaded Config file no version detected falling back to defaults.");
+                        ConfigManager.GeneralConfig.SetDefaults();
+                    }
                     Helpers.ConsolePrint(TAG, "Config file is from an older version of NiceHashMiner..");
                     IsNewVersion = true;
                     GeneralConfigFile.CreateBackup();
-                } else {
-                    Helpers.ConsolePrint(TAG, "Loaded Config file no version detected falling back to defaults.");
-                    ConfigManager.GeneralConfig.SetDefaults();
                 }
                 ConfigManager.GeneralConfig.FixSettingBounds();
                 // check vars
@@ -80,10 +81,18 @@ namespace NiceHashMiner.Configs {
         }
 
         public static void RestoreBackup() {
+            // restore general
             GeneralConfig = GeneralConfigBackup;
-            BenchmarkConfigsBackup = new Dictionary<string, DeviceBenchmarkConfig>();
+            if (GeneralConfig.LastDevicesSettup != null) {
+                foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                    foreach (var conf in GeneralConfig.LastDevicesSettup) {
+                        CDev.SetFromComputeDeviceConfig(conf);
+                    }
+                }
+            }
+            // restore benchmarks
             foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                if (BenchmarkConfigsBackup.ContainsKey(CDev.UUID)) {
+                if (BenchmarkConfigsBackup != null && BenchmarkConfigsBackup.ContainsKey(CDev.UUID)) {
                     CDev.SetAlgorithmDeviceConfig(BenchmarkConfigsBackup[CDev.UUID]);
                 }
             }

@@ -33,11 +33,8 @@ namespace NiceHashMiner {
         }
 
         // benchmark info
-        [JsonIgnore]
         public string BenchmarkStatus { get; set; }
-        [JsonIgnore]
         public bool IsBenchmarkPending { get; private set; }
-        [JsonIgnore]
         public string CurPayingRatio {
             get {
                 string ratio = International.GetText("BenchmarkRatioRateN_A");
@@ -47,7 +44,6 @@ namespace NiceHashMiner {
                 return ratio;
             }
         }
-        [JsonIgnore]
         public string CurPayingRate {
             get {
                 string rate = International.GetText("BenchmarkRatioRateN_A");

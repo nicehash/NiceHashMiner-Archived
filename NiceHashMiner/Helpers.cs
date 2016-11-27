@@ -223,5 +223,28 @@ namespace NiceHashMiner
             return returnValue;
         }
 
+        // parsing helpers
+        public static int ParseInt(string text) {
+            int tmpVal = 0;
+            if (Int32.TryParse(text, out tmpVal)) {
+                return tmpVal;
+            }
+            return 0;
+        }
+        public static long ParseLong(string text) {
+            long tmpVal = 0;
+            if (Int64.TryParse(text, out tmpVal)) {
+                return tmpVal;
+            }
+            return 0;
+        }
+        public static double ParseDouble(string text) {
+            try {
+                return Double.Parse(text, CultureInfo.InvariantCulture);
+            } catch {
+                return 0;
+            }
+        }
+
     }
 }
