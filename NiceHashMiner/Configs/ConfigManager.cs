@@ -172,6 +172,8 @@ namespace NiceHashMiner.Configs {
                     }
                 }
             }
+            // save settings
+            GeneralConfigFileCommit();
         }
 
 

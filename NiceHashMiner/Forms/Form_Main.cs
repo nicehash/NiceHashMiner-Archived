@@ -316,7 +316,7 @@ namespace NiceHashMiner
                         Close();
                         return;
                     }
-                } else {
+                } else if (!ConfigManager.GeneralConfig.DownloadInit) {
                     // all good
                     ConfigManager.GeneralConfig.DownloadInit = true;
                     ConfigManager.GeneralConfigFileCommit();
@@ -351,7 +351,7 @@ namespace NiceHashMiner
                             Close();
                             return;
                         }
-                    } else {
+                    } else if (!ConfigManager.GeneralConfig.DownloadInit3rdParty) {
                         // all good
                         ConfigManager.GeneralConfig.DownloadInit3rdParty = true;
                         ConfigManager.GeneralConfigFileCommit();

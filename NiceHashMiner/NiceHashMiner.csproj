@@ -94,6 +94,7 @@
     <Compile Include="Devices\ComputeDeviceManager.cs" />
     <Compile Include="Devices\CPUUtils.cs" />
     <Compile Include="Devices\CudaDevice.cs" />
+    <Compile Include="Devices\CUDA_Unsupported.cs" />
     <Compile Include="Devices\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\OpenCLDevice.cs" />

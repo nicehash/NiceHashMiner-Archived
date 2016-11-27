@@ -104,6 +104,7 @@ namespace NiceHashMiner.Configs.Data {
         }
 
         public void FixSettingBounds() {
+            this.ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             if (string.IsNullOrEmpty(this.DisplayCurrency)
                 || string.IsNullOrWhiteSpace(this.DisplayCurrency)) {
                 this.DisplayCurrency = "USD";

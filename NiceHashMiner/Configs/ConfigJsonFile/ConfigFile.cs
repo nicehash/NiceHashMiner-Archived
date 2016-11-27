@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 namespace NiceHashMiner.Configs.ConfigJsonFile {
     public abstract class ConfigFile<T> where T : class {
         // statics/consts
-        const string TAG = "ConfigFile<T>";
+        const string TAG_FORMAT = "ConfigFile<{0}>";
         const string CONF_FOLDER = @"configs\";
+        private readonly string TAG;
 
         private static void CheckAndCreateConfigsFolder() {
             try {
@@ -35,6 +36,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
             } else {
                 this._filePathOld = CONF_FOLDER + fileNameOld;
             }
+            TAG = String.Format(TAG_FORMAT, typeof(T).Name);
         }
 
         public bool IsFileExists() {

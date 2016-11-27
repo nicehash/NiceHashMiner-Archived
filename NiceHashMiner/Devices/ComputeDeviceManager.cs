@@ -149,11 +149,15 @@ namespace NiceHashMiner.Devices
 
                 // TODO update this to report undetected hardware
                 // #6 check NVIDIA, AMD devices count
+                int NVIDIA_count = 0;
                 {
-                    int NVIDIA_count = 0;
                     int AMD_count = 0;
                     foreach (var vidCtrl in AvaliableVideoControllers) {
-                        NVIDIA_count += (vidCtrl.Name.ToLower().Contains("nvidia")) ? 1 : 0;
+                        if(vidCtrl.Name.ToLower().Contains("nvidia") && CUDA_Unsupported.IsSupported(vidCtrl.Name)) {
+                            NVIDIA_count += 1;
+                        } else if (vidCtrl.Name.ToLower().Contains("nvidia")) {
+                            Helpers.ConsolePrint(TAG, "Device not supported NVIDIA/CUDA device not supported " + vidCtrl.Name);
+                        }
                         AMD_count += (vidCtrl.Name.ToLower().Contains("amd")) ? 1 : 0;
                     }
                     if (NVIDIA_count == CudaDevices.Count) {
@@ -172,7 +176,7 @@ namespace NiceHashMiner.Devices
                 // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
                 bool isNvidiaErrorShown = false; // to prevent showing twice
                 bool showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning && WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && CudaDevices.Count == 0 && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_MIN_DETECTION_DRIVER)) {
+                if (showWarning && CudaDevices.Count != NVIDIA_count && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_MIN_DETECTION_DRIVER)) {
                     isNvidiaErrorShown = true;
                     var minDriver = NVIDIA_MIN_DETECTION_DRIVER.ToString();
                     var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
