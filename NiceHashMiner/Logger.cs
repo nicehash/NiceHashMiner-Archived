@@ -27,7 +27,7 @@ namespace NiceHashMiner
 
             Hierarchy h = (Hierarchy)LogManager.GetRepository();
 
-            if (ConfigManager_rem.Instance.GeneralConfig.LogToFile)
+            if (ConfigManager.GeneralConfig.LogToFile)
                 h.Root.Level = Level.Info;
             //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 2)
             //    h.Root.Level = Level.Warn;
@@ -46,7 +46,7 @@ namespace NiceHashMiner
             appender.AppendToFile = true;
             appender.RollingStyle = RollingFileAppender.RollingMode.Size;
             appender.MaxSizeRollBackups = 1;
-            appender.MaxFileSize = ConfigManager_rem.Instance.GeneralConfig.LogMaxFileSize;
+            appender.MaxFileSize = ConfigManager.GeneralConfig.LogMaxFileSize;
             appender.PreserveLogFileNameExtension = true;
             appender.Encoding = System.Text.Encoding.Unicode;
 

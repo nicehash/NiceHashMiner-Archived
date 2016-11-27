@@ -124,7 +124,7 @@ namespace NiceHashMiner.Forms {
             Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
             // initialize benchmark settings for same cards to only copy settings
             foreach (var GdevSetting in devicesListViewEnableControl1.Options) {
-                var plainDevName = GdevSetting.CDevice._nameNoNums;
+                var plainDevName = GdevSetting.CDevice.Name;
                 if (benchNamesUUIDs.ContainsKey(plainDevName)) {
                     GdevSetting.IsEnabled = false;
                     GdevSetting.CDevice.BenchmarkCopyUUID = benchNamesUUIDs[plainDevName];
@@ -322,7 +322,7 @@ namespace NiceHashMiner.Forms {
             foreach (var option in devicesListViewEnableControl1.Options) {
                 var algorithmQueue = new Queue<Algorithm>();
                 if (_singleBenchmarkType == AlgorithmType.NONE) {
-                    foreach (var kvpAlgorithm in option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings) {
+                    foreach (var kvpAlgorithm in option.CDevice.AlgorithmSettings) {
                         if (ShoulBenchmark(kvpAlgorithm.Value)) {
                             algorithmQueue.Enqueue(kvpAlgorithm.Value);
                             kvpAlgorithm.Value.SetBenchmarkPendingNoMsg();
@@ -331,7 +331,7 @@ namespace NiceHashMiner.Forms {
                         }
                     }
                 } else { // single bench
-                    var algo = option.CDevice.DeviceBenchmarkConfig.AlgorithmSettings[_singleBenchmarkType];
+                    var algo = option.CDevice.AlgorithmSettings[_singleBenchmarkType];
                     algorithmQueue.Enqueue(algo);
                 }
                 
@@ -418,7 +418,7 @@ namespace NiceHashMiner.Forms {
                 CurrentAlgoName = AlgorithmNiceHashNames.GetName(_currentAlgorithm.NiceHashID);
                 _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
 
-                var time = ConfigManager_rem.Instance.GeneralConfig.BenchmarkTimeLimits
+                var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
                     .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
                 //currentConfig.TimeLimit = time;
                 if (__CPUBenchmarkStatus != null) {
@@ -518,7 +518,7 @@ namespace NiceHashMiner.Forms {
                     _benchmarkFailedAlgoPerDev.Add(
                         new DeviceAlgo() {
                             Device = _currentDevice.Name,
-                            Algorithm = _currentAlgorithm.NiceHashName
+                            Algorithm = _currentAlgorithm.GetName()
                         } );
                     algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
                 } else if (!rebenchSame) {
@@ -563,18 +563,18 @@ namespace NiceHashMiner.Forms {
 
             // disable all pending benchmark
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                foreach (var algorithm in cDev.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
+                foreach (var algorithm in cDev.AlgorithmSettings.Values) {
                     algorithm.ClearBenchmarkPending();
                 }
             }
 
             // save already benchmarked algorithms
-            ConfigManager_rem.Instance.CommitBenchmarks();
+            ConfigManager.CommitBenchmarks();
             // check devices without benchmarks
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.ComputeDeviceEnabledOption.IsEnabled) {
                     bool Enabled = false;
-                    foreach (var algo in cdev.DeviceBenchmarkConfig.AlgorithmSettings) {
+                    foreach (var algo in cdev.AlgorithmSettings) {
                         if (algo.Value.BenchmarkSpeed > 0) {
                             Enabled = true;
                             break;

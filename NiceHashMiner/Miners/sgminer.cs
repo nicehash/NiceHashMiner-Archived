@@ -43,11 +43,11 @@ namespace NiceHashMiner.Miners
             if (BenchmarkProcessStatus != BenchmarkProcessStatus.Killing && BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling) {
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
                 try {
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
                     KillSGMiner();
                 } catch { } finally {
                     BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
                     //BenchmarkHandle = null;
                 }
             }
@@ -111,14 +111,14 @@ namespace NiceHashMiner.Miners
 
             var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
             string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
-                         Globals.MiningLocation[ConfigManager_rem.Instance.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
+                         Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
                          nhAlgorithmData.port;
 
             // demo for benchmark
             string username = Globals.DemoUser;
 
-            if (ConfigManager_rem.Instance.GeneralConfig.WorkerName.Length > 0)
-                username += "." + ConfigManager_rem.Instance.GeneralConfig.WorkerName.Trim();
+            if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
+                username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
 
             // cd to the cgminer for the process bins
             CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
@@ -177,7 +177,7 @@ namespace NiceHashMiner.Miners
 
             if (Globals.NiceHashData[NHDataIndex].paying == 0) {
                 Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
-                    "[algo: " + BenchmarkAlgorithm.NiceHashName + "(" + NHDataIndex + ")]");
+                    "[algo: " + BenchmarkAlgorithm.GetName() + "(" + NHDataIndex + ")]");
 
                 throw new Exception("No work can be used for benchmarking");
             }
@@ -206,7 +206,7 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkThreadRoutine(object CommandLine) {
-            Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;

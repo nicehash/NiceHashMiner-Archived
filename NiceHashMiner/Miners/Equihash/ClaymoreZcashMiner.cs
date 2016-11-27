@@ -139,7 +139,7 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override void BenchmarkThreadRoutine(object CommandLine) {
-            Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;

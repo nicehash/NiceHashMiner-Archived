@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Configs.ConfigJsonFile {
     public abstract class ConfigFile<T> where T : class {
-        #region statics/consts
         // statics/consts
         const string TAG = "ConfigFile<T>";
         const string CONF_FOLDER = @"configs\";
@@ -20,12 +19,10 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
                 }
             } catch { }
         }
-        #endregion statics/consts
 
+        // member stuff
         protected string _filePath = "";
         protected string _filePathOld = "";
-
-        //protected T _file = null;
 
         public ConfigFile(string fileName, string fileNameOld) {
             if(fileName.Contains(CONF_FOLDER)) {
@@ -40,14 +37,16 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
             }
         }
 
-        protected T ReadFile() {
+        public bool IsFileExists() {
+            return File.Exists(_filePath);
+        }
+
+        public T ReadFile() {
             CheckAndCreateConfigsFolder();
             T file = null;
             try {
-                if (new FileInfo(_filePath).Exists) {
+                if (File.Exists(_filePath)) {
                     file = JsonConvert.DeserializeObject<T>(File.ReadAllText(_filePath), Globals.JsonSettings);
-                } else {
-                    Commit(file);
                 }
             } catch (Exception ex) {
                 Helpers.ConsolePrint(TAG, String.Format("ReadFile {0}: exception {1}", _filePath, ex.ToString()));
@@ -57,6 +56,10 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
         }
 
         public void Commit(T file) {
+            if (file == null) {
+                Helpers.ConsolePrint(TAG, String.Format("Commit for FILE {0} IGNORED. Passed null object", _filePath));
+                return;
+            }
             try {
                 File.WriteAllText(_filePath, JsonConvert.SerializeObject(file, Formatting.Indented));
             } catch (Exception ex) {

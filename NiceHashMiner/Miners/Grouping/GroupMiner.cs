@@ -17,10 +17,6 @@ namespace NiceHashMiner.Miners.Grouping {
         public double CurrentRate { get; set; }
         public string Key { get; private set; }
 
-        //private string _miningLocation = "";
-        //private string _btcAdress = "";
-        //private string _worker = "";
-
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key) {
             AlgorithmType = AlgorithmType.NONE;
@@ -56,7 +52,7 @@ namespace NiceHashMiner.Miners.Grouping {
             if (Miner != null && Miner.IsRunning) {
                 Miner.Stop(MinerStopType.SWITCH);
                 // wait before going on
-                System.Threading.Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
+                System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             }
             CurrentRate = 0;
         }
@@ -73,7 +69,7 @@ namespace NiceHashMiner.Miners.Grouping {
                 return;
             }
             // Wait before new start
-            System.Threading.Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
+            System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             string name = Globals.NiceHashData[AlgorithmType].name;
             int port = Globals.NiceHashData[AlgorithmType].port;

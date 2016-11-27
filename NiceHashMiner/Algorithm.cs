@@ -5,12 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace NiceHashMiner {
-    [Serializable]
     public class Algorithm {
         readonly public AlgorithmType NiceHashID;
-        // ignore the dictionary atribute shows the name
-        [JsonIgnore]
-        readonly public string NiceHashName;
         // Miner name is used for miner ALGO flag parameter
         readonly public string MinerName;
         public double BenchmarkSpeed { get; set; }
@@ -19,6 +15,22 @@ namespace NiceHashMiner {
 
         // CPU miners only setting
         public int LessThreads { get; set; }
+
+
+        public Algorithm(AlgorithmType niceHashID, string minerName) {
+            NiceHashID = niceHashID;
+            MinerName = minerName;
+
+            BenchmarkSpeed = 0.0d;
+            ExtraLaunchParameters = "";
+            LessThreads = 0;
+            Skip = false;
+            BenchmarkStatus = "";
+        }
+
+        public string GetName() {
+            return AlgorithmNiceHashNames.GetName(this.NiceHashID);
+        }
 
         // benchmark info
         [JsonIgnore]
@@ -44,18 +56,6 @@ namespace NiceHashMiner {
                 }
                 return rate;
             }
-        }
-
-        public Algorithm(AlgorithmType niceHashID, string minerName) {
-            NiceHashID = niceHashID;
-            NiceHashName = AlgorithmNiceHashNames.GetName(niceHashID);
-            MinerName = minerName;
-
-            BenchmarkSpeed = 0.0d;
-            ExtraLaunchParameters = "";
-            LessThreads = 0;
-            Skip = false;
-            BenchmarkStatus = "";
         }
 
         public void SetBenchmarkPending() {

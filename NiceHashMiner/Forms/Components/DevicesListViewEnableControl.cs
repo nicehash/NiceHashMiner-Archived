@@ -167,7 +167,7 @@ namespace NiceHashMiner.Forms.Components {
                 G.SaveOption();
             }
             if (SaveToGeneralConfig) {
-                ConfigManager_rem.Instance.GeneralConfig.Commit();
+                ConfigManager.GeneralConfigFileCommit();
             }
             var lvi = e.Item as ListViewItem;
             if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);

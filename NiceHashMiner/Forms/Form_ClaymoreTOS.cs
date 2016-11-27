@@ -22,12 +22,12 @@ namespace NiceHashMiner.Forms {
         }
 
         private void button_Agree_Click(object sender, EventArgs e) {
-            ConfigManager_rem.Instance.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
+            ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
             this.Close();
         }
 
         private void button_Decline_Click(object sender, EventArgs e) {
-            ConfigManager_rem.Instance.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
+            ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
             this.Close();
         }
     }

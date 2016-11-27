@@ -18,8 +18,6 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
             }
             const string extension = ".json";
             return fileName + old + extension;
-            //FilePath = fileName + extension;
-            //FilePathOld = fileName + "_OLD" + extension;
         }
 
         public DeviceBenchmarkConfigFile(string DeviceUUID)

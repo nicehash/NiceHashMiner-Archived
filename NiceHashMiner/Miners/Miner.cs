@@ -406,13 +406,13 @@ namespace NiceHashMiner
             if (BenchmarkHandle != null && BenchmarkProcessStatus != BenchmarkProcessStatus.Killing && BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling) {
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
                 try {
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
                     BenchmarkHandle.Kill();
                     BenchmarkHandle.Close();
                 } catch { }
                 finally {
                     BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.NiceHashName));
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
                     //BenchmarkHandle = null;
                 }
             }
@@ -425,7 +425,7 @@ namespace NiceHashMiner
         }
 
         virtual protected void BenchmarkThreadRoutine(object CommandLine) {
-            Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
@@ -498,7 +498,7 @@ namespace NiceHashMiner
 
             P.StartInfo.Arguments = LastCommandLine;
             if (Path != MinerPaths.eqm) {
-                P.StartInfo.CreateNoWindow = ConfigManager_rem.Instance.GeneralConfig.HideMiningWindows;
+                P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
             } else {
                 P.StartInfo.CreateNoWindow = false;
             }
@@ -550,8 +550,8 @@ namespace NiceHashMiner
         virtual protected void Miner_Exited() {
             // TODO make miner restart in 5 seconds
             //Stop(MinerStopType.END, true);
-            var RestartInMS = ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS > 5000 ?
-                ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS : 5000;
+            var RestartInMS = ConfigManager.GeneralConfig.MinerRestartDelayMS > 5000 ?
+                ConfigManager.GeneralConfig.MinerRestartDelayMS : 5000;
             Helpers.ConsolePrint(MinerTAG(), ProcessTag() + String.Format(" Miner_Exited Will restart in {0} ms", RestartInMS));
             _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
             NeedsRestart = true;
@@ -577,7 +577,7 @@ namespace NiceHashMiner
             if (!isEnded) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Restarting miner..");
                 Stop(MinerStopType.END); // stop miner first
-                System.Threading.Thread.Sleep(ConfigManager_rem.Instance.GeneralConfig.MinerRestartDelayMS);
+                System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
                 ProcessHandle = _Start(); // start with old command line
             }
         }

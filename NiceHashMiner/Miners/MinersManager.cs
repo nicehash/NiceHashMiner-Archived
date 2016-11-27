@@ -11,8 +11,6 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Miners {
-    // typedefs
-    using GroupedDevices = SortedSet<string>;
     using NiceHashMiner.Miners.Grouping;
     public class MinersManager : BaseLazySingleton<MinersManager> {
 
@@ -40,7 +38,7 @@ namespace NiceHashMiner.Miners {
                 || mostOptimized == CPUExtensionType.AVX_AES || mostOptimized == CPUExtensionType.AVX2_AES;
         }
 
-        // create miner creates new miners, except cpuminer, those are saves and called from GetCpuMiner()
+        // create miner creates new miners based on device type and algorithm/miner path
         public static Miner CreateMiner(ComputeDevice device, Algorithm algorithm) {
             var minerPath = MinerPaths.GetOptimizedMinerPath(device, algorithm);
             if (minerPath != MinerPaths.NONE) {
@@ -55,10 +53,10 @@ namespace NiceHashMiner.Miners {
             } else if (minerPath == MinerPaths.nheqminer) {
                 return new nheqminer();
             } else if (
-                ConfigManager_rem.Instance.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
+                ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
                 && minerPath == MinerPaths.ClaymoreZcashMiner && DeviceType.AMD == deviceType) {
                 return new ClaymoreZcashMiner();
-            } else if (minerPath.Contains("ethminer") && DeviceType.CPU != deviceType) {
+            } else if (minerPath == MinerPaths.ethminer && DeviceType.CPU != deviceType) {
                 if (DeviceType.AMD == deviceType) {
                     return new MinerEtherumOCL();
                 } else {

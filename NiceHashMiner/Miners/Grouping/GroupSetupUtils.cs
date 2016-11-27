@@ -24,7 +24,7 @@ namespace NiceHashMiner.Miners.Grouping {
                 status = DeviceMiningStatus.Disabled;
             } else {
                 bool hasEnabledAlgo = false;
-                foreach (Algorithm algo in device.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
+                foreach (Algorithm algo in device.AlgorithmSettings.Values) {
                     hasEnabledAlgo |= IsAlgoMiningCapable(algo) && IsValidMinerPath(device, algo);
                 }
                 if (hasEnabledAlgo == false) {
@@ -79,7 +79,7 @@ namespace NiceHashMiner.Miners.Grouping {
                 foreach (var miningDevice in enabledDevices) {
                     var device = miningDevice.Device;
                     stringBuilder.AppendLine(String.Format("\tENABLED ({0})", device.GetFullName()));
-                    foreach (var algo in device.DeviceBenchmarkConfig.AlgorithmSettings.Values) {
+                    foreach (var algo in device.AlgorithmSettings.Values) {
                         var isEnabled = IsAlgoMiningCapable(algo) && IsValidMinerPath(device, algo);
                         stringBuilder.AppendLine(String.Format("\t\tALGORITHM {0} ({1})",
                             isEnabled ? "ENABLED " : "DISABLED", // ENABLED/DISABLED

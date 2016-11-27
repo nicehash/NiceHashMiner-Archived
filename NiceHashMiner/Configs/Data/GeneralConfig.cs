@@ -133,6 +133,15 @@ namespace NiceHashMiner.Configs.Data {
             if (this.ApiBindPortPoolStart > (65535 - 2000)) {
                 this.ApiBindPortPoolStart = 5100;
             }
+            if (this.BenchmarkTimeLimits == null) {
+                this.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
+            }
+            if (this.DeviceDetection == null) {
+                this.DeviceDetection = new DeviceDetectionConfig();
+            }
+            if (this.LastDevicesSettup == null) {
+                this.LastDevicesSettup = new List<ComputeDeviceConfig>();
+            }
         }
 
     }

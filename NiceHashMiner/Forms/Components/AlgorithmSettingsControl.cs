@@ -79,7 +79,7 @@ namespace NiceHashMiner.Forms.Components {
                 this.Enabled = lvi.Checked;
 
                 groupBoxSelectedAlgorithmSettings.Text = String.Format(International.GetText("AlgorithmsListView_GroupBox"),
-                algorithm.NiceHashName); ;
+                algorithm.GetName()); ;
 
                 
                 //// no intensity for cpu miners and ccminer_cryptonight
