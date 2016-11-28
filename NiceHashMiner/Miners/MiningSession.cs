@@ -278,7 +278,7 @@ namespace NiceHashMiner.Miners {
                 stringBuilderFull.AppendLine("Current device profits:");
                 foreach (var device in _miningDevices) {
                     StringBuilder stringBuilderDevice = new StringBuilder();
-                    stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", device.Device.UUID, device.Device.Name));
+                    stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", device.Device.UUID, device.Device.GetFullName()));
                     foreach (var algo in device.Algorithms) {
                         stringBuilderDevice.AppendLine(String.Format("\t\tPROFIT = {0}\t(SPEED = {1}\t\t| NHSMA = {2})\t[{3}]",
                             algo.Value.CurrentProfit.ToString(DOUBLE_FORMAT), // Profit

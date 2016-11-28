@@ -293,10 +293,10 @@ namespace NiceHashMiner.Devices
                             Avaliable.AllAvaliableDevices.Add(
                                 new ComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), ThreadsPerCPU, (ulong)0, ++CPUCount)
                             );
-                        } else {
+                        } else if (Avaliable.CPUsCount > 1) {
                             for (int i = 0; i < Avaliable.CPUsCount; i++) {
                                 Avaliable.AllAvaliableDevices.Add(
-                                    new ComputeDevice(0, "CPU" + i, CPUID.GetCPUName().Trim(), ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask), ++CPUCount)
+                                    new ComputeDevice(i, "CPU" + i, CPUID.GetCPUName().Trim(), ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask), ++CPUCount)
                                 );
                             }
                         }
