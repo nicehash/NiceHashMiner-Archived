@@ -60,6 +60,10 @@ namespace NiceHashMiner.Devices {
                             foreach (var key in toRemove) {
                                 algoSettings.Remove(key);
                             }
+                        } else if (device.Codename.Contains("Ellesmere")) {
+                            if (algoSettings.ContainsKey(AlgorithmType.NeoScrypt)) {
+                                algoSettings.Remove(AlgorithmType.NeoScrypt);
+                            }
                         }
                     }
 
