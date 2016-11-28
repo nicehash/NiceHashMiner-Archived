@@ -47,6 +47,15 @@ namespace NiceHashMiner.Devices
         // Fake dev
         public ComputeDevice(int id) {
             ID = id;
+            Name = "fake_" + id;
+            NameCount = Name;
+            Enabled = true;
+            DeviceType = DeviceType.CPU;
+            DeviceGroupType = DeviceGroupType.NONE;
+            IsEtherumCapale = false;
+            IsOptimizedVersion = false;
+            Codename = "fake";
+            UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
         }
 
         // CPU 
