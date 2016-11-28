@@ -16,6 +16,8 @@ namespace NiceHashMiner {
         // CPU miners only setting
         public int LessThreads { get; set; }
 
+        // avarage speed of same devices to increase mining stability
+        public double AvaragedSpeed { get; set; }
 
         public Algorithm(AlgorithmType niceHashID, string minerName) {
             NiceHashID = niceHashID;

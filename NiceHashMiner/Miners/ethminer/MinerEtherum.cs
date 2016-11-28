@@ -110,7 +110,7 @@ namespace NiceHashMiner.Miners {
             // now find the fastest for DAG generation
             double fastestSpeed = double.MinValue;
             foreach (var mPair in MiningSetup.MiningPairs) {
-                double compareSpeed = mPair.Device.AlgorithmSettings[AlgorithmType.DaggerHashimoto].BenchmarkSpeed;
+                double compareSpeed = mPair.Algorithm.AvaragedSpeed;
                 if (fastestSpeed < compareSpeed) {
                     DaggerHashimotoGenerateDevice = mPair.Device;
                     fastestSpeed = compareSpeed;

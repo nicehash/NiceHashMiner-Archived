@@ -45,6 +45,22 @@ namespace NiceHashMiner.Devices {
                                 Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + device.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
                             }
                         }
+
+                        // Ellesmere, Polaris
+                        // Ellesmere sgminer workaround, keep this until sgminer is fixed to work with Ellesmere
+                        if (device.Codename.Contains("Ellesmere") && Globals.IsEllesmereSgminerIgnore) {
+                            // remove all algos except equi and dagger
+                            List<AlgorithmType> toRemove = new List<AlgorithmType>();
+                            foreach (var key in algoSettings.Keys) {
+                                if (AlgorithmType.DaggerHashimoto != key && AlgorithmType.Equihash != key) {
+                                    toRemove.Add(key);
+                                }
+                            }
+                            // remove keys
+                            foreach (var key in toRemove) {
+                                algoSettings.Remove(key);
+                            }
+                        }
                     }
 
                     // check if it is Etherum capable

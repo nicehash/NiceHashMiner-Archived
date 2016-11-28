@@ -16,7 +16,20 @@ namespace NiceHashMiner.Miners.Grouping {
         public Algorithm AlgoRef { get; private set; }
         public string MinerPath { get; private set; }
         // avarage speed of same devices to increase mining stability
-        public double AvaragedSpeed = 0;
+        public double AvaragedSpeed 
+        {
+            get {
+                if(AlgoRef != null) {
+                    return AlgoRef.AvaragedSpeed;
+                }
+                return 0;
+            }
+            set {
+                if (AlgoRef != null) {
+                    AlgoRef.AvaragedSpeed = value;
+                }
+            }
+        }
         public double CurrentProfit = 0;
         public double CurNhmSMADataVal = 0;
     }
