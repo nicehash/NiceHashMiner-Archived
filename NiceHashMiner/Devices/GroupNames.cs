@@ -19,7 +19,7 @@ namespace NiceHashMiner.Devices
         public static string GetGroupName(DeviceGroupType type, int id) {
             if(DeviceGroupType.CPU == type) {
                 return "CPU"+id;
-            } else if ((int)type < _names.Length) {
+            } else if ((int)type < _names.Length && (int)type >= 0) {
                 return _names[(int)type];
             }
             return "UnknownGroup";
