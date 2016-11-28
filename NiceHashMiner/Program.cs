@@ -42,6 +42,9 @@ namespace NiceHashMiner
                 Helpers.AllocConsole();
             }
 
+            // init active display currency after config load
+            CurrencyConverter.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+
             // #2 then parse args
             var commandLineArgs = new CommandLineParser(argv);
 

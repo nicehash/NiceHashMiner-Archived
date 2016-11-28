@@ -98,14 +98,9 @@ namespace NiceHashMiner
             linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
             linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
 
-            // these strings are no longer used, check and use them as base
-            string rateString = International.GetText("Rate") + ":";
-            string ratesBTCInitialString = "0.00000000 BTC/" + International.GetText("Day");
-            string ratesDollarInitialString = String.Format("0.00 {0}/", ConfigManager.GeneralConfig.DisplayCurrency) + International.GetText("Day");
-
             toolStripStatusLabelGlobalRateText.Text = International.GetText("Form_Main_global_rate") + ":";
             toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
-            toolStripStatusLabelBalanceText.Text = (ConfigManager.GeneralConfig.DisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("Form_Main_balance") + ":";
+            toolStripStatusLabelBalanceText.Text = (CurrencyConverter.ActiveDisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("Form_Main_balance") + ":";
 
             devicesListViewEnableControl1.InitLocale();
 
@@ -129,7 +124,11 @@ namespace NiceHashMiner
             ShowWarningNiceHashData = true;
             DemoMode = false;
 
-            toolStripStatusLabelBalanceDollarValue.Text = "(" + ConfigManager.GeneralConfig.DisplayCurrency + ")";
+            // init active display currency after config load
+            CurrencyConverter.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+
+            toolStripStatusLabelBalanceDollarValue.Text = "(" + CurrencyConverter.ActiveDisplayCurrency + ")";
+            BalanceCheck_Tick(null, null); // update currency changes
 
             if (_isDeviceDetectionInitialized) {
                 devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
@@ -473,8 +472,8 @@ namespace NiceHashMiner
             }
             
             string rateBTCString = FormatPayingOutput(paying);
-            string rateCurrencyString = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
-                + String.Format(" {0}/", ConfigManager.GeneralConfig.DisplayCurrency) + International.GetText("Day");
+            string rateCurrencyString = CurrencyConverter.ConvertToActiveCurrency(paying * Globals.BitcoinRate).ToString("F2", CultureInfo.InvariantCulture)
+                + String.Format(" {0}/", CurrencyConverter.ActiveDisplayCurrency) + International.GetText("Day");
             
             ((GroupProfitControl)flowLayoutPanelRates.Controls[flowLayoutPanelRatesIndex++])
                 .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBTCString, rateCurrencyString);
@@ -507,7 +506,7 @@ namespace NiceHashMiner
                 toolStripStatusLabelGlobalRateValue.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
             }
 
-            toolStripStatusLabelBTCDayValue.Text = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency((TotalRate * Globals.BitcoinRate)).ToString("F2", CultureInfo.InvariantCulture);
+            toolStripStatusLabelBTCDayValue.Text = CurrencyConverter.ConvertToActiveCurrency((TotalRate * Globals.BitcoinRate)).ToString("F2", CultureInfo.InvariantCulture);
         }
 
 
@@ -532,7 +531,7 @@ namespace NiceHashMiner
 
                     //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
                     double Amount = (Balance * Globals.BitcoinRate);
-                    Amount = CurrencyConverter.CurrencyConverter.ConvertToActiveCurrency(Amount);
+                    Amount = CurrencyConverter.ConvertToActiveCurrency(Amount);
                     toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
                 }
             }
@@ -714,7 +713,6 @@ namespace NiceHashMiner
             } else if (Settings.IsChange && Settings.IsChangeSaved) {
                 InitLocalization();
                 InitMainConfigGUIData();
-                UpdateGlobalRate(); // update currency changes
             }
         }
 

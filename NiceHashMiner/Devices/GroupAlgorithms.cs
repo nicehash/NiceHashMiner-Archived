@@ -111,7 +111,7 @@ namespace NiceHashMiner.Devices {
                 //{ AlgorithmType.WhirlpoolX , new Algorithm(AlgorithmType.WhirlpoolX, "whirlpoolx") },
                 //{ AlgorithmType.Qubit , new Algorithm(AlgorithmType.Qubit, "qubit") },
                 //{ AlgorithmType.Quark , new Algorithm(AlgorithmType.Quark, "quark") },
-                { AlgorithmType.Lyra2RE , new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
+                //{ AlgorithmType.Lyra2RE , new Algorithm(AlgorithmType.Lyra2RE, "lyra2") },
                 { AlgorithmType.Lyra2REv2 , new Algorithm(AlgorithmType.Lyra2REv2, "lyra2v2") },
                 //{ AlgorithmType.Blake256r8 , new Algorithm(AlgorithmType.Blake256r8, "blakecoin") },
                 //{ AlgorithmType.Blake256r14 , new Algorithm(AlgorithmType.Blake256r14, "blake") },
