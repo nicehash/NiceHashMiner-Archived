@@ -44,9 +44,9 @@ namespace NiceHashMiner.Miners {
         // check internet connection 
         private Timer _internetCheckTimer;
         
-        // 
-        private Timer _miningStatusCheckTimer;
-        bool CheckStatus = false;
+        //// 
+        //private Timer _miningStatusCheckTimer;
+        //bool CheckStatus = false;
 
         public bool IsMiningEnabled {
             get {
@@ -88,9 +88,9 @@ namespace NiceHashMiner.Miners {
             _internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
             _internetCheckTimer.Interval = 1000 * 30 * 1; // every minute or 5?? // 1000 * 60 * 1
 
-            _miningStatusCheckTimer = new Timer();
-            _miningStatusCheckTimer.Elapsed += MiningStatusCheckTimer_Tick;
-            _miningStatusCheckTimer.Interval = 1000 * 30;
+            //_miningStatusCheckTimer = new Timer();
+            //_miningStatusCheckTimer.Elapsed += MiningStatusCheckTimer_Tick;
+            //_miningStatusCheckTimer.Interval = 1000 * 30;
 
             // assume profitable
             IsProfitable = true;
@@ -100,7 +100,7 @@ namespace NiceHashMiner.Miners {
             if (IsMiningEnabled) {
                 _preventSleepTimer.Start();
                 _internetCheckTimer.Start();
-                _miningStatusCheckTimer.Start();
+                //_miningStatusCheckTimer.Start();
             }
 
             IsMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
@@ -118,9 +118,9 @@ namespace NiceHashMiner.Miners {
             Helpers.PreventSleep();
         }
 
-        private void MiningStatusCheckTimer_Tick(object sender, ElapsedEventArgs e) {
-            CheckStatus = true;
-        }
+        //private void MiningStatusCheckTimer_Tick(object sender, ElapsedEventArgs e) {
+        //    CheckStatus = true;
+        //}
         #endregion
 
         #region Start/Stop
@@ -143,7 +143,7 @@ namespace NiceHashMiner.Miners {
             // restroe/enable sleep
             _preventSleepTimer.Stop();
             _internetCheckTimer.Stop();
-            _miningStatusCheckTimer.Stop();
+            //_miningStatusCheckTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
 
             // delete generated bin files
@@ -297,6 +297,7 @@ namespace NiceHashMiner.Miners {
             }
 
             // check if should mine
+            // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
             if (CheckIfShouldMine(CurrentProfit, log) == false) {
                 return;
             }
@@ -439,17 +440,17 @@ namespace NiceHashMiner.Miners {
                 // Update GUI
                 _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), groupMiners.DevicesInfoString, AD, groupMiners.CurrentRate, m.IsAPIReadException);
             }
-            // check if profitabile
-            if (CheckStatus && !IsMiningRegardlesOfProfit) {
-                CheckStatus = false;
-                if (IsProfitable) {
-                    // check current profit
-                    CheckIfShouldMine(CurrentProfit, true);
-                } else if (!IsProfitable) {
-                    // recalculate and switch
-                    SwichMostProfitableGroupUpMethod(NiceHashData, true);
-                }
-            }
+            //// check if profitabile
+            //if (CheckStatus && !IsMiningRegardlesOfProfit) {
+            //    CheckStatus = false;
+            //    if (IsProfitable) {
+            //        // check current profit
+            //        CheckIfShouldMine(CurrentProfit, true);
+            //    } else if (!IsProfitable) {
+            //        // recalculate and switch
+            //        SwichMostProfitableGroupUpMethod(NiceHashData, true);
+            //    }
+            //}
         }
 
     }
