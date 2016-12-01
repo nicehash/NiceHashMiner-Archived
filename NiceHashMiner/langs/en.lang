@@ -329,6 +329,8 @@
         "Form_Main_3rdParty_Button_Agree_Text": "I agree",
         "Form_Main_3rdParty_Button_Refuse_Text": "I refuse",
         "Form_Settings_General_3rdparty_Text": "Enable3rdPartyMiners",
-        "Form_Settings_General_3rdparty_ToolTip": "Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility."
+        "Form_Settings_General_3rdparty_ToolTip": "Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility.",
+        "Form_Settings_General_AllowMultipleInstances_Text": "Allow Multiple Instances",
+        "Form_Settings_General_AllowMultipleInstances_ToolTip": "When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).",
     }
 }

@@ -58,6 +58,9 @@ namespace NiceHashMiner.Configs.Data {
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;
+
+        public bool AllowMultipleInstances = true;
+
         // device enabled disabled stuff
         public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
         // 
@@ -101,6 +104,7 @@ namespace NiceHashMiner.Configs.Data {
             ContinueMiningIfNoInternetAccess = false;
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
+            AllowMultipleInstances = true;
         }
 
         public void FixSettingBounds() {

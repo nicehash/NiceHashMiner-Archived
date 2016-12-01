@@ -107,6 +107,9 @@ namespace NiceHashMiner.Forms {
 
             toolTip1.SetToolTip(this.checkBox_Use3rdPartyMiners, International.GetText("Form_Settings_General_3rdparty_ToolTip"));
             toolTip1.SetToolTip(this.pictureBox_Use3rdPartyMiners, International.GetText("Form_Settings_General_3rdparty_ToolTip"));
+
+            toolTip1.SetToolTip(this.checkBox_AllowMultipleInstances, International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
+            toolTip1.SetToolTip(this.pictureBox_AllowMultipleInstances, International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
             
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
@@ -237,6 +240,7 @@ namespace NiceHashMiner.Forms {
             checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
             checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
             checkBox_AMD_DisableAMDTempControl.Text = International.GetText("Form_Settings_General_DisableAMDTempControl");
+            checkBox_AllowMultipleInstances.Text = International.GetText("Form_Settings_General_AllowMultipleInstances_Text");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
@@ -310,6 +314,7 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_NVIDIAP0State.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_LogToFile.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -377,6 +382,7 @@ namespace NiceHashMiner.Forms {
                 checkBox_DisableDefaultOptimizations.Checked = ConfigManager.GeneralConfig.DisableDefaultOptimizations;
                 checkBox_ContinueMiningIfNoInternetAccess.Checked = ConfigManager.GeneralConfig.ContinueMiningIfNoInternetAccess;
                 this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+                this.checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
             }
 
             // Textboxes
@@ -469,6 +475,7 @@ namespace NiceHashMiner.Forms {
             ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
             ConfigManager.GeneralConfig.ContinueMiningIfNoInternetAccess = checkBox_ContinueMiningIfNoInternetAccess.Checked;
+            ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
         }
 
         private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {
