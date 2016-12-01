@@ -71,6 +71,10 @@ namespace NiceHashMiner.Devices {
                     if (algoSettings.ContainsKey(AlgorithmType.DaggerHashimoto) && device.IsEtherumCapale == false) {
                         algoSettings.Remove(AlgorithmType.DaggerHashimoto);
                     }
+                    // also check for Equihash as it needs 2GB GPU
+                    if (algoSettings.ContainsKey(AlgorithmType.Equihash) && device.IsEtherumCapale == false) {
+                        algoSettings.Remove(AlgorithmType.Equihash);
+                    }
                 }
                 return algoSettings;
             }
