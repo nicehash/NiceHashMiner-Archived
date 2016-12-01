@@ -207,6 +207,8 @@ namespace NiceHashMiner.Devices
                 public string PNPDeviceID { get; set; }
                 public string DriverVersion { get; set; }
                 public string Status { get; set; }
+                public string InfSection { get; set; } // get codename for fallback not reliable
+                public ulong AdapterRAM { get; set; }
             }
             private static List<VideoControllerData> AvaliableVideoControllers = new List<VideoControllerData>();
             static class WindowsDisplayAdapters {
@@ -217,12 +219,17 @@ namespace NiceHashMiner.Devices
                     ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get();
                     bool allVideoContollersOK = true;
                     foreach (var manObj in moc) {
+                        ulong memTmp = 0;
+                        //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
+                        UInt64.TryParse(manObj.GetPropertyValue("AdapterRAM").ToString(), out memTmp);
                         var vidController = new VideoControllerData() {
                             Name = manObj["Name"] as string,
                             Description = manObj["Description"] as string,
                             PNPDeviceID = manObj["PNPDeviceID"] as string,
                             DriverVersion = manObj["DriverVersion"] as string,
-                            Status = manObj["Status"] as string
+                            Status = manObj["Status"] as string,
+                            InfSection = manObj["InfSection"] as string,
+                            AdapterRAM = memTmp
                         };
                         stringBuilder.AppendLine("\tWin32_VideoController detected:");
                         stringBuilder.AppendLine(String.Format("\t\tName {0}", vidController.Name));
@@ -556,9 +563,31 @@ namespace NiceHashMiner.Devices
                                     }
                                 }
                             }
+                            bool isBusID_OK = true;
+                            // check if buss ids are unuque and different from -1
+                            {
+                                HashSet<int> bus_ids = new HashSet<int>();
+                                foreach (var amdOclDev in amdGpus) {
+                                    if (amdOclDev.AMD_BUS_ID == -1) {
+                                        isBusID_OK = false;
+                                        break;
+                                    }
+                                    bus_ids.Add(amdOclDev.AMD_BUS_ID);
+                                }
+                                // check if unique
+                                isBusID_OK = isBusID_OK && bus_ids.Count == amdGpus.Count;
+                            }
+
                             if (amdGpus.Count == 0) {
                                 Helpers.ConsolePrint(TAG, "AMD GPUs count is 0");
                             } else {
+                                // print BUS id status
+                                if (isBusID_OK) {
+                                    Helpers.ConsolePrint(TAG, "AMD Bus IDs are unique and valid. OK");
+                                } else {
+                                    Helpers.ConsolePrint(TAG, "AMD Bus IDs IS INVALID. Using fallback AMD detection mode");
+                                }
+
                                 Helpers.ConsolePrint(TAG, "AMD GPUs count : " + amdGpus.Count.ToString());
                                 Helpers.ConsolePrint(TAG, "AMD Getting device name and serial from ADL");
                                 // ADL
@@ -645,6 +674,7 @@ namespace NiceHashMiner.Devices
                                                         }
                                                     } else {
                                                         Helpers.ConsolePrint(TAG, "ADL_Adapter_AdapterInfo_Get() returned error code " + ADLRet.ToString());
+                                                        isAdlInit = false;
                                                     }
                                                 }
                                                 // Release the memory for the AdapterInfo structure
@@ -658,12 +688,17 @@ namespace NiceHashMiner.Devices
                                         // TODO
                                         Helpers.ConsolePrint(TAG, "ADL_Main_Control_Create() returned error code " + ADLRet.ToString());
                                         Helpers.ConsolePrint(TAG, "Check if ADL is properly installed!");
+                                        isAdlInit = false;
                                     }
                                 } catch (Exception ex) {
                                     Helpers.ConsolePrint(TAG, "AMD ADL exception: " + ex.Message);
                                     isAdlInit = false;
                                 }
-                                if (isAdlInit) {
+
+                                ///////
+                                // AMD device creation (in NHM context)
+                                if (isAdlInit && isBusID_OK) {
+                                    Helpers.ConsolePrint(TAG, "Using AMD device creation DEFAULT Reliable mappings");
                                     if (amdGpus.Count == _amdDeviceUUID.Count) {
                                         Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS GOOD/SAME");
                                     } else {
@@ -671,7 +706,7 @@ namespace NiceHashMiner.Devices
                                     }
                                     StringBuilder stringBuilder = new StringBuilder();
                                     stringBuilder.AppendLine("");
-                                    stringBuilder.AppendLine("QueryAMD devices: ");
+                                    stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
                                     for (int i_id = 0; i_id < amdGpus.Count; ++i_id) {
                                         Avaliable.HasAMD = true;
 
@@ -687,7 +722,7 @@ namespace NiceHashMiner.Devices
                                             string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
                                             Avaliable.AllAvaliableDevices.Add(
-                                                new ComputeDevice(newAmdDev, ++GPUCount));
+                                                new ComputeDevice(newAmdDev, ++GPUCount, false));
                                             // just in case 
                                             try {
                                                 stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
@@ -703,10 +738,57 @@ namespace NiceHashMiner.Devices
                                         }
                                     }
                                     Helpers.ConsolePrint(TAG, stringBuilder.ToString());
+                                } else {
+                                    Helpers.ConsolePrint(TAG, "Using AMD device creation FALLBACK UnReliable mappings");
+                                    StringBuilder stringBuilder = new StringBuilder();
+                                    stringBuilder.AppendLine("");
+                                    stringBuilder.AppendLine("QueryAMD [FALLBACK query] devices: ");
+
+                                    // get video AMD controllers and sort them by RAM
+                                    // (find a way to get PCI BUS Numbers from PNPDeviceID)
+                                    List<VideoControllerData> AMDVideoControllers = new List<VideoControllerData>();
+                                    foreach (var vcd in AvaliableVideoControllers) {
+                                        if (vcd.Name.ToLower().Contains("amd")
+                                            || vcd.Name.ToLower().Contains("radeon")
+                                            || vcd.Name.ToLower().Contains("firepro")) {
+                                                AMDVideoControllers.Add(vcd);
+                                        }
+                                    }
+                                    // sort by ram not ideal 
+                                    AMDVideoControllers.Sort((a, b) => (int)(a.AdapterRAM - b.AdapterRAM));
+                                    amdGpus.Sort((a, b) => (int)(a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
+                                    int minCount = Math.Min(AMDVideoControllers.Count, amdGpus.Count);
+
+                                    for (int i = 0; i < minCount; ++i) {
+                                        Avaliable.HasAMD = true;
+
+                                        var deviceName = AMDVideoControllers[i].Name;
+                                        var newAmdDev = new AmdGpuDevice(amdGpus[i], deviceDriverOld[deviceName]);
+                                        newAmdDev.DeviceName = deviceName;
+                                        newAmdDev.UUID = "UNUSED";
+                                        bool isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
+                                        string skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
+                                        string isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
+                                        string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
+
+                                        Avaliable.AllAvaliableDevices.Add(
+                                            new ComputeDevice(newAmdDev, ++GPUCount, true));
+                                        // just in case 
+                                        try {
+                                            stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
+                                            stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
+                                            stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
+                                            stringBuilder.AppendLine(String.Format("\t\tCODE_NAME: {0}", newAmdDev.Codename));
+                                            stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
+                                            stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
+                                            stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
+                                        } catch { }
+                                    }
+                                    Helpers.ConsolePrint(TAG, stringBuilder.ToString());
                                 }
                             }
-                        }
-                    }
+                        } // end is amdPlatformNumFound
+                    } // end is OpenCLSuccess
                     Helpers.ConsolePrint(TAG, "QueryAMD END");
                 }
 

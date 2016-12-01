@@ -2,6 +2,8 @@
 
 #define __CL_ENABLE_EXCEPTIONS
 #define CL_USE_DEPRECATED_OPENCL_2_0_APIS
+#define CL_VERSION_1_2
+//#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
 
 #include "cl_ext.hpp"
 

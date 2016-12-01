@@ -88,7 +88,7 @@ namespace NiceHashMiner.Devices
         }
 
         // GPU AMD
-        public ComputeDevice(AmdGpuDevice amdDevice, int GPUCount) {
+        public ComputeDevice(AmdGpuDevice amdDevice, int GPUCount, bool isDetectionFallback) {
             ID = amdDevice.DeviceID;
             DeviceGroupType = DeviceGroupType.AMD_OpenCL;
             Name = amdDevice.DeviceName;
@@ -96,7 +96,11 @@ namespace NiceHashMiner.Devices
             IsEtherumCapale = amdDevice.IsEtherumCapable();
             DeviceType = DeviceType.AMD;
             NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), GPUCount);
-            UUID = amdDevice.UUID;
+            if (isDetectionFallback) {
+                UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            } else {
+                UUID = amdDevice.UUID;
+            }
             // sgminer extra
             IsOptimizedVersion = amdDevice.UseOptimizedVersion;
             Codename = amdDevice.Codename;
