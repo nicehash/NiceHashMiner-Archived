@@ -568,7 +568,7 @@ namespace NiceHashMiner.Devices
                             {
                                 HashSet<int> bus_ids = new HashSet<int>();
                                 foreach (var amdOclDev in amdGpus) {
-                                    if (amdOclDev.AMD_BUS_ID == -1) {
+                                    if (amdOclDev.AMD_BUS_ID < 0) {
                                         isBusID_OK = false;
                                         break;
                                     }
