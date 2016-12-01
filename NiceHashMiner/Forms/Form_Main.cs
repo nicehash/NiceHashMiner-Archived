@@ -508,12 +508,12 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.AutoScaleBTCValues && TotalRate < 0.1)
             {
                 toolStripStatusLabelBTCDayText.Text = "mBTC/" + International.GetText("Day");
-                toolStripStatusLabelGlobalRateValue.Text = (TotalRate * 1000).ToString("F7", CultureInfo.InvariantCulture);
+                toolStripStatusLabelGlobalRateValue.Text = (TotalRate * 1000).ToString("F5", CultureInfo.InvariantCulture);
             }
             else
             {
                 toolStripStatusLabelBTCDayText.Text = "BTC/" + International.GetText("Day");
-                toolStripStatusLabelGlobalRateValue.Text = (TotalRate).ToString("F8", CultureInfo.InvariantCulture);
+                toolStripStatusLabelGlobalRateValue.Text = (TotalRate).ToString("F6", CultureInfo.InvariantCulture);
             }
 
             toolStripStatusLabelBTCDayValue.Text = CurrencyConverter.ConvertToActiveCurrency((TotalRate * Globals.BitcoinRate)).ToString("F2", CultureInfo.InvariantCulture);
@@ -531,12 +531,12 @@ namespace NiceHashMiner
                     if (ConfigManager.GeneralConfig.AutoScaleBTCValues && Balance < 0.1)
                     {
                         toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
-                        toolStripStatusLabelBalanceBTCValue.Text = (Balance * 1000).ToString("F7", CultureInfo.InvariantCulture);
+                        toolStripStatusLabelBalanceBTCValue.Text = (Balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
                     }
                     else
                     {
                         toolStripStatusLabelBalanceBTCCode.Text = "BTC";
-                        toolStripStatusLabelBalanceBTCValue.Text = Balance.ToString("F8", CultureInfo.InvariantCulture);
+                        toolStripStatusLabelBalanceBTCValue.Text = Balance.ToString("F6", CultureInfo.InvariantCulture);
                     }
 
                     //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
@@ -746,9 +746,9 @@ namespace NiceHashMiner
             string ret = "";
 
             if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
-                ret = (paying * 1000).ToString("F7", CultureInfo.InvariantCulture) + " mBTC/" + International.GetText("Day");
+                ret = (paying * 1000).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" + International.GetText("Day");
             else
-                ret = paying.ToString("F8", CultureInfo.InvariantCulture) + " BTC/" + International.GetText("Day");
+                ret = paying.ToString("F6", CultureInfo.InvariantCulture) + " BTC/" + International.GetText("Day");
 
             return ret;
         }
