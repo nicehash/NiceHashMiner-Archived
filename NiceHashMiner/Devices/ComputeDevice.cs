@@ -38,6 +38,7 @@ namespace NiceHashMiner.Devices
         // sgminer extra quickfix
         public bool IsOptimizedVersion { get; private set; }
         public string Codename { get; private set; }
+        public string InfSection { get; private set; }
 
         //public DeviceBenchmarkConfig_rem DeviceBenchmarkConfig { get; private set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
@@ -104,6 +105,7 @@ namespace NiceHashMiner.Devices
             // sgminer extra
             IsOptimizedVersion = amdDevice.UseOptimizedVersion;
             Codename = amdDevice.Codename;
+            InfSection = amdDevice.InfSection;
             AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
         }
 

@@ -18,10 +18,12 @@ namespace NiceHashMiner.Devices {
         public ulong DeviceGlobalMemory { get { return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE; } }
         public bool UseOptimizedVersion { get; private set; }
         private OpenCLDevice _openClSubset;
+        public readonly string InfSection; // has arhitecture string
 
         public string Codename { get { return _openClSubset._CL_DEVICE_NAME; } }
 
-        public AmdGpuDevice(OpenCLDevice openClSubset, bool isOldDriver) {
+        public AmdGpuDevice(OpenCLDevice openClSubset, bool isOldDriver, string infSection) {
+            InfSection = infSection;
             _openClSubset = openClSubset;
             // Check for optimized version
             // first if not optimized

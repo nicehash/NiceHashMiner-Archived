@@ -48,7 +48,7 @@ namespace NiceHashMiner.Devices {
 
                         // Ellesmere, Polaris
                         // Ellesmere sgminer workaround, keep this until sgminer is fixed to work with Ellesmere
-                        if (device.Codename.Contains("Ellesmere") && Globals.IsEllesmereSgminerIgnore) {
+                        if ((device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris")) && Globals.IsEllesmereSgminerIgnore) {
                             // remove all algos except equi and dagger
                             List<AlgorithmType> toRemove = new List<AlgorithmType>();
                             foreach (var key in algoSettings.Keys) {
@@ -60,7 +60,7 @@ namespace NiceHashMiner.Devices {
                             foreach (var key in toRemove) {
                                 algoSettings.Remove(key);
                             }
-                        } else if (device.Codename.Contains("Ellesmere")) {
+                        } else if ((device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris"))) {
                             if (algoSettings.ContainsKey(AlgorithmType.NeoScrypt)) {
                                 algoSettings.Remove(AlgorithmType.NeoScrypt);
                             }

@@ -207,7 +207,7 @@ namespace NiceHashMiner.Devices
                 public string PNPDeviceID { get; set; }
                 public string DriverVersion { get; set; }
                 public string Status { get; set; }
-                public string InfSection { get; set; } // get codename for fallback not reliable
+                public string InfSection { get; set; } // get arhitecture
                 public ulong AdapterRAM { get; set; }
             }
             private static List<VideoControllerData> AvaliableVideoControllers = new List<VideoControllerData>();
@@ -237,6 +237,8 @@ namespace NiceHashMiner.Devices
                         stringBuilder.AppendLine(String.Format("\t\tPNPDeviceID {0}", vidController.PNPDeviceID));
                         stringBuilder.AppendLine(String.Format("\t\tDriverVersion {0}", vidController.DriverVersion));
                         stringBuilder.AppendLine(String.Format("\t\tStatus {0}", vidController.Status));
+                        stringBuilder.AppendLine(String.Format("\t\tInfSection {0}", vidController.InfSection));
+                        stringBuilder.AppendLine(String.Format("\t\tAdapterRAM {0}", vidController.AdapterRAM));
 
                         // check if controller ok
                         if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok")) {
@@ -594,7 +596,7 @@ namespace NiceHashMiner.Devices
                                 bool isAdlInit = true;
                                 // ADL does not get devices in order map devices by bus number
                                 // bus id, <name, uuid>
-                                Dictionary<int, Tuple<string, string>> _busIdsInfo = new Dictionary<int, Tuple<string, string>>();
+                                Dictionary<int, Tuple<string, string, string>> _busIdsInfo = new Dictionary<int, Tuple<string, string, string>>();
                                 List<string> _amdDeviceName = new List<string>();
                                 List<string> _amdDeviceUUID = new List<string>();
                                 try {
@@ -642,6 +644,14 @@ namespace NiceHashMiner.Devices
                                                                     || devName.ToLower().Contains("firepro")) {
 
                                                                     string PNPStr = OSAdapterInfoData.ADLAdapterInfo[i].PNPString;
+                                                                    // find vi controller pnp
+                                                                    string infSection = "";
+                                                                    foreach (var v_ctrl in AvaliableVideoControllers) {
+                                                                        if(v_ctrl.PNPDeviceID == PNPStr) {
+                                                                            infSection = v_ctrl.InfSection;
+                                                                        }
+                                                                    }
+
                                                                     var backSlashLast = PNPStr.LastIndexOf('\\');
                                                                     var serial = PNPStr.Substring(backSlashLast, PNPStr.Length - backSlashLast);
                                                                     var end_0 = serial.IndexOf('&');
@@ -665,7 +675,7 @@ namespace NiceHashMiner.Devices
                                                                         //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                         _amdDeviceName.Add(devName);
                                                                         if (!_busIdsInfo.ContainsKey(budId)) {
-                                                                            var nameUuid = new Tuple<string, string>(devName, uuid);
+                                                                            var nameUuid = new Tuple<string, string, string>(devName, uuid, infSection);
                                                                             _busIdsInfo.Add(budId, nameUuid);
                                                                         }
                                                                     }
@@ -713,7 +723,7 @@ namespace NiceHashMiner.Devices
                                         int busID = amdGpus[i_id].AMD_BUS_ID;
                                         if (busID != -1 && _busIdsInfo.ContainsKey(busID)) {
                                             var deviceName = _busIdsInfo[busID].Item1;
-                                            var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName]);
+                                            var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName], _busIdsInfo[busID].Item3);
                                             newAmdDev.DeviceName = deviceName;
                                             newAmdDev.UUID = _busIdsInfo[busID].Item2;
                                             bool isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
@@ -763,7 +773,8 @@ namespace NiceHashMiner.Devices
                                         Avaliable.HasAMD = true;
 
                                         var deviceName = AMDVideoControllers[i].Name;
-                                        var newAmdDev = new AmdGpuDevice(amdGpus[i], deviceDriverOld[deviceName]);
+                                        if(AMDVideoControllers[i].InfSection == null) AMDVideoControllers[i].InfSection = "";
+                                        var newAmdDev = new AmdGpuDevice(amdGpus[i], deviceDriverOld[deviceName], AMDVideoControllers[i].InfSection);
                                         newAmdDev.DeviceName = deviceName;
                                         newAmdDev.UUID = "UNUSED";
                                         bool isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
