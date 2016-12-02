@@ -48,13 +48,14 @@ namespace NiceHashMiner.Miners {
         }
 
         // benchmark stuff
+        const string TOTAL_MES = "Total measured:";
         protected override bool BenchmarkParseLine(string outdata) {
 
-            if (outdata.Contains(Iter_PER_SEC)) {
-                curSpeed = getNumber(outdata, "Measured: ", Iter_PER_SEC) * SolMultFactor;
+            if (outdata.Contains(TOTAL_MES) && outdata.Contains(Iter_PER_SEC)) {
+                curSpeed = getNumber(outdata, TOTAL_MES, Iter_PER_SEC) * SolMultFactor;
             }
-            if (outdata.Contains(Sols_PER_SEC)) {
-                var sols = getNumber(outdata, "Measured: ", Sols_PER_SEC);
+            if (outdata.Contains(TOTAL_MES) && outdata.Contains(Sols_PER_SEC)) {
+                var sols = getNumber(outdata, TOTAL_MES, Sols_PER_SEC);
                 if (sols > 0) {
                     BenchmarkAlgorithm.BenchmarkSpeed = curSpeed;
                     return true;
