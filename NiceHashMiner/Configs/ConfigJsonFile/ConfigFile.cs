@@ -58,6 +58,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
         }
 
         public void Commit(T file) {
+            CheckAndCreateConfigsFolder();
             if (file == null) {
                 Helpers.ConsolePrint(TAG, String.Format("Commit for FILE {0} IGNORED. Passed null object", _filePath));
                 return;
