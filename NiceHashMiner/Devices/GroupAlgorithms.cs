@@ -142,7 +142,7 @@ namespace NiceHashMiner.Devices {
                 //{ AlgorithmType.Blake256r8vnl , new Algorithm(AlgorithmType.Blake256r8vnl, "vanilla") },
                 { AlgorithmType.DaggerHashimoto , new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto") },
                 { AlgorithmType.Decred , new Algorithm(AlgorithmType.Decred, "decred") },
-                //{ AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") },
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") },
                 { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") },
                 { AlgorithmType.Equihash, new Algorithm(AlgorithmType.Equihash, "equihash") }
                 };
@@ -166,6 +166,9 @@ namespace NiceHashMiner.Devices {
                     // disable/remove daggerhashimoto
                     if (ret.ContainsKey(AlgorithmType.DaggerHashimoto)) {
                         ret.Remove(AlgorithmType.DaggerHashimoto);
+                    }
+                    if (ret.ContainsKey(AlgorithmType.CryptoNight)) {
+                        ret.Remove(AlgorithmType.CryptoNight);
                     }
                 }
                 return ret;
