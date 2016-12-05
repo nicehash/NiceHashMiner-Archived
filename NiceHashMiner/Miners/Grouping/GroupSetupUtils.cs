@@ -1,10 +1,9 @@
 ﻿using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.Grouping {
     public static class GroupSetupUtils {

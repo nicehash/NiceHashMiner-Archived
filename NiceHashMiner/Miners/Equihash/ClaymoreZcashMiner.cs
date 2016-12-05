@@ -3,16 +3,15 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
     public class ClaymoreZcashMiner : Miner {
@@ -119,11 +118,11 @@ namespace NiceHashMiner.Miners {
         protected override string GetDevicesCommandString() {
             string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -di ";
-            List<int> ids = new List<int>();
+            List<string> ids = new List<string>();
             foreach (var mPair in MiningSetup.MiningPairs) {
-                ids.Add(mPair.Device.ID);
+                ids.Add(mPair.Device.ID.ToString());
             }
-            deviceStringCommand += string.Join("", ids);
+            deviceStringCommand += StringHelper.Join("", ids);
 
             return deviceStringCommand + extraParams;
         }

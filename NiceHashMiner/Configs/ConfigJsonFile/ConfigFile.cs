@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Configs.ConfigJsonFile {
     public abstract class ConfigFile<T> where T : class {

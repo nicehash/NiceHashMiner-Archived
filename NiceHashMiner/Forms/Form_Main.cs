@@ -25,6 +25,7 @@ using System.Timers;
 namespace NiceHashMiner
 {
     using NiceHashMiner.Miners.Grouping;
+    using NiceHashMiner.Net20_backport;
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private static string VisitURL = Links.VisitURL;
@@ -181,18 +182,19 @@ namespace NiceHashMiner
             StartupTimer.Stop();
             StartupTimer = null;
 
-            if (!Helpers.Is45NetOrHigher()) {
-                MessageBox.Show(International.GetText("NET45_Not_Intsalled_msg"),
-                                International.GetText("Warning_with_Exclamation"),
-                                MessageBoxButtons.OK);
+            // reverted to .NET 2.0
+            //if (!Helpers.Is45NetOrHigher()) {
+            //    MessageBox.Show(International.GetText("NET45_Not_Intsalled_msg"),
+            //                    International.GetText("Warning_with_Exclamation"),
+            //                    MessageBoxButtons.OK);
 
-                this.Close();
-                return;
-            }
+            //    this.Close();
+            //    return;
+            //}
 
-            // 
-            CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+            // reverted to .NET 2.0
+            //CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            //CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
 
             if (!Helpers.InternalCheckIsWow64()) {
                 MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
@@ -419,12 +421,12 @@ namespace NiceHashMiner
 #if (SWITCH_TESTING)
             SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
 #endif
-            MinersManager.Instance.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
+            MinersManager.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
         }
 
 
         private void MinerStatsCheck_Tick(object sender, EventArgs e) {
-            MinersManager.Instance.MinerStatsCheck(Globals.NiceHashData);
+            MinersManager.MinerStatsCheck(Globals.NiceHashData);
         }
 
         private void InitFlowPanelStart() {
@@ -503,7 +505,7 @@ namespace NiceHashMiner
 
         private void UpdateGlobalRate()
         {
-            double TotalRate = MinersManager.Instance.GetTotalRate();
+            double TotalRate = MinersManager.GetTotalRate();
 
             if (ConfigManager.GeneralConfig.AutoScaleBTCValues && TotalRate < 0.1)
             {
@@ -687,7 +689,7 @@ namespace NiceHashMiner
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MinersManager.Instance.StopAllMiners();
+            MinersManager.StopAllMiners();
 
             MessageBoxManager.Unregister();
         }        
@@ -867,14 +869,6 @@ namespace NiceHashMiner
                                                           International.GetText("Warning_with_Exclamation"),
                                                           MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == System.Windows.Forms.DialogResult.Yes) {
-                    List<ComputeDevice> enabledDevices = new List<ComputeDevice>();
-                    HashSet<string> deviceNames = new HashSet<string>();
-                    foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                        if (cdev.Enabled && !deviceNames.Contains(cdev.Name)) {
-                            deviceNames.Add(cdev.Name);
-                            enabledDevices.Add(cdev);
-                        }
-                    }
                     BenchmarkForm = new Form_Benchmark(
                         BenchmarkPerformanceType.Standard,
                         true);
@@ -942,7 +936,7 @@ namespace NiceHashMiner
             ClearRatesALL();
 
             var btcAdress = DemoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
-            var isMining = MinersManager.Instance.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim(), btcAdress);
+            var isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim(), btcAdress);
 
             if (!DemoMode) ConfigManager.GeneralConfigFileCommit();
 
@@ -957,7 +951,7 @@ namespace NiceHashMiner
             MinerStatsCheck.Stop();
             SMAMinerCheck.Stop();
 
-            MinersManager.Instance.StopAllMiners();
+            MinersManager.StopAllMiners();
 
             textBoxBTCAddress.Enabled = true;
             textBoxWorkerName.Enabled = true;

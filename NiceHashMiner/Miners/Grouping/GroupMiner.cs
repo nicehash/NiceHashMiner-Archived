@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Net20_backport;
 
 namespace NiceHashMiner.Miners.Grouping {
     public class GroupMiner {
@@ -32,7 +31,7 @@ namespace NiceHashMiner.Miners.Grouping {
                     foreach (var pair in miningPairs) {
                         deviceNames.Add(pair.Device.NameCount);
                     }
-                    DevicesInfoString = "{ " + string.Join(", ", deviceNames) + " }";
+                    DevicesInfoString = "{ " + StringHelper.Join(", ", deviceNames) + " }";
                 }
                 // init miner
                 {

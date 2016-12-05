@@ -13,6 +13,7 @@ using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms {
     using NiceHashMiner.Miners.Grouping;
+    using NiceHashMiner.Net20_backport;
     public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator, IBenchmarkCalculation {
 
         private bool _inBenchmark = false;

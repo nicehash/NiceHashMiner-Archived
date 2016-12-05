@@ -17,6 +17,7 @@ using NiceHashMiner.Miners.Grouping;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
+using NiceHashMiner.Net20_backport;
 
 namespace NiceHashMiner
 {
@@ -120,7 +121,7 @@ namespace NiceHashMiner
 
             LastCommandLine = "";
 
-            APIPort = MinersApiPortsManager.Instance.GetAvaliablePort();
+            APIPort = MinersApiPortsManager.GetAvaliablePort();
             IsAPIReadException = false;
             IsNHLocked = false;
             IsKillAllUsedMinerProcs = false;
@@ -131,7 +132,7 @@ namespace NiceHashMiner
 
         ~Miner() {
             // free the port
-            MinersApiPortsManager.Instance.RemovePort(APIPort);
+            MinersApiPortsManager.RemovePort(APIPort);
             Helpers.ConsolePrint(MinerTAG(), "MINER DESTROYED");
         }
 
@@ -156,9 +157,9 @@ namespace NiceHashMiner
                     return String.Format(MASK, MinerDeviceName, MINER_ID, "NOT_SET");
                 }
                 // contains ids
-                List<int> ids = new List<int>();
-                foreach (var cdevs in MiningSetup.MiningPairs) ids.Add(cdevs.Device.ID);
-                _minetTag = String.Format(MASK, MinerDeviceName, MINER_ID, string.Join(",", ids));
+                List<string> ids = new List<string>();
+                foreach (var cdevs in MiningSetup.MiningPairs) ids.Add(cdevs.Device.ID.ToString());
+                _minetTag = String.Format(MASK, MinerDeviceName, MINER_ID, StringHelper.Join(",", ids));
             }
             return _minetTag;
         }
@@ -221,17 +222,17 @@ namespace NiceHashMiner
         protected void ChangeToNextAvaliablePort() {
             // change to new port
             var oldApiPort = APIPort;
-            var newApiPort = MinersApiPortsManager.Instance.GetAvaliablePort();
+            var newApiPort = MinersApiPortsManager.GetAvaliablePort();
             // check if update last command port
             if (UpdateBindPortCommand(oldApiPort, newApiPort)) {
                 Helpers.ConsolePrint(MinerTAG(), String.Format("Changing miner port from {0} to {1}",
                     oldApiPort.ToString(),
                     newApiPort.ToString()));
                 // free old set new
-                MinersApiPortsManager.Instance.RemovePort(oldApiPort);
+                MinersApiPortsManager.RemovePort(oldApiPort);
                 APIPort = newApiPort;
             } else { // release new
-                MinersApiPortsManager.Instance.RemovePort(newApiPort);
+                MinersApiPortsManager.RemovePort(newApiPort);
             }
         }
 
@@ -257,7 +258,7 @@ namespace NiceHashMiner
             foreach (var mPair in MiningSetup.MiningPairs) {
                 ids.Add(mPair.Device.ID.ToString());
             }
-            deviceStringCommand += string.Join(",", ids);
+            deviceStringCommand += StringHelper.Join(",", ids);
 
             return deviceStringCommand;
         }

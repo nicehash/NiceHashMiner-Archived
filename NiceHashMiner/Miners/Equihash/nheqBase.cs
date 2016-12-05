@@ -5,10 +5,8 @@ using NiceHashMiner.Miners.Grouping;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
     public abstract class nheqBase : Miner {

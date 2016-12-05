@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NiceHashMiner {
@@ -23,7 +21,7 @@ namespace NiceHashMiner {
             // allow only one zero
             var textBox = sender as TextBox;
             string checkText = textBox.Text;
-            if (e.KeyChar != '.' && textBox.SelectionLength != textBox.Text.Length && IsHandleZero(e, checkText) && !checkText.Contains('.')) {
+            if (e.KeyChar != '.' && textBox.SelectionLength != textBox.Text.Length && IsHandleZero(e, checkText) && !checkText.Contains(".")) {
                 e.Handled = true;
                 return;
             }

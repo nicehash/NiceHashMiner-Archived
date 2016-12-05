@@ -1,9 +1,7 @@
 ﻿using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner {
     // this class mirrors the web profitability, chech what https://www.nicehash.com/?p=calc is using for each algo

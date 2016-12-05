@@ -5,11 +5,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Utils {
     public class MinersDownloader {
@@ -127,43 +125,44 @@ namespace NiceHashMiner.Utils {
         }
 
         private void UnzipThreadRoutine() {
-            if (File.Exists(_downloadSetup.BinsZipLocation)) {
-                Helpers.ConsolePrint(TAG, _downloadSetup.BinsZipLocation + " already downloaded");
-                Helpers.ConsolePrint(TAG, "unzipping");
-                using (ZipArchive archive = ZipFile.Open(_downloadSetup.BinsZipLocation, ZipArchiveMode.Read)) {
-                    //archive.ExtractToDirectory("bin");
-                    _minerUpdateIndicator.SetMaxProgressValue(archive.Entries.Count);
-                    int prog = 0;
-                    // first create dirs
-                    foreach (ZipArchiveEntry entry in archive.Entries) {
-                        if (entry.Length == 0) {
-                            Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
-                            Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
-                            Directory.CreateDirectory(entry.FullName);
-                            _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
-                        }
-                    }
-                    // unzip files
-                    foreach (ZipArchiveEntry entry in archive.Entries) {
-                        if (entry.Length > 0) {
-                            Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
-                            Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
-                            entry.ExtractToFile(entry.FullName);
-                            _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
-                        }
-                    }
-                }
-                // after unzip stuff
-                _minerUpdateIndicator.FinishMsg(true);
-                // remove bins zip
-                try {
-                    if (File.Exists(_downloadSetup.BinsZipLocation)) {
-                        File.Delete(_downloadSetup.BinsZipLocation);
-                    }
-                } catch { }
-            } else {
-                Helpers.ConsolePrint(TAG, "UnzipThreadRoutine bin.zip file not found");
-            }
+            // TODO fix zip stuff
+            //if (File.Exists(_downloadSetup.BinsZipLocation)) {
+            //    Helpers.ConsolePrint(TAG, _downloadSetup.BinsZipLocation + " already downloaded");
+            //    Helpers.ConsolePrint(TAG, "unzipping");
+            //    using (ZipArchive archive = ZipFile.Open(_downloadSetup.BinsZipLocation, ZipArchiveMode.Read)) {
+            //        //archive.ExtractToDirectory("bin");
+            //        _minerUpdateIndicator.SetMaxProgressValue(archive.Entries.Count);
+            //        int prog = 0;
+            //        // first create dirs
+            //        foreach (ZipArchiveEntry entry in archive.Entries) {
+            //            if (entry.Length == 0) {
+            //                Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
+            //                Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
+            //                Directory.CreateDirectory(entry.FullName);
+            //                _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
+            //            }
+            //        }
+            //        // unzip files
+            //        foreach (ZipArchiveEntry entry in archive.Entries) {
+            //            if (entry.Length > 0) {
+            //                Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
+            //                Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
+            //                entry.ExtractToFile(entry.FullName);
+            //                _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
+            //            }
+            //        }
+            //    }
+            //    // after unzip stuff
+            //    _minerUpdateIndicator.FinishMsg(true);
+            //    // remove bins zip
+            //    try {
+            //        if (File.Exists(_downloadSetup.BinsZipLocation)) {
+            //            File.Delete(_downloadSetup.BinsZipLocation);
+            //        }
+            //    } catch { }
+            //} else {
+            //    Helpers.ConsolePrint(TAG, "UnzipThreadRoutine bin.zip file not found");
+            //}
         }
     }
 }

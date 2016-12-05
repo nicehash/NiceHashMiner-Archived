@@ -183,7 +183,7 @@ namespace NiceHashMiner
             string ResponseFromServer;
             try
             {
-                string ActiveMinersGroup = MinersManager.Instance.GetActiveMinersGroup();
+                string ActiveMinersGroup = MinersManager.GetActiveMinersGroup();
 
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
                 WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion;

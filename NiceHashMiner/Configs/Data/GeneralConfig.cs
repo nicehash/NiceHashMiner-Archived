@@ -1,9 +1,8 @@
 ﻿using NiceHashMiner.Enums;
+using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Configs.Data {
     [Serializable]
@@ -112,7 +111,7 @@ namespace NiceHashMiner.Configs.Data {
         public void FixSettingBounds() {
             this.ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             if (string.IsNullOrEmpty(this.DisplayCurrency)
-                || string.IsNullOrWhiteSpace(this.DisplayCurrency)) {
+                || StringHelper.IsNullOrWhiteSpace(this.DisplayCurrency)) {
                 this.DisplayCurrency = "USD";
             }
             if (this.SwitchMinSecondsFixed <= 0) {

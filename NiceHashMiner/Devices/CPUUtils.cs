@@ -3,9 +3,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices {
     public static class CPUUtils {

@@ -2,11 +2,10 @@
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.Parsing {
     static class ExtraLaunchParametersParser {
@@ -132,6 +131,37 @@ namespace NiceHashMiner.Miners.Parsing {
             return 1; // default 
         }
 
+        private static bool prevHasIgnoreParam = false;
+        private static int logCount = 0;
+
+        private static void IgnorePrintLogIbnit() {
+            prevHasIgnoreParam = false;
+            logCount = 0;
+        }
+
+        private static void IgnorePrintLog(string param, string IGNORE_PARAM, List<MinerOption> ignoreLogOpions = null) {
+            // AMD temp controll is separated and logs stuff that is ignored
+            bool printIgnore = true;
+            if (ignoreLogOpions != null) {
+                foreach (var ignoreOption in ignoreLogOpions) {
+                    if (param.Equals(ignoreOption.ShortName) || param.Equals(ignoreOption.LongName)) {
+                        printIgnore = false;
+                        prevHasIgnoreParam = true;
+                        logCount = 0;
+                        break;
+                    }
+                }
+            }
+            if (printIgnore && !prevHasIgnoreParam) {
+                LogParser(String.Format(IGNORE_PARAM, param));
+            }
+            if (logCount == 1) {
+                prevHasIgnoreParam = false;
+                logCount = 0;
+            }
+            ++logCount;
+        }
+
         private static string Parse(List<MiningPair> MiningPairs, List<MinerOption> options, bool useIfDefaults = false, List<MinerOption> ignoreLogOpions = null) {
             const string IGNORE_PARAM = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             List<MinerOptionType> optionsOrder = new List<MinerOptionType>();
@@ -159,31 +189,8 @@ namespace NiceHashMiner.Miners.Parsing {
                 LogParser(String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", pair.CurrentExtraLaunchParameters, pair.Device.UUID));
                 var parameters = pair.CurrentExtraLaunchParameters.Replace("=", "= ").Split(' ');
 
-                bool prevHasIgnoreParam = false;
-                int logCount = 0;
-                Func<string, string> ignorePrintLog = (string param) => {
-                    // AMD temp controll is separated and logs stuff that is ignored
-                    bool printIgnore = true;
-                    if (ignoreLogOpions != null) {
-                        foreach (var ignoreOption in ignoreLogOpions) {
-                            if (param.Equals(ignoreOption.ShortName) || param.Equals(ignoreOption.LongName)) {
-                                printIgnore = false;
-                                prevHasIgnoreParam = true;
-                                logCount = 0;
-                                break;
-                            }
-                        }
-                    }
-                    if (printIgnore && !prevHasIgnoreParam) {
-                        LogParser(String.Format(IGNORE_PARAM, param));
-                    }
-                    if (logCount == 1) {
-                        prevHasIgnoreParam = false;
-                        logCount = 0;
-                    }
-                    ++logCount;
-                    return ""; // fake crappy C# crap
-                };
+                IgnorePrintLogIbnit();
+
 
                 MinerOptionType currentFlag = MinerOptionType.NONE;
                 foreach (var param in parameters) {
@@ -203,14 +210,14 @@ namespace NiceHashMiner.Miners.Parsing {
                             }
                         }
                         if (isIngored) { // ignored
-                            ignorePrintLog(param);
+                            IgnorePrintLog(param, IGNORE_PARAM, ignoreLogOpions);
                         }
                     } else if (currentFlag != MinerOptionType.NONE) {
                         isOptionExist[currentFlag] = true;
                         cdevOptions[pair.Device.UUID][currentFlag] = param;
                         currentFlag = MinerOptionType.NONE;
                     } else { // problem
-                        ignorePrintLog(param);
+                        IgnorePrintLog(param, IGNORE_PARAM, ignoreLogOpions);
                     }
                 }
             }
@@ -249,10 +256,10 @@ namespace NiceHashMiner.Miners.Parsing {
                                 values.Add(cdevOptions[pair.Device.UUID][option.Type]);
                             }
                             string MASK = " {0} {1}";
-                            if(option.LongName.Contains('=')) {
+                            if(option.LongName.Contains("=")) {
                                 MASK = " {0}{1}";
                             }
-                            retVal += String.Format(MASK, option.LongName, string.Join(option.Separator, values));
+                            retVal += String.Format(MASK, option.LongName, StringHelper.Join(option.Separator, values));
                         } else if (option.FlagType == MinerOptionFlagType.SingleParam) {
                             HashSet<string> values = new HashSet<string>();
                             foreach (var pair in MiningPairs) {
@@ -264,7 +271,7 @@ namespace NiceHashMiner.Miners.Parsing {
                                 setValue = values.First();
                             }
                             string MASK = " {0} {1}";
-                            if (option.LongName.Contains('=')) {
+                            if (option.LongName.Contains("=")) {
                                 MASK = " {0}{1}";
                             }
                             retVal += String.Format(MASK, option.LongName, setValue);

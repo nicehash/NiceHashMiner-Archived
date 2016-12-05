@@ -3,12 +3,11 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Configs;
 using System.IO;
+using NiceHashMiner.Net20_backport;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
@@ -177,7 +176,7 @@ namespace NiceHashMiner.Miners {
         #endregion Start/Stop
 
         private string CalcGroupedDevicesKey(GroupedDevices group) {
-            return string.Join(", ", group);
+            return StringHelper.Join(", ", group);
         }
 
         public string GetActiveMinersGroup() {
@@ -195,7 +194,7 @@ namespace NiceHashMiner.Miners {
                 //}
             }
             if (UniqueMinerGroups.Count > 0 && IsProfitable) {
-                ActiveMinersGroup = string.Join("/", UniqueMinerGroups);
+                ActiveMinersGroup = StringHelper.Join("/", UniqueMinerGroups);
             }
 
             return ActiveMinersGroup;

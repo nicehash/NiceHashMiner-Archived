@@ -3,12 +3,11 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Net20_backport;
 
 namespace NiceHashMiner.Miners {
 
@@ -47,7 +46,7 @@ namespace NiceHashMiner.Miners {
             foreach (var mPair in MiningSetup.MiningPairs) {
                 ids.Add(mPair.Device.ID.ToString());
             }
-            deviceStringCommand += string.Join(" ", ids);
+            deviceStringCommand += StringHelper.Join(" ", ids);
             // set dag load mode
             deviceStringCommand += String.Format(" --dag-load-mode {0} ", GetDagGenerationString(DagGenerationType));
             if (DagGenerationType == DagGenerationType.Single
