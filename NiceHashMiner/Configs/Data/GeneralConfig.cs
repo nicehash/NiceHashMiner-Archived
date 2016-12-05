@@ -53,7 +53,8 @@ namespace NiceHashMiner.Configs.Data {
         public DagGenerationType EthminerDagGenerationType = DagGenerationType.SingleKeep;
         public int ApiBindPortPoolStart = 5100;
         public double MinimumProfit = 0;
-        public bool ContinueMiningIfNoInternetAccess = false;
+        //public bool ContinueMiningIfNoInternetAccess = false;
+        public bool IdleWhenNoInternetAccess = true;
         public bool DownloadInit = false;
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
@@ -101,7 +102,8 @@ namespace NiceHashMiner.Configs.Data {
             MinimumProfit = 0;
             EthminerDagGenerationType = DagGenerationType.SingleKeep;
             DownloadInit = false;
-            ContinueMiningIfNoInternetAccess = false;
+            //ContinueMiningIfNoInternetAccess = false;
+            IdleWhenNoInternetAccess = true;
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;

@@ -28,10 +28,12 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_AllowMultipleInstances = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDefaultOptimizations = new System.Windows.Forms.CheckBox();
             this.checkBox_AMD_DisableAMDTempControl = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.checkBox_HideMiningWindows = new System.Windows.Forms.CheckBox();
+            this.pictureBox_AllowMultipleInstances = new System.Windows.Forms.PictureBox();
             this.checkBox_MinimizeToTray = new System.Windows.Forms.CheckBox();
             this.pictureBox_DisableDefaultOptimizations = new System.Windows.Forms.PictureBox();
             this.pictureBox_AMD_DisableAMDTempControl = new System.Windows.Forms.PictureBox();
@@ -63,13 +65,13 @@
             this.pictureBox_LogToFile = new System.Windows.Forms.PictureBox();
             this.checkBox_DebugConsole = new System.Windows.Forms.CheckBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
-            this.checkBox_ContinueMiningIfNoInternetAccess = new System.Windows.Forms.CheckBox();
+            this.checkBox_IdleWhenNoInternetAccess = new System.Windows.Forms.CheckBox();
             this.pictureBox_WorkerName = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinProfit = new System.Windows.Forms.PictureBox();
             this.pictureBox_ServiceLocation = new System.Windows.Forms.PictureBox();
             this.pictureBox_Info_BitcoinAddress = new System.Windows.Forms.PictureBox();
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
-            this.pictureBox_ContinueMiningIfNoInternetAccess = new System.Windows.Forms.PictureBox();
+            this.pictureBox_IdleWhenNoInternetAccess = new System.Windows.Forms.PictureBox();
             this.label_BitcoinAddress = new System.Windows.Forms.Label();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.label_WorkerName = new System.Windows.Forms.Label();
@@ -118,24 +120,23 @@
             this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.textBox_MinerAPIQueryInterval = new System.Windows.Forms.TextBox();
             this.groupBoxBenchmarkTimeLimits = new System.Windows.Forms.GroupBox();
+            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
+            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.buttonAllProfit = new System.Windows.Forms.Button();
             this.buttonSelectedProfit = new System.Windows.Forms.Button();
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.pictureBox_AllowMultipleInstances = new System.Windows.Forms.PictureBox();
-            this.checkBox_AllowMultipleInstances = new System.Windows.Forms.CheckBox();
-            this.benchmarkLimitControlNVIDIA = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlCPU = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.benchmarkLimitControlAMD = new NiceHashMiner.Forms.Components.BenchmarkLimitControl();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_NVIDIAP0State)).BeginInit();
@@ -158,7 +159,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ServiceLocation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Info_BitcoinAddress)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ContinueMiningIfNoInternetAccess)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_IdleWhenNoInternetAccess)).BeginInit();
             this.groupBox_Localization.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).BeginInit();
@@ -178,7 +179,6 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -249,6 +249,17 @@
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             // 
+            // checkBox_AllowMultipleInstances
+            // 
+            this.checkBox_AllowMultipleInstances.AutoSize = true;
+            this.checkBox_AllowMultipleInstances.Location = new System.Drawing.Point(6, 289);
+            this.checkBox_AllowMultipleInstances.Name = "checkBox_AllowMultipleInstances";
+            this.checkBox_AllowMultipleInstances.Size = new System.Drawing.Size(139, 17);
+            this.checkBox_AllowMultipleInstances.TabIndex = 365;
+            this.checkBox_AllowMultipleInstances.Text = "Allow Multiple Instances";
+            this.checkBox_AllowMultipleInstances.UseVisualStyleBackColor = true;
+            this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.checkBox_DisableDefaultOptimizations_CheckedChanged);
+            // 
             // checkBox_DisableDefaultOptimizations
             // 
             this.checkBox_DisableDefaultOptimizations.AutoSize = true;
@@ -290,6 +301,16 @@
             this.checkBox_HideMiningWindows.TabIndex = 315;
             this.checkBox_HideMiningWindows.Text = "HideMiningWindows";
             this.checkBox_HideMiningWindows.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox_AllowMultipleInstances
+            // 
+            this.pictureBox_AllowMultipleInstances.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_AllowMultipleInstances.Location = new System.Drawing.Point(221, 288);
+            this.pictureBox_AllowMultipleInstances.Name = "pictureBox_AllowMultipleInstances";
+            this.pictureBox_AllowMultipleInstances.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_AllowMultipleInstances.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_AllowMultipleInstances.TabIndex = 364;
+            this.pictureBox_AllowMultipleInstances.TabStop = false;
             // 
             // checkBox_MinimizeToTray
             // 
@@ -596,13 +617,13 @@
             // 
             // groupBox_Main
             // 
-            this.groupBox_Main.Controls.Add(this.checkBox_ContinueMiningIfNoInternetAccess);
+            this.groupBox_Main.Controls.Add(this.checkBox_IdleWhenNoInternetAccess);
             this.groupBox_Main.Controls.Add(this.pictureBox_WorkerName);
             this.groupBox_Main.Controls.Add(this.pictureBox_MinProfit);
             this.groupBox_Main.Controls.Add(this.pictureBox_ServiceLocation);
             this.groupBox_Main.Controls.Add(this.pictureBox_Info_BitcoinAddress);
             this.groupBox_Main.Controls.Add(this.textBox_MinProfit);
-            this.groupBox_Main.Controls.Add(this.pictureBox_ContinueMiningIfNoInternetAccess);
+            this.groupBox_Main.Controls.Add(this.pictureBox_IdleWhenNoInternetAccess);
             this.groupBox_Main.Controls.Add(this.label_BitcoinAddress);
             this.groupBox_Main.Controls.Add(this.label_MinProfit);
             this.groupBox_Main.Controls.Add(this.label_WorkerName);
@@ -617,16 +638,16 @@
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
             // 
-            // checkBox_ContinueMiningIfNoInternetAccess
+            // checkBox_IdleWhenNoInternetAccess
             // 
-            this.checkBox_ContinueMiningIfNoInternetAccess.AutoSize = true;
-            this.checkBox_ContinueMiningIfNoInternetAccess.Location = new System.Drawing.Point(10, 149);
-            this.checkBox_ContinueMiningIfNoInternetAccess.Name = "checkBox_ContinueMiningIfNoInternetAccess";
-            this.checkBox_ContinueMiningIfNoInternetAccess.Size = new System.Drawing.Size(205, 17);
-            this.checkBox_ContinueMiningIfNoInternetAccess.TabIndex = 365;
-            this.checkBox_ContinueMiningIfNoInternetAccess.Text = "Continue Mining If No Internet Access";
-            this.checkBox_ContinueMiningIfNoInternetAccess.UseVisualStyleBackColor = true;
-            this.checkBox_ContinueMiningIfNoInternetAccess.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+            this.checkBox_IdleWhenNoInternetAccess.AutoSize = true;
+            this.checkBox_IdleWhenNoInternetAccess.Location = new System.Drawing.Point(10, 149);
+            this.checkBox_IdleWhenNoInternetAccess.Name = "checkBox_IdleWhenNoInternetAccess";
+            this.checkBox_IdleWhenNoInternetAccess.Size = new System.Drawing.Size(205, 17);
+            this.checkBox_IdleWhenNoInternetAccess.TabIndex = 365;
+            this.checkBox_IdleWhenNoInternetAccess.Text = "Continue Mining If No Internet Access";
+            this.checkBox_IdleWhenNoInternetAccess.UseVisualStyleBackColor = true;
+            this.checkBox_IdleWhenNoInternetAccess.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             // 
             // pictureBox_WorkerName
             // 
@@ -675,15 +696,15 @@
             this.textBox_MinProfit.Size = new System.Drawing.Size(237, 20);
             this.textBox_MinProfit.TabIndex = 334;
             // 
-            // pictureBox_ContinueMiningIfNoInternetAccess
+            // pictureBox_IdleWhenNoInternetAccess
             // 
-            this.pictureBox_ContinueMiningIfNoInternetAccess.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ContinueMiningIfNoInternetAccess.Location = new System.Drawing.Point(302, 149);
-            this.pictureBox_ContinueMiningIfNoInternetAccess.Name = "pictureBox_ContinueMiningIfNoInternetAccess";
-            this.pictureBox_ContinueMiningIfNoInternetAccess.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_ContinueMiningIfNoInternetAccess.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_ContinueMiningIfNoInternetAccess.TabIndex = 364;
-            this.pictureBox_ContinueMiningIfNoInternetAccess.TabStop = false;
+            this.pictureBox_IdleWhenNoInternetAccess.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_IdleWhenNoInternetAccess.Location = new System.Drawing.Point(302, 149);
+            this.pictureBox_IdleWhenNoInternetAccess.Name = "pictureBox_IdleWhenNoInternetAccess";
+            this.pictureBox_IdleWhenNoInternetAccess.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_IdleWhenNoInternetAccess.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_IdleWhenNoInternetAccess.TabIndex = 364;
+            this.pictureBox_IdleWhenNoInternetAccess.TabStop = false;
             // 
             // label_BitcoinAddress
             // 
@@ -1207,6 +1228,36 @@
             this.groupBoxBenchmarkTimeLimits.TabStop = false;
             this.groupBoxBenchmarkTimeLimits.Text = "Benchmark Time Limits:";
             // 
+            // benchmarkLimitControlNVIDIA
+            // 
+            this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
+            this.benchmarkLimitControlNVIDIA.Location = new System.Drawing.Point(9, 17);
+            this.benchmarkLimitControlNVIDIA.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlNVIDIA.Name = "benchmarkLimitControlNVIDIA";
+            this.benchmarkLimitControlNVIDIA.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlNVIDIA.TabIndex = 4;
+            this.benchmarkLimitControlNVIDIA.TimeLimits = null;
+            // 
+            // benchmarkLimitControlCPU
+            // 
+            this.benchmarkLimitControlCPU.GroupName = "CPU";
+            this.benchmarkLimitControlCPU.Location = new System.Drawing.Point(209, 17);
+            this.benchmarkLimitControlCPU.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlCPU.Name = "benchmarkLimitControlCPU";
+            this.benchmarkLimitControlCPU.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlCPU.TabIndex = 3;
+            this.benchmarkLimitControlCPU.TimeLimits = null;
+            // 
+            // benchmarkLimitControlAMD
+            // 
+            this.benchmarkLimitControlAMD.GroupName = "AMD";
+            this.benchmarkLimitControlAMD.Location = new System.Drawing.Point(409, 17);
+            this.benchmarkLimitControlAMD.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.benchmarkLimitControlAMD.Name = "benchmarkLimitControlAMD";
+            this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(177, 121);
+            this.benchmarkLimitControlAMD.TabIndex = 5;
+            this.benchmarkLimitControlAMD.TimeLimits = null;
+            // 
             // tabPageDevicesAlgos
             // 
             this.tabPageDevicesAlgos.Controls.Add(this.devicesListViewEnableControl1);
@@ -1222,6 +1273,25 @@
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
             // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(352, 130);
+            this.devicesListViewEnableControl1.TabIndex = 397;
+            // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(363, 64);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 278);
+            this.algorithmSettingsControl1.TabIndex = 396;
+            // 
             // groupBoxAlgorithmSettings
             // 
             this.groupBoxAlgorithmSettings.Controls.Add(this.algorithmsListView1);
@@ -1231,6 +1301,16 @@
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
+            // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.BenchmarkCalculation = null;
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.IsInBenchmark = false;
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 15);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(339, 191);
+            this.algorithmsListView1.TabIndex = 2;
             // 
             // buttonAllProfit
             // 
@@ -1285,86 +1365,6 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // pictureBox_AllowMultipleInstances
-            // 
-            this.pictureBox_AllowMultipleInstances.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_AllowMultipleInstances.Location = new System.Drawing.Point(221, 288);
-            this.pictureBox_AllowMultipleInstances.Name = "pictureBox_AllowMultipleInstances";
-            this.pictureBox_AllowMultipleInstances.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_AllowMultipleInstances.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_AllowMultipleInstances.TabIndex = 364;
-            this.pictureBox_AllowMultipleInstances.TabStop = false;
-            // 
-            // checkBox_AllowMultipleInstances
-            // 
-            this.checkBox_AllowMultipleInstances.AutoSize = true;
-            this.checkBox_AllowMultipleInstances.Location = new System.Drawing.Point(6, 289);
-            this.checkBox_AllowMultipleInstances.Name = "checkBox_AllowMultipleInstances";
-            this.checkBox_AllowMultipleInstances.Size = new System.Drawing.Size(139, 17);
-            this.checkBox_AllowMultipleInstances.TabIndex = 365;
-            this.checkBox_AllowMultipleInstances.Text = "Allow Multiple Instances";
-            this.checkBox_AllowMultipleInstances.UseVisualStyleBackColor = true;
-            this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.checkBox_DisableDefaultOptimizations_CheckedChanged);
-            // 
-            // benchmarkLimitControlNVIDIA
-            // 
-            this.benchmarkLimitControlNVIDIA.GroupName = "NVIDIA";
-            this.benchmarkLimitControlNVIDIA.Location = new System.Drawing.Point(9, 17);
-            this.benchmarkLimitControlNVIDIA.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlNVIDIA.Name = "benchmarkLimitControlNVIDIA";
-            this.benchmarkLimitControlNVIDIA.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlNVIDIA.TabIndex = 4;
-            this.benchmarkLimitControlNVIDIA.TimeLimits = null;
-            // 
-            // benchmarkLimitControlCPU
-            // 
-            this.benchmarkLimitControlCPU.GroupName = "CPU";
-            this.benchmarkLimitControlCPU.Location = new System.Drawing.Point(209, 17);
-            this.benchmarkLimitControlCPU.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlCPU.Name = "benchmarkLimitControlCPU";
-            this.benchmarkLimitControlCPU.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlCPU.TabIndex = 3;
-            this.benchmarkLimitControlCPU.TimeLimits = null;
-            // 
-            // benchmarkLimitControlAMD
-            // 
-            this.benchmarkLimitControlAMD.GroupName = "AMD";
-            this.benchmarkLimitControlAMD.Location = new System.Drawing.Point(409, 17);
-            this.benchmarkLimitControlAMD.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.benchmarkLimitControlAMD.Name = "benchmarkLimitControlAMD";
-            this.benchmarkLimitControlAMD.Size = new System.Drawing.Size(177, 121);
-            this.benchmarkLimitControlAMD.TabIndex = 5;
-            this.benchmarkLimitControlAMD.TimeLimits = null;
-            // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(352, 130);
-            this.devicesListViewEnableControl1.TabIndex = 397;
-            // 
-            // algorithmSettingsControl1
-            // 
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(363, 64);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 278);
-            this.algorithmSettingsControl1.TabIndex = 396;
-            // 
-            // algorithmsListView1
-            // 
-            this.algorithmsListView1.BenchmarkCalculation = null;
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 15);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(339, 191);
-            this.algorithmsListView1.TabIndex = 2;
-            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1384,6 +1384,7 @@
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_NVIDIAP0State)).EndInit();
@@ -1408,7 +1409,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ServiceLocation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Info_BitcoinAddress)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ContinueMiningIfNoInternetAccess)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_IdleWhenNoInternetAccess)).EndInit();
             this.groupBox_Localization.ResumeLayout(false);
             this.groupBox_Localization.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
@@ -1430,7 +1431,6 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1540,8 +1540,8 @@
         private System.Windows.Forms.PictureBox pictureBox_AMD_DisableAMDTempControl;
         private System.Windows.Forms.CheckBox checkBox_DisableDefaultOptimizations;
         private System.Windows.Forms.PictureBox pictureBox_DisableDefaultOptimizations;
-        private System.Windows.Forms.CheckBox checkBox_ContinueMiningIfNoInternetAccess;
-        private System.Windows.Forms.PictureBox pictureBox_ContinueMiningIfNoInternetAccess;
+        private System.Windows.Forms.CheckBox checkBox_IdleWhenNoInternetAccess;
+        private System.Windows.Forms.PictureBox pictureBox_IdleWhenNoInternetAccess;
         private System.Windows.Forms.PictureBox pictureBox_Use3rdPartyMiners;
         private System.Windows.Forms.CheckBox checkBox_Use3rdPartyMiners;
         private System.Windows.Forms.CheckBox checkBox_AllowMultipleInstances;

@@ -44,9 +44,6 @@ namespace NiceHashMiner.Miners {
         // check internet connection 
         private Timer _internetCheckTimer;
         
-        //// 
-        //private Timer _miningStatusCheckTimer;
-        //bool CheckStatus = false;
 
         public bool IsMiningEnabled {
             get {
@@ -86,11 +83,7 @@ namespace NiceHashMiner.Miners {
             // set internet checking
             _internetCheckTimer = new Timer();
             _internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
-            _internetCheckTimer.Interval = 1000 * 30 * 1; // every minute or 5?? // 1000 * 60 * 1
-
-            //_miningStatusCheckTimer = new Timer();
-            //_miningStatusCheckTimer.Elapsed += MiningStatusCheckTimer_Tick;
-            //_miningStatusCheckTimer.Interval = 1000 * 30;
+            _internetCheckTimer.Interval = 1000 * 1; // every minute
 
             // assume profitable
             IsProfitable = true;
@@ -100,7 +93,6 @@ namespace NiceHashMiner.Miners {
             if (IsMiningEnabled) {
                 _preventSleepTimer.Start();
                 _internetCheckTimer.Start();
-                //_miningStatusCheckTimer.Start();
             }
 
             IsMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
@@ -108,7 +100,7 @@ namespace NiceHashMiner.Miners {
 
         #region Timers stuff
         private void InternetCheckTimer_Tick(object sender, EventArgs e) {
-            if (ConfigManager.GeneralConfig.ContinueMiningIfNoInternetAccess == false) {
+            if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess) {
                 IsConnectedToInternet = Helpers.IsConnectedToInternet();
             }
         }
@@ -118,9 +110,6 @@ namespace NiceHashMiner.Miners {
             Helpers.PreventSleep();
         }
 
-        //private void MiningStatusCheckTimer_Tick(object sender, ElapsedEventArgs e) {
-        //    CheckStatus = true;
-        //}
         #endregion
 
         #region Start/Stop
@@ -129,12 +118,15 @@ namespace NiceHashMiner.Miners {
                 foreach (var groupMiner in _runningGroupMiners.Values) {
                     groupMiner.End();
                 }
+                _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
             if (_ethminerNVIDIAPaused != null) {
                 _ethminerNVIDIAPaused.End();
+                _ethminerNVIDIAPaused = null;
             }
             if (_ethminerAMDPaused != null) {
                 _ethminerAMDPaused.End();
+                _ethminerAMDPaused = null;
             }
             if (_mainFormRatesComunication != null) {
                 _mainFormRatesComunication.ClearRatesALL();
@@ -143,7 +135,6 @@ namespace NiceHashMiner.Miners {
             // restroe/enable sleep
             _preventSleepTimer.Stop();
             _internetCheckTimer.Stop();
-            //_miningStatusCheckTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
 
             // delete generated bin files
@@ -169,12 +160,15 @@ namespace NiceHashMiner.Miners {
                 foreach (var groupMiner in _runningGroupMiners.Values) {
                     groupMiner.End();
                 }
+                _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
             if (_ethminerNVIDIAPaused != null) {
                 _ethminerNVIDIAPaused.End();
+                _ethminerNVIDIAPaused = null;
             }
             if (_ethminerAMDPaused != null) {
                 _ethminerAMDPaused.End();
+                _ethminerAMDPaused = null;
             }
             if (_mainFormRatesComunication != null) {
                 _mainFormRatesComunication.ClearRates(-1);

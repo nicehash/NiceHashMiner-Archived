@@ -31,6 +31,8 @@ namespace NiceHashMiner.Forms {
         private Timer _benchmarkingTimer;
         private int dotCount = 0;
 
+        public bool StartMining { get; private set; }
+
         private struct DeviceAlgo {
             public string Device { get; set; }
             public string Algorithm { get; set; }
@@ -101,6 +103,7 @@ namespace NiceHashMiner.Forms {
             InitializeComponent();
             this.Icon = NiceHashMiner.Properties.Resources.logo;
 
+            StartMining = false;
             _singleBenchmarkType = singleBenchmarkType;
 
             benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
@@ -201,6 +204,7 @@ namespace NiceHashMiner.Forms {
             groupBoxBenchmarkProgress.Text = International.GetText("FormBenchmark_Benchmark_GroupBoxStatus");
             radioButton_SelectedUnbenchmarked.Text = International.GetText("FormBenchmark_Benchmark_All_Selected_Unbenchmarked");
             radioButton_RE_SelectedUnbenchmarked.Text = International.GetText("FormBenchmark_Benchmark_All_Selected_ReUnbenchmarked");
+            checkBox_StartMiningAfterBenchmark.Text = International.GetText("Form_Benchmark_checkbox_StartMiningAfterBenchmark");
         }
 
         private void StartStopBtn_Click(object sender, EventArgs e) {
@@ -441,12 +445,12 @@ namespace NiceHashMiner.Forms {
 
             BenchmarkStoppedGUISettings();
             // check if all ok
-            if(_benchmarkFailedAlgoPerDev.Count == 0) {
+            if(_benchmarkFailedAlgoPerDev.Count == 0 && StartMining == false) {
                 MessageBox.Show(
                     International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
                     International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
                     MessageBoxButtons.OK);
-            } else {
+            } else if (StartMining == false) {
                 var result = MessageBox.Show(
                     International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
                     International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
@@ -465,7 +469,7 @@ namespace NiceHashMiner.Forms {
                     }
                 }
             }
-            if (ExitWhenFinished) {
+            if (ExitWhenFinished || StartMining) {
                 this.Close();
             }
         }
@@ -473,7 +477,6 @@ namespace NiceHashMiner.Forms {
 
         public void SetCurrentStatus(string status) {
             this.Invoke((MethodInvoker)delegate {
-                //algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
                 algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, getDotsWaitString());
             });
         }
@@ -596,6 +599,10 @@ namespace NiceHashMiner.Forms {
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
             algorithmsListView1.ResetListItemColors();
+        }
+
+        private void checkBox_StartMiningAfterBenchmark_CheckedChanged(object sender, EventArgs e) {
+            this.StartMining = this.checkBox_StartMiningAfterBenchmark.Checked;
         }
 
     }

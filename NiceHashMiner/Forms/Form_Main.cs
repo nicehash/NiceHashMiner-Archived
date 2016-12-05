@@ -44,7 +44,7 @@ namespace NiceHashMiner
         private Random R;
 
         private Form_Loading LoadingScreen;
-        private Form BenchmarkForm;
+        private Form_Benchmark BenchmarkForm;
 
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
@@ -699,9 +699,13 @@ namespace NiceHashMiner
             BenchmarkForm = new Form_Benchmark();
             SetChildFormCenter(BenchmarkForm);
             BenchmarkForm.ShowDialog();
+            bool startMining = BenchmarkForm.StartMining;
             BenchmarkForm = null;
 
             InitMainConfigGUIData();
+            if (startMining) {
+                buttonStartMining_Click(null, null);
+            }
         }
 
 
@@ -732,6 +736,9 @@ namespace NiceHashMiner
             if (StartMining(true) == false) {
                 IsManuallyStarted = false;
                 StopMining();
+                MessageBox.Show(International.GetText("Form_Main_StartMiningReturnedFalse"),
+                                International.GetText("Error_with_Exclamation"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -837,48 +844,60 @@ namespace NiceHashMiner
                 return false;
             }
 
-            //// TODO
-            //// first value is a boolean if initialized or not
-            //var tuplePair = DeviceBenchmarkConfigManager.Instance.IsEnabledBenchmarksInitialized();
-            //bool isBenchInit = tuplePair.Item1;
-            //Dictionary<string, List<AlgorithmType>> nonBenchmarkedPerDevice = tuplePair.Item2;
-            //// Check if the user has run benchmark first
-            //if (!isBenchInit) {
-            //    DialogResult result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
-            //                                              International.GetText("Warning_with_Exclamation"),
-            //                                              MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-            //    if (result == System.Windows.Forms.DialogResult.Yes) {
-            //        List<ComputeDevice> enabledDevices = new List<ComputeDevice>();
-            //        HashSet<string> deviceNames = new HashSet<string>();
-            //        foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-            //            if (cdev.Enabled && !deviceNames.Contains(cdev.Name)) {
-            //                deviceNames.Add(cdev.Name);
-            //                enabledDevices.Add(cdev);
-            //            }
-            //        }
-            //        BenchmarkForm = new Form_Benchmark(
-            //            BenchmarkPerformanceType.Standard,
-            //            true);
-            //        SetChildFormCenter(BenchmarkForm);
-            //        BenchmarkForm.ShowDialog();
-            //        BenchmarkForm = null;
-            //        InitMainConfigGUIData();
-            //    } else if (result == System.Windows.Forms.DialogResult.No) {
-            //        // check devices without benchmarks
-            //        foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-            //            bool Enabled = false;
-            //            foreach (var algo in cdev.AlgorithmSettings) {
-            //                if (algo.Value.BenchmarkSpeed > 0) {
-            //                    Enabled = true;
-            //                    break;
-            //                }
-            //            }
-            //            cdev.Enabled = Enabled;
-            //        }
-            //    } else {
-            //        return;
-            //    }
-            //}
+
+            // Check if there are unbenchmakred algorithms
+            bool isBenchInit = true;
+            bool hasAnyAlgoEnabled = false;
+            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                if (cdev.Enabled) {
+                    foreach (var algo in cdev.AlgorithmSettings.Values) {
+                        if (algo.Skip == false) {
+                            hasAnyAlgoEnabled = true;
+                            if (algo.BenchmarkSpeed == 0) {
+                                isBenchInit = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            // Check if the user has run benchmark first
+            if (!isBenchInit) {
+                DialogResult result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
+                                                          International.GetText("Warning_with_Exclamation"),
+                                                          MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == System.Windows.Forms.DialogResult.Yes) {
+                    List<ComputeDevice> enabledDevices = new List<ComputeDevice>();
+                    HashSet<string> deviceNames = new HashSet<string>();
+                    foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                        if (cdev.Enabled && !deviceNames.Contains(cdev.Name)) {
+                            deviceNames.Add(cdev.Name);
+                            enabledDevices.Add(cdev);
+                        }
+                    }
+                    BenchmarkForm = new Form_Benchmark(
+                        BenchmarkPerformanceType.Standard,
+                        true);
+                    SetChildFormCenter(BenchmarkForm);
+                    BenchmarkForm.ShowDialog();
+                    BenchmarkForm = null;
+                    InitMainConfigGUIData();
+                } else if (result == System.Windows.Forms.DialogResult.No) {
+                    // check devices without benchmarks
+                    foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                        bool Enabled = false;
+                        foreach (var algo in cdev.AlgorithmSettings) {
+                            if (algo.Value.BenchmarkSpeed > 0) {
+                                Enabled = true;
+                                break;
+                            }
+                        }
+                        cdev.Enabled = Enabled;
+                    }
+                } else {
+                    return false;
+                }
+            }
 
             // check if any device enabled
             // check devices without benchmarks
@@ -892,6 +911,14 @@ namespace NiceHashMiner
             if (noDeviceEnabled) {
                 if (showWarnings) {
                     DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_For_Mining"),
+                                                          International.GetText("Warning_with_Exclamation"),
+                                                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                return false;
+            }
+            if (!hasAnyAlgoEnabled) {
+                if (showWarnings) {
+                    DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_Algorithms_For_Mining"),
                                                           International.GetText("Warning_with_Exclamation"),
                                                           MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
