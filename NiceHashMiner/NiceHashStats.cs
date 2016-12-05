@@ -190,10 +190,10 @@ namespace NiceHashMiner
                 if (worker.Length > 64) worker = worker.Substring(0, 64);
                 WR.Headers.Add("NiceHash-Worker-ID", worker);
                 WR.Headers.Add("NHM-Active-Miners-Group", ActiveMinersGroup);
-                WR.Timeout = 10000;
+                WR.Timeout = 30 * 1000;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 10000;
+                SS.ReadTimeout = 20 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromServer = Reader.ReadToEnd();
                 if (ResponseFromServer.Length == 0 || ResponseFromServer[0] != '{')

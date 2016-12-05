@@ -38,7 +38,7 @@ namespace NiceHashMiner.Devices
                     if(leftPart < b.leftPart) {
                         return true;
                     }
-                    if (getRightVal(rightPart) < getRightVal(b.rightPart)) {
+                    if (leftPart == b.leftPart && getRightVal(rightPart) < getRightVal(b.rightPart)) {
                         return true;
                     }
                     return false;
