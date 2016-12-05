@@ -73,7 +73,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
             try {
                 if (File.Exists(_filePathOld))
                     File.Delete(_filePathOld);
-                File.Move(_filePath, _filePathOld);
+                File.Copy(_filePath, _filePathOld, true);
             } catch { }
         }
     }

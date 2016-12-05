@@ -207,25 +207,6 @@ namespace NiceHashMiner.Utils {
                         } else {
                             Helpers.ConsolePrint(TAG, "Cannot start 7zr.exe");
                         }
-
-                        //// first create dirs
-                        //foreach (ZipArchiveEntry entry in archive.Entries) {
-                        //    if (entry.Length == 0) {
-                        //        Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
-                        //        Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
-                        //        Directory.CreateDirectory(entry.FullName);
-                        //        _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
-                        //    }
-                        //}
-                        //// unzip files
-                        //foreach (ZipArchiveEntry entry in archive.Entries) {
-                        //    if (entry.Length > 0) {
-                        //        Helpers.ConsolePrint("ZipArchiveEntry", entry.FullName);
-                        //        Helpers.ConsolePrint("ZipArchiveEntry", entry.Length.ToString());
-                        //        entry.ExtractToFile(entry.FullName);
-                        //        _minerUpdateIndicator.SetProgressValueAndMsg(prog++, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), ((double)(prog) / (double)(archive.Entries.Count) * 100).ToString("F2")));
-                        //    }
-                        //}
                     }
                     // after unzip stuff
                     _minerUpdateIndicator.FinishMsg(true);
