@@ -1,5 +1,6 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
@@ -7,11 +8,7 @@ using System.Text;
 
 namespace NiceHashMiner.Miners {
     public static class MinersApiPortsManager {
-        //private static HashSet<int> _usedPorts;
-        
-        //static MinersApiPortsManager() {
-        //    _usedPorts = new HashSet<int>();
-        //}
+        private static HashSet<int> _usedPorts = new HashSet<int>();
 
         private static bool IsPortAvaliable(int port) {
             bool isAvailable = true;
@@ -44,7 +41,7 @@ namespace NiceHashMiner.Miners {
             int port = ConfigManager.GeneralConfig.ApiBindPortPoolStart;
             int newPortEnd = port + 3000;
             for (; port < newPortEnd; ++port) {
-                if (IsPortAvaliable(port) /*&& _usedPorts.Add(port)*/) {
+                if (IsPortAvaliable(port) && _usedPorts.Add(port)) {
                     break;
                 }
             }
@@ -52,7 +49,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public static void RemovePort(int port) {
-            //_usedPorts.Remove(port);
+            _usedPorts.Remove(port);
         }
     }
 }

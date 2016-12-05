@@ -5,10 +5,12 @@ using System.Text;
 namespace NiceHashMiner.Net20_backport {
     public class HashSet<T> : List<T> {
 
-        public new void Add(T item) {
+        public new bool Add(T item) {
             if (this.Contains(item) == false) {
                 base.Add(item);
+                return true;
             }
+            return false;
         }
 
         public T First() {
