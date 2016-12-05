@@ -49,7 +49,7 @@ namespace NiceHashMiner.Devices {
             if (!_isEtherumCapableInit) {
                 _isEtherumCapableInit = true;
                 // check if 2GB device memory
-                _isEtherumCapable = _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE >= ComputeDevice.MEMORY_2GB;
+                _isEtherumCapable = _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE >= ComputeDevice.MEMORY_3GB;
             }
             return _isEtherumCapable;
         }

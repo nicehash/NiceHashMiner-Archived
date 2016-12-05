@@ -33,7 +33,7 @@ namespace NiceHashMiner.Devices {
                 _isEtherumCapableInit = true;
                 _isEtherumCapable = SM_major == 3 || SM_major == 5 || SM_major == 6;
                 // check if 2GB device memory
-                _isEtherumCapable = _isEtherumCapable && DeviceGlobalMemory >= ComputeDevice.MEMORY_2GB;
+                _isEtherumCapable = _isEtherumCapable && DeviceGlobalMemory >= ComputeDevice.MEMORY_3GB;
 
                 // exception devices
                 if (DeviceName.Contains("750") && DeviceName.Contains("Ti")) {

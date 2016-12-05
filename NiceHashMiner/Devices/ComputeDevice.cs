@@ -31,7 +31,7 @@ namespace NiceHashMiner.Devices
 
         // GPU extras
         public readonly bool IsEtherumCapale;
-        public static readonly ulong MEMORY_2GB = 2147483648;
+        public static readonly ulong MEMORY_3GB = 3221225472;
 
         //CudaDevice _cudaDevice = null;
         //AmdGpuDevice _amdDevice = null;
