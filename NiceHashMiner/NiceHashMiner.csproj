@@ -344,11 +344,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="LinqBridge.dll" />
     <Content Include="Resources\info_black_18.png" />
     <Content Include="Resources\info_black_36.png" />
     <Content Include="Resources\logo.ico" />
-    <Content Include="SharpCompress.dll" />
     <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
     <Content Include="Resources\NHM_help_50px.png" />
   </ItemGroup>
