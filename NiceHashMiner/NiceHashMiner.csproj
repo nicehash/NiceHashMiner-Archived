@@ -55,12 +55,18 @@
     <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LinqBridge">
+      <HintPath>..\3rdparty\sharpcompress-0.11\LinqBridge.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3rdparty\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\3rdparty\json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress">
+      <HintPath>..\3rdparty\sharpcompress-0.11\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
