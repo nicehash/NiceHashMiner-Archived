@@ -79,7 +79,15 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
                 }
 
-                Application.Run(new Form_Main());
+                // check WMI
+                if (Helpers.IsWMIEnabled()) {
+                    Application.Run(new Form_Main());
+                }
+                else {
+                    MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
+                                                            International.GetText("Program_WMI_Error_Title"),
+                                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

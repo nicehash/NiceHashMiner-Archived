@@ -334,6 +334,8 @@
         "Form_Settings_General_AllowMultipleInstances_ToolTip": "When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).",
         "Form_Main_No_Device_Enabled_Algorithms_For_Mining": "There are no enabled algorithms for selected devices. Go to Settings or Benchmarks and enable at least 1 Algorithm.",
         "Form_Benchmark_checkbox_StartMiningAfterBenchmark": "Start mining after benchmark",
-        "Form_Main_StartMiningReturnedFalse": "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm."
+        "Form_Main_StartMiningReturnedFalse": "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.",
+        "Program_WMI_Error_Text": "NiceHash Miner cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner.",
+        "Program_WMI_Error_Title": "Windows Management Instrumentation Error",
     }
 }

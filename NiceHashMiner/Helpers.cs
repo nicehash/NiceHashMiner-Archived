@@ -246,5 +246,17 @@ namespace NiceHashMiner
             }
         }
 
+        // IsWMI enabled
+        public static bool IsWMIEnabled() {
+            try {
+                ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
+                ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
+                return true;
+            }
+            catch {
+                ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
+            }
+            return false;
+        }
     }
 }
