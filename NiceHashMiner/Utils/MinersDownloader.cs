@@ -1,4 +1,7 @@
 ﻿using NiceHashMiner.Interfaces;
+using SharpCompress.Archive.SevenZip;
+using SharpCompress.Common;
+using SharpCompress.Reader;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -165,47 +168,81 @@ namespace NiceHashMiner.Utils {
             //    Helpers.ConsolePrint(TAG, "UnzipThreadRoutine bin.zip file not found");
             //}
 
+            ///////////////////////
+            //try {
+            //    if (File.Exists(_downloadSetup.BinsZipLocation)) {
+            //        Helpers.ConsolePrint(TAG, _downloadSetup.BinsZipLocation + " already downloaded");
+            //        Helpers.ConsolePrint(TAG, "unzipping");
+            //        using (Process p_7zr = new Process()) {
+            //            // set to 100%
+            //            _minerUpdateIndicator.SetMaxProgressValue(100);
+            //            double prog = 0;
+            //            // set proc
+            //            p_7zr.StartInfo.FileName = "7zr.exe";
+            //            p_7zr.StartInfo.Arguments = String.Format("-y x {0}", _downloadSetup.BinsZipLocation);
+            //            p_7zr.StartInfo.UseShellExecute = false;
+            //            p_7zr.StartInfo.RedirectStandardError = true;
+            //            p_7zr.StartInfo.RedirectStandardOutput = true;
+            //            p_7zr.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            //            p_7zr.StartInfo.CreateNoWindow = true;
+
+            //            if (p_7zr.Start()) {
+            //                string readLine = "";
+            //                bool isOk = false;
+            //                do {
+            //                    readLine = p_7zr.StandardOutput.ReadLine();
+            //                    Helpers.ConsolePrint("ZipArchiveEntry_7zr.exe", readLine);
+            //                    if (readLine != null && readLine.Contains("%")) {
+            //                        Helpers.ConsolePrint("ZipArchiveEntry_7zr.exe", readLine);
+            //                        string parseNumStr = readLine.Substring(0, readLine.IndexOf("%") + 1).Trim();
+            //                        double progTmp = Helpers.ParseDouble(parseNumStr);
+            //                        if (progTmp > 0) {
+            //                            prog = progTmp;
+            //                            if (prog > 100) prog = 100;
+            //                            _minerUpdateIndicator.SetProgressValueAndMsg((int)prog, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
+            //                        }
+            //                    }
+            //                    if (readLine != null && readLine.Contains("Ok")) {
+            //                        isOk = true;
+            //                        prog = 100;
+            //                        _minerUpdateIndicator.SetProgressValueAndMsg((int)prog, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
+            //                    }
+            //                } while (!p_7zr.StandardOutput.EndOfStream);
+            //            } else {
+            //                Helpers.ConsolePrint(TAG, "Cannot start 7zr.exe");
+            //            }
+            //        }
+            //        // after unzip stuff
+            //        _minerUpdateIndicator.FinishMsg(true);
+            //        // remove bins zip
+            //        try {
+            //            if (File.Exists(_downloadSetup.BinsZipLocation)) {
+            //                File.Delete(_downloadSetup.BinsZipLocation);
+            //            }
+            //        } catch { }
+            //    } else {
+            //        Helpers.ConsolePrint(TAG, String.Format("UnzipThreadRoutine {0} file not found", _downloadSetup.BinsZipLocation));
+            //    }
+            //} catch (Exception) {
+            //    Helpers.ConsolePrint(TAG, "UnzipThreadRoutine has encountered an error while");
+            //    // TODO show notification to the user to download and extract manually
+            //}
+
             try {
                 if (File.Exists(_downloadSetup.BinsZipLocation)) {
+                    
                     Helpers.ConsolePrint(TAG, _downloadSetup.BinsZipLocation + " already downloaded");
                     Helpers.ConsolePrint(TAG, "unzipping");
-                    using (Process p_7zr = new Process()) {
-                        // set to 100%
-                        _minerUpdateIndicator.SetMaxProgressValue(100);
-                        double prog = 0;
-                        // set proc
-                        p_7zr.StartInfo.FileName = "7zr.exe";
-                        p_7zr.StartInfo.Arguments = String.Format("-y x {0}", _downloadSetup.BinsZipLocation);
-                        p_7zr.StartInfo.UseShellExecute = false;
-                        p_7zr.StartInfo.RedirectStandardError = true;
-                        p_7zr.StartInfo.RedirectStandardOutput = true;
-                        p_7zr.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        p_7zr.StartInfo.CreateNoWindow = true;
-
-                        if (p_7zr.Start()) {
-                            string readLine = "";
-                            bool isOk = false;
-                            do {
-                                readLine = p_7zr.StandardOutput.ReadLine();
-                                Helpers.ConsolePrint("ZipArchiveEntry_7zr.exe", readLine);
-                                if (readLine != null && readLine.Contains("%")) {
-                                    Helpers.ConsolePrint("ZipArchiveEntry_7zr.exe", readLine);
-                                    string parseNumStr = readLine.Substring(0, readLine.IndexOf("%") + 1).Trim();
-                                    double progTmp = Helpers.ParseDouble(parseNumStr);
-                                    if (progTmp > 0) {
-                                        prog = progTmp;
-                                        if (prog > 100) prog = 100;
-                                        _minerUpdateIndicator.SetProgressValueAndMsg((int)prog, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
-                                    }
+                    using (var archive = SevenZipArchive.Open(_downloadSetup.BinsZipLocation)) {
+                        var reader = archive.ExtractAllEntries();
+                        //var openedStream = reader.OpenEntryStream();
+                        while (reader.MoveToNextEntry()) {
+                            try {
+                                if (!reader.Entry.IsDirectory) {
+                                    Helpers.ConsolePrint(TAG, reader.Entry.Key);
+                                    reader.WriteEntryToDirectory("", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
                                 }
-                                if (readLine != null && readLine.Contains("Ok")) {
-                                    isOk = true;
-                                    prog = 100;
-                                    _minerUpdateIndicator.SetProgressValueAndMsg((int)prog, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
-                                }
-                            } while (!p_7zr.StandardOutput.EndOfStream);
-                        } else {
-                            Helpers.ConsolePrint(TAG, "Cannot start 7zr.exe");
+                            } catch { }
                         }
                     }
                     // after unzip stuff
@@ -219,9 +256,8 @@ namespace NiceHashMiner.Utils {
                 } else {
                     Helpers.ConsolePrint(TAG, String.Format("UnzipThreadRoutine {0} file not found", _downloadSetup.BinsZipLocation));
                 }
-            } catch (Exception ) {
-                Helpers.ConsolePrint(TAG, "UnzipThreadRoutine has encountered an error while");
-                // TODO show notification to the user to download and extract manually
+            } catch (Exception e) {
+                Helpers.ConsolePrint(TAG, "UnzipThreadRoutine has encountered an error: " + e.Message);
             }
         }
     }
