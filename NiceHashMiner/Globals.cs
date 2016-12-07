@@ -16,7 +16,7 @@ namespace NiceHashMiner {
         public static bool IsFirstNetworkCheckTimeout = true;
         public static int FirstNetworkCheckTimeoutTimeMS = 500;
         public static int FirstNetworkCheckTimeoutTries = 10;
-        // sgminer Ellesmere ignore setting
-        public static bool IsEllesmereSgminerIgnore = false;
+        // sgminer Ellesmere/Polaris ignore setting (sgminer needs more testing)
+        public static bool IsEllesmereSgminerIgnore = true;
     }
 }
