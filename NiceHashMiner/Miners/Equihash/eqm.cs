@@ -34,8 +34,14 @@ namespace NiceHashMiner.Miners {
             if (NVIDIA_Setup.IsInit) {
                 deviceStringCommand += " -cd ";
                 foreach (var nvidia_pair in NVIDIA_Setup.MiningPairs) {
-                    for (int i = 0; i < ExtraLaunchParametersParser.GetEqmCudaThreadCount(nvidia_pair); ++i) {
-                        deviceStringCommand += nvidia_pair.Device.ID + " ";
+                    if (nvidia_pair.CurrentExtraLaunchParameters.Contains("-ct")) {
+                        for (int i = 0; i < ExtraLaunchParametersParser.GetEqmCudaThreadCount(nvidia_pair); ++i) {
+                            deviceStringCommand += nvidia_pair.Device.ID + " ";
+                        }
+                    } else { // use default 2 best performance
+                        for (int i = 0; i < 2; ++i) {
+                            deviceStringCommand += nvidia_pair.Device.ID + " ";
+                        }
                     }
                 }
                 // no extra launch params
