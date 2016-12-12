@@ -50,7 +50,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
                 
-        const string _betaAlphaPostfixString = "_NET20_backport";
+        const string _betaAlphaPostfixString = "";
 
         private bool _isDeviceDetectionInitialized = false;
 
