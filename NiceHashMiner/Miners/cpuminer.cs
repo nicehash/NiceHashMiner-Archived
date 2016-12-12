@@ -16,7 +16,7 @@ namespace NiceHashMiner.Miners {
         }        
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
-            return 60 * 1000; // 1 minute max, whole waiting time 75seconds
+            return 3 * 60 * 1000; // 1 minute max, whole waiting time 75seconds
         }
 
         public override void Start(string url, string btcAdress, string worker) {

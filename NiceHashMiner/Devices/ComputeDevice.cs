@@ -36,9 +36,9 @@ namespace NiceHashMiner.Devices
         //CudaDevice _cudaDevice = null;
         //AmdGpuDevice _amdDevice = null;
         // sgminer extra quickfix
-        public bool IsOptimizedVersion { get; private set; }
-        public string Codename { get; private set; }
-        public string InfSection { get; private set; }
+        public readonly bool IsOptimizedVersion;
+        public readonly string Codename;
+        public readonly string InfSection;
 
         //public DeviceBenchmarkConfig_rem DeviceBenchmarkConfig { get; private set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
