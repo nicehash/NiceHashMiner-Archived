@@ -143,7 +143,7 @@ namespace NiceHashMiner.Utils {
                     foreach (var entry in archive.Entries) {
                         if (!entry.IsDirectory) {
                             SizeCount += entry.CompressedSize;
-                            Console.WriteLine(entry.Key);
+                            Helpers.ConsolePrint(TAG, entry.Key);
                             entry.WriteToDirectory("", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
 
                             double prog = ((double)(SizeCount) / (double)(fileArchive.Length) * 100);
