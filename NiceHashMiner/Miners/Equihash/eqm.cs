@@ -9,8 +9,6 @@ namespace NiceHashMiner.Miners {
     public class eqm : nheqBase {
         public eqm()
             : base("eqm") {
-            Path = MinerPaths.eqm;
-            WorkingDirectory = MinerPaths.eqm.Replace("eqm.exe", "");
             IsNHLocked = true;
         }
 
@@ -21,6 +19,13 @@ namespace NiceHashMiner.Miners {
 
 
         protected override string GetDevicesCommandString() {
+            //// old
+            //Path = MinerPaths.eqm;
+            //WorkingDirectory = MinerPaths.eqm.Replace("eqm.exe", "");
+            // 2 paths
+            Path = this.MiningSetup.MinerPath;
+            WorkingDirectory = this.MiningSetup.MinerPath.Replace("eqm.exe", "");
+
             string deviceStringCommand = " ";
 
             if (CPU_Setup.IsInit) {

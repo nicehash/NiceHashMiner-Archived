@@ -411,7 +411,14 @@ namespace NiceHashMiner.Devices
                                         group = DeviceGroupType.NVIDIA_3_x;
                                         break;
                                     case 5:
-                                        group = DeviceGroupType.NVIDIA_5_x;
+                                        if(cudaDev.SM_minor == 0) {
+                                            group = DeviceGroupType.NVIDIA_5_0;
+                                        } else if (cudaDev.SM_minor == 2) {
+                                            group = DeviceGroupType.NVIDIA_5_2;
+                                        } else {
+                                            // default fallback should not happen
+                                            group = DeviceGroupType.NVIDIA_5_0;
+                                        }
                                         break;
                                     case 6:
                                         group = DeviceGroupType.NVIDIA_6_x;

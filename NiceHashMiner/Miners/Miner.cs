@@ -498,7 +498,7 @@ namespace NiceHashMiner
             P.ExitEvent = Miner_Exited;
 
             P.StartInfo.Arguments = LastCommandLine;
-            if (Path != MinerPaths.eqm) {
+            if (Path != MinerPaths.eqm_sm50 || Path != MinerPaths.eqm_sm52plus) {
                 P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
             } else {
                 P.StartInfo.CreateNoWindow = false;

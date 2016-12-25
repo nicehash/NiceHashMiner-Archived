@@ -28,7 +28,9 @@ namespace NiceHashMiner.Miners.Grouping {
         private static class EquihashGroup {
             public static bool IsEquihashGroupLogic(string minerPath, MiningPair a, MiningPair b) {
                 // eqm
-                if (MinerPaths.eqm == minerPath) {
+                if (MinerPaths.eqm_sm50 == minerPath) {
+                    return Is_eqm(a, b);
+                } else if (MinerPaths.eqm_sm52plus == minerPath) {
                     return Is_eqm(a, b);
                 }
                     // nheqmnier
@@ -55,14 +57,18 @@ namespace NiceHashMiner.Miners.Grouping {
                 return IsDevice_eqm(a) && IsDevice_eqm(b);
             }
             private static bool IsDevice_eqm(MiningPair a) {
-                return IsCPU_eqm(a) || IsNVIDIA_eqm(a);
+                return IsCPU_eqm(a) || IsNVIDIA_eqm_sm50(a) || IsNVIDIA_eqm_sm52_plus(a);
             }
             private static bool IsCPU_eqm(MiningPair a) {
                 return MinersManager.EquihashCPU_USE_eqm() && a.Device.DeviceType == DeviceType.CPU;
             }
-            private static bool IsNVIDIA_eqm(MiningPair a) {
+            private static bool IsNVIDIA_eqm_sm52_plus(MiningPair a) {
                 var groupType = a.Device.DeviceGroupType;
-                return DeviceGroupType.NVIDIA_5_x == groupType || DeviceGroupType.NVIDIA_6_x == groupType;
+                return DeviceGroupType.NVIDIA_5_2 == groupType || DeviceGroupType.NVIDIA_6_x == groupType;
+            }
+            private static bool IsNVIDIA_eqm_sm50(MiningPair a) {
+                var groupType = a.Device.DeviceGroupType;
+                return DeviceGroupType.NVIDIA_5_0 == groupType;
             }
         }
 
