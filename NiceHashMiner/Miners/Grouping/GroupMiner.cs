@@ -75,6 +75,13 @@ namespace NiceHashMiner.Miners.Grouping {
             if (AlgorithmType == AlgorithmType.Equihash) {
                 if (Miner.IsNHLocked) {
                     Miner.Start(miningLocation, btcAdress, worker);
+                } else if(Miner is ClaymoreZcashMiner) {
+                    Miner.Start(
+                    "stratum+ssl://"
+                    + name
+                    + "." + miningLocation
+                    + ".nicehash.com:"
+                    + 33357, btcAdress, worker);
                 } else {
                     Miner.Start(
                     name 
