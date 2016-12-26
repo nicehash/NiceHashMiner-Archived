@@ -54,6 +54,7 @@ namespace NiceHashMiner
         public bool IsAPIReadException { get; protected set; }
         // inhouse miners that are locked on NH (our eqm)
         public bool IsNHLocked { get; protected set; }
+        public bool IsNeverHideMiningWindow { get; protected set; }
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
         protected MiningSetup MiningSetup { get; set; }
@@ -124,6 +125,7 @@ namespace NiceHashMiner
             APIPort = MinersApiPortsManager.GetAvaliablePort();
             IsAPIReadException = false;
             IsNHLocked = false;
+            IsNeverHideMiningWindow = false;
             IsKillAllUsedMinerProcs = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
             // 
@@ -498,10 +500,10 @@ namespace NiceHashMiner
             P.ExitEvent = Miner_Exited;
 
             P.StartInfo.Arguments = LastCommandLine;
-            if (Path != MinerPaths.eqm_sm50 || Path != MinerPaths.eqm_sm52plus) {
-                P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
-            } else {
+            if (IsNeverHideMiningWindow) {
                 P.StartInfo.CreateNoWindow = false;
+            } else {
+                P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
             }
             P.StartInfo.UseShellExecute = false;
 

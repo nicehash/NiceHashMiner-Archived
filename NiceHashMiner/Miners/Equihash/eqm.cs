@@ -10,6 +10,7 @@ namespace NiceHashMiner.Miners {
         public eqm()
             : base("eqm") {
             IsNHLocked = true;
+            IsNeverHideMiningWindow = true;
         }
 
         public override void Start(string url, string btcAdress, string worker) {
