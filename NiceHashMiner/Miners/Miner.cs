@@ -185,7 +185,11 @@ namespace NiceHashMiner
                     Process process = Process.GetProcessById(PidData.PID);
                     if (process != null && PidData.minerBinPath.Contains(process.ProcessName)) {
                         Helpers.ConsolePrint(MinerTAG(), String.Format("Trying to kill {0}", ProcessTag(PidData)));
-                        try { process.Kill(); } catch (Exception e) {
+                        try {
+                            process.Kill();
+                            process.Close();
+                            process.WaitForExit(1000 * 60 * 1);
+                        } catch (Exception e) {
                             Helpers.ConsolePrint(MinerTAG(), String.Format("Exception killing {0}, exMsg {1}", ProcessTag(PidData), e.Message));
                         }
                     }
@@ -329,6 +333,11 @@ namespace NiceHashMiner
 
             if (!BenchmarkHandle.Start()) return null;
 
+            _currentPidData = new MinerPID_Data();
+            _currentPidData.minerBinPath = BenchmarkHandle.StartInfo.FileName;
+            _currentPidData.PID = BenchmarkHandle.Id;
+            _allPidData.Add(_currentPidData);
+
             return BenchmarkHandle;
         }
 
@@ -381,6 +390,10 @@ namespace NiceHashMiner
             }
         }
 
+        public void InvokeBenchmarkSignalQuit() {
+            KillAllUsedMinerProcesses();
+        }
+
         protected double BenchmarkParseLine_cpu_ccminer_extra(string outdata) {
             // parse line
             if (outdata.Contains("Benchmark: ") && outdata.Contains("/s")) {
@@ -412,6 +425,7 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
                     BenchmarkHandle.Kill();
                     BenchmarkHandle.Close();
+                    KillAllUsedMinerProcesses();
                 } catch { }
                 finally {
                     BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;

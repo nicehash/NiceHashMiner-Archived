@@ -248,6 +248,7 @@ namespace NiceHashMiner.Forms {
             CopyBenchmarks();
             if (_currentMiner != null) {
                 _currentMiner.BenchmarkSignalQuit = true;
+                _currentMiner.InvokeBenchmarkSignalQuit();
             }
             if (ExitWhenFinished) {
                 this.Close();
