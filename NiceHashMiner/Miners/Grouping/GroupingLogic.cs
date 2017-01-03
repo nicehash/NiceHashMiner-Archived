@@ -28,9 +28,7 @@ namespace NiceHashMiner.Miners.Grouping {
         private static class EquihashGroup {
             public static bool IsEquihashGroupLogic(string minerPath, MiningPair a, MiningPair b) {
                 // eqm
-                if (MinerPaths.eqm_sm50 == minerPath) {
-                    return Is_eqm(a, b);
-                } else if (MinerPaths.eqm_sm52plus == minerPath) {
+                if (MinerPaths.eqm == minerPath) {
                     return Is_eqm(a, b);
                 }
                     // nheqmnier

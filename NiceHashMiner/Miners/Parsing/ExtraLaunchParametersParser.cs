@@ -317,7 +317,7 @@ namespace NiceHashMiner.Miners.Parsing {
                     if (deviceType == DeviceType.AMD) {
                         return Parse(MiningPairs, _nheqminer_AMD_Options);
                     }
-                } else if (minerPath == MinerPaths.eqm_sm50 || minerPath == MinerPaths.eqm_sm52plus) {
+                } else if (minerPath == MinerPaths.eqm) {
                     if (deviceType == DeviceType.CPU) {
                         CheckAndSetCPUPairs(MiningPairs);
                         return Parse(MiningPairs, _eqm_CPU_Options);

@@ -53,8 +53,9 @@ namespace NiceHashMiner.Miners.Grouping
         /// <summary>
         /// eqm
         /// </summary>
-        public const string eqm_sm50 = _bin + @"\eqm\eqm.exe";
-        public const string eqm_sm52plus = _bin + @"\eqm_sm52plus\eqm.exe";
+        //public const string eqm_sm50 = _bin + @"\eqm\eqm.exe";
+        //public const string eqm_sm52plus = _bin + @"\eqm_sm52plus\eqm.exe";
+        public const string eqm = _bin + @"\eqm\eqm.exe";
 
         public const string NONE = "";
 
@@ -87,13 +88,9 @@ namespace NiceHashMiner.Miners.Grouping
             }
             // AlgorithmType.Equihash special shared case
             if (algorithmType == AlgorithmType.Equihash) {
-                if (deviceGroupType == DeviceGroupType.NVIDIA_5_0) {
-                    return MinerPaths.eqm_sm50;
-                }
-                // for simplicity sake only new eqm miner groups cpu and gpu, check later
-                if (deviceGroupType == DeviceGroupType.NVIDIA_5_2 || deviceGroupType == DeviceGroupType.NVIDIA_6_x
+                if (deviceGroupType == DeviceGroupType.NVIDIA_5_0 || deviceGroupType == DeviceGroupType.NVIDIA_5_2 || deviceGroupType == DeviceGroupType.NVIDIA_6_x
                     || (MinersManager.EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
-                    return MinerPaths.eqm_sm52plus;
+                    return MinerPaths.eqm;
                 } else if(deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) { // TODO remove state
                     return MinerPaths.ClaymoreZcashMiner;
                 }

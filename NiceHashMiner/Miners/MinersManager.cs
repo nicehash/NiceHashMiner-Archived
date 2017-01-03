@@ -46,7 +46,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public static Miner CreateMiner(DeviceType deviceType, string minerPath) {
-            if ((minerPath == MinerPaths.eqm_sm50 || minerPath == MinerPaths.eqm_sm52plus) && DeviceType.AMD != deviceType) {
+            if ((minerPath == MinerPaths.eqm) && DeviceType.AMD != deviceType) {
                 return new eqm();
             } else if (minerPath == MinerPaths.nheqminer) {
                 return new nheqminer();
