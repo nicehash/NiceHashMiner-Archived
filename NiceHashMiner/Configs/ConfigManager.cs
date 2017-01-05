@@ -103,7 +103,8 @@ namespace NiceHashMiner.Configs {
                 || ConfigManager.GeneralConfig.SwitchMinSecondsFixed != GeneralConfigBackup.SwitchMinSecondsFixed
                 || ConfigManager.GeneralConfig.SwitchMinSecondsAMD != GeneralConfigBackup.SwitchMinSecondsAMD
                 || ConfigManager.GeneralConfig.SwitchMinSecondsDynamic != GeneralConfigBackup.SwitchMinSecondsDynamic
-                || ConfigManager.GeneralConfig.MinerAPIQueryInterval != GeneralConfigBackup.MinerAPIQueryInterval;
+                || ConfigManager.GeneralConfig.MinerAPIQueryInterval != GeneralConfigBackup.MinerAPIQueryInterval
+                || ConfigManager.GeneralConfig.DisableWindowsErrorReporting != GeneralConfigBackup.DisableWindowsErrorReporting ;
         }
 
         public static void GeneralConfigFileCommit() {
