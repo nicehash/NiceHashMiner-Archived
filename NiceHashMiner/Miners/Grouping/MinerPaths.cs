@@ -44,6 +44,7 @@ namespace NiceHashMiner.Miners.Grouping
         public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
         public const string sgminer_5_5_0_general =     _bin + @"\sgminer-5-5-0-general\sgminer.exe";
         public const string sgminer_5_4_0_tweaked =     _bin + @"\sgminer-5-4-0-tweaked\sgminer.exe";
+        public const string sgminer_gm =                _bin + @"\sgminer-gm\sgminer.exe";
 
         /// <summary>
         /// nheqminer
@@ -171,6 +172,9 @@ namespace NiceHashMiner.Miners.Grouping
                         else
                             return MinerPaths.sgminer_5_1_1_optimized;
                     }
+                }
+                if (AlgorithmType.CryptoNight == type /*|| AlgorithmType.DaggerHashimoto == type*/) {
+                    return MinerPaths.sgminer_gm;
                 }
 
                 return MinerPaths.sgminer_5_5_0_general;

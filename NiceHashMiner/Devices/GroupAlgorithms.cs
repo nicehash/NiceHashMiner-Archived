@@ -52,7 +52,7 @@ namespace NiceHashMiner.Devices {
                             // remove all algos except equi and dagger
                             List<AlgorithmType> toRemove = new List<AlgorithmType>();
                             foreach (var key in algoSettings.Keys) {
-                                if (AlgorithmType.DaggerHashimoto != key && AlgorithmType.Equihash != key) {
+                                if (AlgorithmType.DaggerHashimoto != key && AlgorithmType.Equihash != key && AlgorithmType.CryptoNight != key) {
                                     toRemove.Add(key);
                                 }
                             }
@@ -121,6 +121,8 @@ namespace NiceHashMiner.Devices {
                     { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") 
                     { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") 
+                    { ExtraLaunchParameters = "--rawintensity 512 -w 4 -g 2" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Equihash, new Algorithm(AlgorithmType.Equihash, "equihash") }
                 };
             }
