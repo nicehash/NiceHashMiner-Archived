@@ -10,6 +10,7 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Miners {
     using NiceHashMiner.Miners.Grouping;
+    using NiceHashMiner.Miners.Equihash;
     public static class MinersManager {
 
         private static MiningSession CurMiningSession;
@@ -54,6 +55,10 @@ namespace NiceHashMiner.Miners {
                 ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
                 && minerPath == MinerPaths.ClaymoreZcashMiner && DeviceType.AMD == deviceType) {
                 return new ClaymoreZcashMiner();
+            } else if (
+                ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
+                && minerPath == MinerPaths.OptiminerZcashMiner && DeviceType.AMD == deviceType) {
+                return new OptiminerZcashMiner();
             } else if (minerPath == MinerPaths.ethminer && DeviceType.CPU != deviceType) {
                 if (DeviceType.AMD == deviceType) {
                     return new MinerEtherumOCL();
@@ -64,7 +69,7 @@ namespace NiceHashMiner.Miners {
                 return new cpuminer();
             } else if (minerPath.Contains("sgminer") && DeviceType.AMD == deviceType) {
                 return new sgminer();
-            } else if(minerPath.Contains("ccminer") && DeviceType.NVIDIA == deviceType) {
+            } else if (minerPath.Contains("ccminer") && DeviceType.NVIDIA == deviceType) {
                 return new ccminer();
             }
 

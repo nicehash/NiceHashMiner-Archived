@@ -44,7 +44,7 @@ namespace NiceHashMiner.Miners.Grouping
         public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
         public const string sgminer_5_5_0_general =     _bin + @"\sgminer-5-5-0-general\sgminer.exe";
         public const string sgminer_5_4_0_tweaked =     _bin + @"\sgminer-5-4-0-tweaked\sgminer.exe";
-        public const string sgminer_gm =                _bin + @"\sgminer-gm\sgminer.exe";
+        public const string sgminer_gm =                _bin + @"\sgminer-gm\sgminer.exe"; // open source miner
 
         /// <summary>
         /// nheqminer
@@ -63,6 +63,7 @@ namespace NiceHashMiner.Miners.Grouping
         // root binary folder
         private const string _bin_3rdparty = @"bin_3rdparty";
         public const string ClaymoreZcashMiner = _bin_3rdparty + @"\claymore_zcash\ZecMiner64.exe";
+        public const string OptiminerZcashMiner = _bin_3rdparty + @"\optiminer_zcash_win\Optiminer.exe";
 
         public static string GetOptimizedMinerPath(MiningPair pair) {
             return GetOptimizedMinerPath(pair.Device, pair.Algorithm);
@@ -93,7 +94,8 @@ namespace NiceHashMiner.Miners.Grouping
                     || (MinersManager.EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
                     return MinerPaths.eqm;
                 } else if(deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) { // TODO remove state
-                    return MinerPaths.ClaymoreZcashMiner;
+                    //return MinerPaths.ClaymoreZcashMiner;
+                    return MinerPaths.OptiminerZcashMiner;
                 }
                 else { // supports all DeviceTypes
                     return MinerPaths.nheqminer;
