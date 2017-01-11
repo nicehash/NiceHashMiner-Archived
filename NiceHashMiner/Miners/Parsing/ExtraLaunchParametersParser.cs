@@ -128,6 +128,13 @@ namespace NiceHashMiner.Miners.Parsing {
             new MinerOption(MinerOptionType.ClaymoreCryptoNight_cvddc  , "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
             new MinerOption(MinerOptionType.ClaymoreCryptoNight_mvddc  , "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
         };
+        // Zcash Optiminer
+        private static List<MinerOption> _OptiminerZcash_Options = new List<MinerOption>() {
+            new MinerOption(MinerOptionType.Optiminer_ForceGenericKernel      , "", "--force-generic-kernel", null, MinerOptionFlagType.Uni, ""),
+            new MinerOption(MinerOptionType.Optiminer_ExperimentalKernel      , "", "--experimental-kernel", null, MinerOptionFlagType.Uni, ""),
+            new MinerOption(MinerOptionType.Optiminer_nodevfee                , "", "--nodevfee", null, MinerOptionFlagType.Uni, ""),
+            new MinerOption(MinerOptionType.Optiminer_i                       , "-i", "--intensity", "0", MinerOptionFlagType.DuplicateMultiParam, ""),
+        };
 
         private static bool _showLog = true;
 
@@ -296,6 +303,13 @@ namespace NiceHashMiner.Miners.Parsing {
                                 MASK = " {0}{1}";
                             }
                             retVal += String.Format(MASK, option.LongName, setValue);
+                        } else if (option.FlagType == MinerOptionFlagType.DuplicateMultiParam) {
+                            List<string> values = new List<string>();
+                            string MASK = " {0} {1}";
+                            foreach (var pair in MiningPairs) {
+                                values.Add(String.Format(MASK, option.LongName, cdevOptions[pair.Device.UUID][option.Type]));
+                            }
+                            retVal += " " + StringHelper.Join(" ", values);
                         }
                     }
                 }
@@ -371,6 +385,8 @@ namespace NiceHashMiner.Miners.Parsing {
                 }
             } else if (minerPath == MinerPaths.ClaymoreCryptoNightMiner) {
                 return Parse(MiningPairs, _Claymore_cryptonight_Options);
+            } else if (minerPath == MinerPaths.OptiminerZcashMiner) {
+                return Parse(MiningPairs, _OptiminerZcash_Options);
             } else if (deviceCheckSkip == false) {
                 // parse for device
                 if (deviceType == DeviceType.CPU) {

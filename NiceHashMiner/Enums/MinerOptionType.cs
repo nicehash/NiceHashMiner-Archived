@@ -83,6 +83,11 @@ namespace NiceHashMiner.Enums {
         ClaymoreCryptoNight_powlim,
         ClaymoreCryptoNight_cvddc,
         ClaymoreCryptoNight_mvddc,
+        // Optiminer
+        Optiminer_ForceGenericKernel,
+        Optiminer_ExperimentalKernel,
+        Optiminer_nodevfee,
+        Optiminer_i,
 
     }
 }

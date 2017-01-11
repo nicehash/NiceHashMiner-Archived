@@ -63,8 +63,7 @@ namespace NiceHashMiner.Miners.Equihash {
         }
 
         protected override string GetDevicesCommandString() {
-            // TODO add 
-            string extraParams = ""; //ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+            string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -c " + ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
             deviceStringCommand += " -d ";
             List<string> ids = new List<string>();

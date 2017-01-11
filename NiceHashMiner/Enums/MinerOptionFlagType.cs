@@ -7,6 +7,7 @@ namespace NiceHashMiner.Enums {
     public enum MinerOptionFlagType {
         Uni,
         SingleParam,
-        MultiParam
+        MultiParam,
+        DuplicateMultiParam // the flag is multiplied
     }
 }
