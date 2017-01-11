@@ -30,8 +30,9 @@ namespace NiceHashMiner.Miners {
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // clean old logs
             CleanAllOldLogs();
-            benchmarkTimeWait = time;
-            //benchmarkTimeWait = 30; // when debugging
+            //benchmarkTimeWait = time;
+            ////benchmarkTimeWait = 180;
+            ////benchmarkTimeWait = 30; // when debugging
 
             // network workaround
             var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];

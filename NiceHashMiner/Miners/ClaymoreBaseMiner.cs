@@ -16,7 +16,7 @@ using System.Threading;
 namespace NiceHashMiner.Miners {
     public abstract class ClaymoreBaseMiner : Miner {
 
-        protected int benchmarkTimeWait = 60;
+        const int benchmarkTimeWait = 45; // if this is larger then welcome to hell!!! keep this fixed
         int benchmark_read_count = 0;
         double benchmark_sum = 0.0d;
         protected readonly string LOOK_FOR_START;
@@ -111,6 +111,14 @@ namespace NiceHashMiner.Miners {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
+        private bool IsActiveProcess(int pid) {
+            try {
+                return Process.GetProcessById(pid) != null;
+            } catch {
+                return false;
+            }
+        }
+
 
         protected override string GetDevicesCommandString() {
             string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
@@ -138,6 +146,7 @@ namespace NiceHashMiner.Miners {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTAG(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
+                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
                 Stopwatch _benchmarkTimer = new Stopwatch();
                 _benchmarkTimer.Reset();
                 _benchmarkTimer.Start();
@@ -148,7 +157,7 @@ namespace NiceHashMiner.Miners {
                 // don't use wait for it breaks everything
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 bool keepRunning = true;
-                while (keepRunning) {
+                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id)) {
                     //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
                     //BenchmarkOutputErrorDataReceivedImpl(outdata);
                     // terminate process situations
