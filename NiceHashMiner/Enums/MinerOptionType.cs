@@ -66,6 +66,23 @@ namespace NiceHashMiner.Enums {
         ClaymoreZcash_mclock,
         ClaymoreZcash_powlim,
         ClaymoreZcash_cvddc,
-        ClaymoreZcash_mvddc
+        ClaymoreZcash_mvddc,
+        // ClaymoreCryptoNight
+        ClaymoreCryptoNight_a,
+        ClaymoreCryptoNight_wd,
+        ClaymoreCryptoNight_r,
+        ClaymoreCryptoNight_nofee,
+        ClaymoreCryptoNight_li,
+        ClaymoreCryptoNight_tt, // -tt
+        ClaymoreCryptoNight_ttli, // not present?
+        ClaymoreCryptoNight_tstop,
+        ClaymoreCryptoNight_fanmax,
+        ClaymoreCryptoNight_fanmin,
+        ClaymoreCryptoNight_cclock,
+        ClaymoreCryptoNight_mclock,
+        ClaymoreCryptoNight_powlim,
+        ClaymoreCryptoNight_cvddc,
+        ClaymoreCryptoNight_mvddc,
+
     }
 }

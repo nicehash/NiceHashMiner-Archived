@@ -108,6 +108,26 @@ namespace NiceHashMiner.Miners.Parsing {
             new MinerOption(MinerOptionType.ClaymoreZcash_cvddc  , "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
             new MinerOption(MinerOptionType.ClaymoreZcash_mvddc  , "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
         };
+        // Zcash cryptonight
+        private static List<MinerOption> _Claymore_cryptonight_Options = new List<MinerOption>() {
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_a      , "-a", "-a", "0", MinerOptionFlagType.MultiParam, ""),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_wd     , "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
+            //new MinerOption(MinerOptionType.ClaymoreCryptoNight_r      , , , , MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_nofee  , "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_li     , "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
+            // temperature stuff
+            //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_tt     , "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","), 
+            //new MinerOption(MinerOptionType.ClaymoreCryptoNight_ttli   , "-ttli", "-ttli", "70", MinerOptionFlagType.SingleParam, ","), // no such param
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_tstop  , "-tstop", "-tstop", "0", MinerOptionFlagType.SingleParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_fanmax , "-fanmax", "-fanmax", "100", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_fanmin , "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_cclock , "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_mclock , "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_powlim , "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_cvddc  , "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_mvddc  , "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
+        };
 
         private static bool _showLog = true;
 
@@ -349,6 +369,8 @@ namespace NiceHashMiner.Miners.Parsing {
                 } else if (deviceType == DeviceType.AMD) {
                     return Parse(cdevs_mappings, _oclEthminerOptions);
                 }
+            } else if (minerPath == MinerPaths.ClaymoreCryptoNightMiner) {
+                return Parse(MiningPairs, _Claymore_cryptonight_Options);
             } else if (deviceCheckSkip == false) {
                 // parse for device
                 if (deviceType == DeviceType.CPU) {
