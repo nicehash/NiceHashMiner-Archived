@@ -63,6 +63,7 @@ namespace NiceHashMiner.Miners.Grouping
         // root binary folder
         private const string _bin_3rdparty = @"bin_3rdparty";
         public const string ClaymoreZcashMiner = _bin_3rdparty + @"\claymore_zcash\ZecMiner64.exe";
+        public const string ClaymoreCryptoNightMiner = _bin_3rdparty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
         public const string OptiminerZcashMiner = _bin_3rdparty + @"\optiminer_zcash_win\Optiminer.exe";
 
         public static string GetOptimizedMinerPath(MiningPair pair) {
@@ -94,12 +95,17 @@ namespace NiceHashMiner.Miners.Grouping
                     || (MinersManager.EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
                     return MinerPaths.eqm;
                 } else if(deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) { // TODO remove state
-                    //return MinerPaths.ClaymoreZcashMiner;
-                    return MinerPaths.OptiminerZcashMiner;
+                    // TODO add settings to choose what miner to use, or to automatically determine what to use
+                    return MinerPaths.ClaymoreZcashMiner;
+                    //return MinerPaths.OptiminerZcashMiner;
                 }
                 else { // supports all DeviceTypes
                     return MinerPaths.nheqminer;
                 }
+            }
+            // 3rd party miner
+            if (algorithmType == AlgorithmType.CryptoNight && deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) {
+                return MinerPaths.ClaymoreCryptoNightMiner;
             }
             // normal stuff
             // CPU

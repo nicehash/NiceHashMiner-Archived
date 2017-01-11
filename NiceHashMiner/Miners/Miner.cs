@@ -599,24 +599,18 @@ namespace NiceHashMiner
             }
         }
 
-        protected string GetAPIData(int port, string cmd)
+        protected string GetAPIData(int port, string DataToSend, bool exitHack = false)
         {
             string ResponseFromServer = null;
             try
             {
                 TcpClient tcpc = new TcpClient("127.0.0.1", port);
-                string DataToSend = "GET /" + cmd + " HTTP/1.1\r\n" +
-                                    "Host: 127.0.0.1\r\n" +
-                                    "User-Agent: NiceHashMiner/" + Application.ProductVersion + "\r\n" +
-                                    "\r\n";
-
-                if (IsKillAllUsedMinerProcs)
-                    DataToSend = cmd;
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
                 tcpc.Client.Send(BytesToSend);
 
                 byte[] IncomingBuffer = new byte[5000];
+                int prevOffset = -1;
                 int offset = 0;
                 bool fin = false;
 
@@ -625,13 +619,24 @@ namespace NiceHashMiner
                     int r = tcpc.Client.Receive(IncomingBuffer, offset, 5000 - offset, SocketFlags.None);
                     for (int i = offset; i < offset + r; i++)
                     {
-                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00)
-                        {
+                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00) {
                             fin = true;
                             break;
                         }
+                        // Not working
+                        //if (IncomingBuffer[i] == 0x5d || IncomingBuffer[i] == 0x5e) {
+                        //    fin = true;
+                        //    break;
+                        //}
                     }
                     offset += r;
+                    if (exitHack) {
+                        if (prevOffset == offset) {
+                            fin = true;
+                            break;
+                        }
+                        prevOffset = offset;
+                    }
                 }
 
                 tcpc.Close();
@@ -650,13 +655,22 @@ namespace NiceHashMiner
 
         public abstract APIData GetSummary();
 
+        protected string GetHttpRequestNHMAgentStrin(string cmd) {
+            return "GET /" + cmd + " HTTP/1.1\r\n" +
+                    "Host: 127.0.0.1\r\n" +
+                    "User-Agent: NiceHashMiner/" + Application.ProductVersion + "\r\n" +
+                    "\r\n";
+        }
+
         protected APIData GetSummaryCPU_CCMINER() {
             string resp;
             // TODO aname
             string aname = null;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
-            resp = GetAPIData(APIPort, "summary");
+            string DataToSend = GetHttpRequestNHMAgentStrin("summary");
+
+            resp = GetAPIData(APIPort, DataToSend);
             if (resp == null) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;

@@ -59,6 +59,10 @@ namespace NiceHashMiner.Miners {
                 ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
                 && minerPath == MinerPaths.OptiminerZcashMiner && DeviceType.AMD == deviceType) {
                 return new OptiminerZcashMiner();
+            } else if (
+                ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
+                && minerPath == MinerPaths.ClaymoreCryptoNightMiner && DeviceType.AMD == deviceType) {
+                return new ClaymoreCryptoNightMiner();
             } else if (minerPath == MinerPaths.ethminer && DeviceType.CPU != deviceType) {
                 if (DeviceType.AMD == deviceType) {
                     return new MinerEtherumOCL();

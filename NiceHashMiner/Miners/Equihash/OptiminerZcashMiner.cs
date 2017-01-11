@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
@@ -6,9 +7,11 @@ using NiceHashMiner.Miners.Parsing;
 using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Windows.Forms;
 
 namespace NiceHashMiner.Miners.Equihash {
     public class OptiminerZcashMiner : Miner {
@@ -60,6 +63,7 @@ namespace NiceHashMiner.Miners.Equihash {
         }
 
         protected override string GetDevicesCommandString() {
+            // TODO add 
             string extraParams = ""; //ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -c " + ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
             deviceStringCommand += " -d ";
@@ -79,38 +83,22 @@ namespace NiceHashMiner.Miners.Equihash {
             TcpClient client = null;
             JsonApiResponse resp = null;
             try {
-                byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes("status\r\n");
-                client = new TcpClient("127.0.0.1", APIPort);
-                //client.ReceiveTimeout = 500;
-                //client.NoDelay = true;
-                NetworkStream nwStream = client.GetStream();
-                //nwStream.ReadTimeout = 5000;
-                nwStream.Write(bytesToSend, 0, bytesToSend.Length);
-                byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-                if (nwStream.CanRead) {
-                    do {
-                        int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-                        string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                        Helpers.ConsolePrint("OptiminerZcashMiner", "respStr: " + respStr);
-                    } while (nwStream.DataAvailable);
-                } else {
-                    Helpers.ConsolePrint("OptiminerZcashMiner API :", "nwStream.CanRead == false");
+                string DataToSend =  GetHttpRequestNHMAgentStrin("");
+                string respStr = GetAPIData(APIPort, DataToSend, true);
+                if (respStr != null && respStr.Contains("{")) {
+                    int start = respStr.IndexOf("{");
+                    if (start > -1) {
+                        string respStrJSON = respStr.Substring(start);
+                        resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStrJSON.Trim(), Globals.JsonSettings);
+                    }
                 }
-                
-                if (nwStream.DataAvailable == false) {
-                    Helpers.ConsolePrint("OptiminerZcashMiner API :", "nwStream.DataAvailable == false");
-                }
-
-                //int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-                //string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                //resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
                 client.Close();
                 //Helpers.ConsolePrint("OptiminerZcashMiner API back:", respStr);
             } catch (Exception ex) {
                 Helpers.ConsolePrint("OptiminerZcashMiner", "GetSummary exception: " + ex.Message);
             }
 
-            if (resp != null && resp.solution_rate == null) {
+            if (resp != null && resp.solution_rate != null) {
                 //Helpers.ConsolePrint("OptiminerZcashMiner API back:", "resp != null && resp.error == null");
                 const string total_key = "Total";
                 const string _5s_key = "5s";
@@ -132,8 +120,8 @@ namespace NiceHashMiner.Miners.Equihash {
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            // TODO waiting api implementation
-            string ret = "TODO";
+            int t = time / 9; // sgminer needs 9 times more than this miner so reduce benchmark speed
+            string ret = " " + GetDevicesCommandString() + " --benchmark " + t;
             return ret;
         }
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
@@ -141,8 +129,17 @@ namespace NiceHashMiner.Miners.Equihash {
         }
 
         protected override bool BenchmarkParseLine(string outdata) {
-            Helpers.ConsolePrint("BENCHMARK", outdata);
-            // TODO waiting api implementation
+            const string FIND = "Benchmark:";
+            if (outdata.Contains(FIND)) {
+                int start = outdata.IndexOf("Benchmark:") + FIND.Length;
+                string itersAndVars = outdata.Substring(start).Trim();
+                var ar = itersAndVars.Split(new char[] { ' ' });
+                if (ar.Length >= 4) {
+                    // gets sols/s
+                    BenchmarkAlgorithm.BenchmarkSpeed = Helpers.ParseDouble(ar[2]);
+                    return true;
+                }
+            }
             return false;
         }
 
