@@ -95,9 +95,11 @@ namespace NiceHashMiner.Miners.Grouping
                     || (MinersManager.EquihashCPU_USE_eqm() && DeviceGroupType.CPU == deviceGroupType)) {
                     return MinerPaths.eqm;
                 } else if(deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) { // TODO remove state
-                    // TODO add settings to choose what miner to use, or to automatically determine what to use
-                    return MinerPaths.ClaymoreZcashMiner;
-                    //return MinerPaths.OptiminerZcashMiner;
+                    if (ConfigManager.GeneralConfig.AMD_Equihash_3rdParty == AMD_Equihash_3rdParty.Claymore) {
+                        return MinerPaths.ClaymoreZcashMiner;
+                    } else {
+                        return MinerPaths.OptiminerZcashMiner;
+                    }
                 }
                 else { // supports all DeviceTypes
                     return MinerPaths.nheqminer;

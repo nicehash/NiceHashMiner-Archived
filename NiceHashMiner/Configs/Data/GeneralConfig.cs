@@ -58,6 +58,7 @@ namespace NiceHashMiner.Configs.Data {
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;
+        public AMD_Equihash_3rdParty AMD_Equihash_3rdParty = AMD_Equihash_3rdParty.Claymore;
 
         public bool AllowMultipleInstances = true;
 
@@ -106,6 +107,7 @@ namespace NiceHashMiner.Configs.Data {
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
+            AMD_Equihash_3rdParty = AMD_Equihash_3rdParty.Claymore;
         }
 
         public void FixSettingBounds() {

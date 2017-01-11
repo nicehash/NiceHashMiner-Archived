@@ -103,6 +103,7 @@
     <Compile Include="Devices\OpenCLDevice.cs" />
     <Compile Include="Enums\AlgorithmBenchmarkSettingsType.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
+    <Compile Include="Enums\AMD_Equihash_3rdParty.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
     <Compile Include="Enums\BenchmarkProcessStatus.cs" />
     <Compile Include="Enums\ComputePlatformType.cs" />
