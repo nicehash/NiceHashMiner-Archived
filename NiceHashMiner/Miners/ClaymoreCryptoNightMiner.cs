@@ -32,6 +32,7 @@ namespace NiceHashMiner.Miners {
             CleanAllOldLogs();
             benchmarkTimeWait = time;
             //benchmarkTimeWait = 30; // when debugging
+
             // network workaround
             var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
             string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
