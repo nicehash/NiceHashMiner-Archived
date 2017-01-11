@@ -89,6 +89,7 @@ namespace NiceHashMiner.Miners.Parsing {
         };
         // Zcash claymore
         private static List<MinerOption> _ClaymoreZcash_Options = new List<MinerOption>() {
+            new MinerOption(MinerOptionType.ClaymoreZcash_a      , "-a", "-a", "0", MinerOptionFlagType.MultiParam, ","),
             new MinerOption(MinerOptionType.ClaymoreZcash_i      , "-i", "-i", "6", MinerOptionFlagType.MultiParam, ","),
             new MinerOption(MinerOptionType.ClaymoreZcash_wd     , "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
             //new MinerOption(MinerOptionType.ClaymoreZcash_r      , , , , MinerOptionFlagType.MultiParam, ","),
