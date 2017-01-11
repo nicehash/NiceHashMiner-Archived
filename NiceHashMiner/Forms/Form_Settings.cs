@@ -711,11 +711,13 @@ namespace NiceHashMiner.Forms {
             if (!_isInitFinished) return;
             if (this.checkBox_Use3rdPartyMiners.Checked) {
                 // Show TOS
-                Form tos = new Form_ClaymoreTOS();
+                Form tos = new Form_3rdParty_TOS();
                 tos.ShowDialog(this);
                 this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             } else {
                 ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
+                // update devices algorithm settings because some algos are supported only by 3rd party miners
+                ComputeDeviceManager.Avaliable.ResetAvaliableAlgorithmsForDevice();
             }
         }
 

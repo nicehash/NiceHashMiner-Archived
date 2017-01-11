@@ -205,6 +205,16 @@ namespace NiceHashMiner
                 return;
             }
 
+            // 3rdparty miners check scope #1
+            {
+                // check if setting set
+                if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET) {
+                    // Show TOS
+                    Form tos = new Form_3rdParty_TOS();
+                    tos.ShowDialog(this);
+                }
+            }
+
             // Query Avaliable ComputeDevices
             ComputeDeviceManager.Query.QueryDevices(LoadingScreen);
             _isDeviceDetectionInitialized = true;
@@ -328,14 +338,8 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfigFileCommit();
                 }
             }
-            // 3rdparty miners check scope
+            // 3rdparty miners check scope #2
             {
-                // check if setting set
-                if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET) {
-                    // Show TOS
-                    Form tos = new Form_ClaymoreTOS();
-                    tos.ShowDialog(this);
-                }
                 // check if download needed
                 if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) {
                     if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit() && !ConfigManager.GeneralConfig.DownloadInit3rdParty) {

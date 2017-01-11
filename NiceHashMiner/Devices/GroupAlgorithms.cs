@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -65,6 +66,16 @@ namespace NiceHashMiner.Devices {
                                 algoSettings.Remove(AlgorithmType.NeoScrypt);
                             }
                         }
+
+                        // check if 3rd party is enabled and allow 3rd party only algos
+                        if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES == false) {
+                            List<AlgorithmType> _3rdPartyOnlyAlgos = new List<AlgorithmType>() { AlgorithmType.CryptoNight };
+                            foreach (var algoType in _3rdPartyOnlyAlgos) {
+                                if (algoSettings.ContainsKey(algoType)) {
+                                    algoSettings.Remove(algoType);
+                                }
+                            }
+                        }
                     }
 
                     // check if it is Etherum capable
@@ -121,8 +132,7 @@ namespace NiceHashMiner.Devices {
                     { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") 
                     { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
-                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") 
-                    { ExtraLaunchParameters = "--rawintensity 512 -w 4 -g 2" + AmdGpuDevice.TemperatureParam } },
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight")  }, // for now only 3rd party support
                 { AlgorithmType.Equihash, new Algorithm(AlgorithmType.Equihash, "equihash") }
                 };
             }

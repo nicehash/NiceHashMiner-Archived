@@ -1,5 +1,5 @@
 ﻿namespace NiceHashMiner.Forms {
-    partial class Form_ClaymoreTOS {
+    partial class Form_3rdParty_TOS {
         /// <summary>
         /// Required designer variable.
         /// </summary>

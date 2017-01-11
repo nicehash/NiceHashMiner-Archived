@@ -859,6 +859,13 @@ namespace NiceHashMiner.Devices
             public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique) {
                 return AllAvaliableDevices[index];
             }
+
+            ////////////
+            public static void ResetAvaliableAlgorithmsForDevice() {
+                foreach (var dev in AllAvaliableDevices) {
+                    dev._3rdPartyMinerChange();
+                }
+            }
         }
 
         public static class Group {

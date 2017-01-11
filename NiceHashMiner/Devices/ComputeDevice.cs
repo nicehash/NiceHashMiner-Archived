@@ -125,6 +125,34 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public void _3rdPartyMinerChange() {
+            var TmpAlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
+            // check to remove
+            {
+                List<AlgorithmType> toRemoveKeys = new List<AlgorithmType>();
+                foreach (var containsKey in AlgorithmSettings.Keys) {
+                    if (TmpAlgorithmSettings.ContainsKey(containsKey) == false) {
+                        toRemoveKeys.Add(containsKey);
+                    }
+                }
+                foreach (var removeKey in toRemoveKeys) {
+                    AlgorithmSettings.Remove(removeKey);
+                }
+            }
+            // check to add
+            {
+                List<AlgorithmType> toAddKeys = new List<AlgorithmType>();
+                foreach (var containsKey in TmpAlgorithmSettings.Keys) {
+                    if (AlgorithmSettings.ContainsKey(containsKey) == false) {
+                        toAddKeys.Add(containsKey);
+                    }
+                }
+                foreach (var addKey in toAddKeys) {
+                    AlgorithmSettings.Add(addKey, TmpAlgorithmSettings[addKey]);
+                }
+            }
+        }
+
         #region Config Setters/Getters
         // settings
         // setters
@@ -135,6 +163,7 @@ namespace NiceHashMiner.Devices
         }
         public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config) {
             if (config != null && config.DeviceUUID == UUID && config.AlgorithmSettings != null) {
+                this.AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
                 foreach (var algoSetting in config.AlgorithmSettings) {
                     AlgorithmType key = algoSetting.Key;
                     AlgorithmConfig conf = algoSetting.Value;
