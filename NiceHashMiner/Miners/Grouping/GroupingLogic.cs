@@ -34,7 +34,7 @@ namespace NiceHashMiner.Miners.Grouping {
                     // nheqmnier
                 else if (MinerPaths.nheqminer == minerPath) {
                     return Is_nheqminer(a, b);
-                } else if (MinerPaths.ClaymoreZcashMiner == minerPath) {
+                } else if (MinerPaths.ClaymoreZcashMiner == minerPath || MinerPaths.OptiminerZcashMiner == minerPath) {
                     return true;
                 }
                 return false;
