@@ -251,6 +251,9 @@ namespace NiceHashMiner.Miners
                         if (BenchmarkSignalFinnished) {
                             break;
                         }
+                    } else {
+                        // wait a second reduce CPU load
+                        Thread.Sleep(1000);
                     }
                 }
             } catch (Exception ex) {
