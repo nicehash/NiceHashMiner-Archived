@@ -567,13 +567,16 @@ namespace NiceHashMiner
         virtual protected void Miner_Exited() {
             // TODO make miner restart in 5 seconds
             //Stop(MinerStopType.END, true);
-            var RestartInMS = ConfigManager.GeneralConfig.MinerRestartDelayMS > 5000 ?
-                ConfigManager.GeneralConfig.MinerRestartDelayMS : 5000;
+            ScheduleRestart(5000);
+        }
+
+        protected void ScheduleRestart(int ms) {
+            var RestartInMS = ConfigManager.GeneralConfig.MinerRestartDelayMS > ms ?
+                ConfigManager.GeneralConfig.MinerRestartDelayMS : ms;
             Helpers.ConsolePrint(MinerTAG(), ProcessTag() + String.Format(" Miner_Exited Will restart in {0} ms", RestartInMS));
             _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
             NeedsRestart = true;
             _currentCooldownTimeInSecondsLeft = RestartInMS;
-
         }
 
         protected abstract bool UpdateBindPortCommand(int oldPort, int newPort);
@@ -590,7 +593,7 @@ namespace NiceHashMiner
             return false;
         }
 
-        private void Restart() {
+        protected void Restart() {
             if (!isEnded) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Restarting miner..");
                 Stop(MinerStopType.END); // stop miner first

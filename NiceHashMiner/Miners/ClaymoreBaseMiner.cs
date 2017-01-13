@@ -91,6 +91,11 @@ namespace NiceHashMiner.Miners {
                 if (ad.Speed == 0) {
                     _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
                 }
+                // some clayomre miners have this issue reporting negative speeds in that case restart miner
+                if (ad.Speed < 0) {
+                    Helpers.ConsolePrint(this.MinerTAG(), "Reporting negative speeds will restart...");
+                    this.Restart();
+                }
             }
 
             return ad;
