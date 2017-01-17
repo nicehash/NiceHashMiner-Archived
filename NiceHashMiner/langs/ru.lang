@@ -337,5 +337,6 @@
         "Form_Main_StartMiningReturnedFalse": "NiceHashMiner не может начать майнинг. Убедитесь, что хотя-бы одно устройство включено с хотя-бы одним включенным и прошедшим бенчмарк алгоритмом",
         "Program_WMI_Error_Text": "NiceHash Miner не может запустить необходимые компоненты. Похоже, что в вашей системе отключен сервис Инструментарий управления Windows. Для корректной работы NiceHash Miner, сервис Инструментарий управления Windows должен быть включен. Этот сервис нужен для определения использования RAM и доступной информации видеоконтроллера. Включите сервис Инструментарий управления Windows вручную и запустите NiceHash Miner.",
         "Program_WMI_Error_Title": "Ошибка Инструментария управления Windows",
+        "Form_Main_Accepted_Speed_Zero" : "Warning! Algorithm {0} is reporting 0 shares accepted. Please disable this algorithm in Benchmark/Settings and report this issue to support@nicehash.com!"
     }
 }

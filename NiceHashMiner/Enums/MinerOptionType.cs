@@ -52,6 +52,7 @@ namespace NiceHashMiner.Enums {
         CUDA_Solver_Mode, // -cm
         // ClaymoreZcash
         ClaymoreZcash_a,
+        ClaymoreZcash_asm,
         ClaymoreZcash_i,  // -i
         ClaymoreZcash_wd, // -wd
         ClaymoreZcash_r,

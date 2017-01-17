@@ -622,7 +622,7 @@ namespace NiceHashMiner
 
             string[] envName = { "GPU_MAX_ALLOC_PERCENT", "GPU_USE_SYNC_OBJECTS",
                                  "GPU_SINGLE_ALLOC_PERCENT", "GPU_MAX_HEAP_SIZE", "GPU_FORCE_64BIT_PTR" };
-            string[] envValue = { "100", "1", "100", "100", "0" };
+            string[] envValue = { "100", "1", "100", "100", "1" };
 
             for (int i = 0; i < envName.Length; i++)
             {
@@ -733,6 +733,20 @@ namespace NiceHashMiner
             } else if (Settings.IsChange && Settings.IsChangeSaved) {
                 InitLocalization();
                 InitMainConfigGUIData();
+            }
+        }
+
+
+        private bool isRaiseAlertSharesNotAcceptedShown = false;
+        public void RaiseAlertSharesNotAccepted(string algoName) {
+            if (!isRaiseAlertSharesNotAcceptedShown) {
+                isRaiseAlertSharesNotAcceptedShown = true;
+
+                MessageBox.Show(String.Format(International.GetText("Form_Main_Accepted_Speed_Zero"), alg),
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                isRaiseAlertSharesNotAcceptedShown = false;
             }
         }
 

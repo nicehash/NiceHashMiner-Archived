@@ -337,5 +337,6 @@
         "Form_Main_StartMiningReturnedFalse": "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.",
         "Program_WMI_Error_Text": "NiceHash Miner cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner.",
         "Program_WMI_Error_Title": "Windows Management Instrumentation Error",
+        "Form_Main_Accepted_Speed_Zero" : "Warning! Algorithm {0} is reporting 0 shares accepted. Please disable this algorithm in Benchmark/Settings and report this issue to support@nicehash.com!"
     }
 }

@@ -42,6 +42,8 @@ namespace NiceHashMiner.Miners {
         private Timer _preventSleepTimer;
         // check internet connection 
         private Timer _internetCheckTimer;
+        // check local and web stats per algo
+        private Timer _checkWorkerStats;
         
 
         public bool IsMiningEnabled {
@@ -82,7 +84,12 @@ namespace NiceHashMiner.Miners {
             // set internet checking
             _internetCheckTimer = new Timer();
             _internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
-            _internetCheckTimer.Interval = 1000 * 1; // every minute
+            _internetCheckTimer.Interval = 1 * 1000 * 60; // every minute
+
+            // check worker stats
+            _checkWorkerStats = new Timer();
+            _checkWorkerStats.Elapsed += _checkWorkerStats_Elapsed;
+            _checkWorkerStats.Interval = 5 * 1000 * 60; // every 5 minutes
 
             // assume profitable
             IsProfitable = true;
@@ -92,9 +99,19 @@ namespace NiceHashMiner.Miners {
             if (IsMiningEnabled) {
                 _preventSleepTimer.Start();
                 _internetCheckTimer.Start();
+                _checkWorkerStats.Start();
             }
 
             IsMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
+        }
+
+        void _checkWorkerStats_Elapsed(object sender, ElapsedEventArgs e) {
+            foreach (var groupMiner in _runningGroupMiners.Values) {
+                var res = NiceHashStats.GetWorkerAlgorithmAcceptedSpeeds(_btcAdress, groupMiner.AlgorithmType, _worker);
+                if (res != null && res.accepted == 0 && _mainFormRatesComunication != null) {
+                    _mainFormRatesComunication.RaiseAlertSharesNotAccepted(AlgorithmNiceHashNames.GetName(groupMiner.AlgorithmType));
+                }
+            }
         }
 
         #region Timers stuff
@@ -134,6 +151,7 @@ namespace NiceHashMiner.Miners {
             // restroe/enable sleep
             _preventSleepTimer.Stop();
             _internetCheckTimer.Stop();
+            _checkWorkerStats.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
 
             // delete generated bin files
