@@ -4,6 +4,7 @@ namespace NiceHashMiner.Utils {
         #region CODE_GEN STUFF // listFiles.py
         public static string[] ALL_FILES_BINS = {
 
+
 @"\claymore_cryptonight\Data.bin",
 
 @"\claymore_cryptonight\msvcr110.dll",
@@ -13,6 +14,18 @@ namespace NiceHashMiner.Utils {
 @"\claymore_cryptonight\Remote manager\EthMan.exe",
 
 @"\claymore_zcash\Data.bin",
+
+@"\claymore_zcash\Data1a1.bin",
+
+@"\claymore_zcash\Data1b1.bin",
+
+@"\claymore_zcash\Data1b2.bin",
+
+@"\claymore_zcash\Data1c1.bin",
+
+@"\claymore_zcash\Data1d1.bin",
+
+@"\claymore_zcash\Data1f1.bin",
 
 @"\claymore_zcash\Data2.bin",
 
@@ -46,28 +59,6 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin\round9.bin",
 
-@"\optiminer_zcash_win\bin\xFiji_asm.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_base.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round1.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round2.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round3.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round4.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round5.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round6.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round7.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round8.bin",
-
-@"\optiminer_zcash_win\bin\xFiji_round9.bin",
-
 @"\optiminer_zcash_win\bin-191205\Bonaire_round1.bin",
 
 @"\optiminer_zcash_win\bin-191205\Bonaire_round2.bin",
@@ -85,6 +76,24 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin-191205\Bonaire_round8.bin",
 
 @"\optiminer_zcash_win\bin-191205\Bonaire_round9.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round1.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round2.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round3.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round4.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round5.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round6.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round7.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round8.bin",
+
+@"\optiminer_zcash_win\bin-191205\CapeVerde_round9.bin",
 
 @"\optiminer_zcash_win\bin-191205\Carrizo_round1.bin",
 
@@ -194,6 +203,42 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-191205\Mullins_round9.bin",
 
+@"\optiminer_zcash_win\bin-191205\Oland_round1.bin",
+
+@"\optiminer_zcash_win\bin-191205\Oland_round2.bin",
+
+@"\optiminer_zcash_win\bin-191205\Oland_round3.bin",
+
+@"\optiminer_zcash_win\bin-191205\Oland_round4.bin",
+
+@"\optiminer_zcash_win\bin-191205\Oland_round5.bin",
+
+@"\optiminer_zcash_win\bin-191205\Oland_round6.bin",
+
+@"\optiminer_zcash_win\bin-191205\Oland_round7.bin",
+
+@"\optiminer_zcash_win\bin-191205\Oland_round8.bin",
+
+@"\optiminer_zcash_win\bin-191205\Oland_round9.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round1.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round2.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round3.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round4.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round5.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round6.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round7.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round8.bin",
+
+@"\optiminer_zcash_win\bin-191205\Pitcairn_round9.bin",
+
 @"\optiminer_zcash_win\bin-191205\Spectre_round1.bin",
 
 @"\optiminer_zcash_win\bin-191205\Spectre_round2.bin",
@@ -230,6 +275,24 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-191205\Spooky_round9.bin",
 
+@"\optiminer_zcash_win\bin-191205\Tahiti_round1.bin",
+
+@"\optiminer_zcash_win\bin-191205\Tahiti_round2.bin",
+
+@"\optiminer_zcash_win\bin-191205\Tahiti_round3.bin",
+
+@"\optiminer_zcash_win\bin-191205\Tahiti_round4.bin",
+
+@"\optiminer_zcash_win\bin-191205\Tahiti_round5.bin",
+
+@"\optiminer_zcash_win\bin-191205\Tahiti_round6.bin",
+
+@"\optiminer_zcash_win\bin-191205\Tahiti_round7.bin",
+
+@"\optiminer_zcash_win\bin-191205\Tahiti_round8.bin",
+
+@"\optiminer_zcash_win\bin-191205\Tahiti_round9.bin",
+
 @"\optiminer_zcash_win\bin-191205\Tonga_round1.bin",
 
 @"\optiminer_zcash_win\bin-191205\Tonga_round2.bin",
@@ -265,6 +328,24 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin-200406\Bonaire_round8.bin",
 
 @"\optiminer_zcash_win\bin-200406\Bonaire_round9.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round1.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round2.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round3.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round4.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round5.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round6.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round7.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round8.bin",
+
+@"\optiminer_zcash_win\bin-200406\CapeVerde_round9.bin",
 
 @"\optiminer_zcash_win\bin-200406\Carrizo_round1.bin",
 
@@ -374,6 +455,42 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-200406\Mullins_round9.bin",
 
+@"\optiminer_zcash_win\bin-200406\Oland_round1.bin",
+
+@"\optiminer_zcash_win\bin-200406\Oland_round2.bin",
+
+@"\optiminer_zcash_win\bin-200406\Oland_round3.bin",
+
+@"\optiminer_zcash_win\bin-200406\Oland_round4.bin",
+
+@"\optiminer_zcash_win\bin-200406\Oland_round5.bin",
+
+@"\optiminer_zcash_win\bin-200406\Oland_round6.bin",
+
+@"\optiminer_zcash_win\bin-200406\Oland_round7.bin",
+
+@"\optiminer_zcash_win\bin-200406\Oland_round8.bin",
+
+@"\optiminer_zcash_win\bin-200406\Oland_round9.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round1.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round2.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round3.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round4.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round5.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round6.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round7.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round8.bin",
+
+@"\optiminer_zcash_win\bin-200406\Pitcairn_round9.bin",
+
 @"\optiminer_zcash_win\bin-200406\Spectre_round1.bin",
 
 @"\optiminer_zcash_win\bin-200406\Spectre_round2.bin",
@@ -428,6 +545,24 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-200406\Stoney_round9.bin",
 
+@"\optiminer_zcash_win\bin-200406\Tahiti_round1.bin",
+
+@"\optiminer_zcash_win\bin-200406\Tahiti_round2.bin",
+
+@"\optiminer_zcash_win\bin-200406\Tahiti_round3.bin",
+
+@"\optiminer_zcash_win\bin-200406\Tahiti_round4.bin",
+
+@"\optiminer_zcash_win\bin-200406\Tahiti_round5.bin",
+
+@"\optiminer_zcash_win\bin-200406\Tahiti_round6.bin",
+
+@"\optiminer_zcash_win\bin-200406\Tahiti_round7.bin",
+
+@"\optiminer_zcash_win\bin-200406\Tahiti_round8.bin",
+
+@"\optiminer_zcash_win\bin-200406\Tahiti_round9.bin",
+
 @"\optiminer_zcash_win\bin-200406\Tonga_round1.bin",
 
 @"\optiminer_zcash_win\bin-200406\Tonga_round2.bin",
@@ -481,6 +616,24 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin-203603\Bonaire_round8.bin",
 
 @"\optiminer_zcash_win\bin-203603\Bonaire_round9.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round1.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round2.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round3.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round4.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round5.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round6.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round7.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round8.bin",
+
+@"\optiminer_zcash_win\bin-203603\CapeVerde_round9.bin",
 
 @"\optiminer_zcash_win\bin-203603\Carrizo_round1.bin",
 
@@ -608,6 +761,42 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-203603\Mullins_round9.bin",
 
+@"\optiminer_zcash_win\bin-203603\Oland_round1.bin",
+
+@"\optiminer_zcash_win\bin-203603\Oland_round2.bin",
+
+@"\optiminer_zcash_win\bin-203603\Oland_round3.bin",
+
+@"\optiminer_zcash_win\bin-203603\Oland_round4.bin",
+
+@"\optiminer_zcash_win\bin-203603\Oland_round5.bin",
+
+@"\optiminer_zcash_win\bin-203603\Oland_round6.bin",
+
+@"\optiminer_zcash_win\bin-203603\Oland_round7.bin",
+
+@"\optiminer_zcash_win\bin-203603\Oland_round8.bin",
+
+@"\optiminer_zcash_win\bin-203603\Oland_round9.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round1.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round2.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round3.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round4.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round5.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round6.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round7.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round8.bin",
+
+@"\optiminer_zcash_win\bin-203603\Pitcairn_round9.bin",
+
 @"\optiminer_zcash_win\bin-203603\Spectre_round1.bin",
 
 @"\optiminer_zcash_win\bin-203603\Spectre_round2.bin",
@@ -662,6 +851,24 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-203603\Stoney_round9.bin",
 
+@"\optiminer_zcash_win\bin-203603\Tahiti_round1.bin",
+
+@"\optiminer_zcash_win\bin-203603\Tahiti_round2.bin",
+
+@"\optiminer_zcash_win\bin-203603\Tahiti_round3.bin",
+
+@"\optiminer_zcash_win\bin-203603\Tahiti_round4.bin",
+
+@"\optiminer_zcash_win\bin-203603\Tahiti_round5.bin",
+
+@"\optiminer_zcash_win\bin-203603\Tahiti_round6.bin",
+
+@"\optiminer_zcash_win\bin-203603\Tahiti_round7.bin",
+
+@"\optiminer_zcash_win\bin-203603\Tahiti_round8.bin",
+
+@"\optiminer_zcash_win\bin-203603\Tahiti_round9.bin",
+
 @"\optiminer_zcash_win\bin-203603\Tonga_round1.bin",
 
 @"\optiminer_zcash_win\bin-203603\Tonga_round2.bin",
@@ -715,6 +922,24 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin-207903\Bonaire_round8.bin",
 
 @"\optiminer_zcash_win\bin-207903\Bonaire_round9.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round1.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round2.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round3.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round4.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round5.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round6.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round7.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round8.bin",
+
+@"\optiminer_zcash_win\bin-207903\CapeVerde_round9.bin",
 
 @"\optiminer_zcash_win\bin-207903\Carrizo_round1.bin",
 
@@ -842,6 +1067,42 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-207903\Mullins_round9.bin",
 
+@"\optiminer_zcash_win\bin-207903\Oland_round1.bin",
+
+@"\optiminer_zcash_win\bin-207903\Oland_round2.bin",
+
+@"\optiminer_zcash_win\bin-207903\Oland_round3.bin",
+
+@"\optiminer_zcash_win\bin-207903\Oland_round4.bin",
+
+@"\optiminer_zcash_win\bin-207903\Oland_round5.bin",
+
+@"\optiminer_zcash_win\bin-207903\Oland_round6.bin",
+
+@"\optiminer_zcash_win\bin-207903\Oland_round7.bin",
+
+@"\optiminer_zcash_win\bin-207903\Oland_round8.bin",
+
+@"\optiminer_zcash_win\bin-207903\Oland_round9.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round1.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round2.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round3.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round4.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round5.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round6.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round7.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round8.bin",
+
+@"\optiminer_zcash_win\bin-207903\Pitcairn_round9.bin",
+
 @"\optiminer_zcash_win\bin-207903\Spectre_round1.bin",
 
 @"\optiminer_zcash_win\bin-207903\Spectre_round2.bin",
@@ -896,6 +1157,24 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-207903\Stoney_round9.bin",
 
+@"\optiminer_zcash_win\bin-207903\Tahiti_round1.bin",
+
+@"\optiminer_zcash_win\bin-207903\Tahiti_round2.bin",
+
+@"\optiminer_zcash_win\bin-207903\Tahiti_round3.bin",
+
+@"\optiminer_zcash_win\bin-207903\Tahiti_round4.bin",
+
+@"\optiminer_zcash_win\bin-207903\Tahiti_round5.bin",
+
+@"\optiminer_zcash_win\bin-207903\Tahiti_round6.bin",
+
+@"\optiminer_zcash_win\bin-207903\Tahiti_round7.bin",
+
+@"\optiminer_zcash_win\bin-207903\Tahiti_round8.bin",
+
+@"\optiminer_zcash_win\bin-207903\Tahiti_round9.bin",
+
 @"\optiminer_zcash_win\bin-207903\Tonga_round1.bin",
 
 @"\optiminer_zcash_win\bin-207903\Tonga_round2.bin",
@@ -949,6 +1228,24 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin-223600\Bonaire_round8.bin",
 
 @"\optiminer_zcash_win\bin-223600\Bonaire_round9.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round1.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round2.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round3.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round4.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round5.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round6.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round7.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round8.bin",
+
+@"\optiminer_zcash_win\bin-223600\CapeVerde_round9.bin",
 
 @"\optiminer_zcash_win\bin-223600\Carrizo_round1.bin",
 
@@ -1076,6 +1373,42 @@ namespace NiceHashMiner.Utils {
 
 @"\optiminer_zcash_win\bin-223600\Mullins_round9.bin",
 
+@"\optiminer_zcash_win\bin-223600\Oland_round1.bin",
+
+@"\optiminer_zcash_win\bin-223600\Oland_round2.bin",
+
+@"\optiminer_zcash_win\bin-223600\Oland_round3.bin",
+
+@"\optiminer_zcash_win\bin-223600\Oland_round4.bin",
+
+@"\optiminer_zcash_win\bin-223600\Oland_round5.bin",
+
+@"\optiminer_zcash_win\bin-223600\Oland_round6.bin",
+
+@"\optiminer_zcash_win\bin-223600\Oland_round7.bin",
+
+@"\optiminer_zcash_win\bin-223600\Oland_round8.bin",
+
+@"\optiminer_zcash_win\bin-223600\Oland_round9.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round1.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round2.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round3.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round4.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round5.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round6.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round7.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round8.bin",
+
+@"\optiminer_zcash_win\bin-223600\Pitcairn_round9.bin",
+
 @"\optiminer_zcash_win\bin-223600\Spectre_round1.bin",
 
 @"\optiminer_zcash_win\bin-223600\Spectre_round2.bin",
@@ -1129,6 +1462,24 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin-223600\Stoney_round8.bin",
 
 @"\optiminer_zcash_win\bin-223600\Stoney_round9.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round1.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round2.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round3.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round4.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round5.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round6.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round7.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round8.bin",
+
+@"\optiminer_zcash_win\bin-223600\Tahiti_round9.bin",
 
 @"\optiminer_zcash_win\bin-223600\Tonga_round1.bin",
 

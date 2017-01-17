@@ -742,7 +742,7 @@ namespace NiceHashMiner
             if (!isRaiseAlertSharesNotAcceptedShown) {
                 isRaiseAlertSharesNotAcceptedShown = true;
 
-                MessageBox.Show(String.Format(International.GetText("Form_Main_Accepted_Speed_Zero"), alg),
+                MessageBox.Show(String.Format(International.GetText("Form_Main_Accepted_Speed_Zero"), algoName),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
