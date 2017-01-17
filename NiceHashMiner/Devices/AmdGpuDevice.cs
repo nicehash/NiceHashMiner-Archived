@@ -18,9 +18,13 @@ namespace NiceHashMiner.Devices {
         private OpenCLDevice _openClSubset;
         public readonly string InfSection; // has arhitecture string
 
+        // new drivers make some algorithms unusable 21.19.164.1 => driver not working with NeoScrypt and 
+        public bool DriverDisableAlgos { get; private set; }
+
         public string Codename { get { return _openClSubset._CL_DEVICE_NAME; } }
 
-        public AmdGpuDevice(OpenCLDevice openClSubset, bool isOldDriver, string infSection) {
+        public AmdGpuDevice(OpenCLDevice openClSubset, bool isOldDriver, string infSection, bool driverDisableAlgo) {
+            DriverDisableAlgos = driverDisableAlgo;
             InfSection = infSection;
             _openClSubset = openClSubset;
             // Check for optimized version

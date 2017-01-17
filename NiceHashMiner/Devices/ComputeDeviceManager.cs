@@ -521,6 +521,7 @@ namespace NiceHashMiner.Devices
                     #region AMD driver check, ADL returns 0
                     // check the driver version bool EnableOptimizedVersion = true;
                     Dictionary<string, bool> deviceDriverOld = new Dictionary<string, bool>();
+                    Dictionary<string, bool> deviceDriverNO_neoscrypt_lyra2re = new Dictionary<string, bool>();
                     string minerPath = MinerPaths.sgminer_5_5_0_general;
                     bool ShowWarningDialog = false;
 
@@ -528,9 +529,18 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint(TAG, String.Format("Checking AMD device (driver): {0} ({1})", vidContrllr.Name, vidContrllr.DriverVersion));
 
                         deviceDriverOld[vidContrllr.Name] = false;
+                        deviceDriverNO_neoscrypt_lyra2re[vidContrllr.Name] = false;
+                        Version sgminer_NO_neoscrypt_lyra2re = new Version("21.19.164.1");
                         // TODO checking radeon drivers only?
                         if ((vidContrllr.Name.Contains("AMD") || vidContrllr.Name.Contains("Radeon")) && ShowWarningDialog == false) {
                             Version AMDDriverVersion = new Version(vidContrllr.DriverVersion);
+
+                            bool greaterOrEqual = AMDDriverVersion.CompareTo(sgminer_NO_neoscrypt_lyra2re) >= 0;
+                            if (greaterOrEqual) {
+                                deviceDriverNO_neoscrypt_lyra2re[vidContrllr.Name] = true;
+                                Helpers.ConsolePrint(TAG, "Driver version seems to be " + sgminer_NO_neoscrypt_lyra2re.ToString() + " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
+                            }
+
 
                             if (AMDDriverVersion.Major < 15) {
                                 ShowWarningDialog = true;
@@ -743,7 +753,7 @@ namespace NiceHashMiner.Devices
                                         int busID = amdGpus[i_id].AMD_BUS_ID;
                                         if (busID != -1 && _busIdsInfo.ContainsKey(busID)) {
                                             var deviceName = _busIdsInfo[busID].Item1;
-                                            var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName], _busIdsInfo[busID].Item3);
+                                            var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName], _busIdsInfo[busID].Item3, deviceDriverNO_neoscrypt_lyra2re[deviceName]);
                                             newAmdDev.DeviceName = deviceName;
                                             newAmdDev.UUID = _busIdsInfo[busID].Item2;
                                             bool isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
@@ -794,7 +804,7 @@ namespace NiceHashMiner.Devices
 
                                         var deviceName = AMDVideoControllers[i].Name;
                                         if(AMDVideoControllers[i].InfSection == null) AMDVideoControllers[i].InfSection = "";
-                                        var newAmdDev = new AmdGpuDevice(amdGpus[i], deviceDriverOld[deviceName], AMDVideoControllers[i].InfSection);
+                                        var newAmdDev = new AmdGpuDevice(amdGpus[i], deviceDriverOld[deviceName], AMDVideoControllers[i].InfSection, deviceDriverNO_neoscrypt_lyra2re[deviceName]);
                                         newAmdDev.DeviceName = deviceName;
                                         newAmdDev.UUID = "UNUSED";
                                         bool isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;

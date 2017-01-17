@@ -39,6 +39,8 @@ namespace NiceHashMiner.Devices
         public readonly bool IsOptimizedVersion;
         public readonly string Codename;
         public readonly string InfSection;
+        // amd has some algos not working with new drivers
+        public readonly bool DriverDisableAlgos;
 
         //public DeviceBenchmarkConfig_rem DeviceBenchmarkConfig { get; private set; }
         public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
@@ -107,6 +109,7 @@ namespace NiceHashMiner.Devices
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
             AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
+            DriverDisableAlgos = amdDevice.DriverDisableAlgos; ;
         }
 
         // combines long and short name

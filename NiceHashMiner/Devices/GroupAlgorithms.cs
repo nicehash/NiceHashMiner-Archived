@@ -76,6 +76,16 @@ namespace NiceHashMiner.Devices {
                                 }
                             }
                         }
+
+                        // drivers algos issue
+                        if (device.DriverDisableAlgos) {
+                            List<AlgorithmType> _3rdPartyOnlyAlgos = new List<AlgorithmType>() { AlgorithmType.NeoScrypt, AlgorithmType.Lyra2REv2 };
+                            foreach (var algoType in _3rdPartyOnlyAlgos) {
+                                if (algoSettings.ContainsKey(algoType)) {
+                                    algoSettings.Remove(algoType);
+                                }
+                            }
+                        }
                     }
 
                     // check if it is Etherum capable
