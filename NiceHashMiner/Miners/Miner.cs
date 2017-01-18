@@ -497,11 +497,33 @@ namespace NiceHashMiner
             }
         }
 
-        public bool IsXminutesMining(int minutes) {
+
+        int minerStatsCheckCount = 3;
+        public bool ShouldCheckMinerStats() {
+            int minuteCheck = 1; // 1 minutes default
+            if (minerStatsCheckCount == 3) {
+                minuteCheck = 15;
+            } else if (minerStatsCheckCount == 2) {
+                minuteCheck = 5;
+            } else if (minerStatsCheckCount == 1) {
+                minuteCheck = 2;
+            }
+            --minerStatsCheckCount;
+            return IsXminutesMining(minuteCheck);
+        }
+
+        public bool IsCheckShowWarning() {
+            return minerStatsCheckCount < 0;
+        }
+
+        private bool IsXminutesMining(int minutes) {
             return _startMining.AddMinutes(minutes) < DateTime.UtcNow;
         }
         public void ResetCheckTime() {
             _startMining = DateTime.UtcNow;
+        }
+        public void ResetCheckStateCount() {
+            minerStatsCheckCount = 3;
         }
 
         abstract protected bool BenchmarkParseLine(string outdata);
@@ -511,6 +533,7 @@ namespace NiceHashMiner
         virtual protected NiceHashProcess _Start()
         {
             ResetCheckTime();
+            ResetCheckStateCount();
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 

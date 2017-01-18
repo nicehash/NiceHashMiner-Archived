@@ -105,16 +105,24 @@ namespace NiceHashMiner.Miners {
             IsMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
         }
 
+        // TODO this feature is needs more feedback
         void _checkWorkerStats_Elapsed(object sender, ElapsedEventArgs e) {
+            AlgorithmType type = AlgorithmType.NONE;
+            bool showWarning = false;
             foreach (var groupMiner in _runningGroupMiners.Values) {
-                if (groupMiner.Miner.IsXminutesMining(15)) {
+                if (groupMiner.Miner.ShouldCheckMinerStats()) {
                     groupMiner.Miner.ResetCheckTime();
                     var res = NiceHashStats.GetWorkerAlgorithmAcceptedSpeeds(_btcAdress, groupMiner.AlgorithmType, _worker);
                     if (res != null && res.accepted == 0 && _mainFormRatesComunication != null) {
-                        _mainFormRatesComunication.RaiseAlertSharesNotAccepted(AlgorithmNiceHashNames.GetName(groupMiner.AlgorithmType));
-                        break;
+                        type = groupMiner.AlgorithmType;
+                        showWarning = groupMiner.Miner.IsCheckShowWarning();
+                    } else {
+                        groupMiner.Miner.ResetCheckStateCount();
                     }
                 }
+            }
+            if (showWarning) {
+                _mainFormRatesComunication.RaiseAlertSharesNotAccepted(AlgorithmNiceHashNames.GetName(type));
             }
         }
 

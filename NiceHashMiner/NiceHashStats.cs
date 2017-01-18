@@ -165,13 +165,12 @@ namespace NiceHashMiner
                         }
                     }
                 }
-                if (ret.Count > 0) {
-                    var first = ret[0];
-                    if (first.speedsStatus.ContainsKey("a")) {
-                        retEl.accepted = first.speedsStatus["a"];
-                    } 
-                    if (first.speedsStatus.ContainsKey("rs")) {
-                        retEl.rejected = first.speedsStatus["rs"];
+                foreach (var r in ret) {
+                    if (r.speedsStatus.ContainsKey("a")) {
+                        retEl.accepted += r.speedsStatus["a"];
+                    }
+                    if (r.speedsStatus.ContainsKey("rs")) {
+                        retEl.rejected += r.speedsStatus["rs"];
                     }
                 }
 
