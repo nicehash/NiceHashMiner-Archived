@@ -498,7 +498,7 @@ namespace NiceHashMiner
         }
 
         public bool Is5minuteMining() {
-            return _startMining.AddMinutes(5) > DateTime.UtcNow;
+            return _startMining.AddMinutes(5) < DateTime.UtcNow;
         }
         public void ResetCheckTime() {
             _startMining = DateTime.UtcNow;

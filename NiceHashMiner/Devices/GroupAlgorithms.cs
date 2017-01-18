@@ -75,6 +75,18 @@ namespace NiceHashMiner.Devices {
                                     algoSettings.Remove(algoType);
                                 }
                             }
+                        } else { // 3rd party enabled
+                            // 
+                            if (algoSettings.ContainsKey(AlgorithmType.CryptoNight)) {
+                                //string regex_a_3 = "[5|6][0-9][0-9][0-9]";
+                                List<string> a_4 = new List<string>() {"280", "280x", "270", "270x", "290", "290x"};
+                                foreach (var namePart in a_4) {
+                                    if(device.Name.Contains(namePart)) {
+                                        algoSettings[AlgorithmType.CryptoNight].ExtraLaunchParameters = "-a 4";
+                                        break;
+                                    }
+                                }
+                            }
                         }
 
                         // drivers algos issue

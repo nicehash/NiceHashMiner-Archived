@@ -108,10 +108,11 @@ namespace NiceHashMiner.Miners {
         void _checkWorkerStats_Elapsed(object sender, ElapsedEventArgs e) {
             foreach (var groupMiner in _runningGroupMiners.Values) {
                 if (groupMiner.Miner.Is5minuteMining()) {
-                    groupMiner.Miner.ResetCheckTime();
+                    //groupMiner.Miner.ResetCheckTime();
                     var res = NiceHashStats.GetWorkerAlgorithmAcceptedSpeeds(_btcAdress, groupMiner.AlgorithmType, _worker);
                     if (res != null && res.accepted == 0 && _mainFormRatesComunication != null) {
                         _mainFormRatesComunication.RaiseAlertSharesNotAccepted(AlgorithmNiceHashNames.GetName(groupMiner.AlgorithmType));
+                        break;
                     }
                 }
             }
