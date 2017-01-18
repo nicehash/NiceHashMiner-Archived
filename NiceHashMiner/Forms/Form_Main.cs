@@ -737,18 +737,18 @@ namespace NiceHashMiner
         }
 
 
-        private bool isRaiseAlertSharesNotAcceptedShown = false;
-        public void RaiseAlertSharesNotAccepted(string algoName) {
-            if (!isRaiseAlertSharesNotAcceptedShown) {
-                isRaiseAlertSharesNotAcceptedShown = true;
+        //private bool isRaiseAlertSharesNotAcceptedShown = false;
+        //public void RaiseAlertSharesNotAccepted(string algoName) {
+        //    if (!isRaiseAlertSharesNotAcceptedShown) {
+        //        isRaiseAlertSharesNotAcceptedShown = true;
 
-                MessageBox.Show(String.Format(International.GetText("Form_Main_Accepted_Speed_Zero"), algoName),
-                                International.GetText("Warning_with_Exclamation"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        MessageBox.Show(String.Format(International.GetText("Form_Main_Accepted_Speed_Zero"), algoName),
+        //                        International.GetText("Warning_with_Exclamation"),
+        //                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                isRaiseAlertSharesNotAcceptedShown = false;
-            }
-        }
+        //        isRaiseAlertSharesNotAcceptedShown = false;
+        //    }
+        //}
 
 
         private void buttonStartMining_Click(object sender, EventArgs e) {

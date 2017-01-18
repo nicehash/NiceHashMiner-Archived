@@ -9,6 +9,6 @@ namespace NiceHashMiner.Interfaces {
         void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException);
         void ShowNotProfitable(string msg);
         void HideNotProfitable();
-        void RaiseAlertSharesNotAccepted(string algoName);
+        //void RaiseAlertSharesNotAccepted(string algoName);
     }
 }
