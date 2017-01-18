@@ -79,7 +79,18 @@ namespace NiceHashMiner.Devices {
                             // 
                             if (algoSettings.ContainsKey(AlgorithmType.CryptoNight)) {
                                 //string regex_a_3 = "[5|6][0-9][0-9][0-9]";
-                                List<string> a_4 = new List<string>() {"280", "280x", "270", "270x", "290", "290x"};
+                                List<string> a_4 = new List<string>() {
+                                    "270",
+                                    "270x",
+                                    "280",
+                                    "280x",
+                                    "290",
+                                    "290x",
+                                    "370",
+                                    "380",
+                                    "390",
+                                    "470",
+                                    "480"};
                                 foreach (var namePart in a_4) {
                                     if(device.Name.Contains(namePart)) {
                                         algoSettings[AlgorithmType.CryptoNight].ExtraLaunchParameters = "-a 4";
