@@ -71,6 +71,9 @@ namespace NiceHashMiner
         private MinerPID_Data _currentPidData;
         private List<MinerPID_Data> _allPidData = new List<MinerPID_Data>();
 
+        // for local and global checking. give miner at least 5 minutes to take affect
+        private DateTime _startMining;
+
         // Benchmark stuff
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
@@ -494,12 +497,20 @@ namespace NiceHashMiner
             }
         }
 
+        public bool Is5minuteMining() {
+            return _startMining.AddMinutes(5) > DateTime.UtcNow;
+        }
+        public void ResetCheckTime() {
+            _startMining = DateTime.UtcNow;
+        }
+
         abstract protected bool BenchmarkParseLine(string outdata);
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
         virtual protected NiceHashProcess _Start()
         {
+            ResetCheckTime();
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 

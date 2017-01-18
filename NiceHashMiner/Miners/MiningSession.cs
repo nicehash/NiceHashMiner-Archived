@@ -89,7 +89,7 @@ namespace NiceHashMiner.Miners {
             // check worker stats
             _checkWorkerStats = new Timer();
             _checkWorkerStats.Elapsed += _checkWorkerStats_Elapsed;
-            _checkWorkerStats.Interval = 5 * 1000 * 60; // every 5 minutes
+            _checkWorkerStats.Interval = 2 * 1000 * 60; // every 2 minutes check, miners have to mine 5 minutes to take into account
 
             // assume profitable
             IsProfitable = true;
@@ -107,9 +107,12 @@ namespace NiceHashMiner.Miners {
 
         void _checkWorkerStats_Elapsed(object sender, ElapsedEventArgs e) {
             foreach (var groupMiner in _runningGroupMiners.Values) {
-                var res = NiceHashStats.GetWorkerAlgorithmAcceptedSpeeds(_btcAdress, groupMiner.AlgorithmType, _worker);
-                if (res != null && res.accepted == 0 && _mainFormRatesComunication != null) {
-                    _mainFormRatesComunication.RaiseAlertSharesNotAccepted(AlgorithmNiceHashNames.GetName(groupMiner.AlgorithmType));
+                if (groupMiner.Miner.Is5minuteMining()) {
+                    groupMiner.Miner.ResetCheckTime();
+                    var res = NiceHashStats.GetWorkerAlgorithmAcceptedSpeeds(_btcAdress, groupMiner.AlgorithmType, _worker);
+                    if (res != null && res.accepted == 0 && _mainFormRatesComunication != null) {
+                        _mainFormRatesComunication.RaiseAlertSharesNotAccepted(AlgorithmNiceHashNames.GetName(groupMiner.AlgorithmType));
+                    }
                 }
             }
         }
