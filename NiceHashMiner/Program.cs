@@ -64,8 +64,8 @@ namespace NiceHashMiner
                 var commandLineArgs = new CommandLineParser(argv);
 
                 Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
-
-                if (!ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang) {
+                bool tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER;
+                if (!tosChecked || !ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang) {
                     Helpers.ConsolePrint("NICEHASH", "No config file found. Running NiceHash Miner for the first time. Choosing a default language.");
                     Application.Run(new Form_ChooseLanguage());
                 }
@@ -81,7 +81,9 @@ namespace NiceHashMiner
 
                 // check WMI
                 if (Helpers.IsWMIEnabled()) {
-                    Application.Run(new Form_Main());
+                    if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER) {
+                        Application.Run(new Form_Main());
+                    }
                 }
                 else {
                     MessageBox.Show(International.GetText("Program_WMI_Error_Text"),

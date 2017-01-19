@@ -66,6 +66,7 @@ namespace NiceHashMiner.Configs.Data {
         public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
         // 
         public string hwid = "";
+        public int agreedWithTOS = 0;
 
         // methods
         public void SetDefaults() {
