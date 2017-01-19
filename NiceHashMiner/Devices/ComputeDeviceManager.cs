@@ -876,6 +876,16 @@ namespace NiceHashMiner.Devices
                     dev._3rdPartyMinerChange();
                 }
             }
+
+            public static int GetCountForType(DeviceType type) {
+                int count = 0;
+                foreach (var device in Avaliable.AllAvaliableDevices) {
+                    if (device.DeviceType == type) {
+                        ++count;
+                    }
+                }
+                return count;
+            }
         }
 
         public static class Group {
