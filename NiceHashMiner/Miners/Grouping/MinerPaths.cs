@@ -86,7 +86,7 @@ namespace NiceHashMiner.Miners.Grouping
             // special cases
             // AlgorithmType.DaggerHashimoto special shared case
             if (algorithmType == AlgorithmType.DaggerHashimoto
-                && (/*deviceType == DeviceType.AMD ||*/ deviceType == DeviceType.NVIDIA)) {
+                && (deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer == false || deviceType == DeviceType.NVIDIA)) {
                 return MinerPaths.ethminer;
             }
             // AlgorithmType.Equihash special shared case

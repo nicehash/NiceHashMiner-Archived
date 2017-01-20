@@ -68,15 +68,7 @@ namespace NiceHashMiner.Devices {
                         }
 
                         // check if 3rd party is enabled and allow 3rd party only algos
-                        if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES == false) {
-                            List<AlgorithmType> _3rdPartyOnlyAlgos = new List<AlgorithmType>() { AlgorithmType.CryptoNight };
-                            foreach (var algoType in _3rdPartyOnlyAlgos) {
-                                if (algoSettings.ContainsKey(algoType)) {
-                                    algoSettings.Remove(algoType);
-                                }
-                            }
-                        } else { // 3rd party enabled
-                            // 
+                        if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES && ConfigManager.GeneralConfig.AMD_CryptoNight_ForceSgminer == false) {
                             if (algoSettings.ContainsKey(AlgorithmType.CryptoNight)) {
                                 //string regex_a_3 = "[5|6][0-9][0-9][0-9]";
                                 List<string> a_4 = new List<string>() {
@@ -92,7 +84,7 @@ namespace NiceHashMiner.Devices {
                                     "470",
                                     "480"};
                                 foreach (var namePart in a_4) {
-                                    if(device.Name.Contains(namePart)) {
+                                    if (device.Name.Contains(namePart)) {
                                         algoSettings[AlgorithmType.CryptoNight].ExtraLaunchParameters = "-a 4";
                                         break;
                                     }
@@ -109,21 +101,22 @@ namespace NiceHashMiner.Devices {
                                 }
                             }
                         }
-                        if (ComputeDeviceManager.Avaliable.GetCountForType(DeviceType.AMD) > 4) {
+                        if (ComputeDeviceManager.Avaliable.GetCountForType(DeviceType.AMD) > 4 && ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer == false) {
                             if (algoSettings.ContainsKey(AlgorithmType.DaggerHashimoto)) {
                                 algoSettings.Remove(AlgorithmType.DaggerHashimoto);
                             }
                         }
+                    }
+                    // check if AlgorithmType.DaggerHashimoto and sgminer
+                    if (ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer) {
+                        // TODO set best defaults
                     }
 
                     // check if it is Etherum capable
                     if (algoSettings.ContainsKey(AlgorithmType.DaggerHashimoto) && device.IsEtherumCapale == false) {
                         algoSettings.Remove(AlgorithmType.DaggerHashimoto);
                     }
-                    //// also check for Equihash as it needs 2GB GPU
-                    //if (algoSettings.ContainsKey(AlgorithmType.Equihash) && device.IsEtherumCapale == false) {
-                    //    algoSettings.Remove(AlgorithmType.Equihash);
-                    //}
+                    
                 }
                 return algoSettings;
             }
@@ -170,7 +163,8 @@ namespace NiceHashMiner.Devices {
                     { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" + AmdGpuDevice.TemperatureParam } },
                 { AlgorithmType.Lbry, new Algorithm(AlgorithmType.Lbry, "lbry") 
                     { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" + AmdGpuDevice.TemperatureParam } },
-                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight")  }, // for now only 3rd party support
+                { AlgorithmType.CryptoNight, new Algorithm(AlgorithmType.CryptoNight, "cryptonight") 
+                    { ExtraLaunchParameters = DefaultParam + "--rawintensity 512 -w 4 -g 2" + AmdGpuDevice.TemperatureParam } }, // TODO find best performance
                 { AlgorithmType.Equihash, new Algorithm(AlgorithmType.Equihash, "equihash") }
                 };
             }
