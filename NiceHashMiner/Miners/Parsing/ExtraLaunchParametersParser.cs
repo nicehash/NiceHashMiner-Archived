@@ -399,10 +399,12 @@ namespace NiceHashMiner.Miners.Parsing {
                         return Parse(MiningPairs, _ccimerOptions);
                     } else if (algorithmType == AlgorithmType.CryptoNight) {
                         // check if any device is SM21 or SM3.x if yes return empty for stability reasons
-                        foreach (var pair in MiningPairs) {
-                            var groupType = pair.Device.DeviceGroupType;
-                            if (groupType == DeviceGroupType.NVIDIA_2_1 || groupType == DeviceGroupType.NVIDIA_3_x) {
-                                return "";
+                        if (ConfigManager.GeneralConfig.NVIDIA_CryptoNight_Preventive) {
+                            foreach (var pair in MiningPairs) {
+                                var groupType = pair.Device.DeviceGroupType;
+                                if (groupType == DeviceGroupType.NVIDIA_2_1 || groupType == DeviceGroupType.NVIDIA_3_x) {
+                                    return "";
+                                }
                             }
                         }
                         return Parse(MiningPairs, _ccimerCryptoNightOptions, true);
