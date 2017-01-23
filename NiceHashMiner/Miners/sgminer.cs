@@ -208,7 +208,7 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkThreadRoutine(object CommandLine) {
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS * 3); // increase wait for sgminer
 
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
