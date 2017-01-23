@@ -19,7 +19,7 @@ namespace NiceHashMiner {
         public static string NHM_API_stats = "https://www.nicehash.com/api?method=stats.provider&addr=";
         public static string NHM_API_info = "https://www.nicehash.com/api?method=simplemultialgo.info";
         public static string NHM_API_version = "https://www.nicehash.com/nicehashminer?method=version";
-        public static string NHM_API_stats_provider_workers = "https://www.nicehash.com/api?method=stats.provider.workers&addr=";
+        //public static string NHM_API_stats_provider_workers = "https://www.nicehash.com/api?method=stats.provider.workers&addr=";
 
         // device profits
         public static string NHM_Profit_Check = "https://www.nicehash.com/?utm_source=NHM&p=calc&name=";
