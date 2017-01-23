@@ -112,7 +112,7 @@ namespace NiceHashMiner.Configs.Data {
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
             AMD_Equihash_3rdParty = AMD_Equihash_3rdParty.Claymore;
-            AMD_DaggerHashimoto_UseSgminer = false;
+            AMD_DaggerHashimoto_UseSgminer = true;
             AMD_CryptoNight_ForceSgminer = false;
         }
 
