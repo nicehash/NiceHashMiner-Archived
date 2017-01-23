@@ -67,12 +67,8 @@ namespace NiceHashMiner.Miners.Grouping {
             if(Miner.IsRunning) {
                 return;
             }
-            int waitTimeMS = ConfigManager.GeneralConfig.MinerRestartDelayMS;
-            if (waitTimeMS < 2000 && Miner is sgminer && AlgorithmType == AlgorithmType.CryptoNight) {
-                waitTimeMS = 2000;
-            }
             // Wait before new start
-            System.Threading.Thread.Sleep(waitTimeMS);
+            System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             string name = Globals.NiceHashData[AlgorithmType].name;
             int port = Globals.NiceHashData[AlgorithmType].port;
