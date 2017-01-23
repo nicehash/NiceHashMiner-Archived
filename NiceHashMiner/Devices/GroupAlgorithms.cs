@@ -90,6 +90,11 @@ namespace NiceHashMiner.Devices {
                                     }
                                 }
                             }
+                        } else { // we are using sgminer for CryptoNight
+                            // set different defaults for Hawaii
+                            if (algoSettings.ContainsKey(AlgorithmType.CryptoNight) && device.Name.Contains("Hawaii")) {
+                                algoSettings[AlgorithmType.CryptoNight].ExtraLaunchParameters = "--rawintensity 640 -w 8 -g 2";
+                            }
                         }
 
                         // drivers algos issue
@@ -101,11 +106,7 @@ namespace NiceHashMiner.Devices {
                                 }
                             }
                         }
-                    }
-                    // check if AlgorithmType.DaggerHashimoto and sgminer
-                    if (ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer) {
-                        // TODO set best defaults
-                    }
+                    } // END AMD case
 
                     // check if it is Etherum capable
                     if (algoSettings.ContainsKey(AlgorithmType.DaggerHashimoto) && device.IsEtherumCapale == false) {
