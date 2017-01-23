@@ -107,7 +107,7 @@ namespace NiceHashMiner.Miners.Grouping
                 }
             }
             // 3rd party miner
-            if (algorithmType == AlgorithmType.CryptoNight && deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES) {
+            if (algorithmType == AlgorithmType.CryptoNight && deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES && ConfigManager.GeneralConfig.AMD_CryptoNight_ForceSgminer == false) {
                 return MinerPaths.ClaymoreCryptoNightMiner;
             }
             // normal stuff

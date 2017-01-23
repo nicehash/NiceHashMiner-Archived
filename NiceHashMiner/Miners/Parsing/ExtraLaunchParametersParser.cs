@@ -340,7 +340,6 @@ namespace NiceHashMiner.Miners.Parsing {
             _showLog = showLog;
 
             // parse for nheqminer
-            bool deviceCheckSkip = algorithmType == AlgorithmType.Equihash || algorithmType == AlgorithmType.DaggerHashimoto;
             if (algorithmType == AlgorithmType.Equihash) {
                 // nheqminer
                 if (minerPath == MinerPaths.nheqminer) {
@@ -365,7 +364,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 } else if (minerPath == MinerPaths.ClaymoreZcashMiner) {
                     return Parse(MiningPairs, _ClaymoreZcash_Options);
                 }
-            } else if (algorithmType == AlgorithmType.DaggerHashimoto && ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer == false) { // ethminer dagger
+            } else if (minerPath == MinerPaths.ethminer && algorithmType == AlgorithmType.DaggerHashimoto) { // ethminer dagger
                 // use if missing compute device for correct mapping
                 // init fakes workaround
                 var cdevs_mappings = new List<MiningPair>();
@@ -389,7 +388,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 return Parse(MiningPairs, _Claymore_cryptonight_Options);
             } else if (minerPath == MinerPaths.OptiminerZcashMiner) {
                 return Parse(MiningPairs, _OptiminerZcash_Options);
-            } else if (deviceCheckSkip == false) {
+            } else {
                 // parse for device
                 if (deviceType == DeviceType.CPU) {
                     CheckAndSetCPUPairs(MiningPairs);
