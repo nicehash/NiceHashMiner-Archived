@@ -365,7 +365,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 } else if (minerPath == MinerPaths.ClaymoreZcashMiner) {
                     return Parse(MiningPairs, _ClaymoreZcash_Options);
                 }
-            } else if (algorithmType == AlgorithmType.DaggerHashimoto) { // ethminer dagger
+            } else if (algorithmType == AlgorithmType.DaggerHashimoto && ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer == false) { // ethminer dagger
                 // use if missing compute device for correct mapping
                 // init fakes workaround
                 var cdevs_mappings = new List<MiningPair>();
