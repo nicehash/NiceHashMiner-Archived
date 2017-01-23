@@ -86,7 +86,8 @@ namespace NiceHashMiner.Miners.Grouping
             // special cases
             // AlgorithmType.DaggerHashimoto special shared case
             if (algorithmType == AlgorithmType.DaggerHashimoto
-                && (deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer == false || deviceType == DeviceType.NVIDIA)) {
+                && (
+                (deviceType == DeviceType.AMD && ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer == false) || deviceType == DeviceType.NVIDIA)) {
                 return MinerPaths.ethminer;
             }
             // AlgorithmType.Equihash special shared case
@@ -169,6 +170,9 @@ namespace NiceHashMiner.Miners.Grouping
 
         static class AMD_GROUP {
             public static string sgminer_path(AlgorithmType type, string gpuCodename, bool isOptimized) {
+                if (AlgorithmType.CryptoNight == type || AlgorithmType.DaggerHashimoto == type) {
+                    return MinerPaths.sgminer_gm;
+                }
                 if (isOptimized) {
                     if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
                         if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
@@ -182,9 +186,6 @@ namespace NiceHashMiner.Miners.Grouping
                         else
                             return MinerPaths.sgminer_5_1_1_optimized;
                     }
-                }
-                if (AlgorithmType.CryptoNight == type || AlgorithmType.DaggerHashimoto == type) {
-                    return MinerPaths.sgminer_gm;
                 }
 
                 return MinerPaths.sgminer_5_5_0_general;

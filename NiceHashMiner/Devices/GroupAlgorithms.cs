@@ -94,16 +94,11 @@ namespace NiceHashMiner.Devices {
 
                         // drivers algos issue
                         if (device.DriverDisableAlgos) {
-                            List<AlgorithmType> _3rdPartyOnlyAlgos = new List<AlgorithmType>() { AlgorithmType.NeoScrypt, AlgorithmType.Lyra2REv2, AlgorithmType.DaggerHashimoto };
+                            List<AlgorithmType> _3rdPartyOnlyAlgos = new List<AlgorithmType>() { AlgorithmType.NeoScrypt, AlgorithmType.Lyra2REv2 };
                             foreach (var algoType in _3rdPartyOnlyAlgos) {
                                 if (algoSettings.ContainsKey(algoType)) {
                                     algoSettings.Remove(algoType);
                                 }
-                            }
-                        }
-                        if (ComputeDeviceManager.Avaliable.GetCountForType(DeviceType.AMD) > 4 && ConfigManager.GeneralConfig.AMD_DaggerHashimoto_UseSgminer == false) {
-                            if (algoSettings.ContainsKey(AlgorithmType.DaggerHashimoto)) {
-                                algoSettings.Remove(AlgorithmType.DaggerHashimoto);
                             }
                         }
                     }

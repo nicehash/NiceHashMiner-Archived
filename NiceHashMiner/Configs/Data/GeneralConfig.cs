@@ -59,7 +59,7 @@ namespace NiceHashMiner.Configs.Data {
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;
         public AMD_Equihash_3rdParty AMD_Equihash_3rdParty = AMD_Equihash_3rdParty.Claymore;
-        public bool AMD_DaggerHashimoto_UseSgminer = false;
+        public bool AMD_DaggerHashimoto_UseSgminer = true;
         public bool AMD_CryptoNight_ForceSgminer = false;
         public bool NVIDIA_CryptoNight_Preventive = true;
 
