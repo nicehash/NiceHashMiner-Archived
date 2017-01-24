@@ -32,7 +32,7 @@ namespace NiceHashMiner.Configs.Data {
         // TODO deprecate this
         public DeviceDetectionConfig DeviceDetection = new DeviceDetectionConfig();
 
-        public bool DisableAMDTempControl = false;
+        public bool DisableAMDTempControl = true;
         public bool DisableDefaultOptimizations = false;
 
         public bool AutoScaleBTCValues = true;
@@ -86,7 +86,7 @@ namespace NiceHashMiner.Configs.Data {
             MinimizeToTray = false;
             BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             DeviceDetection = new DeviceDetectionConfig();
-            DisableAMDTempControl = false;
+            DisableAMDTempControl = true;
             DisableDefaultOptimizations = false;
             AutoScaleBTCValues = true;
             StartMiningWhenIdle = false;
