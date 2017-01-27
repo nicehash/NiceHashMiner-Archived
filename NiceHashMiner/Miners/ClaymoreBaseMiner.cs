@@ -279,7 +279,5 @@ namespace NiceHashMiner.Miners {
             }
             return 0;
         }
-
-
     }
 }

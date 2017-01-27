@@ -74,6 +74,7 @@ namespace NiceHashMiner.Enums {
         ClaymoreCryptoNight_r,
         ClaymoreCryptoNight_nofee,
         ClaymoreCryptoNight_li,
+        ClaymoreCryptoNight_h,
         ClaymoreCryptoNight_tt, // -tt
         ClaymoreCryptoNight_ttli, // not present?
         ClaymoreCryptoNight_tstop,

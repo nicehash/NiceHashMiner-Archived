@@ -79,7 +79,6 @@ namespace NiceHashMiner.Miners.Equihash {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
-            TcpClient client = null;
             JsonApiResponse resp = null;
             try {
                 string DataToSend =  GetHttpRequestNHMAgentStrin("");
@@ -91,7 +90,6 @@ namespace NiceHashMiner.Miners.Equihash {
                         resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStrJSON.Trim(), Globals.JsonSettings);
                     }
                 }
-                client.Close();
                 //Helpers.ConsolePrint("OptiminerZcashMiner API back:", respStr);
             } catch (Exception ex) {
                 Helpers.ConsolePrint("OptiminerZcashMiner", "GetSummary exception: " + ex.Message);

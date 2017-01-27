@@ -38,6 +38,5 @@ namespace NiceHashMiner.Miners {
             string ret =  " -benchmark 1 " + GetDevicesCommandString();
             return ret;
         }
-
     }
 }

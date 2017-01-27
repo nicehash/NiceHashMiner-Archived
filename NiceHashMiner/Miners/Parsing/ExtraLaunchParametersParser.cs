@@ -117,6 +117,7 @@ namespace NiceHashMiner.Miners.Parsing {
             //new MinerOption(MinerOptionType.ClaymoreCryptoNight_r      , , , , MinerOptionFlagType.MultiParam, ","),
             new MinerOption(MinerOptionType.ClaymoreCryptoNight_nofee  , "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
             new MinerOption(MinerOptionType.ClaymoreCryptoNight_li     , "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
+            new MinerOption(MinerOptionType.ClaymoreCryptoNight_h     , "-h", "-h", "0", MinerOptionFlagType.MultiParam, ","),
             // temperature stuff
             //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
             new MinerOption(MinerOptionType.ClaymoreCryptoNight_tt     , "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","), 
