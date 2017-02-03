@@ -26,6 +26,7 @@ namespace NiceHashMiner
 {
     using NiceHashMiner.Miners.Grouping;
     using NiceHashMiner.Net20_backport;
+    using NiceHashMiner.Miners.Parsing;
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private static string VisitURL = Links.VisitURL;
@@ -195,6 +196,11 @@ namespace NiceHashMiner
             // reverted to .NET 2.0
             //CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             //CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+
+            // Internals Init
+            // TODO add loading step
+            ExtraLaunchParameters.InitializePackages();
+
 
             if (!Helpers.InternalCheckIsWow64()) {
                 MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),

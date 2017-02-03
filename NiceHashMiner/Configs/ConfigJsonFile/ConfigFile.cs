@@ -8,10 +8,10 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
     public abstract class ConfigFile<T> where T : class {
         // statics/consts
         const string TAG_FORMAT = "ConfigFile<{0}>";
-        const string CONF_FOLDER = @"configs\";
+        private readonly string CONF_FOLDER; // = @"configs\";
         private readonly string TAG;
 
-        private static void CheckAndCreateConfigsFolder() {
+        private void CheckAndCreateConfigsFolder() {
             try {
                 if (Directory.Exists(CONF_FOLDER) == false) {
                     Directory.CreateDirectory(CONF_FOLDER);
@@ -23,7 +23,8 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
         protected string _filePath = "";
         protected string _filePathOld = "";
 
-        public ConfigFile(string fileName, string fileNameOld) {
+        public ConfigFile(string iCONF_FOLDER, string fileName, string fileNameOld) {
+            CONF_FOLDER = iCONF_FOLDER;
             if(fileName.Contains(CONF_FOLDER)) {
                 this._filePath = fileName;
             } else {
