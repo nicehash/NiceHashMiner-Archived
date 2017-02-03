@@ -203,7 +203,6 @@
     <Compile Include="Miners\Equihash\nheqBase.cs" />
     <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
-    <Compile Include="Miners\Grouping\MiningAlgorithm.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
     <Compile Include="Miners\Parsing\ExtraLaunchParametersParser.cs" />

@@ -9,7 +9,7 @@ namespace NiceHashMiner.Miners.Grouping {
     public static class GroupSetupUtils {
         static readonly string TAG = "GroupSetupUtils";
         public static bool IsAlgoMiningCapable(Algorithm algo) {
-            return algo != null && !algo.Skip && algo.BenchmarkSpeed > 0;
+            return algo != null && algo.Enabled && algo.BenchmarkSpeed > 0;
         }
         public static bool IsValidMinerPath(ComputeDevice device, Algorithm algo) {
             return MinerPaths.NONE != MinerPaths.GetOptimizedMinerPath(device, algo);
@@ -23,7 +23,7 @@ namespace NiceHashMiner.Miners.Grouping {
                 status = DeviceMiningStatus.Disabled;
             } else {
                 bool hasEnabledAlgo = false;
-                foreach (Algorithm algo in device.AlgorithmSettings.Values) {
+                foreach (Algorithm algo in device.GetAlgorithmSettings()) {
                     hasEnabledAlgo |= IsAlgoMiningCapable(algo) && IsValidMinerPath(device, algo);
                 }
                 if (hasEnabledAlgo == false) {
@@ -78,11 +78,11 @@ namespace NiceHashMiner.Miners.Grouping {
                 foreach (var miningDevice in enabledDevices) {
                     var device = miningDevice.Device;
                     stringBuilder.AppendLine(String.Format("\tENABLED ({0})", device.GetFullName()));
-                    foreach (var algo in device.AlgorithmSettings.Values) {
+                    foreach (var algo in device.GetAlgorithmSettings()) {
                         var isEnabled = IsAlgoMiningCapable(algo) && IsValidMinerPath(device, algo);
                         stringBuilder.AppendLine(String.Format("\t\tALGORITHM {0} ({1})",
                             isEnabled ? "ENABLED " : "DISABLED", // ENABLED/DISABLED
-                            AlgorithmNiceHashNames.GetName(algo.NiceHashID)));
+                            algo.AlgorithmStringID));
                     }
                 }
                 Helpers.ConsolePrint(TAG, stringBuilder.ToString());
@@ -99,46 +99,47 @@ namespace NiceHashMiner.Miners.Grouping {
 
         // avarage passed in benchmark values
         public static void AvarageSpeeds(List<MiningDevice> miningDevs) {
-            // calculate avarage speeds, to ensure mining stability
-            // device name, algo key, algos refs list
-            Dictionary<string,
-                Dictionary<AlgorithmType,
-                List<MiningAlgorithm>>> avarager = new Dictionary<string, Dictionary<AlgorithmType, List<MiningAlgorithm>>>();
-            // init empty avarager
-            foreach (var device in miningDevs) {
-                string devName = device.Device.Name;
-                avarager[devName] = new Dictionary<AlgorithmType, List<MiningAlgorithm>>();
-                foreach (var key in AlgorithmNiceHashNames.GetAllAvaliableTypes()) {
-                    avarager[devName][key] = new List<MiningAlgorithm>();
-                }
-            }
-            // fill avarager
-            foreach (var device in miningDevs) {
-                string devName = device.Device.Name;
-                foreach (var kvp in device.Algorithms) {
-                    var key = kvp.Key;
-                    MiningAlgorithm algo = kvp.Value;
-                    avarager[devName][key].Add(algo);
-                }
-            }
-            // calculate avarages
-            foreach (var devDict in avarager.Values) {
-                foreach (List<MiningAlgorithm> miningAlgosList in devDict.Values) {
-                    // if list not empty calculate avarage
-                    if (miningAlgosList.Count > 0) {
-                        // calculate avarage
-                        double sum = 0;
-                        foreach (var algo in miningAlgosList) {
-                            sum += algo.AvaragedSpeed;
-                        }
-                        double avarageSpeed = sum / miningAlgosList.Count;
-                        // set avarage
-                        foreach (var algo in miningAlgosList) {
-                            algo.AvaragedSpeed = avarageSpeed;
-                        }
-                    }
-                }
-            }
+            //// TODO BROKEN FIX
+            //// calculate avarage speeds, to ensure mining stability
+            //// device name, algo key, algos refs list
+            //Dictionary<string,
+            //    Dictionary<AlgorithmType,
+            //    List<MiningAlgorithm>>> avarager = new Dictionary<string, Dictionary<AlgorithmType, List<MiningAlgorithm>>>();
+            //// init empty avarager
+            //foreach (var device in miningDevs) {
+            //    string devName = device.Device.Name;
+            //    avarager[devName] = new Dictionary<AlgorithmType, List<MiningAlgorithm>>();
+            //    foreach (var key in AlgorithmNiceHashNames.GetAllAvaliableTypes()) {
+            //        avarager[devName][key] = new List<MiningAlgorithm>();
+            //    }
+            //}
+            //// fill avarager
+            //foreach (var device in miningDevs) {
+            //    string devName = device.Device.Name;
+            //    foreach (var kvp in device.Algorithms) {
+            //        var key = kvp.Key;
+            //        MiningAlgorithm algo = kvp.Value;
+            //        avarager[devName][key].Add(algo);
+            //    }
+            //}
+            //// calculate avarages
+            //foreach (var devDict in avarager.Values) {
+            //    foreach (List<MiningAlgorithm> miningAlgosList in devDict.Values) {
+            //        // if list not empty calculate avarage
+            //        if (miningAlgosList.Count > 0) {
+            //            // calculate avarage
+            //            double sum = 0;
+            //            foreach (var algo in miningAlgosList) {
+            //                sum += algo.AvaragedSpeed;
+            //            }
+            //            double avarageSpeed = sum / miningAlgosList.Count;
+            //            // set avarage
+            //            foreach (var algo in miningAlgosList) {
+            //                algo.AvaragedSpeed = avarageSpeed;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
     }

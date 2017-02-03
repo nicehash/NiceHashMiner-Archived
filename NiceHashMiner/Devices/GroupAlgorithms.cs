@@ -104,6 +104,15 @@ namespace NiceHashMiner.Devices {
             return null;
         }
 
+        public static List<Algorithm> CreateForDeviceList(ComputeDevice device) {
+            List<Algorithm> ret = new List<Algorithm>();
+            var retDict = CreateForDevice(device);
+            foreach (var kvp in retDict) {
+                ret.AddRange(kvp.Value);
+            }
+            return ret;
+        }
+
         private static Dictionary<MinerBaseType, List<Algorithm>> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<MinerBaseType, List<Algorithm>>() {

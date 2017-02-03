@@ -24,15 +24,11 @@ namespace NiceHashMiner.Forms {
         
         private void button_Agree_Click(object sender, EventArgs e) {
             ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
-            // update devices algorithm settings because some algos are supported only by 3rd party miners
-            ComputeDeviceManager.Avaliable.ResetAvaliableAlgorithmsForDevice();
             this.Close();
         }
 
         private void button_Decline_Click(object sender, EventArgs e) {
             ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
-            // update devices algorithm settings because some algos are supported only by 3rd party miners
-            ComputeDeviceManager.Avaliable.ResetAvaliableAlgorithmsForDevice();
             this.Close();
         }
     }

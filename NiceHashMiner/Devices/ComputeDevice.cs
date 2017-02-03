@@ -43,7 +43,8 @@ namespace NiceHashMiner.Devices
         public readonly bool DriverDisableAlgos;
 
         //public DeviceBenchmarkConfig_rem DeviceBenchmarkConfig { get; private set; }
-        public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
+        //public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
+        private List<Algorithm> AlgorithmSettings;
 
         public string BenchmarkCopyUUID { get; set; }
 
@@ -73,7 +74,7 @@ namespace NiceHashMiner.Devices
             DeviceType = DeviceType.CPU;
             NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_CPU"), CPUCount);
             UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
-            AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
+            AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             IsEtherumCapale = false;
         }
 
@@ -87,7 +88,7 @@ namespace NiceHashMiner.Devices
             DeviceType = DeviceType.NVIDIA;
             NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), GPUCount);
             UUID = cudaDevice.UUID;
-            AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
+            AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
         }
 
         // GPU AMD
@@ -108,7 +109,7 @@ namespace NiceHashMiner.Devices
             IsOptimizedVersion = amdDevice.UseOptimizedVersion;
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
-            AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
+            AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             DriverDisableAlgos = amdDevice.DriverDisableAlgos; ;
         }
 
@@ -117,41 +118,21 @@ namespace NiceHashMiner.Devices
             return String.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
         }
 
-        public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) {
-            foreach (var copyAlgSpeeds in copyBenchCDev.AlgorithmSettings) {
-                if (this.AlgorithmSettings.ContainsKey(copyAlgSpeeds.Key)) {
-                    var setAlgo = this.AlgorithmSettings[copyAlgSpeeds.Key];
-                    setAlgo.BenchmarkSpeed = copyAlgSpeeds.Value.BenchmarkSpeed;
-                    setAlgo.ExtraLaunchParameters = copyAlgSpeeds.Value.ExtraLaunchParameters;
-                    setAlgo.LessThreads = copyAlgSpeeds.Value.LessThreads;
-                }
+        public Algorithm GetAlgorithm(MinerBaseType MinerBaseType, AlgorithmType AlgorithmType) {
+            int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.NiceHashID == AlgorithmType && a.MinerBaseType == MinerBaseType);
+            if (toSetIndex > -1) {
+                return this.AlgorithmSettings[toSetIndex];
             }
+            return null;
         }
 
-        public void _3rdPartyMinerChange() {
-            var TmpAlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
-            // check to remove
-            {
-                List<AlgorithmType> toRemoveKeys = new List<AlgorithmType>();
-                foreach (var containsKey in AlgorithmSettings.Keys) {
-                    if (TmpAlgorithmSettings.ContainsKey(containsKey) == false) {
-                        toRemoveKeys.Add(containsKey);
-                    }
-                }
-                foreach (var removeKey in toRemoveKeys) {
-                    AlgorithmSettings.Remove(removeKey);
-                }
-            }
-            // check to add
-            {
-                List<AlgorithmType> toAddKeys = new List<AlgorithmType>();
-                foreach (var containsKey in TmpAlgorithmSettings.Keys) {
-                    if (AlgorithmSettings.ContainsKey(containsKey) == false) {
-                        toAddKeys.Add(containsKey);
-                    }
-                }
-                foreach (var addKey in toAddKeys) {
-                    AlgorithmSettings.Add(addKey, TmpAlgorithmSettings[addKey]);
+        public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) {
+            foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings) {
+                var setAlgo = GetAlgorithm(copyFromAlgo.MinerBaseType, copyFromAlgo.NiceHashID);
+                if (setAlgo != null) {
+                    setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
+                    setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
+                    setAlgo.LessThreads = copyFromAlgo.LessThreads;
                 }
             }
         }
@@ -166,15 +147,14 @@ namespace NiceHashMiner.Devices
         }
         public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config) {
             if (config != null && config.DeviceUUID == UUID && config.AlgorithmSettings != null) {
-                this.AlgorithmSettings = GroupAlgorithms.CreateForDevice(this);
-                foreach (var algoSetting in config.AlgorithmSettings) {
-                    AlgorithmType key = algoSetting.Key;
-                    AlgorithmConfig conf = algoSetting.Value;
-                    if (this.AlgorithmSettings.ContainsKey(key)) {
-                        this.AlgorithmSettings[key].BenchmarkSpeed = conf.BenchmarkSpeed;
-                        this.AlgorithmSettings[key].ExtraLaunchParameters = conf.ExtraLaunchParameters;
-                        this.AlgorithmSettings[key].Skip = conf.Skip;
-                        this.AlgorithmSettings[key].LessThreads = conf.LessThreads;
+                this.AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+                foreach (var conf in config.AlgorithmSettings) {
+                    var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID);
+                    if (setAlgo != null) {
+                        setAlgo.BenchmarkSpeed = conf.BenchmarkSpeed;
+                        setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
+                        setAlgo.Enabled = conf.Enabled;
+                        setAlgo.LessThreads = conf.LessThreads;
                     }
                 }
             }
@@ -192,22 +172,36 @@ namespace NiceHashMiner.Devices
             ret.DeviceName = this.Name;
             ret.DeviceUUID = this.UUID;
             // init algo settings
-            foreach (var algo in this.AlgorithmSettings.Values) {
-                AlgorithmType key = algo.NiceHashID;
+            foreach (var algo in this.AlgorithmSettings) {
                 // create/setup
                 AlgorithmConfig conf = new AlgorithmConfig();
-                conf.NiceHashID = key;
+                conf.NiceHashID = algo.NiceHashID;
+                conf.MinerBaseType = algo.MinerBaseType;
                 conf.MinerName = algo.MinerName; // TODO probably not needed
                 conf.BenchmarkSpeed = algo.BenchmarkSpeed;
                 conf.ExtraLaunchParameters = algo.ExtraLaunchParameters;
-                conf.Skip = algo.Skip;
+                conf.Enabled = algo.Enabled;
                 conf.LessThreads = algo.LessThreads;
                 // insert
-                ret.AlgorithmSettings[key] = conf;
+                ret.AlgorithmSettings.Add(conf);
             }
             return ret;
         }
         #endregion Config Setters/Getters
+
+        public List<Algorithm> GetAlgorithmSettings() {
+            // hello state
+            return GetAlgorithmSettingsThirdParty(ConfigManager.GeneralConfig.Use3rdPartyMiners);
+        }
+
+        private List<Algorithm> GetAlgorithmSettingsThirdParty(Use3rdPartyMiners use3rdParty) {
+            if (use3rdParty == Use3rdPartyMiners.YES) {
+                return this.AlgorithmSettings;
+            }
+            var third_party_miners = new List<MinerBaseType>() { MinerBaseType.ClaymoreAMD, MinerBaseType.OptiminerAMD };
+
+            return this.AlgorithmSettings.FindAll((a) => third_party_miners.IndexOf(a.MinerBaseType) == -1);
+        }
         
         // static methods
         
@@ -221,6 +215,10 @@ namespace NiceHashMiner.Devices
             }
             // GEN indicates the UUID has been generated and cannot be presumed to be immutable
             return "GEN-" + hash.ToString();
+        }
+
+        internal bool IsAlgorithmSettingsInitialized() {
+            return this.AlgorithmSettings != null;
         }
     }
 }

@@ -47,45 +47,56 @@ namespace NiceHashMiner.Miners.Grouping {
 
         public MiningDevice(ComputeDevice device) {
             Device = device;
-            foreach (var kvp in Device.AlgorithmSettings) {
-                AlgorithmType key = kvp.Key;
-                Algorithm algo = kvp.Value;
+            foreach (var algo in Device.GetAlgorithmSettings()) {
                 bool isAlgoMiningCapable = GroupSetupUtils.IsAlgoMiningCapable(algo);
                 bool isValidMinerPath = GroupSetupUtils.IsValidMinerPath(device, algo);
                 if (isAlgoMiningCapable && isValidMinerPath) {
-                    Algorithms[key] = new MiningAlgorithm(device, algo);
+                    Algorithms.Add(algo);
                 }
             }
         }
         public ComputeDevice Device { get; private set; }
-        public Dictionary<AlgorithmType, MiningAlgorithm> Algorithms = new Dictionary<AlgorithmType, MiningAlgorithm>();
+        public List<Algorithm> Algorithms = new List<Algorithm>();
 
-        public AlgorithmType MostProfitableKey { get; private set; }
+        public string GetMostProfitableString() {
+            return
+                Enum.GetName(typeof(MinerBaseType), MostProfitableMinerBaseType)
+                + "_"
+                + Enum.GetName(typeof(AlgorithmType), MostProfitableAlgorithmType);
+        }
+
+        public AlgorithmType MostProfitableAlgorithmType { get; private set; }
+        public MinerBaseType MostProfitableMinerBaseType { get; private set; }
+
+        private int GetMostProfitableIndex() {
+            return Algorithms.FindIndex((a) => a.NiceHashID == MostProfitableAlgorithmType && a.MinerBaseType == MostProfitableMinerBaseType);
+        }
 
         public double GetCurrentMostProfitValue {
             get {
-                if (AlgorithmType.NONE != MostProfitableKey) {
-                    return Algorithms[MostProfitableKey].CurrentProfit;
+                int mostProfitableIndex = GetMostProfitableIndex();
+                if (mostProfitableIndex > -1) {
+                    return Algorithms[mostProfitableIndex].CurrentProfit;
                 }
                 return 0;
             }
         }
 
         public MiningPair GetMostProfitablePair() {
-            return new MiningPair(this.Device, Algorithms[MostProfitableKey].AlgoRef);
+            return new MiningPair(this.Device, Algorithms[GetMostProfitableIndex()]);
         }
 
         public bool HasProfitableAlgo() {
-            return MostProfitableKey != AlgorithmType.NONE;
+            return GetMostProfitableIndex() > -1;
         }
 
         public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
             // assume none is profitable
-            MostProfitableKey = AlgorithmType.NONE;
+            MostProfitableAlgorithmType = AlgorithmType.NONE;
+            MostProfitableMinerBaseType = MinerBaseType.NONE;
             // calculate new profits
-            foreach (var miningAlgo in Algorithms) {
-                AlgorithmType key = miningAlgo.Key;
-                MiningAlgorithm algo = miningAlgo.Value;
+            foreach (var algo in Algorithms) {
+                AlgorithmType key = algo.NiceHashID;
                 if (NiceHashData.ContainsKey(key)) {
                     algo.CurNhmSMADataVal = NiceHashData[key].paying;
                     algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * 0.000000001;
@@ -95,12 +106,11 @@ namespace NiceHashMiner.Miners.Grouping {
             }
             // find max paying value and save key
             double maxProfit = 0;
-            foreach (var miningAlgo in Algorithms) {
-                AlgorithmType key = miningAlgo.Key;
-                MiningAlgorithm algo = miningAlgo.Value;
+            foreach (var algo in Algorithms) {
                 if (maxProfit < algo.CurrentProfit) {
                     maxProfit = algo.CurrentProfit;
-                    MostProfitableKey = key;
+                    MostProfitableAlgorithmType = algo.NiceHashID;
+                    MostProfitableMinerBaseType = algo.MinerBaseType;
                 }
             }
 #if (SWITCH_TESTING)

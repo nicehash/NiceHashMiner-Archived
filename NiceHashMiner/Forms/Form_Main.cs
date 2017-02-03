@@ -870,8 +870,8 @@ namespace NiceHashMiner
             bool hasAnyAlgoEnabled = false;
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.Enabled) {
-                    foreach (var algo in cdev.AlgorithmSettings.Values) {
-                        if (algo.Skip == false) {
+                    foreach (var algo in cdev.GetAlgorithmSettings()) {
+                        if (algo.Enabled == true) {
                             hasAnyAlgoEnabled = true;
                             if (algo.BenchmarkSpeed == 0) {
                                 isBenchInit = false;
@@ -898,8 +898,8 @@ namespace NiceHashMiner
                     // check devices without benchmarks
                     foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                         bool Enabled = false;
-                        foreach (var algo in cdev.AlgorithmSettings) {
-                            if (algo.Value.BenchmarkSpeed > 0) {
+                        foreach (var algo in cdev.GetAlgorithmSettings()) {
+                            if (algo.BenchmarkSpeed > 0) {
                                 Enabled = true;
                                 break;
                             }

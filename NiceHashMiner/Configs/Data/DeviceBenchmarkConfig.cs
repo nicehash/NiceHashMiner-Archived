@@ -9,6 +9,6 @@ namespace NiceHashMiner.Configs.Data {
         public string DeviceUUID = "";
         public string DeviceName = "";
         //public int TimeLimit { get; set; }
-        public Dictionary<AlgorithmType, AlgorithmConfig> AlgorithmSettings = new Dictionary<AlgorithmType, AlgorithmConfig>();
+        public List<AlgorithmConfig> AlgorithmSettings = new List<AlgorithmConfig>();
     }
 }

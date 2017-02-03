@@ -320,18 +320,20 @@ namespace NiceHashMiner.Forms {
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 var algorithmQueue = new Queue<Algorithm>();
                 if (_singleBenchmarkType == AlgorithmType.NONE) {
-                    foreach (var kvpAlgorithm in cDev.AlgorithmSettings) {
-                        if (ShoulBenchmark(kvpAlgorithm.Value)) {
-                            algorithmQueue.Enqueue(kvpAlgorithm.Value);
-                            kvpAlgorithm.Value.SetBenchmarkPendingNoMsg();
+                    foreach (var algo in cDev.GetAlgorithmSettings()) {
+                        if (ShoulBenchmark(algo)) {
+                            algorithmQueue.Enqueue(algo);
+                            algo.SetBenchmarkPendingNoMsg();
                         } else {
-                            kvpAlgorithm.Value.ClearBenchmarkPending();
+                            algo.ClearBenchmarkPending();
                         }
                     }
-                } else { // single bench
-                    var algo = cDev.AlgorithmSettings[_singleBenchmarkType];
-                    algorithmQueue.Enqueue(algo);
                 }
+                // NOT USED for a while now
+                //else { // single bench
+                //    var algo = cDev.AlgorithmSettings[_singleBenchmarkType];
+                //    algorithmQueue.Enqueue(algo);
+                //}
                 
 
                 BenchmarkSettingsStatus status;
@@ -355,13 +357,13 @@ namespace NiceHashMiner.Forms {
         private bool ShoulBenchmark(Algorithm algorithm) {
             bool isBenchmarked = algorithm.BenchmarkSpeed > 0 ? true : false;
             if (_algorithmOption == AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms
-                && !isBenchmarked && !algorithm.Skip) {
+                && !isBenchmarked && algorithm.Enabled) {
                     return true;
             }
             if (_algorithmOption == AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms && !isBenchmarked) {
                 return true;
             }
-            if (_algorithmOption == AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms && !algorithm.Skip) {
+            if (_algorithmOption == AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms && algorithm.Enabled) {
                 return true;
             }
             if (_algorithmOption == AlgorithmBenchmarkSettingsType.AllAlgorithms) {
@@ -466,7 +468,7 @@ namespace NiceHashMiner.Forms {
                     CalcBenchmarkDevicesAlgorithmQueue();
                     foreach (var deviceAlgoQueue in _benchmarkDevicesAlgorithmQueue) {
                         foreach (var algorithm in deviceAlgoQueue.Item2) {
-                            algorithm.Skip = true;
+                            algorithm.Enabled = false;
                         }
                     }
                 }
@@ -515,7 +517,7 @@ namespace NiceHashMiner.Forms {
                     _benchmarkFailedAlgoPerDev.Add(
                         new DeviceAlgo() {
                             Device = _currentDevice.Name,
-                            Algorithm = _currentAlgorithm.GetName()
+                            Algorithm = _currentAlgorithm.AlgorithmName
                         } );
                     algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
                 } else if (!rebenchSame) {
@@ -560,7 +562,7 @@ namespace NiceHashMiner.Forms {
 
             // disable all pending benchmark
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                foreach (var algorithm in cDev.AlgorithmSettings.Values) {
+                foreach (var algorithm in cDev.GetAlgorithmSettings()) {
                     algorithm.ClearBenchmarkPending();
                 }
             }
@@ -571,8 +573,8 @@ namespace NiceHashMiner.Forms {
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.Enabled) {
                     bool Enabled = false;
-                    foreach (var algo in cdev.AlgorithmSettings) {
-                        if (algo.Value.BenchmarkSpeed > 0) {
+                    foreach (var algo in cdev.GetAlgorithmSettings()) {
+                        if (algo.BenchmarkSpeed > 0) {
                             Enabled = true;
                             break;
                         }

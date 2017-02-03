@@ -870,13 +870,6 @@ namespace NiceHashMiner.Devices
                 return AllAvaliableDevices[index];
             }
 
-            ////////////
-            public static void ResetAvaliableAlgorithmsForDevice() {
-                foreach (var dev in AllAvaliableDevices) {
-                    dev._3rdPartyMinerChange();
-                }
-            }
-
             public static int GetCountForType(DeviceType type) {
                 int count = 0;
                 foreach (var device in Avaliable.AllAvaliableDevices) {

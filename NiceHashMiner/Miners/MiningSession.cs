@@ -304,15 +304,15 @@ namespace NiceHashMiner.Miners {
                     stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", device.Device.UUID, device.Device.GetFullName()));
                     foreach (var algo in device.Algorithms) {
                         stringBuilderDevice.AppendLine(String.Format("\t\tPROFIT = {0}\t(SPEED = {1}\t\t| NHSMA = {2})\t[{3}]",
-                            algo.Value.CurrentProfit.ToString(DOUBLE_FORMAT), // Profit
-                            algo.Value.AvaragedSpeed, // Speed
-                            algo.Value.CurNhmSMADataVal, // NiceHashData
-                            AlgorithmNiceHashNames.GetName(algo.Key) // Name
+                            algo.CurrentProfit.ToString(DOUBLE_FORMAT), // Profit
+                            algo.AvaragedSpeed, // Speed
+                            algo.CurNhmSMADataVal, // NiceHashData
+                            algo.AlgorithmStringID // Name
                         ));
                     }
                     // most profitable
                     stringBuilderDevice.AppendLine(String.Format("\t\tMOST PROFITABLE ALGO: {0}, PROFIT: {1}",
-                        AlgorithmNiceHashNames.GetName(device.MostProfitableKey),
+                        device.GetMostProfitableString(),
                         device.GetCurrentMostProfitValue.ToString(DOUBLE_FORMAT)));
                     stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
                 }

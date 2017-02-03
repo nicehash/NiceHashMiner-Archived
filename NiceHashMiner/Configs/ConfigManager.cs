@@ -132,7 +132,7 @@ namespace NiceHashMiner.Configs {
             {
                 List<ComputeDevice> invalidDevices = new List<ComputeDevice>();
                 foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                    if (CDev.AlgorithmSettings == null) {
+                    if (CDev.IsAlgorithmSettingsInitialized() == false) {
                         Helpers.ConsolePrint(TAG, "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
                         invalidDevices.Add(CDev);
                     }
