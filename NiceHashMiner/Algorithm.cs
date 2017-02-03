@@ -7,6 +7,7 @@ using System.Text;
 namespace NiceHashMiner {
     public class Algorithm {
         readonly public AlgorithmType NiceHashID;
+        readonly public MinerBaseType MinerBaseType;
         // Miner name is used for miner ALGO flag parameter
         readonly public string MinerName;
         public double BenchmarkSpeed { get; set; }
@@ -18,8 +19,14 @@ namespace NiceHashMiner {
 
         // avarage speed of same devices to increase mining stability
         public double AvaragedSpeed { get; set; }
+        // based on device and settings here we set the miner path
+        public string MinerBinaryPath = "";
+        // TODO these are changing (logging reasons)
+        public double CurrentProfit = 0;
+        public double CurNhmSMADataVal = 0;
 
-        public Algorithm(AlgorithmType niceHashID, string minerName) {
+        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName) {
+            MinerBaseType = minerBaseType;
             NiceHashID = niceHashID;
             MinerName = minerName;
 

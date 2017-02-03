@@ -66,6 +66,65 @@ namespace NiceHashMiner.Miners.Grouping
         public const string ClaymoreCryptoNightMiner = _bin_3rdparty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
         public const string OptiminerZcashMiner = _bin_3rdparty + @"\optiminer_zcash_win\Optiminer.exe";
 
+        // NEW START
+        ////////////////////////////////////////////
+        // Pure functions
+        public static bool IsMinerAlgorithmAvaliable(List<Algorithm> algos, MinerBaseType minerBaseType, AlgorithmType algorithmType) {
+            return algos.FindIndex((a) => a.MinerBaseType == minerBaseType && a.NiceHashID == algorithmType) > -1;
+        }
+
+        public static string GetPathFor(ComputeDevice computeDevice, Algorithm algorithm /*, Options: MinerPathsConfig*/) {
+            if (computeDevice == null || algorithm == null) {
+                return MinerPaths.NONE;
+            }
+            var algoType = algorithm.NiceHashID;
+            var devGroupType = computeDevice.DeviceGroupType;
+            var devCodename = computeDevice.Codename;
+            var isOptimized = computeDevice.IsOptimizedVersion;
+            switch (algorithm.MinerBaseType) {
+                case MinerBaseType.cpuminer:
+                    return CPU_GROUP.cpu_miner_opt(CPUUtils.GetMostOptimized()/*Options.MostOptimizedCPUExtensionType*/);
+                case MinerBaseType.ccminer:
+                    return NVIDIA_GROUPS.ccminer_path(algoType, devGroupType);
+                case MinerBaseType.sgminer:
+                    return AMD_GROUP.sgminer_path(algoType, devCodename, isOptimized);
+                case MinerBaseType.nheqminer:
+                    return MinerPaths.nheqminer;
+                case MinerBaseType.eqm:
+                    return MinerPaths.eqm;
+                case MinerBaseType.ethminer:
+                    return MinerPaths.ethminer;
+                case MinerBaseType.ClaymoreAMD:
+                    return AMD_GROUP.ClaymorePath(algoType);
+                case MinerBaseType.OptiminerAMD:
+                    return MinerPaths.OptiminerZcashMiner;
+            }
+            return MinerPaths.NONE;
+        }
+
+        public static bool IsValidMinerPath(string minerPath) {
+            // TODO make a list of valid miner paths and check that instead
+            return minerPath != null && MinerPaths.NONE != minerPath && minerPath != ""; 
+        }
+
+        /**
+         * InitAlgorithmsMinerPaths gets and sets miner paths
+         */
+        public static List<Algorithm> GetAndInitAlgorithmsMinerPaths(List<Algorithm> algos, ComputeDevice computeDevice/*, Options: MinerPathsConfig*/) {
+            var retAlgos = algos.FindAll((a) => a != null).ConvertAll((a) => {
+                a.MinerBinaryPath = GetPathFor(computeDevice, a/*, Options*/);
+                return a;
+            });
+            //// TODO settup what to use what not Options
+            //const thirdPartyMiners = [MinerBaseType.ClaymoreAMD, MinerBaseType.OptiminerAMD];
+            //if (Options.Use3rdPartyMiners != Use3rdPartyMiners.YES) {
+            //    retAlgos = retAlgos.filter((a) => thirdPartyMiners.indexOf(a.MinerBaseType) == -1);   
+            //}
+
+            return retAlgos;
+        }
+        // NEW END
+
         public static string GetOptimizedMinerPath(MiningPair pair) {
             return GetOptimizedMinerPath(pair.Device, pair.Algorithm);
         }
@@ -118,14 +177,7 @@ namespace NiceHashMiner.Miners.Grouping
             // NVIDIA
             if (deviceType == DeviceType.NVIDIA) {
                 var nvidiaGroup = deviceGroupType;
-                // sm21 and sm3x have same settings
-                if (nvidiaGroup == DeviceGroupType.NVIDIA_2_1 || nvidiaGroup == DeviceGroupType.NVIDIA_3_x) {
-                    return NVIDIA_GROUPS.ccminer_sm21_or_sm3x(algorithmType);
-                }
-                // sm5x and sm6x have same settings
-                if (nvidiaGroup == DeviceGroupType.NVIDIA_5_0 || nvidiaGroup == DeviceGroupType.NVIDIA_5_2 || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) {
-                    return NVIDIA_GROUPS.ccminer_sm5x_or_sm6x(algorithmType);
-                }
+                
             }
             // AMD
             if (deviceType == DeviceType.AMD) {
@@ -166,6 +218,18 @@ namespace NiceHashMiner.Miners.Grouping
 
                 return MinerPaths.ccminer_sp;
             }
+            public static string ccminer_path(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup) {
+                // sm21 and sm3x have same settings
+                if (nvidiaGroup == DeviceGroupType.NVIDIA_2_1 || nvidiaGroup == DeviceGroupType.NVIDIA_3_x) {
+                    return NVIDIA_GROUPS.ccminer_sm21_or_sm3x(algorithmType);
+                }
+                // sm5x and sm6x have same settings
+                if (nvidiaGroup == DeviceGroupType.NVIDIA_5_0 || nvidiaGroup == DeviceGroupType.NVIDIA_5_2 || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) {
+                    return NVIDIA_GROUPS.ccminer_sm5x_or_sm6x(algorithmType);
+                }
+                // TODO wrong case?
+                return MinerPaths.NONE; // should not happen
+            }
         }
 
         static class AMD_GROUP {
@@ -189,6 +253,15 @@ namespace NiceHashMiner.Miners.Grouping
                 }
 
                 return MinerPaths.sgminer_5_5_0_general;
+            }
+
+            public static string ClaymorePath(AlgorithmType type) {
+                if(AlgorithmType.Equihash == type) {
+                    return MinerPaths.ClaymoreZcashMiner;
+                } else if(AlgorithmType.CryptoNight == type) {
+                    return MinerPaths.ClaymoreCryptoNightMiner;
+                }
+                return MinerPaths.NONE; // should not happen
             }
         }
 

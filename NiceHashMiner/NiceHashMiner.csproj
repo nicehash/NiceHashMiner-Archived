@@ -114,6 +114,7 @@
     <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerAPIReadStatus.cs" />
+    <Compile Include="Enums\MinerBaseType.cs" />
     <Compile Include="Enums\MinerOptionType.cs" />
     <Compile Include="Enums\MinerOptionFlagType.cs" />
     <Compile Include="Enums\MinerStopType.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningAlgorithm.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
+    <Compile Include="Miners\MinerFactory.cs" />
     <Compile Include="Miners\Parsing\ExtraLaunchParametersParser.cs" />
     <Compile Include="Miners\Grouping\GroupingLogic.cs" />
     <Compile Include="Miners\Grouping\GroupMiner.cs" />

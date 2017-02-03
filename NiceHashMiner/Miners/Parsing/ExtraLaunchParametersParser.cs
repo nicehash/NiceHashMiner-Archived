@@ -371,7 +371,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 var cdevs_mappings = new List<MiningPair>();
                 {
                     int id = -1;
-                    var fakeAlgo = new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto");
+                    var fakeAlgo = new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto");
                     foreach (var pair in MiningPairs) {
                         while (++id != pair.Device.ID) {
                             var fakeCdev = new ComputeDevice(id);
