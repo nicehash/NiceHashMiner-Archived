@@ -63,6 +63,32 @@ namespace NiceHashMiner.Miners.Grouping {
             CurrentRate = 0;
         }
 
+        private string GetLocationURL(string miningLocation, NHMConectionType ConectionType) {
+            string name = Globals.NiceHashData[AlgorithmType].name;
+            int n_port = Globals.NiceHashData[AlgorithmType].port;
+            int ssl_port = 30000 + n_port;
+
+            // NHMConectionType.NONE
+            string prefix = "";
+            int port = n_port;
+            if (NHMConectionType.LOCKED == Miner.ConectionType) {
+                return miningLocation;
+            }
+            if (NHMConectionType.STRATUM_TCP == Miner.ConectionType) {
+                prefix = "stratum+tcp://";
+            }
+            if (NHMConectionType.STRATUM_SSL == Miner.ConectionType) {
+                prefix = "stratum+ssl://";
+                port = ssl_port;
+            }
+
+            return prefix
+                    + name
+                    + "." + miningLocation
+                    + ".nicehash.com:"
+                    + port;
+        }
+
         public void Start(string miningLocation, string btcAdress, string worker) {
             if(Miner.IsRunning) {
                 return;
@@ -70,33 +96,8 @@ namespace NiceHashMiner.Miners.Grouping {
             // Wait before new start
             System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
-            string name = Globals.NiceHashData[AlgorithmType].name;
-            int port = Globals.NiceHashData[AlgorithmType].port;
-            if (AlgorithmType == AlgorithmType.Equihash) {
-                if (Miner.IsNHLocked) {
-                    Miner.Start(miningLocation, btcAdress, worker);
-                } else if(Miner is ClaymoreZcashMiner) {
-                    Miner.Start(
-                    "stratum+ssl://"
-                    + name
-                    + "." + miningLocation
-                    + ".nicehash.com:"
-                    + 33357, btcAdress, worker);
-                } else {
-                    Miner.Start(
-                    name 
-                    + "." + miningLocation
-                    + ".nicehash.com:"
-                    + port, btcAdress, worker);
-                }
-            } else {
-                Miner.Start(
-                "stratum+tcp://"
-                + name
-                + "." + miningLocation
-                + ".nicehash.com:"
-                + port, btcAdress, worker);
-            }
+            string locationURL = GetLocationURL(miningLocation, Miner.ConectionType);
+            Miner.Start(locationURL, btcAdress, worker);
         }
     }
 }

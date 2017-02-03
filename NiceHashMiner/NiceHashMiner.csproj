@@ -117,6 +117,7 @@
     <Compile Include="Enums\MinerOptionType.cs" />
     <Compile Include="Enums\MinerOptionFlagType.cs" />
     <Compile Include="Enums\MinerStopType.cs" />
+    <Compile Include="Enums\NHMConectionType.cs" />
     <Compile Include="Enums\Use3rdPartyMiners.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>

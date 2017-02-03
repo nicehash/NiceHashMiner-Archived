@@ -26,6 +26,7 @@ namespace NiceHashMiner.Miners {
 
         public ClaymoreBaseMiner(string minerDeviceName, string minerPath, string minerExeName, string look_FOR_START)
             : base(minerDeviceName) {
+            ConectionType = NHMConectionType.STRATUM_SSL;
             Path = minerPath;
             MinerExeName = minerExeName;
             LOOK_FOR_START = look_FOR_START.ToLower();

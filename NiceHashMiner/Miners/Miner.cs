@@ -45,6 +45,8 @@ namespace NiceHashMiner
         // MINER_ID_COUNT used to identify miners creation
         protected static long MINER_ID_COUNT { get; private set; }
 
+
+        public NHMConectionType ConectionType { get; protected set; }
         // used to identify miner instance
         protected readonly long MINER_ID;
         private string _minetTag = null;
@@ -52,8 +54,6 @@ namespace NiceHashMiner
         protected int APIPort { get; private set; }
         // if miner has no API bind port for reading curentlly only CryptoNight on ccminer
         public bool IsAPIReadException { get; protected set; }
-        // inhouse miners that are locked on NH (our eqm)
-        public bool IsNHLocked { get; protected set; }
         public bool IsNeverHideMiningWindow { get; protected set; }
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
@@ -111,6 +111,7 @@ namespace NiceHashMiner
 
         public Miner(string minerDeviceName)
         {
+            ConectionType = NHMConectionType.STRATUM_TCP;
             MiningSetup = new MiningSetup(null);
             IsInit = false;
             MINER_ID = MINER_ID_COUNT++;
@@ -127,7 +128,6 @@ namespace NiceHashMiner
 
             APIPort = MinersApiPortsManager.GetAvaliablePort();
             IsAPIReadException = false;
-            IsNHLocked = false;
             IsNeverHideMiningWindow = false;
             IsKillAllUsedMinerProcs = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
