@@ -228,28 +228,10 @@ namespace NiceHashMiner
             Stop(MinerStopType.FORCE_END);
         }
 
-        protected void ChangeToNextAvaliablePort() {
-            // change to new port
-            var oldApiPort = APIPort;
-            var newApiPort = MinersApiPortsManager.GetAvaliablePort();
-            // check if update last command port
-            if (UpdateBindPortCommand(oldApiPort, newApiPort)) {
-                Helpers.ConsolePrint(MinerTAG(), String.Format("Changing miner port from {0} to {1}",
-                    oldApiPort.ToString(),
-                    newApiPort.ToString()));
-                // free old set new
-                MinersApiPortsManager.RemovePort(oldApiPort);
-                APIPort = newApiPort;
-            } else { // release new
-                MinersApiPortsManager.RemovePort(newApiPort);
-            }
-        }
-
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch) {
             if (IsRunning) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }
-            if (willswitch != MinerStopType.FORCE_END) ChangeToNextAvaliablePort();
             if (ProcessHandle != null) {
                 try { ProcessHandle.Kill(); } catch { }
                 ProcessHandle.Close();
@@ -611,20 +593,6 @@ namespace NiceHashMiner
             _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
             NeedsRestart = true;
             _currentCooldownTimeInSecondsLeft = RestartInMS;
-        }
-
-        protected abstract bool UpdateBindPortCommand(int oldPort, int newPort);
-
-        protected bool UpdateBindPortCommand_ccminer_cpuminer(int oldPort, int newPort) {
-            // --api-bind=
-            const string MASK = "--api-bind={0}";
-            var oldApiBindStr = String.Format(MASK, oldPort);
-            var newApiBindStr = String.Format(MASK, newPort);
-            if (LastCommandLine != null && LastCommandLine.Contains(oldApiBindStr)) {
-                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
-                return true;
-            }
-            return false;
         }
 
         protected void Restart() {

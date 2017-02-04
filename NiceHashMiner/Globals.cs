@@ -8,7 +8,7 @@ namespace NiceHashMiner {
         public static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
         public static Dictionary<AlgorithmType, NiceHashSMA> NiceHashData = null;
         public static double BitcoinRate;
-        public static readonly string DemoUser = "34HKWdzLxWBduUfJE9JxaFhoXnfC6gmePG";
+        public static readonly string DemoUser = "3DJhaQaKA6oyRaGyDZYdkZcise4b9DrCi2";
         public static readonly string PasswordDefault = "x";
         public static JsonSerializerSettings JsonSettings = null;
         public static int ThreadsPerCPU;

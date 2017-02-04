@@ -128,11 +128,6 @@ namespace NiceHashMiner.Miners {
             return ad;
         }
 
-        // DONE
-        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
-            return false;
-        }
-
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }

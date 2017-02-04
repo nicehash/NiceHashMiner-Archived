@@ -99,18 +99,6 @@ namespace NiceHashMiner.Miners {
             return ad;
         }
 
-        // DONE
-        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
-            const string MASK = "-a {0}";
-            var oldApiBindStr = String.Format(MASK, oldPort);
-            var newApiBindStr = String.Format(MASK, newPort);
-            if (LastCommandLine != null && LastCommandLine.Contains(oldApiBindStr)) {
-                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
-                return true;
-            }
-            return false;
-        }
-
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }

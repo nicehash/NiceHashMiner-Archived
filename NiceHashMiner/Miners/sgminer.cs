@@ -89,18 +89,6 @@ namespace NiceHashMiner.Miners
             ProcessHandle = _Start();
         }
 
-        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
-            // --api-port=
-            const string MASK = "--api-port={0}";
-            var oldApiBindStr = String.Format(MASK, oldPort);
-            var newApiBindStr = String.Format(MASK, newPort);
-            if (LastCommandLine.Contains(oldApiBindStr)) {
-                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
-                return true;
-            }
-            return false;
-        }
-
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
