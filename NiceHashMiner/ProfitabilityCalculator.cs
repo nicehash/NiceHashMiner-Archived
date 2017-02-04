@@ -16,32 +16,32 @@ namespace NiceHashMiner {
         {
             { AlgorithmType.INVALID , 1 },
             { AlgorithmType.NONE , 1 },
-            { AlgorithmType.Scrypt_UNUSED,          MHs }, // NOT used
-            { AlgorithmType.SHA256_UNUSED ,         THs }, // NOT used
-            { AlgorithmType.ScryptNf_UNUSED ,       MHs }, // NOT used
-            { AlgorithmType.X11_UNUSED ,            MHs }, // NOT used
-            { AlgorithmType.X13 ,                   MHs },
-            { AlgorithmType.Keccak ,                MHs },
-            { AlgorithmType.X15 ,                   MHs },
-            { AlgorithmType.Nist5 ,                 MHs },
-            { AlgorithmType.NeoScrypt ,             MHs },
-            { AlgorithmType.Lyra2RE ,               MHs },
-            { AlgorithmType.WhirlpoolX ,            MHs },
-            { AlgorithmType.Qubit ,                 MHs },
-            { AlgorithmType.Quark ,                 MHs },
-            { AlgorithmType.Axiom_UNUSED ,          kHs }, // NOT used
-            { AlgorithmType.Lyra2REv2 ,             MHs },
-            { AlgorithmType.ScryptJaneNf16_UNUSED , kHs }, // NOT used
-            { AlgorithmType.Blake256r8 ,            GHs },
-            { AlgorithmType.Blake256r14 ,           GHs },
-            { AlgorithmType.Blake256r8vnl ,         GHs },
-            { AlgorithmType.Hodl ,                  kHs },
-            { AlgorithmType.DaggerHashimoto ,       MHs },
-            { AlgorithmType.Decred ,                GHs },
-            { AlgorithmType.CryptoNight ,           kHs },
-            { AlgorithmType.Lbry ,                  GHs },
-            { AlgorithmType.Equihash ,               1 }, // Sols /s
-            { AlgorithmType.Pascal ,                GHs }, // Sols /s
+            { AlgorithmType.Scrypt_UNUSED,                  MHs }, // NOT used
+            { AlgorithmType.SHA256_UNUSED ,                 THs }, // NOT used
+            { AlgorithmType.ScryptNf_UNUSED ,               MHs }, // NOT used
+            { AlgorithmType.X11_UNUSED ,                    MHs }, // NOT used
+            { AlgorithmType.X13_UNUSED ,                    MHs },
+            { AlgorithmType.Keccak_UNUSED ,                 MHs },
+            { AlgorithmType.X15_UNUSED ,                    MHs },
+            { AlgorithmType.Nist5_UNUSED ,                  MHs },
+            { AlgorithmType.NeoScrypt ,                     MHs },
+            { AlgorithmType.Lyra2RE ,                       MHs },
+            { AlgorithmType.WhirlpoolX_UNUSED ,             MHs },
+            { AlgorithmType.Qubit_UNUSED ,                  MHs },
+            { AlgorithmType.Quark_UNUSED ,                  MHs },
+            { AlgorithmType.Axiom_UNUSED ,                  kHs }, // NOT used
+            { AlgorithmType.Lyra2REv2 ,                     MHs },
+            { AlgorithmType.ScryptJaneNf16_UNUSED ,         kHs }, // NOT used
+            { AlgorithmType.Blake256r8_UNUSED ,             GHs },
+            { AlgorithmType.Blake256r14_UNUSED ,            GHs },
+            { AlgorithmType.Blake256r8vnl_UNUSED ,          GHs },
+            { AlgorithmType.Hodl ,                          kHs },
+            { AlgorithmType.DaggerHashimoto ,               MHs },
+            { AlgorithmType.Decred ,                        GHs },
+            { AlgorithmType.CryptoNight ,                   kHs },
+            { AlgorithmType.Lbry ,                          GHs },
+            { AlgorithmType.Equihash ,                      1 }, // Sols /s
+            { AlgorithmType.Pascal ,                        GHs }, // Sols /s
         };
 
         public static double GetFormatedSpeed(double speed, AlgorithmType type) {

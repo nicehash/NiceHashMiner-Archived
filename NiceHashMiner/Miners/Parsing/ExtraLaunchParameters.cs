@@ -188,13 +188,16 @@ namespace NiceHashMiner.Miners.Parsing {
 
         public static void InitializePackages() {
             foreach (var pack in DEFAULTS) {
-                var packageFile = new MinerOptionPackageFile(String.Format("MinerOptionPackage_{0}", pack.Name));
+                var packageName = String.Format("MinerOptionPackage_{0}", pack.Name);
+                var packageFile = new MinerOptionPackageFile(packageName);
                 var readPack = packageFile.ReadFile();
                 if (readPack == null) { // read has failed
+                    Helpers.ConsolePrint("ExtraLaunchParameters", "Creating internal params config " + packageName);
                     MinerOptionPackages.Add(pack);
                     // create defaults
                     packageFile.Commit(pack);
                 } else {
+                    Helpers.ConsolePrint("ExtraLaunchParameters", "Loading internal params config " + packageName);
                     MinerOptionPackages.Add(readPack);
                 }
             }

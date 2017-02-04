@@ -41,7 +41,7 @@ namespace NiceHashMiner.Miners.Grouping
         /// sgminers
         /// </summary>
         public const string sgminer_5_1_0_optimized =   _bin + @"\sgminer-5-1-0-optimized\sgminer.exe";
-        public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
+        //public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
         public const string sgminer_5_6_0_general =     _bin + @"\sgminer-5-6-0-general\sgminer.exe";
         public const string sgminer_5_4_0_tweaked =     _bin + @"\sgminer-5-4-0-tweaked\sgminer.exe";
         public const string sgminer_gm =                _bin + @"\sgminer-gm\sgminer.exe";
@@ -72,21 +72,14 @@ namespace NiceHashMiner.Miners.Grouping
             return algos.FindIndex((a) => a.MinerBaseType == minerBaseType && a.NiceHashID == algorithmType) > -1;
         }
 
-        public static string GetPathFor(ComputeDevice computeDevice, Algorithm algorithm /*, Options: MinerPathsConfig*/) {
-            if (computeDevice == null || algorithm == null) {
-                return MinerPaths.NONE;
-            }
-            var algoType = algorithm.NiceHashID;
-            var devGroupType = computeDevice.DeviceGroupType;
-            var devCodename = computeDevice.Codename;
-            var isOptimized = computeDevice.IsOptimizedVersion;
-            switch (algorithm.MinerBaseType) {
+        public static string GetPathFor(MinerBaseType minerBaseType, AlgorithmType algoType, DeviceGroupType devGroupType, string devCodenameAMD, bool isOptimizedAMD, CPUExtensionType MostOptimizedCPUExtensionType) {
+            switch (minerBaseType) {
                 case MinerBaseType.cpuminer:
-                    return CPU_GROUP.cpu_miner_opt(CPUUtils.GetMostOptimized()/*Options.MostOptimizedCPUExtensionType*/);
+                    return CPU_GROUP.cpu_miner_opt(MostOptimizedCPUExtensionType);
                 case MinerBaseType.ccminer:
                     return NVIDIA_GROUPS.ccminer_path(algoType, devGroupType);
                 case MinerBaseType.sgminer:
-                    return AMD_GROUP.sgminer_path(algoType, devCodename, isOptimized);
+                    return AMD_GROUP.sgminer_path(algoType, devCodenameAMD, isOptimizedAMD);
                 case MinerBaseType.nheqminer:
                     return MinerPaths.nheqminer;
                 case MinerBaseType.eqm:
@@ -101,6 +94,21 @@ namespace NiceHashMiner.Miners.Grouping
                     return MinerPaths.excavator;
             }
             return MinerPaths.NONE;
+        }
+
+        public static string GetPathFor(ComputeDevice computeDevice, Algorithm algorithm /*, Options: MinerPathsConfig*/) {
+            if (computeDevice == null || algorithm == null) {
+                return MinerPaths.NONE;
+            }
+
+            return GetPathFor(
+                algorithm.MinerBaseType,
+                algorithm.NiceHashID,
+                computeDevice.DeviceGroupType,
+                computeDevice.Codename,
+                computeDevice.IsOptimizedVersion,
+                CPUUtils.GetMostOptimized()
+                );
         }
 
         public static bool IsValidMinerPath(string minerPath) {
@@ -172,17 +180,14 @@ namespace NiceHashMiner.Miners.Grouping
                     return MinerPaths.sgminer_gm;
                 }
                 if (isOptimized) {
-                    if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
+                    if (AlgorithmType.Lyra2REv2 == type) {
                         if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
                             if (!Helpers.InternalCheckIsWow64())
                                 return MinerPaths.sgminer_5_6_0_general;
 
                             return MinerPaths.sgminer_5_4_0_tweaked;
                         }
-                        if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type)
-                            return MinerPaths.sgminer_5_1_0_optimized;
-                        else
-                            return MinerPaths.sgminer_5_1_1_optimized;
+                        return MinerPaths.sgminer_5_1_0_optimized;
                     }
                 }
 

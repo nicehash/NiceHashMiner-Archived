@@ -183,23 +183,9 @@ namespace NiceHashMiner
             StartupTimer.Stop();
             StartupTimer = null;
 
-            // reverted to .NET 2.0
-            //if (!Helpers.Is45NetOrHigher()) {
-            //    MessageBox.Show(International.GetText("NET45_Not_Intsalled_msg"),
-            //                    International.GetText("Warning_with_Exclamation"),
-            //                    MessageBoxButtons.OK);
-
-            //    this.Close();
-            //    return;
-            //}
-
-            // reverted to .NET 2.0
-            //CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            //CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
-
             // Internals Init
             // TODO add loading step
-            ExtraLaunchParameters.InitializePackages();
+            MinersSettingsManager.Init();
 
 
             if (!Helpers.InternalCheckIsWow64()) {

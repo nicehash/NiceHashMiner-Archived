@@ -126,7 +126,6 @@ namespace NiceHashMiner
 
             LastCommandLine = "";
 
-            APIPort = MinersApiPortsManager.GetAvaliablePort();
             IsAPIReadException = false;
             IsNeverHideMiningWindow = false;
             IsKillAllUsedMinerProcs = false;
@@ -141,10 +140,29 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerTAG(), "MINER DESTROYED");
         }
 
+        private void SetAPIPort() {
+            if (IsInit) {
+                var minerBase = MiningSetup.MiningPairs[0].Algorithm.MinerBaseType;
+                var algoType = MiningSetup.MiningPairs[0].Algorithm.NiceHashID;
+                var path = MiningSetup.MinerPath;
+                var reservedPorts = MinersSettingsManager.GetPortsListFor(minerBase, path, algoType);
+                APIPort = -1; // not set
+                foreach (var reservedPort in reservedPorts) {
+                    if (MinersApiPortsManager.IsPortAvaliable(reservedPort)) {
+                        APIPort = reservedPort;
+                        break;
+                    }
+                }
+                if (APIPort == -1) {
+                    APIPort = MinersApiPortsManager.GetAvaliablePort();
+                }
+            }
+        }
 
         virtual public void InitMiningSetup(MiningSetup miningSetup) {
             MiningSetup = miningSetup;
             IsInit = MiningSetup.IsInit;
+            SetAPIPort();
         }
 
         // TODO remove or don't recheck

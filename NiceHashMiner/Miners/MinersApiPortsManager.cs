@@ -10,7 +10,7 @@ namespace NiceHashMiner.Miners {
     public static class MinersApiPortsManager {
         private static HashSet<int> _usedPorts = new HashSet<int>();
 
-        private static bool IsPortAvaliable(int port) {
+        public static bool IsPortAvaliable(int port) {
             bool isAvailable = true;
 
             IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
@@ -41,7 +41,7 @@ namespace NiceHashMiner.Miners {
             int port = ConfigManager.GeneralConfig.ApiBindPortPoolStart;
             int newPortEnd = port + 3000;
             for (; port < newPortEnd; ++port) {
-                if (IsPortAvaliable(port) && _usedPorts.Add(port)) {
+                if (MinersSettingsManager.AllReservedPorts.Contains(port) == false && IsPortAvaliable(port) && _usedPorts.Add(port)) {
                     break;
                 }
             }

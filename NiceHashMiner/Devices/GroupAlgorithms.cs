@@ -113,7 +113,7 @@ namespace NiceHashMiner.Devices {
             return ret;
         }
 
-        private static Dictionary<MinerBaseType, List<Algorithm>> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
+        public static Dictionary<MinerBaseType, List<Algorithm>> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<MinerBaseType, List<Algorithm>>() {
                     { MinerBaseType.cpuminer,
@@ -210,7 +210,6 @@ namespace NiceHashMiner.Devices {
                 };
                 if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
-                        AlgorithmType.WhirlpoolX,
                         AlgorithmType.NeoScrypt,
                         AlgorithmType.Lyra2RE,
                         AlgorithmType.Lyra2REv2
