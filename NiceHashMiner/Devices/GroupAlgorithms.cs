@@ -174,7 +174,7 @@ namespace NiceHashMiner.Devices {
                 };
             }
             // NVIDIA
-            if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType || DeviceGroupType.NVIDIA_5_0 == deviceGroupType || DeviceGroupType.NVIDIA_5_2 == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
+            if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                 var ToRemoveAlgoTypes = new List<AlgorithmType>();
                 var ret = new Dictionary<MinerBaseType, List<Algorithm>>() {
                     { MinerBaseType.ccminer,

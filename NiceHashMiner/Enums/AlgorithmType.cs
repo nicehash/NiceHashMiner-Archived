@@ -37,7 +37,8 @@ namespace NiceHashMiner.Enums
         Decred = 21,
         CryptoNight = 22,
         Lbry = 23,
-        Equihash = 24
+        Equihash = 24,
+        Pascal
         #endregion // NiceHashAPI
     }
 }

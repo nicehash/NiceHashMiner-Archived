@@ -11,8 +11,7 @@ namespace NiceHashMiner.Enums
         AMD_OpenCL,
         NVIDIA_2_1,
         NVIDIA_3_x,
-        NVIDIA_5_0,
-        NVIDIA_5_2,
+        NVIDIA_5_x,
         NVIDIA_6_x,
         LAST
     }

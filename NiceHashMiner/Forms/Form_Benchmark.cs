@@ -404,7 +404,7 @@ namespace NiceHashMiner.Forms {
             }
 
             if (_currentDevice != null && _currentAlgorithm != null) {
-                _currentMiner = MinersManager.CreateMiner(_currentDevice, _currentAlgorithm);
+                _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
                 if(_currentDevice.DeviceType == DeviceType.CPU && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
                     __CPUBenchmarkStatus = new CPUBenchmarkStatus();
                     _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;

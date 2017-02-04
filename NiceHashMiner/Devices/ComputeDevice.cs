@@ -6,6 +6,8 @@ using NiceHashMiner.Enums;
 using System.Security.Cryptography;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner.Devices
 {
@@ -191,7 +193,26 @@ namespace NiceHashMiner.Devices
 
         public List<Algorithm> GetAlgorithmSettings() {
             // hello state
-            return GetAlgorithmSettingsThirdParty(ConfigManager.GeneralConfig.Use3rdPartyMiners);
+            var algos = GetAlgorithmSettingsThirdParty(ConfigManager.GeneralConfig.Use3rdPartyMiners);
+
+            var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);;
+
+            // additional filters
+            // CPU
+            if (this.DeviceType == DeviceType.CPU && MinersManager.EquihashCPU_USE_eqm()) {
+                retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.nheqminer);
+            } else if (this.DeviceType == DeviceType.CPU) {
+                retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.eqm);
+            }
+            // NVIDIA
+            if (this.DeviceGroupType == DeviceGroupType.NVIDIA_5_x || this.DeviceGroupType == DeviceGroupType.NVIDIA_6_x) {
+                retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.nheqminer);
+            } else if (this.DeviceType == DeviceType.NVIDIA) {
+                retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.eqm);
+            }
+
+
+            return retAlgos;
         }
 
         private List<Algorithm> GetAlgorithmSettingsThirdParty(Use3rdPartyMiners use3rdParty) {

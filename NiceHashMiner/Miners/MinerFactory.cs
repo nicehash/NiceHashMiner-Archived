@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Equihash;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,14 @@ namespace NiceHashMiner.Miners {
                     return CreateClaymore(algorithmType);
                 case MinerBaseType.OptiminerAMD:
                     return new OptiminerZcashMiner(/*minersConfig*/);
+            }
+            return null;
+        }
+
+        // create miner creates new miners based on device type and algorithm/miner path
+        public static Miner CreateMiner(ComputeDevice device, Algorithm algorithm) {
+            if (device != null && algorithm != null) {
+                return CreateMiner(device.DeviceType, algorithm.NiceHashID, algorithm.MinerBaseType);
             }
             return null;
         }

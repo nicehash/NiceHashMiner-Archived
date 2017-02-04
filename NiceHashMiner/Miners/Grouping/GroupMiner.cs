@@ -37,8 +37,7 @@ namespace NiceHashMiner.Miners.Grouping {
                 {
                     var mPair = miningPairs[0];
                     DeviceType = mPair.Device.DeviceType;
-                    Miner = MinersManager.CreateMiner(mPair.Device.DeviceType,
-                        MinerPaths.GetOptimizedMinerPath(mPair));
+                    Miner = MinerFactory.CreateMiner(mPair.Device, mPair.Algorithm);
                     if(Miner != null) {
                         Miner.InitMiningSetup(new MiningSetup(miningPairs));
                         AlgorithmType = mPair.Algorithm.NiceHashID;

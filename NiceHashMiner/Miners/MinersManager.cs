@@ -37,49 +37,6 @@ namespace NiceHashMiner.Miners {
                 || mostOptimized == CPUExtensionType.AVX_AES || mostOptimized == CPUExtensionType.AVX2_AES;
         }
 
-        // create miner creates new miners based on device type and algorithm/miner path
-        public static Miner CreateMiner(ComputeDevice device, Algorithm algorithm) {
-            var minerPath = MinerPaths.GetOptimizedMinerPath(device, algorithm);
-            if (minerPath != MinerPaths.NONE) {
-                return CreateMiner(device.DeviceType, minerPath);
-            }
-            return null;
-        }
-
-        public static Miner CreateMiner(DeviceType deviceType, string minerPath) {
-            if ((minerPath == MinerPaths.eqm) && DeviceType.AMD != deviceType) {
-                return new eqm();
-            } else if (minerPath == MinerPaths.nheqminer) {
-                return new nheqminer();
-            } else if (
-                ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
-                && minerPath == MinerPaths.ClaymoreZcashMiner && DeviceType.AMD == deviceType) {
-                return new ClaymoreZcashMiner();
-            } else if (
-                ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
-                && minerPath == MinerPaths.OptiminerZcashMiner && DeviceType.AMD == deviceType) {
-                return new OptiminerZcashMiner();
-            } else if (
-                ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES
-                && minerPath == MinerPaths.ClaymoreCryptoNightMiner && DeviceType.AMD == deviceType) {
-                return new ClaymoreCryptoNightMiner();
-            } else if (minerPath == MinerPaths.ethminer && DeviceType.CPU != deviceType) {
-                if (DeviceType.AMD == deviceType) {
-                    return new MinerEtherumOCL();
-                } else {
-                    return new MinerEtherumCUDA();
-                }
-            } else if (minerPath.Contains("cpuminer") && DeviceType.CPU == deviceType) {
-                return new cpuminer();
-            } else if (minerPath.Contains("sgminer") && DeviceType.AMD == deviceType) {
-                return new sgminer();
-            } else if (minerPath.Contains("ccminer") && DeviceType.NVIDIA == deviceType) {
-                return new ccminer();
-            }
-
-            return null;
-        }
-
         public static double GetTotalRate() {
             if (CurMiningSession != null) return CurMiningSession.GetTotalRate();
             return 0;

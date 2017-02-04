@@ -15,14 +15,12 @@ namespace NiceHashMiner.Miners.Grouping {
             this.IsInit = false;
             this.CurrentAlgorithmType = AlgorithmType.NONE;
             if (miningPairs != null && miningPairs.Count > 0) {
-                this.MinerPath = MinerPaths.GetOptimizedMinerPath(miningPairs[0]);
-                if(this.MinerPath != MinerPaths.NONE) {
-                    this.MiningPairs = miningPairs;
-                    this.MiningPairs.Sort((a, b) => a.Device.ID - b.Device.ID);
-                    this.MinerName = miningPairs[0].Algorithm.MinerName;
-                    this.CurrentAlgorithmType = miningPairs[0].Algorithm.NiceHashID;
-                    this.IsInit = true;
-                }
+                this.MiningPairs = miningPairs;
+                this.MiningPairs.Sort((a, b) => a.Device.ID - b.Device.ID);
+                this.MinerName = miningPairs[0].Algorithm.MinerName;
+                this.CurrentAlgorithmType = miningPairs[0].Algorithm.NiceHashID;
+                this.MinerPath = miningPairs[0].Algorithm.MinerBinaryPath;
+                this.IsInit = MinerPaths.IsValidMinerPath(this.MinerPath);
             }
         }
     }

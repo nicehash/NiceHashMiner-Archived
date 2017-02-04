@@ -201,14 +201,13 @@ namespace NiceHashMiner.Miners.Parsing {
         public static string ParseForMiningSetup(MiningSetup miningSetup, DeviceType deviceType, bool showLog = true) {
             return ParseForMiningPairs(
                 miningSetup.MiningPairs,
-                deviceType, miningSetup.MinerPath, showLog);
+                deviceType, showLog);
         }
 
         public static string ParseForMiningPair(MiningPair miningPair, AlgorithmType algorithmType, DeviceType deviceType, bool showLog = true) {
             return ParseForMiningPairs(
                 new List<MiningPair>() { miningPair },
-                deviceType,
-                MinerPaths.GetOptimizedMinerPath(miningPair), showLog);
+                deviceType, showLog);
         }
 
         private static MinerType GetMinerType(DeviceType deviceType, MinerBaseType minerBaseType, AlgorithmType algorithmType) {    
@@ -266,7 +265,7 @@ namespace NiceHashMiner.Miners.Parsing {
             return MinerType.NONE;
         }
 
-        private static string ParseForMiningPairs(List<MiningPair> MiningPairs, DeviceType deviceType, string minerPath, bool showLog = true) {
+        private static string ParseForMiningPairs(List<MiningPair> MiningPairs, DeviceType deviceType, bool showLog = true) {
             _showLog = showLog;
 
             MinerBaseType minerBaseType = MinerBaseType.NONE;

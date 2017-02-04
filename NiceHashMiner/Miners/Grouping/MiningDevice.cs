@@ -49,7 +49,7 @@ namespace NiceHashMiner.Miners.Grouping {
             Device = device;
             foreach (var algo in Device.GetAlgorithmSettings()) {
                 bool isAlgoMiningCapable = GroupSetupUtils.IsAlgoMiningCapable(algo);
-                bool isValidMinerPath = GroupSetupUtils.IsValidMinerPath(device, algo);
+                bool isValidMinerPath = MinerPaths.IsValidMinerPath(algo.MinerBinaryPath);
                 if (isAlgoMiningCapable && isValidMinerPath) {
                     Algorithms.Add(algo);
                 }
