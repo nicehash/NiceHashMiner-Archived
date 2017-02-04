@@ -182,7 +182,7 @@ namespace NiceHashMiner.Forms {
 
         private void BenchmarkingTimer_Tick(object sender, EventArgs e) {
             if (_inBenchmark) {
-                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, getDotsWaitString());
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, getDotsWaitString());
             }
         }
 
@@ -432,7 +432,7 @@ namespace NiceHashMiner.Forms {
                 _benchmarkingTimer.Start();
 
                 _currentMiner.BenchmarkStart(time, this);
-                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID,
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm,
                     getDotsWaitString());
             } else {
                 NextBenchmark();
@@ -481,7 +481,7 @@ namespace NiceHashMiner.Forms {
 
         public void SetCurrentStatus(string status) {
             this.Invoke((MethodInvoker)delegate {
-                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, getDotsWaitString());
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, getDotsWaitString());
             });
         }
 
@@ -519,11 +519,11 @@ namespace NiceHashMiner.Forms {
                             Device = _currentDevice.Name,
                             Algorithm = _currentAlgorithm.AlgorithmName
                         } );
-                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
+                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, status);
                 } else if (!rebenchSame) {
                     // set status to empty string it will return speed
                     _currentAlgorithm.ClearBenchmarkPending();
-                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, "");
+                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, "");
                 }
                 if (rebenchSame) {
                     _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);

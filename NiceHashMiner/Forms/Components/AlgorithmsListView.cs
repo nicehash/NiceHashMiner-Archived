@@ -150,28 +150,24 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         // benchmark settings
-        public void SetSpeedStatus(ComputeDevice computeDevice, AlgorithmType algorithmType, string status) {
-            // TODO BROKEN FIX
-            //var algorithm = computeDevice.AlgorithmSettings[algorithmType];
-            //algorithm.BenchmarkStatus = status;
-
-            
-            
-
-            //// gui update only if same as selected
-            //if (_computeDevice != null && computeDevice.UUID == _computeDevice.UUID) {
-            //    foreach (ListViewItem lvi in listViewAlgorithms.Items) {
-            //        Algorithm algo = lvi.Tag as Algorithm;
-            //        if (algo != null && algo.NiceHashID == algorithmType) {
-            //            // TODO handle numbers
-            //            lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
-            //            lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
-            //            lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
-            //            _listItemCheckColorSetter.LviSetColor(lvi);
-            //            break;
-            //        }
-            //    }
-            //}
+        public void SetSpeedStatus(ComputeDevice computeDevice, Algorithm algorithm, string status) {
+            if (algorithm != null) {
+                algorithm.BenchmarkStatus = status;
+                // gui update only if same as selected
+                if (_computeDevice != null && computeDevice.UUID == _computeDevice.UUID) {
+                    foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                        Algorithm algo = lvi.Tag as Algorithm;
+                        if (algo != null && algo.AlgorithmStringID == algorithm.AlgorithmStringID) {
+                            // TODO handle numbers
+                            lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
+                            lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
+                            lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                            _listItemCheckColorSetter.LviSetColor(lvi);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         private void listViewAlgorithms_MouseClick(object sender, MouseEventArgs e) {
