@@ -42,7 +42,7 @@ namespace NiceHashMiner.Miners.Grouping
         /// </summary>
         public const string sgminer_5_1_0_optimized =   _bin + @"\sgminer-5-1-0-optimized\sgminer.exe";
         public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
-        public const string sgminer_5_5_0_general =     _bin + @"\sgminer-5-5-0-general\sgminer.exe";
+        public const string sgminer_5_6_0_general =     _bin + @"\sgminer-5-6-0-general\sgminer.exe";
         public const string sgminer_5_4_0_tweaked =     _bin + @"\sgminer-5-4-0-tweaked\sgminer.exe";
         public const string sgminer_gm =                _bin + @"\sgminer-gm\sgminer.exe";
 
@@ -175,7 +175,7 @@ namespace NiceHashMiner.Miners.Grouping
                     if (AlgorithmType.Quark == type || AlgorithmType.Lyra2REv2 == type || AlgorithmType.Qubit == type) {
                         if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
                             if (!Helpers.InternalCheckIsWow64())
-                                return MinerPaths.sgminer_5_5_0_general;
+                                return MinerPaths.sgminer_5_6_0_general;
 
                             return MinerPaths.sgminer_5_4_0_tweaked;
                         }
@@ -186,7 +186,7 @@ namespace NiceHashMiner.Miners.Grouping
                     }
                 }
 
-                return MinerPaths.sgminer_5_5_0_general;
+                return MinerPaths.sgminer_5_6_0_general;
             }
 
             public static string ClaymorePath(AlgorithmType type) {
