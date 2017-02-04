@@ -12,6 +12,7 @@ namespace NiceHashMiner.Enums {
         eqm,
         ethminer,
         ClaymoreAMD,
-        OptiminerAMD
+        OptiminerAMD,
+        excavator
     }
 }

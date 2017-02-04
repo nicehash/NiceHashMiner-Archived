@@ -20,10 +20,6 @@ namespace NiceHashMiner.Miners {
 
 
         protected override string GetDevicesCommandString() {
-            //// old
-            //Path = MinerPaths.eqm;
-            //WorkingDirectory = MinerPaths.eqm.Replace("eqm.exe", "");
-            // 2 paths
             Path = this.MiningSetup.MinerPath;
             WorkingDirectory = this.MiningSetup.MinerPath.Replace("eqm.exe", "");
 

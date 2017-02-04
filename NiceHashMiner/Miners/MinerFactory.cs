@@ -44,6 +44,8 @@ namespace NiceHashMiner.Miners {
                     return CreateClaymore(algorithmType);
                 case MinerBaseType.OptiminerAMD:
                     return new OptiminerZcashMiner(/*minersConfig*/);
+                case MinerBaseType.excavator:
+                    return new excavator();
             }
             return null;
         }

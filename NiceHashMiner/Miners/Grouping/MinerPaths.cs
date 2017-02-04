@@ -55,6 +55,7 @@ namespace NiceHashMiner.Miners.Grouping
         /// eqm
         /// </summary>
         public const string eqm = _bin + @"\eqm\eqm.exe";
+        public const string excavator = _bin + @"\excavator\excavator.exe";
 
         public const string NONE = "";
 
@@ -96,6 +97,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return AMD_GROUP.ClaymorePath(algoType);
                 case MinerBaseType.OptiminerAMD:
                     return MinerPaths.OptiminerZcashMiner;
+                case MinerBaseType.excavator:
+                    return MinerPaths.excavator;
             }
             return MinerPaths.NONE;
         }

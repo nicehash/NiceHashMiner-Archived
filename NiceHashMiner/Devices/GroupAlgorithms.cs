@@ -201,6 +201,11 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.eqm, AlgorithmType.Equihash, "equihash")
                         }
                     },
+                    { MinerBaseType.excavator,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
+                        }
+                    },
                 };
                 if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
@@ -213,7 +218,8 @@ namespace NiceHashMiner.Devices {
                 if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
                         AlgorithmType.DaggerHashimoto,
-                        AlgorithmType.CryptoNight
+                        AlgorithmType.CryptoNight,
+                        AlgorithmType.Pascal
                     });
                 }
 
