@@ -185,6 +185,7 @@ namespace NiceHashMiner.Devices
             foreach (var algo in this.AlgorithmSettings) {
                 // create/setup
                 AlgorithmConfig conf = new AlgorithmConfig();
+                conf.Name = algo.AlgorithmStringID;
                 conf.NiceHashID = algo.NiceHashID;
                 conf.MinerBaseType = algo.MinerBaseType;
                 conf.MinerName = algo.MinerName; // TODO probably not needed

@@ -177,6 +177,7 @@ namespace NiceHashMiner.Devices {
             // NVIDIA
             if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType || DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                 var ToRemoveAlgoTypes = new List<AlgorithmType>();
+                var ToRemoveMinerTypes = new List<MinerBaseType>();
                 var ret = new Dictionary<MinerBaseType, List<Algorithm>>() {
                     { MinerBaseType.ccminer,
                         new List<Algorithm>() {
@@ -214,6 +215,7 @@ namespace NiceHashMiner.Devices {
                         AlgorithmType.Lyra2RE,
                         AlgorithmType.Lyra2REv2
                     });
+                    ToRemoveMinerTypes.Add(MinerBaseType.eqm);
                 }
                 if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
@@ -225,6 +227,7 @@ namespace NiceHashMiner.Devices {
 
                 // filter unused
                 var finalRet = FilterMinerAlgos(ret, ToRemoveAlgoTypes);
+                finalRet = FilterMinerBaseTypes(finalRet, ToRemoveMinerTypes);
 
                 return finalRet;
             }

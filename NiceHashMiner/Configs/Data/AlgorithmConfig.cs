@@ -9,7 +9,7 @@ namespace NiceHashMiner.Configs.Data {
         public string Name = ""; // Used as an indicator for easier user interaction
         public AlgorithmType NiceHashID = AlgorithmType.NONE;
         public MinerBaseType MinerBaseType = MinerBaseType.NONE;
-        public string MinerName = "";  // TODO probably not needed
+        public string MinerName = "";  // probably not needed
         public double BenchmarkSpeed = 0;
         public string ExtraLaunchParameters= "";
         public bool Enabled = true;

@@ -25,7 +25,7 @@ namespace NiceHashMiner {
         public double AvaragedSpeed { get; set; }
         // based on device and settings here we set the miner path
         public string MinerBinaryPath = "";
-        // TODO these are changing (logging reasons)
+        // these are changing (logging reasons)
         public double CurrentProfit = 0;
         public double CurNhmSMADataVal = 0;
 

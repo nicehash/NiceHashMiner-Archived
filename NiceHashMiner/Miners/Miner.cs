@@ -162,7 +162,6 @@ namespace NiceHashMiner
             SetAPIPort();
         }
 
-        // TODO remove or don't recheck
         public void InitBenchmarkSetup(MiningPair benchmarkPair) {
             InitMiningSetup(new MiningSetup(new List<MiningPair>() { benchmarkPair }));
             BenchmarkAlgorithm = benchmarkPair.Algorithm;
@@ -570,8 +569,6 @@ namespace NiceHashMiner
 
 
         virtual protected void Miner_Exited() {
-            // TODO make miner restart in 5 seconds
-            //Stop(MinerStopType.END, true);
             ScheduleRestart(5000);
         }
 
