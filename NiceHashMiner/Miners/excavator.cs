@@ -35,6 +35,7 @@ namespace NiceHashMiner.Miners {
         public excavator()
             : base("excavator") {
                 ConectionType = NHMConectionType.NONE;
+                IsNeverHideMiningWindow = true;
         }
 
         public override void Start(string url, string btcAdress, string worker) {

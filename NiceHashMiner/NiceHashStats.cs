@@ -83,28 +83,6 @@ namespace NiceHashMiner
         {
             public string version;
         }
-
-        class nicehash_workers_algo_stats {
-            public string addr; 
-            public AlgorithmType algo;
-            public List<List<object>> workers;
-        }
-        class nicehash_worker_algo_stats_H {
-            public string workerName;
-            public Dictionary<string, double> speedsStatus;
-            public int timeConnected;
-            public int xnsub;
-            public double difficulty;
-            public int serviceLocation;
-        }
-        public class nicehash_worker_algo_stats {
-            public nicehash_worker_algo_stats(AlgorithmType t) {
-                type = t;
-            }
-            public readonly AlgorithmType type = AlgorithmType.NONE;
-            public double accepted = 0;
-            public double rejected = 0;
-        }
 #pragma warning restore 649
 
 
@@ -132,54 +110,6 @@ namespace NiceHashMiner
                 return null;
             }
         }
-
-        //public static nicehash_worker_algo_stats GetWorkerAlgorithmAcceptedSpeeds(string btc, AlgorithmType algo, string worker) {
-        //    string args = String.Format("{0}&algo={1}", btc, (int)algo);
-        //    string r1 = GetNiceHashAPIData(Links.NHM_API_stats_provider_workers + args, worker);
-        //    if (r1 == null) return null;
-
-        //    List<nicehash_worker_algo_stats_H> ret = new List<nicehash_worker_algo_stats_H>();
-        //    nicehash_worker_algo_stats retEl = new nicehash_worker_algo_stats(algo);
-        //    nicehash_json_T<nicehash_workers_algo_stats> nhjson_current;
-        //    try {
-        //        nhjson_current = JsonConvert.DeserializeObject<nicehash_json_T<nicehash_workers_algo_stats>>(r1, Globals.JsonSettings);
-        //        List<nicehash_worker_algo_stats_H> all = new List<nicehash_worker_algo_stats_H>();
-        //        foreach (var worker_stat in nhjson_current.result.workers) {
-        //            if (worker_stat.Count >= 6) {
-        //                nicehash_worker_algo_stats_H tmp = new nicehash_worker_algo_stats_H();
-        //                tmp.workerName = worker_stat[0] as string;
-        //                {
-        //                    var toConv = worker_stat[1] as JObject; // Dictionary<System.String, Newtonsoft.Json.Linq.JToken>;
-        //                    tmp.speedsStatus = new Dictionary<string, double>();
-        //                    foreach (var pair in toConv) {
-        //                        tmp.speedsStatus.Add(pair.Key, Helpers.ParseDouble(pair.Value.ToString()));
-        //                    }
-        //                }
-        //                // other stuff don't care
-        //                //tmp.timeConnected = (int)worker_stat[2];
-        //                //tmp.xnsub = (int)worker_stat[3];
-        //                //tmp.difficulty = (double)worker_stat[4];
-        //                //tmp.serviceLocation = (int)worker_stat[5];
-        //                if (tmp.workerName == worker) {
-        //                    ret.Add(tmp);
-        //                }
-        //            }
-        //        }
-        //        foreach (var r in ret) {
-        //            if (r.speedsStatus.ContainsKey("a")) {
-        //                retEl.accepted += r.speedsStatus["a"];
-        //            }
-        //            if (r.speedsStatus.ContainsKey("rs")) {
-        //                retEl.rejected += r.speedsStatus["rs"];
-        //            }
-        //        }
-
-        //        return retEl;
-        //    } catch {
-        //        return null;
-        //    }
-        //}
-
 
         public static nicehash_stats GetStats(string btc, int algo, string worker)
         {

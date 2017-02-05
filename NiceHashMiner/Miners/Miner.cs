@@ -71,9 +71,6 @@ namespace NiceHashMiner
         private MinerPID_Data _currentPidData;
         private List<MinerPID_Data> _allPidData = new List<MinerPID_Data>();
 
-        // for local and global checking. give miner at least 5 minutes to take affect
-        private DateTime _startMining;
-
         // Benchmark stuff
         public bool BenchmarkSignalQuit;
         public bool BenchmarkSignalHanged;
@@ -497,43 +494,12 @@ namespace NiceHashMiner
             }
         }
 
-
-        int minerStatsCheckCount = 3;
-        public bool ShouldCheckMinerStats() {
-            int minuteCheck = 1; // 1 minutes default
-            if (minerStatsCheckCount == 3) {
-                minuteCheck = 15;
-            } else if (minerStatsCheckCount == 2) {
-                minuteCheck = 5;
-            } else if (minerStatsCheckCount == 1) {
-                minuteCheck = 2;
-            }
-            --minerStatsCheckCount;
-            return IsXminutesMining(minuteCheck);
-        }
-
-        public bool IsCheckShowWarning() {
-            return minerStatsCheckCount < 0;
-        }
-
-        private bool IsXminutesMining(int minutes) {
-            return _startMining.AddMinutes(minutes) < DateTime.UtcNow;
-        }
-        public void ResetCheckTime() {
-            _startMining = DateTime.UtcNow;
-        }
-        public void ResetCheckStateCount() {
-            minerStatsCheckCount = 3;
-        }
-
         abstract protected bool BenchmarkParseLine(string outdata);
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
         virtual protected NiceHashProcess _Start()
         {
-            ResetCheckTime();
-            ResetCheckStateCount();
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 
@@ -550,6 +516,11 @@ namespace NiceHashMiner
             P.StartInfo.Arguments = LastCommandLine;
             if (IsNeverHideMiningWindow) {
                 P.StartInfo.CreateNoWindow = false;
+                // not working
+                //if (ConfigManager.GeneralConfig.HideMiningWindows) {
+                //    P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                //    P.StartInfo.UseShellExecute = true;
+                //}
             } else {
                 P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
             }

@@ -597,8 +597,7 @@ namespace NiceHashMiner.Forms {
                 return;
             }
             var url = Links.NHM_Profit_Check + _selectedComputeDevice.Name;
-            // TODO API doesn't have multiple algorithm support
-            foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettings()) {
+            foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest()) {
                 var id = (int)algorithm.NiceHashID;
                 url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
             }
@@ -610,9 +609,8 @@ namespace NiceHashMiner.Forms {
         private void buttonAllProfit_Click(object sender, EventArgs e) {
             var url = Links.NHM_Profit_Check + "CUSTOM";
             Dictionary<AlgorithmType, double> total = new Dictionary<AlgorithmType,double>();
-            // TODO API doesn't have multiple algorithm support
             foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                foreach (var algorithm in curCDev.GetAlgorithmSettings()) {
+                foreach (var algorithm in curCDev.GetAlgorithmSettingsFastest()) {
                     if (total.ContainsKey(algorithm.NiceHashID)) {
                         total[algorithm.NiceHashID] += algorithm.BenchmarkSpeed;
                     } else {

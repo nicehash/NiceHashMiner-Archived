@@ -219,6 +219,30 @@ namespace NiceHashMiner.Devices
                 retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.eqm);
             }
 
+            // sort by miner and algo
+            retAlgos.Sort((a_1, a_2) => (a_1.MinerBaseType - a_2.MinerBaseType) != 0 ? (a_1.MinerBaseType - a_2.MinerBaseType) : (a_1.NiceHashID - a_2.NiceHashID));
+
+            return retAlgos;
+        }
+
+        public List<Algorithm> GetAlgorithmSettingsFastest() {
+            // hello state
+            var algosTmp = GetAlgorithmSettings();
+            Dictionary<AlgorithmType, Algorithm> sortDict = new Dictionary<AlgorithmType, Algorithm>();
+            foreach (var algo in algosTmp) {
+                var algoKey = algo.NiceHashID;
+                if (sortDict.ContainsKey(algoKey)) {
+                    if (sortDict[algoKey].BenchmarkSpeed < algo.BenchmarkSpeed) {
+                        sortDict[algoKey] = algo;
+                    }
+                } else {
+                    sortDict[algoKey] = algo;
+                }
+            }
+            List<Algorithm> retAlgos = new List<Algorithm>();
+            foreach (var fastestAlgo in sortDict.Values) {
+                retAlgos.Add(fastestAlgo);
+            }
 
             return retAlgos;
         }
