@@ -148,7 +148,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 }
             ),
             new MinerOptionPackage(
-                MinerType.ccminer_CryptoNight,
+                MinerType.ClaymoreCryptoNight,
                 new List<MinerOption>() {
                     new MinerOption("ClaymoreCryptoNight_a"      , "-a", "-a", "0", MinerOptionFlagType.MultiParam, ""),
                     new MinerOption("ClaymoreCryptoNight_wd"     , "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
@@ -199,6 +199,19 @@ namespace NiceHashMiner.Miners.Parsing {
                 } else {
                     Helpers.ConsolePrint("ExtraLaunchParameters", "Loading internal params config " + packageName);
                     MinerOptionPackages.Add(readPack);
+                }
+            }
+            var defaultKeys = DEFAULTS.ConvertAll((p) => p.Type);
+            // extra check if DEFAULTS is missing a key
+            for (var type = (MinerType.NONE + 1); type < MinerType.END; ++type) {
+                if (defaultKeys.Contains(type) == false) {
+                    var packageName = String.Format("MinerOptionPackage_{0}", Enum.GetName(typeof(MinerType), type));
+                    var packageFile = new MinerOptionPackageFile(packageName);
+                    var readPack = packageFile.ReadFile();
+                    if (readPack != null) { // read has failed
+                        Helpers.ConsolePrint("ExtraLaunchParameters", "Creating internal params config " + packageName);
+                        MinerOptionPackages.Add(readPack);
+                    }
                 }
             }
         }
