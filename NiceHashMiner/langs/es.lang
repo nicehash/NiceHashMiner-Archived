@@ -52,17 +52,17 @@
         "Form_Main_loadtext_NVIDIAP0State": "Poniendo tadas las GPUs de NVIDIA al estado P0...",
 
         "Form_Main_msgbox_CPUMining64bitMsg": "NiceHash Miner solo funciona en sistemas de 64bit (para el minado con CPU). El minado CPU será desactivado.",
-        "Form_Main_msgbox_CPUMining64CoresMsg": "NiceHash Miner no soparta más de 64 núcleos virtuales. El minado CPU será desactivado.",
+        "Form_Main_msgbox_CPUMining64CoresMsg": "NiceHash Miner no soporta más de 64 núcleos virtuales. El minado CPU será desactivado.",
         "Form_Main_msgbox_CPUMiningLessThreadMsg": "LessThreads es mayor al número de nucleos por CPU. Opción ignorada",
         "Form_Main_msgbox_NoInternetTitle": "Comprueba la conexión a Internet",
         "Form_Main_msgbox_NoInternetMsg": "NiceHash Miner requiere una conexión a Internet. Asegúrese de que tiene una conexión a internet antes de continuar. ¿Le gustaría continuar?",
         "Form_Main_msgbox_InvalidBTCAddressMsg": "¡Dirección Bitcoin inválida!\n\nIntruduzca una dirección válida o pulse Sí para crear una.",
         "Form_Main_msgbox_InvalidWorkerNameMsg": "¡Nombre inválido!\n\nPor favor introduzca un nombre válido (Aa-Zz, 0-9, de hasta 7 carácteres).",
         "Form_Main_msgbox_NullNiceHashDataMsg": "No se puede obtener los datos de rentabilidad de NiceHash. Si está conectado a Internet, inténtelo más tarde.",
-        "Form_Main_msgbox_HaveNotBenchmarkedMsg": "No has hecho ningún benchmark para el dispositivo {0}. Sin hacer un benchmark primero, NiceHashMiner no podrá cambiar al algoritmo más rentable. Para continuar, pulsa Sí. Si le gustaría hacer un benchmark primero, pulse No y haga click en Benchmark.",
+        "Form_Main_msgbox_HaveNotBenchmarkedMsg": "No ha hecho ningún benchmark para el dispositivo {0}. Sin hacer un benchmark primero, NiceHashMiner no podrá cambiar al algoritmo más rentable. Para continuar, pulsa Sí. Si le gustaría hacer un benchmark primero, pulse No y haga click en Benchmark.",
         "Form_Main_msgbox_buttonBenchmarkWarningMsg": "Solo usuarios avanzados deberían cambiar las configuraciones avanzadas. \r\n\r\nSi {0} se cierra por una mala configuración, puede arreglarlo eliminando el archivo 'config.json' .\r\n\r\n¿Seguro que quiere editar la configuración avanzada?",
         "Form_Main_msgbox_buttonBenchmarkRestartWarningTitle": "Reiniciando {0}",
-        "Form_Main_msgbox_buttonBenchmarkRestartWarningMsg": "{0} se cierrará. Esta nueva ventana de configuración está uún en beta y {0} necesita un reinicio para que haga efecto.",
+        "Form_Main_msgbox_buttonBenchmarkRestartWarningMsg": "{0} se cierrará. Esta nueva ventana de configuración está aún en beta y {0} necesita un reinicio para que haga efecto.",
         "Form_Main_msgbox_anti_botnet_msgbox": "NiceHash Miner ha detectado un cambio en la identificación del hardware. Si no has descargado e instalado NiceHash Miner, tu ordenador puede estar en peligro. En tal caso, se recomienda instalar un software antivirus o reinstalar Windows.\r\n\r\n¿Continuar con NiceHash Miner?",
 
 
@@ -76,16 +76,16 @@
         "Form_Benchmark_radioButton_QuickBenchmark": "Rá&pido (puede ser impreciso)",
         "Form_Benchmark_radioButton_StandardBenchmark": "Es&tandar",
         "Form_Benchmark_radioButton_PreciseBenchmark": "&Preciso (tardará más)",
-        "Form_Benchmark_listView_WaitSeconds": "Por favor espera unos {0} segundos...",
-        "Form_Benchmark_listView_WaitMinutes": "Por favor espera unos {0} minutos...",
+        "Form_Benchmark_listView_WaitSeconds": "Por favor espere unos {0} segundos...",
+        "Form_Benchmark_listView_WaitMinutes": "Por favor espere unos {0} minutos...",
         "Form_Benchmark_listView_WaitForEth": "Corriendo benchmark (2-4 minutos)...",
 
 
-        "Form_Loading_label_LoadingText": "Cargando, espera por favor...",
+        "Form_Loading_label_LoadingText": "Cargando, espere por favor...",
 
 
         "DriverVersionConfirmationDialog_title": "Actualización del driver de AMD recomendada",
-        "DriverVersionConfirmationDialog_labelWarning": "No estas usando una versión óptima del driver de AMD. La versión más estable para minar es la 15.7.1 .\nLe recomendamos encarecidamente usar esta versión.",
+        "DriverVersionConfirmationDialog_labelWarning": "No esta usando una versión óptima del driver de AMD. La versión más estable para minar es la 15.7.1 .\nLe recomendamos encarecidamente usar esta versión.",
         "DriverVersionConfirmationDialog_linkToDriverDownloadPage": "&Enlace a la página de descargas del driver",
         "DriverVersionConfirmationDialog_chkBoxDontShowAgain": "&No volver a mostrar esta ventana",
 
@@ -97,7 +97,7 @@
 
 
         "SubmitResultDialog_title": "Enviar los resultados del benchmark",
-        "SubmitResultDialog_labelInstruction": "Por favor selecciona un dispositivo para que se le haga un benchmark y una vez hecho, abrirá automáticamente una \r\nnueva ventana con la calculadora de rentabilidad de NiceHash.",
+        "SubmitResultDialog_labelInstruction": "Por favor seleccione un dispositivo para que se le haga un benchmark y una vez hecho, abrirá automáticamente una \r\nnueva ventana con la calculadora de rentabilidad de NiceHash.",
         "SubmitResultDialog_StartBtn": "&Empezar",
         "SubmitResultDialog_StopBtn": "&Detener",
         "SubmitResultDialog_CloseBtn": "&Cerrar",
@@ -106,9 +106,9 @@
         "SubmitResultDialog_LabelProgressPercentageInProgress": "{0}% : Corriendo benchmark {1}.. Espera, por favor..",
 
         "SubmitResultDialog_NoDeviceCheckedTitle": "Ningún dispositivo seleccionado",
-        "SubmitResultDialog_NoDeviceCheckedMsg": "Elige al menos un dispositivo para enviar los resultados.",
+        "SubmitResultDialog_NoDeviceCheckedMsg": "Elija al menos un dispositivo para enviar los resultados.",
         "SubmitResultDialog_UsePreviousBenchmarkedValueTitle": "¿Usar resultados de un benchmark previo?",
-        "SubmitResultDialog_UsePreviousBenchmarkedValueMsg": "Podrías usar los resultados de un benckmark anterior. Elige Sí para usar los resultados anteriores o No para volver a correr un benchmark.",
+        "SubmitResultDialog_UsePreviousBenchmarkedValueMsg": "Podría usar los resultados de un benckmark anterior. Elige Sí para usar los resultados anteriores o No para volver a correr un benchmark.",
 
 
         "Form_Settings_General_DebugConsole": "Consola de depuración",
@@ -161,9 +161,9 @@
         "Form_Settings_LessThreadWarningTitle": "¡Número inválido para LessThreads!",
         "Form_Settings_LessThreadWarningMsg": "¡Error! Por favor introduce un número valido para LessThreads.",
         "Form_Settings_MinimumProfitWarningTitle": "¡Ganancias mínimas inválidas!",
-        "Form_Settings_MinimumProfitWarningMsg": "¡Error! Por favor introduce una ganancia mínima que sea un número y sea mayor o igual a 0.",
+        "Form_Settings_MinimumProfitWarningMsg": "¡Error! Por favor introduzca una ganancia mínima que sea un número y sea mayor o igual a 0.",
         "Form_Settings_APIBindPortWarningTitle": "¡Número de puerto de la API inválido!",
-        "Form_Settings_APIBindPortWarningMsg": "¡Error! Por favor introduce un número de puerto para la API válido.",
+        "Form_Settings_APIBindPortWarningMsg": "¡Error! Por favor introduzca un número de puerto para la API válido.",
         "Form_Settings_BenchmarkSpeedWarningTitle": "¡Velocidad de benchmark inválida!",
         "Form_Settings_BenchmarkSpeedWarningMsg": "¡Error! Por favor introduce una velocidad de benchmark que sea un número y sea mayor o igual a 0.",
         "Form_Settings_DaggerHashimotoGenerateDeviceWarningTitle": "¡Número de dispositivo inválido!",
@@ -174,13 +174,13 @@
         "Form_Settings_ParseIntMsg": "Solo se aceptan números (0-9).",
         "Form_Settings_buttonDefaultsText": "&Predeterminados",
         "Form_Settings_buttonDefaultsTitle": "¿Poner configuración predeterminada?",
-        "Form_Settings_buttonDefaultsMsg": "¿Está seguro de que quieres establecer la configuración predeterminada? NiceHash Miner se reiniciará automáticamente.",
+        "Form_Settings_buttonDefaultsMsg": "¿Está seguro de que quiere establecer la configuración predeterminada? NiceHash Miner se reiniciará automáticamente.",
         "Form_Settings_buttonSaveText": "&Guardar y cerrar",
         "Form_Settings_buttonSaveTitle": "¡Configuración guardada!",
         "Form_Settings_buttonSaveMsg": "¡Configuración guardada!",
         "Form_Settings_buttonCloseNoSaveText": "&Cerrar sin guardar",
         "Form_Settings_buttonCloseNoSaveTitle": "¡Alerta!",
-		"Form_Settings_buttonCloseNoSaveMsg": "¡Alerta! Has elegido cerrar sin guardar. ¿Seguro que quiere continuar?",
+		"Form_Settings_buttonCloseNoSaveMsg": "¡Alerta! Ha elegido cerrar sin guardar. ¿Seguro que quiere continuar?",
         
 
         "Form_Settings_ToolTip_Explaination": "Explicación",
