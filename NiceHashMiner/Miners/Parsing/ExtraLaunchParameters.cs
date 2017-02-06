@@ -182,6 +182,15 @@ namespace NiceHashMiner.Miners.Parsing {
                 },
                 new List<MinerOption>()
             ),
+            new MinerOptionPackage(
+                MinerType.excavator,
+                new List<MinerOption>() {
+                    new MinerOption("number_of_blocks", "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
+                    new MinerOption("tpb", "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
+                },
+                new List<MinerOption>()
+            ),
+            
         };
 
         private static List<MinerOptionPackage> MinerOptionPackages = new List<MinerOptionPackage>();

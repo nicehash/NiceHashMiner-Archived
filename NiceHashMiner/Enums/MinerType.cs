@@ -19,6 +19,7 @@ namespace NiceHashMiner.Enums {
         ClaymoreZcash,
         ClaymoreCryptoNight,
         OptiminerZcash,
+        excavator,
         END
     }
 }
