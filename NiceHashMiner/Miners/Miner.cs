@@ -45,6 +45,8 @@ namespace NiceHashMiner
         // MINER_ID_COUNT used to identify miners creation
         protected static long MINER_ID_COUNT { get; private set; }
 
+
+        public NHMConectionType ConectionType { get; protected set; }
         // used to identify miner instance
         protected readonly long MINER_ID;
         private string _minetTag = null;
@@ -52,8 +54,6 @@ namespace NiceHashMiner
         protected int APIPort { get; private set; }
         // if miner has no API bind port for reading curentlly only CryptoNight on ccminer
         public bool IsAPIReadException { get; protected set; }
-        // inhouse miners that are locked on NH (our eqm)
-        public bool IsNHLocked { get; protected set; }
         public bool IsNeverHideMiningWindow { get; protected set; }
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
@@ -70,9 +70,6 @@ namespace NiceHashMiner
         protected NiceHashProcess ProcessHandle;
         private MinerPID_Data _currentPidData;
         private List<MinerPID_Data> _allPidData = new List<MinerPID_Data>();
-
-        // for local and global checking. give miner at least 5 minutes to take affect
-        private DateTime _startMining;
 
         // Benchmark stuff
         public bool BenchmarkSignalQuit;
@@ -111,6 +108,7 @@ namespace NiceHashMiner
 
         public Miner(string minerDeviceName)
         {
+            ConectionType = NHMConectionType.STRATUM_TCP;
             MiningSetup = new MiningSetup(null);
             IsInit = false;
             MINER_ID = MINER_ID_COUNT++;
@@ -125,9 +123,7 @@ namespace NiceHashMiner
 
             LastCommandLine = "";
 
-            APIPort = MinersApiPortsManager.GetAvaliablePort();
             IsAPIReadException = false;
-            IsNHLocked = false;
             IsNeverHideMiningWindow = false;
             IsKillAllUsedMinerProcs = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
@@ -141,13 +137,31 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerTAG(), "MINER DESTROYED");
         }
 
+        private void SetAPIPort() {
+            if (IsInit) {
+                var minerBase = MiningSetup.MiningPairs[0].Algorithm.MinerBaseType;
+                var algoType = MiningSetup.MiningPairs[0].Algorithm.NiceHashID;
+                var path = MiningSetup.MinerPath;
+                var reservedPorts = MinersSettingsManager.GetPortsListFor(minerBase, path, algoType);
+                APIPort = -1; // not set
+                foreach (var reservedPort in reservedPorts) {
+                    if (MinersApiPortsManager.IsPortAvaliable(reservedPort)) {
+                        APIPort = reservedPort;
+                        break;
+                    }
+                }
+                if (APIPort == -1) {
+                    APIPort = MinersApiPortsManager.GetAvaliablePort();
+                }
+            }
+        }
 
         virtual public void InitMiningSetup(MiningSetup miningSetup) {
             MiningSetup = miningSetup;
             IsInit = MiningSetup.IsInit;
+            SetAPIPort();
         }
 
-        // TODO remove or don't recheck
         public void InitBenchmarkSetup(MiningPair benchmarkPair) {
             InitMiningSetup(new MiningSetup(new List<MiningPair>() { benchmarkPair }));
             BenchmarkAlgorithm = benchmarkPair.Algorithm;
@@ -228,28 +242,10 @@ namespace NiceHashMiner
             Stop(MinerStopType.FORCE_END);
         }
 
-        protected void ChangeToNextAvaliablePort() {
-            // change to new port
-            var oldApiPort = APIPort;
-            var newApiPort = MinersApiPortsManager.GetAvaliablePort();
-            // check if update last command port
-            if (UpdateBindPortCommand(oldApiPort, newApiPort)) {
-                Helpers.ConsolePrint(MinerTAG(), String.Format("Changing miner port from {0} to {1}",
-                    oldApiPort.ToString(),
-                    newApiPort.ToString()));
-                // free old set new
-                MinersApiPortsManager.RemovePort(oldApiPort);
-                APIPort = newApiPort;
-            } else { // release new
-                MinersApiPortsManager.RemovePort(newApiPort);
-            }
-        }
-
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch) {
             if (IsRunning) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }
-            if (willswitch != MinerStopType.FORCE_END) ChangeToNextAvaliablePort();
             if (ProcessHandle != null) {
                 try { ProcessHandle.Kill(); } catch { }
                 ProcessHandle.Close();
@@ -425,14 +421,14 @@ namespace NiceHashMiner
             if (BenchmarkHandle != null && BenchmarkProcessStatus != BenchmarkProcessStatus.Killing && BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling) {
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
                 try {
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.AlgorithmName));
                     BenchmarkHandle.Kill();
                     BenchmarkHandle.Close();
                     KillAllUsedMinerProcesses();
                 } catch { }
                 finally {
                     BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.AlgorithmName));
                     //BenchmarkHandle = null;
                 }
             }
@@ -497,43 +493,17 @@ namespace NiceHashMiner
             }
         }
 
-
-        int minerStatsCheckCount = 3;
-        public bool ShouldCheckMinerStats() {
-            int minuteCheck = 1; // 1 minutes default
-            if (minerStatsCheckCount == 3) {
-                minuteCheck = 15;
-            } else if (minerStatsCheckCount == 2) {
-                minuteCheck = 5;
-            } else if (minerStatsCheckCount == 1) {
-                minuteCheck = 2;
-            }
-            --minerStatsCheckCount;
-            return IsXminutesMining(minuteCheck);
-        }
-
-        public bool IsCheckShowWarning() {
-            return minerStatsCheckCount < 0;
-        }
-
-        private bool IsXminutesMining(int minutes) {
-            return _startMining.AddMinutes(minutes) < DateTime.UtcNow;
-        }
-        public void ResetCheckTime() {
-            _startMining = DateTime.UtcNow;
-        }
-        public void ResetCheckStateCount() {
-            minerStatsCheckCount = 3;
-        }
-
         abstract protected bool BenchmarkParseLine(string outdata);
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
         virtual protected NiceHashProcess _Start()
         {
-            ResetCheckTime();
-            ResetCheckStateCount();
+            // never start when ended
+            if (isEnded) {
+                return null;
+            }
+
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 
@@ -550,6 +520,11 @@ namespace NiceHashMiner
             P.StartInfo.Arguments = LastCommandLine;
             if (IsNeverHideMiningWindow) {
                 P.StartInfo.CreateNoWindow = false;
+                ////not working
+                //if (ConfigManager.GeneralConfig.HideMiningWindows) {
+                //    P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                //    P.StartInfo.UseShellExecute = true;
+                //}
             } else {
                 P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
             }
@@ -568,7 +543,6 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint(MinerTAG(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
 
                     StartCoolDownTimerChecker();
-                    isEnded = false;
 
                     return P;
                 } else {
@@ -599,8 +573,6 @@ namespace NiceHashMiner
 
 
         virtual protected void Miner_Exited() {
-            // TODO make miner restart in 5 seconds
-            //Stop(MinerStopType.END, true);
             ScheduleRestart(5000);
         }
 
@@ -611,20 +583,6 @@ namespace NiceHashMiner
             _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
             NeedsRestart = true;
             _currentCooldownTimeInSecondsLeft = RestartInMS;
-        }
-
-        protected abstract bool UpdateBindPortCommand(int oldPort, int newPort);
-
-        protected bool UpdateBindPortCommand_ccminer_cpuminer(int oldPort, int newPort) {
-            // --api-bind=
-            const string MASK = "--api-bind={0}";
-            var oldApiBindStr = String.Format(MASK, oldPort);
-            var newApiBindStr = String.Format(MASK, newPort);
-            if (LastCommandLine != null && LastCommandLine.Contains(oldApiBindStr)) {
-                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
-                return true;
-            }
-            return false;
         }
 
         protected void Restart() {
@@ -764,6 +722,10 @@ namespace NiceHashMiner
         }
 
         private void MinerCoolingCheck_Tick(object sender, ElapsedEventArgs e) {
+            if (isEnded) {
+                End();
+                return;
+            }
             _currentCooldownTimeInSecondsLeft -= (int)_cooldownCheckTimer.Interval;
             // if times up
             if (_currentCooldownTimeInSecondsLeft <= 0) {

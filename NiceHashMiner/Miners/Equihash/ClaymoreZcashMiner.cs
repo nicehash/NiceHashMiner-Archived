@@ -24,7 +24,7 @@ namespace NiceHashMiner.Miners {
         
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
-            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -zpool " + url + " -zwal " + username + " -zpsw x";
+            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -zpool " + url + " -zwal " + username + " -zpsw x -dbg -1";
             ProcessHandle = _Start();
         }
 

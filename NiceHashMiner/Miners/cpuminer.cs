@@ -56,10 +56,6 @@ namespace NiceHashMiner.Miners {
             return P;
         }
 
-        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
-            return UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
-        }
-
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 

@@ -9,10 +9,7 @@ namespace NiceHashMiner.Miners.Grouping {
     public static class GroupSetupUtils {
         static readonly string TAG = "GroupSetupUtils";
         public static bool IsAlgoMiningCapable(Algorithm algo) {
-            return algo != null && !algo.Skip && algo.BenchmarkSpeed > 0;
-        }
-        public static bool IsValidMinerPath(ComputeDevice device, Algorithm algo) {
-            return MinerPaths.NONE != MinerPaths.GetOptimizedMinerPath(device, algo);
+            return algo != null && algo.Enabled && algo.BenchmarkSpeed > 0;
         }
 
         public static Tuple<ComputeDevice, DeviceMiningStatus> getDeviceMiningStatus(ComputeDevice device) {
@@ -23,8 +20,8 @@ namespace NiceHashMiner.Miners.Grouping {
                 status = DeviceMiningStatus.Disabled;
             } else {
                 bool hasEnabledAlgo = false;
-                foreach (Algorithm algo in device.AlgorithmSettings.Values) {
-                    hasEnabledAlgo |= IsAlgoMiningCapable(algo) && IsValidMinerPath(device, algo);
+                foreach (Algorithm algo in device.GetAlgorithmSettings()) {
+                    hasEnabledAlgo |= IsAlgoMiningCapable(algo) && MinerPaths.IsValidMinerPath(algo.MinerBinaryPath);
                 }
                 if (hasEnabledAlgo == false) {
                     status = DeviceMiningStatus.NoEnabledAlgorithms;
@@ -78,11 +75,11 @@ namespace NiceHashMiner.Miners.Grouping {
                 foreach (var miningDevice in enabledDevices) {
                     var device = miningDevice.Device;
                     stringBuilder.AppendLine(String.Format("\tENABLED ({0})", device.GetFullName()));
-                    foreach (var algo in device.AlgorithmSettings.Values) {
-                        var isEnabled = IsAlgoMiningCapable(algo) && IsValidMinerPath(device, algo);
+                    foreach (var algo in device.GetAlgorithmSettings()) {
+                        var isEnabled = IsAlgoMiningCapable(algo) && MinerPaths.IsValidMinerPath(algo.MinerBinaryPath);
                         stringBuilder.AppendLine(String.Format("\t\tALGORITHM {0} ({1})",
                             isEnabled ? "ENABLED " : "DISABLED", // ENABLED/DISABLED
-                            AlgorithmNiceHashNames.GetName(algo.NiceHashID)));
+                            algo.AlgorithmStringID));
                     }
                 }
                 Helpers.ConsolePrint(TAG, stringBuilder.ToString());
@@ -101,45 +98,81 @@ namespace NiceHashMiner.Miners.Grouping {
         public static void AvarageSpeeds(List<MiningDevice> miningDevs) {
             // calculate avarage speeds, to ensure mining stability
             // device name, algo key, algos refs list
-            Dictionary<string,
-                Dictionary<AlgorithmType,
-                List<MiningAlgorithm>>> avarager = new Dictionary<string, Dictionary<AlgorithmType, List<MiningAlgorithm>>>();
+            Dictionary<string, AvaragerGroup> allAvaragers = new Dictionary<string, AvaragerGroup>();
+
             // init empty avarager
             foreach (var device in miningDevs) {
                 string devName = device.Device.Name;
-                avarager[devName] = new Dictionary<AlgorithmType, List<MiningAlgorithm>>();
-                foreach (var key in AlgorithmNiceHashNames.GetAllAvaliableTypes()) {
-                    avarager[devName][key] = new List<MiningAlgorithm>();
-                }
+                allAvaragers[devName] = new AvaragerGroup();
             }
             // fill avarager
             foreach (var device in miningDevs) {
                 string devName = device.Device.Name;
-                foreach (var kvp in device.Algorithms) {
-                    var key = kvp.Key;
-                    MiningAlgorithm algo = kvp.Value;
-                    avarager[devName][key].Add(algo);
-                }
+                // add UUID
+                allAvaragers[devName].UUIDsList.Add(device.Device.UUID);
+                allAvaragers[devName].AddAlgorithms(device.Algorithms);
             }
-            // calculate avarages
-            foreach (var devDict in avarager.Values) {
-                foreach (List<MiningAlgorithm> miningAlgosList in devDict.Values) {
-                    // if list not empty calculate avarage
-                    if (miningAlgosList.Count > 0) {
-                        // calculate avarage
-                        double sum = 0;
-                        foreach (var algo in miningAlgosList) {
-                            sum += algo.AvaragedSpeed;
-                        }
-                        double avarageSpeed = sum / miningAlgosList.Count;
-                        // set avarage
-                        foreach (var algo in miningAlgosList) {
-                            algo.AvaragedSpeed = avarageSpeed;
+            // calculate and set new AvarageSpeeds for miningDeviceReferences
+            foreach (var curAvaragerKvp in allAvaragers) {
+                AvaragerGroup curAvarager = curAvaragerKvp.Value;
+                var calculatedAvaragers = curAvarager.CalculateAvarages();
+                foreach (var uuid in curAvarager.UUIDsList) {
+                    int minerDevIndex = miningDevs.FindIndex((dev) => dev.Device.UUID == uuid);
+                    if (minerDevIndex > -1) {
+                        foreach (var avgKvp in calculatedAvaragers) {
+                            string algo_id = avgKvp.Key;
+                            double avaragedSpeed = avgKvp.Value; 
+                            int index = miningDevs[minerDevIndex].Algorithms.FindIndex((a) => a.AlgorithmStringID == algo_id);
+                            if(index > -1) {
+                                miningDevs[minerDevIndex].Algorithms[index].AvaragedSpeed = avaragedSpeed;
+                            }
                         }
                     }
                 }
             }
         }
 
+    }
+
+    class SpeedSumCount {
+        public double speed = 0;
+        public int count = 0;
+        public double GetAvarage() {
+            if (count > 0) {
+                return speed / (double)count;
+            }
+            return 0;
+        }
+    }
+
+    class AvaragerGroup {
+        public string DeviceName;
+        public List<string> UUIDsList = new List<string>();
+        // algo_id, speed_sum, speed_count
+        public Dictionary<string, SpeedSumCount> BenchmarkSums = new Dictionary<string, SpeedSumCount>();
+        public Dictionary<string, double> CalculateAvarages() {
+            Dictionary<string, double> ret = new Dictionary<string, double>();
+            foreach (var kvp in this.BenchmarkSums) {
+                string algo_id = kvp.Key;
+                SpeedSumCount ssc = kvp.Value;
+                ret[algo_id] = ssc.GetAvarage();
+            }
+            return ret;
+        }
+
+        public void AddAlgorithms(List<Algorithm> algos) {
+            foreach (var algo in algos) {
+                var algo_id = algo.AlgorithmStringID;
+                if (BenchmarkSums.ContainsKey(algo_id) == false) {
+                    var ssc = new SpeedSumCount();
+                    ssc.count = 1;
+                    ssc.speed = algo.BenchmarkSpeed;
+                    BenchmarkSums[algo_id] = ssc;
+                } else {
+                    BenchmarkSums[algo_id].count++;
+                    BenchmarkSums[algo_id].speed += algo.BenchmarkSpeed;
+                }
+            }
+        }
     }
 }

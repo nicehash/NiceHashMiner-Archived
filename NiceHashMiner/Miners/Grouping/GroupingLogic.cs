@@ -8,13 +8,13 @@ namespace NiceHashMiner.Miners.Grouping {
     public static class GroupingLogic {
 
         public static bool ShouldGroup(MiningPair a, MiningPair b) {
+            bool canGroup = IsGroupableMinerBaseType(a) && IsGroupableMinerBaseType(b);
             // group if same bin path and same algo type
-            if (IsSameBinPath(a, b) && IsSameAlgorithmType(a, b)) {
+            if (canGroup && IsSameBinPath(a, b) && IsSameAlgorithmType(a, b)) {
                 AlgorithmType algorithmType = a.Algorithm.NiceHashID;
                 // AlgorithmType.Equihash is special case
                 if (AlgorithmType.Equihash == algorithmType) {
-                    string minerPath = MinerPaths.GetOptimizedMinerPath(a);
-                    return EquihashGroup.IsEquihashGroupLogic(minerPath,
+                    return EquihashGroup.IsEquihashGroupLogic(a.Algorithm.MinerBaseType,
                         a, b);
                 }
                     // all other algorithms are grouped if DeviceType is same and is not CPU
@@ -26,15 +26,15 @@ namespace NiceHashMiner.Miners.Grouping {
         }
 
         private static class EquihashGroup {
-            public static bool IsEquihashGroupLogic(string minerPath, MiningPair a, MiningPair b) {
+            public static bool IsEquihashGroupLogic(MinerBaseType minerBase, MiningPair a, MiningPair b) {
                 // eqm
-                if (MinerPaths.eqm == minerPath) {
+                if (MinerBaseType.eqm == minerBase) {
                     return Is_eqm(a, b);
                 }
                     // nheqmnier
-                else if (MinerPaths.nheqminer == minerPath) {
+                else if (MinerBaseType.nheqminer == minerBase) {
                     return Is_nheqminer(a, b);
-                } else if (MinerPaths.ClaymoreZcashMiner == minerPath || MinerPaths.OptiminerZcashMiner == minerPath) {
+                } else if (MinerBaseType.ClaymoreAMD == minerBase || MinerBaseType.OptiminerAMD == minerBase) {
                     return true;
                 }
                 return false;
@@ -55,18 +55,14 @@ namespace NiceHashMiner.Miners.Grouping {
                 return IsDevice_eqm(a) && IsDevice_eqm(b);
             }
             private static bool IsDevice_eqm(MiningPair a) {
-                return IsCPU_eqm(a) || IsNVIDIA_eqm_sm50(a) || IsNVIDIA_eqm_sm52_plus(a);
+                return IsCPU_eqm(a) || IsNVIDIA_eqm(a);
             }
             private static bool IsCPU_eqm(MiningPair a) {
-                return MinersManager.EquihashCPU_USE_eqm() && a.Device.DeviceType == DeviceType.CPU;
+                return a.Device.DeviceType == DeviceType.CPU;
             }
-            private static bool IsNVIDIA_eqm_sm52_plus(MiningPair a) {
+            private static bool IsNVIDIA_eqm(MiningPair a) {
                 var groupType = a.Device.DeviceGroupType;
-                return DeviceGroupType.NVIDIA_5_2 == groupType || DeviceGroupType.NVIDIA_6_x == groupType;
-            }
-            private static bool IsNVIDIA_eqm_sm50(MiningPair a) {
-                var groupType = a.Device.DeviceGroupType;
-                return DeviceGroupType.NVIDIA_5_0 == groupType;
+                return DeviceGroupType.NVIDIA_5_x == groupType || DeviceGroupType.NVIDIA_6_x == groupType;
             }
         }
 
@@ -75,14 +71,16 @@ namespace NiceHashMiner.Miners.Grouping {
         }
 
         private static bool IsSameBinPath(MiningPair a, MiningPair b) {
-            return MinerPaths.GetOptimizedMinerPath(a)
-                    == MinerPaths.GetOptimizedMinerPath(b);
+            return a.Algorithm.MinerBinaryPath == b.Algorithm.MinerBinaryPath;
         }
         private static bool IsSameAlgorithmType(MiningPair a, MiningPair b) {
             return a.Algorithm.NiceHashID == b.Algorithm.NiceHashID;
         }
         private static bool IsSameDeviceType(MiningPair a, MiningPair b) {
             return a.Device.DeviceType == b.Device.DeviceType;
+        }
+        private static bool IsGroupableMinerBaseType(MiningPair a) {
+            return a.Algorithm.MinerBaseType != MinerBaseType.cpuminer;
         }
     }
 }

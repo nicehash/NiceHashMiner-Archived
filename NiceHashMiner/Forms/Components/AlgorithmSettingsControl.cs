@@ -72,7 +72,7 @@ namespace NiceHashMiner.Forms.Components {
                 this.Enabled = lvi.Checked;
 
                 groupBoxSelectedAlgorithmSettings.Text = String.Format(International.GetText("AlgorithmsListView_GroupBox"),
-                algorithm.GetName()); ;
+                String.Format("{0} ({1})", algorithm.AlgorithmName, algorithm.MinerBaseTypeName)); ;
 
                 field_LessThreads.Enabled = _computeDevice.DeviceGroupType == DeviceGroupType.CPU;
                 if (field_LessThreads.Enabled) {

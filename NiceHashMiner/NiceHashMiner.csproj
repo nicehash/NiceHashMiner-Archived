@@ -81,6 +81,7 @@
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmNiceHashNames.cs" />
+    <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
     <Compile Include="Configs\Data\AlgorithmConfig.cs" />
     <Compile Include="Configs\Data\DeviceBenchmarkConfig.cs" />
@@ -114,9 +115,11 @@
     <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerAPIReadStatus.cs" />
-    <Compile Include="Enums\MinerOptionType.cs" />
+    <Compile Include="Enums\MinerBaseType.cs" />
     <Compile Include="Enums\MinerOptionFlagType.cs" />
     <Compile Include="Enums\MinerStopType.cs" />
+    <Compile Include="Enums\MinerType.cs" />
+    <Compile Include="Enums\NHMConectionType.cs" />
     <Compile Include="Enums\Use3rdPartyMiners.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
@@ -200,9 +203,12 @@
     <Compile Include="Miners\Equihash\eqm.cs" />
     <Compile Include="Miners\Equihash\nheqBase.cs" />
     <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
+    <Compile Include="Miners\excavator.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
-    <Compile Include="Miners\Grouping\MiningAlgorithm.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
+    <Compile Include="Miners\MinerFactory.cs" />
+    <Compile Include="Miners\MinersSettingsManager.cs" />
+    <Compile Include="Miners\Parsing\ExtraLaunchParameters.cs" />
     <Compile Include="Miners\Parsing\ExtraLaunchParametersParser.cs" />
     <Compile Include="Miners\Grouping\GroupingLogic.cs" />
     <Compile Include="Miners\Grouping\GroupMiner.cs" />
@@ -217,6 +223,7 @@
     <Compile Include="Miners\MinersManager.cs" />
     <Compile Include="Miners\Equihash\nheqminer.cs" />
     <Compile Include="Miners\MiningSession.cs" />
+    <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
     <Compile Include="Net20_backport\HashSet.cs" />
     <Compile Include="Net20_backport\SortedSet.cs" />
     <Compile Include="Net20_backport\StringHelper.cs" />

@@ -411,14 +411,7 @@ namespace NiceHashMiner.Devices
                                         group = DeviceGroupType.NVIDIA_3_x;
                                         break;
                                     case 5:
-                                        if(cudaDev.SM_minor == 0) {
-                                            group = DeviceGroupType.NVIDIA_5_0;
-                                        } else if (cudaDev.SM_minor == 2) {
-                                            group = DeviceGroupType.NVIDIA_5_2;
-                                        } else {
-                                            // default fallback should not happen
-                                            group = DeviceGroupType.NVIDIA_5_0;
-                                        }
+                                        group = DeviceGroupType.NVIDIA_5_x;
                                         break;
                                     case 6:
                                         group = DeviceGroupType.NVIDIA_6_x;
@@ -522,7 +515,7 @@ namespace NiceHashMiner.Devices
                     // check the driver version bool EnableOptimizedVersion = true;
                     Dictionary<string, bool> deviceDriverOld = new Dictionary<string, bool>();
                     Dictionary<string, bool> deviceDriverNO_neoscrypt_lyra2re = new Dictionary<string, bool>();
-                    string minerPath = MinerPaths.sgminer_5_5_0_general;
+                    string minerPath = MinerPaths.sgminer_5_6_0_general;
                     bool ShowWarningDialog = false;
 
                     foreach (var vidContrllr in AvaliableVideoControllers) {
@@ -868,13 +861,6 @@ namespace NiceHashMiner.Devices
 
             public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique) {
                 return AllAvaliableDevices[index];
-            }
-
-            ////////////
-            public static void ResetAvaliableAlgorithmsForDevice() {
-                foreach (var dev in AllAvaliableDevices) {
-                    dev._3rdPartyMinerChange();
-                }
             }
 
             public static int GetCountForType(DeviceType type) {

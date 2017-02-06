@@ -486,11 +486,11 @@ namespace NiceHashMiner.Forms {
             ConfigManager.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cDev.DeviceType == DeviceType.AMD) {
-                    foreach (var algorithm in cDev.AlgorithmSettings) {
-                        if (algorithm.Key != AlgorithmType.DaggerHashimoto) {
-                            algorithm.Value.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-                            algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-                                new MiningPair(cDev, algorithm.Value), algorithm.Key, DeviceType.AMD, false);
+                    foreach (var algorithm in cDev.GetAlgorithmSettings()) {
+                        if (algorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
+                            algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
+                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+                                new MiningPair(cDev, algorithm), algorithm.NiceHashID, DeviceType.AMD, false);
                         }
                     }
                 }
@@ -505,26 +505,25 @@ namespace NiceHashMiner.Forms {
             ConfigManager.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
             if (ConfigManager.GeneralConfig.DisableDefaultOptimizations) {
                 foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                    foreach (var algorithm in cDev.AlgorithmSettings) {
-                        algorithm.Value.ExtraLaunchParameters = "";
-                        if (cDev.DeviceType == DeviceType.AMD && algorithm.Key != AlgorithmType.DaggerHashimoto) {
-                            algorithm.Value.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-                            algorithm.Value.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-                                new MiningPair(cDev, algorithm.Value), algorithm.Key, cDev.DeviceType, false);
+                    foreach (var algorithm in cDev.GetAlgorithmSettings()) {
+                        algorithm.ExtraLaunchParameters = "";
+                        if (cDev.DeviceType == DeviceType.AMD && algorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
+                            algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
+                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+                                new MiningPair(cDev, algorithm), algorithm.NiceHashID, cDev.DeviceType, false);
                         }
                     }
                 }
             } else {
                 foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                     if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
-                    var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDevice(cDev);
+                    var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDeviceList(cDev);
                     foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings) {
-                        var algorithmKey = defaultAlgoSettings.Key;
-                        if (cDev.AlgorithmSettings.ContainsKey(algorithmKey)) {
-                            var algorithm = cDev.AlgorithmSettings[algorithmKey];
-                            algorithm.ExtraLaunchParameters = defaultAlgoSettings.Value.ExtraLaunchParameters;
-                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-                                new MiningPair(cDev, algorithm), algorithmKey, cDev.DeviceType, false);
+                        var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings.MinerBaseType, defaultAlgoSettings.NiceHashID);
+                        if (toSetAlgo != null) {
+                            toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
+                            toSetAlgo.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+                                new MiningPair(cDev, toSetAlgo), toSetAlgo.NiceHashID, cDev.DeviceType, false);
                         }
                     }
                 }
@@ -598,7 +597,7 @@ namespace NiceHashMiner.Forms {
                 return;
             }
             var url = Links.NHM_Profit_Check + _selectedComputeDevice.Name;
-            foreach (var algorithm in _selectedComputeDevice.AlgorithmSettings.Values) {
+            foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest()) {
                 var id = (int)algorithm.NiceHashID;
                 url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
             }
@@ -610,9 +609,8 @@ namespace NiceHashMiner.Forms {
         private void buttonAllProfit_Click(object sender, EventArgs e) {
             var url = Links.NHM_Profit_Check + "CUSTOM";
             Dictionary<AlgorithmType, double> total = new Dictionary<AlgorithmType,double>();
-
             foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                foreach (var algorithm in curCDev.AlgorithmSettings.Values) {
+                foreach (var algorithm in curCDev.GetAlgorithmSettingsFastest()) {
                     if (total.ContainsKey(algorithm.NiceHashID)) {
                         total[algorithm.NiceHashID] += algorithm.BenchmarkSpeed;
                     } else {
@@ -716,8 +714,6 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             } else {
                 ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
-                // update devices algorithm settings because some algos are supported only by 3rd party miners
-                ComputeDeviceManager.Avaliable.ResetAvaliableAlgorithmsForDevice();
             }
         }
 

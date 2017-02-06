@@ -65,10 +65,6 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
-            return UpdateBindPortCommand_ccminer_cpuminer(oldPort, newPort);
-        }
-
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
@@ -168,7 +164,10 @@ namespace NiceHashMiner.Miners
 
                 var totalSpeed = 0.0d;
                 foreach (var miningPair in MiningSetup.MiningPairs) {
-                    totalSpeed += miningPair.Device.AlgorithmSettings[AlgorithmType.CryptoNight].BenchmarkSpeed;
+                    var algo = miningPair.Device.GetAlgorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight);
+                    if (algo != null) {
+                        totalSpeed += algo.BenchmarkSpeed;
+                    }
                 }
 
                 APIData CryptoNightData = new APIData(MiningSetup.CurrentAlgorithmType);

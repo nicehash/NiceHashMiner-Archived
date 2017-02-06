@@ -26,6 +26,7 @@ namespace NiceHashMiner
 {
     using NiceHashMiner.Miners.Grouping;
     using NiceHashMiner.Net20_backport;
+    using NiceHashMiner.Miners.Parsing;
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private static string VisitURL = Links.VisitURL;
@@ -182,19 +183,10 @@ namespace NiceHashMiner
             StartupTimer.Stop();
             StartupTimer = null;
 
-            // reverted to .NET 2.0
-            //if (!Helpers.Is45NetOrHigher()) {
-            //    MessageBox.Show(International.GetText("NET45_Not_Intsalled_msg"),
-            //                    International.GetText("Warning_with_Exclamation"),
-            //                    MessageBoxButtons.OK);
+            // Internals Init
+            // TODO add loading step
+            MinersSettingsManager.Init();
 
-            //    this.Close();
-            //    return;
-            //}
-
-            // reverted to .NET 2.0
-            //CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            //CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
 
             if (!Helpers.InternalCheckIsWow64()) {
                 MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
@@ -870,8 +862,8 @@ namespace NiceHashMiner
             bool hasAnyAlgoEnabled = false;
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.Enabled) {
-                    foreach (var algo in cdev.AlgorithmSettings.Values) {
-                        if (algo.Skip == false) {
+                    foreach (var algo in cdev.GetAlgorithmSettings()) {
+                        if (algo.Enabled == true) {
                             hasAnyAlgoEnabled = true;
                             if (algo.BenchmarkSpeed == 0) {
                                 isBenchInit = false;
@@ -898,8 +890,8 @@ namespace NiceHashMiner
                     // check devices without benchmarks
                     foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                         bool Enabled = false;
-                        foreach (var algo in cdev.AlgorithmSettings) {
-                            if (algo.Value.BenchmarkSpeed > 0) {
+                        foreach (var algo in cdev.GetAlgorithmSettings()) {
+                            if (algo.BenchmarkSpeed > 0) {
                                 Enabled = true;
                                 break;
                             }

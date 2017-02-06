@@ -15,6 +15,7 @@ namespace NiceHashMiner.Miners {
     public class nheqminer : nheqBase {
         public nheqminer()
             : base("nheqminer") {
+                ConectionType = NHMConectionType.NONE;
                 Path = MinerPaths.nheqminer;
                 WorkingDirectory = MinerPaths.nheqminer.Replace("nheqminer.exe", "");
         }

@@ -19,7 +19,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
         }
 
         public DeviceBenchmarkConfigFile(string DeviceUUID)
-            : base(GetName(DeviceUUID), GetName(DeviceUUID, "_OLD")) {
+            : base(FOLDERS.CONFIG, GetName(DeviceUUID), GetName(DeviceUUID, "_OLD")) {
         }
 
     }

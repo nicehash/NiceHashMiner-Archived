@@ -26,8 +26,7 @@ namespace NiceHashMiner.Miners
 
         public sgminer()
             : base("sgminer_AMD")
-        {            
-            Path = MinerPaths.sgminer_5_5_0_general;
+        {
             GPUPlatformNumber = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
             IsKillAllUsedMinerProcs = true;
         }
@@ -43,11 +42,11 @@ namespace NiceHashMiner.Miners
             if (BenchmarkProcessStatus != BenchmarkProcessStatus.Killing && BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling) {
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
                 try {
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.AlgorithmName));
                     KillSGMiner();
                 } catch { } finally {
                     BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.GetName()));
+                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.AlgorithmName));
                     //BenchmarkHandle = null;
                 }
             }
@@ -88,18 +87,6 @@ namespace NiceHashMiner.Miners
             LastCommandLine += GetDevicesCommandString();
 
             ProcessHandle = _Start();
-        }
-
-        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
-            // --api-port=
-            const string MASK = "--api-port={0}";
-            var oldApiBindStr = String.Format(MASK, oldPort);
-            var newApiBindStr = String.Format(MASK, newPort);
-            if (LastCommandLine.Contains(oldApiBindStr)) {
-                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
-                return true;
-            }
-            return false;
         }
 
         // new decoupled benchmarking routines
@@ -203,7 +190,7 @@ namespace NiceHashMiner.Miners
 
             if (Globals.NiceHashData[NHDataIndex].paying == 0) {
                 Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
-                    "[algo: " + BenchmarkAlgorithm.GetName() + "(" + NHDataIndex + ")]");
+                    "[algo: " + BenchmarkAlgorithm.AlgorithmName + "(" + NHDataIndex + ")]");
 
                 throw new Exception("No work can be used for benchmarking");
             }

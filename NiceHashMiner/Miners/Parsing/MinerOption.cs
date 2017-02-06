@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NiceHashMiner.Miners.Parsing {
     public class MinerOption {
-        public MinerOption(MinerOptionType iType, string iShortName, string iLongName, string iDefault, MinerOptionFlagType iFlagType, string iSeparator) {
+        public MinerOption(string iType, string iShortName, string iLongName, string iDefault, MinerOptionFlagType iFlagType, string iSeparator) {
             this.Type = iType;
             this.ShortName = iShortName;
             this.LongName = iLongName;
@@ -13,11 +13,11 @@ namespace NiceHashMiner.Miners.Parsing {
             this.FlagType = iFlagType;
             this.Separator = iSeparator;
         }
-        public readonly MinerOptionType Type;
-        public readonly string ShortName;
-        public readonly string LongName;
-        public readonly string Default;
-        public readonly MinerOptionFlagType FlagType;
-        public readonly string Separator;
+        public string Type;
+        public string ShortName;
+        public string LongName;
+        public string Default;
+        public MinerOptionFlagType FlagType;
+        public string Separator;
     }
 }

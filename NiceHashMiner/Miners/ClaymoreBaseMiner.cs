@@ -26,6 +26,7 @@ namespace NiceHashMiner.Miners {
 
         public ClaymoreBaseMiner(string minerDeviceName, string minerPath, string minerExeName, string look_FOR_START)
             : base(minerDeviceName) {
+            ConectionType = NHMConectionType.STRATUM_SSL;
             Path = minerPath;
             MinerExeName = minerExeName;
             LOOK_FOR_START = look_FOR_START.ToLower();
@@ -99,17 +100,6 @@ namespace NiceHashMiner.Miners {
             }
 
             return ad;
-        }
-
-        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
-            const string MASK = "-mport -{0}";
-            var oldApiBindStr = String.Format(MASK, oldPort);
-            var newApiBindStr = String.Format(MASK, newPort);
-            if (LastCommandLine != null && LastCommandLine.Contains(oldApiBindStr)) {
-                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
-                return true;
-            }
-            return false;
         }
 
         protected override void _Stop(MinerStopType willswitch) {

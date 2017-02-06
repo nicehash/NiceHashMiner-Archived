@@ -158,7 +158,6 @@ namespace NiceHashMiner.Miners {
             } else if ((IsRunning || IsPaused) && willswitch != MinerStopType.SWITCH) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }
-            if (willswitch == MinerStopType.END) ChangeToNextAvaliablePort();
             if ((willswitch == MinerStopType.FORCE_END || willswitch == MinerStopType.END) && ProcessHandle != null) {
                 IsPaused = false; // shutting down means it is not paused
                 try {
@@ -168,18 +167,6 @@ namespace NiceHashMiner.Miners {
                     ProcessHandle = null;
                 }
             }
-        }
-
-        protected override bool UpdateBindPortCommand(int oldPort, int newPort) {
-            // --api-port 
-            const string MASK = "--api-port {0}";
-            var oldApiBindStr = String.Format(MASK, oldPort);
-            var newApiBindStr = String.Format(MASK, newPort);
-            if (LastCommandLine != null && LastCommandLine.Contains(oldApiBindStr)) {
-                LastCommandLine = LastCommandLine.Replace(oldApiBindStr, newApiBindStr);
-                return true;
-            }
-            return false;
         }
 
         // benchmark stuff

@@ -6,32 +6,43 @@ using System.Text;
 
 namespace NiceHashMiner {
     public class Algorithm {
-        readonly public AlgorithmType NiceHashID;
+
+        public readonly string AlgorithmName;
+        public readonly string MinerBaseTypeName;
+        public readonly AlgorithmType NiceHashID;
+        public readonly MinerBaseType MinerBaseType;
+        public readonly string AlgorithmStringID;
         // Miner name is used for miner ALGO flag parameter
-        readonly public string MinerName;
+        public readonly string MinerName;
         public double BenchmarkSpeed { get; set; }
         public string ExtraLaunchParameters { get; set; }
-        public bool Skip { get; set; }
+        public bool Enabled { get; set; }
 
         // CPU miners only setting
         public int LessThreads { get; set; }
 
         // avarage speed of same devices to increase mining stability
         public double AvaragedSpeed { get; set; }
+        // based on device and settings here we set the miner path
+        public string MinerBinaryPath = "";
+        // these are changing (logging reasons)
+        public double CurrentProfit = 0;
+        public double CurNhmSMADataVal = 0;
 
-        public Algorithm(AlgorithmType niceHashID, string minerName) {
+        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName) {
+            this.AlgorithmName = AlgorithmNiceHashNames.GetName(niceHashID);
+            this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
+            this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName;
+
+            MinerBaseType = minerBaseType;
             NiceHashID = niceHashID;
             MinerName = minerName;
 
             BenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
             LessThreads = 0;
-            Skip = false;
+            Enabled = true;
             BenchmarkStatus = "";
-        }
-
-        public string GetName() {
-            return AlgorithmNiceHashNames.GetName(this.NiceHashID);
         }
 
         // benchmark info
@@ -69,7 +80,7 @@ namespace NiceHashMiner {
         }
 
         public string BenchmarkSpeedString() {
-            if (!Skip && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
+            if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
                 return Helpers.FormatSpeedOutput(BenchmarkSpeed);

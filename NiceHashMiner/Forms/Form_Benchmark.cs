@@ -182,7 +182,7 @@ namespace NiceHashMiner.Forms {
 
         private void BenchmarkingTimer_Tick(object sender, EventArgs e) {
             if (_inBenchmark) {
-                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, getDotsWaitString());
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, getDotsWaitString());
             }
         }
 
@@ -320,18 +320,20 @@ namespace NiceHashMiner.Forms {
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 var algorithmQueue = new Queue<Algorithm>();
                 if (_singleBenchmarkType == AlgorithmType.NONE) {
-                    foreach (var kvpAlgorithm in cDev.AlgorithmSettings) {
-                        if (ShoulBenchmark(kvpAlgorithm.Value)) {
-                            algorithmQueue.Enqueue(kvpAlgorithm.Value);
-                            kvpAlgorithm.Value.SetBenchmarkPendingNoMsg();
+                    foreach (var algo in cDev.GetAlgorithmSettings()) {
+                        if (ShoulBenchmark(algo)) {
+                            algorithmQueue.Enqueue(algo);
+                            algo.SetBenchmarkPendingNoMsg();
                         } else {
-                            kvpAlgorithm.Value.ClearBenchmarkPending();
+                            algo.ClearBenchmarkPending();
                         }
                     }
-                } else { // single bench
-                    var algo = cDev.AlgorithmSettings[_singleBenchmarkType];
-                    algorithmQueue.Enqueue(algo);
                 }
+                // NOT USED for a while now
+                //else { // single bench
+                //    var algo = cDev.AlgorithmSettings[_singleBenchmarkType];
+                //    algorithmQueue.Enqueue(algo);
+                //}
                 
 
                 BenchmarkSettingsStatus status;
@@ -355,13 +357,13 @@ namespace NiceHashMiner.Forms {
         private bool ShoulBenchmark(Algorithm algorithm) {
             bool isBenchmarked = algorithm.BenchmarkSpeed > 0 ? true : false;
             if (_algorithmOption == AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms
-                && !isBenchmarked && !algorithm.Skip) {
+                && !isBenchmarked && algorithm.Enabled) {
                     return true;
             }
             if (_algorithmOption == AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms && !isBenchmarked) {
                 return true;
             }
-            if (_algorithmOption == AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms && !algorithm.Skip) {
+            if (_algorithmOption == AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms && algorithm.Enabled) {
                 return true;
             }
             if (_algorithmOption == AlgorithmBenchmarkSettingsType.AllAlgorithms) {
@@ -402,7 +404,7 @@ namespace NiceHashMiner.Forms {
             }
 
             if (_currentDevice != null && _currentAlgorithm != null) {
-                _currentMiner = MinersManager.CreateMiner(_currentDevice, _currentAlgorithm);
+                _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
                 if(_currentDevice.DeviceType == DeviceType.CPU && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
                     __CPUBenchmarkStatus = new CPUBenchmarkStatus();
                     _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
@@ -430,7 +432,7 @@ namespace NiceHashMiner.Forms {
                 _benchmarkingTimer.Start();
 
                 _currentMiner.BenchmarkStart(time, this);
-                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID,
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm,
                     getDotsWaitString());
             } else {
                 NextBenchmark();
@@ -466,7 +468,7 @@ namespace NiceHashMiner.Forms {
                     CalcBenchmarkDevicesAlgorithmQueue();
                     foreach (var deviceAlgoQueue in _benchmarkDevicesAlgorithmQueue) {
                         foreach (var algorithm in deviceAlgoQueue.Item2) {
-                            algorithm.Skip = true;
+                            algorithm.Enabled = false;
                         }
                     }
                 }
@@ -479,7 +481,7 @@ namespace NiceHashMiner.Forms {
 
         public void SetCurrentStatus(string status) {
             this.Invoke((MethodInvoker)delegate {
-                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, getDotsWaitString());
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, getDotsWaitString());
             });
         }
 
@@ -515,13 +517,13 @@ namespace NiceHashMiner.Forms {
                     _benchmarkFailedAlgoPerDev.Add(
                         new DeviceAlgo() {
                             Device = _currentDevice.Name,
-                            Algorithm = _currentAlgorithm.GetName()
+                            Algorithm = _currentAlgorithm.AlgorithmName
                         } );
-                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, status);
+                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, status);
                 } else if (!rebenchSame) {
                     // set status to empty string it will return speed
                     _currentAlgorithm.ClearBenchmarkPending();
-                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm.NiceHashID, "");
+                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, "");
                 }
                 if (rebenchSame) {
                     _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
@@ -560,7 +562,7 @@ namespace NiceHashMiner.Forms {
 
             // disable all pending benchmark
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                foreach (var algorithm in cDev.AlgorithmSettings.Values) {
+                foreach (var algorithm in cDev.GetAlgorithmSettings()) {
                     algorithm.ClearBenchmarkPending();
                 }
             }
@@ -571,8 +573,8 @@ namespace NiceHashMiner.Forms {
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.Enabled) {
                     bool Enabled = false;
-                    foreach (var algo in cdev.AlgorithmSettings) {
-                        if (algo.Value.BenchmarkSpeed > 0) {
+                    foreach (var algo in cdev.GetAlgorithmSettings()) {
+                        if (algo.BenchmarkSpeed > 0) {
                             Enabled = true;
                             break;
                         }

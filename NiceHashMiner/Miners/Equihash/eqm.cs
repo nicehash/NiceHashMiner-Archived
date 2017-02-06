@@ -9,7 +9,7 @@ namespace NiceHashMiner.Miners {
     public class eqm : nheqBase {
         public eqm()
             : base("eqm") {
-            IsNHLocked = true;
+            ConectionType = NHMConectionType.LOCKED;
             IsNeverHideMiningWindow = true;
         }
 
@@ -20,10 +20,6 @@ namespace NiceHashMiner.Miners {
 
 
         protected override string GetDevicesCommandString() {
-            //// old
-            //Path = MinerPaths.eqm;
-            //WorkingDirectory = MinerPaths.eqm.Replace("eqm.exe", "");
-            // 2 paths
             Path = this.MiningSetup.MinerPath;
             WorkingDirectory = this.MiningSetup.MinerPath.Replace("eqm.exe", "");
 

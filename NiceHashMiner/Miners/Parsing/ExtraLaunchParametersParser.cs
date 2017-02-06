@@ -8,136 +8,11 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace NiceHashMiner.Miners.Parsing {
+    using MinerOptionType = String;
     static class ExtraLaunchParametersParser {
         private static readonly string TAG = "ExtraLaunchParametersParser";
-
-        // Order of miner options tpyes is important make sure to implement it corectly
-        // ccminer
-        private static List<MinerOption> _ccimerOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Intensity, "-i", "--intensity=", "0", MinerOptionFlagType.MultiParam, ",")
-        };
-        // ccminer CryptoNight
-        private static List<MinerOption> _ccimerCryptoNightOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Ccminer_CryptoNightLaunch, "-l", "--launch=", "8x40", MinerOptionFlagType.MultiParam, ","), // default is 8x40
-            new MinerOption(MinerOptionType.Ccminer_CryptoNightBfactor, "", "--bfactor=", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.Ccminer_CryptoNightBsleep, "", "--bsleep=", "0", MinerOptionFlagType.MultiParam, ",") // TODO check default
-        };
-        // OCL ethminer
-        private static List<MinerOption> _oclEthminerOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Ethminer_OCL_LocalWork, "", "--cl-local-work", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.Ethminer_OCL_GlobalWork, "", "--cl-global-work", "0", MinerOptionFlagType.MultiParam, ","),
-        };
-
-        // CUDA ethminer
-        private static List<MinerOption> _cudaEthminerOptions = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.CudaBlockSize, "", "--cuda-block-size", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.CudaGridSize, "", "--cuda-grid-size", "0", MinerOptionFlagType.MultiParam, ","),
-        };
-
-        // sgminer
-        private static List<MinerOption> _sgminerOptions = new List<MinerOption>() {
-            // SingleParam
-            new MinerOption(MinerOptionType.KeccakUnroll, "", "--keccak-unroll", "0", MinerOptionFlagType.SingleParam, ""),
-            new MinerOption(MinerOptionType.HamsiExpandBig, "", "--hamsi-expand-big", "4", MinerOptionFlagType.SingleParam, ""),
-            new MinerOption(MinerOptionType.Nfactor, "", "--nfactor", "10", MinerOptionFlagType.SingleParam, ""),
-            // MultiParam TODO IMPORTANT check defaults
-            new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "d", MinerOptionFlagType.MultiParam, ","), // default is "d" check if -1 works
-            new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-            new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-            new MinerOption(MinerOptionType.ThreadConcurrency, "", "--thread-concurrency", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-            new MinerOption(MinerOptionType.Worksize, "-w", "--worksize", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-            new MinerOption(MinerOptionType.GpuThreads, "-g", "--gpu-threads", "1", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.LookupGap, "", "--lookup-gap", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-            // Uni
-        };
-        private static List<MinerOption> _sgminerTemperatureOptions = new List<MinerOption>() {
-            // temperature stuff
-            new MinerOption(MinerOptionType.GpuFan, "", "--gpu-fan", "30-60", MinerOptionFlagType.MultiParam, ","), // default none
-            new MinerOption(MinerOptionType.TempCutoff, "", "--temp-cutoff", "95", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.TempOverheat, "", "--temp-overheat", "85", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.TempTarget, "", "--temp-target", "75", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.AutoFan, "", "--auto-fan", null, MinerOptionFlagType.Uni, ""),
-            new MinerOption(MinerOptionType.AutoGpu, "", "--auto-gpu", null, MinerOptionFlagType.Uni, "")
-        };
-
-        private static List<MinerOption> _cpuminerOptions = new List<MinerOption>() {
-            // temperature stuff
-            new MinerOption(MinerOptionType.Threads, "-t", "--threads=", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-            new MinerOption(MinerOptionType.CpuAffinity, "", "--cpu-affinity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-            new MinerOption(MinerOptionType.CpuPriority, "", "--cpu-priority", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-        };
-        // nheqminer 
-        private static List<MinerOption> _nheqminer_CPU_Options = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Threads, "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " "), // default none
-        };
-        private static List<MinerOption> _nheqminer_CUDA_Options = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.CUDA_Solver_Version, "-cv", "-cv", "0", MinerOptionFlagType.SingleParam, " "), // default 0
-            new MinerOption(MinerOptionType.CUDA_Solver_Block, "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-            new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-        };
-        private static List<MinerOption> _nheqminer_AMD_Options = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.OpenCL_Solver_Version, "-ov", "-ov", "0", MinerOptionFlagType.SingleParam, " "), // default none
-            new MinerOption(MinerOptionType.OpenCL_Solver_Dev_Thread, "-ot", "-ot", "1", MinerOptionFlagType.MultiParam, " "), // default none
-        };
-        // eqm
-        private static List<MinerOption> _eqm_CPU_Options = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Threads, "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " "), // default none
-        };
-        // eqm CUDA
-        private static List<MinerOption> _eqm_CUDA_Options = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.CUDA_Solver_Mode, "-cm", "-cm", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-        };
-        // Zcash claymore
-        private static List<MinerOption> _ClaymoreZcash_Options = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.ClaymoreZcash_a      , "-a", "-a", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_asm      , "-asm", "-asm", "1", MinerOptionFlagType.MultiParam, ","), 
-
-            new MinerOption(MinerOptionType.ClaymoreZcash_i      , "-i", "-i", "6", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_wd     , "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
-            //new MinerOption(MinerOptionType.ClaymoreZcash_r      , , , , MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_nofee  , "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_li     , "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
-            // temperature stuff
-            //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
-            new MinerOption(MinerOptionType.ClaymoreZcash_tt     , "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","), 
-            new MinerOption(MinerOptionType.ClaymoreZcash_ttli   , "-ttli", "-ttli", "70", MinerOptionFlagType.SingleParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_tstop  , "-tstop", "-tstop", "0", MinerOptionFlagType.SingleParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_fanmax , "-fanmax", "-fanmax", "100", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_fanmin , "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_cclock , "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_mclock , "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_powlim , "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_cvddc  , "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreZcash_mvddc  , "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
-        };
-        // Zcash cryptonight
-        private static List<MinerOption> _Claymore_cryptonight_Options = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_a      , "-a", "-a", "0", MinerOptionFlagType.MultiParam, ""),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_wd     , "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
-            //new MinerOption(MinerOptionType.ClaymoreCryptoNight_r      , , , , MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_nofee  , "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_li     , "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_h     , "-h", "-h", "0", MinerOptionFlagType.MultiParam, ","),
-            // temperature stuff
-            //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_tt     , "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","), 
-            //new MinerOption(MinerOptionType.ClaymoreCryptoNight_ttli   , "-ttli", "-ttli", "70", MinerOptionFlagType.SingleParam, ","), // no such param
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_tstop  , "-tstop", "-tstop", "0", MinerOptionFlagType.SingleParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_fanmax , "-fanmax", "-fanmax", "100", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_fanmin , "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_cclock , "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_mclock , "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_powlim , "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_cvddc  , "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
-            new MinerOption(MinerOptionType.ClaymoreCryptoNight_mvddc  , "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
-        };
-        // Zcash Optiminer
-        private static List<MinerOption> _OptiminerZcash_Options = new List<MinerOption>() {
-            new MinerOption(MinerOptionType.Optiminer_ForceGenericKernel      , "", "--force-generic-kernel", null, MinerOptionFlagType.Uni, ""),
-            new MinerOption(MinerOptionType.Optiminer_ExperimentalKernel      , "", "--experimental-kernel", null, MinerOptionFlagType.Uni, ""),
-            new MinerOption(MinerOptionType.Optiminer_nodevfee                , "", "--nodevfee", null, MinerOptionFlagType.Uni, ""),
-            new MinerOption(MinerOptionType.Optiminer_i                       , "-i", "--intensity", "0", MinerOptionFlagType.DuplicateMultiParam, ""),
-        };
+        private static readonly string MinerOptionType_NONE = "MinerOptionType_NONE";
+        
 
         private static bool _showLog = true;
 
@@ -151,7 +26,7 @@ namespace NiceHashMiner.Miners.Parsing {
         public static int GetEqmCudaThreadCount(MiningPair pair) {
             if (pair.CurrentExtraLaunchParameters.Contains("-ct")) {
                 List<MinerOption> eqm_CUDA_Options = new List<MinerOption>() {
-                    new MinerOption(MinerOptionType.CUDA_Solver_Thread, "-ct", "-ct", "1", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("CUDA_Solver_Thread", "-ct", "-ct", "1", MinerOptionFlagType.MultiParam, " "),
                 };
                 string parsedStr = Parse(new List<MiningPair>() { pair }, eqm_CUDA_Options, true);
                 try {
@@ -223,11 +98,11 @@ namespace NiceHashMiner.Miners.Parsing {
                 IgnorePrintLogIbnit();
 
 
-                MinerOptionType currentFlag = MinerOptionType.NONE;
+                MinerOptionType currentFlag = MinerOptionType_NONE;
                 foreach (var param in parameters) {
                     if (param.Equals("")) { // skip
                         continue;
-                    } else if (currentFlag == MinerOptionType.NONE) {
+                    } else if (currentFlag == MinerOptionType_NONE) {
                         bool isIngored = true;
                         foreach (var option in options) {
                             if (param.Equals(option.ShortName) || param.Equals(option.LongName)) {
@@ -243,10 +118,10 @@ namespace NiceHashMiner.Miners.Parsing {
                         if (isIngored) { // ignored
                             IgnorePrintLog(param, IGNORE_PARAM, ignoreLogOpions);
                         }
-                    } else if (currentFlag != MinerOptionType.NONE) {
+                    } else if (currentFlag != MinerOptionType_NONE) {
                         isOptionExist[currentFlag] = true;
                         cdevOptions[pair.Device.UUID][currentFlag] = param;
-                        currentFlag = MinerOptionType.NONE;
+                        currentFlag = MinerOptionType_NONE;
                     } else { // problem
                         IgnorePrintLog(param, IGNORE_PARAM, ignoreLogOpions);
                     }
@@ -326,53 +201,105 @@ namespace NiceHashMiner.Miners.Parsing {
         public static string ParseForMiningSetup(MiningSetup miningSetup, DeviceType deviceType, bool showLog = true) {
             return ParseForMiningPairs(
                 miningSetup.MiningPairs,
-                miningSetup.CurrentAlgorithmType,
-                deviceType, miningSetup.MinerPath, showLog);
+                deviceType, showLog);
         }
 
         public static string ParseForMiningPair(MiningPair miningPair, AlgorithmType algorithmType, DeviceType deviceType, bool showLog = true) {
             return ParseForMiningPairs(
                 new List<MiningPair>() { miningPair },
-                algorithmType, deviceType,
-                MinerPaths.GetOptimizedMinerPath(miningPair), showLog);
+                deviceType, showLog);
         }
 
-        private static string ParseForMiningPairs(List<MiningPair> MiningPairs, AlgorithmType algorithmType, DeviceType deviceType, string minerPath, bool showLog = true) {
+        private static MinerType GetMinerType(DeviceType deviceType, MinerBaseType minerBaseType, AlgorithmType algorithmType) {    
+            if (MinerBaseType.cpuminer == minerBaseType) {
+                return MinerType.cpuminer_opt;
+            }
+            if (MinerBaseType.OptiminerAMD == minerBaseType) {
+                return MinerType.OptiminerZcash;
+            }
+            if (MinerBaseType.sgminer == minerBaseType) {
+                return MinerType.sgminer;
+            }
+            if (MinerBaseType.ccminer == minerBaseType) {
+                if (AlgorithmType.CryptoNight == algorithmType) {
+                    return MinerType.ccminer_CryptoNight;
+                }
+                return MinerType.ccminer;
+            }
+            if (MinerBaseType.ClaymoreAMD == minerBaseType) {
+                if (AlgorithmType.CryptoNight == algorithmType) {
+                    return MinerType.ClaymoreCryptoNight;
+                }
+                if (AlgorithmType.Equihash == algorithmType) {
+                    return MinerType.ClaymoreZcash;
+                }
+            }
+            if (MinerBaseType.ethminer == minerBaseType) {
+                if(DeviceType.AMD == deviceType) {
+                    return MinerType.ethminer_OCL;
+                }
+                if(DeviceType.NVIDIA == deviceType) {
+                    return MinerType.ethminer_CUDA;
+                }
+            }
+            if (MinerBaseType.nheqminer == minerBaseType) {
+                if(DeviceType.CPU == deviceType) {
+                    return MinerType.nheqminer_CPU;
+                }
+                if(DeviceType.AMD == deviceType) {
+                    return MinerType.nheqminer_AMD;
+                }
+                if(DeviceType.NVIDIA == deviceType) {
+                    return MinerType.nheqminer_CUDA;
+                }
+            }
+            if (MinerBaseType.eqm == minerBaseType) {
+                if(DeviceType.CPU == deviceType) {
+                    return MinerType.eqm_CPU;
+                }
+                if(DeviceType.NVIDIA == deviceType) {
+                    return MinerType.eqm_CUDA;
+                }
+            }
+            if (MinerBaseType.excavator == minerBaseType) {
+                return MinerType.excavator;
+            }
+
+            return MinerType.NONE;
+        }
+
+        private static string ParseForMiningPairs(List<MiningPair> MiningPairs, DeviceType deviceType, bool showLog = true) {
             _showLog = showLog;
 
-            // parse for nheqminer
-            if (algorithmType == AlgorithmType.Equihash) {
-                // nheqminer
-                if (minerPath == MinerPaths.nheqminer) {
-                    if (deviceType == DeviceType.CPU) {
-                        CheckAndSetCPUPairs(MiningPairs);
-                        return Parse(MiningPairs, _nheqminer_CPU_Options);
-                    }
-                    if (deviceType == DeviceType.NVIDIA) {
-                        return Parse(MiningPairs, _nheqminer_CUDA_Options);
-                    }
-                    if (deviceType == DeviceType.AMD) {
-                        return Parse(MiningPairs, _nheqminer_AMD_Options);
-                    }
-                } else if (minerPath == MinerPaths.eqm) {
-                    if (deviceType == DeviceType.CPU) {
-                        CheckAndSetCPUPairs(MiningPairs);
-                        return Parse(MiningPairs, _eqm_CPU_Options);
-                    }
-                    if (deviceType == DeviceType.NVIDIA) {
-                        return Parse(MiningPairs, _eqm_CUDA_Options);
-                    }
-                } else if (minerPath == MinerPaths.ClaymoreZcashMiner) {
-                    return Parse(MiningPairs, _ClaymoreZcash_Options);
+            MinerBaseType minerBaseType = MinerBaseType.NONE;
+            AlgorithmType algorithmType = AlgorithmType.NONE;
+            if (MiningPairs.Count > 0) {
+                var algo = MiningPairs[0].Algorithm;
+                if (algo != null) {
+                    algorithmType = algo.NiceHashID;
+                    minerBaseType = algo.MinerBaseType;
                 }
-            } else if (minerPath == MinerPaths.ethminer && algorithmType == AlgorithmType.DaggerHashimoto) { // ethminer dagger
+            }
+
+            MinerType minerType = GetMinerType(deviceType, minerBaseType, algorithmType);
+
+            MinerOptionPackage minerOptionPackage = ExtraLaunchParameters.GetMinerOptionPackageForMinerType(minerType);
+
+            List<MiningPair> setMiningPairs = MiningPairs.ConvertAll((mp) => mp);
+            // handle exceptions and package parsing
+            // CPU exception
+            if (deviceType == DeviceType.CPU) {
+                CheckAndSetCPUPairs(setMiningPairs);
+            }
+            // ethminer exception
+            if (MinerType.ethminer_OCL == minerType || MinerType.ethminer_CUDA == minerType) {
                 // use if missing compute device for correct mapping
                 // init fakes workaround
                 var cdevs_mappings = new List<MiningPair>();
                 {
                     int id = -1;
-                    var fakeAlgo = new Algorithm(AlgorithmType.DaggerHashimoto, "daggerhashimoto");
-                    foreach (var pair in MiningPairs) {
+                    var fakeAlgo = new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto");
+                    foreach (var pair in setMiningPairs) {
                         while (++id != pair.Device.ID) {
                             var fakeCdev = new ComputeDevice(id);
                             cdevs_mappings.Add(new MiningPair(fakeCdev, fakeAlgo));
@@ -380,90 +307,64 @@ namespace NiceHashMiner.Miners.Parsing {
                         cdevs_mappings.Add(pair);
                     }
                 }
-                if (deviceType == DeviceType.NVIDIA) {
-                    return Parse(cdevs_mappings, _cudaEthminerOptions);
-                } else if (deviceType == DeviceType.AMD) {
-                    return Parse(cdevs_mappings, _oclEthminerOptions);
+                // reset setMiningPairs
+                setMiningPairs = cdevs_mappings;
+            }
+            // sgminer exception handle intensity types
+            if (MinerType.sgminer == minerType) {
+                // rawIntensity overrides xintensity, xintensity overrides intensity
+                var sgminer_intensities = new List<MinerOption>() {
+                    new MinerOption("Intensity", "-I", "--intensity", "d", MinerOptionFlagType.MultiParam, ","), // default is "d" check if -1 works
+                    new MinerOption("Xintensity", "-X", "--xintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+                    new MinerOption("Rawintensity", "", "--rawintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
+                };
+                var contains_intensity = new Dictionary<MinerOptionType, bool>() {
+                    { "Intensity", false },
+                    { "Xintensity", false },
+                    { "Rawintensity", false },
+                };
+                // check intensity and xintensity, the latter overrides so change accordingly
+                foreach (var cDev in setMiningPairs) {
+                    foreach (var intensityOption in sgminer_intensities) {
+                        if (!string.IsNullOrEmpty(intensityOption.ShortName) && cDev.CurrentExtraLaunchParameters.Contains(intensityOption.ShortName)) {
+                            cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace(intensityOption.ShortName, intensityOption.LongName);
+                            contains_intensity[intensityOption.Type] = true;
+                        }
+                        if (cDev.CurrentExtraLaunchParameters.Contains(intensityOption.LongName)) {
+                            contains_intensity[intensityOption.Type] = true;
+                        }
+                    }
                 }
-            } else if (minerPath == MinerPaths.ClaymoreCryptoNightMiner) {
-                return Parse(MiningPairs, _Claymore_cryptonight_Options);
-            } else if (minerPath == MinerPaths.OptiminerZcashMiner) {
-                return Parse(MiningPairs, _OptiminerZcash_Options);
-            } else {
-                // parse for device
-                if (deviceType == DeviceType.CPU) {
-                    CheckAndSetCPUPairs(MiningPairs);
-                    return Parse(MiningPairs, _cpuminerOptions);
-                } else if (deviceType == DeviceType.NVIDIA) {
-                    if (algorithmType != AlgorithmType.CryptoNight) {
-                        return Parse(MiningPairs, _ccimerOptions);
-                    } else if (algorithmType == AlgorithmType.CryptoNight) {
-                        // check if any device is SM21 or SM3.x if yes return empty for stability reasons
-                        if (ConfigManager.GeneralConfig.NVIDIA_CryptoNight_Preventive) {
-                            foreach (var pair in MiningPairs) {
-                                var groupType = pair.Device.DeviceGroupType;
-                                if (groupType == DeviceGroupType.NVIDIA_2_1 || groupType == DeviceGroupType.NVIDIA_3_x) {
-                                    return "";
-                                }
-                            }
-                        }
-                        return Parse(MiningPairs, _ccimerCryptoNightOptions, true);
+                // replace
+                if (contains_intensity["Intensity"] && contains_intensity["Xintensity"]) {
+                    LogParser("Sgminer replacing --intensity with --xintensity");
+                    foreach (var cDev in setMiningPairs) {
+                        cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--intensity", "--xintensity");
                     }
-                } else if (deviceType == DeviceType.AMD) {
-                    // rawIntensity overrides xintensity, xintensity overrides intensity
-                    var sgminer_intensities = new List<MinerOption>() {
-                        new MinerOption(MinerOptionType.Intensity, "-I", "--intensity", "d", MinerOptionFlagType.MultiParam, ","), // default is "d" check if -1 works
-                        new MinerOption(MinerOptionType.Xintensity, "-X", "--xintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                        new MinerOption(MinerOptionType.Rawintensity, "", "--rawintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                    };
-                    var contains_intensity = new Dictionary<MinerOptionType, bool>() {
-                        { MinerOptionType.Intensity, false },
-                        { MinerOptionType.Xintensity, false },
-                        { MinerOptionType.Rawintensity, false },
-                    };
-                    // check intensity and xintensity, the latter overrides so change accordingly
-                    foreach (var cDev in MiningPairs) {
-                        foreach (var intensityOption in sgminer_intensities) {
-                            if (!string.IsNullOrEmpty(intensityOption.ShortName) && cDev.CurrentExtraLaunchParameters.Contains(intensityOption.ShortName)) {
-                                cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace(intensityOption.ShortName, intensityOption.LongName);
-                                contains_intensity[intensityOption.Type] = true;
-                            }
-                            if (cDev.CurrentExtraLaunchParameters.Contains(intensityOption.LongName)) {
-                                contains_intensity[intensityOption.Type] = true;
-                            }
-                        }
+                }
+                if (contains_intensity["Xintensity"] && contains_intensity["Rawintensity"]) {
+                    LogParser("Sgminer replacing --xintensity with --rawintensity");
+                    foreach (var cDev in setMiningPairs) {
+                        cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--xintensity", "--rawintensity");
                     }
-                    // replace
-                    if (contains_intensity[MinerOptionType.Intensity] && contains_intensity[MinerOptionType.Xintensity]) {
-                        LogParser("Sgminer replacing --intensity with --xintensity");
-                        foreach (var cDev in MiningPairs) {
-                            cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--intensity", "--xintensity");
-                        }
-                    }
-                    if (contains_intensity[MinerOptionType.Xintensity] && contains_intensity[MinerOptionType.Rawintensity]) {
-                        LogParser("Sgminer replacing --xintensity with --rawintensity");
-                        foreach (var cDev in MiningPairs) {
-                            cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--xintensity", "--rawintensity");
-                        }
-                    }
-
-                    List<MinerOption> sgminerOptionsNew = new List<MinerOption>();
-                    string temperatureControl = "";
-                    // temp control and parse
-                    if (ConfigManager.GeneralConfig.DisableAMDTempControl) {
-                        LogParser("DisableAMDTempControl is TRUE, temp control parameters will be ignored");
-                    } else {
-                        LogParser("Sgminer parsing temperature control parameters");
-                        temperatureControl = Parse(MiningPairs, _sgminerTemperatureOptions, true, _sgminerOptions);
-                    }
-                    LogParser("Sgminer parsing default parameters");
-                    string returnStr = String.Format("{0} {1}", Parse(MiningPairs, _sgminerOptions, false, _sgminerTemperatureOptions), temperatureControl);
-                    LogParser("Sgminer extra launch parameters merged: " + returnStr);
-                    return returnStr;
                 }
             }
+        
+            string ret = "";
+            string general = Parse(setMiningPairs, minerOptionPackage.GeneralOptions, false, minerOptionPackage.TemperatureOptions);
+            // temp control and parse
+            if (ConfigManager.GeneralConfig.DisableAMDTempControl) {
+                LogParser("DisableAMDTempControl is TRUE, temp control parameters will be ignored");
+                ret = general;
+            } else {
+                LogParser("AMD parsing temperature control parameters");
+                // temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, true, minerOptionPackage.GeneralOptions);            
+                string temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, false, minerOptionPackage.GeneralOptions);
 
-            return "";
+                ret = general + "  " + temp;
+            }
+        
+            return ret;
         }
 
         private static void CheckAndSetCPUPairs(List<MiningPair> MiningPairs) {
