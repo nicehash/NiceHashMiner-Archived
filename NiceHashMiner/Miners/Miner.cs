@@ -499,6 +499,11 @@ namespace NiceHashMiner
 
         virtual protected NiceHashProcess _Start()
         {
+            // never start when ended
+            if (isEnded) {
+                return null;
+            }
+
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 
@@ -538,7 +543,6 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint(MinerTAG(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
 
                     StartCoolDownTimerChecker();
-                    isEnded = false;
 
                     return P;
                 } else {
@@ -718,6 +722,10 @@ namespace NiceHashMiner
         }
 
         private void MinerCoolingCheck_Tick(object sender, ElapsedEventArgs e) {
+            if (isEnded) {
+                End();
+                return;
+            }
             _currentCooldownTimeInSecondsLeft -= (int)_cooldownCheckTimer.Interval;
             // if times up
             if (_currentCooldownTimeInSecondsLeft <= 0) {

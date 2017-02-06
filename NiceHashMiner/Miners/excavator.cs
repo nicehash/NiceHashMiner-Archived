@@ -44,10 +44,6 @@ namespace NiceHashMiner.Miners {
             ProcessHandle = _Start();
         }
 
-        public override void InitMiningSetup(MiningSetup miningSetup) {
-            base.InitMiningSetup(miningSetup);
-        }
-
         protected override string GetDevicesCommandString() {
             Path = this.MiningSetup.MinerPath;
             WorkingDirectory = this.MiningSetup.MinerPath.Replace("excavator.exe", "");
@@ -66,7 +62,7 @@ namespace NiceHashMiner.Miners {
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            String ret = "-b " + time + " " + GetDevicesCommandString();
+            string ret = "-b " + time + " " + GetDevicesCommandString();
             return ret;
         }
 
@@ -135,19 +131,6 @@ namespace NiceHashMiner.Miners {
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
-        }
-
-        protected double getNumber(string outdata, string startF, string remF) {
-            try {
-                int speedStart = outdata.IndexOf(startF);
-                String speed = outdata.Substring(speedStart, outdata.Length - speedStart);
-                speed = speed.Replace(startF, "");
-                speed = speed.Replace(remF, "");
-                speed = speed.Trim();
-                return Double.Parse(speed, CultureInfo.InvariantCulture);
-            } catch {
-            }
-            return 0;
         }
 
         // benchmark stuff
