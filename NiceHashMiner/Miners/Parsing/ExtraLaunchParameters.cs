@@ -22,7 +22,7 @@ namespace NiceHashMiner.Miners.Parsing {
             new MinerOptionPackage(
                 MinerType.ccminer_CryptoNight,
                 new List<MinerOption>() {
-                    new MinerOption("Launch", "-l", "--launch=", "8x40", MinerOptionFlagType.MultiParam, ","), // default is 8x40
+                    new MinerOption("Launch", "-l", "--launch=", "8x20", MinerOptionFlagType.MultiParam, ","), // default is 8x40
                     new MinerOption("Bfactor", "", "--bfactor=", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Bsleep", "", "--bsleep=", "0", MinerOptionFlagType.MultiParam, ",") // TODO check default
                 },
