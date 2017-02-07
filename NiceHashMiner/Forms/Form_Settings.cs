@@ -210,6 +210,9 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(checkBox_IdleWhenNoInternetAccess, International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
             toolTip1.SetToolTip(pictureBox_IdleWhenNoInternetAccess, International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
 
+            toolTip1.SetToolTip(pictureBox_SwitchProfitabilityThreshold, International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
+            toolTip1.SetToolTip(label_SwitchProfitabilityThreshold, International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
+
             this.Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -297,6 +300,8 @@ namespace NiceHashMiner.Forms {
 
             checkBox_DisableDefaultOptimizations.Text = International.GetText("Form_Settings_Text_DisableDefaultOptimizations");
             checkBox_IdleWhenNoInternetAccess.Text = International.GetText("Form_Settings_Text_ContinueMiningIfNoInternetAccess");
+
+            label_SwitchProfitabilityThreshold.Text = International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
         }
 
         private void InitializeGeneralTabCallbacks() {
@@ -399,6 +404,7 @@ namespace NiceHashMiner.Forms {
                 textBox_ethminerDefaultBlockHeight.Text = ConfigManager.GeneralConfig.ethminerDefaultBlockHeight.ToString();
                 textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
                 textBox_MinProfit.Text = ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
+                textBox_SwitchProfitabilityThreshold.Text = ConfigManager.GeneralConfig.SwitchProfitabilityThreshold.ToString("F2").Replace(',', '.'); // force comma;
             }
 
             // set custom control referances
@@ -547,11 +553,13 @@ namespace NiceHashMiner.Forms {
             ConfigManager.GeneralConfig.ApiBindPortPoolStart = Helpers.ParseInt(textBox_APIBindPortStart.Text);
             // min profit
             ConfigManager.GeneralConfig.MinimumProfit = Helpers.ParseDouble(textBox_MinProfit.Text);
+            ConfigManager.GeneralConfig.SwitchProfitabilityThreshold = Helpers.ParseDouble(textBox_SwitchProfitabilityThreshold.Text);
 
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
             // update strings
             textBox_MinProfit.Text = ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma
+            textBox_SwitchProfitabilityThreshold.Text = ConfigManager.GeneralConfig.SwitchProfitabilityThreshold.ToString("F2").Replace(',', '.'); // force comma
             textBox_SwitchMinSecondsFixed.Text = ConfigManager.GeneralConfig.SwitchMinSecondsFixed.ToString();
             textBox_SwitchMinSecondsDynamic.Text = ConfigManager.GeneralConfig.SwitchMinSecondsDynamic.ToString();
             textBox_SwitchMinSecondsAMD.Text = ConfigManager.GeneralConfig.SwitchMinSecondsAMD.ToString();

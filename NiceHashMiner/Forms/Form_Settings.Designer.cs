@@ -133,6 +133,9 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
+            this.textBox_SwitchProfitabilityThreshold = new System.Windows.Forms.TextBox();
+            this.pictureBox_SwitchProfitabilityThreshold = new System.Windows.Forms.PictureBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -179,6 +182,7 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -905,6 +909,7 @@
             this.groupBox_Miners.Controls.Add(this.pictureBox_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.pictureBox_APIBindPortStart);
             this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMinSecondsDynamic);
+            this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.pictureBox_ethminerDefaultBlockHeight);
             this.groupBox_Miners.Controls.Add(this.pictureBox_DagGeneration);
             this.groupBox_Miners.Controls.Add(this.pictureBox_CPU0_ForceCPUExtension);
@@ -922,7 +927,9 @@
             this.groupBox_Miners.Controls.Add(this.label_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.textBox_SwitchMinSecondsAMD);
             this.groupBox_Miners.Controls.Add(this.label_APIBindPortStart);
+            this.groupBox_Miners.Controls.Add(this.textBox_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.textBox_ethminerDefaultBlockHeight);
+            this.groupBox_Miners.Controls.Add(this.label_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.label_ethminerDefaultBlockHeight);
             this.groupBox_Miners.Controls.Add(this.textBox_APIBindPortStart);
             this.groupBox_Miners.Controls.Add(this.label_SwitchMinSecondsAMD);
@@ -1365,6 +1372,32 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
+            // label_SwitchProfitabilityThreshold
+            // 
+            this.label_SwitchProfitabilityThreshold.AutoSize = true;
+            this.label_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(406, 102);
+            this.label_SwitchProfitabilityThreshold.Name = "label_SwitchProfitabilityThreshold";
+            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(142, 13);
+            this.label_SwitchProfitabilityThreshold.TabIndex = 361;
+            this.label_SwitchProfitabilityThreshold.Text = "ethminerDefaultBlockHeight:";
+            // 
+            // textBox_SwitchProfitabilityThreshold
+            // 
+            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(406, 123);
+            this.textBox_SwitchProfitabilityThreshold.Name = "textBox_SwitchProfitabilityThreshold";
+            this.textBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(172, 20);
+            this.textBox_SwitchProfitabilityThreshold.TabIndex = 333;
+            // 
+            // pictureBox_SwitchProfitabilityThreshold
+            // 
+            this.pictureBox_SwitchProfitabilityThreshold.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(560, 104);
+            this.pictureBox_SwitchProfitabilityThreshold.Name = "pictureBox_SwitchProfitabilityThreshold";
+            this.pictureBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_SwitchProfitabilityThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_SwitchProfitabilityThreshold.TabIndex = 385;
+            this.pictureBox_SwitchProfitabilityThreshold.TabStop = false;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1431,6 +1464,7 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1546,6 +1580,9 @@
         private System.Windows.Forms.CheckBox checkBox_Use3rdPartyMiners;
         private System.Windows.Forms.CheckBox checkBox_AllowMultipleInstances;
         private System.Windows.Forms.PictureBox pictureBox_AllowMultipleInstances;
+        private System.Windows.Forms.PictureBox pictureBox_SwitchProfitabilityThreshold;
+        private System.Windows.Forms.TextBox textBox_SwitchProfitabilityThreshold;
+        private System.Windows.Forms.Label label_SwitchProfitabilityThreshold;
 
     }
 }

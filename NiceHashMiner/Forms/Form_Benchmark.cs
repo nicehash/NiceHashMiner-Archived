@@ -176,7 +176,7 @@ namespace NiceHashMiner.Forms {
                         Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", cDev.UUID, cDev.BenchmarkCopyUUID));
                         cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
                     }
-                } 
+                }
             }
         }
 
@@ -244,8 +244,8 @@ namespace NiceHashMiner.Forms {
             _benchmarkingTimer.Stop();
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
-            // copy benchmarked
-            CopyBenchmarks();
+            //// copy benchmarked
+            //CopyBenchmarks();
             if (_currentMiner != null) {
                 _currentMiner.BenchmarkSignalQuit = true;
                 _currentMiner.InvokeBenchmarkSignalQuit();
@@ -445,7 +445,7 @@ namespace NiceHashMiner.Forms {
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
 
-            CopyBenchmarks();
+            //CopyBenchmarks();
 
             BenchmarkStoppedGUISettings();
             // check if all ok

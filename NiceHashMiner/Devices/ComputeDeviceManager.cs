@@ -542,14 +542,14 @@ namespace NiceHashMiner.Devices
                                     "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
                             } else if (AMDDriverVersion.Major == 16 && AMDDriverVersion.Minor >= 150) {
                                 if (MinersDownloadManager.IsMinerBinFolder()) {
-                                    // TODO why this copy?
-                                    string src = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\" +
-                                                 minerPath.Split('\\')[0] + "\\" + minerPath.Split('\\')[1] + "\\kernel";
+                                    //// TODO why this copy?
+                                    //string src = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\" +
+                                    //             minerPath.Split('\\')[0] + "\\" + minerPath.Split('\\')[1] + "\\kernel";
 
-                                    foreach (var file in Directory.GetFiles(src)) {
-                                        string dest = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\" + System.IO.Path.GetFileName(file);
-                                        if (!File.Exists(dest)) File.Copy(file, dest, false);
-                                    }
+                                    //foreach (var file in Directory.GetFiles(src)) {
+                                    //    string dest = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\" + System.IO.Path.GetFileName(file);
+                                    //    if (!File.Exists(dest)) File.Copy(file, dest, false);
+                                    //}
                                 }
                             }
                         }

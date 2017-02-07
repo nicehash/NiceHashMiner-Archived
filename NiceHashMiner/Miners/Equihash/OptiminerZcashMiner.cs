@@ -17,6 +17,7 @@ namespace NiceHashMiner.Miners.Equihash {
     public class OptiminerZcashMiner : Miner {
         public OptiminerZcashMiner()
             : base("OptiminerZcashMiner") {
+            ConectionType = NHMConectionType.NONE;
             Path = MinerPaths.OptiminerZcashMiner;
             WorkingDirectory = MinerPaths.OptiminerZcashMiner.Replace("Optiminer.exe", "");
         }
