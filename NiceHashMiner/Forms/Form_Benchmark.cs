@@ -166,19 +166,19 @@ namespace NiceHashMiner.Forms {
             }
         }
 
-        private void CopyBenchmarks() {
-            Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
-            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                // check if copy
-                if (!cDev.Enabled && cDev.BenchmarkCopyUUID != null) {
-                    var copyCdevSettings = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(cDev.BenchmarkCopyUUID);
-                    if (copyCdevSettings != null) {
-                        Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", cDev.UUID, cDev.BenchmarkCopyUUID));
-                        cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
-                    }
-                } 
-            }
-        }
+        //private void CopyBenchmarks() {
+        //    Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
+        //    foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+        //        // check if copy
+        //        if (!cDev.Enabled && cDev.BenchmarkCopyUUID != null) {
+        //            var copyCdevSettings = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(cDev.BenchmarkCopyUUID);
+        //            if (copyCdevSettings != null) {
+        //                Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", cDev.UUID, cDev.BenchmarkCopyUUID));
+        //                cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
+        //            }
+        //        } 
+        //    }
+        //}
 
         private void BenchmarkingTimer_Tick(object sender, EventArgs e) {
             if (_inBenchmark) {
@@ -244,8 +244,8 @@ namespace NiceHashMiner.Forms {
             _benchmarkingTimer.Stop();
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
-            // copy benchmarked
-            CopyBenchmarks();
+            //// copy benchmarked
+            //CopyBenchmarks();
             if (_currentMiner != null) {
                 _currentMiner.BenchmarkSignalQuit = true;
                 _currentMiner.InvokeBenchmarkSignalQuit();
@@ -445,7 +445,7 @@ namespace NiceHashMiner.Forms {
             _inBenchmark = false;
             Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
 
-            CopyBenchmarks();
+            //CopyBenchmarks();
 
             BenchmarkStoppedGUISettings();
             // check if all ok
