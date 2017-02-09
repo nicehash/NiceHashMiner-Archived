@@ -221,7 +221,9 @@ namespace NiceHashMiner.Devices
             }
 
             // sort by miner and algo
-            retAlgos.Sort((a_1, a_2) => (a_1.MinerBaseType - a_2.MinerBaseType) != 0 ? (a_1.MinerBaseType - a_2.MinerBaseType) : (a_1.NiceHashID - a_2.NiceHashID));
+            //retAlgos.Sort((a_1, a_2) => (a_1.MinerBaseType - a_2.MinerBaseType) != 0 ? (a_1.MinerBaseType - a_2.MinerBaseType) : (a_1.NiceHashID - a_2.NiceHashID));
+            // sort by algo
+            retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0 ? (a_1.NiceHashID - a_2.NiceHashID) : (a_1.MinerBaseType - a_2.MinerBaseType));
 
             return retAlgos;
         }

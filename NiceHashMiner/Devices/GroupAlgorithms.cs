@@ -165,11 +165,6 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto")
                         }
                     },
-                    { MinerBaseType.nheqminer,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
-                        }
-                    },
                     { MinerBaseType.ClaymoreAMD,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.CryptoNight, "cryptonight"),  /*, { ExtraLaunchParameters: "-a 4" }*/
