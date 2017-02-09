@@ -42,10 +42,11 @@ namespace NiceHashMiner.Miners.Grouping
             /// <summary>
             /// sgminers
             /// </summary>
-            public const string sgminer_5_1_0_optimized = _bin + @"\sgminer-5-1-0-optimized\sgminer.exe";
-            //public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
+            //public const string sgminer_5_1_0_optimized = _bin + @"\sgminer-5-1-0-optimized\sgminer.exe";
+            ////public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
+            //public const string sgminer_5_4_0_tweaked = _bin + @"\sgminer-5-4-0-tweaked\sgminer.exe";
+
             public const string sgminer_5_6_0_general = _bin + @"\sgminer-5-6-0-general\sgminer.exe";
-            public const string sgminer_5_4_0_tweaked = _bin + @"\sgminer-5-4-0-tweaked\sgminer.exe";
             public const string sgminer_gm = _bin + @"\sgminer-gm\sgminer.exe";
 
             /// <summary>
@@ -186,17 +187,17 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.CryptoNight == type || AlgorithmType.DaggerHashimoto == type) {
                     return Data.sgminer_gm;
                 }
-                if (isOptimized) {
-                    if (AlgorithmType.Lyra2REv2 == type) {
-                        if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
-                            if (!Helpers.InternalCheckIsWow64())
-                                return Data.sgminer_5_6_0_general;
+                //if (isOptimized) {
+                //    if (AlgorithmType.Lyra2REv2 == type) {
+                //        if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
+                //            if (!Helpers.InternalCheckIsWow64())
+                //                return Data.sgminer_5_6_0_general;
 
-                            return Data.sgminer_5_4_0_tweaked;
-                        }
-                        return Data.sgminer_5_1_0_optimized;
-                    }
-                }
+                //            return Data.sgminer_5_4_0_tweaked;
+                //        }
+                //        return Data.sgminer_5_1_0_optimized;
+                //    }
+                //}
 
                 return Data.sgminer_5_6_0_general;
             }

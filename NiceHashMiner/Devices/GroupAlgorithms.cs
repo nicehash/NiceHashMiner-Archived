@@ -46,13 +46,13 @@ namespace NiceHashMiner.Devices {
                         // Ellesmere sgminer workaround, keep this until sgminer is fixed to work with Ellesmere
                         if ((device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris")) && Globals.IsEllesmereSgminerIgnore) {
                             // remove all algos except equi and dagger
-                            var ignoreRemove = new List<AlgorithmType> {AlgorithmType.DaggerHashimoto, AlgorithmType.Equihash, AlgorithmType.CryptoNight, AlgorithmType.Pascal};
+                            var ignoreRemove = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.Equihash, AlgorithmType.CryptoNight, AlgorithmType.Pascal };
                             var toRemove = GetKeysForMinerAlgosGroup(algoSettings).FindAll((algoType) => ignoreRemove.IndexOf(algoType) == -1);
                             algoSettings = FilterMinerAlgos(algoSettings, toRemove);
                             // remove all sgminer?
                             // algoSettings = FilterMinerBaseTypes(algoSettings, [MinerBaseType.sgminer]);
                         } else if ((device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris"))) {
-                            algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType> { AlgorithmType.NeoScrypt} );
+                            algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType> { AlgorithmType.NeoScrypt });
                         }
 
                         // check if 3rd party is enabled and allow 3rd party only algos
@@ -87,9 +87,24 @@ namespace NiceHashMiner.Devices {
                             algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType> { AlgorithmType.NeoScrypt, AlgorithmType.Lyra2REv2 });
                         }
 
-                        // also check for Equihash as nheqminer it needs 2GB GPU
-                        if (device.IsEtherumCapale == false) {
-                            algoSettings = FilterMinerBaseTypes(algoSettings, new List<MinerBaseType> { MinerBaseType.nheqminer });
+                        // disable by default
+                        {
+                            var minerBases = new List<MinerBaseType>() { MinerBaseType.ethminer, MinerBaseType.OptiminerAMD };
+                            foreach (var minerKey in minerBases) {
+                                if (algoSettings.ContainsKey(minerKey)) {
+                                    foreach (var algo in algoSettings[minerKey]) {
+                                        algo.Enabled = false;
+                                    }
+                                }
+                            }
+                            if (algoSettings.ContainsKey(MinerBaseType.ClaymoreAMD)) {
+                                foreach (var algo in algoSettings[MinerBaseType.ClaymoreAMD]) {
+                                    if (algo.NiceHashID == AlgorithmType.CryptoNight) {
+                                        algo.Enabled = false;
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     } // END AMD case
 
