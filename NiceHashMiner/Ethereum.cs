@@ -136,12 +136,11 @@ namespace NiceHashMiner
 
     public static class Ethereum
     {
-        public static string EtherMinerPath;
+        //public static string EtherMinerPath;
         public static string CurrentBlockNum;
 
         static Ethereum()
         {
-            EtherMinerPath = MinerPaths.ethminer;
             CurrentBlockNum = "";
         }
 

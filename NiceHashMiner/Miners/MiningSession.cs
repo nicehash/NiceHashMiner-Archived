@@ -170,7 +170,7 @@ namespace NiceHashMiner.Miners {
 
             // delete generated bin files
             // check for bins files
-            var dirInfo = new DirectoryInfo(MinerPaths.nheqminer.Replace("nheqminer.exe", ""));
+            var dirInfo = new DirectoryInfo(MinerPaths.Data.nheqminer.Replace("nheqminer.exe", ""));
             var DONT_DELETE = "equiw200k9.bin";
             var deleteContains = "equiw200k9";
             var alwaysDeleteContains2 = "silentarmy_gpu";

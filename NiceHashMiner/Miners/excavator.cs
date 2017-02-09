@@ -45,9 +45,6 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override string GetDevicesCommandString() {
-            Path = this.MiningSetup.MinerPath;
-            WorkingDirectory = this.MiningSetup.MinerPath.Replace("excavator.exe", "");
-
             string deviceStringCommand = " -cd ";
 
             foreach (var nvidia_pair in this.MiningSetup.MiningPairs) {

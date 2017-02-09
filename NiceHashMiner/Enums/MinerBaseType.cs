@@ -14,6 +14,7 @@ namespace NiceHashMiner.Enums {
         ClaymoreAMD,
         OptiminerAMD,
         excavator,
+        XmrStackCPU,
         END
     }
 }

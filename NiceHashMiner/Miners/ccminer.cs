@@ -56,8 +56,6 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine += GetDevicesCommandString();
 
-            Path = MiningSetup.MinerPath;
-
             ProcessHandle = _Start();
         }
 
@@ -79,8 +77,6 @@ namespace NiceHashMiner.Miners
                               " --devices ";
 
             CommandLine += GetDevicesCommandString();
-
-            Path = MiningSetup.MinerPath;
 
             // cryptonight exception helper variables
             _cryptonightTotalCount = BenchmarkTimeInSeconds / _cryptonightTotalDelim;

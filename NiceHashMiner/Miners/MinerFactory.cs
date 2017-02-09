@@ -46,6 +46,8 @@ namespace NiceHashMiner.Miners {
                     return new OptiminerZcashMiner(/*minersConfig*/);
                 case MinerBaseType.excavator:
                     return new excavator();
+                case MinerBaseType.XmrStackCPU:
+                    return new XmrStackCPUMiner();
             }
             return null;
         }

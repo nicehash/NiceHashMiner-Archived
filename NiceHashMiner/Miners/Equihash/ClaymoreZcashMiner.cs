@@ -18,7 +18,7 @@ namespace NiceHashMiner.Miners {
 
         const string _LOOK_FOR_START = "ZEC - Total Speed:";
         public ClaymoreZcashMiner()
-            : base("ClaymoreZcashMiner", MinerPaths.ClaymoreZcashMiner, "ZecMiner64", _LOOK_FOR_START) {
+            : base("ClaymoreZcashMiner", _LOOK_FOR_START) {
         }
 
         

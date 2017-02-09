@@ -21,5 +21,34 @@ namespace NiceHashMiner {
 
         // change this if TOS changes
         public static int CURRENT_TOS_VER = 1;
+
+        public static string GetLocationURL(AlgorithmType AlgorithmType, string miningLocation, NHMConectionType ConectionType) {
+            if (Globals.NiceHashData != null && Globals.NiceHashData.ContainsKey(AlgorithmType)) {
+                string name = Globals.NiceHashData[AlgorithmType].name;
+                int n_port = Globals.NiceHashData[AlgorithmType].port;
+                int ssl_port = 30000 + n_port;
+
+                // NHMConectionType.NONE
+                string prefix = "";
+                int port = n_port;
+                if (NHMConectionType.LOCKED == ConectionType) {
+                    return miningLocation;
+                }
+                if (NHMConectionType.STRATUM_TCP == ConectionType) {
+                    prefix = "stratum+tcp://";
+                }
+                if (NHMConectionType.STRATUM_SSL == ConectionType) {
+                    prefix = "stratum+ssl://";
+                    port = ssl_port;
+                }
+
+                return prefix
+                        + name
+                        + "." + miningLocation
+                        + ".nicehash.com:"
+                        + port;
+            }
+            return "";
+        }
     }
 }

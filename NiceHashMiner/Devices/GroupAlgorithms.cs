@@ -99,6 +99,10 @@ namespace NiceHashMiner.Devices {
                     }
                     
                 }
+                if (algoSettings.ContainsKey(MinerBaseType.XmrStackCPU)) {
+                    algoSettings[MinerBaseType.XmrStackCPU][0].LessThreads = device.Threads / 2; // use half
+                }
+
                 return algoSettings;
             }
             return null;
@@ -131,6 +135,11 @@ namespace NiceHashMiner.Devices {
                     { MinerBaseType.eqm,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.eqm, AlgorithmType.Equihash, "equihash")
+                        }
+                    },
+                    { MinerBaseType.XmrStackCPU,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.XmrStackCPU, AlgorithmType.CryptoNight, "cryptonight")
                         }
                     }
 

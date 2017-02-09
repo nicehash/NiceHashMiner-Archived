@@ -18,8 +18,6 @@ namespace NiceHashMiner.Miners.Equihash {
         public OptiminerZcashMiner()
             : base("OptiminerZcashMiner") {
             ConectionType = NHMConectionType.NONE;
-            Path = MinerPaths.OptiminerZcashMiner;
-            WorkingDirectory = MinerPaths.OptiminerZcashMiner.Replace("Optiminer.exe", "");
         }
 
         private class Stratum {

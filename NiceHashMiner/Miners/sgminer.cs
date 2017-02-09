@@ -67,10 +67,7 @@ namespace NiceHashMiner.Miners
                 return;
             }
             string username = GetUsername(btcAdress, worker);
-
-            Path = MiningSetup.MinerPath;
-            WorkingDirectory = Path.Replace("sgminer.exe", "");
-
+            
             LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
                               " -k " + MiningSetup.MinerName +
                               " --url=" + url +
@@ -94,13 +91,8 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             string CommandLine;
-            Path = "cmd";
-            string MinerPath = MiningSetup.MinerPath;
 
-            var nhAlgorithmData = Globals.NiceHashData[algorithm.NiceHashID];
-            string url = "stratum+tcp://" + nhAlgorithmData.name + "." +
-                         Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation] + ".nicehash.com:" +
-                         nhAlgorithmData.port;
+            string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
 
             // demo for benchmark
             string username = Globals.DemoUser;
@@ -109,7 +101,7 @@ namespace NiceHashMiner.Miners
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
 
             // cd to the cgminer for the process bins
-            CommandLine = " /C \"cd /d " + MinerPath.Replace("sgminer.exe", "") + " && sgminer.exe " +
+            CommandLine = " /C \"cd /d " + WorkingDirectory + " && sgminer.exe " +
                           " --gpu-platform " + GPUPlatformNumber +
                           " -k " + algorithm.MinerName +
                           " --url=" + url +

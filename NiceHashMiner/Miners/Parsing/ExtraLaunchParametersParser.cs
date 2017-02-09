@@ -379,6 +379,29 @@ namespace NiceHashMiner.Miners.Parsing {
             }
         }
 
+        public static int GetThreadsNumber(MiningPair cpuPair) {
+            var cDev = cpuPair.Device;
+            var algo = cpuPair.Algorithm;
+            // extra thread check
+            if (algo.ExtraLaunchParameters.Contains("--threads=") || algo.ExtraLaunchParameters.Contains("-t")) {
+                var strings = algo.ExtraLaunchParameters.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                int i = -1;
+                for (int cur_i = 0; cur_i < strings.Length; ++cur_i) {
+                    if (strings[cur_i] == "--threads=" || strings[cur_i] == "-t") {
+                        i = cur_i + 1;
+                        break;
+                    }
+                }
+                if (i > -1 && strings.Length < i) {
+                    int numTr = cDev.Threads;
+                    if (Int32.TryParse(strings[i], out numTr)) {
+                        if (numTr <= cDev.Threads) return numTr; 
+                    }
+                }
+            }
+            return GetThreads(cDev.Threads, cpuPair.Algorithm.LessThreads);
+        }
+
         private static int GetThreads(int Threads, int LessThreads) {
             if (Threads > LessThreads) {
                 return Threads - LessThreads;

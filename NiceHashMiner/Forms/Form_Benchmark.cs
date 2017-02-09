@@ -382,7 +382,7 @@ namespace NiceHashMiner.Forms {
         void NextBenchmark() {
             if (_bechmarkCurrentIndex > -1) {
                 StepUpBenchmarkStepProgress();
-            } 
+            }
             ++_bechmarkCurrentIndex;
             if (_bechmarkCurrentIndex >= _benchmarkAlgorithmsCount) {
                 EndBenchmark();
@@ -405,7 +405,7 @@ namespace NiceHashMiner.Forms {
 
             if (_currentDevice != null && _currentAlgorithm != null) {
                 _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
-                if(_currentDevice.DeviceType == DeviceType.CPU && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.cpuminer && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
                     __CPUBenchmarkStatus = new CPUBenchmarkStatus();
                     _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
                 } else {
@@ -490,7 +490,7 @@ namespace NiceHashMiner.Forms {
             this.Invoke((MethodInvoker)delegate {
                 _bechmarkedSuccessCount += success ? 1 : 0;
                 bool rebenchSame = false;
-                if(success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID)) {
+                if(success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID) && _currentAlgorithm.MinerBaseType == MinerBaseType.cpuminer) {
                     if (__CPUBenchmarkStatus.HasAlreadyBenchmarked && __CPUBenchmarkStatus.BenchmarkSpeed > _currentAlgorithm.BenchmarkSpeed) {
                         rebenchSame = false;
                         _currentAlgorithm.BenchmarkSpeed = __CPUBenchmarkStatus.BenchmarkSpeed;

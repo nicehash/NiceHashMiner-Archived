@@ -20,17 +20,13 @@ namespace NiceHashMiner.Miners {
         int benchmark_read_count = 0;
         double benchmark_sum = 0.0d;
         protected readonly string LOOK_FOR_START;
-        protected readonly string MinerExeName;
         const string LOOK_FOR_END = " h/s";
 
 
-        public ClaymoreBaseMiner(string minerDeviceName, string minerPath, string minerExeName, string look_FOR_START)
+        public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
             ConectionType = NHMConectionType.STRATUM_SSL;
-            Path = minerPath;
-            MinerExeName = minerExeName;
             LOOK_FOR_START = look_FOR_START.ToLower();
-            WorkingDirectory = minerPath.Replace(minerExeName + ".exe", "");
             IsKillAllUsedMinerProcs = true;
         }
 
@@ -162,8 +158,10 @@ namespace NiceHashMiner.Miners {
                         || BenchmarkSignalHanged
                         || BenchmarkSignalTimedout
                         || BenchmarkException != null) {
+
+                        string imageName = MinerExeName.Replace(".exe", "");
                         // maybe will have to KILL process
-                        KillClaymoreMinerBase(MinerExeName);
+                        KillClaymoreMinerBase(imageName);
                         if (BenchmarkSignalTimedout) {
                             throw new Exception("Benchmark timedout");
                         }

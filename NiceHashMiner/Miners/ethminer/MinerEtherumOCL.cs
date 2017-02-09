@@ -36,8 +36,6 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override string GetStartCommandStringPart(string url, string username) {
-            // set directory
-            WorkingDirectory = "";
             return " --opencl --opencl-platform " + GPUPlatformNumber
                 + " "
                 + ExtraLaunchParametersParser.ParseForMiningSetup(

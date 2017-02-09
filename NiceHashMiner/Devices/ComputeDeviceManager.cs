@@ -515,7 +515,6 @@ namespace NiceHashMiner.Devices
                     // check the driver version bool EnableOptimizedVersion = true;
                     Dictionary<string, bool> deviceDriverOld = new Dictionary<string, bool>();
                     Dictionary<string, bool> deviceDriverNO_neoscrypt_lyra2re = new Dictionary<string, bool>();
-                    string minerPath = MinerPaths.sgminer_5_6_0_general;
                     bool ShowWarningDialog = false;
 
                     foreach (var vidContrllr in AvaliableVideoControllers) {

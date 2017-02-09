@@ -16,8 +16,6 @@ namespace NiceHashMiner.Miners {
         public nheqminer()
             : base("nheqminer") {
                 ConectionType = NHMConectionType.NONE;
-                Path = MinerPaths.nheqminer;
-                WorkingDirectory = MinerPaths.nheqminer.Replace("nheqminer.exe", "");
         }
 
         // CPU aff set from NHM

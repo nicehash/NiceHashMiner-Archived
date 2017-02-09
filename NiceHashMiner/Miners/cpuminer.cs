@@ -16,7 +16,7 @@ namespace NiceHashMiner.Miners {
         }        
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
-            return 3 * 60 * 1000; // 1 minute max, whole waiting time 75seconds
+            return 3600000; // 1hour
         }
 
         public override void Start(string url, string btcAdress, string worker) {
@@ -25,7 +25,6 @@ namespace NiceHashMiner.Miners {
                 return;
             }
             string username = GetUsername(btcAdress, worker);
-            Path = MiningSetup.MinerPath;
 
             LastCommandLine = "--algo=" + MiningSetup.MinerName +
                               " --url=" + url +
@@ -60,8 +59,6 @@ namespace NiceHashMiner.Miners {
         #region Decoupled benchmarking routines
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            Path = MiningSetup.MinerPath;
-
             return "--algo=" + algorithm.MinerName +
                          " --benchmark" +
                          ExtraLaunchParametersParser.ParseForMiningSetup(

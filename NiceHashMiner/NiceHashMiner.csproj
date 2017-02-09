@@ -224,6 +224,7 @@
     <Compile Include="Miners\Equihash\nheqminer.cs" />
     <Compile Include="Miners\MiningSession.cs" />
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
+    <Compile Include="Miners\XmrStackCPUMiner.cs" />
     <Compile Include="Net20_backport\HashSet.cs" />
     <Compile Include="Net20_backport\SortedSet.cs" />
     <Compile Include="Net20_backport\StringHelper.cs" />

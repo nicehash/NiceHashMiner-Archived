@@ -61,12 +61,13 @@ namespace NiceHashMiner
         // sgminer/zcash claymore workaround
         protected bool IsKillAllUsedMinerProcs { get; set; }
         public bool IsRunning { get; protected set; }
-        protected string Path;
+        protected string Path { get; private set; }
         protected string LastCommandLine { get; set; }
         // TODO check this 
         protected double PreviousTotalMH;
         // the defaults will be 
-        protected string WorkingDirectory;
+        protected string WorkingDirectory { get; private set; }
+        protected string MinerExeName { get; private set; }
         protected NiceHashProcess ProcessHandle;
         private MinerPID_Data _currentPidData;
         private List<MinerPID_Data> _allPidData = new List<MinerPID_Data>();
@@ -115,7 +116,6 @@ namespace NiceHashMiner
 
             MinerDeviceName = minerDeviceName;
 
-            //WorkingDirectory = @"bin\dlls";
             WorkingDirectory = "";
 
             IsRunning = false;
@@ -135,6 +135,16 @@ namespace NiceHashMiner
             // free the port
             MinersApiPortsManager.RemovePort(APIPort);
             Helpers.ConsolePrint(MinerTAG(), "MINER DESTROYED");
+        }
+
+        protected void SetWorkingDirAndProgName(string fullPath) {
+            this.WorkingDirectory = "";
+            this.Path = fullPath;
+            int lastIndex = fullPath.LastIndexOf("\\") + 1;
+            if(lastIndex > 0) {
+                this.WorkingDirectory = fullPath.Substring(0, lastIndex);
+                this.MinerExeName = fullPath.Substring(lastIndex);
+            }
         }
 
         private void SetAPIPort() {
@@ -160,6 +170,7 @@ namespace NiceHashMiner
             MiningSetup = miningSetup;
             IsInit = MiningSetup.IsInit;
             SetAPIPort();
+            SetWorkingDirAndProgName(MiningSetup.MinerPath);
         }
 
         public void InitBenchmarkSetup(MiningPair benchmarkPair) {
@@ -309,17 +320,14 @@ namespace NiceHashMiner
 
             BenchmarkHandle.StartInfo.FileName = MiningSetup.MinerPath;
 
-            // TODO sgminer quickfix
-
+            // sgminer quickfix
             if (this is sgminer) {
                 BenchmarkProcessPath = "cmd / " + BenchmarkHandle.StartInfo.FileName;
                 BenchmarkHandle.StartInfo.FileName = "cmd";
             } else {
                 BenchmarkProcessPath = BenchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTAG(), "Using miner: " + BenchmarkHandle.StartInfo.FileName);
-                if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.Equihash) {
-                    BenchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
-                }
+                BenchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
             }
 
             BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;

@@ -79,7 +79,7 @@ namespace NiceHashMiner.Miners {
                                         foreach (var cpuExt in CPUExtensions) {
                                             var algoType = algo.NiceHashID;
                                             var path = MinerPaths.GetPathFor(minerBaseType, algoType, devGroupType, "", false, cpuExt);
-                                            if (path != MinerPaths.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
+                                            if (path != MinerPaths.Data.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
                                                 MinerReservedPorts[minerBaseType][path] = new Dictionary<AlgorithmType, List<int>>();
                                             }
                                             if (MinerReservedPorts[minerBaseType][path] != null && MinerReservedPorts[minerBaseType][path].ContainsKey(algoType) == false) {
@@ -93,7 +93,7 @@ namespace NiceHashMiner.Miners {
                                             foreach (var codename in AMDCodenames) {
                                                 var algoType = algo.NiceHashID;
                                                 var path = MinerPaths.GetPathFor(minerBaseType, algoType, devGroupType, codename, isOptimized, CPUExtensionType.Automatic);
-                                                if (path != MinerPaths.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
+                                                if (path != MinerPaths.Data.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
                                                     MinerReservedPorts[minerBaseType][path] = new Dictionary<AlgorithmType, List<int>>();
                                                 }
                                                 if (MinerReservedPorts[minerBaseType][path] != null && MinerReservedPorts[minerBaseType][path].ContainsKey(algoType) == false) {
@@ -106,7 +106,7 @@ namespace NiceHashMiner.Miners {
                                     foreach (var algo in algos) {
                                         var algoType = algo.NiceHashID;
                                         var path = MinerPaths.GetPathFor(minerBaseType, algoType, devGroupType, "", false, CPUExtensionType.Automatic);
-                                        if (path != MinerPaths.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
+                                        if (path != MinerPaths.Data.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
                                             MinerReservedPorts[minerBaseType][path] = new Dictionary<AlgorithmType, List<int>>();
                                         }
                                         if (MinerReservedPorts[minerBaseType][path] != null && MinerReservedPorts[minerBaseType][path].ContainsKey(algoType) == false) {
