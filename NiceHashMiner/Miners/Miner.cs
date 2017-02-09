@@ -520,11 +520,10 @@ namespace NiceHashMiner
             P.StartInfo.Arguments = LastCommandLine;
             if (IsNeverHideMiningWindow) {
                 P.StartInfo.CreateNoWindow = false;
-                ////not working
-                //if (ConfigManager.GeneralConfig.HideMiningWindows) {
-                //    P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                //    P.StartInfo.UseShellExecute = true;
-                //}
+                if (ConfigManager.GeneralConfig.HideMiningWindows) {
+                    P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                    P.StartInfo.UseShellExecute = true;
+                }
             } else {
                 P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
             }

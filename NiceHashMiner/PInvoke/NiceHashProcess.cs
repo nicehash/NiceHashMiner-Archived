@@ -12,6 +12,8 @@ namespace NiceHashMiner
         private const uint CREATE_NEW_CONSOLE = 0x00000010;
         private const uint NORMAL_PRIORITY_CLASS = 0x0020;
         private const uint CREATE_NO_WINDOW = 0x08000000;
+        private const int STARTF_USESHOWWINDOW = 0x00000001;
+        private const short SW_SHOWMINNOACTIVE = 7;
         private const uint INFINITE = 0xFFFFFFFF;
         private const uint STILL_ACTIVE = 259;
 
@@ -116,10 +118,17 @@ namespace NiceHashMiner
             tSec.nLength = Marshal.SizeOf(tSec);
 
             uint sflags = 0;
-            if (StartInfo.CreateNoWindow)
+            if (StartInfo.CreateNoWindow) {
                 sflags = CREATE_NO_WINDOW;
-            else
+            }
+            else if (StartInfo.WindowStyle == ProcessWindowStyle.Minimized) {
+                sInfo.dwFlags = STARTF_USESHOWWINDOW;
+                sInfo.wShowWindow = SW_SHOWMINNOACTIVE;
                 sflags = CREATE_NEW_CONSOLE;
+            }
+            else {
+                sflags = CREATE_NEW_CONSOLE;
+            }
 
             string workDir = null;
             if (StartInfo.WorkingDirectory != null && StartInfo.WorkingDirectory.Length > 0)
