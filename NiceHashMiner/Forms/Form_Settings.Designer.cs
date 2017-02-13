@@ -93,6 +93,7 @@
             this.pictureBox_MinerRestartDelayMS = new System.Windows.Forms.PictureBox();
             this.pictureBox_APIBindPortStart = new System.Windows.Forms.PictureBox();
             this.pictureBox_SwitchMinSecondsDynamic = new System.Windows.Forms.PictureBox();
+            this.pictureBox_SwitchProfitabilityThreshold = new System.Windows.Forms.PictureBox();
             this.pictureBox_ethminerDefaultBlockHeight = new System.Windows.Forms.PictureBox();
             this.pictureBox_DagGeneration = new System.Windows.Forms.PictureBox();
             this.pictureBox_CPU0_ForceCPUExtension = new System.Windows.Forms.PictureBox();
@@ -110,7 +111,9 @@
             this.label_MinerRestartDelayMS = new System.Windows.Forms.Label();
             this.textBox_SwitchMinSecondsAMD = new System.Windows.Forms.TextBox();
             this.label_APIBindPortStart = new System.Windows.Forms.Label();
+            this.textBox_SwitchProfitabilityThreshold = new System.Windows.Forms.TextBox();
             this.textBox_ethminerDefaultBlockHeight = new System.Windows.Forms.TextBox();
+            this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
             this.label_ethminerDefaultBlockHeight = new System.Windows.Forms.Label();
             this.textBox_APIBindPortStart = new System.Windows.Forms.TextBox();
             this.label_SwitchMinSecondsAMD = new System.Windows.Forms.Label();
@@ -133,9 +136,6 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
-            this.textBox_SwitchProfitabilityThreshold = new System.Windows.Forms.TextBox();
-            this.pictureBox_SwitchProfitabilityThreshold = new System.Windows.Forms.PictureBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -173,6 +173,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerRestartDelayMS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_APIBindPortStart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsDynamic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ethminerDefaultBlockHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DagGeneration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CPU0_ForceCPUExtension)).BeginInit();
@@ -182,7 +183,6 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -985,6 +985,16 @@
             this.pictureBox_SwitchMinSecondsDynamic.TabIndex = 385;
             this.pictureBox_SwitchMinSecondsDynamic.TabStop = false;
             // 
+            // pictureBox_SwitchProfitabilityThreshold
+            // 
+            this.pictureBox_SwitchProfitabilityThreshold.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(560, 104);
+            this.pictureBox_SwitchProfitabilityThreshold.Name = "pictureBox_SwitchProfitabilityThreshold";
+            this.pictureBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_SwitchProfitabilityThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_SwitchProfitabilityThreshold.TabIndex = 385;
+            this.pictureBox_SwitchProfitabilityThreshold.TabStop = false;
+            // 
             // pictureBox_ethminerDefaultBlockHeight
             // 
             this.pictureBox_ethminerDefaultBlockHeight.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
@@ -1078,8 +1088,7 @@
             "AVX2",
             "AVX_AES",
             "AVX",
-            "AES",
-            "SSE2"});
+            "AES"});
             this.comboBox_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(9, 165);
             this.comboBox_CPU0_ForceCPUExtension.Name = "comboBox_CPU0_ForceCPUExtension";
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(177, 21);
@@ -1156,12 +1165,28 @@
             this.label_APIBindPortStart.TabIndex = 357;
             this.label_APIBindPortStart.Text = "API Bind port pool start:";
             // 
+            // textBox_SwitchProfitabilityThreshold
+            // 
+            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(406, 123);
+            this.textBox_SwitchProfitabilityThreshold.Name = "textBox_SwitchProfitabilityThreshold";
+            this.textBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(172, 20);
+            this.textBox_SwitchProfitabilityThreshold.TabIndex = 333;
+            // 
             // textBox_ethminerDefaultBlockHeight
             // 
             this.textBox_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(209, 121);
             this.textBox_ethminerDefaultBlockHeight.Name = "textBox_ethminerDefaultBlockHeight";
             this.textBox_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(172, 20);
             this.textBox_ethminerDefaultBlockHeight.TabIndex = 333;
+            // 
+            // label_SwitchProfitabilityThreshold
+            // 
+            this.label_SwitchProfitabilityThreshold.AutoSize = true;
+            this.label_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(406, 102);
+            this.label_SwitchProfitabilityThreshold.Name = "label_SwitchProfitabilityThreshold";
+            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(142, 13);
+            this.label_SwitchProfitabilityThreshold.TabIndex = 361;
+            this.label_SwitchProfitabilityThreshold.Text = "ethminerDefaultBlockHeight:";
             // 
             // label_ethminerDefaultBlockHeight
             // 
@@ -1372,32 +1397,6 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // label_SwitchProfitabilityThreshold
-            // 
-            this.label_SwitchProfitabilityThreshold.AutoSize = true;
-            this.label_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(406, 102);
-            this.label_SwitchProfitabilityThreshold.Name = "label_SwitchProfitabilityThreshold";
-            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(142, 13);
-            this.label_SwitchProfitabilityThreshold.TabIndex = 361;
-            this.label_SwitchProfitabilityThreshold.Text = "ethminerDefaultBlockHeight:";
-            // 
-            // textBox_SwitchProfitabilityThreshold
-            // 
-            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(406, 123);
-            this.textBox_SwitchProfitabilityThreshold.Name = "textBox_SwitchProfitabilityThreshold";
-            this.textBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(172, 20);
-            this.textBox_SwitchProfitabilityThreshold.TabIndex = 333;
-            // 
-            // pictureBox_SwitchProfitabilityThreshold
-            // 
-            this.pictureBox_SwitchProfitabilityThreshold.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(560, 104);
-            this.pictureBox_SwitchProfitabilityThreshold.Name = "pictureBox_SwitchProfitabilityThreshold";
-            this.pictureBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_SwitchProfitabilityThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_SwitchProfitabilityThreshold.TabIndex = 385;
-            this.pictureBox_SwitchProfitabilityThreshold.TabStop = false;
-            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1455,6 +1454,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerRestartDelayMS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_APIBindPortStart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsDynamic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ethminerDefaultBlockHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DagGeneration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CPU0_ForceCPUExtension)).EndInit();
@@ -1464,7 +1464,6 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).EndInit();
             this.ResumeLayout(false);
 
         }

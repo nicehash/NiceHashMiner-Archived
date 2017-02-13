@@ -135,18 +135,18 @@ namespace NiceHashMiner.Devices {
         public static Dictionary<MinerBaseType, List<Algorithm>> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<MinerBaseType, List<Algorithm>>() {
-                    { MinerBaseType.cpuminer,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Lyra2RE, "lyra2"),
-                            new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Hodl, "hodl"),
-                            new Algorithm(MinerBaseType.cpuminer, AlgorithmType.CryptoNight, "cryptonight")
-                        }
-                    },
-                    { MinerBaseType.nheqminer,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
-                        }
-                    },
+                    //{ MinerBaseType.cpuminer,
+                    //    new List<Algorithm>() {
+                    //        new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Lyra2RE, "lyra2"),
+                    //        new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Hodl, "hodl"),
+                    //        new Algorithm(MinerBaseType.cpuminer, AlgorithmType.CryptoNight, "cryptonight")
+                    //    }
+                    //},
+                    //{ MinerBaseType.nheqminer,
+                    //    new List<Algorithm>() {
+                    //        new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
+                    //    }
+                    //},
                     { MinerBaseType.eqm,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.eqm, AlgorithmType.Equihash, "equihash")
