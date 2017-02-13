@@ -147,11 +147,11 @@ namespace NiceHashMiner.Devices {
                     //        new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
                     //    }
                     //},
-                    { MinerBaseType.eqm,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.eqm, AlgorithmType.Equihash, "equihash")
-                        }
-                    },
+                    //{ MinerBaseType.eqm,
+                    //    new List<Algorithm>() {
+                    //        new Algorithm(MinerBaseType.eqm, AlgorithmType.Equihash, "equihash")
+                    //    }
+                    //},
                     { MinerBaseType.XmrStackCPU,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.XmrStackCPU, AlgorithmType.CryptoNight, "cryptonight")

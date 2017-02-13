@@ -14,7 +14,7 @@ namespace NiceHashMiner.Devices {
                 CPUExtensionType.AVX_AES,
                 CPUExtensionType.AVX,
                 CPUExtensionType.AES,
-                //CPUExtensionType.SSE2, // disabled
+                CPUExtensionType.SSE2, // disabled
             };
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace NiceHashMiner.Devices {
                 case CPUExtensionType.AVX_AES: return (CPUID.SupportsAVX() == 1) && (CPUID.SupportsAES() == 1);
                 case CPUExtensionType.AVX: return CPUID.SupportsAVX() == 1;
                 case CPUExtensionType.AES: return CPUID.SupportsAES() == 1;
-                //case CPUExtensionType.SSE2: return CPUID.SupportsSSE2() == 1;
+                case CPUExtensionType.SSE2: return CPUID.SupportsSSE2() == 1;
                 default: // CPUExtensionType.Automatic
                     break;
             }
@@ -59,7 +59,7 @@ namespace NiceHashMiner.Devices {
         /// </summary>
         /// <returns></returns>
         public static bool IsCPUMiningCapable() {
-            return CPUExtensionType.Automatic != GetMostOptimized();
+            return HasExtensionSupport(CPUExtensionType.AES);
         }
     }
 }
