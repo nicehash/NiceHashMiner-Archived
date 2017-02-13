@@ -162,7 +162,7 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return Data.ccminer_cryptonight;
                 }
-                if (AlgorithmType.Lbry == algorithmType) {
+                if (AlgorithmType.Lbry == algorithmType || AlgorithmType.X11Gost == algorithmType) {
                     return Data.ccminer_tpruvot;
                 }
 

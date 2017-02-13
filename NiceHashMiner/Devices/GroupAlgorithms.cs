@@ -46,7 +46,7 @@ namespace NiceHashMiner.Devices {
                         // Ellesmere sgminer workaround, keep this until sgminer is fixed to work with Ellesmere
                         if ((device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris")) && Globals.IsEllesmereSgminerIgnore) {
                             // remove all algos except equi and dagger
-                            var ignoreRemove = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.Equihash, AlgorithmType.CryptoNight, AlgorithmType.Pascal };
+                            var ignoreRemove = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.Equihash, AlgorithmType.CryptoNight, AlgorithmType.Pascal, AlgorithmType.X11Gost };
                             var toRemove = GetKeysForMinerAlgosGroup(algoSettings).FindAll((algoType) => ignoreRemove.IndexOf(algoType) == -1);
                             algoSettings = FilterMinerAlgos(algoSettings, toRemove);
                             // remove all sgminer?
@@ -172,7 +172,8 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Decred, "decred") { ExtraLaunchParameters = "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lbry, "lbry") { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.CryptoNight, "cryptonight") { ExtraLaunchParameters = DefaultParam + "--rawintensity 512 -w 4 -g 2" },
-                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal") { ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2" }
+                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal") { ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2" },
+                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "gost")
                         }
                     },
                     { MinerBaseType.ethminer,
@@ -204,7 +205,8 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv2, "lyra2v2"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Decred, "decred"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, "cryptonight"),
-                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry")
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry"),
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib")
                         }
                     },
                     { MinerBaseType.ethminer,
@@ -240,7 +242,8 @@ namespace NiceHashMiner.Devices {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
                         AlgorithmType.DaggerHashimoto,
                         AlgorithmType.CryptoNight,
-                        AlgorithmType.Pascal
+                        AlgorithmType.Pascal,
+                        AlgorithmType.X11Gost
                     });
                 }
 
