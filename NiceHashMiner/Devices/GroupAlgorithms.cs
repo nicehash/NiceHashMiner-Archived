@@ -201,10 +201,10 @@ namespace NiceHashMiner.Devices {
                 var ret = new Dictionary<MinerBaseType, List<Algorithm>>() {
                     { MinerBaseType.ccminer,
                         new List<Algorithm>() {
-                            //new Algorithm(MinerBaseType.ccminer, AlgorithmType.NeoScrypt, "neoscrypt"),
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.NeoScrypt, "neoscrypt"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv2, "lyra2v2"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Decred, "decred"),
-                            //new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, "cryptonight"),
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, "cryptonight"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib")
                         }
@@ -230,6 +230,12 @@ namespace NiceHashMiner.Devices {
                         }
                     },
                 };
+                if (DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
+                    ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
+                        AlgorithmType.NeoScrypt,
+                        AlgorithmType.CryptoNight
+                    });
+                }
                 if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
                         AlgorithmType.NeoScrypt,
