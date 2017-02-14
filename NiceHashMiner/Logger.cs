@@ -13,6 +13,7 @@ namespace NiceHashMiner
 {
     public class Logger
     {
+        public static bool IsInit = false;
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         public const string _logPath = @"logs\";
@@ -25,17 +26,22 @@ namespace NiceHashMiner
                 }
             } catch { }
 
-            Hierarchy h = (Hierarchy)LogManager.GetRepository();
+            IsInit = true;
+            try {
+                Hierarchy h = (Hierarchy)LogManager.GetRepository();
 
-            if (ConfigManager.GeneralConfig.LogToFile)
-                h.Root.Level = Level.Info;
-            //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 2)
-            //    h.Root.Level = Level.Warn;
-            //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 3)
-            //    h.Root.Level = Level.Error;
+                if (ConfigManager.GeneralConfig.LogToFile)
+                    h.Root.Level = Level.Info;
+                //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 2)
+                //    h.Root.Level = Level.Warn;
+                //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 3)
+                //    h.Root.Level = Level.Error;
 
-            h.Root.AddAppender(CreateFileAppender());
-            h.Configured = true;
+                h.Root.AddAppender(CreateFileAppender());
+                h.Configured = true;
+            } catch (Exception e) {
+                IsInit = false;
+            }
         }
 
         public static IAppender CreateFileAppender()
