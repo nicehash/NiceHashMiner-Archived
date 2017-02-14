@@ -18,6 +18,7 @@ using NiceHashMiner.Miners.Grouping;
 using Timer = System.Timers.Timer;
 using System.Timers;
 using NiceHashMiner.Net20_backport;
+using System.IO;
 
 namespace NiceHashMiner
 {
@@ -87,9 +88,10 @@ namespace NiceHashMiner
         protected Exception BenchmarkException = null;
         protected int BenchmarkTimeInSeconds;
 
-        
-        protected bool _isEthMinerExit = false;
+        string benchmarkLogPath = "";
+        List<string> bench_lines;
 
+        
         // TODO maybe set for individual miner cooldown/retries logic variables
         // this replaces MinerAPIGraceSeconds(AMD)
         private const int _MIN_CooldownTimeInMilliseconds = 5 * 1000; // 5 seconds
@@ -306,6 +308,15 @@ namespace NiceHashMiner
             OnBenchmarkCompleteCalled = false;
             BenchmarkTimeOutStopWatch = null;
 
+
+            try {
+                if (!Directory.Exists("logs")) {
+                    Directory.CreateDirectory("logs");
+                }
+            } catch { }
+            bench_lines = new List<string>();
+            benchmarkLogPath = String.Format("{0}Log_{1}_{2}", Logger._logPath, MiningSetup.MiningPairs[0].Device.UUID, MiningSetup.MiningPairs[0].Algorithm.AlgorithmStringID);
+
             string CommandLine = BenchmarkCreateCommandLine(BenchmarkAlgorithm, time);
 
             Thread BenchmarkThread = new Thread(BenchmarkThreadRoutine);
@@ -374,6 +385,8 @@ namespace NiceHashMiner
         protected abstract void BenchmarkOutputErrorDataReceivedImpl(string outdata);
 
         protected void CheckOutdata(string outdata) {
+            //Helpers.ConsolePrint("BENCHMARK" + benchmarkLogPath, outdata);
+            bench_lines.Add(outdata);
             // ccminer, cpuminer
             if (outdata.Contains("Cuda error"))
                 BenchmarkException = new Exception("CUDA error");
@@ -491,6 +504,12 @@ namespace NiceHashMiner
                     BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated"));
                 }
             } finally {
+                
+                using (StreamWriter sw = File.AppendText(benchmarkLogPath)) {
+                    foreach (var line in bench_lines) {
+                        sw.WriteLine(line);
+                    } 
+                }
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Success;
                 Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");

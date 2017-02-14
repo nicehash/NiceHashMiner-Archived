@@ -26,7 +26,6 @@ namespace NiceHashMiner.Miners {
 
         public MinerEtherum(string minerDeviceName, string blockString)
             : base(minerDeviceName) {
-            _isEthMinerExit = true;
             CurrentBlockString = blockString;
             DagGenerationType = ConfigManager.GeneralConfig.EthminerDagGenerationType;
         }

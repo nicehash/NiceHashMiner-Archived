@@ -15,7 +15,7 @@ namespace NiceHashMiner
     {
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        const string _logPath = @"logs\";
+        public const string _logPath = @"logs\";
 
         public static void ConfigureWithFile()
         {
