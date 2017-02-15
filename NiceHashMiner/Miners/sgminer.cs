@@ -260,21 +260,9 @@ namespace NiceHashMiner.Miners
                     }
                 }
             } catch (Exception ex) {
-                BenchmarkAlgorithm.BenchmarkSpeed = 0;
-
-                Helpers.ConsolePrint(MinerTAG(), "Benchmark Exception: " + ex.Message);
-                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
-                    OnBenchmarkCompleteCalled = true;
-                    BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated"));
-                }
+                BenchmarkThreadRoutineCatch(ex);
             } finally {
-                BenchmarkProcessStatus = BenchmarkProcessStatus.Success;
-                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
-                Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
-                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
-                    OnBenchmarkCompleteCalled = true;
-                    BenchmarkComunicator.OnBenchmarkComplete(true, "Success");
-                }
+                BenchmarkThreadRoutineFinish(BenchmarkProcessStatus.Success);
             }
         }
 

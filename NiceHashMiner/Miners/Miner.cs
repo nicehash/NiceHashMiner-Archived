@@ -89,7 +89,7 @@ namespace NiceHashMiner
         protected int BenchmarkTimeInSeconds;
 
         string benchmarkLogPath = "";
-        List<string> bench_lines;
+        protected List<string> bench_lines;
 
         
         // TODO maybe set for individual miner cooldown/retries logic variables
@@ -461,6 +461,31 @@ namespace NiceHashMiner
             BenchmarkHandle.BeginOutputReadLine();
         }
 
+        protected void BenchmarkThreadRoutineCatch(Exception ex) {
+            BenchmarkAlgorithm.BenchmarkSpeed = 0;
+
+            Helpers.ConsolePrint(MinerTAG(), "Benchmark Exception: " + ex.Message);
+            if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
+                OnBenchmarkCompleteCalled = true;
+                BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated"));
+            }
+        }
+
+        protected void BenchmarkThreadRoutineFinish(BenchmarkProcessStatus status) {
+            using (StreamWriter sw = File.AppendText(benchmarkLogPath)) {
+                foreach (var line in bench_lines) {
+                    sw.WriteLine(line);
+                }
+            }
+            BenchmarkProcessStatus = status;
+            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
+            Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
+            if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
+                OnBenchmarkCompleteCalled = true;
+                BenchmarkComunicator.OnBenchmarkComplete(true, "Success");
+            }
+        }
+
         virtual protected void BenchmarkThreadRoutine(object CommandLine) {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
@@ -496,27 +521,9 @@ namespace NiceHashMiner
                     //break;
                 }
             } catch (Exception ex) {
-                BenchmarkAlgorithm.BenchmarkSpeed = 0;
-
-                Helpers.ConsolePrint(MinerTAG(), "Benchmark Exception: " + ex.Message);
-                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
-                    OnBenchmarkCompleteCalled = true;
-                    BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated"));
-                }
+                BenchmarkThreadRoutineCatch(ex);
             } finally {
-                
-                using (StreamWriter sw = File.AppendText(benchmarkLogPath)) {
-                    foreach (var line in bench_lines) {
-                        sw.WriteLine(line);
-                    } 
-                }
-                BenchmarkProcessStatus = BenchmarkProcessStatus.Success;
-                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
-                Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
-                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
-                    OnBenchmarkCompleteCalled = true;
-                    BenchmarkComunicator.OnBenchmarkComplete(true, "Success");
-                }
+                BenchmarkThreadRoutineFinish(BenchmarkProcessStatus.Success);
             }
         }
 

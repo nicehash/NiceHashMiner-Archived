@@ -183,15 +183,10 @@ namespace NiceHashMiner.Miners {
 
                 }
             } catch (Exception ex) {
-                BenchmarkAlgorithm.BenchmarkSpeed = 0;
-                Helpers.ConsolePrint(MinerTAG(), "Benchmark Exception: " + ex.Message);
-                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
-                    OnBenchmarkCompleteCalled = true;
-                    BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated"));
-                }
+                BenchmarkThreadRoutineCatch(ex);
             } finally {
                 BenchmarkAlgorithm.BenchmarkSpeed = 0;
-                BenchmarkProcessStatus = BenchmarkProcessStatus.Finished;
+                var status = BenchmarkProcessStatus.Finished;
                 // find latest log file
                 string latestLogFile = "";
                 var dirInfo = new DirectoryInfo(this.WorkingDirectory);
@@ -202,8 +197,10 @@ namespace NiceHashMiner.Miners {
                 // read file log
                 if (File.Exists(WorkingDirectory + latestLogFile)) {
                     var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                    var addBenchLines = bench_lines.Count == 0;
                     foreach (var line in lines) {
                         if (line != null) {
+                            bench_lines.Add(line);
                             string lineLowered = line.ToLower();
                             if (lineLowered.Contains(LOOK_FOR_START)) {
                                 benchmark_sum += getNumber(lineLowered);
@@ -213,15 +210,10 @@ namespace NiceHashMiner.Miners {
                     }
                     if (benchmark_read_count > 0) {
                         BenchmarkAlgorithm.BenchmarkSpeed = benchmark_sum / benchmark_read_count;
-                        BenchmarkProcessStatus = BenchmarkProcessStatus.Success;
+                        status = BenchmarkProcessStatus.Success;
                     }
                 }
-                Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
-                Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
-                if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
-                    OnBenchmarkCompleteCalled = true;
-                    BenchmarkComunicator.OnBenchmarkComplete(true, "Success");
-                }
+                BenchmarkThreadRoutineFinish(status);
             }
         }
 
