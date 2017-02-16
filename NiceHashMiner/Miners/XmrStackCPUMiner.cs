@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
 using System;
@@ -18,13 +19,19 @@ namespace NiceHashMiner.Miners {
             this.httpd_port = port;
         }
 
-        public void Inti_cpu_threads_conf(bool low_power_mode, bool no_prefetch, bool affine_to_cpu) {
+        public void Inti_cpu_threads_conf(bool low_power_mode, bool no_prefetch, bool affine_to_cpu, bool isHyperThreading) {
             cpu_threads_conf = new List<JObject>();
-            for (int i_cpu = 0; i_cpu < cpu_thread_num; ++i_cpu) {
-                if (affine_to_cpu) {
-                    cpu_threads_conf.Add(JObject.FromObject(new { low_power_mode = low_power_mode, no_prefetch = no_prefetch, affine_to_cpu = i_cpu }));
-                } else {
-                    cpu_threads_conf.Add(JObject.FromObject(new { low_power_mode = low_power_mode, no_prefetch = no_prefetch, affine_to_cpu = false }));
+            if (isHyperThreading) {
+                for (int i_cpu = 0; i_cpu < cpu_thread_num; ++i_cpu) {
+                    cpu_threads_conf.Add(JObject.FromObject(new { low_power_mode = low_power_mode, no_prefetch = no_prefetch, affine_to_cpu = i_cpu * 2 }));
+                }
+            } else {
+                for (int i_cpu = 0; i_cpu < cpu_thread_num; ++i_cpu) {
+                    if (affine_to_cpu) {
+                        cpu_threads_conf.Add(JObject.FromObject(new { low_power_mode = low_power_mode, no_prefetch = no_prefetch, affine_to_cpu = i_cpu }));
+                    } else {
+                        cpu_threads_conf.Add(JObject.FromObject(new { low_power_mode = low_power_mode, no_prefetch = no_prefetch, affine_to_cpu = false }));
+                    }
                 }
             }
         }
@@ -189,8 +196,11 @@ namespace NiceHashMiner.Miners {
             if (this.MiningSetup.MiningPairs.Count > 0) {
                 try {
                     int numTr = ExtraLaunchParametersParser.GetThreadsNumber(this.MiningSetup.MiningPairs[0]);
+                    if (ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled) {
+                        numTr /= 2;
+                    }
                     var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.APIPort);
-                    config.Inti_cpu_threads_conf(false, false, true);
+                    config.Inti_cpu_threads_conf(false, false, true, ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled);
                     var confJson = JObject.FromObject(config);
                     string writeStr = confJson.ToString();
                     int start = writeStr.IndexOf("{");

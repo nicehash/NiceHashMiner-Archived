@@ -288,6 +288,9 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint(TAG, "QueryCPUs START");
                     // get all CPUs
                     Avaliable.CPUsCount = CPUID.GetPhysicalProcessorCount();
+                    Avaliable.IsHyperThreadingEnabled = CPUID.IsHypeThreadingEnabled();
+
+                    Helpers.ConsolePrint(TAG, Avaliable.IsHyperThreadingEnabled ? "HyperThreadingEnabled = TRUE" : "HyperThreadingEnabled = FALSE");
 
                     // get all cores (including virtual - HT can benefit mining)
                     int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / Avaliable.CPUsCount;
@@ -825,6 +828,7 @@ namespace NiceHashMiner.Devices
             public static int CPUsCount = 0;
             public static int GPUsCount = 0;
             public static int AMDOpenCLPlatformNum = -1;
+            public static bool IsHyperThreadingEnabled = false;
             
             public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
 
