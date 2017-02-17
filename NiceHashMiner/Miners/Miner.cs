@@ -424,15 +424,27 @@ namespace NiceHashMiner
 
                 // save speed
                 int b = hashspeed.IndexOf(" ");
-                double spd = Double.Parse(hashspeed.Substring(0, b), CultureInfo.InvariantCulture);
-                if (hashspeed.Contains("kH/s"))
-                    spd *= 1000;
-                else if (hashspeed.Contains("MH/s"))
-                    spd *= 1000000;
-                else if (hashspeed.Contains("GH/s"))
-                    spd *= 1000000000;
+                if (b < 0) {
+                    int stub;
+                    for (int _i = hashspeed.Length - 1; _i >= 0; --_i ) {
+                        if (Int32.TryParse(hashspeed[_i].ToString(), out stub)) {
+                            b = _i;
+                            break;
+                        }
+                    }
+                }
+                if (b >= 0) {
+                    string speedStr = hashspeed.Substring(0, b);
+                    double spd = Helpers.ParseDouble(speedStr);
+                    if (hashspeed.Contains("kH/s"))
+                        spd *= 1000;
+                    else if (hashspeed.Contains("MH/s"))
+                        spd *= 1000000;
+                    else if (hashspeed.Contains("GH/s"))
+                        spd *= 1000000000;
 
-                return spd;
+                    return spd;
+                }
             }
             return 0.0d;
         }

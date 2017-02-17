@@ -25,6 +25,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ccminer_sp = _bin + @"\ccminer_sp.exe";
             public const string ccminer_tpruvot = _bin + @"\ccminer_tpruvot.exe";
             public const string ccminer_cryptonight = _bin + @"\ccminer_cryptonight.exe";
+            public const string ccminer_x11gost = _bin + @"\ccminer_x11gost.exe";
             /// <summary>
             /// cpuminers opt new
             /// </summary>
@@ -162,8 +163,11 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return Data.ccminer_cryptonight;
                 }
-                if (AlgorithmType.Lbry == algorithmType || AlgorithmType.X11Gost == algorithmType) {
+                if (AlgorithmType.Lbry == algorithmType) {
                     return Data.ccminer_tpruvot;
+                }
+                if (AlgorithmType.X11Gost == algorithmType) {
+                    return Data.ccminer_x11gost;
                 }
 
                 return Data.ccminer_sp;
