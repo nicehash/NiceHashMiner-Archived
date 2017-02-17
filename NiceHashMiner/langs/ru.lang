@@ -341,5 +341,6 @@
 
         "Form_Settings_General_SwitchProfitabilityThreshold": "Порог переключения прибыльности",
         "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Майнер не будет переключаться, если разница между прибыльностью алгоритмов ниже Порога переключения прибыльности. Значение в процентах [0 — 1]",
+        "VirtualMemorySize_BAD":  "NiceHash Miner рекомендует увеличить размер виртуальной памяти для нормальной работы всех алгоритмов."
     }
 }

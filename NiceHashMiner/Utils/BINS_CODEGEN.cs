@@ -2,13 +2,13 @@
 namespace NiceHashMiner.Utils {
     public static class Bins_Data {
     #region CODE_GEN STUFF // listFiles.py
-        public static string[] ALL_FILES_BINS = {@"\ccminer.exe",
-@"\ccminer_cryptonight.exe",
+        public static string[] ALL_FILES_BINS = {@"\ccminer_cryptonight.exe",
 @"\ccminer_decred.exe",
 @"\ccminer_nanashi.exe",
 @"\ccminer_neoscrypt.exe",
 @"\ccminer_sp.exe",
 @"\ccminer_tpruvot.exe",
+@"\ccminer_x11gost.exe",
 @"\cudart32_80.dll",
 @"\cudart64_80.dll",
 @"\ethminer.exe",
@@ -28,6 +28,7 @@ namespace NiceHashMiner.Utils {
 @"\libz-1.dll",
 @"\msvcr120.dll",
 @"\OpenCL.dll",
+@"\vc_redist.x64.exe",
 @"\zlib1.dll",
 @"\eqm\cudart64_80.dll",
 @"\eqm\eqm.exe",
@@ -47,7 +48,9 @@ namespace NiceHashMiner.Utils {
 @"\nheqminer_v0.4b\nheqminer.exe",
 @"\sgminer-5-6-0-general\sgminer.exe",
 @"\sgminer-gm\sgminer.exe",
-@"\xmr-stak-cpu\xmr-stak-cpu.exe",
+@"\xmr-stak-cpu\msvcp140.dll",
+@"\xmr-stak-cpu\vcruntime140.dll",
+@"\xmr-stak-cpu\xmr-stak-cpu.exe"
 };
     #endregion //CODE_GEN STUFF // listFiles.py
     }

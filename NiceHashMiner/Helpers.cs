@@ -222,5 +222,20 @@ namespace NiceHashMiner
             }
             return false;
         }
+
+        public static void InstallVcRedist() {
+            Process CudaDevicesDetection = new Process();
+            CudaDevicesDetection.StartInfo.FileName = @"bin\vc_redist.x64.exe";
+            CudaDevicesDetection.StartInfo.Arguments = "/q /norestart";
+            CudaDevicesDetection.StartInfo.UseShellExecute = false;
+            CudaDevicesDetection.StartInfo.RedirectStandardError = false;
+            CudaDevicesDetection.StartInfo.RedirectStandardOutput = false;
+            CudaDevicesDetection.StartInfo.CreateNoWindow = false;
+
+            //const int waitTime = 45 * 1000; // 45seconds
+            //CudaDevicesDetection.WaitForExit(waitTime);
+            CudaDevicesDetection.Start();
+        }
+
     }
 }

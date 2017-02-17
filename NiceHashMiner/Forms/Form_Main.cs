@@ -189,7 +189,6 @@ namespace NiceHashMiner
             // TODO add loading step
             MinersSettingsManager.Init();
 
-
             if (!Helpers.InternalCheckIsWow64()) {
                 MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
                                 International.GetText("Warning_with_Exclamation"),
@@ -304,6 +303,7 @@ namespace NiceHashMiner
 
             LoadingScreen.FinishLoad();
 
+            bool runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
             // standard miners check scope
             {
                 // check if download needed
@@ -361,6 +361,10 @@ namespace NiceHashMiner
                         ConfigManager.GeneralConfigFileCommit();
                     }
                 }
+            }
+
+            if (runVCRed) {
+                Helpers.InstallVcRedist();
             }
 
             // no bots please
@@ -891,14 +895,16 @@ namespace NiceHashMiner
                 } else if (result == System.Windows.Forms.DialogResult.No) {
                     // check devices without benchmarks
                     foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                        bool Enabled = false;
-                        foreach (var algo in cdev.GetAlgorithmSettings()) {
-                            if (algo.BenchmarkSpeed > 0) {
-                                Enabled = true;
-                                break;
+                        if (cdev.Enabled) {
+                            bool Enabled = false;
+                            foreach (var algo in cdev.GetAlgorithmSettings()) {
+                                if (algo.BenchmarkSpeed > 0) {
+                                    Enabled = true;
+                                    break;
+                                }
                             }
+                            cdev.Enabled = Enabled;
                         }
-                        cdev.Enabled = Enabled;
                     }
                 } else {
                     return false;
