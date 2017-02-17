@@ -65,6 +65,8 @@ namespace NiceHashMiner
 
             InitLocalization();
 
+            ComputeDeviceManager.SystemSpecs.QueryAndLog();
+
             // Log the computer's amount of Total RAM and Page File Size
             ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
             foreach (ManagementObject mo in moc)

@@ -25,6 +25,9 @@ namespace NiceHashMiner.Miners
         const int _cryptonightTotalDelim = 2;
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
+            if (this.MiningSetup.MinerPath == MinerPaths.Data.ccminer_x11gost) {
+                return 60 * 1000 * 3; // wait a little longer
+            }
             return 60 * 1000; // 1 minute max, whole waiting time 75seconds
         }
 

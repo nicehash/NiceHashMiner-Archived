@@ -196,6 +196,28 @@ namespace NiceHashMiner.Devices
                                                           International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
                                                           MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+                // get GPUs RAM sum
+                // bytes
+                Avaliable.NVIDIA_RAM_SUM = 0;
+                Avaliable.AMD_RAM_SUM = 0;
+                foreach (var dev in Avaliable.AllAvaliableDevices) {
+                    if (dev.DeviceType == DeviceType.NVIDIA) {
+                        Avaliable.NVIDIA_RAM_SUM += dev.GpuRam;
+                    } else if (dev.DeviceType == DeviceType.AMD) {
+                        Avaliable.AMD_RAM_SUM += dev.GpuRam;
+                    }
+                }
+                double total_GPU_RAM = (Avaliable.NVIDIA_RAM_SUM + Avaliable.AMD_RAM_SUM) / 1024; // b to kb
+                double total_Sys_RAM = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
+                // check
+                if (total_Sys_RAM < total_GPU_RAM * 0.6) {
+                    Helpers.ConsolePrint(TAG, "virtual memory size BAD");
+                    MessageBox.Show(International.GetText("VirtualMemorySize_BAD"),
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK);
+                } else {
+                    Helpers.ConsolePrint(TAG, "virtual memory size GOOD");
+                }
 
                 // #x remove reference
                 MessageNotifier = null;
@@ -821,6 +843,69 @@ namespace NiceHashMiner.Devices
             #endregion Helpers
         }
 
+        public static class SystemSpecs {
+            public static UInt64   FreePhysicalMemory;
+            public static UInt64   FreeSpaceInPagingFiles;
+            public static UInt64   FreeVirtualMemory;
+            public static UInt32   LargeSystemCache;
+            public static UInt32   MaxNumberOfProcesses;
+            public static UInt64   MaxProcessMemorySize;
+
+            public static UInt32   NumberOfLicensedUsers;
+            public static UInt32   NumberOfProcesses;
+            public static UInt32   NumberOfUsers;
+            public static UInt32   OperatingSystemSKU;
+            
+            public static UInt64   SizeStoredInPagingFiles;
+            
+            public static UInt32   SuiteMask;
+            
+            public static UInt64   TotalSwapSpaceSize;
+            public static UInt64   TotalVirtualMemorySize;
+            public static UInt64   TotalVisibleMemorySize;
+            
+
+            public static void QueryAndLog() {
+                ObjectQuery winQuery = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
+
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(winQuery);
+
+                foreach (ManagementObject item in searcher.Get()) {
+                    if (item["FreePhysicalMemory"] != null) UInt64.TryParse(item["FreePhysicalMemory"].ToString(), out FreePhysicalMemory);
+                    if (item["FreeSpaceInPagingFiles"] != null) UInt64.TryParse(item["FreeSpaceInPagingFiles"].ToString(), out FreeSpaceInPagingFiles);
+                    if (item["FreeVirtualMemory"] != null) UInt64.TryParse(item["FreeVirtualMemory"].ToString(), out FreeVirtualMemory);
+                    if (item["LargeSystemCache"] != null) UInt32.TryParse(item["LargeSystemCache"].ToString(), out LargeSystemCache);
+                    if (item["MaxNumberOfProcesses"] != null) UInt32.TryParse(item["MaxNumberOfProcesses"].ToString(), out MaxNumberOfProcesses);
+                    if (item["MaxProcessMemorySize"] != null) UInt64.TryParse(item["MaxProcessMemorySize"].ToString(), out MaxProcessMemorySize);
+                    if (item["NumberOfLicensedUsers"] != null) UInt32.TryParse(item["NumberOfLicensedUsers"].ToString(), out NumberOfLicensedUsers);
+                    if (item["NumberOfProcesses"] != null) UInt32.TryParse(item["NumberOfProcesses"].ToString(), out NumberOfProcesses);
+                    if (item["NumberOfUsers"] != null) UInt32.TryParse(item["NumberOfUsers"].ToString(), out NumberOfUsers);
+                    if (item["OperatingSystemSKU"] != null) UInt32.TryParse(item["OperatingSystemSKU"].ToString(), out OperatingSystemSKU);
+                    if (item["SizeStoredInPagingFiles"] != null) UInt64.TryParse(item["SizeStoredInPagingFiles"].ToString(), out SizeStoredInPagingFiles);
+                    if (item["SuiteMask"] != null) UInt32.TryParse(item["SuiteMask"].ToString(), out SuiteMask);
+                    if (item["TotalSwapSpaceSize"] != null) UInt64.TryParse(item["TotalSwapSpaceSize"].ToString(), out TotalSwapSpaceSize);
+                    if (item["TotalVirtualMemorySize"] != null) UInt64.TryParse(item["TotalVirtualMemorySize"].ToString(), out TotalVirtualMemorySize);
+                    if (item["TotalVisibleMemorySize"] != null) UInt64.TryParse(item["TotalVisibleMemorySize"].ToString(), out TotalVisibleMemorySize);
+                    // log
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("FreePhysicalMemory = {0}", FreePhysicalMemory));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("FreeSpaceInPagingFiles = {0}", FreeSpaceInPagingFiles));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("FreeVirtualMemory = {0}", FreeVirtualMemory));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("LargeSystemCache = {0}", LargeSystemCache));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("MaxNumberOfProcesses = {0}", MaxNumberOfProcesses));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("MaxProcessMemorySize = {0}", MaxProcessMemorySize));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("NumberOfLicensedUsers = {0}", NumberOfLicensedUsers));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("NumberOfProcesses = {0}", NumberOfProcesses));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("NumberOfUsers = {0}", NumberOfUsers));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("OperatingSystemSKU = {0}", OperatingSystemSKU));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("SizeStoredInPagingFiles = {0}", SizeStoredInPagingFiles));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("SuiteMask = {0}", SuiteMask));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("TotalSwapSpaceSize = {0}", TotalSwapSpaceSize));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("TotalVirtualMemorySize = {0}", TotalVirtualMemorySize));
+                    Helpers.ConsolePrint("SystemSpecs", String.Format("TotalVisibleMemorySize = {0}", TotalVisibleMemorySize));
+                }
+            }
+        }
+
         public static class Avaliable {
             public static bool HasNVIDIA = false;
             public static bool HasAMD = false;
@@ -829,6 +914,9 @@ namespace NiceHashMiner.Devices
             public static int GPUsCount = 0;
             public static int AMDOpenCLPlatformNum = -1;
             public static bool IsHyperThreadingEnabled = false;
+
+            public static ulong NVIDIA_RAM_SUM = 0;
+            public static ulong AMD_RAM_SUM = 0;
             
             public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
 

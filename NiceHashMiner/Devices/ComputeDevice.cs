@@ -32,6 +32,7 @@ namespace NiceHashMiner.Devices
         readonly public ulong AffinityMask;
 
         // GPU extras
+        public readonly ulong GpuRam;
         public readonly bool IsEtherumCapale;
         public static readonly ulong MEMORY_3GB = 3221225472;
 
@@ -62,6 +63,7 @@ namespace NiceHashMiner.Devices
             IsOptimizedVersion = false;
             Codename = "fake";
             UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            GpuRam = 0;
         }
 
         // CPU 
@@ -78,6 +80,7 @@ namespace NiceHashMiner.Devices
             UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             IsEtherumCapale = false;
+            GpuRam = 0;
         }
 
         // GPU NVIDIA
@@ -91,6 +94,7 @@ namespace NiceHashMiner.Devices
             NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), GPUCount);
             UUID = cudaDevice.UUID;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+            GpuRam = cudaDevice.DeviceGlobalMemory;
         }
 
         // GPU AMD
@@ -112,7 +116,8 @@ namespace NiceHashMiner.Devices
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
-            DriverDisableAlgos = amdDevice.DriverDisableAlgos; ;
+            DriverDisableAlgos = amdDevice.DriverDisableAlgos;
+            GpuRam = amdDevice.DeviceGlobalMemory;
         }
 
         // combines long and short name
