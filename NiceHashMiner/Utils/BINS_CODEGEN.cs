@@ -48,8 +48,6 @@ namespace NiceHashMiner.Utils {
 @"\nheqminer_v0.4b\nheqminer.exe",
 @"\sgminer-5-6-0-general\sgminer.exe",
 @"\sgminer-gm\sgminer.exe",
-@"\xmr-stak-cpu\msvcp140.dll",
-@"\xmr-stak-cpu\vcruntime140.dll",
 @"\xmr-stak-cpu\xmr-stak-cpu.exe"
 };
     #endregion //CODE_GEN STUFF // listFiles.py
