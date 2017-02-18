@@ -101,6 +101,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.excavator;
                 case MinerBaseType.XmrStackCPU:
                     return Data.XmrStackCPUMiner;
+                case MinerBaseType.ccminer_unstable:
+                    return NVIDIA_GROUPS.ccminer_unstable_path(algoType, devGroupType);
             }
             return Data.NONE;
         }
@@ -163,11 +165,8 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return Data.ccminer_cryptonight;
                 }
-                if (AlgorithmType.Lbry == algorithmType) {
+                if (AlgorithmType.Lbry == algorithmType || AlgorithmType.X11Gost == algorithmType) {
                     return Data.ccminer_tpruvot;
-                }
-                if (AlgorithmType.X11Gost == algorithmType) {
-                    return Data.ccminer_x11gost;
                 }
 
                 return Data.ccminer_sp;
@@ -180,6 +179,17 @@ namespace NiceHashMiner.Miners.Grouping
                 // sm5x and sm6x have same settings
                 if (nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) {
                     return NVIDIA_GROUPS.ccminer_sm5x_or_sm6x(algorithmType);
+                }
+                // TODO wrong case?
+                return Data.NONE; // should not happen
+            }
+
+            public static string ccminer_unstable_path(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup) {
+                // sm5x and sm6x have same settings
+                if (nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) {
+                    if (AlgorithmType.X11Gost == algorithmType) {
+                        return Data.ccminer_x11gost;
+                    }
                 }
                 // TODO wrong case?
                 return Data.NONE; // should not happen
