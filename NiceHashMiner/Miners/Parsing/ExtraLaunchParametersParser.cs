@@ -220,7 +220,7 @@ namespace NiceHashMiner.Miners.Parsing {
             if (MinerBaseType.sgminer == minerBaseType) {
                 return MinerType.sgminer;
             }
-            if (MinerBaseType.ccminer == minerBaseType || MinerBaseType.ccminer_unstable == minerBaseType) {
+            if (MinerBaseType.ccminer == minerBaseType || MinerBaseType.ccminer_alexis == minerBaseType) {
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return MinerType.ccminer_CryptoNight;
                 }

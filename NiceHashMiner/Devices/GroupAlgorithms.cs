@@ -118,8 +118,8 @@ namespace NiceHashMiner.Devices {
                     algoSettings[MinerBaseType.XmrStackCPU][0].LessThreads = device.Threads / 2; // use half
                 }
 
-                if (algoSettings.ContainsKey(MinerBaseType.ccminer_unstable)) {
-                    foreach (var unstable_algo in algoSettings[MinerBaseType.ccminer_unstable]) {
+                if (algoSettings.ContainsKey(MinerBaseType.ccminer_alexis)) {
+                    foreach (var unstable_algo in algoSettings[MinerBaseType.ccminer_alexis]) {
                         unstable_algo.Enabled = false;
                     }
                 }
@@ -215,9 +215,9 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib")
                         }
                     },
-                    { MinerBaseType.ccminer_unstable,
+                    { MinerBaseType.ccminer_alexis,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ccminer_unstable, AlgorithmType.X11Gost, "sib")
+                            new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib")
                         }
                     },
                     { MinerBaseType.ethminer,

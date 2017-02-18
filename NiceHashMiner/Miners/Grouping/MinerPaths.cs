@@ -101,7 +101,7 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.excavator;
                 case MinerBaseType.XmrStackCPU:
                     return Data.XmrStackCPUMiner;
-                case MinerBaseType.ccminer_unstable:
+                case MinerBaseType.ccminer_alexis:
                     return NVIDIA_GROUPS.ccminer_unstable_path(algoType, devGroupType);
             }
             return Data.NONE;

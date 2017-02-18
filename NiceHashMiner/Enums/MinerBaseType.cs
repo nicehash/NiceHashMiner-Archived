@@ -15,7 +15,7 @@ namespace NiceHashMiner.Enums {
         OptiminerAMD,
         excavator,
         XmrStackCPU,
-        ccminer_unstable,
+        ccminer_alexis,
         END
     }
 }
