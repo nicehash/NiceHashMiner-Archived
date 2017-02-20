@@ -114,9 +114,9 @@ namespace NiceHashMiner.Devices {
                     }
                     
                 }
-                if (algoSettings.ContainsKey(MinerBaseType.XmrStackCPU)) {
-                    algoSettings[MinerBaseType.XmrStackCPU][0].LessThreads = device.Threads / 2; // use half
-                }
+                //if (algoSettings.ContainsKey(MinerBaseType.XmrStackCPU)) {
+                //    algoSettings[MinerBaseType.XmrStackCPU][0].LessThreads = device.Threads / 2; // use half
+                //}
 
                 if (algoSettings.ContainsKey(MinerBaseType.ccminer_alexis)) {
                     foreach (var unstable_algo in algoSettings[MinerBaseType.ccminer_alexis]) {
