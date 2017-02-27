@@ -829,7 +829,9 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin-223600\Tonga_round6.bin",
 @"\optiminer_zcash_win\bin-223600\Tonga_round7.bin",
 @"\optiminer_zcash_win\bin-223600\Tonga_round8.bin",
-@"\optiminer_zcash_win\bin-223600\Tonga_round9.bin"
+@"\optiminer_zcash_win\bin-223600\Tonga_round9.bin",
+
+@"\claymore_dual\EthDcrMiner64.exe",
 };
         #endregion //CODE_GEN STUFF // listFiles.py
     }
