@@ -187,6 +187,7 @@ namespace NiceHashMiner.Miners {
         public XmrStackCPUMiner()
             : base("XmrStackCPUMiner") {
             this.ConectionType = NHMConectionType.NONE;
+            IsNeverHideMiningWindow = true;
         }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {

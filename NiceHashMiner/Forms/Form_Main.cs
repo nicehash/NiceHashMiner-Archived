@@ -59,6 +59,7 @@ namespace NiceHashMiner
         private bool IsMining = false;
 
         int MainFormHeight = 0;
+        int EmtpyGroupPanelHeight = 0;
 
         public Form_Main()
         {
@@ -89,6 +90,14 @@ namespace NiceHashMiner
 
             // for resizing
             InitFlowPanelStart();
+
+            if (groupBox1.Size.Height > 0 && this.Size.Height > 0) {
+                EmtpyGroupPanelHeight = groupBox1.Size.Height;
+                MainFormHeight = this.Size.Height - EmtpyGroupPanelHeight;
+            } else {
+                EmtpyGroupPanelHeight = 59;
+                MainFormHeight = 330 - EmtpyGroupPanelHeight;
+            }
             ClearRatesALL();
         }
 
@@ -452,7 +461,6 @@ namespace NiceHashMiner
         }
 
         public void ClearRates(int groupCount) {
-            float panelHeight = -1;
             if (flowLayoutPanelVisibleCount != groupCount) {
                 flowLayoutPanelVisibleCount = groupCount;
                 // hide some Controls
@@ -463,21 +471,19 @@ namespace NiceHashMiner
                 }
             }
             flowLayoutPanelRatesIndex = 0;
-            int visibleGroupCount = groupCount + 1;
-            if (visibleGroupCount <= 0) visibleGroupCount = 1;
-            if (panelHeight <= 0) {
-                if (flowLayoutPanelRates.Controls != null && flowLayoutPanelRates.Controls.Count > 0) {
-                    var control = flowLayoutPanelRates.Controls[0];
-                    panelHeight = ((GroupProfitControl)control).Size.Height * 1.2f;
-                } else {
-                    panelHeight = 40;
-                }
+            int visibleGroupCount = 1;
+            if (groupCount > 0) visibleGroupCount += groupCount;
+
+            int groupBox1Height = EmtpyGroupPanelHeight;
+            if (flowLayoutPanelRates.Controls != null && flowLayoutPanelRates.Controls.Count > 0) {
+                var control = flowLayoutPanelRates.Controls[0];
+                float panelHeight = ((GroupProfitControl)control).Size.Height * 1.2f;
+                groupBox1Height = (int)((visibleGroupCount) * panelHeight);
             }
 
-            var oldHeight = groupBox1.Size.Height;
-            groupBox1.Size = new Size(groupBox1.Size.Width, (int)( (visibleGroupCount) * panelHeight ));
+            groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1Height);
             // set new height
-            this.Size = new Size(this.Size.Width, this.Size.Height + groupBox1.Size.Height - oldHeight);
+            this.Size = new Size(this.Size.Width, MainFormHeight + groupBox1Height);
         }
 
         public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException) {
