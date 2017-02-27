@@ -483,7 +483,13 @@ namespace NiceHashMiner
             }
         }
 
-        protected void BenchmarkThreadRoutineFinish(BenchmarkProcessStatus status) {
+        protected void BenchmarkThreadRoutineFinish() {
+            BenchmarkProcessStatus status = BenchmarkProcessStatus.Finished;
+
+            if (BenchmarkAlgorithm.BenchmarkSpeed > 0) {
+                status = BenchmarkProcessStatus.Success;
+            }
+
             using (StreamWriter sw = File.AppendText(benchmarkLogPath)) {
                 foreach (var line in bench_lines) {
                     sw.WriteLine(line);
@@ -494,7 +500,7 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;
-                BenchmarkComunicator.OnBenchmarkComplete(true, "Success");
+                BenchmarkComunicator.OnBenchmarkComplete(BenchmarkProcessStatus.Success == status, "Success");
             }
         }
 
@@ -535,7 +541,7 @@ namespace NiceHashMiner
             } catch (Exception ex) {
                 BenchmarkThreadRoutineCatch(ex);
             } finally {
-                BenchmarkThreadRoutineFinish(BenchmarkProcessStatus.Success);
+                BenchmarkThreadRoutineFinish();
             }
         }
 

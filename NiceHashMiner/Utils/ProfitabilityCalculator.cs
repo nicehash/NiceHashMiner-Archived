@@ -41,7 +41,8 @@ namespace NiceHashMiner {
             { AlgorithmType.CryptoNight ,                   kHs },
             { AlgorithmType.Lbry ,                          GHs },
             { AlgorithmType.Equihash ,                      1 }, // Sols /s
-            { AlgorithmType.Pascal ,                        GHs }, // Sols /s
+            { AlgorithmType.Pascal ,                        GHs }, 
+            { AlgorithmType.X11Gost ,                       MHs }, 
         };
 
         public static double GetFormatedSpeed(double speed, AlgorithmType type) {

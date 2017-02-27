@@ -105,6 +105,14 @@ namespace NiceHashMiner.Devices {
                                     }
                                 }
                             }
+                            if (algoSettings.ContainsKey(MinerBaseType.sgminer)) {
+                                foreach (var algo in algoSettings[MinerBaseType.sgminer]) {
+                                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto) {
+                                        algo.Enabled = false;
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     } // END AMD case
 
@@ -182,15 +190,16 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod") { ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2" }
                         }
                     },
-                    { MinerBaseType.ethminer,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto")
-                        }
-                    },
+                    //{ MinerBaseType.ethminer,
+                    //    new List<Algorithm>() {
+                    //        new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto")
+                    //    }
+                    //},
                     { MinerBaseType.ClaymoreAMD,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.CryptoNight, "cryptonight"),  /*, { ExtraLaunchParameters: "-a 4" }*/
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.Equihash, "equihash")
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.Equihash, "equihash"),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "")
                         }
                     },
                     { MinerBaseType.OptiminerAMD,

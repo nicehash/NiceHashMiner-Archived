@@ -190,7 +190,40 @@ namespace NiceHashMiner.Miners.Parsing {
                 },
                 new List<MinerOption>()
             ),
-            
+            new MinerOptionPackage(
+                MinerType.ClaymoreDual,
+                new List<MinerOption>() {
+                    new MinerOption("ClaymoreDual_etha"      , "-etha", "-etha", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ClaymoreDual_ethi"      , "-ethi", "-ethi", "8", MinerOptionFlagType.MultiParam, ","), 
+
+                    new MinerOption("ClaymoreDual_eres"      , "-eres", "-eres", "2", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_erate"     , "-erate", "-erate", "1", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_estale"    , "-estale", "-estale", "1", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_gser"      , "-gser", "-gser", "0", MinerOptionFlagType.SingleParam, ","),
+
+                    new MinerOption("ClaymoreDual_wd"        , "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_retrydelay"  , "-retrydelay", "-retrydelay", "20", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_nofee"  , "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_li"     , "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ClaymoreDual_lidag"     , "-lidag", "-lidag", "0", MinerOptionFlagType.MultiParam, ","),
+                                    
+                    //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
+                    new MinerOption("ClaymoreDual_cclock" , "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ClaymoreDual_mclock" , "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ClaymoreDual_powlim" , "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ClaymoreDual_cvddc"  , "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ClaymoreDual_mvddc"  , "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
+                },
+                new List<MinerOption>() {
+                    // temperature stuff
+                    //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
+                    new MinerOption("ClaymoreDual_tt"     , "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","), 
+                    new MinerOption("ClaymoreDual_ttli"   , "-ttli", "-ttli", "70", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_tstop"  , "-tstop", "-tstop", "0", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_fanmax" , "-fanmax", "-fanmax", "100", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ClaymoreDual_fanmin" , "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
+                }
+            ),
         };
 
         private static List<MinerOptionPackage> MinerOptionPackages = new List<MinerOptionPackage>();

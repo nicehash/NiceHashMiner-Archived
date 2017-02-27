@@ -22,6 +22,8 @@ namespace NiceHashMiner.Miners {
                 return new ClaymoreZcashMiner(/*minersConfig*/);
             } else if (AlgorithmType.CryptoNight == algorithmType) {
                 return new ClaymoreCryptoNightMiner(/*minersConfig*/);
+            } else if (AlgorithmType.DaggerHashimoto == algorithmType) {
+                return new ClaymoreDual(/*minersConfig*/);
             }
             return null;
         }

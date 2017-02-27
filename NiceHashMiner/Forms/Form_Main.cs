@@ -58,6 +58,8 @@ namespace NiceHashMiner
         private bool IsManuallyStarted = false;
         private bool IsMining = false;
 
+        int MainFormHeight = 0;
+
         public Form_Main()
         {
             InitializeComponent();
@@ -135,6 +137,7 @@ namespace NiceHashMiner
             CurrencyConverter.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             toolStripStatusLabelBalanceDollarValue.Text = "(" + CurrencyConverter.ActiveDisplayCurrency + ")";
+            toolStripStatusLabelBalanceText.Text = (CurrencyConverter.ActiveDisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("Form_Main_balance") + ":";
             BalanceCheck_Tick(null, null); // update currency changes
 
             if (_isDeviceDetectionInitialized) {

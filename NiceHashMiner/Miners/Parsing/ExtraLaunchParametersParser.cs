@@ -233,6 +233,9 @@ namespace NiceHashMiner.Miners.Parsing {
                 if (AlgorithmType.Equihash == algorithmType) {
                     return MinerType.ClaymoreZcash;
                 }
+                if (AlgorithmType.DaggerHashimoto == algorithmType) {
+                    return MinerType.ClaymoreDual;
+                }
             }
             if (MinerBaseType.ethminer == minerBaseType) {
                 if(DeviceType.AMD == deviceType) {

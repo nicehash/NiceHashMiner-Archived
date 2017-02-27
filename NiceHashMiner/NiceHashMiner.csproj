@@ -80,7 +80,9 @@
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
-    <Compile Include="AlgorithmNiceHashNames.cs" />
+    <Compile Include="Enums\XmrStackCPUMinerConfigType.cs" />
+    <Compile Include="Miners\ClaymoreDual.cs" />
+    <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
     <Compile Include="Configs\Data\AlgorithmConfig.cs" />
@@ -195,8 +197,8 @@
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="International.cs" />
-    <Compile Include="Links.cs" />
-    <Compile Include="MemoryHelper.cs" />
+    <Compile Include="Utils\Links.cs" />
+    <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
     <Compile Include="Miners\ClaymoreCryptoNightMiner.cs" />
     <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
@@ -231,7 +233,7 @@
     <Compile Include="Net20_backport\Tuple.cs" />
     <Compile Include="Net20_backport\Tuple3.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
-    <Compile Include="BitcoinAddress.cs" />
+    <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Bitcoin.cs" />
     <Compile Include="Miners\ccminer.cs" />
     <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
@@ -240,8 +242,8 @@
     <Compile Include="Forms\DriverVersionConfirmationDialog.Designer.cs">
       <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Ethereum.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Miners\ethminer\Ethereum.cs" />
+    <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
     <Compile Include="Miners\cpuminer.cs" />
     <Compile Include="Forms\Form_Main.cs">
@@ -256,7 +258,7 @@
     <Compile Include="Forms\Form_Loading.Designer.cs">
       <DependentUpon>Form_Loading.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers.cs" />
+    <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />
     <Compile Include="Forms\MinerFileNotFoundDialog.cs">
       <SubType>Form</SubType>
@@ -266,11 +268,11 @@
     </Compile>
     <Compile Include="NiceHashStats.cs" />
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
-    <Compile Include="ProfitabilityCalculator.cs" />
+    <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Miners\sgminer.cs" />
-    <Compile Include="TextBoxKeyPressEvents.cs" />
+    <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />

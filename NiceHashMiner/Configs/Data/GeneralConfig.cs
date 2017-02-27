@@ -25,7 +25,7 @@ namespace NiceHashMiner.Configs.Data {
         public int SwitchMinSecondsFixed = 90;
         public int SwitchMinSecondsDynamic = 30;
         public int SwitchMinSecondsAMD = 60;
-        public double SwitchProfitabilityThreshold = 0.02; // percent
+        public double SwitchProfitabilityThreshold = 0.05; // percent
         public int MinerAPIQueryInterval = 5;
         public int MinerRestartDelayMS = 500;
 
@@ -97,6 +97,7 @@ namespace NiceHashMiner.Configs.Data {
             SwitchMinSecondsFixed = 90;
             SwitchMinSecondsDynamic = 30;
             SwitchMinSecondsAMD = 90;
+            SwitchProfitabilityThreshold = 0.05; // percent
             MinIdleSeconds = 60;
             DisplayCurrency = "USD";
             ApiBindPortPoolStart = 4000;

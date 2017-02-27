@@ -20,8 +20,11 @@ namespace NiceHashMiner.Miners {
         int benchmark_read_count = 0;
         double benchmark_sum = 0.0d;
         protected readonly string LOOK_FOR_START;
-        const string LOOK_FOR_END = " h/s";
+        const string LOOK_FOR_END = "h/s";
 
+        // only dagger change
+        protected bool ignoreZero = false;
+        protected double api_read_mult = 1;
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
@@ -83,6 +86,7 @@ namespace NiceHashMiner.Miners {
                         }
                         ad.Speed += tmpSpeed;
                     }
+                    ad.Speed *= api_read_mult;
                     _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                 }
                 if (ad.Speed == 0) {
@@ -186,7 +190,6 @@ namespace NiceHashMiner.Miners {
                 BenchmarkThreadRoutineCatch(ex);
             } finally {
                 BenchmarkAlgorithm.BenchmarkSpeed = 0;
-                var status = BenchmarkProcessStatus.Finished;
                 // find latest log file
                 string latestLogFile = "";
                 var dirInfo = new DirectoryInfo(this.WorkingDirectory);
@@ -203,17 +206,24 @@ namespace NiceHashMiner.Miners {
                             bench_lines.Add(line);
                             string lineLowered = line.ToLower();
                             if (lineLowered.Contains(LOOK_FOR_START)) {
-                                benchmark_sum += getNumber(lineLowered);
-                                ++benchmark_read_count;
+                                if (ignoreZero) {
+                                    double got = getNumber(lineLowered);
+                                    if (got != 0) {
+                                        benchmark_sum += got;
+                                        ++benchmark_read_count;
+                                    }
+                                } else {
+                                    benchmark_sum += getNumber(lineLowered);
+                                    ++benchmark_read_count;
+                                }
                             }
                         }
                     }
                     if (benchmark_read_count > 0) {
                         BenchmarkAlgorithm.BenchmarkSpeed = benchmark_sum / benchmark_read_count;
-                        status = BenchmarkProcessStatus.Success;
                     }
                 }
-                BenchmarkThreadRoutineFinish(status);
+                BenchmarkThreadRoutineFinish();
             }
         }
 
@@ -248,12 +258,22 @@ namespace NiceHashMiner.Miners {
 
         protected double getNumber(string outdata, string LOOK_FOR_START, string LOOK_FOR_END) {
             try {
+                double mult = 1; 
                 int speedStart = outdata.IndexOf(LOOK_FOR_START);
                 string speed = outdata.Substring(speedStart, outdata.Length - speedStart);
                 speed = speed.Replace(LOOK_FOR_START, "");
                 speed = speed.Substring(0, speed.IndexOf(LOOK_FOR_END));
+
+                if (speed.Contains("k")) {
+                    mult = 1000;
+                    speed = speed.Replace("k", "");
+                } else if (speed.Contains("m")) {
+                    mult = 1000000;
+                    speed = speed.Replace("m", "");
+                }
+                //Helpers.ConsolePrint("speed", speed);
                 speed = speed.Trim();
-                return Double.Parse(speed, CultureInfo.InvariantCulture);
+                return Double.Parse(speed, CultureInfo.InvariantCulture) * mult;
             } catch (Exception ex) {
                 Helpers.ConsolePrint("getNumber", ex.Message + " | args => " + outdata + " | " + LOOK_FOR_END + " | " + LOOK_FOR_START);
             }

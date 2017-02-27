@@ -138,19 +138,19 @@ namespace NiceHashMiner.Forms.Components {
         }
         #endregion
 
-        private void buttonBenchmark_Click(object sender, EventArgs e) {
-            var device = new List<ComputeDevice>();
-            device.Add(_computeDevice);
-            var BenchmarkForm = new Form_Benchmark(
-                        BenchmarkPerformanceType.Standard,
-                        false, _currentlySelectedAlgorithm.NiceHashID);
-            BenchmarkForm.ShowDialog();
-            fieldBoxBenchmarkSpeed.EntryText = _currentlySelectedAlgorithm.BenchmarkSpeed.ToString();
-            // update lvi speed
-            if (_currentlySelectedLvi != null) {
-                _currentlySelectedLvi.SubItems[2].Text = Helpers.FormatSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed);
-            }
-        }
+        //private void buttonBenchmark_Click(object sender, EventArgs e) {
+        //    var device = new List<ComputeDevice>();
+        //    device.Add(_computeDevice);
+        //    var BenchmarkForm = new Form_Benchmark(
+        //                BenchmarkPerformanceType.Standard,
+        //                false, _currentlySelectedAlgorithm.NiceHashID);
+        //    BenchmarkForm.ShowDialog();
+        //    fieldBoxBenchmarkSpeed.EntryText = _currentlySelectedAlgorithm.BenchmarkSpeed.ToString();
+        //    // update lvi speed
+        //    if (_currentlySelectedLvi != null) {
+        //        _currentlySelectedLvi.SubItems[2].Text = Helpers.FormatSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed);
+        //    }
+        //}
 
     }
 }

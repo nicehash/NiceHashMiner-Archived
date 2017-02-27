@@ -24,7 +24,7 @@ namespace NiceHashMiner.Miners {
         
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
-            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -zpool " + url + " -zwal " + username + " -zpsw x -dbg -1";
+            LastCommandLine = " " + GetDevicesCommandString() + " -mport 127.0.0.1:" + APIPort + " -zpool " + url + " -zwal " + username + " -zpsw x -dbg -1";
             ProcessHandle = _Start();
         }
 
@@ -35,7 +35,7 @@ namespace NiceHashMiner.Miners {
             //benchmarkTimeWait = time / 3; // 3 times faster than sgminer
             //benchmarkTimeWait = 30; // when debugging
 
-            string ret =  " -benchmark 1 " + GetDevicesCommandString();
+            string ret =  " -mport 127.0.0.1:" + APIPort + " -benchmark 1 " + GetDevicesCommandString();
             return ret;
         }
     }

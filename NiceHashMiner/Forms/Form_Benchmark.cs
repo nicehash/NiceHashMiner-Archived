@@ -27,7 +27,7 @@ namespace NiceHashMiner.Forms {
         private List<Tuple<ComputeDevice, Queue<Algorithm>>> _benchmarkDevicesAlgorithmQueue;
 
         private bool ExitWhenFinished = false;
-        private AlgorithmType _singleBenchmarkType = AlgorithmType.NONE;
+        //private AlgorithmType _singleBenchmarkType = AlgorithmType.NONE;
 
         private Timer _benchmarkingTimer;
         private int dotCount = 0;
@@ -97,15 +97,12 @@ namespace NiceHashMiner.Forms {
         }
 
         public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
-            bool autostart = false,
-            //List<ComputeDevice> enabledDevices = null,
-            AlgorithmType singleBenchmarkType = AlgorithmType.NONE) {
+            bool autostart = false) {
             
             InitializeComponent();
             this.Icon = NiceHashMiner.Properties.Resources.logo;
 
             StartMining = false;
-            _singleBenchmarkType = singleBenchmarkType;
 
             benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
             
@@ -122,23 +119,23 @@ namespace NiceHashMiner.Forms {
             _benchmarkingTimer.Tick += BenchmarkingTimer_Tick;
             _benchmarkingTimer.Interval = 1000; // 1s
 
-            // name, UUID
-            Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
-            // initialize benchmark settings for same cards to only copy settings
-            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                var plainDevName = cDev.Name;
-                if (benchNamesUUIDs.ContainsKey(plainDevName)) {
-                    cDev.Enabled = false;
-                    cDev.BenchmarkCopyUUID = benchNamesUUIDs[plainDevName];
-                } else {
-                    benchNamesUUIDs.Add(plainDevName, cDev.UUID);
-                    cDev.Enabled = true; // enable benchmark
-                    cDev.BenchmarkCopyUUID = null;
-                }
-            }
+            //// name, UUID
+            //Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
+            //// initialize benchmark settings for same cards to only copy settings
+            //foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+            //    var plainDevName = cDev.Name;
+            //    if (benchNamesUUIDs.ContainsKey(plainDevName)) {
+            //        cDev.Enabled = false;
+            //        cDev.BenchmarkCopyUUID = benchNamesUUIDs[plainDevName];
+            //    } else if (cDev.Enabled == true) {
+            //        benchNamesUUIDs.Add(plainDevName, cDev.UUID);
+            //        //cDev.Enabled = true; // enable benchmark
+            //        cDev.BenchmarkCopyUUID = null;
+            //    }
+            //}
 
             //groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
-            devicesListViewEnableControl1.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
+            devicesListViewEnableControl1.Enabled = true;
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
 
             devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
@@ -319,21 +316,14 @@ namespace NiceHashMiner.Forms {
             _benchmarkDevicesAlgorithmQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 var algorithmQueue = new Queue<Algorithm>();
-                if (_singleBenchmarkType == AlgorithmType.NONE) {
-                    foreach (var algo in cDev.GetAlgorithmSettings()) {
-                        if (ShoulBenchmark(algo)) {
-                            algorithmQueue.Enqueue(algo);
-                            algo.SetBenchmarkPendingNoMsg();
-                        } else {
-                            algo.ClearBenchmarkPending();
-                        }
+                foreach (var algo in cDev.GetAlgorithmSettings()) {
+                    if (ShoulBenchmark(algo)) {
+                        algorithmQueue.Enqueue(algo);
+                        algo.SetBenchmarkPendingNoMsg();
+                    } else {
+                        algo.ClearBenchmarkPending();
                     }
                 }
-                // NOT USED for a while now
-                //else { // single bench
-                //    var algo = cDev.AlgorithmSettings[_singleBenchmarkType];
-                //    algorithmQueue.Enqueue(algo);
-                //}
                 
 
                 BenchmarkSettingsStatus status;
@@ -405,7 +395,7 @@ namespace NiceHashMiner.Forms {
 
             if (_currentDevice != null && _currentAlgorithm != null) {
                 _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.cpuminer && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
                     __CPUBenchmarkStatus = new CPUBenchmarkStatus();
                     _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
                 } else {
@@ -490,7 +480,7 @@ namespace NiceHashMiner.Forms {
             this.Invoke((MethodInvoker)delegate {
                 _bechmarkedSuccessCount += success ? 1 : 0;
                 bool rebenchSame = false;
-                if(success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID) && _currentAlgorithm.MinerBaseType == MinerBaseType.cpuminer) {
+                if(success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID) && _currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU) {
                     if (__CPUBenchmarkStatus.HasAlreadyBenchmarked && __CPUBenchmarkStatus.BenchmarkSpeed > _currentAlgorithm.BenchmarkSpeed) {
                         rebenchSame = false;
                         _currentAlgorithm.BenchmarkSpeed = __CPUBenchmarkStatus.BenchmarkSpeed;

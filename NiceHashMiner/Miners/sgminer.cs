@@ -262,7 +262,7 @@ namespace NiceHashMiner.Miners
             } catch (Exception ex) {
                 BenchmarkThreadRoutineCatch(ex);
             } finally {
-                BenchmarkThreadRoutineFinish(BenchmarkProcessStatus.Success);
+                BenchmarkThreadRoutineFinish();
             }
         }
 

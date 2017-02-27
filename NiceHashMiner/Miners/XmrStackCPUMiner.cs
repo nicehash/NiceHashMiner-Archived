@@ -5,6 +5,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
@@ -192,21 +193,27 @@ namespace NiceHashMiner.Miners {
             return 3600000; // 1hour
         }
 
+
+        private string GetConfigFileName() {
+            return String.Format("config_{0}.txt", this.MiningSetup.MiningPairs[0].Device.ID);
+        }
+
         private void prepareConfigFile(string pool, string wallet) {
             if (this.MiningSetup.MiningPairs.Count > 0) {
                 try {
                     int numTr = ExtraLaunchParametersParser.GetThreadsNumber(this.MiningSetup.MiningPairs[0]);
-                    if (ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled) {
-                        numTr /= 2;
-                    }
+                    //if (ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled) {
+                    //    numTr /= 2;
+                    //}
                     var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.APIPort);
-                    config.Inti_cpu_threads_conf(false, false, true, ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled);
+                    //config.Inti_cpu_threads_conf(false, false, true, ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled);
+                    config.Inti_cpu_threads_conf(false, false, false, false);
                     var confJson = JObject.FromObject(config);
                     string writeStr = confJson.ToString();
                     int start = writeStr.IndexOf("{");
                     int end = writeStr.LastIndexOf("}");
                     writeStr = writeStr.Substring(start + 1, end - 1);
-                    System.IO.File.WriteAllText(WorkingDirectory + "config.txt", writeStr);
+                    System.IO.File.WriteAllText(WorkingDirectory + GetConfigFileName(), writeStr);
                 } catch {
                 }
             }
@@ -257,18 +264,38 @@ namespace NiceHashMiner.Miners {
                 return;
             }
             string username = GetUsername(btcAdress, worker);
-            LastCommandLine = "config.txt";
+            LastCommandLine = GetConfigFileName();
 
             prepareConfigFile(url, username);
 
             ProcessHandle = _Start();
         }
 
+        protected override NiceHashProcess _Start() {
+            NiceHashProcess P = base._Start();
+
+            var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
+            if (AffinityMask != 0 && P != null)
+                CPUID.AdjustAffinity(P.Id, AffinityMask);
+
+            return P;
+        }
+
         // doesn't work stubs
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             prepareConfigFile(url, Globals.DemoUser);
-            return "benchmark_mode config.txt";
+            return "benchmark_mode " + GetConfigFileName();
+        }
+
+        protected override Process BenchmarkStartProcess(string CommandLine) {
+            Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
+
+            var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
+            if (AffinityMask != 0 && BenchmarkHandle != null)
+                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
+
+            return BenchmarkHandle;
         }
 
         protected override bool BenchmarkParseLine(string outdata) {

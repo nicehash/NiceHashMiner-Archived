@@ -43,10 +43,6 @@ namespace NiceHashMiner.Miners.Grouping
             /// <summary>
             /// sgminers
             /// </summary>
-            //public const string sgminer_5_1_0_optimized = _bin + @"\sgminer-5-1-0-optimized\sgminer.exe";
-            ////public const string sgminer_5_1_1_optimized =   _bin + @"\sgminer-5-1-1-optimized\sgminer.exe";
-            //public const string sgminer_5_4_0_tweaked = _bin + @"\sgminer-5-4-0-tweaked\sgminer.exe";
-
             public const string sgminer_5_6_0_general = _bin + @"\sgminer-5-6-0-general\sgminer.exe";
             public const string sgminer_gm = _bin + @"\sgminer-gm\sgminer.exe";
 
@@ -70,6 +66,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ClaymoreZcashMiner = _bin_3rdparty + @"\claymore_zcash\ZecMiner64.exe";
             public const string ClaymoreCryptoNightMiner = _bin_3rdparty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
             public const string OptiminerZcashMiner = _bin_3rdparty + @"\optiminer_zcash_win\Optiminer.exe";
+            public const string ClaymoreDual = _bin_3rdparty + @"\claymore_dual\EthDcrMiner64.exe";
         }
 
         // NEW START
@@ -221,6 +218,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.ClaymoreZcashMiner;
                 } else if(AlgorithmType.CryptoNight == type) {
                     return Data.ClaymoreCryptoNightMiner;
+                } else if (AlgorithmType.DaggerHashimoto == type) {
+                    return Data.ClaymoreDual;
                 }
                 return Data.NONE; // should not happen
             }

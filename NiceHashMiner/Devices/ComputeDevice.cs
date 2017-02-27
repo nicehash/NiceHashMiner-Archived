@@ -133,13 +133,13 @@ namespace NiceHashMiner.Devices
             return null;
         }
 
-        public Algorithm GetAlgorithm(string algoID) {
-            int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.AlgorithmStringID == algoID);
-            if (toSetIndex > -1) {
-                return this.AlgorithmSettings[toSetIndex];
-            }
-            return null;
-        }
+        //public Algorithm GetAlgorithm(string algoID) {
+        //    int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.AlgorithmStringID == algoID);
+        //    if (toSetIndex > -1) {
+        //        return this.AlgorithmSettings[toSetIndex];
+        //    }
+        //    return null;
+        //}
 
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings) {
