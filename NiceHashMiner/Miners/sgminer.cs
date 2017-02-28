@@ -20,8 +20,6 @@ namespace NiceHashMiner.Miners
     class sgminer : Miner
     {
         private readonly int GPUPlatformNumber;
-        // benchmark helper variables
-        bool _benchmarkOnce = true;
         Stopwatch _benchmarkTimer = new Stopwatch();
 
         public sgminer()
@@ -194,12 +192,11 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
-            if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTimeInSeconds + 1 && _benchmarkOnce == true) {
-                _benchmarkOnce = false;
+            if (_benchmarkTimer.Elapsed.Seconds >= BenchmarkTimeInSeconds) {
                 string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
                 Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
             }
-            if (_benchmarkTimer.Elapsed.Minutes >= BenchmarkTimeInSeconds + 2) {
+            if (_benchmarkTimer.Elapsed.Seconds >= BenchmarkTimeInSeconds + 2) {
                 _benchmarkTimer.Stop();
                 // this is safe in a benchmark
                 KillSGMiner();
