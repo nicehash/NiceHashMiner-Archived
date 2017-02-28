@@ -26,7 +26,7 @@ namespace NiceHashMiner.Miners {
             }
             return " "
                 + GetDevicesCommandString()
-                + String.Format("-epool {0} -ewal {1} -mport -{2} -eworker {3} -esm 3 -epsw x -mode 1 -allpools 1", url, btcAdress, APIPort, useWorker);
+                + String.Format("  -epool {0} -ewal {1} -mport -{2} -eworker {3} -esm 3 -epsw x -mode 1 -allpools 1", url, btcAdress, APIPort, useWorker);
         }
 
         public override void Start(string url, string btcAdress, string worker) {
