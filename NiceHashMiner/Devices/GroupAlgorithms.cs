@@ -57,7 +57,7 @@ namespace NiceHashMiner.Devices {
 
                         // check if 3rd party is enabled and allow 3rd party only algos
                         if (algoSettings.ContainsKey(MinerBaseType.ClaymoreAMD)) {
-                            var ClaymoreAlgos = algoSettings[MinerBaseType.sgminer];
+                            var ClaymoreAlgos = algoSettings[MinerBaseType.ClaymoreAMD];
                             int CryptoNight_Index = ClaymoreAlgos.FindIndex((el) => el.NiceHashID == AlgorithmType.CryptoNight);
                             if (CryptoNight_Index > -1) {
                                 //string regex_a_3 = "[5|6][0-9][0-9][0-9]";

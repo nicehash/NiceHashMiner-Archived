@@ -61,6 +61,55 @@ namespace NiceHashMiner.Forms {
         }
         private CPUBenchmarkStatus __CPUBenchmarkStatus = null;
 
+        private class ClaymoreZcashStatus {
+            private const int MAX_BENCH = 2;
+            private readonly string[] ASM_MODES = new string[] { " -asm 0", " -asm 1" };
+
+            private double[] speeds = new double[] { 0.0d, 0.0d };
+            private int CurIndex = 0;
+            private readonly string originalExtraParams;
+
+            public ClaymoreZcashStatus(string oep) {
+                originalExtraParams = oep;
+            }
+
+            public bool HasTest() {
+                return CurIndex < MAX_BENCH;
+            }
+
+            public void SetSpeed(double speed) {
+                if (HasTest()) {
+                    speeds[CurIndex] = speed;
+                }
+            }
+
+            public void SetNext() {
+                CurIndex += 1;
+            }
+
+            public string GetTestExtraParams() {
+                if (HasTest()) {
+                    return originalExtraParams + ASM_MODES[CurIndex];
+                }
+                return originalExtraParams;
+            }
+
+            private int FastestIndex() {
+                if (speeds[1] > speeds[0]) {
+                    return 1;
+                }
+                return 0;
+            }
+
+            public string GetFastestExtraParams() {
+                return originalExtraParams + ASM_MODES[FastestIndex()];
+            }
+            public double GetFastestTime() {
+                return speeds[FastestIndex()];
+            }
+        }
+        private ClaymoreZcashStatus __ClaymoreZcashStatus = null;
+
         // CPU sweet spots
         private List<AlgorithmType> CPUAlgos = new List<AlgorithmType>() {
             AlgorithmType.CryptoNight
@@ -401,6 +450,12 @@ namespace NiceHashMiner.Forms {
                 } else {
                     __CPUBenchmarkStatus = null;
                 }
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.ClaymoreAMD && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash && _currentAlgorithm.ExtraLaunchParameters != null && !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm")) {
+                    __ClaymoreZcashStatus = new ClaymoreZcashStatus(_currentAlgorithm.ExtraLaunchParameters);
+                    _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();
+                } else {
+                    __ClaymoreZcashStatus = null;
+                }
             }
 
             if (_currentMiner != null && _currentAlgorithm != null) {
@@ -498,6 +553,24 @@ namespace NiceHashMiner.Forms {
                     }
                 }
 
+                if (__ClaymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.ClaymoreAMD && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash) {
+                    if (__ClaymoreZcashStatus.HasTest()) {
+                        rebenchSame = true;
+                        __ClaymoreZcashStatus.SetSpeed(_currentAlgorithm.BenchmarkSpeed);
+                        __ClaymoreZcashStatus.SetNext();
+                        _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();
+                        Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
+                        _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
+                    }
+
+                    if (__ClaymoreZcashStatus.HasTest() == false) {
+                        rebenchSame = false;
+                        // set fastest mode
+                        _currentAlgorithm.BenchmarkSpeed = __ClaymoreZcashStatus.GetFastestTime();
+                        _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetFastestExtraParams();
+                    }
+                }
+
                 if(!rebenchSame) {
                     _benchmarkingTimer.Stop();
                 }
@@ -516,7 +589,11 @@ namespace NiceHashMiner.Forms {
                     algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, "");
                 }
                 if (rebenchSame) {
-                    _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
+                    if (__CPUBenchmarkStatus != null) {
+                        _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
+                    } else if (__ClaymoreZcashStatus != null) {
+                        _currentMiner.BenchmarkStart(45, this);
+                    }
                 } else {
                     NextBenchmark();
                 }
