@@ -348,6 +348,7 @@ namespace NiceHashMiner
             BenchmarkHandle.StartInfo.CreateNoWindow = true;
             BenchmarkHandle.OutputDataReceived += BenchmarkOutputErrorDataReceived;
             BenchmarkHandle.ErrorDataReceived += BenchmarkOutputErrorDataReceived;
+            BenchmarkHandle.Exited += BenchmarkHandle_Exited;
 
             if (!BenchmarkHandle.Start()) return null;
 
@@ -357,6 +358,10 @@ namespace NiceHashMiner
             _allPidData.Add(_currentPidData);
 
             return BenchmarkHandle;
+        }
+
+        void BenchmarkHandle_Exited(object sender, EventArgs e) {
+            BenchmarkSignalFinnished = true;
         }
 
         private void BenchmarkOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
