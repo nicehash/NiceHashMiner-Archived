@@ -15,8 +15,7 @@ using System.Threading;
 
 namespace NiceHashMiner.Miners {
     public abstract class ClaymoreBaseMiner : Miner {
-
-        const int benchmarkTimeWait = 45; // if this is larger then welcome to hell!!! keep this fixed
+        
         int benchmark_read_count = 0;
         double benchmark_sum = 0.0d;
         protected readonly string LOOK_FOR_START;
@@ -25,6 +24,7 @@ namespace NiceHashMiner.Miners {
         // only dagger change
         protected bool ignoreZero = false;
         protected double api_read_mult = 1;
+        protected int benchmarkTimeWait = 45;
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
@@ -156,7 +156,7 @@ namespace NiceHashMiner.Miners {
                     //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
                     //BenchmarkOutputErrorDataReceivedImpl(outdata);
                     // terminate process situations
-                    if (_benchmarkTimer.Elapsed.Seconds >= (benchmarkTimeWait + 2)
+                    if (_benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 2)
                         || BenchmarkSignalQuit
                         || BenchmarkSignalFinnished
                         || BenchmarkSignalHanged
