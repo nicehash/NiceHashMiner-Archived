@@ -305,7 +305,7 @@ namespace NiceHashMiner.Miners {
                 var strings = toParse.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var s in strings) {
                     double lastSpeed = 0;
-                    if (double.TryParse(s, out lastSpeed)) {
+                    if (double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out lastSpeed)) {
                         BenchmarkAlgorithm.BenchmarkSpeed = Helpers.ParseDouble(s);
                         return true;
                     }
