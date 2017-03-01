@@ -60,6 +60,7 @@ namespace NiceHashMiner.Miners.Parsing {
                     new MinerOption("GpuThreads", "-g", "--gpu-threads", "1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("LookupGap", "", "--lookup-gap", "-1", MinerOptionFlagType.MultiParam, ","), // default none
                     // Uni
+                    new MinerOption("RemoveDisabled", "--remove-disabled", "--remove-disabled", "", MinerOptionFlagType.Uni, ""), // default none
                 },
                 // TemperatureOptions
                 new List<MinerOption>() {

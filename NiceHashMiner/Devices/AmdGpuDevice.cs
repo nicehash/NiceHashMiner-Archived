@@ -6,9 +6,9 @@ namespace NiceHashMiner.Devices {
     [Serializable]
     public class AmdGpuDevice {
 
-        public static readonly string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 ";
-        public static readonly string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90" +
-                                        " --temp-target 75 --auto-fan --auto-gpu";
+        public static readonly string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 --remove-disabled  ";
+        public static readonly string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " +
+                                        " --temp-target 75 --auto-fan --auto-gpu ";
 
         public int DeviceID { get { return (int)_openClSubset.DeviceID; } }
         public string DeviceName; // init this with the ADL
