@@ -204,7 +204,8 @@ namespace NiceHashMiner
         }
         public static double ParseDouble(string text) {
             try {
-                return Double.Parse(text, CultureInfo.InvariantCulture);
+                string parseText = text.Replace(',', '.');
+                return Double.Parse(parseText, CultureInfo.InvariantCulture);
             } catch {
                 return 0;
             }
