@@ -15,6 +15,10 @@ namespace NiceHashMiner.Miners {
             ConectionType = NHMConectionType.STRATUM_TCP;
         }
 
+        protected override double DevFee() {
+            return 1.0;
+        }
+
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
         }

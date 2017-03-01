@@ -20,7 +20,7 @@ namespace NiceHashMiner {
         public static bool IsEllesmereSgminerIgnore = true;
 
         // change this if TOS changes
-        public static int CURRENT_TOS_VER = 1;
+        public static int CURRENT_TOS_VER = 2;
 
         public static string GetLocationURL(AlgorithmType AlgorithmType, string miningLocation, NHMConectionType ConectionType) {
             if (Globals.NiceHashData != null && Globals.NiceHashData.ContainsKey(AlgorithmType)) {

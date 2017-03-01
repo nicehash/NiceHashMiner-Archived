@@ -33,6 +33,8 @@ namespace NiceHashMiner.Miners {
             IsKillAllUsedMinerProcs = true;
         }
 
+        protected abstract double DevFee();
+
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
         }
@@ -273,7 +275,7 @@ namespace NiceHashMiner.Miners {
                 }
                 //Helpers.ConsolePrint("speed", speed);
                 speed = speed.Trim();
-                return Double.Parse(speed, CultureInfo.InvariantCulture) * mult;
+                return (Double.Parse(speed, CultureInfo.InvariantCulture) * mult) * (1.0 - DevFee() * 0.01);
             } catch (Exception ex) {
                 Helpers.ConsolePrint("getNumber", ex.Message + " | args => " + outdata + " | " + LOOK_FOR_END + " | " + LOOK_FOR_START);
             }

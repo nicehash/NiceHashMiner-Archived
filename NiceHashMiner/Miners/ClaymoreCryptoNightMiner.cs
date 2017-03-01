@@ -19,6 +19,10 @@ namespace NiceHashMiner.Miners {
             : base("ClaymoreCryptoNightMiner", _LOOK_FOR_START) {
         }
 
+        protected override double DevFee() {
+            return 2.0;
+        }
+
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
             LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -o " + url + " -u " + username + " -p x -dbg -1";

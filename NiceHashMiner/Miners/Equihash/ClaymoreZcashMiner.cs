@@ -21,6 +21,10 @@ namespace NiceHashMiner.Miners {
             : base("ClaymoreZcashMiner", _LOOK_FOR_START) {
         }
 
+        protected override double DevFee() {
+            return 2.0;
+        }
+
         
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
