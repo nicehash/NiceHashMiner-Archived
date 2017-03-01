@@ -306,6 +306,7 @@ namespace NiceHashMiner.Miners {
                 foreach (var s in strings) {
                     double lastSpeed = 0;
                     if (double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out lastSpeed)) {
+                        Helpers.ConsolePrint("BENCHMARK " + MinerTAG(), "double.TryParse true. Last speed is" + lastSpeed.ToString());
                         BenchmarkAlgorithm.BenchmarkSpeed = Helpers.ParseDouble(s);
                         return true;
                     }
