@@ -13,6 +13,7 @@ namespace NiceHashMiner.Miners {
             ignoreZero = true;
             api_read_mult = 1000;
             ConectionType = NHMConectionType.STRATUM_TCP;
+            benchmarkTimeWait = 90;
         }
 
         protected override double DevFee() {
