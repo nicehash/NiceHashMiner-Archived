@@ -210,7 +210,7 @@ namespace NiceHashMiner.Devices
                 double total_GPU_RAM = (Avaliable.NVIDIA_RAM_SUM + Avaliable.AMD_RAM_SUM) / 1024; // b to kb
                 double total_Sys_RAM = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
                 // check
-                if (total_Sys_RAM < total_GPU_RAM * 0.6) {
+                if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && total_Sys_RAM < total_GPU_RAM * 0.6) {
                     Helpers.ConsolePrint(TAG, "virtual memory size BAD");
                     MessageBox.Show(International.GetText("VirtualMemorySize_BAD"),
                                 International.GetText("Warning_with_Exclamation"),
