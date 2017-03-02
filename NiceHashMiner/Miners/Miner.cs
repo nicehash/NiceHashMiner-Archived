@@ -368,7 +368,7 @@ namespace NiceHashMiner
             if (BenchmarkTimeOutStopWatch == null) {
                 BenchmarkTimeOutStopWatch = new Stopwatch();
                 BenchmarkTimeOutStopWatch.Start();
-            } else if (BenchmarkTimeOutStopWatch.ElapsedMilliseconds > BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds) * 1000) {
+            } else if (BenchmarkTimeOutStopWatch.Elapsed.TotalSeconds > BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds)) {
                 BenchmarkTimeOutStopWatch.Stop();
                 BenchmarkSignalTimedout = true;
             }

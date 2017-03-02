@@ -47,6 +47,8 @@ namespace NiceHashMiner.Miners {
             // clean old logs
             CleanAllOldLogs();
 
+            benchmarkTimeWait = time;
+
             // network workaround
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             // demo for benchmark

@@ -34,6 +34,7 @@ namespace NiceHashMiner.Miners {
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // clean old logs
             CleanAllOldLogs();
+            benchmarkTimeWait = time / 3; // 3 times faster than sgminer
 
             // network workaround
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);

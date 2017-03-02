@@ -192,11 +192,11 @@ namespace NiceHashMiner.Miners
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
-            if (_benchmarkTimer.Elapsed.Seconds >= BenchmarkTimeInSeconds) {
+            if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds) {
                 string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
                 Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
             }
-            if (_benchmarkTimer.Elapsed.Seconds >= BenchmarkTimeInSeconds + 2) {
+            if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds + 2) {
                 _benchmarkTimer.Stop();
                 // this is safe in a benchmark
                 KillSGMiner();
