@@ -99,20 +99,20 @@ namespace NiceHashMiner.Devices {
                             }
                             if (algoSettings.ContainsKey(MinerBaseType.ClaymoreAMD)) {
                                 foreach (var algo in algoSettings[MinerBaseType.ClaymoreAMD]) {
-                                    if (algo.NiceHashID == AlgorithmType.CryptoNight) {
+                                    if (algo.NiceHashID == AlgorithmType.CryptoNight || algo.NiceHashID == AlgorithmType.DaggerHashimoto) {
                                         algo.Enabled = false;
-                                        break;
+                                        //break;
                                     }
                                 }
                             }
-                            if (algoSettings.ContainsKey(MinerBaseType.sgminer)) {
-                                foreach (var algo in algoSettings[MinerBaseType.sgminer]) {
-                                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto) {
-                                        algo.Enabled = false;
-                                        break;
-                                    }
-                                }
-                            }
+                            //if (algoSettings.ContainsKey(MinerBaseType.sgminer)) {
+                            //    foreach (var algo in algoSettings[MinerBaseType.sgminer]) {
+                            //        if (algo.NiceHashID == AlgorithmType.DaggerHashimoto) {
+                            //            algo.Enabled = false;
+                            //            break;
+                            //        }
+                            //    }
+                            //}
                         }
                     } // END AMD case
 

@@ -33,5 +33,21 @@ namespace NiceHashMiner.Utils {
             return File.Exists(StandardDlSetup.BinsZipLocation);
         }
 
+        // delete
+        private static void DeleteAfter(DownloadSetup dlSetup) {
+            try {
+                if (File.Exists(dlSetup.BinsZipLocation)) {
+                    File.Delete(dlSetup.BinsZipLocation);
+                }
+            } catch { }
+        }
+
+        public static void DeleteStandardDlSetup() {
+            DeleteAfter(StandardDlSetup);
+        }
+        public static void DeleteThirdPartyDlSetup() {
+            DeleteAfter(ThirdPartyDlSetup);
+        }
+
     }
 }

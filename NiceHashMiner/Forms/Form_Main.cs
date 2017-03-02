@@ -40,6 +40,8 @@ namespace NiceHashMiner
         private Timer StartupTimer;
         private Timer IdleCheck;
 
+        private Timer DeleteDl;
+
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
 
@@ -402,6 +404,18 @@ namespace NiceHashMiner
                     }
                 }
             }
+            // cleanup
+            DeleteDl = new Timer();
+            DeleteDl.Tick += DeletSingleShot_Tick;
+            DeleteDl.Interval = 10 * 1000;
+            DeleteDl.Start();
+        }
+
+        private void DeletSingleShot_Tick(object sender, EventArgs e) {
+            DeleteDl.Stop();
+            DeleteDl = null;
+            MinersDownloadManager.DeleteStandardDlSetup();
+            MinersDownloadManager.DeleteThirdPartyDlSetup();
         }
 
         private void SetChildFormCenter(Form form) {

@@ -505,7 +505,9 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;
-                BenchmarkComunicator.OnBenchmarkComplete(BenchmarkProcessStatus.Success == status, "Success");
+                bool isOK = BenchmarkProcessStatus.Success == status;
+                string msg = isOK ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated");
+                BenchmarkComunicator.OnBenchmarkComplete(isOK, msg);
             }
         }
 
