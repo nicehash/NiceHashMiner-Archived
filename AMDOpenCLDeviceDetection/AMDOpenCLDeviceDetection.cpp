@@ -147,5 +147,38 @@ void AMDOpenCLDeviceDetection::PrintDevicesJson() {
 		}
 	}
 
-	cout << "]"; // << endl;
+	cout << "]" << endl;
+}
+
+
+void AMDOpenCLDeviceDetection::PrintDevicesJsonDirty() {
+	cout << "[";
+
+	{
+		int devPlatformsComma = _devicesPlatformsDevices.size();
+		for (const auto &jsonLog : _devicesPlatformsDevices) {
+			cout << "{";
+			cout << "\"PlatformName\": \"" << jsonLog.PlatformName << "\"" << ",";
+			cout << "\"PlatformNum\": " << jsonLog.PlatformNum << ",";
+			cout << "\"Devices\" : [";
+			// device print
+			int devComma = jsonLog.Devices.size();
+			for (const auto &dev : jsonLog.Devices) {
+				cout << "{";
+				cout << "\"" << "DeviceID" << "\" : " << dev.DeviceID << ","; // num
+				cout << "\"" << "AMD_BUS_ID" << "\" : " << dev.AMD_BUS_ID << ","; // num
+				cout << "\"" << "_CL_DEVICE_NAME" << "\" : \"" << dev._CL_DEVICE_NAME << "\",";
+				cout << "\"" << "_CL_DEVICE_TYPE" << "\" : \"" << dev._CL_DEVICE_TYPE << "\",";
+				cout << "\"" << "_CL_DEVICE_GLOBAL_MEM_SIZE" << "\" : " << dev._CL_DEVICE_GLOBAL_MEM_SIZE << ","; // num
+				cout << "\"" << "_CL_DEVICE_VENDOR" << "\" : \"" << dev._CL_DEVICE_VENDOR << "\",";
+				cout << "\"" << "_CL_DEVICE_VERSION" << "\" : \"" << dev._CL_DEVICE_VERSION << "\",";
+				cout << "\"" << "_CL_DRIVER_VERSION" << "\" : \"" << dev._CL_DRIVER_VERSION << "\"";
+				cout << "}" << COMMA(devComma);
+			}
+			cout << "]";
+			cout << "}" << COMMA(devPlatformsComma);
+		}
+	}
+
+	cout << "]" << endl;
 }

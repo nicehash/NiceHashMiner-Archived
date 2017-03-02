@@ -27,6 +27,7 @@ public:
 		
 	bool QueryDevices();
 	void PrintDevicesJson();
+	void PrintDevicesJsonDirty();
 
 private:
 
