@@ -44,15 +44,15 @@ namespace NiceHashMiner.Devices {
 
                         // Ellesmere, Polaris
                         // Ellesmere sgminer workaround, keep this until sgminer is fixed to work with Ellesmere
-                        if ((device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris")) && Globals.IsEllesmereSgminerIgnore) {
-                            // remove all algos except equi and dagger
-                            var ignoreRemove = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.Equihash, AlgorithmType.CryptoNight, AlgorithmType.Pascal, AlgorithmType.X11Gost };
-                            var toRemove = GetKeysForMinerAlgosGroup(algoSettings).FindAll((algoType) => ignoreRemove.IndexOf(algoType) == -1);
-                            algoSettings = FilterMinerAlgos(algoSettings, toRemove);
-                            // remove all sgminer?
-                            // algoSettings = FilterMinerBaseTypes(algoSettings, [MinerBaseType.sgminer]);
-                        } else if ((device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris"))) {
-                            algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType> { AlgorithmType.NeoScrypt });
+                        if ((device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris"))) {
+                            foreach (var algosInMiner in algoSettings) {
+                                foreach (var algo in algosInMiner.Value) {
+                                    // disable all algos in list
+                                    if (algo.NiceHashID == AlgorithmType.Decred || algo.NiceHashID == AlgorithmType.Lbry) {
+                                        algo.Enabled = false;
+                                    }
+                                }
+                            }
                         }
 
                         // check if 3rd party is enabled and allow 3rd party only algos
@@ -182,7 +182,7 @@ namespace NiceHashMiner.Devices {
                     { MinerBaseType.sgminer,
                         new List<Algorithm>() {
                             //new Algorithm(MinerBaseType.sgminer, AlgorithmType.NeoScrypt, "neoscrypt") { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4" },
-                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lyra2REv2,  "Lyra2REv2") { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1" },
+                            //new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lyra2REv2,  "Lyra2REv2") { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.DaggerHashimoto, "ethash") { ExtraLaunchParameters = RemDis + "--xintensity 512 -w 192 -g 1" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Decred, "decred") { ExtraLaunchParameters = RemDis + "--gpu-threads 1 --remove-disabled --xintensity 256 --lookup-gap 2 --worksize 64" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lbry, "lbry") { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" },
