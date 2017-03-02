@@ -506,10 +506,12 @@ namespace NiceHashMiner
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;
                 bool isOK = BenchmarkProcessStatus.Success == status;
-                string msg = isOK ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated");
-                BenchmarkComunicator.OnBenchmarkComplete(isOK, msg);
+                string msg = BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated");
+                BenchmarkComunicator.OnBenchmarkComplete(isOK, isOK ? "" : msg);
             }
         }
+
+
 
         virtual protected void BenchmarkThreadRoutine(object CommandLine) {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
