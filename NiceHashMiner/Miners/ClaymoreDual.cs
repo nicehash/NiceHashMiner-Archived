@@ -30,9 +30,37 @@ namespace NiceHashMiner.Miners {
             if (useWorker == null || useWorker == "") {
                 useWorker = "worker1";
             }
+            string dualModeParams = "";
+            foreach (var pair in MiningSetup.MiningPairs) {
+                if (pair.CurrentExtraLaunchParameters.Contains("-dual=")) {
+                    AlgorithmType dual = AlgorithmType.NONE;
+                    string coinP = "";
+                    if (pair.CurrentExtraLaunchParameters.Contains("Decred")) {
+                        dual = AlgorithmType.Decred;
+                        coinP = " -dcoin dcr ";
+                    }
+                    //if (pair.CurrentExtraLaunchParameters.Contains("Siacoin")) {
+                    //    dual = AlgorithmType.;
+                    //}
+                    if (pair.CurrentExtraLaunchParameters.Contains("Lbry")) {
+                        dual = AlgorithmType.Lbry;
+                        coinP = " -dcoin lbc ";
+                    }
+                    if (pair.CurrentExtraLaunchParameters.Contains("Pascal")) {
+                        dual = AlgorithmType.Pascal;
+                        coinP = " -dcoin pasc ";
+                    }
+                    if (dual != AlgorithmType.NONE) {
+                        string urlSecond = Globals.GetLocationURL(dual, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+                        dualModeParams = String.Format(" {0} -dpool {1} -dwal {2}", coinP, urlSecond, btcAdress);
+                        break;
+                    }
+                }
+            }
             return " "
                 + GetDevicesCommandString()
-                + String.Format("  -epool {0} -ewal {1} -mport -{2} -eworker {3} -esm 3 -epsw x -allpools 1", url, btcAdress, APIPort, useWorker);
+                + String.Format("  -epool {0} -ewal {1} -mport -{2} -eworker {3} -esm 3 -epsw x -allpools 1", url, btcAdress, APIPort, useWorker)
+                + dualModeParams;
         }
 
         public override void Start(string url, string btcAdress, string worker) {
