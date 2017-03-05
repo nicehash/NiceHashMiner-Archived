@@ -216,6 +216,8 @@ namespace NiceHashMiner.Forms.Components {
                 var algorithm = lvi.Tag as Algorithm;
                 algorithm.BenchmarkSpeed = 0;
                 RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                // update benchmark status data
+                if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
             }
         }
 
