@@ -214,11 +214,9 @@ namespace NiceHashMiner.Forms.Components {
 
         private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
             if (_computeDevice != null) {
-                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
-                {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
                     var algorithm = lvi.Tag as Algorithm;
-                    if (algorithm != null)
-                    {
+                    if (algorithm != null) {
                         algorithm.BenchmarkSpeed = 0;
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
                         // update benchmark status data
