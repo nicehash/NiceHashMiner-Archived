@@ -188,6 +188,13 @@ namespace NiceHashMiner.Forms.Components {
                     enableAllItems.Click += toolStripMenuItemEnableAll_Click;
                     contextMenuStrip1.Items.Add(enableAllItems);
                 }
+                // clear item
+                {
+                    var clearItem = new ToolStripMenuItem();
+                    clearItem.Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem");
+                    clearItem.Click += toolStripMenuItemClear_Click;
+                    contextMenuStrip1.Items.Add(clearItem);
+                }
                 contextMenuStrip1.Show(Cursor.Position);
             }
         }
@@ -202,6 +209,10 @@ namespace NiceHashMiner.Forms.Components {
             foreach (ListViewItem lvi in listViewAlgorithms.Items) {
                 lvi.Checked = false;
             }
+        }
+
+        private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
+            // Do something
         }
 
     }
