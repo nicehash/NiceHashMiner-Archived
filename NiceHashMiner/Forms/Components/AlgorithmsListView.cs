@@ -221,7 +221,7 @@ namespace NiceHashMiner.Forms.Components {
                     // update benchmark status data
                     if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
                     // update settings
-                    ComunicationInterface.ChangeSpeed(lvi);
+                    if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
                 }
             }
         }
