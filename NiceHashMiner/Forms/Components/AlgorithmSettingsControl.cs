@@ -92,6 +92,17 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        public void ChangeSpeed(ListViewItem lvi)
+        {
+            if (Object.ReferenceEquals(_currentlySelectedLvi, lvi))
+            {
+                var algorithm = lvi.Tag as Algorithm;
+                if (algorithm != null) {
+                    fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
+                }
+            }
+        }
+
         private bool CanEdit() {
             return _currentlySelectedAlgorithm != null && _selected;
         }

@@ -24,6 +24,7 @@ namespace NiceHashMiner.Forms.Components {
         public interface IAlgorithmsListView {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
             void HandleCheck(ListViewItem lvi);
+            void ChangeSpeed(ListViewItem lvi);
         }
 
         public IAlgorithmsListView ComunicationInterface { get; set; }
@@ -214,10 +215,14 @@ namespace NiceHashMiner.Forms.Components {
         private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
             foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
                 var algorithm = lvi.Tag as Algorithm;
-                algorithm.BenchmarkSpeed = 0;
-                RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
-                // update benchmark status data
-                if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                if (algorithm != null) {
+                    algorithm.BenchmarkSpeed = 0;
+                    RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                    // update benchmark status data
+                    if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                    // update settings
+                    ComunicationInterface.ChangeSpeed(lvi);
+                }
             }
         }
 
