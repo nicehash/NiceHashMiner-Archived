@@ -212,7 +212,11 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
-            // Do something
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
+                var algorithm = lvi.Tag as Algorithm;
+                algorithm.BenchmarkSpeed = 0;
+                RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+            }
         }
 
     }
