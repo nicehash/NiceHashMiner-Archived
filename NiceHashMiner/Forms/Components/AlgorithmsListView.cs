@@ -213,15 +213,19 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
-            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
-                var algorithm = lvi.Tag as Algorithm;
-                if (algorithm != null) {
-                    algorithm.BenchmarkSpeed = 0;
-                    RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
-                    // update benchmark status data
-                    if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
-                    // update settings
-                    if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+            if (_computeDevice != null) {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    var algorithm = lvi.Tag as Algorithm;
+                    if (algorithm != null)
+                    {
+                        algorithm.BenchmarkSpeed = 0;
+                        RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                        // update benchmark status data
+                        if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                        // update settings
+                        if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+                    }
                 }
             }
         }
