@@ -26,10 +26,8 @@ namespace NiceHashMiner.Miners {
         }
 
         private string GetStartCommand(string url, string btcAdress, string worker) {
-            string useWorker = worker;
-            if (useWorker == null || useWorker == "") {
-                useWorker = "worker1";
-            }
+            string username = GetUsername(btcAdress, worker);
+
             string dualModeParams = "";
             foreach (var pair in MiningSetup.MiningPairs) {
                 if (pair.CurrentExtraLaunchParameters.Contains("-dual=")) {
@@ -52,14 +50,14 @@ namespace NiceHashMiner.Miners {
                     }
                     if (dual != AlgorithmType.NONE) {
                         string urlSecond = Globals.GetLocationURL(dual, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
-                        dualModeParams = String.Format(" {0} -dpool {1} -dwal {2}", coinP, urlSecond, btcAdress);
+                        dualModeParams = String.Format(" {0} -dpool {1} -dwal {2}", coinP, urlSecond, username);
                         break;
                     }
                 }
             }
             return " "
                 + GetDevicesCommandString()
-                + String.Format("  -epool {0} -ewal {1} -mport -{2} -eworker {3} -esm 3 -epsw x -allpools 1", url, btcAdress, APIPort, useWorker)
+                + String.Format("  -epool {0} -ewal {1} -mport -{2} -esm 3 -epsw x -allpools 1", url, username, APIPort)
                 + dualModeParams;
         }
 

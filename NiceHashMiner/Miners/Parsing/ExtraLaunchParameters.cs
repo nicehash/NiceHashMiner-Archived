@@ -176,10 +176,11 @@ namespace NiceHashMiner.Miners.Parsing {
             new MinerOptionPackage(
                 MinerType.OptiminerZcash,
                 new List<MinerOption>() {
-                    new MinerOption("ForceGenericKernel"      , "", "--force-generic-kernel", null, MinerOptionFlagType.Uni, ""),
-                    new MinerOption("ExperimentalKernel"      , "", "--experimental-kernel", null, MinerOptionFlagType.Uni, ""),
-                    new MinerOption("nodevfee"                , "", "--nodevfee", null, MinerOptionFlagType.Uni, ""),
+                    new MinerOption("ForceGenericKernel"      , "--force-generic-kernel", "--force-generic-kernel", null, MinerOptionFlagType.Uni, ""),
+                    new MinerOption("ExperimentalKernel"      , "--experimental-kernel", "--experimental-kernel", null, MinerOptionFlagType.Uni, ""),
+                    new MinerOption("nodevfee"                , "--nodevfee", "--nodevfee", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("Intensity"               , "-i", "--intensity", "0", MinerOptionFlagType.DuplicateMultiParam, ""),
+                    new MinerOption("PciMode"               , "--pci-mode", "--pci-mode", "", MinerOptionFlagType.SingleParam, ""),
                 },
                 new List<MinerOption>()
             ),

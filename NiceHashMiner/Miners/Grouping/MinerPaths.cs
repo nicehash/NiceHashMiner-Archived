@@ -26,15 +26,15 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ccminer_tpruvot = _bin + @"\ccminer_tpruvot.exe";
             public const string ccminer_cryptonight = _bin + @"\ccminer_cryptonight.exe";
             public const string ccminer_x11gost = _bin + @"\ccminer_x11gost.exe";
-            /// <summary>
-            /// cpuminers opt new
-            /// </summary>
-            public const string cpuminer_opt_AVX2_AES = _bin + @"\cpuminer_opt_AVX2_AES.exe";
-            public const string cpuminer_opt_AVX2 = _bin + @"\cpuminer_opt_AVX2.exe";
-            public const string cpuminer_opt_AVX_AES = _bin + @"\cpuminer_opt_AVX_AES.exe";
-            public const string cpuminer_opt_AVX = _bin + @"\cpuminer_opt_AVX.exe";
-            public const string cpuminer_opt_AES = _bin + @"\cpuminer_opt_AES.exe";
-            public const string cpuminer_opt_SSE2 = _bin + @"\cpuminer_opt_SSE2.exe";
+            ///// <summary>
+            ///// cpuminers opt new
+            ///// </summary>
+            //public const string cpuminer_opt_AVX2_AES = _bin + @"\cpuminer_opt_AVX2_AES.exe";
+            //public const string cpuminer_opt_AVX2 = _bin + @"\cpuminer_opt_AVX2.exe";
+            //public const string cpuminer_opt_AVX_AES = _bin + @"\cpuminer_opt_AVX_AES.exe";
+            //public const string cpuminer_opt_AVX = _bin + @"\cpuminer_opt_AVX.exe";
+            //public const string cpuminer_opt_AES = _bin + @"\cpuminer_opt_AES.exe";
+            //public const string cpuminer_opt_SSE2 = _bin + @"\cpuminer_opt_SSE2.exe";
             /// <summary>
             /// ethminers
             /// </summary>
@@ -78,8 +78,8 @@ namespace NiceHashMiner.Miners.Grouping
 
         public static string GetPathFor(MinerBaseType minerBaseType, AlgorithmType algoType, DeviceGroupType devGroupType, string devCodenameAMD, bool isOptimizedAMD, CPUExtensionType MostOptimizedCPUExtensionType) {
             switch (minerBaseType) {
-                case MinerBaseType.cpuminer:
-                    return CPU_GROUP.cpu_miner_opt(MostOptimizedCPUExtensionType);
+                //case MinerBaseType.cpuminer:
+                //    return CPU_GROUP.cpu_miner_opt(MostOptimizedCPUExtensionType);
                 case MinerBaseType.ccminer:
                     return NVIDIA_GROUPS.ccminer_path(algoType, devGroupType);
                 case MinerBaseType.sgminer:
@@ -225,20 +225,20 @@ namespace NiceHashMiner.Miners.Grouping
             }
         }
 
-        static class CPU_GROUP {
-            public static string cpu_miner_opt(CPUExtensionType type) {
-                // algorithmType is not needed ATM
-                // algorithmType: AlgorithmType
-                if (CPUExtensionType.AVX2_AES == type) { return Data.cpuminer_opt_AVX2_AES; }
-                if (CPUExtensionType.AVX2 == type) { return Data.cpuminer_opt_AVX2; }
-                if (CPUExtensionType.AVX_AES == type) { return Data.cpuminer_opt_AVX_AES; }
-                if (CPUExtensionType.AVX == type) { return Data.cpuminer_opt_AVX; }
-                if (CPUExtensionType.AES == type) { return Data.cpuminer_opt_AES; }
-                if (CPUExtensionType.SSE2 == type) { return Data.cpuminer_opt_SSE2; }
+        //static class CPU_GROUP {
+        //    public static string cpu_miner_opt(CPUExtensionType type) {
+        //        // algorithmType is not needed ATM
+        //        // algorithmType: AlgorithmType
+        //        if (CPUExtensionType.AVX2_AES == type) { return Data.cpuminer_opt_AVX2_AES; }
+        //        if (CPUExtensionType.AVX2 == type) { return Data.cpuminer_opt_AVX2; }
+        //        if (CPUExtensionType.AVX_AES == type) { return Data.cpuminer_opt_AVX_AES; }
+        //        if (CPUExtensionType.AVX == type) { return Data.cpuminer_opt_AVX; }
+        //        if (CPUExtensionType.AES == type) { return Data.cpuminer_opt_AES; }
+        //        if (CPUExtensionType.SSE2 == type) { return Data.cpuminer_opt_SSE2; }
 
-                return Data.NONE; // should not happen
-            }
-        }
+        //        return Data.NONE; // should not happen
+        //    }
+        //}
 
     }
 }

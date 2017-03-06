@@ -36,10 +36,19 @@ namespace NiceHashMiner.Miners.Equihash {
             public Stratum stratum;
         }
 
+        // give some time or else it will crash
+        Stopwatch _startAPI = null;
+        bool _skipAPICheck = true;
+        int waitSeconds = 30;
+
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
             LastCommandLine = " " + GetDevicesCommandString() + " -m " + APIPort + " -s " + url + " -u " + username + " -p x";
             ProcessHandle = _Start();
+
+            //
+            _startAPI = new Stopwatch();
+            _startAPI.Start();
         }
 
         protected override void _Stop(MinerStopType willswitch) {
@@ -67,36 +76,41 @@ namespace NiceHashMiner.Miners.Equihash {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
-            JsonApiResponse resp = null;
-            try {
-                string DataToSend =  GetHttpRequestNHMAgentStrin("");
-                string respStr = GetAPIData(APIPort, DataToSend, true);
-                if (respStr != null && respStr.Contains("{")) {
-                    int start = respStr.IndexOf("{");
-                    if (start > -1) {
-                        string respStrJSON = respStr.Substring(start);
-                        resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStrJSON.Trim(), Globals.JsonSettings);
+            if (_skipAPICheck == false) {
+                JsonApiResponse resp = null;
+                try {
+                    string DataToSend = GetHttpRequestNHMAgentStrin("");
+                    string respStr = GetAPIData(APIPort, DataToSend, true);
+                    if (respStr != null && respStr.Contains("{")) {
+                        int start = respStr.IndexOf("{");
+                        if (start > -1) {
+                            string respStrJSON = respStr.Substring(start);
+                            resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStrJSON.Trim(), Globals.JsonSettings);
+                        }
                     }
+                    //Helpers.ConsolePrint("OptiminerZcashMiner API back:", respStr);
+                } catch (Exception ex) {
+                    Helpers.ConsolePrint("OptiminerZcashMiner", "GetSummary exception: " + ex.Message);
                 }
-                //Helpers.ConsolePrint("OptiminerZcashMiner API back:", respStr);
-            } catch (Exception ex) {
-                Helpers.ConsolePrint("OptiminerZcashMiner", "GetSummary exception: " + ex.Message);
-            }
 
-            if (resp != null && resp.solution_rate != null) {
-                //Helpers.ConsolePrint("OptiminerZcashMiner API back:", "resp != null && resp.error == null");
-                const string total_key = "Total";
-                const string _5s_key = "5s";
-                if (resp.solution_rate.ContainsKey(total_key)) {
-                    var total_solution_rate_dict = resp.solution_rate[total_key];
-                    if (total_solution_rate_dict != null && total_solution_rate_dict.ContainsKey(_5s_key)) {
-                        ad.Speed = total_solution_rate_dict[_5s_key];
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                if (resp != null && resp.solution_rate != null) {
+                    //Helpers.ConsolePrint("OptiminerZcashMiner API back:", "resp != null && resp.error == null");
+                    const string total_key = "Total";
+                    const string _5s_key = "5s";
+                    if (resp.solution_rate.ContainsKey(total_key)) {
+                        var total_solution_rate_dict = resp.solution_rate[total_key];
+                        if (total_solution_rate_dict != null && total_solution_rate_dict.ContainsKey(_5s_key)) {
+                            ad.Speed = total_solution_rate_dict[_5s_key];
+                            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        }
+                    }
+                    if (ad.Speed == 0) {
+                        _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
                     }
                 }
-                if (ad.Speed == 0) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
-                }
+            } else if (_skipAPICheck && _startAPI.Elapsed.TotalSeconds > waitSeconds) {
+                _startAPI.Stop();
+                _skipAPICheck = false;
             }
 
             return ad;
