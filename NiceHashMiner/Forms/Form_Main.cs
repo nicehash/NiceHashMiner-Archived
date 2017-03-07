@@ -778,8 +778,8 @@ namespace NiceHashMiner
                 IsManuallyStarted = false;
                 StopMining();
                 MessageBox.Show(International.GetText("Form_Main_StartMiningReturnedFalse"),
-                                International.GetText("Error_with_Exclamation"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -888,20 +888,20 @@ namespace NiceHashMiner
 
             // Check if there are unbenchmakred algorithms
             bool isBenchInit = true;
-            bool hasAnyAlgoEnabled = false;
-            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                if (cdev.Enabled) {
-                    foreach (var algo in cdev.GetAlgorithmSettings()) {
-                        if (algo.Enabled == true) {
-                            hasAnyAlgoEnabled = true;
-                            if (algo.BenchmarkSpeed == 0) {
-                                isBenchInit = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            //bool hasAnyAlgoEnabled = false;
+            //foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+            //    if (cdev.Enabled) {
+            //        foreach (var algo in cdev.GetAlgorithmSettings()) {
+            //            if (algo.Enabled == true) {
+            //                hasAnyAlgoEnabled = true;
+            //                if (algo.BenchmarkSpeed == 0) {
+            //                    isBenchInit = false;
+            //                    break;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
             // Check if the user has run benchmark first
             if (!isBenchInit) {
                 DialogResult result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
@@ -936,29 +936,29 @@ namespace NiceHashMiner
 
             // check if any device enabled
             // check devices without benchmarks
-            bool noDeviceEnabled = true;
-            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                if (cdev.Enabled) {
-                    noDeviceEnabled = false;
-                    break;
-                }
-            }
-            if (noDeviceEnabled) {
-                if (showWarnings) {
-                    DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_For_Mining"),
-                                                          International.GetText("Warning_with_Exclamation"),
-                                                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                return false;
-            }
-            if (!hasAnyAlgoEnabled) {
-                if (showWarnings) {
-                    DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_Algorithms_For_Mining"),
-                                                          International.GetText("Warning_with_Exclamation"),
-                                                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                return false;
-            }
+            //bool noDeviceEnabled = true;
+            //foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+            //    if (cdev.Enabled) {
+            //        noDeviceEnabled = false;
+            //        break;
+            //    }
+            //}
+            //if (noDeviceEnabled) {
+            //    if (showWarnings) {
+            //        DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_For_Mining"),
+            //                                              International.GetText("Warning_with_Exclamation"),
+            //                                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    }
+            //    return false;
+            //}
+            //if (!hasAnyAlgoEnabled) {
+            //    if (showWarnings) {
+            //        DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_Algorithms_For_Mining"),
+            //                                              International.GetText("Warning_with_Exclamation"),
+            //                                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    }
+            //    return false;
+            //}
 
             textBoxBTCAddress.Enabled = false;
             textBoxWorkerName.Enabled = false;
