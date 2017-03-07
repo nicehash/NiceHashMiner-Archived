@@ -150,10 +150,10 @@ namespace NiceHashMiner.Miners
 
                 double mult = 1;
                 if (hashSpeed.Contains("K")) {
-                    hashSpeed = hashSpeed.Replace("K", "");
+                    hashSpeed = hashSpeed.Replace("K", " ");
                     mult = 1000;
                 } else if (hashSpeed.Contains("M")) {
-                    hashSpeed = hashSpeed.Replace("M", "");
+                    hashSpeed = hashSpeed.Replace("M", " ");
                     mult = 1000000;
                 }
 
