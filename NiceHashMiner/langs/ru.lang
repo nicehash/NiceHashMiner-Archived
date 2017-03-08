@@ -254,7 +254,7 @@
         "AlgorithmsListView_GroupBox_NONE": "NONE",
 	"AlgorithmsListView_ContextMenu_DisableAll": "Отключить все алгоритмы",
         "AlgorithmsListView_ContextMenu_EnableAll" : "Включить все алгоритмы",
-        "AlgorithmsListView_ContextMenu_ClearItem": "ясно скорость пункт",
+        "AlgorithmsListView_ContextMenu_ClearItem": "Быстрая скорость алгоритма",
         "BenchmarkOptions_Benchmark_Type": "Тип бенчмарка:",
         "Form_Main_MiningDevices": "Устройства {0}:",
         "Form_Main_bins_folder_files_missing": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner может не работать правильно без недостающих файлов. Нажмите Да для переустановки NiceHash Miner, чтобы попробовать исправить ошибку.",
