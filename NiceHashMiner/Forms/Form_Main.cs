@@ -187,7 +187,7 @@ namespace NiceHashMiner
                 if (BenchmarkForm == null && (MSIdle > (ConfigManager.GeneralConfig.MinIdleSeconds * 1000)))
                 {
                     Helpers.ConsolePrint("NICEHASH", "Entering idling state");
-                    if (StartMining(false) == false) {
+                    if (StartMining(false) != StartMiningReturnType.StartMining) {
                         StopMining();
                     }
                 }
@@ -398,7 +398,7 @@ namespace NiceHashMiner
                 if (ConfigManager.GeneralConfig.AutoStartMining) {
                     // well this is started manually as we want it to start at runtime
                     IsManuallyStarted = true;
-                    if (StartMining(true) == false) {
+                    if (StartMining(true) != StartMiningReturnType.StartMining) {
                         IsManuallyStarted = false;
                         StopMining();
                     }
@@ -663,7 +663,6 @@ namespace NiceHashMiner
             }
         }
 
-
         private bool VerifyMiningAddress(bool ShowError)
         {
             if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress.Text.Trim()) && ShowError)
@@ -774,7 +773,7 @@ namespace NiceHashMiner
 
         private void buttonStartMining_Click(object sender, EventArgs e) {
             IsManuallyStarted = true;
-            if (StartMining(true) == false) {
+            if (StartMining(true) == StartMiningReturnType.ShowNoMining) {
                 IsManuallyStarted = false;
                 StopMining();
                 MessageBox.Show(International.GetText("Form_Main_StartMiningReturnedFalse"),
@@ -857,7 +856,13 @@ namespace NiceHashMiner
 
         ///////////////////////////////////////
         // Miner control functions
-        private bool StartMining(bool showWarnings) {
+        private enum StartMiningReturnType {
+            StartMining,
+            ShowNoMining,
+            IgnoreMsg
+        }
+
+        private StartMiningReturnType StartMining(bool showWarnings) {
             if (textBoxBTCAddress.Text.Equals("")) {
                 if (showWarnings) {
                     DialogResult result = MessageBox.Show(International.GetText("Form_Main_DemoModeMsg"),
@@ -869,12 +874,12 @@ namespace NiceHashMiner
                         labelDemoMode.Visible = true;
                         labelDemoMode.Text = International.GetText("Form_Main_DemoModeLabel");
                     } else {
-                        return false;
+                        return StartMiningReturnType.IgnoreMsg;
                     }
                 } else {
-                    return false;
+                    return StartMiningReturnType.IgnoreMsg; ;
                 }
-            } else if (!VerifyMiningAddress(true)) return false;
+            } else if (!VerifyMiningAddress(true)) return StartMiningReturnType.IgnoreMsg;
 
             if (Globals.NiceHashData == null) {
                 if (showWarnings) {
@@ -882,26 +887,26 @@ namespace NiceHashMiner
                                 International.GetText("Error_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                return false;
+                return StartMiningReturnType.IgnoreMsg;
             }
 
 
             // Check if there are unbenchmakred algorithms
             bool isBenchInit = true;
-            //bool hasAnyAlgoEnabled = false;
-            //foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-            //    if (cdev.Enabled) {
-            //        foreach (var algo in cdev.GetAlgorithmSettings()) {
-            //            if (algo.Enabled == true) {
-            //                hasAnyAlgoEnabled = true;
-            //                if (algo.BenchmarkSpeed == 0) {
-            //                    isBenchInit = false;
-            //                    break;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+            bool hasAnyAlgoEnabled = false;
+            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                if (cdev.Enabled) {
+                    foreach (var algo in cdev.GetAlgorithmSettings()) {
+                        if (algo.Enabled == true) {
+                            hasAnyAlgoEnabled = true;
+                            if (algo.BenchmarkSpeed == 0) {
+                                isBenchInit = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
             // Check if the user has run benchmark first
             if (!isBenchInit) {
                 DialogResult result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
@@ -930,35 +935,9 @@ namespace NiceHashMiner
                         }
                     }
                 } else {
-                    return false;
+                    return StartMiningReturnType.IgnoreMsg;
                 }
             }
-
-            // check if any device enabled
-            // check devices without benchmarks
-            //bool noDeviceEnabled = true;
-            //foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-            //    if (cdev.Enabled) {
-            //        noDeviceEnabled = false;
-            //        break;
-            //    }
-            //}
-            //if (noDeviceEnabled) {
-            //    if (showWarnings) {
-            //        DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_For_Mining"),
-            //                                              International.GetText("Warning_with_Exclamation"),
-            //                                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    }
-            //    return false;
-            //}
-            //if (!hasAnyAlgoEnabled) {
-            //    if (showWarnings) {
-            //        DialogResult result = MessageBox.Show(International.GetText("Form_Main_No_Device_Enabled_Algorithms_For_Mining"),
-            //                                              International.GetText("Warning_with_Exclamation"),
-            //                                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    }
-            //    return false;
-            //}
 
             textBoxBTCAddress.Enabled = false;
             textBoxWorkerName.Enabled = false;
@@ -985,7 +964,7 @@ namespace NiceHashMiner
             SMAMinerCheck.Start();
             MinerStatsCheck.Start();
 
-            return isMining;
+            return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
 
         private void StopMining() {
