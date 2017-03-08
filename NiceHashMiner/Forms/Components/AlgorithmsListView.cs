@@ -24,6 +24,7 @@ namespace NiceHashMiner.Forms.Components {
         public interface IAlgorithmsListView {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
             void HandleCheck(ListViewItem lvi);
+            void ChangeSpeed(ListViewItem lvi);
         }
 
         public IAlgorithmsListView ComunicationInterface { get; set; }
@@ -188,6 +189,13 @@ namespace NiceHashMiner.Forms.Components {
                     enableAllItems.Click += toolStripMenuItemEnableAll_Click;
                     contextMenuStrip1.Items.Add(enableAllItems);
                 }
+                // clear item
+                {
+                    var clearItem = new ToolStripMenuItem();
+                    clearItem.Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem");
+                    clearItem.Click += toolStripMenuItemClear_Click;
+                    contextMenuStrip1.Items.Add(clearItem);
+                }
                 contextMenuStrip1.Show(Cursor.Position);
             }
         }
@@ -201,6 +209,22 @@ namespace NiceHashMiner.Forms.Components {
         private void toolStripMenuItemDisableAll_Click(object sender, EventArgs e) {
             foreach (ListViewItem lvi in listViewAlgorithms.Items) {
                 lvi.Checked = false;
+            }
+        }
+
+        private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
+            if (_computeDevice != null) {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
+                    var algorithm = lvi.Tag as Algorithm;
+                    if (algorithm != null) {
+                        algorithm.BenchmarkSpeed = 0;
+                        RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                        // update benchmark status data
+                        if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                        // update settings
+                        if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+                    }
+                }
             }
         }
 
