@@ -275,6 +275,8 @@ namespace NiceHashMiner.Miners
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
+            //// sgminer debug log
+            //Helpers.ConsolePrint("sgminer-DEBUG_resp", resp);
 
             try {
                 // Checks if all the GPUs are Alive first
@@ -283,11 +285,13 @@ namespace NiceHashMiner.Miners
                     _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                     return null;
                 }
+                //// sgminer debug log
+                //Helpers.ConsolePrint("sgminer-DEBUG_resp2", resp2);
 
                 string[] checkGPUStatus = resp2.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
                 for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
-                    if (!checkGPUStatus[i].Contains("Status=Alive")) {
+                    if (checkGPUStatus[i].Contains("Enabled=Y") && !checkGPUStatus[i].Contains("Status=Alive")) {
                         Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
                         _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
                         return null;
