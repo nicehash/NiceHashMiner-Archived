@@ -484,8 +484,12 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerTAG(), "Benchmark Exception: " + ex.Message);
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;
-                BenchmarkComunicator.OnBenchmarkComplete(false, BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated"));
+                BenchmarkComunicator.OnBenchmarkComplete(false, GetFinalBenchmarkString());
             }
+        }
+
+        protected virtual string GetFinalBenchmarkString() {
+            return BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated");
         }
 
         protected void BenchmarkThreadRoutineFinish() {
@@ -506,7 +510,7 @@ namespace NiceHashMiner
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;
                 bool isOK = BenchmarkProcessStatus.Success == status;
-                string msg = BenchmarkSignalTimedout ? International.GetText("Benchmark_Timedout") : International.GetText("Benchmark_Terminated");
+                string msg = GetFinalBenchmarkString();
                 BenchmarkComunicator.OnBenchmarkComplete(isOK, isOK ? "" : msg);
             }
         }

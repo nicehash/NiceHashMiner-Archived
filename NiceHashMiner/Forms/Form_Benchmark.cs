@@ -153,6 +153,13 @@ namespace NiceHashMiner.Forms {
 
             StartMining = false;
 
+            // clear prev pending statuses
+            foreach (var dev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                foreach (var algo in dev.GetAlgorithmSettings()) {
+                    algo.ClearBenchmarkPendingFirst();
+                }
+            }
+
             benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
             
             // benchmark only unique devices
@@ -198,7 +205,6 @@ namespace NiceHashMiner.Forms {
             // to update laclulation status
             devicesListViewEnableControl1.BenchmarkCalculation = this;
             algorithmsListView1.BenchmarkCalculation = this;
-
 
             // set first device selected {
             if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {

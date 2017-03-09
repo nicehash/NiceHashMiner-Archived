@@ -74,7 +74,22 @@ namespace NiceHashMiner {
         public void SetBenchmarkPendingNoMsg() {
             IsBenchmarkPending = true;
         }
+
+        private bool IsPendingString() {
+            return BenchmarkStatus == International.GetText("Algorithm_Waiting_Benchmark")
+                || BenchmarkStatus == "."
+                || BenchmarkStatus == ".."
+                || BenchmarkStatus == "...";
+        }
+
         public void ClearBenchmarkPending() {
+            IsBenchmarkPending = false;
+            if (IsPendingString()) {
+                BenchmarkStatus = "";
+            }
+        }
+
+        public void ClearBenchmarkPendingFirst() {
             IsBenchmarkPending = false;
             BenchmarkStatus = "";
         }
@@ -84,6 +99,8 @@ namespace NiceHashMiner {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
                 return Helpers.FormatSpeedOutput(BenchmarkSpeed);
+            } else if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus)) {
+                return BenchmarkStatus;
             }
             return International.GetText("BenchmarkSpeedStringNone");
         }

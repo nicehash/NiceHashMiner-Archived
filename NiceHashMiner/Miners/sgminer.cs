@@ -207,6 +207,14 @@ namespace NiceHashMiner.Miners
             }
         }
 
+        protected override string GetFinalBenchmarkString() {
+            if (BenchmarkAlgorithm.BenchmarkSpeed <= 0) {
+                Helpers.ConsolePrint("sgminer_GetFinalBenchmarkString", International.GetText("sgminer_precise_try"));
+                return International.GetText("sgminer_precise_try");
+            }
+            return base.GetFinalBenchmarkString();
+        }
+
         protected override void BenchmarkThreadRoutine(object CommandLine) {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS * 3); // increase wait for sgminer
 
