@@ -254,7 +254,7 @@
         "AlgorithmsListView_GroupBox_NONE": "NONE",
 	"AlgorithmsListView_ContextMenu_DisableAll": "Отключить все алгоритмы",
         "AlgorithmsListView_ContextMenu_EnableAll" : "Включить все алгоритмы",
-        "AlgorithmsListView_ContextMenu_ClearItem": "Быстрая скорость алгоритма",
+        "AlgorithmsListView_ContextMenu_ClearItem": "Сбросить скорость алгоритма",
         "BenchmarkOptions_Benchmark_Type": "Тип бенчмарка:",
         "Form_Main_MiningDevices": "Устройства {0}:",
         "Form_Main_bins_folder_files_missing": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner может не работать правильно без недостающих файлов. Нажмите Да для переустановки NiceHash Miner, чтобы попробовать исправить ошибку.",
@@ -317,7 +317,7 @@
         "Compute_Device_Query_Manager_AMD_Query": "Проверка GPU AMD OpenCL",
         "Compute_Device_Query_Manager_AMD_Query_Skip": "Пропустить проверку GPU AMD OpenCL",
         "Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title": "Рекомендуемый драйвер Nvidia",
-        "Compute_Device_Query_Manager_NVIDIA_Driver_Detection": "Мы обнаружили, что в вашей системе есть Nvidia GPU, но ваш драйвер старее {0}. Для корректной работы NiceHash Miner, вам необходимо обновить драйверы до рекомендуемого {1} или новее.",
+        "Compute_Device_Query_Manager_NVIDIA_Driver_Detection": "Мы обнаружили, что в вашей системе есть устройства Nvidia GPU, но ваш драйвер старее, чем {0}. Для правильной работы NiceHash Miner вам следует обновить ваши драйверы до рекомендуемых {1} или новее. Если вы все еще видите это предупреждение после обновления драйверов, удалите, пожалуйста, все ваши драйверы для Nvidia и выполните чистую установку последних официальных драйверов с http://www.nvidia.com.",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART" : " (текущий {0})",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended": "Мы обнаружили, что ваш драйвер старее {0}{1}. Мы рекомендуем вам обновиться до {2} или новее.",
 	"NET45_Not_Intsalled_msg" : "Для корректной работы NiceHash Miner требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
@@ -343,6 +343,7 @@
         "Form_Settings_General_SwitchProfitabilityThreshold": "Порог переключения прибыльности",
         "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Майнер не будет переключаться, если разница между прибыльностью алгоритмов ниже Порога переключения прибыльности. Значение в процентах [0 — 1]",
         "VirtualMemorySize_BAD": "NiceHash Miner рекомендует увеличить размер виртуальной памяти для нормальной работы всех алгоритмов.",
-        "sgminer_precise_try":  "Failed - try Precise"
+        "sgminer_precise_try":  "Неудача — попробуйте Точный"
+
     }
 }
