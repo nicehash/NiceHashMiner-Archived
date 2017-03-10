@@ -63,7 +63,7 @@ namespace NiceHashMiner.Forms {
 
         private class ClaymoreZcashStatus {
             private const int MAX_BENCH = 2;
-            private readonly string[] ASM_MODES = new string[] { " -asm 0", " -asm 1" };
+            private readonly string[] ASM_MODES = new string[] { " -asm 1", " -asm 0" };
 
             private double[] speeds = new double[] { 0.0d, 0.0d };
             private int CurIndex = 0;
