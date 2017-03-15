@@ -113,6 +113,8 @@ namespace NiceHashMiner.Forms {
             public double GetFastestTime() {
                 return speeds[FastestIndex()];
             }
+
+            public int Time = 180;
         }
         private ClaymoreZcashStatus __ClaymoreZcashStatus = null;
 
@@ -481,6 +483,9 @@ namespace NiceHashMiner.Forms {
                 if (__CPUBenchmarkStatus != null) {
                     __CPUBenchmarkStatus.Time = time;
                 }
+                if (__ClaymoreZcashStatus != null) {
+                    __ClaymoreZcashStatus.Time = time;
+                }
                 
                 // dagger about 4 minutes
                 var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;
@@ -567,6 +572,7 @@ namespace NiceHashMiner.Forms {
 
                 if (__ClaymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.ClaymoreAMD && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash) {
                     if (__ClaymoreZcashStatus.HasTest()) {
+                        _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
                         rebenchSame = true;
                         //System.Threading.Thread.Sleep(1000*60*5);
                         __ClaymoreZcashStatus.SetSpeed(_currentAlgorithm.BenchmarkSpeed);
@@ -605,7 +611,7 @@ namespace NiceHashMiner.Forms {
                     if (__CPUBenchmarkStatus != null) {
                         _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
                     } else if (__ClaymoreZcashStatus != null) {
-                        _currentMiner.BenchmarkStart(45, this);
+                        _currentMiner.BenchmarkStart(__ClaymoreZcashStatus.Time, this);
                     }
                 } else {
                     NextBenchmark();

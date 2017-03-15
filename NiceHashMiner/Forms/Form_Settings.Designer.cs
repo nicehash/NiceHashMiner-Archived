@@ -1024,6 +1024,7 @@
             this.pictureBox_CPU0_ForceCPUExtension.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox_CPU0_ForceCPUExtension.TabIndex = 385;
             this.pictureBox_CPU0_ForceCPUExtension.TabStop = false;
+            this.pictureBox_CPU0_ForceCPUExtension.Visible = false;
             // 
             // pictureBox_MinerAPIQueryInterval
             // 
@@ -1093,6 +1094,7 @@
             this.comboBox_CPU0_ForceCPUExtension.Name = "comboBox_CPU0_ForceCPUExtension";
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(177, 21);
             this.comboBox_CPU0_ForceCPUExtension.TabIndex = 379;
+            this.comboBox_CPU0_ForceCPUExtension.Visible = false;
             this.comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += new System.EventHandler(this.comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged);
             // 
             // label_CPU0_ForceCPUExtension
@@ -1103,6 +1105,7 @@
             this.label_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(105, 13);
             this.label_CPU0_ForceCPUExtension.TabIndex = 382;
             this.label_CPU0_ForceCPUExtension.Text = "ForceCPUExtension:";
+            this.label_CPU0_ForceCPUExtension.Visible = false;
             // 
             // label_MinIdleSeconds
             // 
