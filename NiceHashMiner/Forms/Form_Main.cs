@@ -641,23 +641,28 @@ namespace NiceHashMiner
         {
             Helpers.ConsolePrint("NICEHASH", "Setting environment variables");
 
-            string[] envName = { "GPU_MAX_ALLOC_PERCENT", "GPU_USE_SYNC_OBJECTS",
-                                 "GPU_SINGLE_ALLOC_PERCENT", "GPU_MAX_HEAP_SIZE", "GPU_FORCE_64BIT_PTR" };
-            string[] envValue = { "100", "1", "100", "100", "1" };
+            Dictionary<string, string> envNameValues = new Dictionary<string, string>() {
+                { "GPU_MAX_ALLOC_PERCENT",      "100" },
+                { "GPU_USE_SYNC_OBJECTS",       "1" },
+                { "GPU_SINGLE_ALLOC_PERCENT",   "100" },
+                { "GPU_MAX_HEAP_SIZE",          "100" },
+                { "GPU_FORCE_64BIT_PTR",        "1" }
+            };
 
-            for (int i = 0; i < envName.Length; i++)
-            {
+            foreach (var kvp in envNameValues) {
+                string envName = kvp.Key;
+                string envValue = kvp.Value;
                 // Check if all the variables is set
-                if (Environment.GetEnvironmentVariable(envName[i]) == null)
+                if (Environment.GetEnvironmentVariable(envName) == null)
                 {
-                    try { Environment.SetEnvironmentVariable(envName[i], envValue[i]); }
+                    try { Environment.SetEnvironmentVariable(envName, envValue); }
                     catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
                 }
 
                 // Check to make sure all the values are set correctly
-                if (!Environment.GetEnvironmentVariable(envName[i]).Equals(envValue[i]))
+                if (!Environment.GetEnvironmentVariable(envName).Equals(envValue))
                 {
-                    try { Environment.SetEnvironmentVariable(envName[i], envValue[i]); }
+                    try { Environment.SetEnvironmentVariable(envName, envValue); }
                     catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
                 }
             }
@@ -755,21 +760,6 @@ namespace NiceHashMiner
                 InitMainConfigGUIData();
             }
         }
-
-
-        //private bool isRaiseAlertSharesNotAcceptedShown = false;
-        //public void RaiseAlertSharesNotAccepted(string algoName) {
-        //    if (!isRaiseAlertSharesNotAcceptedShown) {
-        //        isRaiseAlertSharesNotAcceptedShown = true;
-
-        //        MessageBox.Show(String.Format(International.GetText("Form_Main_Accepted_Speed_Zero"), algoName),
-        //                        International.GetText("Warning_with_Exclamation"),
-        //                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-        //        isRaiseAlertSharesNotAcceptedShown = false;
-        //    }
-        //}
-
 
         private void buttonStartMining_Click(object sender, EventArgs e) {
             IsManuallyStarted = true;
