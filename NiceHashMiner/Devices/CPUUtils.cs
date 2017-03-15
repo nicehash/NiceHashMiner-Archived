@@ -55,7 +55,7 @@ namespace NiceHashMiner.Devices {
         }
 
         /// <summary>
-        /// Checks if CPU mining is capable by checking GetMostOptimized is not automatic
+        /// Checks if CPU mining is capable, CPU must have AES support
         /// </summary>
         /// <returns></returns>
         public static bool IsCPUMiningCapable() {

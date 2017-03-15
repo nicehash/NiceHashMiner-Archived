@@ -8,7 +8,7 @@ namespace NiceHashMiner.Devices
     static public class GroupNames
     {
         private static readonly string[] _names = {
-                                        "CPU", // TODO we can have more then one CPU
+                                        "CPU", // we can have more then one CPU
                                         "AMD_OpenCL",
                                         "NVIDIA2.1",
                                         "NVIDIA3.x",

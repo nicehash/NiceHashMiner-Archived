@@ -57,7 +57,7 @@ namespace NiceHashMiner.Miners {
             }
             return " "
                 + GetDevicesCommandString()
-                + String.Format("  -epool {0} -ewal {1} -mport -{2} -esm 3 -epsw x -allpools 1", url, username, APIPort)
+                + String.Format("  -epool {0} -ewal {1} -mport 127.0.0.1:{2} -esm 3 -epsw x -allpools 1", url, username, APIPort)
                 + dualModeParams;
         }
 
@@ -75,11 +75,12 @@ namespace NiceHashMiner.Miners {
 
             benchmarkTimeWait = time;
 
-            // network workaround
+            // network stub
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             // demo for benchmark
             string ret = GetStartCommand(url, Globals.DemoUser, ConfigManager.GeneralConfig.WorkerName.Trim());
-            return ret;
+            // local benhcmark
+            return ret + "  -benchmark 1";
         }
 
     }

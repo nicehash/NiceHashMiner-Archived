@@ -80,7 +80,6 @@
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
-    <Compile Include="Enums\XmrStackCPUMinerConfigType.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
@@ -106,10 +105,8 @@
     <Compile Include="Devices\OpenCLDevice.cs" />
     <Compile Include="Enums\AlgorithmBenchmarkSettingsType.cs" />
     <Compile Include="Enums\AlgorithmType.cs" />
-    <Compile Include="Enums\AMD_Equihash_3rdParty.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
     <Compile Include="Enums\BenchmarkProcessStatus.cs" />
-    <Compile Include="Enums\ComputePlatformType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
     <Compile Include="Enums\DagGenerationType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />

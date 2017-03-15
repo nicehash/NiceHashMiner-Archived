@@ -39,7 +39,7 @@ namespace NiceHashMiner.Devices
         //CudaDevice _cudaDevice = null;
         //AmdGpuDevice _amdDevice = null;
         // sgminer extra quickfix
-        public readonly bool IsOptimizedVersion;
+        //public readonly bool IsOptimizedVersion;
         public readonly string Codename;
         public readonly string InfSection;
         // amd has some algos not working with new drivers
@@ -60,7 +60,7 @@ namespace NiceHashMiner.Devices
             DeviceType = DeviceType.CPU;
             DeviceGroupType = DeviceGroupType.NONE;
             IsEtherumCapale = false;
-            IsOptimizedVersion = false;
+            //IsOptimizedVersion = false;
             Codename = "fake";
             UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
             GpuRam = 0;
@@ -112,7 +112,7 @@ namespace NiceHashMiner.Devices
                 UUID = amdDevice.UUID;
             }
             // sgminer extra
-            IsOptimizedVersion = amdDevice.UseOptimizedVersion;
+            //IsOptimizedVersion = amdDevice.UseOptimizedVersion;
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);

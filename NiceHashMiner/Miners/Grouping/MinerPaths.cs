@@ -26,15 +26,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ccminer_tpruvot = _bin + @"\ccminer_tpruvot.exe";
             public const string ccminer_cryptonight = _bin + @"\ccminer_cryptonight.exe";
             public const string ccminer_x11gost = _bin + @"\ccminer_x11gost.exe";
-            ///// <summary>
-            ///// cpuminers opt new
-            ///// </summary>
-            //public const string cpuminer_opt_AVX2_AES = _bin + @"\cpuminer_opt_AVX2_AES.exe";
-            //public const string cpuminer_opt_AVX2 = _bin + @"\cpuminer_opt_AVX2.exe";
-            //public const string cpuminer_opt_AVX_AES = _bin + @"\cpuminer_opt_AVX_AES.exe";
-            //public const string cpuminer_opt_AVX = _bin + @"\cpuminer_opt_AVX.exe";
-            //public const string cpuminer_opt_AES = _bin + @"\cpuminer_opt_AES.exe";
-            //public const string cpuminer_opt_SSE2 = _bin + @"\cpuminer_opt_SSE2.exe";
+
             /// <summary>
             /// ethminers
             /// </summary>
@@ -76,14 +68,12 @@ namespace NiceHashMiner.Miners.Grouping
             return algos.FindIndex((a) => a.MinerBaseType == minerBaseType && a.NiceHashID == algorithmType) > -1;
         }
 
-        public static string GetPathFor(MinerBaseType minerBaseType, AlgorithmType algoType, DeviceGroupType devGroupType, string devCodenameAMD, bool isOptimizedAMD, CPUExtensionType MostOptimizedCPUExtensionType) {
+        public static string GetPathFor(MinerBaseType minerBaseType, AlgorithmType algoType, DeviceGroupType devGroupType) {
             switch (minerBaseType) {
-                //case MinerBaseType.cpuminer:
-                //    return CPU_GROUP.cpu_miner_opt(MostOptimizedCPUExtensionType);
                 case MinerBaseType.ccminer:
                     return NVIDIA_GROUPS.ccminer_path(algoType, devGroupType);
                 case MinerBaseType.sgminer:
-                    return AMD_GROUP.sgminer_path(algoType, devCodenameAMD, isOptimizedAMD);
+                    return AMD_GROUP.sgminer_path(algoType);
                 case MinerBaseType.nheqminer:
                     return Data.nheqminer;
                 case MinerBaseType.eqm:
@@ -112,10 +102,7 @@ namespace NiceHashMiner.Miners.Grouping
             return GetPathFor(
                 algorithm.MinerBaseType,
                 algorithm.NiceHashID,
-                computeDevice.DeviceGroupType,
-                computeDevice.Codename,
-                computeDevice.IsOptimizedVersion,
-                CPUUtils.GetMostOptimized()
+                computeDevice.DeviceGroupType
                 );
         }
 
@@ -194,22 +181,10 @@ namespace NiceHashMiner.Miners.Grouping
         }
 
         static class AMD_GROUP {
-            public static string sgminer_path(AlgorithmType type, string gpuCodename, bool isOptimized) {
+            public static string sgminer_path(AlgorithmType type) {
                 if (AlgorithmType.CryptoNight == type || AlgorithmType.DaggerHashimoto == type) {
                     return Data.sgminer_gm;
                 }
-                //if (isOptimized) {
-                //    if (AlgorithmType.Lyra2REv2 == type) {
-                //        if (!(gpuCodename.Contains("Hawaii") || gpuCodename.Contains("Pitcairn") || gpuCodename.Contains("Tahiti"))) {
-                //            if (!Helpers.InternalCheckIsWow64())
-                //                return Data.sgminer_5_6_0_general;
-
-                //            return Data.sgminer_5_4_0_tweaked;
-                //        }
-                //        return Data.sgminer_5_1_0_optimized;
-                //    }
-                //}
-
                 return Data.sgminer_5_6_0_general;
             }
 
@@ -224,21 +199,5 @@ namespace NiceHashMiner.Miners.Grouping
                 return Data.NONE; // should not happen
             }
         }
-
-        //static class CPU_GROUP {
-        //    public static string cpu_miner_opt(CPUExtensionType type) {
-        //        // algorithmType is not needed ATM
-        //        // algorithmType: AlgorithmType
-        //        if (CPUExtensionType.AVX2_AES == type) { return Data.cpuminer_opt_AVX2_AES; }
-        //        if (CPUExtensionType.AVX2 == type) { return Data.cpuminer_opt_AVX2; }
-        //        if (CPUExtensionType.AVX_AES == type) { return Data.cpuminer_opt_AVX_AES; }
-        //        if (CPUExtensionType.AVX == type) { return Data.cpuminer_opt_AVX; }
-        //        if (CPUExtensionType.AES == type) { return Data.cpuminer_opt_AES; }
-        //        if (CPUExtensionType.SSE2 == type) { return Data.cpuminer_opt_SSE2; }
-
-        //        return Data.NONE; // should not happen
-        //    }
-        //}
-
     }
 }

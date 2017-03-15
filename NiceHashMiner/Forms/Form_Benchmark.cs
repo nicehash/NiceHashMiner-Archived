@@ -95,9 +95,15 @@ namespace NiceHashMiner.Forms {
             }
 
             private int FastestIndex() {
-                if (speeds[1] > speeds[0]) {
-                    return 1;
+                int maxIndex = 0;
+                double maxValue = speeds[maxIndex];
+                for (int i = 1; i < speeds.Length; ++i) {
+                    if (speeds[i] > maxValue) {
+                        maxIndex = i;
+                        maxValue = speeds[i];
+                    }
                 }
+                
                 return 0;
             }
 
@@ -562,6 +568,7 @@ namespace NiceHashMiner.Forms {
                 if (__ClaymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.ClaymoreAMD && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash) {
                     if (__ClaymoreZcashStatus.HasTest()) {
                         rebenchSame = true;
+                        //System.Threading.Thread.Sleep(1000*60*5);
                         __ClaymoreZcashStatus.SetSpeed(_currentAlgorithm.BenchmarkSpeed);
                         __ClaymoreZcashStatus.SetNext();
                         _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();

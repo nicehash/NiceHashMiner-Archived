@@ -42,16 +42,6 @@ namespace NiceHashMiner.Miners {
         }
 
         public static void InitMinerReservedPortsFile() {
-            var AMDCodenames = new List<string>() { "Hawaii", "Pitcairn", "Tahiti" };
-            var AMDOptimizations = new List<bool>() { true, false };
-            var CPUExtensions = new List<CPUExtensionType>() {
-                CPUExtensionType.AVX2_AES,
-                CPUExtensionType.AVX2,
-                CPUExtensionType.AVX_AES,
-                CPUExtensionType.AVX,
-                CPUExtensionType.AES,
-                CPUExtensionType.SSE2
-            };
             MinerReservedPortsFile file = new MinerReservedPortsFile();
             MinerReservedPorts = new Dictionary<MinerBaseType, Dictionary<string, Dictionary<AlgorithmType, List<int>>>>();
             if (file.IsFileExists()) {
@@ -73,45 +63,15 @@ namespace NiceHashMiner.Miners {
                             MinerBaseType minerBaseType = mbaseKvp.Key;
                             if (MinerReservedPorts.ContainsKey(minerBaseType)) {
                                 var algos = mbaseKvp.Value;
-                                // CPU case
-                                if (MinerBaseType.cpuminer == minerBaseType) {
-                                    foreach (var algo in algos) {
-                                        foreach (var cpuExt in CPUExtensions) {
-                                            var algoType = algo.NiceHashID;
-                                            var path = MinerPaths.GetPathFor(minerBaseType, algoType, devGroupType, "", false, cpuExt);
-                                            if (path != MinerPaths.Data.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
-                                                MinerReservedPorts[minerBaseType][path] = new Dictionary<AlgorithmType, List<int>>();
-                                            }
-                                            if (MinerReservedPorts[minerBaseType][path] != null && MinerReservedPorts[minerBaseType][path].ContainsKey(algoType) == false) {
-                                                MinerReservedPorts[minerBaseType][path][algoType] = new List<int>();
-                                            }
-                                        }
+                                foreach (var algo in algos) {
+                                    var algoType = algo.NiceHashID;
+                                    var path = MinerPaths.GetPathFor(minerBaseType, algoType, devGroupType);
+                                    var isPathValid = path != MinerPaths.Data.NONE;
+                                    if (isPathValid && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
+                                        MinerReservedPorts[minerBaseType][path] = new Dictionary<AlgorithmType, List<int>>();
                                     }
-                                } else if (MinerBaseType.sgminer == minerBaseType) {
-                                    foreach (var algo in algos) {
-                                        foreach (var isOptimized in AMDOptimizations) {
-                                            foreach (var codename in AMDCodenames) {
-                                                var algoType = algo.NiceHashID;
-                                                var path = MinerPaths.GetPathFor(minerBaseType, algoType, devGroupType, codename, isOptimized, CPUExtensionType.Automatic);
-                                                if (path != MinerPaths.Data.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
-                                                    MinerReservedPorts[minerBaseType][path] = new Dictionary<AlgorithmType, List<int>>();
-                                                }
-                                                if (MinerReservedPorts[minerBaseType][path] != null && MinerReservedPorts[minerBaseType][path].ContainsKey(algoType) == false) {
-                                                    MinerReservedPorts[minerBaseType][path][algoType] = new List<int>();
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    foreach (var algo in algos) {
-                                        var algoType = algo.NiceHashID;
-                                        var path = MinerPaths.GetPathFor(minerBaseType, algoType, devGroupType, "", false, CPUExtensionType.Automatic);
-                                        if (path != MinerPaths.Data.NONE && MinerReservedPorts[minerBaseType].ContainsKey(path) == false) {
-                                            MinerReservedPorts[minerBaseType][path] = new Dictionary<AlgorithmType, List<int>>();
-                                        }
-                                        if (MinerReservedPorts[minerBaseType][path] != null && MinerReservedPorts[minerBaseType][path].ContainsKey(algoType) == false) {
-                                            MinerReservedPorts[minerBaseType][path][algoType] = new List<int>();
-                                        }
+                                    if (isPathValid && MinerReservedPorts[minerBaseType][path] != null && MinerReservedPorts[minerBaseType][path].ContainsKey(algoType) == false) {
+                                        MinerReservedPorts[minerBaseType][path][algoType] = new List<int>();
                                     }
                                 }
                             }
@@ -130,7 +90,6 @@ namespace NiceHashMiner.Miners {
                     }
                 }
             } catch {
-
             }
         }
 

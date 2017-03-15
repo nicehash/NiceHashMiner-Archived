@@ -26,13 +26,8 @@ namespace NiceHashMiner.Devices {
 
                             // Check for optimized version
                             if (Lyra2REv2_Index > -1) {
-                                if (device.IsOptimizedVersion) {
-                                    sgminerAlgos[Lyra2REv2_Index].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 512  --thread-concurrency 0 --worksize 64 --gpu-threads 1";
-                                } else {
-                                    sgminerAlgos[Lyra2REv2_Index].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
-                                }
+                                sgminerAlgos[Lyra2REv2_Index].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
                             }
-
                             if (!device.Codename.Contains("Tahiti") && NeoScrypt_Index > -1) {
                                 sgminerAlgos[NeoScrypt_Index].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
                                 Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + device.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
@@ -54,8 +49,7 @@ namespace NiceHashMiner.Devices {
                                 }
                             }
                         }
-
-                        // check if 3rd party is enabled and allow 3rd party only algos
+                        // non sgminer optimizations
                         if (algoSettings.ContainsKey(MinerBaseType.ClaymoreAMD)) {
                             var ClaymoreAlgos = algoSettings[MinerBaseType.ClaymoreAMD];
                             int CryptoNight_Index = ClaymoreAlgos.FindIndex((el) => el.NiceHashID == AlgorithmType.CryptoNight);
@@ -101,18 +95,9 @@ namespace NiceHashMiner.Devices {
                                 foreach (var algo in algoSettings[MinerBaseType.ClaymoreAMD]) {
                                     if (algo.NiceHashID == AlgorithmType.CryptoNight || algo.NiceHashID == AlgorithmType.DaggerHashimoto) {
                                         algo.Enabled = false;
-                                        //break;
                                     }
                                 }
                             }
-                            //if (algoSettings.ContainsKey(MinerBaseType.sgminer)) {
-                            //    foreach (var algo in algoSettings[MinerBaseType.sgminer]) {
-                            //        if (algo.NiceHashID == AlgorithmType.DaggerHashimoto) {
-                            //            algo.Enabled = false;
-                            //            break;
-                            //        }
-                            //    }
-                            //}
                         }
                     } // END AMD case
 
@@ -120,18 +105,13 @@ namespace NiceHashMiner.Devices {
                     if (device.IsEtherumCapale == false) {
                         algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType> { AlgorithmType.DaggerHashimoto });
                     }
-                    
-                }
-                //if (algoSettings.ContainsKey(MinerBaseType.XmrStackCPU)) {
-                //    algoSettings[MinerBaseType.XmrStackCPU][0].LessThreads = device.Threads / 2; // use half
-                //}
 
-                if (algoSettings.ContainsKey(MinerBaseType.ccminer_alexis)) {
-                    foreach (var unstable_algo in algoSettings[MinerBaseType.ccminer_alexis]) {
-                        unstable_algo.Enabled = false;
+                    if (algoSettings.ContainsKey(MinerBaseType.ccminer_alexis)) {
+                        foreach (var unstable_algo in algoSettings[MinerBaseType.ccminer_alexis]) {
+                            unstable_algo.Enabled = false;
+                        }
                     }
-                }
-
+                } // END algoSettings != null
                 return algoSettings;
             }
             return null;
@@ -140,8 +120,10 @@ namespace NiceHashMiner.Devices {
         public static List<Algorithm> CreateForDeviceList(ComputeDevice device) {
             List<Algorithm> ret = new List<Algorithm>();
             var retDict = CreateForDevice(device);
-            foreach (var kvp in retDict) {
-                ret.AddRange(kvp.Value);
+            if (retDict != null) {
+                foreach (var kvp in retDict) {
+                    ret.AddRange(kvp.Value);
+                }
             }
             return ret;
         }
@@ -149,29 +131,11 @@ namespace NiceHashMiner.Devices {
         public static Dictionary<MinerBaseType, List<Algorithm>> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<MinerBaseType, List<Algorithm>>() {
-                    //{ MinerBaseType.cpuminer,
-                    //    new List<Algorithm>() {
-                    //        new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Lyra2RE, "lyra2"),
-                    //        new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Hodl, "hodl"),
-                    //        new Algorithm(MinerBaseType.cpuminer, AlgorithmType.CryptoNight, "cryptonight")
-                    //    }
-                    //},
-                    //{ MinerBaseType.nheqminer,
-                    //    new List<Algorithm>() {
-                    //        new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
-                    //    }
-                    //},
-                    //{ MinerBaseType.eqm,
-                    //    new List<Algorithm>() {
-                    //        new Algorithm(MinerBaseType.eqm, AlgorithmType.Equihash, "equihash")
-                    //    }
-                    //},
                     { MinerBaseType.XmrStackCPU,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.XmrStackCPU, AlgorithmType.CryptoNight, "cryptonight")
                         }
                     }
-
                 };
             }
             if (DeviceGroupType.AMD_OpenCL == deviceGroupType) {
@@ -191,14 +155,9 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod") { ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2" }
                         }
                     },
-                    //{ MinerBaseType.ethminer,
-                    //    new List<Algorithm>() {
-                    //        new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto")
-                    //    }
-                    //},
                     { MinerBaseType.ClaymoreAMD,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.CryptoNight, "cryptonight"),  /*, { ExtraLaunchParameters: "-a 4" }*/
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.CryptoNight, "cryptonight"),
                             new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.Equihash, "equihash"),
                             new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "")
                         }
@@ -317,15 +276,5 @@ namespace NiceHashMiner.Devices {
             }
             return ret;
         }
-
-
-        //private static List<AlgorithmType> GetAlgorithmKeysForGroup(DeviceGroupType deviceGroupType) {
-        //    var ret = CreateDefaultsForGroup(deviceGroupType);
-        //    if (ret != null) {
-        //        return new List <AlgorithmType>(ret.Keys);
-        //    }
-        //    return null;
-        //}
-
     }
 }
