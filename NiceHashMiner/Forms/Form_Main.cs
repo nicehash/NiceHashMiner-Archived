@@ -289,7 +289,7 @@ namespace NiceHashMiner
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
 
-            SetEnvironmentVariables();
+            //SetEnvironmentVariables();
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 
@@ -637,36 +637,36 @@ namespace NiceHashMiner
         }
 
 
-        void SetEnvironmentVariables()
-        {
-            Helpers.ConsolePrint("NICEHASH", "Setting environment variables");
+        //void SetEnvironmentVariables()
+        //{
+        //    Helpers.ConsolePrint("NICEHASH", "Setting environment variables");
 
-            Dictionary<string, string> envNameValues = new Dictionary<string, string>() {
-                { "GPU_MAX_ALLOC_PERCENT",      "100" },
-                { "GPU_USE_SYNC_OBJECTS",       "1" },
-                { "GPU_SINGLE_ALLOC_PERCENT",   "100" },
-                { "GPU_MAX_HEAP_SIZE",          "100" },
-                { "GPU_FORCE_64BIT_PTR",        "1" }
-            };
+        //    Dictionary<string, string> envNameValues = new Dictionary<string, string>() {
+        //        { "GPU_MAX_ALLOC_PERCENT",      "100" },
+        //        { "GPU_USE_SYNC_OBJECTS",       "1" },
+        //        { "GPU_SINGLE_ALLOC_PERCENT",   "100" },
+        //        { "GPU_MAX_HEAP_SIZE",          "100" },
+        //        { "GPU_FORCE_64BIT_PTR",        "1" }
+        //    };
 
-            foreach (var kvp in envNameValues) {
-                string envName = kvp.Key;
-                string envValue = kvp.Value;
-                // Check if all the variables is set
-                if (Environment.GetEnvironmentVariable(envName) == null)
-                {
-                    try { Environment.SetEnvironmentVariable(envName, envValue); }
-                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
-                }
+        //    foreach (var kvp in envNameValues) {
+        //        string envName = kvp.Key;
+        //        string envValue = kvp.Value;
+        //        // Check if all the variables is set
+        //        if (Environment.GetEnvironmentVariable(envName) == null)
+        //        {
+        //            try { Environment.SetEnvironmentVariable(envName, envValue); }
+        //            catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+        //        }
 
-                // Check to make sure all the values are set correctly
-                if (!Environment.GetEnvironmentVariable(envName).Equals(envValue))
-                {
-                    try { Environment.SetEnvironmentVariable(envName, envValue); }
-                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
-                }
-            }
-        }
+        //        // Check to make sure all the values are set correctly
+        //        if (!Environment.GetEnvironmentVariable(envName).Equals(envValue))
+        //        {
+        //            try { Environment.SetEnvironmentVariable(envName, envValue); }
+        //            catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+        //        }
+        //    }
+        //}
 
         private bool VerifyMiningAddress(bool ShowError)
         {

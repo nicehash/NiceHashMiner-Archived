@@ -16,15 +16,23 @@ namespace NiceHashMiner.Miners {
             }
         }
 
+        // {miner path : {envName : envValue} }
+        class MinerSystemVariablesFile : ConfigFile<Dictionary<string, Dictionary<string, string>>> {
+            public MinerSystemVariablesFile() : base(FOLDERS.CONFIG, "MinerSystemVariables.json", "MinerSystemVariables_old.json") {}
+        }
+
         private static Dictionary<MinerBaseType,
             Dictionary<string,
                 Dictionary<AlgorithmType,
                     List<int>>>> MinerReservedPorts = new Dictionary<MinerBaseType, Dictionary<string, Dictionary<AlgorithmType, List<int>>>>();
         public static List<int> AllReservedPorts = new List<int>();
 
+        public static Dictionary<string, Dictionary<string, string>> MinerSystemVariables = new Dictionary<string, Dictionary<string, string>>();
+
         public static void Init() {
             ExtraLaunchParameters.InitializePackages();
             InitMinerReservedPortsFile();
+            InitMinerSystemVariablesFile();
         }
 
         public static List<int> GetPortsListFor(MinerBaseType minerBaseType, string path, AlgorithmType algorithmType) {
@@ -54,7 +62,7 @@ namespace NiceHashMiner.Miners {
                 for (MinerBaseType type = (MinerBaseType.NONE + 1); type < MinerBaseType.END; ++type) {
                     if (MinerReservedPorts.ContainsKey(type) == false) {
                         MinerReservedPorts[type] = new Dictionary<string, Dictionary<AlgorithmType, List<int>>>();
-                    } 
+                    }
                 }
                 for (DeviceGroupType devGroupType = (DeviceGroupType.NONE + 1); devGroupType < DeviceGroupType.LAST; ++devGroupType) {
                     var minerAlgosForGroup = GroupAlgorithms.CreateDefaultsForGroup(devGroupType);
@@ -91,6 +99,49 @@ namespace NiceHashMiner.Miners {
                 }
             } catch {
             }
+        }
+
+        public static void InitMinerSystemVariablesFile() {
+            MinerSystemVariablesFile file = new MinerSystemVariablesFile();
+            MinerSystemVariables = new Dictionary<string, Dictionary<string, string>>();
+            if (file.IsFileExists()) {
+                var read = file.ReadFile();
+                if (read != null) {
+                    MinerSystemVariables = read;
+                }
+            } else {
+                // general AMD defaults scope
+                {
+                    List<string> minerPaths = new List<string>() {
+                        MinerPaths.Data.sgminer_5_6_0_general,
+                        MinerPaths.Data.sgminer_gm,
+                        MinerPaths.Data.ClaymoreCryptoNightMiner,
+                        MinerPaths.Data.ClaymoreZcashMiner,
+                        MinerPaths.Data.OptiminerZcashMiner
+                    };
+                    foreach (var minerPath in minerPaths) {
+                        MinerSystemVariables[minerPath] = new Dictionary<string, string>() {
+                            { "GPU_MAX_ALLOC_PERCENT",      "100" },
+                            { "GPU_USE_SYNC_OBJECTS",       "1" },
+                            { "GPU_SINGLE_ALLOC_PERCENT",   "100" },
+                            { "GPU_MAX_HEAP_SIZE",          "100" },
+                            { "GPU_FORCE_64BIT_PTR",        "1" }
+                        };
+                    }
+                }
+                // ClaymoreDual scope
+                {
+                    MinerSystemVariables[MinerPaths.Data.ClaymoreDual] = new Dictionary<string, string>() {
+                        { "GPU_MAX_ALLOC_PERCENT",      "100" },
+                        { "GPU_USE_SYNC_OBJECTS",       "1" },
+                        { "GPU_SINGLE_ALLOC_PERCENT",   "100" },
+                        { "GPU_MAX_HEAP_SIZE",          "100" },
+                        { "GPU_FORCE_64BIT_PTR",        "0" }
+                    };
+                }
+            }
+            // save defaults
+            file.Commit(MinerSystemVariables);
         }
 
     }

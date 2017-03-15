@@ -340,6 +340,14 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint(MinerTAG(), "Using miner: " + BenchmarkHandle.StartInfo.FileName);
                 BenchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
             }
+            // set sys variables
+            if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path)) {
+                foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path]) {
+                    string envName = kvp.Key;
+                    string envValue = kvp.Value;
+                    BenchmarkHandle.StartInfo.EnvironmentVariables[envName] = envValue;
+                }
+            }
 
             BenchmarkHandle.StartInfo.Arguments = (string)CommandLine;
             BenchmarkHandle.StartInfo.UseShellExecute = false;
@@ -577,6 +585,13 @@ namespace NiceHashMiner
             if (WorkingDirectory.Length > 1)
             {
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
+            }
+            if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path)) {
+                foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path]) {
+                    string envName = kvp.Key;
+                    string envValue = kvp.Value;
+                    P.StartInfo.EnvironmentVariables[envName] = envValue;
+                }
             }
 
             P.StartInfo.FileName = Path;
