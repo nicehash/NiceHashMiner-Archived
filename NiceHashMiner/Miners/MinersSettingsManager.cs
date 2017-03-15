@@ -104,12 +104,15 @@ namespace NiceHashMiner.Miners {
         public static void InitMinerSystemVariablesFile() {
             MinerSystemVariablesFile file = new MinerSystemVariablesFile();
             MinerSystemVariables = new Dictionary<string, Dictionary<string, string>>();
+            bool isFileInit = false;
             if (file.IsFileExists()) {
                 var read = file.ReadFile();
                 if (read != null) {
+                    isFileInit = true;
                     MinerSystemVariables = read;
                 }
-            } else {
+            }
+            if (!isFileInit) {
                 // general AMD defaults scope
                 {
                     List<string> minerPaths = new List<string>() {
@@ -139,9 +142,9 @@ namespace NiceHashMiner.Miners {
                         { "GPU_FORCE_64BIT_PTR",        "0" }
                     };
                 }
+                // save defaults
+                file.Commit(MinerSystemVariables);
             }
-            // save defaults
-            file.Commit(MinerSystemVariables);
         }
 
     }
