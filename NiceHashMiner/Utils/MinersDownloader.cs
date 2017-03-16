@@ -21,6 +21,7 @@ namespace NiceHashMiner.Utils {
 
         private WebClient _webClient;
         private Stopwatch _stopwatch;
+        Thread _UnzipThread = null;
 
         bool isDownloadSizeInit = false;
 
@@ -124,8 +125,8 @@ namespace NiceHashMiner.Utils {
 
         private void UnzipStart() {
             _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Settup"));
-            Thread BenchmarkThread = new Thread(UnzipThreadRoutine);
-            BenchmarkThread.Start();
+            _UnzipThread = new Thread(UnzipThreadRoutine);
+            _UnzipThread.Start();
         }
 
         private void UnzipThreadRoutine() {
@@ -150,6 +151,8 @@ namespace NiceHashMiner.Utils {
                             _minerUpdateIndicator.SetProgressValueAndMsg((int)prog, String.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
                         }
                     }
+                    archive.Dispose();
+                    archive = null;
                     // after unzip stuff
                     _minerUpdateIndicator.FinishMsg(true);
                     // remove bins zip
@@ -157,7 +160,9 @@ namespace NiceHashMiner.Utils {
                         if (File.Exists(_downloadSetup.BinsZipLocation)) {
                             File.Delete(_downloadSetup.BinsZipLocation);
                         }
-                    } catch { }
+                    } catch (Exception e) {
+                        Helpers.ConsolePrint("MinersDownloader.UnzipThreadRoutine", "Cannot delete exception: " + e.Message);
+                    }
                 } else {
                     Helpers.ConsolePrint(TAG, String.Format("UnzipThreadRoutine {0} file not found", _downloadSetup.BinsZipLocation));
                 }

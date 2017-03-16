@@ -39,7 +39,9 @@ namespace NiceHashMiner.Utils {
                 if (File.Exists(dlSetup.BinsZipLocation)) {
                     File.Delete(dlSetup.BinsZipLocation);
                 }
-            } catch { }
+            } catch(Exception e) {
+                Helpers.ConsolePrint("MinersDownloadManager.DeleteAfter", "Cannot delete exception: " + e.Message);
+            }
         }
 
         public static void DeleteStandardDlSetup() {
