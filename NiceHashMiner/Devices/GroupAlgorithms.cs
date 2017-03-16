@@ -118,6 +118,12 @@ namespace NiceHashMiner.Devices {
                             unstable_algo.Enabled = false;
                         }
                     }
+                    if (algoSettings.ContainsKey(MinerBaseType.experimental)) {
+                        foreach (var unstable_algo in algoSettings[MinerBaseType.experimental]) {
+                            unstable_algo.Enabled = false;
+                        }
+                    }
+
                 } // END algoSettings != null
                 return algoSettings;
             }
@@ -216,12 +222,20 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
                         }
                     },
+                    { MinerBaseType.experimental,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.experimental, AlgorithmType.NeoScrypt, "neoscrypt")
+                        }
+                    },
                 };
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
                         AlgorithmType.NeoScrypt,
                         AlgorithmType.CryptoNight
                     });
+                }
+                if (DeviceGroupType.NVIDIA_6_x != deviceGroupType) {
+                    ToRemoveMinerTypes.Add(MinerBaseType.experimental);
                 }
                 if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
@@ -241,7 +255,7 @@ namespace NiceHashMiner.Devices {
                 }
 
                 // filter unused
-                var finalRet = FilterMinerAlgos(ret, ToRemoveAlgoTypes);
+                var finalRet = FilterMinerAlgos(ret, ToRemoveAlgoTypes, new List<MinerBaseType>() { MinerBaseType.ccminer });
                 finalRet = FilterMinerBaseTypes(finalRet, ToRemoveMinerTypes);
 
                 return finalRet;
@@ -260,12 +274,26 @@ namespace NiceHashMiner.Devices {
             return finalRet;
         }
 
-        static Dictionary<MinerBaseType, List<Algorithm>> FilterMinerAlgos(Dictionary<MinerBaseType, List<Algorithm>> minerAlgos, List<AlgorithmType> toRemove) {
+        static Dictionary<MinerBaseType, List<Algorithm>> FilterMinerAlgos(Dictionary<MinerBaseType, List<Algorithm>> minerAlgos, List<AlgorithmType> toRemove, List<MinerBaseType> toRemoveBase = null) {
             var finalRet = new Dictionary<MinerBaseType, List<Algorithm>>();
-            foreach (var kvp in minerAlgos) {
-                var algoList = kvp.Value.FindAll((a) => toRemove.IndexOf(a.NiceHashID) == -1);
-                if (algoList.Count > 0) {
-                    finalRet[kvp.Key] = algoList;
+            if (toRemoveBase == null) { // all minerbasekeys
+                foreach (var kvp in minerAlgos) {
+                    var algoList = kvp.Value.FindAll((a) => toRemove.IndexOf(a.NiceHashID) == -1);
+                    if (algoList.Count > 0) {
+                        finalRet[kvp.Key] = algoList;
+                    }
+                }
+            } else {
+                foreach (var kvp in minerAlgos) {
+                    // filter only if base key is defined
+                    if (toRemoveBase.IndexOf(kvp.Key) > -1) {
+                        var algoList = kvp.Value.FindAll((a) => toRemove.IndexOf(a.NiceHashID) == -1);
+                        if (algoList.Count > 0) {
+                            finalRet[kvp.Key] = algoList;
+                        }
+                    } else { // keep all
+                        finalRet[kvp.Key] = kvp.Value;
+                    }
                 }
             }
             return finalRet;
