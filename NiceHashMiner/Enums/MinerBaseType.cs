@@ -20,6 +20,7 @@ namespace NiceHashMiner.Enums {
         excavator,
         XmrStackCPU,
         ccminer_alexis,
+        experimental,
         END
     }
 }

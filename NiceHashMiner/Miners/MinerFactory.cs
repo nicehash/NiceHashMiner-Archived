@@ -28,6 +28,13 @@ namespace NiceHashMiner.Miners {
             return null;
         }
 
+        private static Miner CreateExperimental(DeviceType deviceType, AlgorithmType algorithmType) {
+            if (AlgorithmType.NeoScrypt == algorithmType && DeviceType.NVIDIA == deviceType) {
+                return new ccminer(/*minersConfig*/);
+            }
+            return null;
+        }
+
         public static Miner CreateMiner(DeviceType deviceType, AlgorithmType algorithmType, MinerBaseType minerBaseType /*, /*minersConfig: minersConfig*/) {
             switch (minerBaseType) {
                 case MinerBaseType.cpuminer:
@@ -52,6 +59,8 @@ namespace NiceHashMiner.Miners {
                     return new XmrStackCPUMiner();
                 case MinerBaseType.ccminer_alexis:
                     return new ccminer(/*minersConfig*/);
+                case MinerBaseType.experimental:
+                    return CreateExperimental(deviceType, algorithmType);
             }
             return null;
         }

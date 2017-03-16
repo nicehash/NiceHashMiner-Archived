@@ -90,6 +90,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.XmrStackCPUMiner;
                 case MinerBaseType.ccminer_alexis:
                     return NVIDIA_GROUPS.ccminer_unstable_path(algoType, devGroupType);
+                case MinerBaseType.experimental:
+                    return EXPERIMENTAL.GetPath(algoType, devGroupType);
             }
             return Data.NONE;
         }
@@ -195,6 +197,16 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.ClaymoreCryptoNightMiner;
                 } else if (AlgorithmType.DaggerHashimoto == type) {
                     return Data.ClaymoreDual;
+                }
+                return Data.NONE; // should not happen
+            }
+        }
+
+        // unstable miners, NVIDIA for now
+        static class EXPERIMENTAL {
+            public static string GetPath(AlgorithmType algoType, DeviceGroupType devGroupType) {
+                if (devGroupType == DeviceGroupType.NVIDIA_6_x) {
+                    return NVIDIA_GROUPS.ccminer_path(algoType, devGroupType);
                 }
                 return Data.NONE; // should not happen
             }
