@@ -91,9 +91,16 @@ namespace NiceHashMiner.Devices {
                                     }
                                 }
                             }
+                            if (algoSettings.ContainsKey(MinerBaseType.sgminer)) {
+                                foreach (var algo in algoSettings[MinerBaseType.sgminer]) {
+                                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto) {
+                                        algo.Enabled = false;
+                                    }
+                                }
+                            }
                             if (algoSettings.ContainsKey(MinerBaseType.ClaymoreAMD)) {
                                 foreach (var algo in algoSettings[MinerBaseType.ClaymoreAMD]) {
-                                    if (algo.NiceHashID == AlgorithmType.CryptoNight || algo.NiceHashID == AlgorithmType.DaggerHashimoto) {
+                                    if (algo.NiceHashID == AlgorithmType.CryptoNight) {
                                         algo.Enabled = false;
                                     }
                                 }
