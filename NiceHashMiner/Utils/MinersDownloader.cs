@@ -46,15 +46,6 @@ namespace NiceHashMiner.Utils {
             Downlaod();
         }
 
-        //// #1 check if miners exits
-        //public bool IsMinerBinFolder() {
-        //    return Directory.Exists("bin");
-        //}
-
-        //bool IsMinerBinZip() {
-        //    return File.Exists(_downloadSetup.BinsZipLocation);
-        //}
-
         // #2 download the file
         private void Downlaod() {
             _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Downloading"));

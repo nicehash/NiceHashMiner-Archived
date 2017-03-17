@@ -40,8 +40,6 @@ namespace NiceHashMiner
         private Timer StartupTimer;
         private Timer IdleCheck;
 
-        private Timer DeleteDl;
-
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
 
@@ -52,13 +50,12 @@ namespace NiceHashMiner
 
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
-                
-        const string _betaAlphaPostfixString = "";
+
+        const string _betaAlphaPostfixString = "-Pre-Release_01";
 
         private bool _isDeviceDetectionInitialized = false;
 
         private bool IsManuallyStarted = false;
-        private bool IsMining = false;
 
         int MainFormHeight = 0;
         int EmtpyGroupPanelHeight = 0;
@@ -402,18 +399,6 @@ namespace NiceHashMiner
                     }
                 }
             }
-            // cleanup
-            DeleteDl = new Timer();
-            DeleteDl.Tick += DeletSingleShot_Tick;
-            DeleteDl.Interval = 10 * 1000;
-            DeleteDl.Start();
-        }
-
-        private void DeletSingleShot_Tick(object sender, EventArgs e) {
-            DeleteDl.Stop();
-            DeleteDl = null;
-            MinersDownloadManager.DeleteStandardDlSetup();
-            MinersDownloadManager.DeleteThirdPartyDlSetup();
         }
 
         private void SetChildFormCenter(Form form) {

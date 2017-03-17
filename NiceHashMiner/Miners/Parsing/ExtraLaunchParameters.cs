@@ -97,21 +97,21 @@ namespace NiceHashMiner.Miners.Parsing {
                 },
                 new List<MinerOption>()
             ),
-            new MinerOptionPackage(
-                MinerType.nheqminer_AMD,
-                new List<MinerOption>() {
-                    new MinerOption("Solver_Version", "-ov", "-ov", "0", MinerOptionFlagType.SingleParam, " "), // default none
-                    new MinerOption("Solver_Dev_Thread", "-ot", "-ot", "1", MinerOptionFlagType.MultiParam, " "), // default none
-                },
-                new List<MinerOption>()
-            ),
-            new MinerOptionPackage(
-                MinerType.eqm_CPU,
-                new List<MinerOption>() {
-                    new MinerOption("Threads", "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " ") // default none
-                },
-                new List<MinerOption>()
-            ),
+            //new MinerOptionPackage(
+            //    MinerType.nheqminer_AMD,
+            //    new List<MinerOption>() {
+            //        new MinerOption("Solver_Version", "-ov", "-ov", "0", MinerOptionFlagType.SingleParam, " "), // default none
+            //        new MinerOption("Solver_Dev_Thread", "-ot", "-ot", "1", MinerOptionFlagType.MultiParam, " "), // default none
+            //    },
+            //    new List<MinerOption>()
+            //),
+            //new MinerOptionPackage(
+            //    MinerType.eqm_CPU,
+            //    new List<MinerOption>() {
+            //        new MinerOption("Threads", "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " ") // default none
+            //    },
+            //    new List<MinerOption>()
+            //),
             new MinerOptionPackage(
                 MinerType.eqm_CUDA,
                 new List<MinerOption>() {
@@ -187,8 +187,12 @@ namespace NiceHashMiner.Miners.Parsing {
             new MinerOptionPackage(
                 MinerType.excavator,
                 new List<MinerOption>() {
-                    new MinerOption("number_of_blocks", "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-                    new MinerOption("tpb", "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
+                    // parameters differ according to algorithm
+                    new MinerOption("parameter1", "-c1", "-c1", "", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("parameter2", "-c2", "-c2", "", MinerOptionFlagType.MultiParam, " "),
+                    // Overclocking not supported from NHM
+                    //new MinerOption("Overclocking_os", "-os", "-os", "", MinerOptionFlagType.MultiParam, " "),
+                    //new MinerOption("Overclocking_od", "-od", "-od", "2", MinerOptionFlagType.MultiParam, " "),
                 },
                 new List<MinerOption>()
             ),

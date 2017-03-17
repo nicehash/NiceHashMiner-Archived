@@ -38,15 +38,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string sgminer_5_6_0_general = _bin + @"\sgminer-5-6-0-general\sgminer.exe";
             public const string sgminer_gm = _bin + @"\sgminer-gm\sgminer.exe";
 
-            /// <summary>
-            /// nheqminer
-            /// </summary>
             public const string nheqminer = _bin + @"\nheqminer_v0.4b\nheqminer.exe";
-
-            /// <summary>
-            /// eqm
-            /// </summary>
-            public const string eqm = _bin + @"\eqm\eqm.exe";
             public const string excavator = _bin + @"\excavator\excavator.exe";
 
             public const string XmrStackCPUMiner = _bin + @"\xmr-stak-cpu\xmr-stak-cpu.exe";
@@ -76,8 +68,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return AMD_GROUP.sgminer_path(algoType);
                 case MinerBaseType.nheqminer:
                     return Data.nheqminer;
-                case MinerBaseType.eqm:
-                    return Data.eqm;
                 case MinerBaseType.ethminer:
                     return Data.ethminer;
                 case MinerBaseType.ClaymoreAMD:

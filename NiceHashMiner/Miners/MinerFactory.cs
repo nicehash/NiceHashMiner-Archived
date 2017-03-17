@@ -10,55 +10,51 @@ namespace NiceHashMiner.Miners {
 
         private static Miner CreateEthminer(DeviceType deviceType) {
             if (DeviceType.AMD == deviceType) {
-                return new MinerEtherumOCL(/*minersConfig*/);
+                return new MinerEtherumOCL();
             } else if(DeviceType.NVIDIA == deviceType) {
-                return new MinerEtherumCUDA(/*minersConfig*/);
+                return new MinerEtherumCUDA();
             }
             return null;
         }
 
         private static Miner CreateClaymore(AlgorithmType algorithmType) {
             if (AlgorithmType.Equihash == algorithmType) {
-                return new ClaymoreZcashMiner(/*minersConfig*/);
+                return new ClaymoreZcashMiner();
             } else if (AlgorithmType.CryptoNight == algorithmType) {
-                return new ClaymoreCryptoNightMiner(/*minersConfig*/);
+                return new ClaymoreCryptoNightMiner();
             } else if (AlgorithmType.DaggerHashimoto == algorithmType) {
-                return new ClaymoreDual(/*minersConfig*/);
+                return new ClaymoreDual();
             }
             return null;
         }
 
         private static Miner CreateExperimental(DeviceType deviceType, AlgorithmType algorithmType) {
             if (AlgorithmType.NeoScrypt == algorithmType && DeviceType.NVIDIA == deviceType) {
-                return new ccminer(/*minersConfig*/);
+                return new ccminer();
             }
             return null;
         }
 
-        public static Miner CreateMiner(DeviceType deviceType, AlgorithmType algorithmType, MinerBaseType minerBaseType /*, /*minersConfig: minersConfig*/) {
+        public static Miner CreateMiner(DeviceType deviceType, AlgorithmType algorithmType, MinerBaseType minerBaseType) {
             switch (minerBaseType) {
-                case MinerBaseType.cpuminer:
-                    return new cpuminer(/*minersConfig*/);
                 case MinerBaseType.ccminer:
-                    return new ccminer(/*minersConfig*/);
+                    return new ccminer();
                 case MinerBaseType.sgminer:
-                    return new sgminer(/*minersConfig*/);
+                    return new sgminer();
                 case MinerBaseType.nheqminer:
-                    return new nheqminer(/*minersConfig*/);
-                case MinerBaseType.eqm:
-                    return new eqm(/*minersConfig*/);
+                    return new nheqminer();
                 case MinerBaseType.ethminer:
                     return CreateEthminer(deviceType);
                 case MinerBaseType.ClaymoreAMD:
                     return CreateClaymore(algorithmType);
                 case MinerBaseType.OptiminerAMD:
-                    return new OptiminerZcashMiner(/*minersConfig*/);
+                    return new OptiminerZcashMiner();
                 case MinerBaseType.excavator:
                     return new excavator();
                 case MinerBaseType.XmrStackCPU:
                     return new XmrStackCPUMiner();
                 case MinerBaseType.ccminer_alexis:
-                    return new ccminer(/*minersConfig*/);
+                    return new ccminer();
                 case MinerBaseType.experimental:
                     return CreateExperimental(deviceType, algorithmType);
             }

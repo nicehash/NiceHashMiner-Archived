@@ -44,8 +44,6 @@ namespace NiceHashMiner.Miners {
         private Timer _preventSleepTimer;
         // check internet connection 
         private Timer _internetCheckTimer;
-        //// check local and web stats per algo
-        //private Timer _checkWorkerStats;
         
 
         public bool IsMiningEnabled {
@@ -88,11 +86,6 @@ namespace NiceHashMiner.Miners {
             _internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
             _internetCheckTimer.Interval = 1 * 1000 * 60; // every minute
 
-            //// check worker stats
-            //_checkWorkerStats = new Timer();
-            //_checkWorkerStats.Elapsed += _checkWorkerStats_Elapsed;
-            //_checkWorkerStats.Interval = 2 * 1000 * 60; // every 2 minutes check, miners have to mine 5 minutes to take into account
-
             // assume profitable
             IsProfitable = true;
             // assume we have internet
@@ -101,32 +94,10 @@ namespace NiceHashMiner.Miners {
             if (IsMiningEnabled) {
                 _preventSleepTimer.Start();
                 _internetCheckTimer.Start();
-                //_checkWorkerStats.Start();
             }
 
             IsMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
         }
-
-        //// TODO this feature is needs more feedback
-        //void _checkWorkerStats_Elapsed(object sender, ElapsedEventArgs e) {
-        //    AlgorithmType type = AlgorithmType.NONE;
-        //    bool showWarning = false;
-        //    foreach (var groupMiner in _runningGroupMiners.Values) {
-        //        if (groupMiner.Miner.ShouldCheckMinerStats()) {
-        //            groupMiner.Miner.ResetCheckTime();
-        //            var res = NiceHashStats.GetWorkerAlgorithmAcceptedSpeeds(_btcAdress, groupMiner.AlgorithmType, _worker);
-        //            if (res != null && res.accepted == 0 && _mainFormRatesComunication != null) {
-        //                type = groupMiner.AlgorithmType;
-        //                showWarning = groupMiner.Miner.IsCheckShowWarning();
-        //            } else {
-        //                groupMiner.Miner.ResetCheckStateCount();
-        //            }
-        //        }
-        //    }
-        //    if (showWarning) {
-        //        _mainFormRatesComunication.RaiseAlertSharesNotAccepted(AlgorithmNiceHashNames.GetName(type));
-        //    }
-        //}
 
         #region Timers stuff
         private void InternetCheckTimer_Tick(object sender, EventArgs e) {
@@ -165,25 +136,7 @@ namespace NiceHashMiner.Miners {
             // restroe/enable sleep
             _preventSleepTimer.Stop();
             _internetCheckTimer.Stop();
-            //_checkWorkerStats.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
-
-            // delete generated bin files
-            // check for bins files
-            var dirInfo = new DirectoryInfo(MinerPaths.Data.nheqminer.Replace("nheqminer.exe", ""));
-            var DONT_DELETE = "equiw200k9.bin";
-            var deleteContains = "equiw200k9";
-            var alwaysDeleteContains2 = "silentarmy_gpu";
-            if (dirInfo != null && dirInfo.Exists) {
-                foreach (FileInfo file in dirInfo.GetFiles()) {
-                    if (file.Name != DONT_DELETE && file.Name.Contains(deleteContains)) {
-                        file.Delete();
-                    }
-                    if (file.Name.Contains(alwaysDeleteContains2)) {
-                        file.Delete();
-                    }
-                }
-            }
         }
 
         public void StopAllMinersNonProfitable() {
@@ -476,17 +429,6 @@ namespace NiceHashMiner.Miners {
                 // Update GUI
                 _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), groupMiners.DevicesInfoString, AD, groupMiners.CurrentRate, m.IsAPIReadException);
             }
-            //// check if profitabile
-            //if (CheckStatus && !IsMiningRegardlesOfProfit) {
-            //    CheckStatus = false;
-            //    if (IsProfitable) {
-            //        // check current profit
-            //        CheckIfShouldMine(CurrentProfit, true);
-            //    } else if (!IsProfitable) {
-            //        // recalculate and switch
-            //        SwichMostProfitableGroupUpMethod(NiceHashData, true);
-            //    }
-            //}
         }
 
     }

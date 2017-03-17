@@ -211,9 +211,9 @@ namespace NiceHashMiner.Miners.Parsing {
         }
 
         private static MinerType GetMinerType(DeviceType deviceType, MinerBaseType minerBaseType, AlgorithmType algorithmType) {    
-            if (MinerBaseType.cpuminer == minerBaseType) {
-                return MinerType.cpuminer_opt;
-            }
+            //if (MinerBaseType.cpuminer == minerBaseType) {
+            //    return MinerType.cpuminer_opt;
+            //}
             if (MinerBaseType.OptiminerAMD == minerBaseType) {
                 return MinerType.OptiminerZcash;
             }

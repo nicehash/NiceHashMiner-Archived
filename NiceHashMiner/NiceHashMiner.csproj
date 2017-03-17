@@ -199,7 +199,7 @@
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
     <Compile Include="Miners\ClaymoreCryptoNightMiner.cs" />
     <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
-    <Compile Include="Miners\Equihash\eqm.cs" />
+    <Compile Include="Miners\Obsolete\eqm.cs" />
     <Compile Include="Miners\Equihash\nheqBase.cs" />
     <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
     <Compile Include="Miners\excavator.cs" />
@@ -242,7 +242,7 @@
     <Compile Include="Miners\ethminer\Ethereum.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
-    <Compile Include="Miners\cpuminer.cs" />
+    <Compile Include="Miners\Obsolete\cpuminer.cs" />
     <Compile Include="Forms\Form_Main.cs">
       <SubType>Form</SubType>
     </Compile>

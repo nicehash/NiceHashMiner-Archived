@@ -46,12 +46,26 @@ namespace NiceHashMiner.Miners {
 
         protected override string GetDevicesCommandString() {
             string deviceStringCommand = " -cd ";
-
-            foreach (var nvidia_pair in this.MiningSetup.MiningPairs) {
-                deviceStringCommand += nvidia_pair.Device.ID + " ";
+            if(this.MiningSetup.CurrentAlgorithmType == AlgorithmType.Equihash) {
+                foreach (var nvidia_pair in this.MiningSetup.MiningPairs) {
+                    if (nvidia_pair.CurrentExtraLaunchParameters.Contains("-ct")) {
+                        for (int i = 0; i < ExtraLaunchParametersParser.GetEqmCudaThreadCount(nvidia_pair); ++i) {
+                            deviceStringCommand += nvidia_pair.Device.ID + " ";
+                        }
+                    } else { // use default 2 best performance
+                        for (int i = 0; i < 2; ++i) {
+                            deviceStringCommand += nvidia_pair.Device.ID + " ";
+                        }
+                    }
+                }
+            } else {
+                foreach (var nvidia_pair in this.MiningSetup.MiningPairs) {
+                    deviceStringCommand += nvidia_pair.Device.ID + " ";
+                }
             }
-            //// no extra launch params
-            //deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(NVIDIA_Setup, DeviceType.NVIDIA);
+            
+            // no extra launch params
+            deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(this.MiningSetup, DeviceType.NVIDIA);
 
             return deviceStringCommand;
         }
@@ -59,7 +73,7 @@ namespace NiceHashMiner.Miners {
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string ret = "-b " + time + " " + GetDevicesCommandString();
+            string ret = " -a " + this.MiningSetup.MinerName + " -b " + time + " " + GetDevicesCommandString();
             return ret;
         }
 
@@ -81,6 +95,13 @@ namespace NiceHashMiner.Miners {
                             spd *= 1000000;
                         else if (postfixStr.Contains("GH/s"))
                             spd *= 1000000000;
+
+                        // wrong benchmark workaround over 3gh/s is considered false
+                        if (this.MiningSetup.CurrentAlgorithmType == AlgorithmType.Pascal
+                            && spd > 3.0d * 1000000000.0d
+                            ) {
+                            return false;
+                        }
 
                         BenchmarkAlgorithm.BenchmarkSpeed = spd;
                         return true;

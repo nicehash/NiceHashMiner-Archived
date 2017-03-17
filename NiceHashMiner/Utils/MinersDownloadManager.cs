@@ -15,7 +15,7 @@ using NiceHashMiner.Devices;
 namespace NiceHashMiner.Utils {
     public static class MinersDownloadManager {
         public static DownloadSetup StandardDlSetup = new DownloadSetup(
-            "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_5_2.zip",
+            "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_5_6.zip",
             "bins.zip",
             "bin");
 
@@ -23,33 +23,5 @@ namespace NiceHashMiner.Utils {
             "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_3rdparty_1_7_5_4.zip",
             "bins_3rdparty.zip",
             "bin_3rdparty");
-
-        // #1 check if miners exits
-        public static bool IsMinerBinFolder() {
-            return Directory.Exists(StandardDlSetup.ZipedFolderName);
-        }
-
-        static bool IsMinerBinZip() {
-            return File.Exists(StandardDlSetup.BinsZipLocation);
-        }
-
-        // delete
-        private static void DeleteAfter(DownloadSetup dlSetup) {
-            try {
-                if (File.Exists(dlSetup.BinsZipLocation)) {
-                    File.Delete(dlSetup.BinsZipLocation);
-                }
-            } catch(Exception e) {
-                Helpers.ConsolePrint("MinersDownloadManager.DeleteAfter", "Cannot delete exception: " + e.Message);
-            }
-        }
-
-        public static void DeleteStandardDlSetup() {
-            DeleteAfter(StandardDlSetup);
-        }
-        public static void DeleteThirdPartyDlSetup() {
-            DeleteAfter(ThirdPartyDlSetup);
-        }
-
     }
 }

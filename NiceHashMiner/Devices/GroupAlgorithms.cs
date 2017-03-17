@@ -11,7 +11,6 @@ namespace NiceHashMiner.Devices {
     /// </summary>
     public static class GroupAlgorithms {
 
-
         public static Dictionary<MinerBaseType, List<Algorithm>> CreateForDevice(ComputeDevice device) {
             if (device != null) {
                 var algoSettings = CreateDefaultsForGroup(device.DeviceGroupType);
@@ -212,13 +211,9 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
                         }
                     },
-                    { MinerBaseType.eqm,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.eqm, AlgorithmType.Equihash, "equihash")
-                        }
-                    },
                     { MinerBaseType.excavator,
                         new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.excavator, AlgorithmType.Equihash, "equihash"),
                             new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
                         }
                     },
@@ -237,13 +232,21 @@ namespace NiceHashMiner.Devices {
                 if (DeviceGroupType.NVIDIA_6_x != deviceGroupType) {
                     ToRemoveMinerTypes.Add(MinerBaseType.experimental);
                 }
+                if (DeviceGroupType.NVIDIA_6_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType) {
+                    ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
+                        MinerBaseType.nheqminer
+                    });
+                }
                 if(DeviceGroupType.NVIDIA_2_1 == deviceGroupType || DeviceGroupType.NVIDIA_3_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
                         AlgorithmType.NeoScrypt,
                         AlgorithmType.Lyra2RE,
                         AlgorithmType.Lyra2REv2
                     });
-                    ToRemoveMinerTypes.Add(MinerBaseType.eqm);
+                    ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
+                        MinerBaseType.eqm,
+                        MinerBaseType.excavator
+                    });
                 }
                 if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
@@ -299,17 +302,17 @@ namespace NiceHashMiner.Devices {
             return finalRet;
         }
 
-        static List<AlgorithmType> GetKeysForMinerAlgosGroup(Dictionary<MinerBaseType, List<Algorithm>> minerAlgos) {
-            List<AlgorithmType> ret = new List<AlgorithmType>();
-            foreach (var kvp in minerAlgos) {
-                var currentKeys = kvp.Value.ConvertAll((a) => a.NiceHashID);
-                foreach (var key in currentKeys) {
-                    if (ret.Contains(key) == false) {
-                        ret.Add(key);
-                    }
-                }
-            }
-            return ret;
-        }
+        //static List<AlgorithmType> GetKeysForMinerAlgosGroup(Dictionary<MinerBaseType, List<Algorithm>> minerAlgos) {
+        //    List<AlgorithmType> ret = new List<AlgorithmType>();
+        //    foreach (var kvp in minerAlgos) {
+        //        var currentKeys = kvp.Value.ConvertAll((a) => a.NiceHashID);
+        //        foreach (var key in currentKeys) {
+        //            if (ret.Contains(key) == false) {
+        //                ret.Add(key);
+        //            }
+        //        }
+        //    }
+        //    return ret;
+        //}
     }
 }

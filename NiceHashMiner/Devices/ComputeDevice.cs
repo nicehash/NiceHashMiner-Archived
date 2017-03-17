@@ -36,8 +36,6 @@ namespace NiceHashMiner.Devices
         public readonly bool IsEtherumCapale;
         public static readonly ulong MEMORY_3GB = 3221225472;
 
-        //CudaDevice _cudaDevice = null;
-        //AmdGpuDevice _amdDevice = null;
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
         public readonly string Codename;
@@ -45,8 +43,6 @@ namespace NiceHashMiner.Devices
         // amd has some algos not working with new drivers
         public readonly bool DriverDisableAlgos;
 
-        //public DeviceBenchmarkConfig_rem DeviceBenchmarkConfig { get; private set; }
-        //public Dictionary<AlgorithmType, Algorithm> AlgorithmSettings { get; set; }
         private List<Algorithm> AlgorithmSettings;
 
         public string BenchmarkCopyUUID { get; set; }
@@ -211,13 +207,6 @@ namespace NiceHashMiner.Devices
 
             var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);;
 
-            // additional filters
-            // CPU
-            if (this.DeviceType == DeviceType.CPU && MinersManager.EquihashCPU_USE_eqm()) {
-                retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.nheqminer);
-            } else if (this.DeviceType == DeviceType.CPU) {
-                retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.eqm);
-            }
             // NVIDIA
             if (this.DeviceGroupType == DeviceGroupType.NVIDIA_5_x || this.DeviceGroupType == DeviceGroupType.NVIDIA_6_x) {
                 retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.nheqminer);
@@ -225,8 +214,6 @@ namespace NiceHashMiner.Devices
                 retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.eqm);
             }
 
-            // sort by miner and algo
-            //retAlgos.Sort((a_1, a_2) => (a_1.MinerBaseType - a_2.MinerBaseType) != 0 ? (a_1.MinerBaseType - a_2.MinerBaseType) : (a_1.NiceHashID - a_2.NiceHashID));
             // sort by algo
             retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0 ? (a_1.NiceHashID - a_2.NiceHashID) : (a_1.MinerBaseType - a_2.MinerBaseType));
 

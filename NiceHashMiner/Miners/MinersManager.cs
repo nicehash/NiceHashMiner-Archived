@@ -31,12 +31,6 @@ namespace NiceHashMiner.Miners {
             return "IDLE";
         }
 
-        public static bool EquihashCPU_USE_eqm() {
-            var mostOptimized = CPUUtils.GetMostOptimized();
-            return mostOptimized == CPUExtensionType.AVX || mostOptimized == CPUExtensionType.AVX2
-                || mostOptimized == CPUExtensionType.AVX_AES || mostOptimized == CPUExtensionType.AVX2_AES;
-        }
-
         public static double GetTotalRate() {
             if (CurMiningSession != null) return CurMiningSession.GetTotalRate();
             return 0;
