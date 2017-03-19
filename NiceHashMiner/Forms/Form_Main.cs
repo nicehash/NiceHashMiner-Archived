@@ -285,6 +285,7 @@ namespace NiceHashMiner
             BalanceCheck_Tick(null, null);
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
+            Helpers.SetDefaultEnvironmentVariables();
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 
