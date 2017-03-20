@@ -123,6 +123,13 @@ namespace NiceHashMiner.Devices {
                         }
                     }
 
+                    if (device.IsSM50() && algoSettings.ContainsKey(MinerBaseType.excavator)) {
+                        int Equihash_index = algoSettings[MinerBaseType.excavator].FindIndex((algo) => algo.NiceHashID == AlgorithmType.Equihash );
+                        if (Equihash_index > -1) {
+                            // -c1 1 needed for SM50 to work ATM
+                            algoSettings[MinerBaseType.excavator][Equihash_index].ExtraLaunchParameters = "-c1 1";
+                        }
+                    }
                 } // END algoSettings != null
                 return algoSettings;
             }

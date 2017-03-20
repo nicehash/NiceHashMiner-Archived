@@ -40,7 +40,7 @@ namespace NiceHashMiner.Miners.Parsing {
         private static bool prevHasIgnoreParam = false;
         private static int logCount = 0;
 
-        private static void IgnorePrintLogIbnit() {
+        private static void IgnorePrintLogInit() {
             prevHasIgnoreParam = false;
             logCount = 0;
         }
@@ -95,7 +95,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 LogParser(String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", pair.CurrentExtraLaunchParameters, pair.Device.UUID));
                 var parameters = pair.CurrentExtraLaunchParameters.Replace("=", "= ").Split(' ');
 
-                IgnorePrintLogIbnit();
+                IgnorePrintLogInit();
 
 
                 MinerOptionType currentFlag = MinerOptionType_NONE;
@@ -220,7 +220,7 @@ namespace NiceHashMiner.Miners.Parsing {
             if (MinerBaseType.sgminer == minerBaseType) {
                 return MinerType.sgminer;
             }
-            if (MinerBaseType.ccminer == minerBaseType || MinerBaseType.ccminer_alexis == minerBaseType) {
+            if (MinerBaseType.ccminer == minerBaseType || MinerBaseType.ccminer_alexis == minerBaseType || MinerBaseType.experimental == minerBaseType) {
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return MinerType.ccminer_CryptoNight;
                 }

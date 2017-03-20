@@ -80,7 +80,11 @@ namespace NiceHashMiner.Devices
         }
 
         // GPU NVIDIA
+        int _SM_major = -1;
+        int _SM_minor = -1;
         public ComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount) {
+            _SM_major = cudaDevice.SM_major;
+            _SM_minor = cudaDevice.SM_minor;
             ID = (int)cudaDevice.DeviceID;
             Name = cudaDevice.GetName();
             Enabled = true;
@@ -92,6 +96,8 @@ namespace NiceHashMiner.Devices
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             GpuRam = cudaDevice.DeviceGlobalMemory;
         }
+
+        public bool IsSM50() { return _SM_major == 5 && _SM_minor == 0; }
 
         // GPU AMD
         public ComputeDevice(AmdGpuDevice amdDevice, int GPUCount, bool isDetectionFallback) {

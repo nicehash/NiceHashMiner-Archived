@@ -53,7 +53,6 @@ namespace NiceHashMiner.Configs.Data {
         public DagGenerationType EthminerDagGenerationType = DagGenerationType.SingleKeep;
         public int ApiBindPortPoolStart = 5100;
         public double MinimumProfit = 0;
-        //public bool ContinueMiningIfNoInternetAccess = false;
         public bool IdleWhenNoInternetAccess = true;
         public bool DownloadInit = false;
         // 3rd party miners
