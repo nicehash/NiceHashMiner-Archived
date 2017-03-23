@@ -28,7 +28,7 @@ namespace NiceHashMiner.Miners {
 
             LastCommandLine = "--algo=" + MiningSetup.MinerName +
                               " --url=" + url +
-                              " --userpass=" + username + ":" + Globals.PasswordDefault +
+                              " --userpass=" + username + ":x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.CPU) +

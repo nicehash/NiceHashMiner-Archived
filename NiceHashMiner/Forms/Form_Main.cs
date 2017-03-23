@@ -51,7 +51,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
-        const string _betaAlphaPostfixString = "-Pre-Release_01b";
+        const string _betaAlphaPostfixString = "-Pre-Release_02";
 
         private bool _isDeviceDetectionInitialized = false;
 

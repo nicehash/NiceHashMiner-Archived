@@ -8,7 +8,6 @@ namespace NiceHashMiner {
         // Constants
         public static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
         public static readonly string DemoUser = "3DJhaQaKA6oyRaGyDZYdkZcise4b9DrCi2";
-        public static readonly string PasswordDefault = "x";
         // change this if TOS changes
         public static int CURRENT_TOS_VER = 2;
 

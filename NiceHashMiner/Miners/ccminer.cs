@@ -50,7 +50,7 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine = algo +
                                   " --url=" + url +
-                                  " --userpass=" + username + ":" + Globals.PasswordDefault +
+                                  " --userpass=" + username + ":x " +
                                   apiBind + " " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,

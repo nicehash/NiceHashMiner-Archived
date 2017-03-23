@@ -36,7 +36,7 @@ namespace NiceHashMiner.Miners {
                                                     MiningSetup,
                                                     DeviceType.NVIDIA)
                 + " -S " + url.Substring(14)
-                + " -O " + username + ":" + Globals.PasswordDefault
+                + " -O " + username + ":x " 
                 + " --api-port " + APIPort.ToString()
                 + " --cuda-devices ";
         }

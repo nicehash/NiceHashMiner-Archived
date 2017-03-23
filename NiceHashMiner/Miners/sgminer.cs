@@ -70,7 +70,7 @@ namespace NiceHashMiner.Miners
                               " -k " + MiningSetup.MinerName +
                               " --url=" + url +
                               " --userpass=" + username +
-                              " -p " + Globals.PasswordDefault +
+                              " -p x " +
                               " --api-listen" +
                               " --api-port=" + APIPort.ToString() +
                               " " +
@@ -104,7 +104,7 @@ namespace NiceHashMiner.Miners
                           " -k " + algorithm.MinerName +
                           " --url=" + url +
                           " --userpass=" + username +
-                          " -p " + Globals.PasswordDefault +
+                          " -p x " +
                           " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
                           " -T --log 10 --log-file dump.txt" +
                           " " +

@@ -173,8 +173,8 @@ namespace NiceHashMiner.Miners.Parsing {
                 MinerType.excavator,
                 new List<MinerOption>() {
                     // parameters differ according to algorithm
-                    new MinerOption("parameter1", "-c1", "-c1", "", MinerOptionFlagType.MultiParam, " "),
-                    new MinerOption("parameter2", "-c2", "-c2", "", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("parameter1", "-c1", "-c1", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("parameter2", "-c2", "-c2", "0", MinerOptionFlagType.MultiParam, " "),
                     // Overclocking not supported from NHM
                     //new MinerOption("Overclocking_os", "-os", "-os", "", MinerOptionFlagType.MultiParam, " "),
                     //new MinerOption("Overclocking_od", "-od", "-od", "2", MinerOptionFlagType.MultiParam, " "),

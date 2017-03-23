@@ -11,7 +11,7 @@ using System.Text;
 namespace NiceHashMiner.Miners {
     public class excavator : Miner {
 
-        private class DviceStat {
+        private class DeviceStat {
             public int id { get; set; }
             public string name { get; set; }
             public double speed_hps { get; set; }
@@ -21,7 +21,7 @@ namespace NiceHashMiner.Miners {
             public bool connected { get; set; }
             public double interval_seconds { get; set; }
             public double speed_hps { get; set; }
-            public List<DviceStat> devices { get; set; }
+            public List<DeviceStat> devices { get; set; }
             public double accepted_per_minute { get; set; }
             public double rejected_per_minute { get; set; }
         }
@@ -45,27 +45,30 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override string GetDevicesCommandString() {
+            List<MiningPair> CT_MiningPairs = new List<MiningPair>();
             string deviceStringCommand = " -cd ";
+            int default_CT = 1;
             if(this.MiningSetup.CurrentAlgorithmType == AlgorithmType.Equihash) {
-                foreach (var nvidia_pair in this.MiningSetup.MiningPairs) {
-                    if (nvidia_pair.CurrentExtraLaunchParameters.Contains("-ct")) {
-                        for (int i = 0; i < ExtraLaunchParametersParser.GetEqmCudaThreadCount(nvidia_pair); ++i) {
-                            deviceStringCommand += nvidia_pair.Device.ID + " ";
-                        }
-                    } else { // use default 2 best performance
-                        for (int i = 0; i < 2; ++i) {
-                            deviceStringCommand += nvidia_pair.Device.ID + " ";
-                        }
+                default_CT = 2;
+            } 
+            foreach (var nvidia_pair in this.MiningSetup.MiningPairs) {
+                if (nvidia_pair.CurrentExtraLaunchParameters.Contains("-ct")) {
+                    for (int i = 0; i < ExtraLaunchParametersParser.GetEqmCudaThreadCount(nvidia_pair); ++i) {
+                        deviceStringCommand += nvidia_pair.Device.ID + " ";
+                        CT_MiningPairs.Add(nvidia_pair);
                     }
-                }
-            } else {
-                foreach (var nvidia_pair in this.MiningSetup.MiningPairs) {
-                    deviceStringCommand += nvidia_pair.Device.ID + " ";
+                } else { // use default default_CT for best performance
+                    for (int i = 0; i < default_CT; ++i) {
+                        deviceStringCommand += nvidia_pair.Device.ID + " ";
+                        CT_MiningPairs.Add(nvidia_pair);
+                    }
                 }
             }
             
             // no extra launch params
-            deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(this.MiningSetup, DeviceType.NVIDIA);
+            MiningSetup CT_MiningSetup = new MiningSetup(CT_MiningPairs);
+            //deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(this.MiningSetup, DeviceType.NVIDIA);
+            deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(CT_MiningSetup, DeviceType.NVIDIA);
 
             return deviceStringCommand;
         }
