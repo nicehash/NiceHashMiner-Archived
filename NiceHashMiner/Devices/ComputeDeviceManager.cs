@@ -125,9 +125,9 @@ namespace NiceHashMiner.Devices
                 // check NVIDIA nvml.dll and copy over scope
                 {
                     string nvmlPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvml.dll";
+                    if (nvmlPath.Contains(" (x86)")) nvmlPath = nvmlPath.Replace(" (x86)", "");
                     if (File.Exists(nvmlPath)) {
                         string copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
-                        if (nvmlPath.Contains(" (x86)")) nvmlPath = nvmlPath.Replace(" (x86)", "");
                         try {
                             File.Copy(nvmlPath, copyToPath, true);
                             Helpers.ConsolePrint(TAG, String.Format("Copy from {0} to {1} done", nvmlPath, copyToPath));
