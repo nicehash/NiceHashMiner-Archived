@@ -125,12 +125,21 @@ namespace NiceHashMiner.Devices {
 
                     // This is not needed anymore after excavator v1.1.4a
                     //if (device.IsSM50() && algoSettings.ContainsKey(MinerBaseType.excavator)) {
-                    //    int Equihash_index = algoSettings[MinerBaseType.excavator].FindIndex((algo) => algo.NiceHashID == AlgorithmType.Equihash );
+                    //    int Equihash_index = algoSettings[MinerBaseType.excavator].FindIndex((algo) => algo.NiceHashID == AlgorithmType.Equihash);
                     //    if (Equihash_index > -1) {
                     //        // -c1 1 needed for SM50 to work ATM
                     //        algoSettings[MinerBaseType.excavator][Equihash_index].ExtraLaunchParameters = "-c1 1";
                     //    }
                     //}
+                    // nheqminer exceptions scope
+                    {
+                        const MinerBaseType minerBaseKey = MinerBaseType.nheqminer;
+                        if (algoSettings.ContainsKey(minerBaseKey) && device.Name.Contains("GTX")
+                            && (device.Name.Contains("560") || device.Name.Contains("650") || device.Name.Contains("680") || device.Name.Contains("770"))
+                            ) {
+                                algoSettings = FilterMinerBaseTypes(algoSettings, new List<MinerBaseType>() { minerBaseKey });
+                        }
+                    }
                 } // END algoSettings != null
                 return algoSettings;
             }
