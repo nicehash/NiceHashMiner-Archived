@@ -121,6 +121,21 @@ namespace NiceHashMiner.Devices
             public static IMessageNotifier MessageNotifier { get; private set; }
 
             public static void QueryDevices(IMessageNotifier messageNotifier) {
+
+                // check NVIDIA nvml.dll and copy over scope
+                {
+                    string nvmlPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvml.dll";
+                    string copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
+                    if (nvmlPath.Contains(" (x86)")) nvmlPath = nvmlPath.Replace(" (x86)", "");
+                    try {
+                        File.Copy(nvmlPath, copyToPath, true);
+                        Helpers.ConsolePrint(TAG, String.Format("Copy from {0} to {1} done", nvmlPath, copyToPath));
+                    } catch (Exception e) {
+                        Helpers.ConsolePrint(TAG, "Copy nvml.dll failed: " + e.Message);
+                    }
+                }
+
+
                 MessageNotifier = messageNotifier;
                 // #0 get video controllers, used for cross checking
                 WindowsDisplayAdapters.QueryVideoControllers();
