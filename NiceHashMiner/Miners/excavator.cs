@@ -65,7 +65,6 @@ namespace NiceHashMiner.Miners {
                 }
             }
             
-            // no extra launch params
             MiningSetup CT_MiningSetup = new MiningSetup(CT_MiningPairs);
             //deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(this.MiningSetup, DeviceType.NVIDIA);
             deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(CT_MiningSetup, DeviceType.NVIDIA);
