@@ -4,11 +4,11 @@ using System.Text;
 
 namespace NiceHashMiner {
     public static class Links {
-        public static string VisitURL = "http://www.nicehash.com?utm_source=NHM";
+        public static string VisitURL = "https://www.nicehash.com?utm_source=NHM";
         // add version
         public static string VisitURLNew = "https://github.com/nicehash/NiceHashMiner/releases/tag/";
         // add btc adress as parameter
-        public static string CheckStats = "http://www.nicehash.com/index.jsp?utm_source=NHM&p=miners&addr=";
+        public static string CheckStats = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=miners&addr=";
         // help and faq
         public static string NHM_Help = "https://github.com/nicehash/NiceHashMiner";
         // faq

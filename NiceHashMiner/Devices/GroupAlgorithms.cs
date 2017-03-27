@@ -11,7 +11,7 @@ namespace NiceHashMiner.Devices {
     /// </summary>
     public static class GroupAlgorithms {
 
-        public static Dictionary<MinerBaseType, List<Algorithm>> CreateForDevice(ComputeDevice device) {
+        private static Dictionary<MinerBaseType, List<Algorithm>> CreateForDevice(ComputeDevice device) {
             if (device != null) {
                 var algoSettings = CreateDefaultsForGroup(device.DeviceGroupType);
                 if (algoSettings != null) {
