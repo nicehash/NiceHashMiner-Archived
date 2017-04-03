@@ -250,6 +250,24 @@ namespace NiceHashMiner.Miners {
                     CurrentProfit += device.GetCurrentMostProfitValue;
                 }
             }
+
+            // check if should mine
+            // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
+            if (CheckIfShouldMine(CurrentProfit, log) == false) {
+                return;
+            }
+            // check profit threshold
+            if (LastEstimatedProfit > 0 && CurrentProfit > 0) {
+                double percDiff = Math.Abs((LastEstimatedProfit / CurrentProfit) - 1);
+                if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) {
+                    // don't switch
+                    Helpers.ConsolePrint(TAG, String.Format("Will not switch profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
+                    return;
+                }
+            }
+
+            LastEstimatedProfit = CurrentProfit;
+
             // print profit statuses
             if (log) {
                 StringBuilder stringBuilderFull = new StringBuilder();
@@ -274,23 +292,7 @@ namespace NiceHashMiner.Miners {
                 Helpers.ConsolePrint(TAG, stringBuilderFull.ToString());
             }
 
-            // check if should mine
-            // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
-            if (CheckIfShouldMine(CurrentProfit, log) == false) {
-                return;
-            }
-            // check profit threshold
-            if (LastEstimatedProfit > 0 && CurrentProfit > 0) {
-                double percDiff = Math.Abs((LastEstimatedProfit / CurrentProfit) - 1);
-                if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) {
-                    // don't switch
-                    Helpers.ConsolePrint(TAG, String.Format("Will not switch profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
-                    return;
-                }
-            }
-
-            LastEstimatedProfit = CurrentProfit;
-
+            // group new miners 
             Dictionary<string, List<MiningPair>> newGroupedMiningPairs = new Dictionary<string,List<MiningPair>>();
             // group devices with same supported algorithms
             {
