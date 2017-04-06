@@ -220,6 +220,8 @@ namespace NiceHashMiner.Miners.Parsing {
                     new MinerOption("ClaymoreDual_dcri"  , "-dcri", "-dcri", "30", MinerOptionFlagType.MultiParam, ","),
 
                     new MinerOption("ClaymoreDual_dcrt"  , "-dcrt", "-dcrt", "5", MinerOptionFlagType.SingleParam, ","),
+                    // v9.0
+                    new MinerOption("ClaymoreDual_asm"  , "-asm", "-asm", "1", MinerOptionFlagType.MultiParam, ","),
                 },
                 new List<MinerOption>() {
                     // temperature stuff
