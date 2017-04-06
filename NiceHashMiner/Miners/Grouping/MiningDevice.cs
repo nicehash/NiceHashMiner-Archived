@@ -54,6 +54,8 @@ namespace NiceHashMiner.Miners.Grouping {
                     Algorithms.Add(algo);
                 }
             }
+            MostProfitableAlgorithmType = AlgorithmType.NONE;
+            MostProfitableMinerBaseType = MinerBaseType.NONE;
         }
         public ComputeDevice Device { get; private set; }
         public List<Algorithm> Algorithms = new List<Algorithm>();
@@ -67,14 +69,31 @@ namespace NiceHashMiner.Miners.Grouping {
 
         public AlgorithmType MostProfitableAlgorithmType { get; private set; }
         public MinerBaseType MostProfitableMinerBaseType { get; private set; }
+        // prev state
+        public AlgorithmType PrevProfitableAlgorithmType { get; private set; }
+        public MinerBaseType PrevProfitableMinerBaseType { get; private set; }
 
         private int GetMostProfitableIndex() {
             return Algorithms.FindIndex((a) => a.NiceHashID == MostProfitableAlgorithmType && a.MinerBaseType == MostProfitableMinerBaseType);
         }
 
+        private int GetPrevProfitableIndex() {
+            return Algorithms.FindIndex((a) => a.NiceHashID == PrevProfitableAlgorithmType && a.MinerBaseType == PrevProfitableMinerBaseType);
+        }
+
         public double GetCurrentMostProfitValue {
             get {
                 int mostProfitableIndex = GetMostProfitableIndex();
+                if (mostProfitableIndex > -1) {
+                    return Algorithms[mostProfitableIndex].CurrentProfit;
+                }
+                return 0;
+            }
+        }
+
+        public double GetPrevMostProfitValue {
+            get {
+                int mostProfitableIndex = GetPrevProfitableIndex();
                 if (mostProfitableIndex > -1) {
                     return Algorithms[mostProfitableIndex].CurrentProfit;
                 }
@@ -91,6 +110,9 @@ namespace NiceHashMiner.Miners.Grouping {
         }
 
         public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
+            // save last state
+            PrevProfitableAlgorithmType = MostProfitableAlgorithmType;
+            PrevProfitableMinerBaseType = MostProfitableMinerBaseType;
             // assume none is profitable
             MostProfitableAlgorithmType = AlgorithmType.NONE;
             MostProfitableMinerBaseType = MinerBaseType.NONE;

@@ -38,8 +38,6 @@ namespace NiceHashMiner.Miners {
         private bool IsConnectedToInternet = true;
         private bool IsMiningRegardlesOfProfit = true;
 
-        private double LastEstimatedProfit = 0;
-
         // timers 
         private Timer _preventSleepTimer;
         // check internet connection 
@@ -241,6 +239,7 @@ namespace NiceHashMiner.Miners {
 #endif
             List<MiningPair> profitableDevices = new List<MiningPair>();
             double CurrentProfit = 0.0d;
+            double PrevStateProfit = 0.0d;
             foreach (var device in _miningDevices) {
                 // calculate profits
                 device.CalculateProfits(NiceHashData);
@@ -248,6 +247,7 @@ namespace NiceHashMiner.Miners {
                 if (device.HasProfitableAlgo()) {
                     profitableDevices.Add(device.GetMostProfitablePair());
                     CurrentProfit += device.GetCurrentMostProfitValue;
+                    PrevStateProfit += device.GetPrevMostProfitValue;
                 }
             }
 
@@ -257,16 +257,18 @@ namespace NiceHashMiner.Miners {
                 return;
             }
             // check profit threshold
-            if (LastEstimatedProfit > 0 && CurrentProfit > 0) {
-                double percDiff = Math.Abs((LastEstimatedProfit / CurrentProfit) - 1);
+            Helpers.ConsolePrint(TAG, String.Format("PrevStateProfit {0}, CurrentProfit {1}", PrevStateProfit, CurrentProfit));
+            if (PrevStateProfit > 0 && CurrentProfit > 0) {
+                double a = Math.Max(PrevStateProfit, CurrentProfit);
+                double b = Math.Min(PrevStateProfit, CurrentProfit);
+                //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
+                double percDiff = ((a - b)) / b;
                 if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) {
                     // don't switch
                     Helpers.ConsolePrint(TAG, String.Format("Will not switch profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
                     return;
                 }
             }
-
-            LastEstimatedProfit = CurrentProfit;
 
             // print profit statuses
             if (log) {
