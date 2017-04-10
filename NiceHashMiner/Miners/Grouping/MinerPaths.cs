@@ -19,18 +19,18 @@ namespace NiceHashMiner.Miners.Grouping
             /// <summary>
             /// ccminers
             /// </summary>
-            public const string ccminer_decred = _bin + @"\ccminer_decred.exe";
-            public const string ccminer_nanashi = _bin + @"\ccminer_nanashi.exe";
-            public const string ccminer_neoscrypt = _bin + @"\ccminer_neoscrypt.exe";
-            public const string ccminer_sp = _bin + @"\ccminer_sp.exe";
-            public const string ccminer_tpruvot = _bin + @"\ccminer_tpruvot.exe";
-            public const string ccminer_cryptonight = _bin + @"\ccminer_cryptonight.exe";
-            public const string ccminer_x11gost = _bin + @"\ccminer_x11gost.exe";
+            public const string ccminer_decred = _bin + @"\ccminer_decred\ccminer.exe";
+            public const string ccminer_nanashi = _bin + @"\ccminer_nanashi\ccminer.exe";
+            public const string ccminer_neoscrypt = _bin + @"\ccminer_neoscrypt\ccminer.exe";
+            public const string ccminer_sp = _bin + @"\ccminer_sp\ccminer.exe";
+            public const string ccminer_tpruvot = _bin + @"\ccminer_tpruvot\ccminer.exe";
+            public const string ccminer_cryptonight = _bin + @"\ccminer_cryptonight\ccminer.exe";
+            public const string ccminer_x11gost = _bin + @"\ccminer_x11gost\ccminer.exe";
 
             /// <summary>
             /// ethminers
             /// </summary>
-            public const string ethminer = _bin + @"\ethminer.exe";
+            public const string ethminer = _bin + @"\ethminer\ethminer.exe";
 
             /// <summary>
             /// sgminers

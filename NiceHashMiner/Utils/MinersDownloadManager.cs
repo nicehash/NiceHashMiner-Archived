@@ -15,7 +15,7 @@ using NiceHashMiner.Devices;
 namespace NiceHashMiner.Utils {
     public static class MinersDownloadManager {
         public static DownloadSetup StandardDlSetup = new DownloadSetup(
-            "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_5_6.zip",
+            "https://github.com/nicehash/NiceHashMiner/releases/download/1.7.0.0-dev/bin_1_7_5_8.zip",
             "bins.zip",
             "bin");
 
