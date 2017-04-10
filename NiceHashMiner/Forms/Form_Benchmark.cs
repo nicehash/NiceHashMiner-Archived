@@ -54,9 +54,43 @@ namespace NiceHashMiner.Forms {
 
         // CPU benchmarking helpers
         private class CPUBenchmarkStatus {
-            public bool HasAlreadyBenchmarked = false; // after first benchmark set to true
-            public double BenchmarkSpeed;
-            public int LessTreads = 0;
+            private class benchmark {
+                public benchmark(int lt, double bench) {
+                    LessTreads = lt;
+                    Benchmark = bench;
+                }
+                public readonly int LessTreads;
+                public readonly double Benchmark;
+            }
+            public CPUBenchmarkStatus(int max_threads) {
+                _max_threads = max_threads;
+            }
+
+            public bool HasTest() {
+                return _cur_less_threads < _max_threads;
+            }
+
+            public void SetNextSpeed(double speed) {
+                if (HasTest()) {
+                    _benchmarks.Add(new benchmark(_cur_less_threads, speed));
+                    ++_cur_less_threads;
+                }
+            }
+
+            public void FindFastest() {
+                _benchmarks.Sort((a, b) => - a.Benchmark.CompareTo(b.Benchmark));
+            }
+            public double GetBestSpeed() {
+                return _benchmarks[0].Benchmark;
+            }
+            public int GetLessThreads() {
+                return _benchmarks[0].LessTreads;
+            }
+
+            private readonly int _max_threads;
+            private int _cur_less_threads = 0;
+            private List<benchmark> _benchmarks = new List<benchmark>();
+            public int LessTreads { get { return _cur_less_threads; } }
             public int Time;
         }
         private CPUBenchmarkStatus __CPUBenchmarkStatus = null;
@@ -458,8 +492,8 @@ namespace NiceHashMiner.Forms {
 
             if (_currentDevice != null && _currentAlgorithm != null) {
                 _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)) {
-                    __CPUBenchmarkStatus = new CPUBenchmarkStatus();
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) && _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false) {
+                    __CPUBenchmarkStatus = new CPUBenchmarkStatus(Globals.ThreadsPerCPU);
                     _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
                 } else {
                     __CPUBenchmarkStatus = null;
@@ -553,20 +587,13 @@ namespace NiceHashMiner.Forms {
                 _bechmarkedSuccessCount += success ? 1 : 0;
                 bool rebenchSame = false;
                 if(success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID) && _currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU) {
-                    if (__CPUBenchmarkStatus.HasAlreadyBenchmarked && __CPUBenchmarkStatus.BenchmarkSpeed > _currentAlgorithm.BenchmarkSpeed) {
-                        rebenchSame = false;
-                        _currentAlgorithm.BenchmarkSpeed = __CPUBenchmarkStatus.BenchmarkSpeed;
-                        _currentAlgorithm.LessThreads--;
-                    } else {
-                        __CPUBenchmarkStatus.HasAlreadyBenchmarked = true;
-                        __CPUBenchmarkStatus.BenchmarkSpeed = _currentAlgorithm.BenchmarkSpeed;
-                        __CPUBenchmarkStatus.LessTreads++;
-                        if(__CPUBenchmarkStatus.LessTreads < Globals.ThreadsPerCPU) {
-                            _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
-                            rebenchSame = true;
-                        } else {
-                            rebenchSame = false;
-                        }
+                    __CPUBenchmarkStatus.SetNextSpeed(_currentAlgorithm.BenchmarkSpeed);
+                    rebenchSame = __CPUBenchmarkStatus.HasTest();
+                    _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads; 
+                    if (rebenchSame == false) {
+                        __CPUBenchmarkStatus.FindFastest();
+                        _currentAlgorithm.BenchmarkSpeed = __CPUBenchmarkStatus.GetBestSpeed();
+                        _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.GetLessThreads();
                     }
                 }
 

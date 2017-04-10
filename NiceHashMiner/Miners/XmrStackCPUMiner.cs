@@ -202,13 +202,15 @@ namespace NiceHashMiner.Miners {
         private void prepareConfigFile(string pool, string wallet) {
             if (this.MiningSetup.MiningPairs.Count > 0) {
                 try {
+                    bool IsHyperThreadingEnabled = this.MiningSetup.MiningPairs[0].CurrentExtraLaunchParameters.Contains("enable_ht=true");
                     int numTr = ExtraLaunchParametersParser.GetThreadsNumber(this.MiningSetup.MiningPairs[0]);
-                    //if (ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled) {
-                    //    numTr /= 2;
-                    //}
+                    if (IsHyperThreadingEnabled) {
+                        numTr /= 2;
+                    }
                     var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.APIPort);
+
                     //config.Inti_cpu_threads_conf(false, false, true, ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled);
-                    config.Inti_cpu_threads_conf(false, false, false, false);
+                    config.Inti_cpu_threads_conf(false, false, false, IsHyperThreadingEnabled);
                     var confJson = JObject.FromObject(config);
                     string writeStr = confJson.ToString();
                     int start = writeStr.IndexOf("{");
