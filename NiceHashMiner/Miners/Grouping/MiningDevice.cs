@@ -125,11 +125,16 @@ namespace NiceHashMiner.Miners.Grouping {
             // calculate new profits
             foreach (var algo in Algorithms) {
                 AlgorithmType key = algo.NiceHashID;
+                AlgorithmType secondaryKey = algo.SecondaryNiceHashID;
                 if (NiceHashData.ContainsKey(key)) {
                     algo.CurNhmSMADataVal = NiceHashData[key].paying;
                     algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * 0.000000001;
                 } else {
                     algo.CurrentProfit = 0;
+                }
+                if (NiceHashData.ContainsKey(secondaryKey))
+                {
+                    algo.CurrentProfit += NiceHashData[secondaryKey].paying * algo.SecondaryAveragedSpeed * 0.000000001;
                 }
             }
             // find max paying value and save key

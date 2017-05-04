@@ -26,6 +26,7 @@ namespace NiceHashMiner {
 
         // avarage speed of same devices to increase mining stability
         public double AvaragedSpeed { get; set; }
+        public double SecondaryAveragedSpeed { get; set; }
         // based on device and settings here we set the miner path
         public string MinerBinaryPath = "";
         // these are changing (logging reasons)
@@ -90,8 +91,8 @@ namespace NiceHashMiner {
                 string rate = International.GetText("BenchmarkRatioRateN_A");
                 var payingRate = 0.0d;
                 if (Globals.NiceHashData != null) {
-                    rate = (BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001).ToString("F8");
-                    if (BenchmarkSpeed > 0)  {
+                    if (BenchmarkSpeed > 0)
+                    {
                         payingRate += BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
                     }
                     if (SecondaryBenchmarkSpeed > 0 && SecondaryNiceHashID != AlgorithmType.NONE) {

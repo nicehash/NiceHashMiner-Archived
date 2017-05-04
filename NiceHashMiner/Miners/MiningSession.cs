@@ -259,7 +259,7 @@ namespace NiceHashMiner.Miners {
                     StringBuilder stringBuilderDevice = new StringBuilder();
                     stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", device.Device.UUID, device.Device.GetFullName()));
                     foreach (var algo in device.Algorithms) {
-                        stringBuilderDevice.AppendLine(String.Format("\t\tPROFIT = {0}\t(SPEED = {1}\t\t| NHSMA = {2})\t[{3}]",
+                       stringBuilderDevice.AppendLine(String.Format("\t\tPROFIT = {0}\t(SPEED = {1}\t\t| NHSMA = {2})\t[{3}]",
                             algo.CurrentProfit.ToString(DOUBLE_FORMAT), // Profit
                             algo.AvaragedSpeed, // Speed
                             algo.CurNhmSMADataVal, // NiceHashData
