@@ -431,6 +431,9 @@ namespace NiceHashMiner.Miners {
                 // set rates
                 if (NiceHashData != null && AD != null) {
                     groupMiners.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
+                    if (NiceHashData.ContainsKey(AD.SecondaryAlgorithmID)) {
+                        groupMiners.CurrentRate += NiceHashData[AD.SecondaryAlgorithmID].paying * AD.SecondarySpeed * 0.000000001;
+                    }
                 } else {
                     groupMiners.CurrentRate = 0;
                     // set empty

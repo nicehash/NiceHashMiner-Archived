@@ -61,7 +61,7 @@ namespace NiceHashMiner.Miners {
 
         public override APIData GetSummary() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
             TcpClient client = null;
             JsonApiResponse resp = null;
@@ -85,7 +85,9 @@ namespace NiceHashMiner.Miners {
                 if (resp.result != null && resp.result.Count > 4) {
                     //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp.result != null && resp.result.Count > 4");
                     var speeds = resp.result[3].Split(';');
+                    var secondarySpeeds = resp.result[5].Split(';');
                     ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
                     foreach (var speed in speeds) {
                         //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
                         double tmpSpeed = 0;
@@ -96,7 +98,17 @@ namespace NiceHashMiner.Miners {
                         }
                         ad.Speed += tmpSpeed;
                     }
+                    foreach (var speed in secondarySpeeds) {
+                        double tmpSpeed = 0;
+                        try {
+                            tmpSpeed = Double.Parse(speed, CultureInfo.InvariantCulture);
+                        } catch {
+                            tmpSpeed = 0;
+                        }
+                        ad.SecondarySpeed += tmpSpeed;
+                    }
                     ad.Speed *= api_read_mult;
+                    ad.SecondarySpeed *= api_read_mult;
                     _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                 }
                 if (ad.Speed == 0) {
