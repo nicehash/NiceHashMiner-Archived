@@ -127,8 +127,8 @@ namespace NiceHashMiner.Devices
             return String.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
         }
 
-        public Algorithm GetAlgorithm(MinerBaseType MinerBaseType, AlgorithmType AlgorithmType) {
-            int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.NiceHashID == AlgorithmType && a.MinerBaseType == MinerBaseType);
+        public Algorithm GetAlgorithm(MinerBaseType MinerBaseType, AlgorithmType AlgorithmType, AlgorithmType SecondaryAlgorithmType) {
+            int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.NiceHashID == AlgorithmType && a.MinerBaseType == MinerBaseType && a.SecondaryNiceHashID == SecondaryAlgorithmType);
             if (toSetIndex > -1) {
                 return this.AlgorithmSettings[toSetIndex];
             }
@@ -145,9 +145,10 @@ namespace NiceHashMiner.Devices
 
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings) {
-                var setAlgo = GetAlgorithm(copyFromAlgo.MinerBaseType, copyFromAlgo.NiceHashID);
+                var setAlgo = GetAlgorithm(copyFromAlgo.MinerBaseType, copyFromAlgo.NiceHashID, copyFromAlgo.SecondaryNiceHashID);
                 if (setAlgo != null) {
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
+                    setAlgo.SecondaryBenchmarkSpeed = copyFromAlgo.SecondaryBenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
                     setAlgo.LessThreads = copyFromAlgo.LessThreads;
                 }
@@ -166,9 +167,10 @@ namespace NiceHashMiner.Devices
             if (config != null && config.DeviceUUID == UUID && config.AlgorithmSettings != null) {
                 this.AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
                 foreach (var conf in config.AlgorithmSettings) {
-                    var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID);
+                    var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
                     if (setAlgo != null) {
                         setAlgo.BenchmarkSpeed = conf.BenchmarkSpeed;
+                        setAlgo.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
                         setAlgo.Enabled = conf.Enabled;
                         setAlgo.LessThreads = conf.LessThreads;
@@ -194,9 +196,11 @@ namespace NiceHashMiner.Devices
                 AlgorithmConfig conf = new AlgorithmConfig();
                 conf.Name = algo.AlgorithmStringID;
                 conf.NiceHashID = algo.NiceHashID;
+                conf.SecondaryNiceHashID = algo.SecondaryNiceHashID;
                 conf.MinerBaseType = algo.MinerBaseType;
                 conf.MinerName = algo.MinerName; // TODO probably not needed
                 conf.BenchmarkSpeed = algo.BenchmarkSpeed;
+                conf.SecondaryBenchmarkSpeed = algo.SecondaryBenchmarkSpeed;
                 conf.ExtraLaunchParameters = algo.ExtraLaunchParameters;
                 conf.Enabled = algo.Enabled;
                 conf.LessThreads = algo.LessThreads;

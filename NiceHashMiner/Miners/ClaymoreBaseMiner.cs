@@ -25,6 +25,7 @@ namespace NiceHashMiner.Miners {
         // only dagger change
         protected bool ignoreZero = false;
         protected double api_read_mult = 1;
+        protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {

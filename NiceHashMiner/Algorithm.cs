@@ -8,13 +8,16 @@ namespace NiceHashMiner {
     public class Algorithm {
 
         public readonly string AlgorithmName;
+        public readonly string SecondaryAlgorithmName;
         public readonly string MinerBaseTypeName;
         public readonly AlgorithmType NiceHashID;
+        public readonly AlgorithmType SecondaryNiceHashID;
         public readonly MinerBaseType MinerBaseType;
         public readonly string AlgorithmStringID;
         // Miner name is used for miner ALGO flag parameter
         public readonly string MinerName;
         public double BenchmarkSpeed { get; set; }
+        public double SecondaryBenchmarkSpeed { get; set; }
         public string ExtraLaunchParameters { get; set; }
         public bool Enabled { get; set; }
 
@@ -36,12 +39,34 @@ namespace NiceHashMiner {
 
             MinerBaseType = minerBaseType;
             NiceHashID = niceHashID;
+            SecondaryNiceHashID = AlgorithmType.NONE;
             MinerName = minerName;
 
             BenchmarkSpeed = 0.0d;
+            SecondaryBenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
             LessThreads = 0;
             Enabled = true;
+            BenchmarkStatus = "";
+        }
+
+        // for ClaymoreDual algos
+        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID, string minerName) {
+            this.AlgorithmName = AlgorithmNiceHashNames.GetName(niceHashID);
+            this.SecondaryAlgorithmName = AlgorithmNiceHashNames.GetName(secondaryNiceHashID);
+            this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
+            this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName + "/" + this.SecondaryAlgorithmName;
+
+            MinerBaseType = minerBaseType;
+            NiceHashID = niceHashID;
+            SecondaryNiceHashID = secondaryNiceHashID;
+            MinerName = minerName;
+
+            BenchmarkSpeed = 0.0d;
+            SecondaryBenchmarkSpeed = 1.0d;
+            ExtraLaunchParameters = "";
+            LessThreads = 0;
+            Enabled = false;
             BenchmarkStatus = "";
         }
 
@@ -54,14 +79,25 @@ namespace NiceHashMiner {
                 if (Globals.NiceHashData != null) {
                     ratio = Globals.NiceHashData[NiceHashID].paying.ToString("F8");
                 }
+                if (SecondaryNiceHashID != AlgorithmType.NONE) {
+                    ratio += "/" + Globals.NiceHashData[SecondaryNiceHashID].paying.ToString("F8");
+                }
                 return ratio;
             }
         }
         public string CurPayingRate {
             get {
                 string rate = International.GetText("BenchmarkRatioRateN_A");
-                if (BenchmarkSpeed > 0 && Globals.NiceHashData != null) {
+                var payingRate = 0.0d;
+                if (Globals.NiceHashData != null) {
                     rate = (BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001).ToString("F8");
+                    if (BenchmarkSpeed > 0)  {
+                        payingRate += BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
+                    }
+                    if (SecondaryBenchmarkSpeed > 0 && SecondaryNiceHashID != AlgorithmType.NONE) {
+                        payingRate += SecondaryBenchmarkSpeed * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
+                    }
+                    rate = payingRate.ToString("F8");
                 }
                 return rate;
             }
@@ -98,7 +134,11 @@ namespace NiceHashMiner {
             if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
-                return Helpers.FormatSpeedOutput(BenchmarkSpeed);
+                var speedString = Helpers.FormatSpeedOutput(BenchmarkSpeed);
+                if (SecondaryBenchmarkSpeed > 0)  {
+                    speedString += "/" + Helpers.FormatSpeedOutput(SecondaryBenchmarkSpeed);
+                }
+                return speedString;
             } else if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             }

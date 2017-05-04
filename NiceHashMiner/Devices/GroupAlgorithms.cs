@@ -188,7 +188,10 @@ namespace NiceHashMiner.Devices {
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.CryptoNight, "cryptonight"),
                             new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.Equihash, "equihash"),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "")
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, ""),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred, ""),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry, ""),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal, "")
                         }
                     },
                     { MinerBaseType.OptiminerAMD,
