@@ -135,7 +135,7 @@ namespace NiceHashMiner {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
                 var speedString = Helpers.FormatSpeedOutput(BenchmarkSpeed);
-                if (SecondaryBenchmarkSpeed > 0)  {
+                if (SecondaryNiceHashID != AlgorithmType.NONE)  {
                     speedString += "/" + Helpers.FormatSpeedOutput(SecondaryBenchmarkSpeed);
                 }
                 return speedString;
@@ -143,6 +143,15 @@ namespace NiceHashMiner {
                 return BenchmarkStatus;
             }
             return International.GetText("BenchmarkSpeedStringNone");
+        }
+
+        // convenience for formatting name text
+        public string FormattedSecondaryName() {
+            if (SecondaryAlgorithmName != null)
+            {
+                return "/" + SecondaryAlgorithmName;
+            }
+            return "";
         }
     }
 }

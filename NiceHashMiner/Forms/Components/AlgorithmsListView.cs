@@ -91,12 +91,7 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Items.Clear();
             foreach (var alg in computeDevice.GetAlgorithmSettings()) {
                 ListViewItem lvi = new ListViewItem();
-                if (alg.SecondaryAlgorithmName != null) {
-                    ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(String.Format("{0}/{1} ({2})", alg.AlgorithmName, alg.SecondaryAlgorithmName, alg.MinerBaseTypeName));
-                }
-                else {
-                    ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName));
-                }
+                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(String.Format("{0} ({1})", alg.AlgorithmName + alg.FormattedSecondaryName(), alg.MinerBaseTypeName));
 
                 //sub.Tag = alg.Value;
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());
