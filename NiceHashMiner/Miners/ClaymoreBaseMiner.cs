@@ -19,6 +19,8 @@ namespace NiceHashMiner.Miners {
         protected int benchmarkTimeWait = 2 * 45; // Ok... this was all wrong 
         int benchmark_read_count = 0;
         double benchmark_sum = 0.0d;
+        int secondary_benchmark_read_count = 0;
+        double secondary_benchmark_sum = 0.0d;
         protected readonly string LOOK_FOR_START;
         const string LOOK_FOR_END = "h/s";
 
@@ -35,6 +37,11 @@ namespace NiceHashMiner.Miners {
         }
 
         protected abstract double DevFee();
+
+        protected virtual string SecondaryLookForStart()
+        {
+            return "";
+        }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
@@ -220,10 +227,23 @@ namespace NiceHashMiner.Miners {
                                     ++benchmark_read_count;
                                 }
                             }
+                            else if (lineLowered.Contains(SecondaryLookForStart())) {
+                                if (ignoreZero) {
+                                    double got = getNumber(lineLowered, SecondaryLookForStart(), LOOK_FOR_END);
+                                    if (got != 0) {
+                                        secondary_benchmark_sum += got;
+                                        ++secondary_benchmark_read_count;
+                                    }
+                                } else {
+                                    secondary_benchmark_sum += getNumber(lineLowered);
+                                    ++secondary_benchmark_read_count;
+                                }
+                            }
                         }
                     }
                     if (benchmark_read_count > 0) {
                         BenchmarkAlgorithm.BenchmarkSpeed = benchmark_sum / benchmark_read_count;
+                        BenchmarkAlgorithm.SecondaryBenchmarkSpeed = secondary_benchmark_sum / secondary_benchmark_read_count;
                     }
                 }
                 BenchmarkThreadRoutineFinish();

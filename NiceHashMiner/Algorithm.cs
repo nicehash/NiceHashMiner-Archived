@@ -55,7 +55,7 @@ namespace NiceHashMiner {
             this.AlgorithmName = AlgorithmNiceHashNames.GetName(niceHashID);
             this.SecondaryAlgorithmName = AlgorithmNiceHashNames.GetName(secondaryNiceHashID);
             this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
-            this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName + "/" + this.SecondaryAlgorithmName;
+            this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName + "_" + this.SecondaryAlgorithmName;
 
             MinerBaseType = minerBaseType;
             NiceHashID = niceHashID;
