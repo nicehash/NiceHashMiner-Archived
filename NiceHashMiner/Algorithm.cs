@@ -8,7 +8,6 @@ namespace NiceHashMiner {
     public class Algorithm {
 
         public readonly string AlgorithmName;
-        public readonly string SecondaryAlgorithmName;
         public readonly string MinerBaseTypeName;
         public readonly AlgorithmType NiceHashID;
         public readonly AlgorithmType SecondaryNiceHashID;
@@ -32,6 +31,7 @@ namespace NiceHashMiner {
         // these are changing (logging reasons)
         public double CurrentProfit = 0;
         public double CurNhmSMADataVal = 0;
+        public double SecondaryCurNhmSMADataVal = 0;
 
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName) {
             this.AlgorithmName = AlgorithmNiceHashNames.GetName(niceHashID);
@@ -53,14 +53,14 @@ namespace NiceHashMiner {
 
         // for ClaymoreDual algos
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID, string minerName) {
-            this.AlgorithmName = AlgorithmNiceHashNames.GetName(niceHashID);
-            this.SecondaryAlgorithmName = AlgorithmNiceHashNames.GetName(secondaryNiceHashID);
-            this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
-            this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName + "_" + this.SecondaryAlgorithmName;
-
-            MinerBaseType = minerBaseType;
             NiceHashID = niceHashID;
             SecondaryNiceHashID = secondaryNiceHashID;
+
+            this.AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID());
+            this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
+            this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName;
+
+            MinerBaseType = minerBaseType;
             MinerName = minerName;
 
             BenchmarkSpeed = 0.0d;
@@ -135,24 +135,32 @@ namespace NiceHashMiner {
             if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
-                var speedString = Helpers.FormatSpeedOutput(BenchmarkSpeed);
-                if (SecondaryNiceHashID != AlgorithmType.NONE)  {
-                    speedString += "/" + Helpers.FormatSpeedOutput(SecondaryBenchmarkSpeed);
-                }
-                return speedString;
+                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed);
             } else if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             }
             return International.GetText("BenchmarkSpeedStringNone");
         }
-
-        // convenience for formatting name text
-        public string FormattedSecondaryName() {
-            if (SecondaryAlgorithmName != null)
-            {
-                return "/" + SecondaryAlgorithmName;
+   
+        // return hybrid type if dual, else standard ID
+        public AlgorithmType DualNiceHashID() {
+            if (NiceHashID == AlgorithmType.DaggerHashimoto) {
+                switch (SecondaryNiceHashID) {
+                    case AlgorithmType.Decred:
+                        return AlgorithmType.DaggerDecred;
+                    case AlgorithmType.Lbry:
+                        return AlgorithmType.DaggerLbry;
+                    case AlgorithmType.Pascal:
+                        return AlgorithmType.DaggerPascal;
+                }
             }
-            return "";
+            return NiceHashID;
+        }
+        public bool IsDual()
+        {
+            return (DualNiceHashID() == AlgorithmType.DaggerDecred ||
+                    DualNiceHashID() == AlgorithmType.DaggerLbry ||
+                    DualNiceHashID() == AlgorithmType.DaggerPascal);
         }
     }
 }
