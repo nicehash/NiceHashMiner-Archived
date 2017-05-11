@@ -322,7 +322,7 @@
 		"Form_Settings_Text_DisableDefaultOptimizations": "Desactivar optimizaciones predeterminadas",
 		"AlgorithmsListView_ContextMenu_DisableAll": "Deshabilitar todos los algoritmos",
 		"AlgorithmsListView_ContextMenu_EnableAll": "Habilitar todos los algoritmos",
-    "AlgorithmsListView_ContextMenu_ClearItem": "Velocidad del Algoritmo Limpio",
+    "AlgorithmsListView_ContextMenu_ClearItem": "Velocidad del Algoritmo",
 		"Form_Main_No_Device_Enabled_For_Mining": "¡Alerta! Ningún dispisitivo se ha establecido para minar, por favor habilite al menos 1 dispositivo para poder minar.",
 		"Form_Main_3rdParty_Title": "Aviso en el uso de software de terceros",
 		"Form_Main_3rdParty_Text": "Hemos integrado software de minado de terceros (desarrollado por Claymore) que debería aumentar su verlocidad y estabilidad minando - esto podría resultar en mas beneficios en un menor periodo de tiempo después de la regalía del desarrollador. Aun así, dado que no es de código abierto, no podemos inspeccionarlo de ninguna forma. NiceHash no puede garantizar el uso de ese software y se niega a asumir ninguna responsabilidad por cualquier daño causado - incumplimientos de seguridad, pérdida de datos o fondos, errores de sistema o hardware y otros problemas. Al aceptar esta exención de responsabilidad usted asume toda la responsabilidad de usar estos mineros cerrados de Claymore como son.",
