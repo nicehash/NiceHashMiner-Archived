@@ -198,7 +198,7 @@ namespace NiceHashMiner.Miners {
         // full of state
         private bool CheckIfProfitable(double CurrentProfit, bool log = true) {
             // TODO FOR NOW USD ONLY
-            var currentProfitUSD = (CurrentProfit * Globals.BitcoinRate);
+            var currentProfitUSD = (CurrentProfit * Globals.BitcoinUSDRate);
             IsProfitable = 
                 IsMiningRegardlesOfProfit
                 || !IsMiningRegardlesOfProfit && currentProfitUSD >= ConfigManager.GeneralConfig.MinimumProfit;

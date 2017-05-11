@@ -13,7 +13,7 @@ namespace NiceHashMiner {
 
         // Variables
         public static Dictionary<AlgorithmType, NiceHashSMA> NiceHashData = null;
-        public static double BitcoinRate;
+        public static double BitcoinUSDRate;
         public static JsonSerializerSettings JsonSettings = null;
         public static int ThreadsPerCPU;
         // quickfix guard for checking internet conection

@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
+    <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
@@ -93,7 +94,6 @@
     <Compile Include="Configs\Data\DeviceDetectionConfig.cs" />
     <Compile Include="Configs\ConfigJsonFile\DeviceBenchmarkConfigFile.cs" />
     <Compile Include="Configs\ConfigJsonFile\GeneralConfigFile.cs" />
-    <Compile Include="CurrencyConverter.cs" />
     <Compile Include="Devices\AmdGpuDevice.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceManager.cs" />
@@ -231,7 +231,6 @@
     <Compile Include="Net20_backport\Tuple3.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="Bitcoin.cs" />
     <Compile Include="Miners\ccminer.cs" />
     <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
       <SubType>Form</SubType>

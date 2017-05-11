@@ -58,7 +58,7 @@ namespace NiceHashMiner
                 }
 
                 // init active display currency after config load
-                CurrencyConverter.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+                ExchangeRateAPI.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
                 // #2 then parse args
                 var commandLineArgs = new CommandLineParser(argv);
