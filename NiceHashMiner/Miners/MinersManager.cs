@@ -17,6 +17,7 @@ namespace NiceHashMiner.Miners {
 
         public static void StopAllMiners() {
             if (CurMiningSession != null) CurMiningSession.StopAllMiners();
+            CurMiningSession = null;
         }
 
         public static void StopAllMinersNonProfitable() {
@@ -45,6 +46,10 @@ namespace NiceHashMiner.Miners {
             return CurMiningSession.IsMiningEnabled;
         }
 
+        public static bool IsMiningEnabled() {
+            if (CurMiningSession != null) return CurMiningSession.IsMiningEnabled;
+            return false;
+        }
 
 
         /// <summary>

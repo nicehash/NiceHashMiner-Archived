@@ -109,6 +109,12 @@ namespace NiceHashMiner.Miners.Grouping {
             return GetMostProfitableIndex() > -1;
         }
 
+        public void RestoreOldProfitsState() {
+            // restore last state
+            MostProfitableAlgorithmType = PrevProfitableAlgorithmType;
+            MostProfitableMinerBaseType = PrevProfitableMinerBaseType;
+        }
+
         public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
             // save last state
             PrevProfitableAlgorithmType = MostProfitableAlgorithmType;

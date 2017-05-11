@@ -573,12 +573,11 @@ namespace NiceHashMiner
         {
             string worker = textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim();
             Helpers.ConsolePrint("NICEHASH", "SMA get");
-            Dictionary<AlgorithmType, NiceHashSMA> t = NiceHashStats.GetAlgorithmRates(worker);
+            Dictionary<AlgorithmType, NiceHashSMA> t = null;
 
-            for (int i = 0; i < 3; i++)
-            {
-                if (t != null)
-                {
+            for (int i = 0; i < 5; i++) {
+                t = NiceHashStats.GetAlgorithmRates(worker);
+                if (t != null) {
                     Globals.NiceHashData = t;
                     break;
                 }
@@ -588,8 +587,7 @@ namespace NiceHashMiner
                 t = NiceHashStats.GetAlgorithmRates(worker);
             }
 
-            if (t == null && Globals.NiceHashData == null && ShowWarningNiceHashData)
-            {
+            if (t == null && Globals.NiceHashData == null && ShowWarningNiceHashData) {
                 ShowWarningNiceHashData = false;
                 DialogResult dialogResult = MessageBox.Show(International.GetText("Form_Main_msgbox_NoInternetMsg"),
                                                             International.GetText("Form_Main_msgbox_NoInternetTitle"),

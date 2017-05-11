@@ -251,25 +251,6 @@ namespace NiceHashMiner.Miners {
                 }
             }
 
-            // check if should mine
-            // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
-            if (CheckIfShouldMine(CurrentProfit, log) == false) {
-                return;
-            }
-            // check profit threshold
-            Helpers.ConsolePrint(TAG, String.Format("PrevStateProfit {0}, CurrentProfit {1}", PrevStateProfit, CurrentProfit));
-            if (PrevStateProfit > 0 && CurrentProfit > 0) {
-                double a = Math.Max(PrevStateProfit, CurrentProfit);
-                double b = Math.Min(PrevStateProfit, CurrentProfit);
-                //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
-                double percDiff = ((a - b)) / b;
-                if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) {
-                    // don't switch
-                    Helpers.ConsolePrint(TAG, String.Format("Will not switch profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
-                    return;
-                }
-            }
-
             // print profit statuses
             if (log) {
                 StringBuilder stringBuilderFull = new StringBuilder();
@@ -292,6 +273,32 @@ namespace NiceHashMiner.Miners {
                     stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
                 }
                 Helpers.ConsolePrint(TAG, stringBuilderFull.ToString());
+            }
+
+            // check profit threshold
+            Helpers.ConsolePrint(TAG, String.Format("PrevStateProfit {0}, CurrentProfit {1}", PrevStateProfit, CurrentProfit));
+            if (PrevStateProfit > 0 && CurrentProfit > 0) {
+                double a = Math.Max(PrevStateProfit, CurrentProfit);
+                double b = Math.Min(PrevStateProfit, CurrentProfit);
+                //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
+                double percDiff = ((a - b)) / b;
+                if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) {
+                    // don't switch
+                    Helpers.ConsolePrint(TAG, String.Format("Will NOT switch profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
+                    // RESTORE OLD PROFITS STATE
+                    foreach (var device in _miningDevices) {
+                        device.RestoreOldProfitsState();
+                    }
+                    return;
+                } else {
+                    Helpers.ConsolePrint(TAG, String.Format("Will SWITCH profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
+                }
+            }
+
+            // check if should mine
+            // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
+            if (CheckIfShouldMine(CurrentProfit, log) == false) {
+                return;
             }
 
             // group new miners 
