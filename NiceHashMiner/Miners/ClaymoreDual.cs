@@ -19,10 +19,10 @@ namespace NiceHashMiner.Miners {
         // eth-only: 1%
         // eth-dual-mine: 2%
         protected override double DevFee() {
-            return (SecondaryAlgorithmType == AlgorithmType.NONE) ? 1.0 : 2.0;
+            return IsDual() ? 2.0 : 1.0;
         }
 
-        // the short form the miner uses for secondary algos
+        // the short form the miner uses for secondary algo in cmd line and log
         public string SecondaryShortName() {
             switch (SecondaryAlgorithmType) {
                 case AlgorithmType.Decred:
@@ -47,7 +47,7 @@ namespace NiceHashMiner.Miners {
             string username = GetUsername(btcAdress, worker);
 
             string dualModeParams = "";
-            if (SecondaryAlgorithmType == AlgorithmType.NONE)
+            if (!IsDual())
             {  // leave convenience param for non-dual entry
                 foreach (var pair in MiningSetup.MiningPairs)
                 {
@@ -55,35 +55,29 @@ namespace NiceHashMiner.Miners {
                     {
                         AlgorithmType dual = AlgorithmType.NONE;
                         string coinP = "";
-                        if (pair.CurrentExtraLaunchParameters.Contains("Decred"))
-                        {
+                        if (pair.CurrentExtraLaunchParameters.Contains("Decred")) {
                             dual = AlgorithmType.Decred;
                             coinP = " -dcoin dcr ";
                         }
                         //if (pair.CurrentExtraLaunchParameters.Contains("Siacoin")) {
                         //    dual = AlgorithmType.;
                         //}
-                        if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))
-                        {
+                        if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))  {
                             dual = AlgorithmType.Lbry;
                             coinP = " -dcoin lbc ";
                         }
-                        if (pair.CurrentExtraLaunchParameters.Contains("Pascal"))
-                        {
+                        if (pair.CurrentExtraLaunchParameters.Contains("Pascal")) {
                             dual = AlgorithmType.Pascal;
                             coinP = " -dcoin pasc ";
                         }
-                        if (dual != AlgorithmType.NONE)
-                        {
+                        if (dual != AlgorithmType.NONE)  {
                             string urlSecond = Globals.GetLocationURL(dual, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
                             dualModeParams = String.Format(" {0} -dpool {1} -dwal {2}", coinP, urlSecond, username);
                             break;
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 string urlSecond = Globals.GetLocationURL(SecondaryAlgorithmType, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
                 dualModeParams = String.Format(" -dcoin {0} -dpool {1} -dwal {2}", SecondaryShortName(), urlSecond, username);
             }
@@ -99,21 +93,26 @@ namespace NiceHashMiner.Miners {
             LastCommandLine = GetStartCommand(url, btcAdress, worker) + " -dbg -1";
             ProcessHandle = _Start();
         }
-        
+
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // clean old logs
             CleanAllOldLogs();
 
-            benchmarkTimeWait = time;
 
             // network stub
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             // demo for benchmark
             string ret = GetStartCommand(url, Globals.DemoUser, ConfigManager.GeneralConfig.WorkerName.Trim());
-            // local benhcmark (benchmark does not work in dual
-            return ret + ((SecondaryAlgorithmType == AlgorithmType.NONE) ? "  -benchmark 1" : "");
+            // local benhcmark
+            if (!IsDual()) {
+                benchmarkTimeWait = time;
+                return ret + "  -benchmark 1";
+            } else {
+                benchmarkTimeWait = Math.Max(120, time);  // dual seems to stop mining after this time if redirect output is true
+                return ret;  // benchmark 1 does not output secondary speeds
+            }
         }
 
     }

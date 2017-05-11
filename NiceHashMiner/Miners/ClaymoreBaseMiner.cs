@@ -38,9 +38,13 @@ namespace NiceHashMiner.Miners {
 
         protected abstract double DevFee();
 
-        protected virtual string SecondaryLookForStart()
-        {
+        protected virtual string SecondaryLookForStart() {
             return "";
+        }
+
+        // return true if a secondary algo is being used
+        public bool IsDual() {
+            return (SecondaryAlgorithmType != AlgorithmType.NONE);
         }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {

@@ -76,7 +76,7 @@ namespace NiceHashMiner.Forms.Components {
                 _currentlySelectedAlgorithm = algorithm;
                 _currentlySelectedLvi = lvi;
                 this.Enabled = lvi.Checked;
-                
+
                 groupBoxSelectedAlgorithmSettings.Text = String.Format(International.GetText("AlgorithmsListView_GroupBox"),
                 String.Format("{0} ({1})", algorithm.AlgorithmName, algorithm.MinerBaseTypeName)); ;
 
@@ -129,8 +129,7 @@ namespace NiceHashMiner.Forms.Components {
         private void secondaryTextChangedBenchmarkSpeed(object sender, EventArgs e)
         {
             double secondaryValue;
-            if (Double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out secondaryValue))
-            {
+            if (Double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out secondaryValue)) {
                 _currentlySelectedAlgorithm.SecondaryBenchmarkSpeed = secondaryValue;
             }
             updateSpeedText();
@@ -140,8 +139,7 @@ namespace NiceHashMiner.Forms.Components {
         {
             var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, _currentlySelectedAlgorithm.SecondaryBenchmarkSpeed);
             // update lvi speed
-            if (_currentlySelectedLvi != null)
-            {
+            if (_currentlySelectedLvi != null) {
                 _currentlySelectedLvi.SubItems[2].Text = speedString;
             }
         }

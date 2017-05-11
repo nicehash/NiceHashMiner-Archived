@@ -32,27 +32,8 @@ namespace NiceHashMiner {
         public double CurrentProfit = 0;
         public double CurNhmSMADataVal = 0;
         public double SecondaryCurNhmSMADataVal = 0;
-
-        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName) {
-            this.AlgorithmName = AlgorithmNiceHashNames.GetName(niceHashID);
-            this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
-            this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName;
-
-            MinerBaseType = minerBaseType;
-            NiceHashID = niceHashID;
-            SecondaryNiceHashID = AlgorithmType.NONE;
-            MinerName = minerName;
-
-            BenchmarkSpeed = 0.0d;
-            SecondaryBenchmarkSpeed = 0.0d;
-            ExtraLaunchParameters = "";
-            LessThreads = 0;
-            Enabled = true;
-            BenchmarkStatus = "";
-        }
-
-        // for ClaymoreDual algos
-        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID, string minerName) {
+        
+        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName, AlgorithmType secondaryNiceHashID=AlgorithmType.NONE) {
             NiceHashID = niceHashID;
             SecondaryNiceHashID = secondaryNiceHashID;
 
@@ -64,10 +45,10 @@ namespace NiceHashMiner {
             MinerName = minerName;
 
             BenchmarkSpeed = 0.0d;
-            SecondaryBenchmarkSpeed = 1.0d;
+            SecondaryBenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
             LessThreads = 0;
-            Enabled = false;
+            Enabled = !IsDual();
             BenchmarkStatus = "";
         }
 
@@ -91,11 +72,10 @@ namespace NiceHashMiner {
                 string rate = International.GetText("BenchmarkRatioRateN_A");
                 var payingRate = 0.0d;
                 if (Globals.NiceHashData != null) {
-                    if (BenchmarkSpeed > 0)
-                    {
+                    if (BenchmarkSpeed > 0) {
                         payingRate += BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
                     }
-                    if (SecondaryBenchmarkSpeed > 0 && SecondaryNiceHashID != AlgorithmType.NONE) {
+                    if (SecondaryBenchmarkSpeed > 0 && IsDual()) {
                         payingRate += SecondaryBenchmarkSpeed * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
                     }
                     rate = payingRate.ToString("F8");
@@ -156,8 +136,7 @@ namespace NiceHashMiner {
             }
             return NiceHashID;
         }
-        public bool IsDual()
-        {
+        public bool IsDual() {
             return (DualNiceHashID() == AlgorithmType.DaggerDecred ||
                     DualNiceHashID() == AlgorithmType.DaggerLbry ||
                     DualNiceHashID() == AlgorithmType.DaggerPascal);
