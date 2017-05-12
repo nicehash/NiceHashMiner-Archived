@@ -20,7 +20,7 @@ namespace NiceHashMiner {
             public string method { get; set; }
         }
 
-        const string apiUrl = "http://api.nicehash.com/api?method=nicehash.service.info";
+        const string apiUrl = "https://api.nicehash.com/api?method=nicehash.service.info";
 
         private static Dictionary<string, double> exchanges_fiat = null;
         private static double USD_BTC_rate = -1;
