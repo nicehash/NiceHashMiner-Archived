@@ -5,35 +5,49 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace NiceHashMiner {
-    [Serializable]
     public class Algorithm {
-        readonly public AlgorithmType NiceHashID;
-        // ignore the dictionary atribute shows the name
-        [JsonIgnore]
-        readonly public string NiceHashName;
+
+        public readonly string AlgorithmName;
+        public readonly string MinerBaseTypeName;
+        public readonly AlgorithmType NiceHashID;
+        public readonly MinerBaseType MinerBaseType;
+        public readonly string AlgorithmStringID;
         // Miner name is used for miner ALGO flag parameter
-        readonly public string MinerName;
+        public readonly string MinerName;
         public double BenchmarkSpeed { get; set; }
         public string ExtraLaunchParameters { get; set; }
+        public bool Enabled { get; set; }
 
-        // not all miners, GPU sgminer and most ccminers
-        public double Intensity { get; set; } 
         // CPU miners only setting
         public int LessThreads { get; set; }
 
-        public bool Skip { get; set; }
+        // avarage speed of same devices to increase mining stability
+        public double AvaragedSpeed { get; set; }
+        // based on device and settings here we set the miner path
+        public string MinerBinaryPath = "";
+        // these are changing (logging reasons)
+        public double CurrentProfit = 0;
+        public double CurNhmSMADataVal = 0;
 
-        public static readonly string PasswordDefault = "x";
+        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName) {
+            this.AlgorithmName = AlgorithmNiceHashNames.GetName(niceHashID);
+            this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
+            this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName;
 
-        [JsonIgnore]
-        public double CurrentProfit { get; set; }
+            MinerBaseType = minerBaseType;
+            NiceHashID = niceHashID;
+            MinerName = minerName;
+
+            BenchmarkSpeed = 0.0d;
+            ExtraLaunchParameters = "";
+            LessThreads = 0;
+            Enabled = true;
+            BenchmarkStatus = "";
+        }
 
         // benchmark info
-        [JsonIgnore]
         public string BenchmarkStatus { get; set; }
-        [JsonIgnore]
         public bool IsBenchmarkPending { get; private set; }
-        [JsonIgnore]
         public string CurPayingRatio {
             get {
                 string ratio = International.GetText("BenchmarkRatioRateN_A");
@@ -43,7 +57,6 @@ namespace NiceHashMiner {
                 return ratio;
             }
         }
-        [JsonIgnore]
         public string CurPayingRate {
             get {
                 string rate = International.GetText("BenchmarkRatioRateN_A");
@@ -54,33 +67,40 @@ namespace NiceHashMiner {
             }
         }
 
-        public Algorithm(AlgorithmType niceHashID, string minerName) {
-            NiceHashID = niceHashID;
-            NiceHashName = AlgorithmNiceHashNames.GetName(niceHashID);
-            MinerName = minerName;
-
-            BenchmarkSpeed = 0.0d;
-            ExtraLaunchParameters = "";
-            Intensity = 0.0d; // 0.0d is default
-            LessThreads = 0;
-            Skip = false;
-            BenchmarkStatus = "";
-        }
-
         public void SetBenchmarkPending() {
             IsBenchmarkPending = true;
             BenchmarkStatus = International.GetText("Algorithm_Waiting_Benchmark");
         }
+        public void SetBenchmarkPendingNoMsg() {
+            IsBenchmarkPending = true;
+        }
+
+        private bool IsPendingString() {
+            return BenchmarkStatus == International.GetText("Algorithm_Waiting_Benchmark")
+                || BenchmarkStatus == "."
+                || BenchmarkStatus == ".."
+                || BenchmarkStatus == "...";
+        }
+
         public void ClearBenchmarkPending() {
+            IsBenchmarkPending = false;
+            if (IsPendingString()) {
+                BenchmarkStatus = "";
+            }
+        }
+
+        public void ClearBenchmarkPendingFirst() {
             IsBenchmarkPending = false;
             BenchmarkStatus = "";
         }
 
         public string BenchmarkSpeedString() {
-            if (!Skip && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
+            if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
                 return Helpers.FormatSpeedOutput(BenchmarkSpeed);
+            } else if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus)) {
+                return BenchmarkStatus;
             }
             return International.GetText("BenchmarkSpeedStringNone");
         }

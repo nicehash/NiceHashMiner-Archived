@@ -17,11 +17,15 @@ public:
 
 	bool QueryDevices();
 	void PrintDevicesJson();
+	void PrintDevicesJson_d();
 
 private:
 
-	void print(CudaDevice &dev);
+	//void print(CudaDevice &dev);
 	void json_print(CudaDevice &dev);
+
+	//void print_d(CudaDevice &dev);
+	void json_print_d(CudaDevice &dev);
 
 	std::vector<std::string> _errorMsgs;
 	std::vector<CudaDevice> _cudaDevices;

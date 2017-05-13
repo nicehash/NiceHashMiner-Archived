@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NiceHashMiner</RootNamespace>
     <AssemblyName>NiceHashMiner</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -55,6 +55,9 @@
     <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LinqBridge">
+      <HintPath>..\3rdparty\sharpcompress-0.11\LinqBridge.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3rdparty\log4net\log4net.dll</HintPath>
@@ -62,13 +65,14 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\3rdparty\json\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="SharpCompress">
+      <HintPath>..\3rdparty\sharpcompress-0.11\SharpCompress.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -76,20 +80,26 @@
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
-    <Compile Include="AlgorithmNiceHashNames.cs" />
-    <Compile Include="BaseLazySingleton.cs" />
-    <Compile Include="Configs\DeviceBenchmarkConfig.cs" />
-    <Compile Include="Configs\DeviceBenchmarkConfigManager.cs" />
-    <Compile Include="Configs\BenchmarkTimeLimitsConfig.cs" />
-    <Compile Include="Configs\BaseConfigFile.cs" />
+    <Compile Include="ExchangeRateAPI.cs" />
+    <Compile Include="Miners\ClaymoreDual.cs" />
+    <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
+    <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
-    <Compile Include="Configs\DeviceDetectionConfig.cs" />
-    <Compile Include="Configs\GeneralConfig.cs" />
-    <Compile Include="CurrencyConverter.cs" />
+    <Compile Include="Configs\Data\AlgorithmConfig.cs" />
+    <Compile Include="Configs\Data\DeviceBenchmarkConfig.cs" />
+    <Compile Include="Configs\ConfigJsonFile\ConfigFile.cs" />
+    <Compile Include="Configs\Data\ComputeDeviceConfig.cs" />
+    <Compile Include="Configs\Data\GeneralConfig.cs" />
+    <Compile Include="Configs\Data\BenchmarkTimeLimitsConfig.cs" />
+    <Compile Include="Configs\Data\DeviceDetectionConfig.cs" />
+    <Compile Include="Configs\ConfigJsonFile\DeviceBenchmarkConfigFile.cs" />
+    <Compile Include="Configs\ConfigJsonFile\GeneralConfigFile.cs" />
     <Compile Include="Devices\AmdGpuDevice.cs" />
     <Compile Include="Devices\ComputeDevice.cs" />
-    <Compile Include="Devices\ComputeDeviceQueryManager.cs" />
+    <Compile Include="Devices\ComputeDeviceManager.cs" />
+    <Compile Include="Devices\CPUUtils.cs" />
     <Compile Include="Devices\CudaDevice.cs" />
+    <Compile Include="Devices\CUDA_Unsupported.cs" />
     <Compile Include="Devices\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\OpenCLDevice.cs" />
@@ -97,14 +107,19 @@
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
     <Compile Include="Enums\BenchmarkProcessStatus.cs" />
-    <Compile Include="Enums\ComputePlatformType.cs" />
     <Compile Include="Enums\CPUExtensionType.cs" />
     <Compile Include="Enums\DagGenerationType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
+    <Compile Include="Enums\DeviceMiningStatus.cs" />
     <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerAPIReadStatus.cs" />
+    <Compile Include="Enums\MinerBaseType.cs" />
+    <Compile Include="Enums\MinerOptionFlagType.cs" />
     <Compile Include="Enums\MinerStopType.cs" />
+    <Compile Include="Enums\MinerType.cs" />
+    <Compile Include="Enums\NHMConectionType.cs" />
+    <Compile Include="Enums\Use3rdPartyMiners.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -153,56 +168,80 @@
     <Compile Include="Forms\Form_Benchmark.Designer.cs">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Settings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Settings.Designer.cs">
-      <DependentUpon>Form_Settings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Form_ChooseLanguage.Designer.cs">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_3rdParty_TOS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
+      <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_Settings.Designer.cs">
+      <DependentUpon>Form_Settings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IBenchmarkComunicator.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
-    <Compile Include="Interfaces\IPathsProperties.cs" />
     <Compile Include="International.cs" />
-    <Compile Include="Devices\ComputeDeviceGroupManager.cs" />
-    <Compile Include="MemoryHelper.cs" />
-    <Compile Include="Miners\ccminer_sm6x.cs" />
-    <Compile Include="Miners\ManagerPrivate\CpuGroupMiner.cs" />
-    <Compile Include="Miners\ManagerPrivate\GroupMiners.cs" />
-    <Compile Include="Miners\ManagerPrivate\SwitchTesting.cs" />
-    <Compile Include="Miners\MinerEtherum.cs" />
-    <Compile Include="Miners\MinerEtherumCUDA.cs" />
-    <Compile Include="Miners\MinerEtherumOCL.cs" />
-    <Compile Include="Miners\MinerPaths.cs" />
+    <Compile Include="Utils\Links.cs" />
+    <Compile Include="Utils\MemoryHelper.cs" />
+    <Compile Include="Miners\ClaymoreBaseMiner.cs" />
+    <Compile Include="Miners\ClaymoreCryptoNightMiner.cs" />
+    <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
+    <Compile Include="Miners\Obsolete\eqm.cs" />
+    <Compile Include="Miners\Equihash\nheqBase.cs" />
+    <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
+    <Compile Include="Miners\excavator.cs" />
+    <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
+    <Compile Include="Miners\Grouping\MiningDevice.cs" />
+    <Compile Include="Miners\MinerFactory.cs" />
+    <Compile Include="Miners\MinersSettingsManager.cs" />
+    <Compile Include="Miners\Parsing\ExtraLaunchParameters.cs" />
+    <Compile Include="Miners\Parsing\ExtraLaunchParametersParser.cs" />
+    <Compile Include="Miners\Grouping\GroupingLogic.cs" />
+    <Compile Include="Miners\Grouping\GroupMiner.cs" />
+    <Compile Include="Miners\Grouping\MiningPair.cs" />
+    <Compile Include="Miners\Grouping\MiningSetup.cs" />
+    <Compile Include="Miners\ethminer\MinerEtherum.cs" />
+    <Compile Include="Miners\ethminer\MinerEtherumCUDA.cs" />
+    <Compile Include="Miners\ethminer\MinerEtherumOCL.cs" />
+    <Compile Include="Miners\Parsing\MinerOption.cs" />
+    <Compile Include="Miners\Grouping\MinerPaths.cs" />
     <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager.cs" />
+    <Compile Include="Miners\Equihash\nheqminer.cs" />
+    <Compile Include="Miners\MiningSession.cs" />
+    <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
+    <Compile Include="Miners\XmrStackCPUMiner.cs" />
+    <Compile Include="Net20_backport\HashSet.cs" />
+    <Compile Include="Net20_backport\SortedSet.cs" />
+    <Compile Include="Net20_backport\StringHelper.cs" />
+    <Compile Include="Net20_backport\Tuple.cs" />
+    <Compile Include="Net20_backport\Tuple3.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
-    <Compile Include="BitcoinAddress.cs" />
-    <Compile Include="Bitcoin.cs" />
-    <Compile Include="Miners\ccminer_sm5x.cs" />
+    <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Miners\ccminer.cs" />
-    <Compile Include="Miners\ccminer_sm21.cs" />
-    <Compile Include="Miners\ccminer_sm3x.cs" />
     <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DriverVersionConfirmationDialog.Designer.cs">
       <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Ethereum.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="Configs\Legacy\Config.cs" />
+    <Compile Include="Miners\ethminer\Ethereum.cs" />
+    <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
-    <Compile Include="Miners\cpuminer.cs" />
+    <Compile Include="Miners\Obsolete\cpuminer.cs" />
     <Compile Include="Forms\Form_Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -215,7 +254,7 @@
     <Compile Include="Forms\Form_Loading.Designer.cs">
       <DependentUpon>Form_Loading.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers.cs" />
+    <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />
     <Compile Include="Forms\MinerFileNotFoundDialog.cs">
       <SubType>Form</SubType>
@@ -225,18 +264,21 @@
     </Compile>
     <Compile Include="NiceHashStats.cs" />
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
+    <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Miners\sgminer.cs" />
-    <Compile Include="TextBoxKeyPressEvents.cs" />
+    <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
-    <Compile Include="Utils\BINS_CODEGEN_AMD.cs" />
-    <Compile Include="Utils\BINS_CODEGEN_NVIDIA.cs" />
-    <Compile Include="Utils\BINS_CODEGEN_SHARED.cs" />
+    <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
+    <Compile Include="Utils\DownloadSetup.cs" />
+    <Compile Include="Utils\MinersDownloader.cs" />
     <Compile Include="Utils\MinersDownloadManager.cs" />
+    <Compile Include="Utils\MinersExistanceChecker.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
       <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
@@ -260,11 +302,14 @@
     <EmbeddedResource Include="Forms\Form_Benchmark.resx">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Settings.resx">
-      <DependentUpon>Form_Settings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
+      <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Settings.resx">
+      <DependentUpon>Form_Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DriverVersionConfirmationDialog.resx">
       <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>

@@ -5,11 +5,12 @@ using System.Text;
 namespace NiceHashMiner.Enums
 {
     public enum CPUExtensionType : int {
-        // 0 - automatic, 1 - AVX2, 2 - AVX, 3 - AES, 4 - SSE2
         Automatic = 0,
-        AVX2 = 1,
-        AVX = 2,
-        AES = 3,
-        SSE2 = 4
+        AVX2_AES = 1,
+        AVX2 = 2,
+        AVX_AES = 3,
+        AVX = 4,
+        AES = 5,
+        SSE2 = 6,
     }
 }

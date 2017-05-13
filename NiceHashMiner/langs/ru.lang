@@ -64,6 +64,8 @@
         "Form_Main_msgbox_buttonBenchmarkRestartWarningTitle":"Перезагрузка {0}",
         "Form_Main_msgbox_buttonBenchmarkRestartWarningMsg":"Работа {0} завершится. Этот новое диалоговое окно еще тестируется и {0} нужен перезапуск для результата.",
         "Form_Main_msgbox_anti_botnet_msgbox": "NiceHash Miner обнаружил изменение ID оборудования. Если вы не загружали и не устанавливали NiceHash Miner, ваш компьютер может быть взломан. В этом случае, мы советуем вам установить антивирус или переустановить ваш Windows.\r\n\r\nПродолжить работу с NiceHash Miner?",
+	"Form_Main_No_Device_Enabled_For_Mining":  "Предупреждение: устройства для майнинга не были включены. Включите, пожалуйста, хотя-бы одно устройство для запуска майнинга.",
+	"Form_Main_MINING_NO_INTERNET_CONNECTION": "НА ДАННЫЙ МОМЕНТ НЕ МАЙНИТ. НЕТ ПОДКЛЮЧЕНИЯ К ИНТЕРНЕТУ.",
 
 
         "Form_Benchmark_title":"Бенчмарк",
@@ -250,6 +252,9 @@
         "AlgorithmSettingsControl_ToolTip_Intensity": "Устанавливает интенсивность для выбранного алгоритма (значения между 8.0 - 25.0 или 31.0, в зависимости от алгоритма). Интенсивность 0 использует интенсивность по умолчанию. ФУНКЦИЯ ДЛЯ ПРОДВИНУТЫХ ПОЛЬЗОВАТЕЛЕЙ.",
         "AlgorithmsListView_GroupBox": "Выбранный алгоритм: {0}",
         "AlgorithmsListView_GroupBox_NONE": "NONE",
+	"AlgorithmsListView_ContextMenu_DisableAll": "Отключить все алгоритмы",
+        "AlgorithmsListView_ContextMenu_EnableAll" : "Включить все алгоритмы",
+        "AlgorithmsListView_ContextMenu_ClearItem": "Сбросить скорость алгоритма",
         "BenchmarkOptions_Benchmark_Type": "Тип бенчмарка:",
         "Form_Main_MiningDevices": "Устройства {0}:",
         "Form_Main_bins_folder_files_missing": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner может не работать правильно без недостающих файлов. Нажмите Да для переустановки NiceHash Miner, чтобы попробовать исправить ошибку.",
@@ -312,8 +317,33 @@
         "Compute_Device_Query_Manager_AMD_Query": "Проверка GPU AMD OpenCL",
         "Compute_Device_Query_Manager_AMD_Query_Skip": "Пропустить проверку GPU AMD OpenCL",
         "Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title": "Рекомендуемый драйвер Nvidia",
-        "Compute_Device_Query_Manager_NVIDIA_Driver_Detection": "Мы обнаружили, что в вашей системе есть Nvidia GPU, но ваш драйвер старее {0}. Для корректной работы NiceHash Miner, вам необходимо обновить драйверы до рекомендуемого {1} или новее.",
+        "Compute_Device_Query_Manager_NVIDIA_Driver_Detection": "Мы обнаружили, что в вашей системе есть устройства Nvidia GPU, но ваш драйвер старее, чем {0}. Для правильной работы NiceHash Miner вам следует обновить ваши драйверы до рекомендуемых {1} или новее. Если вы все еще видите это предупреждение после обновления драйверов, удалите, пожалуйста, все ваши драйверы для Nvidia и выполните чистую установку последних официальных драйверов с http://www.nvidia.com.",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART" : " (текущий {0})",
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended": "Мы обнаружили, что ваш драйвер старее {0}{1}. Мы рекомендуем вам обновиться до {2} или новее.",
+	"NET45_Not_Intsalled_msg" : "Для корректной работы NiceHash Miner требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
+	"Form_Settings_ToolTip_DisableDefaultOptimizations": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг потенциально более стабильным, но значительно медленнее (особенно для карт  AMD).",
+        "Form_Settings_Text_DisableDefaultOptimizations": "Отключить оптимизацию",
+	"Form_Settings_Text_ContinueMiningIfNoInternetAccess" : "Простаивать, когда нет интернета",
+        "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess": "Если включено, NiceHashMiner будет останавливать майнинг, при отсутствии доступа к интернету",
+        "Form_Main_3rdParty_Title": "Дисклеймер от использования стороннего ПО",
+        "Form_Main_3rdParty_Text": "Мы интегрировали стороннее программное обеспечение (разработанное Claymore), которое должно поднять скорость вашего майнинга и дать вам более стабильный опыт майнинга — это потенциально может привести к большему заработку за короткий период времени, даже после вычета комиссии разработчика. Однако, поскольку это стороннее программное обеспечение является полностью закрытым, у нас нет никакой возможности исследовать его. NiceHash не может ручаться за использование этого ПО и отказывается брать на себя ответственность за любой причиненный ущерб -  нарушение безопасности, потерю данных или средств и другие проблемы. Соглашением с этим дисклеймером, вы берете полную ответственность за использование этих майнеров с закрытым исходным кодом от Claymore.",
+        "Form_Main_3rdParty_Button_Agree_Text": "Я соглашаюсь",
+        "Form_Main_3rdParty_Button_Refuse_Text": "Я отказываюсь",
+        "Form_Settings_General_3rdparty_Text": "Включить сторонние майнеры",
+        "Form_Settings_General_3rdparty_ToolTip": "Используйте закрытое стороннее программное обеспечение для майнинга для высшей прибыльности. Использование на вашей собственной ответственности.",
+        "Form_Settings_General_AllowMultipleInstances_Text": "Разрешить несколько экземпляров",
+        "Form_Settings_General_AllowMultipleInstances_ToolTip": "Когда не отмечено, NiceHash Miner разрешит работу только одного экземпляра (он закроет новый запущенный экземпляр, если один экземпляр уже работает).",
+        "Form_Main_No_Device_Enabled_Algorithms_For_Mining": "Для выбранных устройств нет включенных алгоритмов. Перейдите в Настройки или Бенчмарк и включите хотя-бы 1 алгоритм.",
+        "Form_Benchmark_checkbox_StartMiningAfterBenchmark": "Запустить майнинг после бенчмарка",
+        "Form_Main_StartMiningReturnedFalse": "NiceHashMiner не может начать майнинг. Убедитесь, что хотя-бы одно устройство включено с хотя-бы одним включенным и прошедшим бенчмарк алгоритмом",
+        "Program_WMI_Error_Text": "NiceHash Miner не может запустить необходимые компоненты. Похоже, что в вашей системе отключен сервис Инструментарий управления Windows. Для корректной работы NiceHash Miner, сервис Инструментарий управления Windows должен быть включен. Этот сервис нужен для определения использования RAM и доступной информации видеоконтроллера. Включите сервис Инструментарий управления Windows вручную и запустите NiceHash Miner.",
+        "Program_WMI_Error_Title": "Ошибка Инструментария управления Windows",
+        "Form_Main_Accepted_Speed_Zero": "Предупреждение! Алгоритм {0} сообщает 0 принятых шар. Отключите, пожалуйста, этот алгоритм в Бенчмарке/Настройках и сообщите о данной проблеме на support-ru@nicehash.com!",
+
+        "Form_Settings_General_SwitchProfitabilityThreshold": "Порог переключения прибыльности",
+        "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Майнер не будет переключаться, если разница между прибыльностью алгоритмов ниже Порога переключения прибыльности. Значение в процентах [0 — 1]",
+        "VirtualMemorySize_BAD": "NiceHash Miner рекомендует увеличить размер виртуальной памяти для нормальной работы всех алгоритмов.",
+        "sgminer_precise_try":  "Неудача — попробуйте Точный"
+
     }
 }

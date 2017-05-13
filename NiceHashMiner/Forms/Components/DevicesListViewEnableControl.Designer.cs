@@ -66,7 +66,6 @@
             this.toolStripMenuItemEnable.Name = "toolStripMenuItemEnable";
             this.toolStripMenuItemEnable.Size = new System.Drawing.Size(196, 22);
             this.toolStripMenuItemEnable.Text = "Enable Benchmark";
-            this.toolStripMenuItemEnable.Click += new System.EventHandler(this.toolStripMenuItemEnable_Click);
             // 
             // toolStripMenuItem1
             // 

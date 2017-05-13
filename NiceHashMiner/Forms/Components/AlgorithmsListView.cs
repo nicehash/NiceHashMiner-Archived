@@ -24,9 +24,12 @@ namespace NiceHashMiner.Forms.Components {
         public interface IAlgorithmsListView {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
             void HandleCheck(ListViewItem lvi);
+            void ChangeSpeed(ListViewItem lvi);
         }
 
         public IAlgorithmsListView ComunicationInterface { get; set; }
+
+        public IBenchmarkCalculation BenchmarkCalculation { get; set; }
 
         ComputeDevice _computeDevice;
 
@@ -37,7 +40,7 @@ namespace NiceHashMiner.Forms.Components {
             public void LviSetColor(ListViewItem lvi) {
                 Algorithm algorithm = lvi.Tag as Algorithm;
                 if (algorithm != null) {
-                    if (algorithm.Skip && !algorithm.IsBenchmarkPending) {
+                    if (algorithm.Enabled == false && !algorithm.IsBenchmarkPending) {
                         lvi.BackColor = DISABLED_COLOR;
                     } else if (algorithm.BenchmarkSpeed > 0 && !algorithm.IsBenchmarkPending) {
                         lvi.BackColor = BENCHMARKED_COLOR;
@@ -82,29 +85,23 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
         }
 
-        //public void RemoveRatioRates() {
-        //    listViewAlgorithms.Columns.RemoveAt(RATE);
-        //    listViewAlgorithms.Columns.RemoveAt(RATIO);
-        //}
-
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled) {
             _computeDevice = computeDevice;
-            var config = computeDevice.DeviceBenchmarkConfig;
+            listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
-            foreach (var alg in config.AlgorithmSettings) {
+            foreach (var alg in computeDevice.GetAlgorithmSettings()) {
                 ListViewItem lvi = new ListViewItem();
-                lvi.Checked = !alg.Value.Skip;
-                //lvi.Text = alg.Value.NiceHashName;
-                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(alg.Value.NiceHashName);
+                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName));
 
                 //sub.Tag = alg.Value;
-                lvi.SubItems.Add(alg.Value.BenchmarkSpeedString());
-                lvi.SubItems.Add(alg.Value.CurPayingRatio);
-                lvi.SubItems.Add(alg.Value.CurPayingRate);
-                lvi.Tag = alg.Value;
-                _listItemCheckColorSetter.LviSetColor(lvi);
+                lvi.SubItems.Add(alg.BenchmarkSpeedString());
+                lvi.SubItems.Add(alg.CurPayingRatio);
+                lvi.SubItems.Add(alg.CurPayingRate);
+                lvi.Tag = alg;
+                lvi.Checked = alg.Enabled;
                 listViewAlgorithms.Items.Add(lvi);
             }
+            listViewAlgorithms.EndUpdate();
             this.Enabled = isEnabled;
         }
 
@@ -133,38 +130,103 @@ namespace NiceHashMiner.Forms.Components {
             }
             var algo = e.Item.Tag as Algorithm;
             if (algo != null) {
-                algo.Skip = !e.Item.Checked;
+                algo.Enabled = e.Item.Checked;
             }
             if (ComunicationInterface != null) {
                 ComunicationInterface.HandleCheck(e.Item);
             }
             var lvi = e.Item as ListViewItem;
             _listItemCheckColorSetter.LviSetColor(lvi);
+            // update benchmark status data
+            if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
         }
         #endregion //Callbacks Events
 
+        public void ResetListItemColors() {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                if (_listItemCheckColorSetter != null) {
+                    _listItemCheckColorSetter.LviSetColor(lvi);
+                }
+            }
+        }
+
         // benchmark settings
-        public void SetSpeedStatus(ComputeDevice computeDevice, AlgorithmType algorithmType, string status) {
-            var algorithm = computeDevice.DeviceBenchmarkConfig.AlgorithmSettings[algorithmType];
-            algorithm.BenchmarkStatus = status;
-
-            
-            
-
-            // gui update only if same as selected
-            if (_computeDevice != null && computeDevice.UUID == _computeDevice.UUID) {
-                foreach (ListViewItem lvi in listViewAlgorithms.Items) {
-                    Algorithm algo = lvi.Tag as Algorithm;
-                    if (algo != null && algo.NiceHashID == algorithmType) {
-                        // TODO handle numbers
-                        lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
-                        lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
-                        lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
-                        _listItemCheckColorSetter.LviSetColor(lvi);
-                        break;
+        public void SetSpeedStatus(ComputeDevice computeDevice, Algorithm algorithm, string status) {
+            if (algorithm != null) {
+                algorithm.BenchmarkStatus = status;
+                // gui update only if same as selected
+                if (_computeDevice != null && computeDevice.UUID == _computeDevice.UUID) {
+                    foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                        Algorithm algo = lvi.Tag as Algorithm;
+                        if (algo != null && algo.AlgorithmStringID == algorithm.AlgorithmStringID) {
+                            // TODO handle numbers
+                            lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
+                            lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
+                            lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                            _listItemCheckColorSetter.LviSetColor(lvi);
+                            break;
+                        }
                     }
                 }
             }
         }
+
+        private void listViewAlgorithms_MouseClick(object sender, MouseEventArgs e) {
+            if (IsInBenchmark) return;
+            if (e.Button == MouseButtons.Right) {
+                contextMenuStrip1.Items.Clear();
+                // disable all
+                {
+                    var disableAllItems = new ToolStripMenuItem();
+                    disableAllItems.Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll");
+                    disableAllItems.Click += toolStripMenuItemDisableAll_Click;
+                    contextMenuStrip1.Items.Add(disableAllItems);
+                }
+                // enable all
+                {
+                    var enableAllItems = new ToolStripMenuItem();
+                    enableAllItems.Text = International.GetText("AlgorithmsListView_ContextMenu_EnableAll");
+                    enableAllItems.Click += toolStripMenuItemEnableAll_Click;
+                    contextMenuStrip1.Items.Add(enableAllItems);
+                }
+                // clear item
+                {
+                    var clearItem = new ToolStripMenuItem();
+                    clearItem.Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem");
+                    clearItem.Click += toolStripMenuItemClear_Click;
+                    contextMenuStrip1.Items.Add(clearItem);
+                }
+                contextMenuStrip1.Show(Cursor.Position);
+            }
+        }
+
+        private void toolStripMenuItemEnableAll_Click(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                lvi.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemDisableAll_Click(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items) {
+                lvi.Checked = false;
+            }
+        }
+
+        private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
+            if (_computeDevice != null) {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
+                    var algorithm = lvi.Tag as Algorithm;
+                    if (algorithm != null) {
+                        algorithm.BenchmarkSpeed = 0;
+                        RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                        // update benchmark status data
+                        if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                        // update settings
+                        if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+                    }
+                }
+            }
+        }
+
     }
 }
