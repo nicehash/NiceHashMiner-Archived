@@ -1,21 +1,16 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
-    public class MinersApiPortsManager : BaseLazySingleton<MinersApiPortsManager> {
-        private HashSet<int> _usedPorts;
-        
-        protected MinersApiPortsManager() {
-            _usedPorts = new HashSet<int>();
-        }
+    public static class MinersApiPortsManager {
+        private static HashSet<int> _usedPorts = new HashSet<int>();
 
-        private bool IsPortAvaliable(int port) {
+        public static bool IsPortAvaliable(int port) {
             bool isAvailable = true;
 
             IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
@@ -42,18 +37,18 @@ namespace NiceHashMiner.Miners {
             return isAvailable;
         }
 
-        public int GetAvaliablePort() {
-            int port = ConfigManager.Instance.GeneralConfig.ApiBindPortPoolStart;
+        public static int GetAvaliablePort() {
+            int port = ConfigManager.GeneralConfig.ApiBindPortPoolStart;
             int newPortEnd = port + 3000;
             for (; port < newPortEnd; ++port) {
-                if (IsPortAvaliable(port) && _usedPorts.Add(port)) {
+                if (MinersSettingsManager.AllReservedPorts.Contains(port) == false && IsPortAvaliable(port) && _usedPorts.Add(port)) {
                     break;
                 }
             }
             return port;
         }
 
-        public void RemovePort(int port) {
+        public static void RemovePort(int port) {
             _usedPorts.Remove(port);
         }
     }

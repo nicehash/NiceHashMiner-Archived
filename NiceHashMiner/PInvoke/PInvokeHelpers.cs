@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.PInvoke {
     class PInvokeHelpers {
@@ -19,6 +17,9 @@ namespace NiceHashMiner.PInvoke {
         [return: MarshalAsAttribute(UnmanagedType.Bool)]
         public static extern bool AllocConsole();
 
+        [DllImport("wininet.dll")]
+        protected extern static bool InternetGetConnectedState(out int Description, int ReservedValue);
+        
         #region Check If Idle
         internal struct LASTINPUTINFO {
             public uint cbSize;

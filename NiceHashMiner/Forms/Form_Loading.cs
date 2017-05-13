@@ -20,6 +20,7 @@ namespace NiceHashMiner
         private int TotalLoadSteps = 12;
         private readonly IAfterInitializationCaller AfterInitCaller;
 
+        // init loading stuff
         public Form_Loading(IAfterInitializationCaller initCaller, string loadFormTitle, string startInfoMsg, int totalLoadSteps)
         {
             InitializeComponent();
@@ -36,11 +37,12 @@ namespace NiceHashMiner
             SetInfoMsg(startInfoMsg);
         }
 
-        // download miners
-        public Form_Loading() {
+        // download miners constructor
+        MinersDownloader _minersDownloader = null;
+        public Form_Loading(MinersDownloader minersDownloader) {
             InitializeComponent();
             label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
-            _startMinersInitLogic = true;
+            _minersDownloader = minersDownloader;
         }
 
         public void IncreaseLoadCounterAndMessage(string infoMsg) {
@@ -117,13 +119,13 @@ namespace NiceHashMiner
             });
         }
 
-        public void FinishMsg(bool success) {
+        public void FinishMsg(bool ok) {
             this.Invoke((MethodInvoker)delegate {
-                //if (success) {
-                //    label_LoadingText.Text = "Init Finished!";
-                //} else {
-                //    label_LoadingText.Text = "Init Failed!";
-                //}
+                if (ok) {
+                    label_LoadingText.Text = "Init Finished!";
+                } else {
+                    label_LoadingText.Text = "Init Failed!";
+                }
                 System.Threading.Thread.Sleep(1000);
                 Close();
             });
@@ -131,10 +133,10 @@ namespace NiceHashMiner
 
         #endregion IMinerUpdateIndicator
 
-        bool _startMinersInitLogic = false;
+
         private void Form_Loading_Shown(object sender, EventArgs e) {
-            if (_startMinersInitLogic) {
-                MinersDownloadManager.Instance.Start(this);
+            if (_minersDownloader != null) {
+                _minersDownloader.Start(this);
             }
         }
     }

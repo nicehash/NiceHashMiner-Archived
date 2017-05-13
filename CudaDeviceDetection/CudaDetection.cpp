@@ -8,6 +8,8 @@ using namespace std;
 CudaDetection::CudaDetection() { }
 CudaDetection::~CudaDetection() { }
 
+#define PCI_BUS_LEN 64
+
 bool CudaDetection::QueryDevices() {
 	const unsigned int UUID_SIZE = 128;
 	try {
@@ -19,11 +21,15 @@ bool CudaDetection::QueryDevices() {
 
 			cudaDeviceProp props;
 			CUDA_SAFE_CALL(cudaGetDeviceProperties(&props, i));
+			char pciBusID[PCI_BUS_LEN];
+			CUDA_SAFE_CALL(cudaDeviceGetPCIBusId(pciBusID, PCI_BUS_LEN, i));
+
 			// serial stuff
 			nvmlPciInfo_t pciInfo;
 			nvmlDevice_t device_t;
 			char uuid[UUID_SIZE];
-			NVML_SAFE_CALL(nvmlDeviceGetHandleByIndex(i, &device_t));
+			//NVML_SAFE_CALL(nvmlDeviceGetHandleByIndex(i, &device_t)); // this is wrong
+			NVML_SAFE_CALL(nvmlDeviceGetHandleByPciBusId(pciBusID, &device_t)); // use pciBusID to get the right version
 			NVML_SAFE_CALL(nvmlDeviceGetPciInfo(device_t, &pciInfo));
 			NVML_SAFE_CALL(nvmlDeviceGetUUID(device_t, uuid, UUID_SIZE));
 
@@ -98,15 +104,15 @@ void CudaDetection::PrintDevicesJson() {
 	cout << endl << "]" << endl;
 }
 
-void CudaDetection::print(CudaDevice &dev) {
-	cout << "DeviceID : " << dev.DeviceID << endl;
-	cout << "DeviceName : " << dev.DeviceName << endl;
-	cout << "SMVersionString : " << dev.SMVersionString << endl;
-	cout << "UUID : " << dev.UUID << endl;
-	cout << "DeviceGlobalMemory : " << dev.DeviceGlobalMemory << endl;
-	cout << "pciDeviceId : " << dev.pciDeviceId << endl;
-	cout << "pciSubSystemId : " << dev.pciSubSystemId << endl << endl;
-}
+//void CudaDetection::print(CudaDevice &dev) {
+//	cout << "DeviceID : " << dev.DeviceID << endl;
+//	cout << "DeviceName : " << dev.DeviceName << endl;
+//	cout << "SMVersionString : " << dev.SMVersionString << endl;
+//	cout << "UUID : " << dev.UUID << endl;
+//	cout << "DeviceGlobalMemory : " << dev.DeviceGlobalMemory << endl;
+//	cout << "pciDeviceId : " << dev.pciDeviceId << endl;
+//	cout << "pciSubSystemId : " << dev.pciSubSystemId << endl << endl;
+//}
 
 void CudaDetection::json_print(CudaDevice &dev) {
 	cout << "\t{" << endl;
@@ -123,4 +129,42 @@ void CudaDetection::json_print(CudaDevice &dev) {
 	cout << "\t\t\"pciSubSystemId\" : " << dev.pciSubSystemId << "," << endl; // num
 	cout << "\t\t\"SMX\" : " << dev.SMX << endl; // num
 	cout << "\t}";
+}
+
+// non human readable print
+void CudaDetection::PrintDevicesJson_d() {
+	cout << "[";
+	for (int i = 0; i < _cudaDevices.size() - 1; ++i) {
+		json_print_d(_cudaDevices[i]);
+		cout << ",";
+	}
+	json_print_d(_cudaDevices[_cudaDevices.size() - 1]);
+	cout << "]" << endl;
+}
+
+//void CudaDetection::print_d(CudaDevice &dev) {
+//    cout << "DeviceID : " << dev.DeviceID ;
+//    cout << "DeviceName : " << dev.DeviceName ;
+//    cout << "SMVersionString : " << dev.SMVersionString ;
+//    cout << "UUID : " << dev.UUID ;
+//    cout << "DeviceGlobalMemory : " << dev.DeviceGlobalMemory ;
+//    cout << "pciDeviceId : " << dev.pciDeviceId ;
+//    cout << "pciSubSystemId : " << dev.pciSubSystemId  ;
+//}
+
+void CudaDetection::json_print_d(CudaDevice &dev) {
+	cout << "{";
+	cout << "\"DeviceID\" : " << dev.DeviceID << ","; // num
+	cout << "\"VendorID\" : " << dev.VendorID << ","; // num
+	cout << "\"VendorName\" : \"" << dev.VendorName << "\","; // string
+	cout << "\"DeviceName\" : \"" << dev.DeviceName << "\","; // string
+	cout << "\"SMVersionString\" : \"" << dev.SMVersionString << "\",";  // string
+	cout << "\"SM_major\" : " << dev.SM_major << ","; // num
+	cout << "\"SM_minor\" : " << dev.SM_minor << ","; // num
+	cout << "\"UUID\" : \"" << dev.UUID << "\",";  // string
+	cout << "\"DeviceGlobalMemory\" : " << dev.DeviceGlobalMemory << ","; // num
+	cout << "\"pciDeviceId\" : " << dev.pciDeviceId << ","; // num
+	cout << "\"pciSubSystemId\" : " << dev.pciSubSystemId << ","; // num
+	cout << "\"SMX\" : " << dev.SMX; // num
+	cout << "}";
 }

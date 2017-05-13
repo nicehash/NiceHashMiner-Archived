@@ -53,6 +53,20 @@ namespace NiceHashMiner
             return coreCount;
         }
 
+        public static int GetNumberOfCores() {
+            int coreCount = 0;
+
+            foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get()) {
+                coreCount += int.Parse(item["NumberOfCores"].ToString());
+            }
+
+            return coreCount;
+        }
+
+        public static bool IsHypeThreadingEnabled() {
+            return GetVirtualCoresCount() > GetNumberOfCores();
+        }
+
         public static ulong CreateAffinityMask(int index, int percpu)
         {
             ulong mask = 0;

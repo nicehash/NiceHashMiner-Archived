@@ -7,6 +7,9 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
+using Newtonsoft.Json.Linq;
+
+
 
 namespace NiceHashMiner
 {
@@ -65,6 +68,11 @@ namespace NiceHashMiner
             public string method;
         }
 
+        class nicehash_json_T<T> {
+            public T result;
+            public string method;
+        }
+
         class nicehash_error
         {
             public string error;
@@ -80,7 +88,7 @@ namespace NiceHashMiner
 
         public static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=simplemultialgo.info", worker);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_info, worker);
             if (r1 == null) return null;
 
             nicehash_json_2 nhjson_current;
@@ -103,10 +111,9 @@ namespace NiceHashMiner
             }
         }
 
-
         public static nicehash_stats GetStats(string btc, int algo, string worker)
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&addr=" + btc, worker);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_stats + btc, worker);
             if (r1 == null) return null;
 
             nicehash_json<nicehash_stats> nhjson_current;
@@ -132,7 +139,7 @@ namespace NiceHashMiner
         {
             double balance = 0;
 
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/api?method=stats.provider&addr=" + btc, worker);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_stats + btc, worker);
             if (r1 != null)
             {
                 nicehash_json<nicehash_stats> nhjson_current;
@@ -160,7 +167,7 @@ namespace NiceHashMiner
 
         public static string GetVersion(string worker)
         {
-            string r1 = GetNiceHashAPIData("https://www.nicehash.com/nicehashminer?method=version", worker);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_version, worker);
             if (r1 == null) return null;
 
             nicehashminer_version nhjson;
@@ -181,17 +188,17 @@ namespace NiceHashMiner
             string ResponseFromServer;
             try
             {
-                string ActiveMinersGroup = MinersManager.Instance.GetActiveMinersGroup();
+                string ActiveMinersGroup = MinersManager.GetActiveMinersGroup();
 
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
                 WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
                 if (worker.Length > 64) worker = worker.Substring(0, 64);
                 WR.Headers.Add("NiceHash-Worker-ID", worker);
                 WR.Headers.Add("NHM-Active-Miners-Group", ActiveMinersGroup);
-                WR.Timeout = 10000;
+                WR.Timeout = 30 * 1000;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 10000;
+                SS.ReadTimeout = 20 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromServer = Reader.ReadToEnd();
                 if (ResponseFromServer.Length == 0 || ResponseFromServer[0] != '{')
