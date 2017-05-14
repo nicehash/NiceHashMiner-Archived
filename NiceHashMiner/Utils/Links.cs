@@ -16,12 +16,12 @@ namespace NiceHashMiner {
         public static string NHM_Paying_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs6";
         // API
         // btc adress as parameter
-        public static string NHM_API_stats = "https://www.nicehash.com/api?method=stats.provider&addr=";
-        public static string NHM_API_info = "https://www.nicehash.com/api?method=simplemultialgo.info";
-        public static string NHM_API_version = "https://www.nicehash.com/nicehashminer?method=version";
-        //public static string NHM_API_stats_provider_workers = "https://www.nicehash.com/api?method=stats.provider.workers&addr=";
+        public static string NHM_API_stats = "https://api.nicehash.com/api?method=stats.provider&addr=";
+        public static string NHM_API_info = "https://api.nicehash.com/api?method=simplemultialgo.info";
+        public static string NHM_API_version = "https://api.nicehash.com/nicehashminer?method=version";
+        //public static string NHM_API_stats_provider_workers = "https://api.nicehash.com/api?method=stats.provider.workers&addr=";
 
         // device profits
-        public static string NHM_Profit_Check = "https://www.nicehash.com/?utm_source=NHM&p=calc&name=";
+        public static string NHM_Profit_Check = "https://api.nicehash.com/?utm_source=NHM&p=calc&name=";
     }
 }
