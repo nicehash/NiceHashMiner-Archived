@@ -9,7 +9,7 @@ namespace NiceHashMiner {
         public static string[] MiningLocation = { "eu", "usa", "hk", "jp" };
         public static readonly string DemoUser = "3DJhaQaKA6oyRaGyDZYdkZcise4b9DrCi2";
         // change this if TOS changes
-        public static int CURRENT_TOS_VER = 2;
+        public static int CURRENT_TOS_VER = 3;
 
         // Variables
         public static Dictionary<AlgorithmType, NiceHashSMA> NiceHashData = null;
