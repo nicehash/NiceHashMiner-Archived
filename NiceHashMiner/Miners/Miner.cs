@@ -260,12 +260,13 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }
             if (ProcessHandle != null) {
-                try { ProcessHandle.Kill(); } catch { }
+                //try { ProcessHandle.Kill(); } catch { }
+                try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
                 ProcessHandle.Close();
                 ProcessHandle = null;
 
                 // sgminer needs to be removed and kill by PID
-                if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
+                //if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
             }
         }
 
