@@ -69,7 +69,7 @@ namespace NiceHashMiner.Configs.Data {
 
         // Web Interface settings
         public int WebInterfacePort = 8888;
-        public bool WebInterfaceEnabled = true;
+        public bool WebInterfaceEnabled = false;
 
         // methods
         public void SetDefaults() {

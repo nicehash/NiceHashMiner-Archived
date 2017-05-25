@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>NiceHash Miner</title>
+    <link rel="stylesheet" href="Style.css" />
+    <script src="jquery-3.2.1.min.js"></script>
+
+    <script>
+
+        function updateDisplay() {
+            data = $.getJSON("stats.json", function (dObj) {
+                
+                
+
+                dataString = "";
+
+                for (var i = 0; i < dObj.length; i++) {
+                    currentHashObj = dObj[i];
+                    data = "<h2>_type_</h2><pre>Speed: _speed_ Rate: _btcrate_ (_currate_)</pre> <br />";
+                    data = data.replace("_type_", currentHashObj.DeviceInfo);
+                    data = data.replace("_speed_", currentHashObj.Speed);
+                    data = data.replace("_btcrate_", currentHashObj.RateBTC);
+                    data = data.replace("_currate_", currentHashObj.RateCurrency);
+
+                    dataString += data;
+
+                }
+
+                $("#statsDiv").html(dataString);
+            });
+            
+        }
+
+
+        function updateDisplayLoop() {
+            updateDisplay();
+            setTimeout(updateDisplayLoop, 5000);
+        }
+
+        $(document).ready(function () {
+            updateDisplayLoop();
+        });
+    </script>
+
+</head>
+<body>
+    <h1>NiceHash Miner Web Monitor</h1>
+    <hr/>
+    <div id="statsDiv"></div>
+
+
+   
+</body>
+</html>
