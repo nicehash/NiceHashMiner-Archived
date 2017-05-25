@@ -388,6 +388,7 @@ namespace NiceHashMiner.Forms {
                 checkBox_IdleWhenNoInternetAccess.Checked = ConfigManager.GeneralConfig.IdleWhenNoInternetAccess;
                 this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
                 this.checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
+                this.checkBox_EnableWebMonitor.Checked = ConfigManager.GeneralConfig.WebInterfaceEnabled;
             }
 
             // Textboxes
@@ -482,6 +483,7 @@ namespace NiceHashMiner.Forms {
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
             ConfigManager.GeneralConfig.IdleWhenNoInternetAccess = checkBox_IdleWhenNoInternetAccess.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
+            ConfigManager.GeneralConfig.WebInterfaceEnabled = checkBox_EnableWebMonitor.Checked;
         }
 
         private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {
