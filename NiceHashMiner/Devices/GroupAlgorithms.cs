@@ -242,6 +242,14 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.experimental, AlgorithmType.NeoScrypt, "neoscrypt")
                         }
                     },
+                    { MinerBaseType.ClaymoreAMD,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, ""),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
+                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal)
+                        }
+                    },
                 };
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
