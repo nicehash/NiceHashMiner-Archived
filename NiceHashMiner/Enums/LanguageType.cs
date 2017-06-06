@@ -9,6 +9,7 @@ namespace NiceHashMiner.Enums
         //NONE = -1,
         En = 0,
         Ru,
-        Es
+        Es,
+		Pt
     }
 }
