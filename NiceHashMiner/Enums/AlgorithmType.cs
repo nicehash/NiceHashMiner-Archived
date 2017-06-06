@@ -72,7 +72,8 @@ namespace NiceHashMiner.Enums
         Lbry = 23,
         Equihash = 24,
         Pascal = 25,
-        X11Gost = 26
+        X11Gost = 26,
+        Sia = 27
         #endregion // NiceHashAPI
     }
 }

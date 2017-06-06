@@ -37,9 +37,9 @@ namespace NiceHashMiner.Miners {
                         dual = AlgorithmType.Decred;
                         coinP = " -dcoin dcr ";
                     }
-                    //if (pair.CurrentExtraLaunchParameters.Contains("Siacoin")) {
-                    //    dual = AlgorithmType.;
-                    //}
+                    if (pair.CurrentExtraLaunchParameters.Contains("Siacoin")) {
+                        dual = AlgorithmType.Sia;
+                    }
                     if (pair.CurrentExtraLaunchParameters.Contains("Lbry")) {
                         dual = AlgorithmType.Lbry;
                         coinP = " -dcoin lbc ";
