@@ -754,7 +754,10 @@
             "Europe - Amsterdam",
             "USA - San Jose",
             "China - Hong Kong",
-            "Japan - Tokyo"});
+            "Japan - Tokyo",
+            "India - Chennai",
+            "",
+            "Brazil - Sao Paulo"});
             this.comboBox_ServiceLocation.Location = new System.Drawing.Point(160, 80);
             this.comboBox_ServiceLocation.Name = "comboBox_ServiceLocation";
             this.comboBox_ServiceLocation.Size = new System.Drawing.Size(160, 21);
