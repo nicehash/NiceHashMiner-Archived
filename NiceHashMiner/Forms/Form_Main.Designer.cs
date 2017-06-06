@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Main));
             this.buttonStartMining = new System.Windows.Forms.Button();
             this.textBoxBTCAddress = new System.Windows.Forms.TextBox();
             this.labelServiceLocation = new System.Windows.Forms.Label();
@@ -100,7 +99,9 @@
             "Europe - Amsterdam",
             "USA - San Jose",
             "China - Hong Kong",
-            "Japan - Tokyo"});
+            "Japan - Tokyo",
+            "India - Chennai",
+            "Brazil - Sao Paulo"});
             this.comboBoxLocation.Location = new System.Drawing.Point(113, 12);
             this.comboBoxLocation.Name = "comboBoxLocation";
             this.comboBoxLocation.Size = new System.Drawing.Size(121, 21);
@@ -386,7 +387,6 @@
             this.Controls.Add(this.buttonStartMining);
             this.Enabled = false;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(581, 330);
             this.Name = "Form_Main";
