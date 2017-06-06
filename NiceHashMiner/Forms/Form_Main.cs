@@ -51,7 +51,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
-        const string _betaAlphaPostfixString = " - Graceful Shutdown";
+        const string _betaAlphaPostfixString = "";
 
         private bool _isDeviceDetectionInitialized = false;
 
