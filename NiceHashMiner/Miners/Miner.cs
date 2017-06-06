@@ -25,12 +25,29 @@ namespace NiceHashMiner
     public class APIData
     {
         public AlgorithmType AlgorithmID;
+        public AlgorithmType SecondaryAlgorithmID;
         public string AlgorithmName;
         public double Speed;
-        public APIData(AlgorithmType algorithmID) {
+        public double SecondarySpeed;
+        public APIData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID=AlgorithmType.NONE) {
             this.AlgorithmID = algorithmID;
-            this.AlgorithmName = AlgorithmNiceHashNames.GetName(algorithmID);
+            this.SecondaryAlgorithmID = secondaryAlgorithmID;
+            this.AlgorithmName = AlgorithmNiceHashNames.GetName(DualAlgorithmID());
             this.Speed = 0.0;
+            this.SecondarySpeed = 0.0;
+        }
+        public AlgorithmType DualAlgorithmID() {
+            if (AlgorithmID == AlgorithmType.DaggerHashimoto) {
+                switch (SecondaryAlgorithmID) {
+                    case AlgorithmType.Decred:
+                        return AlgorithmType.DaggerDecred;
+                    case AlgorithmType.Lbry:
+                        return AlgorithmType.DaggerLbry;
+                    case AlgorithmType.Pascal:
+                        return AlgorithmType.DaggerPascal;
+                }
+            }
+            return AlgorithmID;
         }
     }
 
@@ -514,7 +531,7 @@ namespace NiceHashMiner
                 }
             }
             BenchmarkProcessStatus = status;
-            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
+            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, BenchmarkAlgorithm.SecondaryBenchmarkSpeed));
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;

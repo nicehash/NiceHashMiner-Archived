@@ -157,6 +157,7 @@
 
         "Form_Settings_Algo_Skip": "Skip",
         "Form_Settings_Algo_BenchmarkSpeed": "Benchmark Speed (H/s)",
+        "Form_Settings_Algo_SecondaryBenchmarkSpeed":  "Secondary Benchmark Speed (H/s)",
 
         "Form_Settings_LessThreadWarningTitle": "Invalid number for LessThreads!",
         "Form_Settings_LessThreadWarningMsg": "Error! Please input a valid number for LessThreads.",
@@ -231,6 +232,7 @@
         "Form_Settings_ToolTip_AlgoSkip": "Check it if you would like to skip & disable a particular algorithm.\nBenchmarking as well as actual mining will be disabled for this particular algorithm.\nThat said, auto-switching will skip this algorithm when mining will be running.",
         "Form_Settings_ToolTip_AlgoUsePassword": "Use this password when launching miner and this algorithm. If not set, Groups's UsePassword is used.",
         "Form_Settings_ToolTip_AlgoBenchmarkSpeed": "Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.",
+        "Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed": "Speed for the secondary algorithm when using dual algo mining.",
         "Form_Settings_ToolTip_AlgoDisabledDevices": "Any devices that are checked will be skipped by NiceHashMiner (only for this algorithm).",
         "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Additional launch parameters when launching miner and this algorithm.",
         "Form_Settings_Text_ContinueMiningIfNoInternetAccess" :  "Idle When No Internet Access",

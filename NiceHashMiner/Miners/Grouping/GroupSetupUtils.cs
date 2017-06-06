@@ -121,10 +121,12 @@ namespace NiceHashMiner.Miners.Grouping {
                     if (minerDevIndex > -1) {
                         foreach (var avgKvp in calculatedAvaragers) {
                             string algo_id = avgKvp.Key;
-                            double avaragedSpeed = avgKvp.Value; 
+                            double avaragedSpeed = avgKvp.Value[0];
+                            double secondaryAveragedSpeed = avgKvp.Value[1];
                             int index = miningDevs[minerDevIndex].Algorithms.FindIndex((a) => a.AlgorithmStringID == algo_id);
                             if(index > -1) {
                                 miningDevs[minerDevIndex].Algorithms[index].AvaragedSpeed = avaragedSpeed;
+                                miningDevs[minerDevIndex].Algorithms[index].SecondaryAveragedSpeed = secondaryAveragedSpeed;
                             }
                         }
                     }
@@ -136,10 +138,17 @@ namespace NiceHashMiner.Miners.Grouping {
 
     class SpeedSumCount {
         public double speed = 0;
+        public double secondarySpeed = 0;
         public int count = 0;
         public double GetAvarage() {
             if (count > 0) {
                 return speed / (double)count;
+            }
+            return 0;
+        }
+        public double GetSecondaryAverage() {
+            if (count > 0) {
+                return secondarySpeed / (double)count;
             }
             return 0;
         }
@@ -150,12 +159,12 @@ namespace NiceHashMiner.Miners.Grouping {
         public List<string> UUIDsList = new List<string>();
         // algo_id, speed_sum, speed_count
         public Dictionary<string, SpeedSumCount> BenchmarkSums = new Dictionary<string, SpeedSumCount>();
-        public Dictionary<string, double> CalculateAvarages() {
-            Dictionary<string, double> ret = new Dictionary<string, double>();
+        public Dictionary<string, List<double>> CalculateAvarages() {
+            Dictionary<string, List<double>> ret = new Dictionary<string, List<double>>();
             foreach (var kvp in this.BenchmarkSums) {
                 string algo_id = kvp.Key;
                 SpeedSumCount ssc = kvp.Value;
-                ret[algo_id] = ssc.GetAvarage();
+                ret[algo_id] = new List<double> { ssc.GetAvarage(), ssc.GetSecondaryAverage() };
             }
             return ret;
         }
@@ -167,10 +176,12 @@ namespace NiceHashMiner.Miners.Grouping {
                     var ssc = new SpeedSumCount();
                     ssc.count = 1;
                     ssc.speed = algo.BenchmarkSpeed;
+                    ssc.secondarySpeed = algo.SecondaryBenchmarkSpeed;
                     BenchmarkSums[algo_id] = ssc;
                 } else {
                     BenchmarkSums[algo_id].count++;
                     BenchmarkSums[algo_id].speed += algo.BenchmarkSpeed;
+                    BenchmarkSums[algo_id].secondarySpeed += algo.SecondaryBenchmarkSpeed;
                 }
             }
         }

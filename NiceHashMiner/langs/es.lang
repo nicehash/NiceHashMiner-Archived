@@ -157,6 +157,7 @@
 
 		"Form_Settings_Algo_Skip": "Saltar",
 		"Form_Settings_Algo_BenchmarkSpeed": "Velocidad del benchmark (H/s)",
+    "Form_Settings_Algo_SecondaryBenchmarkSpeed": "Velocidad de referencia secundaria (H/s)",
 
 		"Form_Settings_LessThreadWarningTitle": "¡Número inválido para LessThreads!",
 		"Form_Settings_LessThreadWarningMsg": "¡Error! Por favor introduce un número valido para LessThreads.",
@@ -232,6 +233,7 @@
 		"Form_Settings_ToolTip_AlgoSkip": "Márcalo si quieres saltar y desactivar un algoritmo en particular.\nEl minado y el benchmark serán desactivados para este algoritmo en particular.\nEl cambio automático de algoritmo también ignorará este algoritmo.",
 		"Form_Settings_ToolTip_AlgoUsePassword": "Usa esta contraseña al iniciar este minero y este algoritmo. Si no se establece, UsePassword del grupo se usará.",
 		"Form_Settings_ToolTip_AlgoBenchmarkSpeed": "Personalización de los ratios de los algoritmos al cambiar manualmente las velocidades de los benchmark.",
+    "Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed": "Velocidad para el algoritmo secundario cuando se utiliza minería de algo dual.",
 		"Form_Settings_ToolTip_AlgoDisabledDevices": "Todos los dispositivos marcados serán ignorados por NiceHash Miner (solo para este algoritmo).",
 		"Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Parámetros de inicio adicionales al lanzar el minero y este algoritmo.",
 		"Form_Settings_DisplayCurrency": "Mostrar divisa",

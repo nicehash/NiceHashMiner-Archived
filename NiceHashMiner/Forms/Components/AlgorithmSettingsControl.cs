@@ -21,10 +21,12 @@ namespace NiceHashMiner.Forms.Components {
         public AlgorithmSettingsControl() {
             InitializeComponent();
             fieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
+            secondaryFieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
             field_LessThreads.SetInputModeIntOnly();
 
             field_LessThreads.SetOnTextLeave(LessThreads_Leave);
             fieldBoxBenchmarkSpeed.SetOnTextChanged(textChangedBenchmarkSpeed);
+            secondaryFieldBoxBenchmarkSpeed.SetOnTextChanged(secondaryTextChangedBenchmarkSpeed);
             richTextBoxExtraLaunchParameters.TextChanged += textChangedExtraLaunchParameters;
 
         }
@@ -35,6 +37,7 @@ namespace NiceHashMiner.Forms.Components {
                 International.GetText("AlgorithmsListView_GroupBox_NONE"));
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
+            secondaryFieldBoxBenchmarkSpeed.EntryText = "";
             field_LessThreads.EntryText = "";
             richTextBoxExtraLaunchParameters.Text = "";
         }
@@ -46,6 +49,9 @@ namespace NiceHashMiner.Forms.Components {
             fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
                 International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
                 International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
+            secondaryFieldBoxBenchmarkSpeed.InitLocale(toolTip1,
+                International.GetText("Form_Settings_Algo_SecondaryBenchmarkSpeed") + ":",
+                International.GetText("Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed"));
             groupBoxExtraLaunchParameters.Text = International.GetText("Form_Settings_General_ExtraLaunchParameters");
             toolTip1.SetToolTip(groupBoxExtraLaunchParameters, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
             toolTip1.SetToolTip(pictureBox1, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
@@ -80,6 +86,8 @@ namespace NiceHashMiner.Forms.Components {
                 }
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
+                secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.SecondaryBenchmarkSpeed);
+                secondaryFieldBoxBenchmarkSpeed.Enabled = _currentlySelectedAlgorithm.SecondaryNiceHashID != AlgorithmType.NONE;
                 this.Update();
             } else {
                 // TODO this should not be null
@@ -99,6 +107,7 @@ namespace NiceHashMiner.Forms.Components {
                 var algorithm = lvi.Tag as Algorithm;
                 if (algorithm != null) {
                     fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
+                    secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.SecondaryBenchmarkSpeed);
                 }
             }
         }
@@ -113,10 +122,25 @@ namespace NiceHashMiner.Forms.Components {
             double value;
             if (Double.TryParse(fieldBoxBenchmarkSpeed.EntryText, out value)) {
                 _currentlySelectedAlgorithm.BenchmarkSpeed = value;
-                // update lvi speed
-                if (_currentlySelectedLvi != null) {
-                    _currentlySelectedLvi.SubItems[2].Text = Helpers.FormatSpeedOutput(value);
-                }
+            }
+            updateSpeedText();
+        }
+
+        private void secondaryTextChangedBenchmarkSpeed(object sender, EventArgs e)
+        {
+            double secondaryValue;
+            if (Double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out secondaryValue)) {
+                _currentlySelectedAlgorithm.SecondaryBenchmarkSpeed = secondaryValue;
+            }
+            updateSpeedText();
+        }
+
+        private void updateSpeedText()
+        {
+            var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, _currentlySelectedAlgorithm.SecondaryBenchmarkSpeed);
+            // update lvi speed
+            if (_currentlySelectedLvi != null) {
+                _currentlySelectedLvi.SubItems[2].Text = speedString;
             }
         }
 
