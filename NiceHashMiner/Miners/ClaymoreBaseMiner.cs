@@ -19,12 +19,15 @@ namespace NiceHashMiner.Miners {
         protected int benchmarkTimeWait = 2 * 45; // Ok... this was all wrong 
         int benchmark_read_count = 0;
         double benchmark_sum = 0.0d;
+        int secondary_benchmark_read_count = 0;
+        double secondary_benchmark_sum = 0.0d;
         protected readonly string LOOK_FOR_START;
         const string LOOK_FOR_END = "h/s";
 
         // only dagger change
         protected bool ignoreZero = false;
         protected double api_read_mult = 1;
+        protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
@@ -34,6 +37,15 @@ namespace NiceHashMiner.Miners {
         }
 
         protected abstract double DevFee();
+
+        protected virtual string SecondaryLookForStart() {
+            return "";
+        }
+
+        // return true if a secondary algo is being used
+        public bool IsDual() {
+            return (SecondaryAlgorithmType != AlgorithmType.NONE);
+        }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
@@ -53,7 +65,7 @@ namespace NiceHashMiner.Miners {
 
         public override APIData GetSummary() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
             TcpClient client = null;
             JsonApiResponse resp = null;
@@ -77,7 +89,9 @@ namespace NiceHashMiner.Miners {
                 if (resp.result != null && resp.result.Count > 4) {
                     //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp.result != null && resp.result.Count > 4");
                     var speeds = resp.result[3].Split(';');
+                    var secondarySpeeds = resp.result[5].Split(';');
                     ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
                     foreach (var speed in speeds) {
                         //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
                         double tmpSpeed = 0;
@@ -88,7 +102,17 @@ namespace NiceHashMiner.Miners {
                         }
                         ad.Speed += tmpSpeed;
                     }
+                    foreach (var speed in secondarySpeeds) {
+                        double tmpSpeed = 0;
+                        try {
+                            tmpSpeed = Double.Parse(speed, CultureInfo.InvariantCulture);
+                        } catch {
+                            tmpSpeed = 0;
+                        }
+                        ad.SecondarySpeed += tmpSpeed;
+                    }
                     ad.Speed *= api_read_mult;
+                    ad.SecondarySpeed *= api_read_mult;
                     _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                 }
                 if (ad.Speed == 0) {
@@ -219,10 +243,23 @@ namespace NiceHashMiner.Miners {
                                     ++benchmark_read_count;
                                 }
                             }
+                            else if (lineLowered.Contains(SecondaryLookForStart())) {
+                                if (ignoreZero) {
+                                    double got = getNumber(lineLowered, SecondaryLookForStart(), LOOK_FOR_END);
+                                    if (got != 0) {
+                                        secondary_benchmark_sum += got;
+                                        ++secondary_benchmark_read_count;
+                                    }
+                                } else {
+                                    secondary_benchmark_sum += getNumber(lineLowered);
+                                    ++secondary_benchmark_read_count;
+                                }
+                            }
                         }
                     }
                     if (benchmark_read_count > 0) {
                         BenchmarkAlgorithm.BenchmarkSpeed = benchmark_sum / benchmark_read_count;
+                        BenchmarkAlgorithm.SecondaryBenchmarkSpeed = secondary_benchmark_sum / secondary_benchmark_read_count;
                     }
                 }
                 BenchmarkThreadRoutineFinish();

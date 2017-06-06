@@ -10,6 +10,10 @@ namespace NiceHashMiner.Enums
     /// </summary>
     public enum AlgorithmType : int
     {
+        // dual algos for grouping
+        DaggerDecred = -5,
+        DaggerLbry = -4,
+        DaggerPascal = -3,
         INVALID = -2,
         NONE = -1,
         #region NiceHashAPI

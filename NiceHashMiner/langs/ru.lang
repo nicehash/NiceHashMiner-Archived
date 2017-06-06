@@ -159,6 +159,7 @@
 
         "Form_Settings_Algo_Skip":"Пропустить",
         "Form_Settings_Algo_BenchmarkSpeed":"Скорость бенчмарка (H/s)",
+        "Form_Settings_Algo_SecondaryBenchmarkSpeed": "Средняя контрольная скорость",
 
         "Form_Settings_LessThreadWarningTitle":"Неверное значение LessThreads!",
         "Form_Settings_LessThreadWarningMsg":"Ошибка! Введите, пожалуйста, верное значение для LessThreads.",
@@ -233,6 +234,7 @@
         "Form_Settings_ToolTip_AlgoSkip":"Отметьте, если вы хотели бы пропустить/отключить определенный алгоритм. \nБенчмаркинг, а также фактический майнинг будут отключены для этого конкретного алгоритма. \nЭто означает, что автоматическое переключение будет пропускать этот алгоритм во время майнинга.",
         "Form_Settings_ToolTip_AlgoUsePassword":"Использовать этот пароль при запуске майнера и этого алгоритма. Если не указано, будет использоваться пароль группы.",
         "Form_Settings_ToolTip_AlgoBenchmarkSpeed":"Ручная настройка скорости бенчмарка для каждого алгоритма.",
+        "Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed": "Скорость для вторичного алгоритма при использовании алгоритма двойного алгоритма.",
         "Form_Settings_ToolTip_AlgoDisabledDevices":"Отмеченные устройства будут пропущены NiceHashMiner (только для этого алгоритма).",
         "Form_Settings_ToolTip_AlgoExtraLaunchParameters":"Дополнительные параметры при запуске майнера и этого алгоритма.",
         "Form_Settings_DisplayCurrency": "Отображ. валюты",

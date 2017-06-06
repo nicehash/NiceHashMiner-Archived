@@ -124,19 +124,30 @@ namespace NiceHashMiner
             }
         }
 
-        public static string FormatSpeedOutput(double speed) {
+        public static string FormatSpeedOutput(double speed, string separator=" ") {
             string ret = "";
 
             if (speed < 1000)
-                ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + " H/s ";
+                ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + separator;
             else if (speed < 100000)
-                ret = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + " kH/s ";
+                ret = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + separator + "k";
             else if (speed < 100000000)
-                ret = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + " MH/s ";
+                ret = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "M";
             else
-                ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + " GH/s ";
+                ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "G";
 
             return ret;
+        }
+
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0) {
+            string ret;
+            if (secondarySpeed > 0) {
+                ret = FormatSpeedOutput(primarySpeed, "") + "/" + FormatSpeedOutput(secondarySpeed, "") + " ";
+            }
+            else {
+                ret = FormatSpeedOutput(primarySpeed);
+            }
+            return ret + "H/s ";
         }
 
         public static string GetMotherboardID() {
