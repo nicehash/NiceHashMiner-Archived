@@ -283,6 +283,9 @@ namespace NiceHashMiner.Devices {
                         AlgorithmType.Pascal,
                         AlgorithmType.X11Gost
                     });
+                    ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
+                        MinerBaseType.ClaymoreAMD
+                    });
                 }
 
                 // filter unused
