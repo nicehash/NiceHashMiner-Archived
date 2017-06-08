@@ -132,14 +132,14 @@ namespace NiceHashMiner {
                         return AlgorithmType.DaggerLbry;
                     case AlgorithmType.Pascal:
                         return AlgorithmType.DaggerPascal;
+                    case AlgorithmType.Sia:
+                        return AlgorithmType.DaggerSia;
                 }
             }
             return NiceHashID;
         }
         public bool IsDual() {
-            return (DualNiceHashID() == AlgorithmType.DaggerDecred ||
-                    DualNiceHashID() == AlgorithmType.DaggerLbry ||
-                    DualNiceHashID() == AlgorithmType.DaggerPascal);
+            return (AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal);
         }
     }
 }
