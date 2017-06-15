@@ -268,7 +268,7 @@ namespace NiceHashMiner.Devices
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.AppendLine("");
                     stringBuilder.AppendLine("QueryVideoControllers: ");
-                    ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get();
+                    ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI\\%'").Get();
                     bool allVideoContollersOK = true;
                     foreach (var manObj in moc) {
                         ulong memTmp = 0;
