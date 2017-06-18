@@ -249,6 +249,7 @@ namespace NiceHashMiner.Devices
                 public string Status { get; set; }
                 public string InfSection { get; set; } // get arhitecture
                 public ulong AdapterRAM { get; set; }
+                public bool IsOk { get { return string.Equals(Status, "ok", StringComparison.InvariantCultureIgnoreCase); } }
             }
             private static List<VideoControllerData> AvaliableVideoControllers = new List<VideoControllerData>();
             static class WindowsDisplayAdapters {
@@ -269,9 +270,9 @@ namespace NiceHashMiner.Devices
                     stringBuilder.AppendLine("");
                     stringBuilder.AppendLine("QueryVideoControllers: ");
                     bool allVideoContollersOK = true;
-                    using (var moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI\\%'").Get())
+                    try
                     {
-                        try
+                        using (var moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI\\%'").Get())
                         {
                             foreach (var manObj in moc)
                             {
@@ -298,29 +299,26 @@ namespace NiceHashMiner.Devices
                                 stringBuilder.AppendLine(String.Format("\t\tAdapterRAM {0}", vidController.AdapterRAM));
 
                                 // check if controller ok
-                                if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
+                                if (allVideoContollersOK && !vidController.IsOk)
                                     allVideoContollersOK = false;
 
                                 AvaliableVideoControllers.Add(vidController);
                             }
                         }
-                        catch (Exception e)
+                        Helpers.ConsolePrint(TAG, stringBuilder.ToString());
+                        if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
                         {
-                            Helpers.ConsolePrint(TAG, "QueryVideoControllers threw exception: " + e.Message);
+                            string msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
+                            foreach (var vc in AvaliableVideoControllers)
+                                if (!vc.IsOk)
+                                    msg += Environment.NewLine +
+                                        string.Format(International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"), vc.Name, vc.Status, vc.PNPDeviceID);
+                            MessageBox.Show(msg, International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
-                    Helpers.ConsolePrint(TAG, stringBuilder.ToString());
-                    if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK) {
-                        string msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
-                        foreach (var vc in AvaliableVideoControllers) {
-                            if (!vc.Status.ToLower().Equals("ok")) {
-                                msg += Environment.NewLine
-                                    + String.Format(International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"), vc.Name, vc.Status, vc.PNPDeviceID);
-                            }
-                        }
-                        MessageBox.Show(msg,
-                                        International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"),
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint(TAG, "QueryVideoControllers threw exception: " + e.Message);
                     }
                 }
 
