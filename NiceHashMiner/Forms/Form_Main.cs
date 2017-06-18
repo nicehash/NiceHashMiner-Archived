@@ -834,12 +834,10 @@ namespace NiceHashMiner
 
             // Check if there are unbenchmakred algorithms
             bool isBenchInit = true;
-            bool hasAnyAlgoEnabled = false;
             foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 if (cdev.Enabled) {
                     foreach (var algo in cdev.GetAlgorithmSettings()) {
                         if (algo.Enabled == true) {
-                            hasAnyAlgoEnabled = true;
                             if (algo.BenchmarkSpeed == 0) {
                                 isBenchInit = false;
                                 break;

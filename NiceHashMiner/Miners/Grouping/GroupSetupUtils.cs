@@ -155,7 +155,6 @@ namespace NiceHashMiner.Miners.Grouping {
     }
 
     class AvaragerGroup {
-        public string DeviceName;
         public List<string> UUIDsList = new List<string>();
         // algo_id, speed_sum, speed_count
         public Dictionary<string, SpeedSumCount> BenchmarkSums = new Dictionary<string, SpeedSumCount>();

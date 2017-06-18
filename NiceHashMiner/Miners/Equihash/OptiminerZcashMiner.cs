@@ -29,11 +29,11 @@ namespace NiceHashMiner.Miners.Equihash {
         }
 
         private class JsonApiResponse {
-            public double uptime;
-            public Dictionary<string, Dictionary<string, double>> solution_rate;
-            public Dictionary<string, double> share;
-            public Dictionary<string, Dictionary<string, double>> iteration_rate;
-            public Stratum stratum;
+            public double uptime { get; set; }
+            public Dictionary<string, Dictionary<string, double>> solution_rate { get; set; }
+            public Dictionary<string, double> share { get; set; }
+            public Dictionary<string, Dictionary<string, double>> iteration_rate { get; set; }
+            public Stratum stratum { get; set; }
         }
 
         // give some time or else it will crash
