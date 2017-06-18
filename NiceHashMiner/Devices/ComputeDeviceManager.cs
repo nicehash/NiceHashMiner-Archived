@@ -268,36 +268,46 @@ namespace NiceHashMiner.Devices
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.AppendLine("");
                     stringBuilder.AppendLine("QueryVideoControllers: ");
-                    ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI\\%'").Get();
                     bool allVideoContollersOK = true;
-                    foreach (var manObj in moc) {
-                        ulong memTmp = 0;
-                        //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
-                        UInt64.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out memTmp);
-                        var vidController = new VideoControllerData() {
-                            Name = SafeGetProperty(manObj, "Name"),
-                            Description = SafeGetProperty(manObj, "Description"),
-                            PNPDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
-                            DriverVersion = SafeGetProperty(manObj, "DriverVersion"),
-                            Status = SafeGetProperty(manObj, "Status"),
-                            InfSection = SafeGetProperty(manObj, "InfSection"),
-                            AdapterRAM = memTmp
-                        };
-                        stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                        stringBuilder.AppendLine(String.Format("\t\tName {0}", vidController.Name));
-                        stringBuilder.AppendLine(String.Format("\t\tDescription {0}", vidController.Description));
-                        stringBuilder.AppendLine(String.Format("\t\tPNPDeviceID {0}", vidController.PNPDeviceID));
-                        stringBuilder.AppendLine(String.Format("\t\tDriverVersion {0}", vidController.DriverVersion));
-                        stringBuilder.AppendLine(String.Format("\t\tStatus {0}", vidController.Status));
-                        stringBuilder.AppendLine(String.Format("\t\tInfSection {0}", vidController.InfSection));
-                        stringBuilder.AppendLine(String.Format("\t\tAdapterRAM {0}", vidController.AdapterRAM));
+                    using (var moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI\\%'").Get())
+                    {
+                        try
+                        {
+                            foreach (var manObj in moc)
+                            {
+                                ulong memTmp = 0;
+                                //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
+                                UInt64.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out memTmp);
+                                var vidController = new VideoControllerData()
+                                {
+                                    Name = SafeGetProperty(manObj, "Name"),
+                                    Description = SafeGetProperty(manObj, "Description"),
+                                    PNPDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
+                                    DriverVersion = SafeGetProperty(manObj, "DriverVersion"),
+                                    Status = SafeGetProperty(manObj, "Status"),
+                                    InfSection = SafeGetProperty(manObj, "InfSection"),
+                                    AdapterRAM = memTmp
+                                };
+                                stringBuilder.AppendLine("\tWin32_VideoController detected:");
+                                stringBuilder.AppendLine(String.Format("\t\tName {0}", vidController.Name));
+                                stringBuilder.AppendLine(String.Format("\t\tDescription {0}", vidController.Description));
+                                stringBuilder.AppendLine(String.Format("\t\tPNPDeviceID {0}", vidController.PNPDeviceID));
+                                stringBuilder.AppendLine(String.Format("\t\tDriverVersion {0}", vidController.DriverVersion));
+                                stringBuilder.AppendLine(String.Format("\t\tStatus {0}", vidController.Status));
+                                stringBuilder.AppendLine(String.Format("\t\tInfSection {0}", vidController.InfSection));
+                                stringBuilder.AppendLine(String.Format("\t\tAdapterRAM {0}", vidController.AdapterRAM));
 
-                        // check if controller ok
-                        if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok")) {
-                            allVideoContollersOK = false;
+                                // check if controller ok
+                                if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
+                                    allVideoContollersOK = false;
+
+                                AvaliableVideoControllers.Add(vidController);
+                            }
                         }
-
-                        AvaliableVideoControllers.Add(vidController);
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(TAG, "QueryVideoControllers threw exception: " + e.Message);
+                        }
                     }
                     Helpers.ConsolePrint(TAG, stringBuilder.ToString());
                     if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK) {
