@@ -238,7 +238,7 @@
         "Form_Settings_Text_ContinueMiningIfNoInternetAccess" :  "Idle When No Internet Access",
         "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess" :  "If enabled NiceHashMiner will stop mining without internet connectivity",
         "Form_Settings_DisplayCurrency": "Display Currency",
-        "Form_Settings_ToolTip_DisplayCurrency": "Choose what Currency to Display mining protif.",
+        "Form_Settings_ToolTip_DisplayCurrency": "Choose what Currency to Display mining profit.",
         "Form_Settings_APIBindPortStart": "API Bind port pool start",
         "Form_Settings_ToolTip_APIBindPortStart": "Set starting port number from which miner API Bind ports will be set for comunication.",
         "Form_Settings_DagGeneration": "Dag Load Mode",
