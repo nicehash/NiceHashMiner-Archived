@@ -11,6 +11,7 @@ namespace NiceHashMiner.Enums
     public enum AlgorithmType : int
     {
         // dual algos for grouping
+        DaggerSia = -6,
         DaggerDecred = -5,
         DaggerLbry = -4,
         DaggerPascal = -3,
