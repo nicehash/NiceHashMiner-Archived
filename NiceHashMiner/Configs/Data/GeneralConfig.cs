@@ -67,6 +67,10 @@ namespace NiceHashMiner.Configs.Data {
         public string hwid = "";
         public int agreedWithTOS = 0;
 
+        // Web Interface settings
+        public int WebInterfacePort = 8888;
+        public bool WebInterfaceEnabled = false;
+
         // methods
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -108,6 +112,8 @@ namespace NiceHashMiner.Configs.Data {
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
+            WebInterfaceEnabled = true;
+            WebInterfacePort = 8888;
         }
 
         public void FixSettingBounds() {
