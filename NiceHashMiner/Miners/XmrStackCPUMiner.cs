@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
+using System.Linq;
 
 namespace NiceHashMiner.Miners {
     
@@ -227,34 +228,42 @@ namespace NiceHashMiner.Miners {
         }
 
         public override APIData GetSummary() {
-            string resp;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
             string DataToSend = GetHttpRequestNHMAgentStrin("h");
 
-            resp = GetAPIData(APIPort, DataToSend);
+            var resp = GetAPIData(APIPort, DataToSend);
             if (resp == null) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
             }
+
             const string Totals = "Totals:";
-            const string Highest = "Highest:";
+            //find Totals:
             int start_i = resp.IndexOf(Totals);
-            int end_i = resp.IndexOf(Highest);
-            if (start_i > -1 && end_i > -1) {
-                string sub_resp = resp.Substring(start_i, end_i);
-                sub_resp = sub_resp.Replace(Totals, "");
-                sub_resp = sub_resp.Replace(Highest, "");
-                var strings = sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var s in strings) {
-                    if (s != "(na)") {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                        ad.Speed = Helpers.ParseDouble(s);
-                        break;
+            if (start_i > -1)
+            {
+                //exclude Totals:
+                start_i += Totals.Length;
+                //find end line
+                int end_i = resp.IndexOf('\n', start_i);
+                if (end_i > -1)
+                {
+                    string sub_resp = resp.Substring(start_i, end_i - start_i);
+                    //find '60s' or '2.5s' speed from results (2.5s 60s 15m H/s)
+                    foreach (var s in sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Take(2))
+                    {
+                        var speed = Helpers.ParseDouble(s);
+                        if (speed > 0)
+                        {
+                            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                            ad.Speed = speed;
+                        }
                     }
                 }
             }
+
             // check if speed zero
             if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
 
