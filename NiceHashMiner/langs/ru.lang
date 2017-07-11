@@ -294,7 +294,7 @@
         "Form_Settings_Title": "Настройки",
         "FormBenchmark_No_Devices_Selected_Msg": "Устройства для бенчмарка не были выбраны",
         "FormBenchmark_No_Devices_Selected_Title": "Устройства не выбраны",
-        "FormBenchmark_Nothing_to_Benchmark_Msg": "Текущие настройки бенчмарка уже выполняются.",
+        "FormBenchmark_Nothing_to_Benchmark_Msg": "Текущие настройки бенчмарка уже тестировались. Нечего выполнять.",
         "FormBenchmark_Nothing_to_Benchmark_Title": "Нечего тестировать",
         "Algorithm_Waiting_Benchmark": "Ожидание бенчмарка",
         "BenchmarkSpeedStringNone": "none",
