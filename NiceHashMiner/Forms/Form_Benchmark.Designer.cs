@@ -23,17 +23,17 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Benchmark));
             this.StartStopBtn = new System.Windows.Forms.Button();
             this.CloseBtn = new System.Windows.Forms.Button();
             this.groupBoxBenchmarkProgress = new System.Windows.Forms.GroupBox();
             this.labelBenchmarkSteps = new System.Windows.Forms.Label();
             this.progressBarBenchmarkSteps = new System.Windows.Forms.ProgressBar();
+            this.radioButton_SelectedUnbenchmarked = new System.Windows.Forms.RadioButton();
+            this.radioButton_RE_SelectedUnbenchmarked = new System.Windows.Forms.RadioButton();
+            this.checkBox_StartMiningAfterBenchmark = new System.Windows.Forms.CheckBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.radioButton_SelectedUnbenchmarked = new System.Windows.Forms.RadioButton();
-            this.radioButton_RE_SelectedUnbenchmarked = new System.Windows.Forms.RadioButton();
             this.groupBoxBenchmarkProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,35 +84,6 @@
             this.progressBarBenchmarkSteps.Size = new System.Drawing.Size(161, 23);
             this.progressBarBenchmarkSteps.TabIndex = 108;
             // 
-            // algorithmsListView1
-            // 
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(12, 133);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(580, 155);
-            this.algorithmsListView1.TabIndex = 109;
-            // 
-            // benchmarkOptions1
-            // 
-            this.benchmarkOptions1.Location = new System.Drawing.Point(394, 15);
-            this.benchmarkOptions1.Name = "benchmarkOptions1";
-            this.benchmarkOptions1.Size = new System.Drawing.Size(208, 112);
-            this.benchmarkOptions1.TabIndex = 106;
-            // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.AutoSaveChange = false;
-            this.devicesListViewEnableControl1.FirstColumnText = "Benckmark";
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(12, 15);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.SetAllEnabled = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(376, 112);
-            this.devicesListViewEnableControl1.TabIndex = 0;
-            // 
             // radioButton_SelectedUnbenchmarked
             // 
             this.radioButton_SelectedUnbenchmarked.AutoSize = true;
@@ -137,11 +108,52 @@
             this.radioButton_RE_SelectedUnbenchmarked.UseVisualStyleBackColor = true;
             this.radioButton_RE_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.radioButton_RE_SelectedUnbenchmarked_CheckedChanged);
             // 
+            // checkBox_StartMiningAfterBenchmark
+            // 
+            this.checkBox_StartMiningAfterBenchmark.AutoSize = true;
+            this.checkBox_StartMiningAfterBenchmark.Location = new System.Drawing.Point(350, 318);
+            this.checkBox_StartMiningAfterBenchmark.Name = "checkBox_StartMiningAfterBenchmark";
+            this.checkBox_StartMiningAfterBenchmark.Size = new System.Drawing.Size(161, 17);
+            this.checkBox_StartMiningAfterBenchmark.TabIndex = 111;
+            this.checkBox_StartMiningAfterBenchmark.Text = "Start mining after benchmark";
+            this.checkBox_StartMiningAfterBenchmark.UseVisualStyleBackColor = true;
+            this.checkBox_StartMiningAfterBenchmark.CheckedChanged += new System.EventHandler(this.checkBox_StartMiningAfterBenchmark_CheckedChanged);
+            // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.BenchmarkCalculation = null;
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.IsInBenchmark = false;
+            this.algorithmsListView1.Location = new System.Drawing.Point(12, 133);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(580, 155);
+            this.algorithmsListView1.TabIndex = 109;
+            // 
+            // benchmarkOptions1
+            // 
+            this.benchmarkOptions1.Location = new System.Drawing.Point(394, 15);
+            this.benchmarkOptions1.Name = "benchmarkOptions1";
+            this.benchmarkOptions1.Size = new System.Drawing.Size(208, 112);
+            this.benchmarkOptions1.TabIndex = 106;
+            // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl1.FirstColumnText = "Benckmark";
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(12, 15);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(376, 112);
+            this.devicesListViewEnableControl1.TabIndex = 0;
+            // 
             // Form_Benchmark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(604, 401);
+            this.Controls.Add(this.checkBox_StartMiningAfterBenchmark);
             this.Controls.Add(this.radioButton_RE_SelectedUnbenchmarked);
             this.Controls.Add(this.radioButton_SelectedUnbenchmarked);
             this.Controls.Add(this.algorithmsListView1);
@@ -151,7 +163,6 @@
             this.Controls.Add(this.CloseBtn);
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form_Benchmark";
@@ -176,6 +187,7 @@
         private Components.AlgorithmsListView algorithmsListView1;
         private System.Windows.Forms.RadioButton radioButton_SelectedUnbenchmarked;
         private System.Windows.Forms.RadioButton radioButton_RE_SelectedUnbenchmarked;
+        private System.Windows.Forms.CheckBox checkBox_StartMiningAfterBenchmark;
 
 
     }

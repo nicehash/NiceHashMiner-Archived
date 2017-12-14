@@ -214,7 +214,7 @@ namespace ATI.ADL {
             #endregion Internal Constant
 
             #region DLLImport
-            [DllImport(Kernel32_FileName, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Kernel32_FileName, CallingConvention = CallingConvention.StdCall)]
             internal static extern HMODULE GetModuleHandle(string moduleName);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]

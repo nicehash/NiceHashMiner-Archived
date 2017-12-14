@@ -3,24 +3,22 @@ from fnmatch import fnmatch
 
 c_sharp_Class_START = """
 namespace NiceHashMiner.Utils {
-    public partial class MinersDownloadManager : BaseLazySingleton<MinersDownloadManager> {
+    public static class Bins_Data {
     #region CODE_GEN STUFF // listFiles.py
 """
 
-containsFilesC_SHARP_Code = "private static string[] ALL_FILES_BINS = {"
+containsFilesC_SHARP_Code = "public static string[] ALL_FILES_BINS = {"
 
 root = "."
 
 outFile = "BINS_CODEGEN.cs"
-outFile_shared = "BINS_CODEGEN_SHARED.cs"
-outFile_amd = "BINS_CODEGEN_AMD.cs"
-outFile_nvidia = "BINS_CODEGEN_NVIDIA.cs"
 inFile = "genBins.py"
 
 for path, subdirs, files in os.walk(root):
     for name in files:
         #print os.path.join(path, name)
-        if (".py" not in name) and (".cs" not in name):
+        #if (".py" not in name) and (".cs" not in name):
+        if (".exe" in name) or (".dll" in name) or (".bin" in name):
             file = '@"%s",' % os.path.join(path, name)[1:]
             containsFilesC_SHARP_Code =  "%s%s%s" % (containsFilesC_SHARP_Code, os.linesep, file)
 

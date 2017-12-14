@@ -3,10 +3,15 @@
 // TODO maybe add nvml.dll check
 //#include <Windows.h>
 
-int main() {
+int main(int argc, char* argv[]) {
 	CudaDetection detection;
 	if (detection.QueryDevices()) {
-		detection.PrintDevicesJson();
+		if (argc < 2) {
+			detection.PrintDevicesJson_d();
+		}
+		else {
+			detection.PrintDevicesJson();
+		}
 	}
 	return 0;
 }

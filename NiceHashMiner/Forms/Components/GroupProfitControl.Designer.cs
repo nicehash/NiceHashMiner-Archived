@@ -45,7 +45,7 @@
             this.groupBoxMinerGroup.Size = new System.Drawing.Size(525, 32);
             this.groupBoxMinerGroup.TabIndex = 108;
             this.groupBoxMinerGroup.TabStop = false;
-            this.groupBoxMinerGroup.Text = "GPU NVIDIA5.x: Devices { 1 * GTX 970, 1 x GTX 990 } ";
+            this.groupBoxMinerGroup.Text = "Mining Devices { N/A } ";
             // 
             // labelSpeedIndicator
             // 
@@ -91,9 +91,9 @@
             this.labelSpeedValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.labelSpeedValue.Location = new System.Drawing.Point(81, 16);
             this.labelSpeedValue.Name = "labelSpeedValue";
-            this.labelSpeedValue.Size = new System.Drawing.Size(71, 13);
+            this.labelSpeedValue.Size = new System.Drawing.Size(30, 13);
             this.labelSpeedValue.TabIndex = 107;
-            this.labelSpeedValue.Text = "0.000 kH/s";
+            this.labelSpeedValue.Text = "N/A";
             // 
             // GroupProfitControl
             // 

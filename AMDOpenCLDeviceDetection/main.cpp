@@ -1,9 +1,14 @@
 #include "AMDOpenCLDeviceDetection.h"
 
-int main() {
+int main(int argc, char* argv[]) {
 	AMDOpenCLDeviceDetection AMDOpenCLDeviceDetection;
 	if (AMDOpenCLDeviceDetection.QueryDevices()) {
-		AMDOpenCLDeviceDetection.PrintDevicesJson();
+		if (argc < 2) {
+			AMDOpenCLDeviceDetection.PrintDevicesJsonDirty();
+		}
+		else {
+			AMDOpenCLDeviceDetection.PrintDevicesJson();
+		}
 	}
 	return 0;
 }

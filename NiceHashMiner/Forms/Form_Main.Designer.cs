@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Main));
             this.buttonStartMining = new System.Windows.Forms.Button();
             this.textBoxBTCAddress = new System.Windows.Forms.TextBox();
             this.labelServiceLocation = new System.Windows.Forms.Label();
@@ -100,7 +99,9 @@
             "Europe - Amsterdam",
             "USA - San Jose",
             "China - Hong Kong",
-            "Japan - Tokyo"});
+            "Japan - Tokyo",
+            "India - Chennai",
+            "Brazil - Sao Paulo"});
             this.comboBoxLocation.Location = new System.Drawing.Point(113, 12);
             this.comboBoxLocation.Name = "comboBoxLocation";
             this.comboBoxLocation.Size = new System.Drawing.Size(121, 21);
@@ -129,7 +130,7 @@
             this.toolStripStatusLabelBalanceDollarText,
             this.toolStripStatusLabelBalanceDollarValue,
             this.toolStripStatusLabel10});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 345);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 266);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(565, 25);
             this.statusStrip1.TabIndex = 8;
@@ -323,7 +324,7 @@
             this.flowLayoutPanelRates.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelRates.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelRates.Name = "flowLayoutPanelRates";
-            this.flowLayoutPanelRates.Size = new System.Drawing.Size(536, 123);
+            this.flowLayoutPanelRates.Size = new System.Drawing.Size(536, 40);
             this.flowLayoutPanelRates.TabIndex = 107;
             this.flowLayoutPanelRates.WrapContents = false;
             // 
@@ -333,7 +334,7 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
             this.groupBox1.Location = new System.Drawing.Point(11, 202);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(542, 142);
+            this.groupBox1.Size = new System.Drawing.Size(542, 59);
             this.groupBox1.TabIndex = 108;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Group/Device Rates:";
@@ -351,14 +352,13 @@
             // 
             // devicesListViewEnableControl1
             // 
-            this.devicesListViewEnableControl1.AutoSaveChange = false;
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
             this.devicesListViewEnableControl1.IsInBenchmark = false;
             this.devicesListViewEnableControl1.IsMining = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(11, 91);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.SetAllEnabled = false;
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 105);
             this.devicesListViewEnableControl1.TabIndex = 109;
             // 
@@ -366,7 +366,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 370);
+            this.ClientSize = new System.Drawing.Size(565, 291);
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);
@@ -387,8 +387,8 @@
             this.Controls.Add(this.buttonStartMining);
             this.Enabled = false;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(581, 330);
             this.Name = "Form_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NiceHash Miner";
