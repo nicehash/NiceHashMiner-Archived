@@ -81,6 +81,12 @@
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
+    <Compile Include="Forms\Form_DeviceRename.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_DeviceRename.Designer.cs">
+      <DependentUpon>Form_DeviceRename.cs</DependentUpon>
+    </Compile>
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
@@ -276,6 +282,7 @@
     <Compile Include="Utils\MinersDownloader.cs" />
     <Compile Include="Utils\MinersDownloadManager.cs" />
     <Compile Include="Utils\MinersExistanceChecker.cs" />
+    <Compile Include="Utils\SettingsUtil.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -307,6 +314,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_DeviceRename.resx">
+      <DependentUpon>Form_DeviceRename.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>

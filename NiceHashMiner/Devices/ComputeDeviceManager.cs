@@ -25,37 +25,46 @@ namespace NiceHashMiner.Devices
     /// </summary>
     public class ComputeDeviceManager
     {
-        public static class Query {
+        public static class Query
+        {
             const string TAG = "ComputeDeviceManager.Query";
 
             // format 372.54;
-            private class NVIDIA_SMI_DRIVER {
-                public NVIDIA_SMI_DRIVER(int left, int right) {
+            private class NVIDIA_SMI_DRIVER
+            {
+                public NVIDIA_SMI_DRIVER(int left, int right)
+                {
                     leftPart = left;
                     rightPart = right;
                 }
-                public bool IsLesserVersionThan(NVIDIA_SMI_DRIVER b) {
-                    if(leftPart < b.leftPart) {
+                public bool IsLesserVersionThan(NVIDIA_SMI_DRIVER b)
+                {
+                    if (leftPart < b.leftPart)
+                    {
                         return true;
                     }
-                    if (leftPart == b.leftPart && getRightVal(rightPart) < getRightVal(b.rightPart)) {
+                    if (leftPart == b.leftPart && getRightVal(rightPart) < getRightVal(b.rightPart))
+                    {
                         return true;
                     }
                     return false;
                 }
 
-                public override string ToString() {
+                public override string ToString()
+                {
                     return String.Format("{0}.{1}", leftPart, rightPart);
                 }
 
                 public int leftPart;
                 public int rightPart;
-                private int getRightVal(int val) {
-                    if(val >= 10) {
+                private int getRightVal(int val)
+                {
+                    if (val >= 10)
+                    {
                         return val;
                     }
                     return val * 10;
-                } 
+                }
             }
 
             static readonly NVIDIA_SMI_DRIVER NVIDIA_RECOMENDED_DRIVER = new NVIDIA_SMI_DRIVER(372, 54); // 372.54;
@@ -67,13 +76,16 @@ namespace NiceHashMiner.Devices
             private static int CPUCount = 0;
             private static int GPUCount = 0;
 
-            static private NVIDIA_SMI_DRIVER GetNvidiaSMIDriver() {
-                if (WindowsDisplayAdapters.HasNvidiaVideoController()) {
+            static private NVIDIA_SMI_DRIVER GetNvidiaSMIDriver()
+            {
+                if (WindowsDisplayAdapters.HasNvidiaVideoController())
+                {
                     string stdOut, stdErr, args, smiPath;
                     stdOut = stdErr = args = String.Empty;
                     smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
                     if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
-                    try {
+                    try
+                    {
                         Process P = new Process();
                         P.StartInfo.FileName = smiPath;
                         P.StartInfo.UseShellExecute = false;
@@ -87,12 +99,16 @@ namespace NiceHashMiner.Devices
                         stdErr = P.StandardError.ReadToEnd();
 
                         const string FIND_STRING = "Driver Version: ";
-                        using (StringReader reader = new StringReader(stdOut)) {
+                        using (StringReader reader = new StringReader(stdOut))
+                        {
                             string line = string.Empty;
-                            do {
+                            do
+                            {
                                 line = reader.ReadLine();
-                                if (line != null) {
-                                    if(line.Contains(FIND_STRING)) {
+                                if (line != null)
+                                {
+                                    if (line.Contains(FIND_STRING))
+                                    {
                                         int start = line.IndexOf(FIND_STRING);
                                         string driverVer = line.Substring(start, start + 7);
                                         driverVer = driverVer.Replace(FIND_STRING, "").Substring(0, 7).Trim();
@@ -106,7 +122,9 @@ namespace NiceHashMiner.Devices
                             } while (line != null);
                         }
 
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         Helpers.ConsolePrint(TAG, "GetNvidiaSMIDriver Exception: " + ex.Message);
                         return INVALID_SMI_DRIVER;
                     }
@@ -114,29 +132,34 @@ namespace NiceHashMiner.Devices
                 return INVALID_SMI_DRIVER;
             }
 
-            private static void showMessageAndStep(string infoMsg) {
+            private static void showMessageAndStep(string infoMsg)
+            {
                 if (MessageNotifier != null) MessageNotifier.SetMessageAndIncrementStep(infoMsg);
             }
 
             public static IMessageNotifier MessageNotifier { get; private set; }
 
-            public static void QueryDevices(IMessageNotifier messageNotifier) {
+            public static void QueryDevices(IMessageNotifier messageNotifier)
+            {
 
                 // check NVIDIA nvml.dll and copy over scope
                 {
                     string nvmlPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvml.dll";
                     if (nvmlPath.Contains(" (x86)")) nvmlPath = nvmlPath.Replace(" (x86)", "");
-                    if (File.Exists(nvmlPath)) {
+                    if (File.Exists(nvmlPath))
+                    {
                         string copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
-                        try {
+                        try
+                        {
                             File.Copy(nvmlPath, copyToPath, true);
                             Helpers.ConsolePrint(TAG, String.Format("Copy from {0} to {1} done", nvmlPath, copyToPath));
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e)
+                        {
                             Helpers.ConsolePrint(TAG, "Copy nvml.dll failed: " + e.Message);
                         }
                     }
                 }
-
 
                 MessageNotifier = messageNotifier;
                 // #0 get video controllers, used for cross checking
@@ -145,17 +168,23 @@ namespace NiceHashMiner.Devices
                 // #1 CPU
                 CPU.QueryCPUs();
                 // #2 CUDA
-                if (NVIDIA.IsSkipNVIDIA()) {
+                if (NVIDIA.IsSkipNVIDIA())
+                {
                     Helpers.ConsolePrint(TAG, "Skipping NVIDIA device detection, settings are set to disabled");
-                } else {
+                }
+                else
+                {
                     showMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
                     NVIDIA.QueryCudaDevices();
                 }
                 // OpenCL and AMD
-                if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD) {
+                if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
+                {
                     Helpers.ConsolePrint(TAG, "Skipping AMD device detection, settings set to disabled");
                     showMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
-                } else {
+                }
+                else
+                {
                     // #3 OpenCL
                     showMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
                     OpenCL.QueryOpenCLDevices();
@@ -170,22 +199,32 @@ namespace NiceHashMiner.Devices
                 int NVIDIA_count = 0;
                 {
                     int AMD_count = 0;
-                    foreach (var vidCtrl in AvaliableVideoControllers) {
-                        if(vidCtrl.Name.ToLower().Contains("nvidia") && CUDA_Unsupported.IsSupported(vidCtrl.Name)) {
+                    foreach (var vidCtrl in AvaliableVideoControllers)
+                    {
+                        if (vidCtrl.Name.ToLower().Contains("nvidia") && CUDA_Unsupported.IsSupported(vidCtrl.Name))
+                        {
                             NVIDIA_count += 1;
-                        } else if (vidCtrl.Name.ToLower().Contains("nvidia")) {
+                        }
+                        else if (vidCtrl.Name.ToLower().Contains("nvidia"))
+                        {
                             Helpers.ConsolePrint(TAG, "Device not supported NVIDIA/CUDA device not supported " + vidCtrl.Name);
                         }
                         AMD_count += (vidCtrl.Name.ToLower().Contains("amd")) ? 1 : 0;
                     }
-                    if (NVIDIA_count == CudaDevices.Count) {
+                    if (NVIDIA_count == CudaDevices.Count)
+                    {
                         Helpers.ConsolePrint(TAG, "Cuda NVIDIA/CUDA device count GOOD");
-                    } else {
+                    }
+                    else
+                    {
                         Helpers.ConsolePrint(TAG, "Cuda NVIDIA/CUDA device count BAD!!!");
                     }
-                    if (AMD_count == amdGpus.Count) {
+                    if (AMD_count == amdGpus.Count)
+                    {
                         Helpers.ConsolePrint(TAG, "AMD GPU device count GOOD");
-                    } else {
+                    }
+                    else
+                    {
                         Helpers.ConsolePrint(TAG, "AMD GPU device count BAD!!!");
                     }
                 }
@@ -194,7 +233,8 @@ namespace NiceHashMiner.Devices
                 // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
                 bool isNvidiaErrorShown = false; // to prevent showing twice
                 bool showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning && WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && CudaDevices.Count != NVIDIA_count && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_MIN_DETECTION_DRIVER)) {
+                if (showWarning && CudaDevices.Count != NVIDIA_count && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_MIN_DETECTION_DRIVER))
+                {
                     isNvidiaErrorShown = true;
                     var minDriver = NVIDIA_MIN_DETECTION_DRIVER.ToString();
                     var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
@@ -204,7 +244,8 @@ namespace NiceHashMiner.Devices
                                                           MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 // recomended driver
-                if (showWarning && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_RECOMENDED_DRIVER) && !isNvidiaErrorShown && _currentNvidiaSMIDriver.leftPart > -1) {
+                if (showWarning && _currentNvidiaSMIDriver.IsLesserVersionThan(NVIDIA_RECOMENDED_DRIVER) && !isNvidiaErrorShown && _currentNvidiaSMIDriver.leftPart > -1)
+                {
                     var recomendDrvier = NVIDIA_RECOMENDED_DRIVER.ToString();
                     var nvdriverString = _currentNvidiaSMIDriver.leftPart > -1 ? String.Format(International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"), _currentNvidiaSMIDriver.ToString())
                     : "";
@@ -217,22 +258,29 @@ namespace NiceHashMiner.Devices
                 // bytes
                 Avaliable.NVIDIA_RAM_SUM = 0;
                 Avaliable.AMD_RAM_SUM = 0;
-                foreach (var dev in Avaliable.AllAvaliableDevices) {
-                    if (dev.DeviceType == DeviceType.NVIDIA) {
+                foreach (var dev in Avaliable.AllAvaliableDevices)
+                {
+                    if (dev.DeviceType == DeviceType.NVIDIA)
+                    {
                         Avaliable.NVIDIA_RAM_SUM += dev.GpuRam;
-                    } else if (dev.DeviceType == DeviceType.AMD) {
+                    }
+                    else if (dev.DeviceType == DeviceType.AMD)
+                    {
                         Avaliable.AMD_RAM_SUM += dev.GpuRam;
                     }
                 }
                 double total_GPU_RAM = (Avaliable.NVIDIA_RAM_SUM + Avaliable.AMD_RAM_SUM) / 1024; // b to kb
                 double total_Sys_RAM = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
                 // check
-                if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && total_Sys_RAM < total_GPU_RAM * 0.6) {
+                if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && total_Sys_RAM < total_GPU_RAM * 0.6)
+                {
                     Helpers.ConsolePrint(TAG, "virtual memory size BAD");
                     MessageBox.Show(International.GetText("VirtualMemorySize_BAD"),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK);
-                } else {
+                }
+                else
+                {
                     Helpers.ConsolePrint(TAG, "virtual memory size GOOD");
                 }
 
@@ -241,7 +289,8 @@ namespace NiceHashMiner.Devices
             }
 
             #region Helpers
-            private class VideoControllerData {
+            private class VideoControllerData
+            {
                 public string Name { get; set; }
                 public string Description { get; set; }
                 public string PNPDeviceID { get; set; }
@@ -251,30 +300,38 @@ namespace NiceHashMiner.Devices
                 public ulong AdapterRAM { get; set; }
             }
             private static List<VideoControllerData> AvaliableVideoControllers = new List<VideoControllerData>();
-            static class WindowsDisplayAdapters {
+            static class WindowsDisplayAdapters
+            {
 
-                private static string SafeGetProperty(ManagementBaseObject mbo, string key) {
-                    try {
+                private static string SafeGetProperty(ManagementBaseObject mbo, string key)
+                {
+                    try
+                    {
                         object o = mbo.GetPropertyValue(key);
-                        if(o != null) {
+                        if (o != null)
+                        {
                             return o.ToString();
                         }
-                    } catch {} 
+                    }
+                    catch { }
 
                     return "key is null";
                 }
 
-                public static void QueryVideoControllers() {
+                public static void QueryVideoControllers()
+                {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.AppendLine("");
                     stringBuilder.AppendLine("QueryVideoControllers: ");
                     ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
                     bool allVideoContollersOK = true;
-                    foreach (var manObj in moc) {
+                    foreach (var manObj in moc)
+                    {
                         ulong memTmp = 0;
                         //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
                         UInt64.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out memTmp);
-                        var vidController = new VideoControllerData() {
+                        var vidController = new VideoControllerData()
+                        {
                             Name = SafeGetProperty(manObj, "Name"),
                             Description = SafeGetProperty(manObj, "Description"),
                             PNPDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
@@ -293,17 +350,21 @@ namespace NiceHashMiner.Devices
                         stringBuilder.AppendLine(String.Format("\t\tAdapterRAM {0}", vidController.AdapterRAM));
 
                         // check if controller ok
-                        if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok")) {
+                        if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
+                        {
                             allVideoContollersOK = false;
                         }
 
                         AvaliableVideoControllers.Add(vidController);
                     }
                     Helpers.ConsolePrint(TAG, stringBuilder.ToString());
-                    if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK) {
+                    if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
+                    {
                         string msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
-                        foreach (var vc in AvaliableVideoControllers) {
-                            if (!vc.Status.ToLower().Equals("ok")) {
+                        foreach (var vc in AvaliableVideoControllers)
+                        {
+                            if (!vc.Status.ToLower().Equals("ok"))
+                            {
                                 msg += Environment.NewLine
                                     + String.Format(International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"), vc.Name, vc.Status, vc.PNPDeviceID);
                             }
@@ -314,16 +375,20 @@ namespace NiceHashMiner.Devices
                     }
                 }
 
-                public static bool HasNvidiaVideoController() {
-                    foreach (var vctrl in AvaliableVideoControllers) {
+                public static bool HasNvidiaVideoController()
+                {
+                    foreach (var vctrl in AvaliableVideoControllers)
+                    {
                         if (vctrl.Name.ToLower().Contains("nvidia")) return true;
                     }
                     return false;
                 }
             }
 
-            static class CPU {
-                public static void QueryCPUs() {
+            static class CPU
+            {
+                public static void QueryCPUs()
+                {
                     Helpers.ConsolePrint(TAG, "QueryCPUs START");
                     // get all CPUs
                     Avaliable.CPUsCount = CPUID.GetPhysicalProcessorCount();
@@ -334,14 +399,16 @@ namespace NiceHashMiner.Devices
                     // get all cores (including virtual - HT can benefit mining)
                     int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / Avaliable.CPUsCount;
 
-                    if (!Helpers.InternalCheckIsWow64()) {
+                    if (!Helpers.InternalCheckIsWow64())
+                    {
                         MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
                                         International.GetText("Warning_with_Exclamation"),
                                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         Avaliable.CPUsCount = 0;
                     }
 
-                    if (ThreadsPerCPU * Avaliable.CPUsCount > 64) {
+                    if (ThreadsPerCPU * Avaliable.CPUsCount > 64)
+                    {
                         MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
                                         International.GetText("Warning_with_Exclamation"),
                                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -352,13 +419,18 @@ namespace NiceHashMiner.Devices
                     int ThreadsPerCPUMask = ThreadsPerCPU;
                     Globals.ThreadsPerCPU = ThreadsPerCPU;
 
-                    if (CPUUtils.IsCPUMiningCapable()) {
-                        if (Avaliable.CPUsCount == 1) {
+                    if (CPUUtils.IsCPUMiningCapable())
+                    {
+                        if (Avaliable.CPUsCount == 1)
+                        {
                             Avaliable.AllAvaliableDevices.Add(
                                 new ComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), ThreadsPerCPU, (ulong)0, ++CPUCount)
                             );
-                        } else if (Avaliable.CPUsCount > 1) {
-                            for (int i = 0; i < Avaliable.CPUsCount; i++) {
+                        }
+                        else if (Avaliable.CPUsCount > 1)
+                        {
+                            for (int i = 0; i < Avaliable.CPUsCount; i++)
+                            {
                                 Avaliable.AllAvaliableDevices.Add(
                                     new ComputeDevice(i, "CPU" + i, CPUID.GetCPUName().Trim(), ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask), ++CPUCount)
                                 );
@@ -372,19 +444,24 @@ namespace NiceHashMiner.Devices
             }
 
             static List<CudaDevice> CudaDevices = new List<CudaDevice>();
-            static class NVIDIA {
+            static class NVIDIA
+            {
                 static string QueryCudaDevicesString = "";
-                static private void QueryCudaDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
-                    if (e.Data != null) {
+                static private void QueryCudaDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e)
+                {
+                    if (e.Data != null)
+                    {
                         QueryCudaDevicesString += e.Data;
                     }
                 }
 
-                public static bool IsSkipNVIDIA() {
+                public static bool IsSkipNVIDIA()
+                {
                     return ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 }
 
-                static public void QueryCudaDevices() {
+                static public void QueryCudaDevices()
+                {
                     Helpers.ConsolePrint(TAG, "QueryCudaDevices START");
                     Process CudaDevicesDetection = new Process();
                     CudaDevicesDetection.StartInfo.FileName = "CudaDeviceDetection.exe";
@@ -396,32 +473,46 @@ namespace NiceHashMiner.Devices
                     CudaDevicesDetection.ErrorDataReceived += QueryCudaDevicesOutputErrorDataReceived;
 
                     const int waitTime = 30 * 1000; // 30seconds
-                    try {
-                        if (!CudaDevicesDetection.Start()) {
+                    try
+                    {
+                        if (!CudaDevicesDetection.Start())
+                        {
                             Helpers.ConsolePrint(TAG, "CudaDevicesDetection process could not start");
-                        } else {
+                        }
+                        else
+                        {
                             CudaDevicesDetection.BeginErrorReadLine();
                             CudaDevicesDetection.BeginOutputReadLine();
-                            if (CudaDevicesDetection.WaitForExit(waitTime)) {
+                            if (CudaDevicesDetection.WaitForExit(waitTime))
+                            {
                                 CudaDevicesDetection.Close();
                             }
                         }
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         // TODO
                         Helpers.ConsolePrint(TAG, "CudaDevicesDetection threw Exception: " + ex.Message);
-                    } finally {
-                        if (QueryCudaDevicesString != "") {
-                            try {
+                    }
+                    finally
+                    {
+                        if (QueryCudaDevicesString != "")
+                        {
+                            try
+                            {
                                 CudaDevices = JsonConvert.DeserializeObject<List<CudaDevice>>(QueryCudaDevicesString, Globals.JsonSettings);
-                            } catch { }
+                            }
+                            catch { }
                         }
                     }
-                    if (CudaDevices != null && CudaDevices.Count != 0) {
+                    if (CudaDevices != null && CudaDevices.Count != 0)
+                    {
                         Avaliable.HasNVIDIA = true;
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("CudaDevicesDetection:");
-                        foreach (var cudaDev in CudaDevices) {
+                        foreach (var cudaDev in CudaDevices)
+                        {
                             // check sm vesrions
                             bool isUnderSM21;
                             {
@@ -443,9 +534,11 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", cudaDev.DeviceGlobalMemory.ToString()));
                             stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
 
-                            if (!skip) {
+                            if (!skip)
+                            {
                                 DeviceGroupType group;
-                                switch (cudaDev.SM_major) {
+                                switch (cudaDev.SM_major)
+                                {
                                     case 2:
                                         group = DeviceGroupType.NVIDIA_2_1;
                                         break;
@@ -468,29 +561,36 @@ namespace NiceHashMiner.Devices
                             }
                         }
                         Helpers.ConsolePrint(TAG, stringBuilder.ToString());
-                    } else {
+                    }
+                    else
+                    {
                         Helpers.ConsolePrint(TAG, "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " + QueryCudaDevicesString);
                     }
                     Helpers.ConsolePrint(TAG, "QueryCudaDevices END");
                 }
             }
 
-            class OpenCLJSONData_t {
+            class OpenCLJSONData_t
+            {
                 public string PlatformName = "NONE";
                 public int PlatformNum = 0;
                 public List<OpenCLDevice> Devices = new List<OpenCLDevice>();
             }
             static List<OpenCLJSONData_t> OpenCLJSONData = new List<OpenCLJSONData_t>();
             static bool IsOpenCLQuerrySuccess = false;
-            static class OpenCL {
+            static class OpenCL
+            {
                 static string QueryOpenCLDevicesString = "";
-                static private void QueryOpenCLDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
-                    if (e.Data != null) {
+                static private void QueryOpenCLDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e)
+                {
+                    if (e.Data != null)
+                    {
                         QueryOpenCLDevicesString += e.Data;
                     }
                 }
 
-                static public void QueryOpenCLDevices() {
+                static public void QueryOpenCLDevices()
+                {
                     Helpers.ConsolePrint(TAG, "QueryOpenCLDevices START");
                     Process OpenCLDevicesDetection = new Process();
                     OpenCLDevicesDetection.StartInfo.FileName = "AMDOpenCLDeviceDetection.exe";
@@ -502,39 +602,57 @@ namespace NiceHashMiner.Devices
                     OpenCLDevicesDetection.ErrorDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
 
                     const int waitTime = 30 * 1000; // 30seconds
-                    try {
-                        if (!OpenCLDevicesDetection.Start()) {
+                    try
+                    {
+                        if (!OpenCLDevicesDetection.Start())
+                        {
                             Helpers.ConsolePrint(TAG, "AMDOpenCLDeviceDetection process could not start");
-                        } else {
+                        }
+                        else
+                        {
                             OpenCLDevicesDetection.BeginErrorReadLine();
                             OpenCLDevicesDetection.BeginOutputReadLine();
-                            if (OpenCLDevicesDetection.WaitForExit(waitTime)) {
+                            if (OpenCLDevicesDetection.WaitForExit(waitTime))
+                            {
                                 OpenCLDevicesDetection.Close();
                             }
                         }
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         // TODO
                         Helpers.ConsolePrint(TAG, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
-                    } finally {
-                        if (QueryOpenCLDevicesString != "") {
-                            try {
+                    }
+                    finally
+                    {
+                        if (QueryOpenCLDevicesString != "")
+                        {
+                            try
+                            {
                                 OpenCLJSONData = JsonConvert.DeserializeObject<List<OpenCLJSONData_t>>(QueryOpenCLDevicesString, Globals.JsonSettings);
-                            } catch {
+                            }
+                            catch
+                            {
                                 OpenCLJSONData = null;
                             }
                         }
                     }
 
-                    if (OpenCLJSONData == null) {
+                    if (OpenCLJSONData == null)
+                    {
                         Helpers.ConsolePrint(TAG, "AMDOpenCLDeviceDetection found no devices. AMDOpenCLDeviceDetection returned: " + QueryOpenCLDevicesString);
-                    } else {
+                    }
+                    else
+                    {
                         IsOpenCLQuerrySuccess = true;
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
-                        foreach (var oclElem in OpenCLJSONData) {
+                        foreach (var oclElem in OpenCLJSONData)
+                        {
                             stringBuilder.AppendLine(String.Format("\tFound devices for platform: {0}", oclElem.PlatformName));
-                            foreach (var oclDev in oclElem.Devices) {
+                            foreach (var oclDev in oclElem.Devices)
+                            {
                                 stringBuilder.AppendLine("\t\tDevice:");
                                 stringBuilder.AppendLine(String.Format("\t\t\tDevice ID {0}", oclDev.DeviceID));
                                 stringBuilder.AppendLine(String.Format("\t\t\tDevice NAME {0}", oclDev._CL_DEVICE_NAME));
@@ -548,8 +666,10 @@ namespace NiceHashMiner.Devices
             }
 
             static List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
-            static class AMD {
-                static public void QueryAMD() {
+            static class AMD
+            {
+                static public void QueryAMD()
+                {
                     const int AMD_VENDOR_ID = 1002;
                     Helpers.ConsolePrint(TAG, "QueryAMD START");
 
@@ -559,24 +679,28 @@ namespace NiceHashMiner.Devices
                     Dictionary<string, bool> deviceDriverNO_neoscrypt_lyra2re = new Dictionary<string, bool>();
                     bool ShowWarningDialog = false;
 
-                    foreach (var vidContrllr in AvaliableVideoControllers) {
+                    foreach (var vidContrllr in AvaliableVideoControllers)
+                    {
                         Helpers.ConsolePrint(TAG, String.Format("Checking AMD device (driver): {0} ({1})", vidContrllr.Name, vidContrllr.DriverVersion));
 
                         deviceDriverOld[vidContrllr.Name] = false;
                         deviceDriverNO_neoscrypt_lyra2re[vidContrllr.Name] = false;
                         Version sgminer_NO_neoscrypt_lyra2re = new Version("21.19.164.1");
                         // TODO checking radeon drivers only?
-                        if ((vidContrllr.Name.Contains("AMD") || vidContrllr.Name.Contains("Radeon")) && ShowWarningDialog == false) {
+                        if ((vidContrllr.Name.Contains("AMD") || vidContrllr.Name.Contains("Radeon")) && ShowWarningDialog == false)
+                        {
                             Version AMDDriverVersion = new Version(vidContrllr.DriverVersion);
 
                             bool greaterOrEqual = AMDDriverVersion.CompareTo(sgminer_NO_neoscrypt_lyra2re) >= 0;
-                            if (greaterOrEqual) {
+                            if (greaterOrEqual)
+                            {
                                 deviceDriverNO_neoscrypt_lyra2re[vidContrllr.Name] = true;
                                 Helpers.ConsolePrint(TAG, "Driver version seems to be " + sgminer_NO_neoscrypt_lyra2re.ToString() + " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
                             }
 
 
-                            if (AMDDriverVersion.Major < 15) {
+                            if (AMDDriverVersion.Major < 15)
+                            {
                                 ShowWarningDialog = true;
                                 deviceDriverOld[vidContrllr.Name] = true;
                                 Helpers.ConsolePrint(TAG, "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
@@ -584,7 +708,8 @@ namespace NiceHashMiner.Devices
                             }
                         }
                     }
-                    if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && ShowWarningDialog == true) {
+                    if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && ShowWarningDialog == true)
+                    {
                         Form WarningDialog = new DriverVersionConfirmationDialog();
                         WarningDialog.ShowDialog();
                         WarningDialog = null;
@@ -595,10 +720,13 @@ namespace NiceHashMiner.Devices
                     showMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
                     List<OpenCLDevice> amdOCLDevices = new List<OpenCLDevice>();
                     string AMDOpenCLPlatformStringKey = "";
-                    if (IsOpenCLQuerrySuccess) {
+                    if (IsOpenCLQuerrySuccess)
+                    {
                         bool amdPlatformNumFound = false;
-                        foreach (var oclEl in OpenCLJSONData) {
-                            if (oclEl.PlatformName.Contains("AMD") || oclEl.PlatformName.Contains("amd")) {
+                        foreach (var oclEl in OpenCLJSONData)
+                        {
+                            if (oclEl.PlatformName.Contains("AMD") || oclEl.PlatformName.Contains("amd"))
+                            {
                                 amdPlatformNumFound = true;
                                 AMDOpenCLPlatformStringKey = oclEl.PlatformName;
                                 Avaliable.AMDOpenCLPlatformNum = oclEl.PlatformNum;
@@ -609,11 +737,14 @@ namespace NiceHashMiner.Devices
                                 break;
                             }
                         }
-                        if (amdPlatformNumFound) {
+                        if (amdPlatformNumFound)
+                        {
                             // get only AMD gpus
                             {
-                                foreach (var oclDev in amdOCLDevices) {
-                                    if (oclDev._CL_DEVICE_TYPE.Contains("GPU")) {
+                                foreach (var oclDev in amdOCLDevices)
+                                {
+                                    if (oclDev._CL_DEVICE_TYPE.Contains("GPU"))
+                                    {
                                         amdGpus.Add(oclDev);
                                     }
                                 }
@@ -622,8 +753,10 @@ namespace NiceHashMiner.Devices
                             // check if buss ids are unuque and different from -1
                             {
                                 HashSet<int> bus_ids = new HashSet<int>();
-                                foreach (var amdOclDev in amdGpus) {
-                                    if (amdOclDev.AMD_BUS_ID < 0) {
+                                foreach (var amdOclDev in amdGpus)
+                                {
+                                    if (amdOclDev.AMD_BUS_ID < 0)
+                                    {
                                         isBusID_OK = false;
                                         break;
                                     }
@@ -633,13 +766,19 @@ namespace NiceHashMiner.Devices
                                 isBusID_OK = isBusID_OK && bus_ids.Count == amdGpus.Count;
                             }
 
-                            if (amdGpus.Count == 0) {
+                            if (amdGpus.Count == 0)
+                            {
                                 Helpers.ConsolePrint(TAG, "AMD GPUs count is 0");
-                            } else {
+                            }
+                            else
+                            {
                                 // print BUS id status
-                                if (isBusID_OK) {
+                                if (isBusID_OK)
+                                {
                                     Helpers.ConsolePrint(TAG, "AMD Bus IDs are unique and valid. OK");
-                                } else {
+                                }
+                                else
+                                {
                                     Helpers.ConsolePrint(TAG, "AMD Bus IDs IS INVALID. Using fallback AMD detection mode");
                                 }
 
@@ -652,41 +791,50 @@ namespace NiceHashMiner.Devices
                                 Dictionary<int, Tuple3<string, string, string>> _busIdsInfo = new Dictionary<int, Tuple3<string, string, string>>();
                                 List<string> _amdDeviceName = new List<string>();
                                 List<string> _amdDeviceUUID = new List<string>();
-                                try {
+                                try
+                                {
                                     int ADLRet = -1;
                                     int NumberOfAdapters = 0;
                                     if (null != ADL.ADL_Main_Control_Create)
                                         // Second parameter is 1: Get only the present adapters
                                         ADLRet = ADL.ADL_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 1);
-                                    if (ADL.ADL_SUCCESS == ADLRet) {
-                                        if (null != ADL.ADL_Adapter_NumberOfAdapters_Get) {
+                                    if (ADL.ADL_SUCCESS == ADLRet)
+                                    {
+                                        if (null != ADL.ADL_Adapter_NumberOfAdapters_Get)
+                                        {
                                             ADL.ADL_Adapter_NumberOfAdapters_Get(ref NumberOfAdapters);
                                         }
                                         Helpers.ConsolePrint(TAG, "Number Of Adapters: " + NumberOfAdapters.ToString());
 
-                                        if (0 < NumberOfAdapters) {
+                                        if (0 < NumberOfAdapters)
+                                        {
                                             // Get OS adpater info from ADL
                                             ADLAdapterInfoArray OSAdapterInfoData;
                                             OSAdapterInfoData = new ADLAdapterInfoArray();
 
-                                            if (null != ADL.ADL_Adapter_AdapterInfo_Get) {
+                                            if (null != ADL.ADL_Adapter_AdapterInfo_Get)
+                                            {
                                                 IntPtr AdapterBuffer = IntPtr.Zero;
                                                 int size = Marshal.SizeOf(OSAdapterInfoData);
                                                 AdapterBuffer = Marshal.AllocCoTaskMem((int)size);
                                                 Marshal.StructureToPtr(OSAdapterInfoData, AdapterBuffer, false);
 
-                                                if (null != ADL.ADL_Adapter_AdapterInfo_Get) {
+                                                if (null != ADL.ADL_Adapter_AdapterInfo_Get)
+                                                {
                                                     ADLRet = ADL.ADL_Adapter_AdapterInfo_Get(AdapterBuffer, size);
-                                                    if (ADL.ADL_SUCCESS == ADLRet) {
+                                                    if (ADL.ADL_SUCCESS == ADLRet)
+                                                    {
                                                         OSAdapterInfoData = (ADLAdapterInfoArray)Marshal.PtrToStructure(AdapterBuffer, OSAdapterInfoData.GetType());
                                                         int IsActive = 0;
 
-                                                        for (int i = 0; i < NumberOfAdapters; i++) {
+                                                        for (int i = 0; i < NumberOfAdapters; i++)
+                                                        {
                                                             // Check if the adapter is active
                                                             if (null != ADL.ADL_Adapter_Active_Get)
                                                                 ADLRet = ADL.ADL_Adapter_Active_Get(OSAdapterInfoData.ADLAdapterInfo[i].AdapterIndex, ref IsActive);
 
-                                                            if (ADL.ADL_SUCCESS == ADLRet) {
+                                                            if (ADL.ADL_SUCCESS == ADLRet)
+                                                            {
                                                                 // we are looking for amd
                                                                 // TODO check discrete and integrated GPU separation
                                                                 var vendorID = OSAdapterInfoData.ADLAdapterInfo[i].VendorID;
@@ -694,13 +842,16 @@ namespace NiceHashMiner.Devices
                                                                 if (vendorID == AMD_VENDOR_ID
                                                                     || devName.ToLower().Contains("amd")
                                                                     || devName.ToLower().Contains("radeon")
-                                                                    || devName.ToLower().Contains("firepro")) {
+                                                                    || devName.ToLower().Contains("firepro"))
+                                                                {
 
                                                                     string PNPStr = OSAdapterInfoData.ADLAdapterInfo[i].PNPString;
                                                                     // find vi controller pnp
                                                                     string infSection = "";
-                                                                    foreach (var v_ctrl in AvaliableVideoControllers) {
-                                                                        if(v_ctrl.PNPDeviceID == PNPStr) {
+                                                                    foreach (var v_ctrl in AvaliableVideoControllers)
+                                                                    {
+                                                                        if (v_ctrl.PNPDeviceID == PNPStr)
+                                                                        {
                                                                             infSection = v_ctrl.InfSection;
                                                                         }
                                                                     }
@@ -716,18 +867,22 @@ namespace NiceHashMiner.Devices
                                                                     var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
                                                                     var uuid = udid.Substring(0, pciVen_id_strSize) + "_" + serial;
                                                                     int budId = OSAdapterInfoData.ADLAdapterInfo[i].BusNumber;
-                                                                    if (!_amdDeviceUUID.Contains(uuid)) {
-                                                                        try {
+                                                                    if (!_amdDeviceUUID.Contains(uuid))
+                                                                    {
+                                                                        try
+                                                                        {
                                                                             Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}  NAME:{1}  UUID:{2}"),
                                                                                 budId,
                                                                                 devName,
                                                                                 uuid);
-                                                                        } catch { }
+                                                                        }
+                                                                        catch { }
 
                                                                         _amdDeviceUUID.Add(uuid);
                                                                         //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                         _amdDeviceName.Add(devName);
-                                                                        if (!_busIdsInfo.ContainsKey(budId)) {
+                                                                        if (!_busIdsInfo.ContainsKey(budId))
+                                                                        {
                                                                             var nameUuid = new Tuple3<string, string, string>(devName, uuid, infSection);
                                                                             _busIdsInfo.Add(budId, nameUuid);
                                                                         }
@@ -735,7 +890,9 @@ namespace NiceHashMiner.Devices
                                                                 }
                                                             }
                                                         }
-                                                    } else {
+                                                    }
+                                                    else
+                                                    {
                                                         Helpers.ConsolePrint(TAG, "ADL_Adapter_AdapterInfo_Get() returned error code " + ADLRet.ToString());
                                                         isAdlInit = false;
                                                     }
@@ -747,34 +904,44 @@ namespace NiceHashMiner.Devices
                                         }
                                         if (null != ADL.ADL_Main_Control_Destroy)
                                             ADL.ADL_Main_Control_Destroy();
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         // TODO
                                         Helpers.ConsolePrint(TAG, "ADL_Main_Control_Create() returned error code " + ADLRet.ToString());
                                         Helpers.ConsolePrint(TAG, "Check if ADL is properly installed!");
                                         isAdlInit = false;
                                     }
-                                } catch (Exception ex) {
+                                }
+                                catch (Exception ex)
+                                {
                                     Helpers.ConsolePrint(TAG, "AMD ADL exception: " + ex.Message);
                                     isAdlInit = false;
                                 }
 
                                 ///////
                                 // AMD device creation (in NHM context)
-                                if (isAdlInit && isBusID_OK) {
+                                if (isAdlInit && isBusID_OK)
+                                {
                                     Helpers.ConsolePrint(TAG, "Using AMD device creation DEFAULT Reliable mappings");
-                                    if (amdGpus.Count == _amdDeviceUUID.Count) {
+                                    if (amdGpus.Count == _amdDeviceUUID.Count)
+                                    {
                                         Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS GOOD/SAME");
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         Helpers.ConsolePrint(TAG, "AMD OpenCL and ADL AMD query COUNTS DIFFERENT/BAD");
                                     }
                                     StringBuilder stringBuilder = new StringBuilder();
                                     stringBuilder.AppendLine("");
                                     stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
-                                    for (int i_id = 0; i_id < amdGpus.Count; ++i_id) {
+                                    for (int i_id = 0; i_id < amdGpus.Count; ++i_id)
+                                    {
                                         Avaliable.HasAMD = true;
 
                                         int busID = amdGpus[i_id].AMD_BUS_ID;
-                                        if (busID != -1 && _busIdsInfo.ContainsKey(busID)) {
+                                        if (busID != -1 && _busIdsInfo.ContainsKey(busID))
+                                        {
                                             var deviceName = _busIdsInfo[busID].Item1;
                                             var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName], _busIdsInfo[busID].Item3, deviceDriverNO_neoscrypt_lyra2re[deviceName]);
                                             newAmdDev.DeviceName = deviceName;
@@ -787,7 +954,8 @@ namespace NiceHashMiner.Devices
                                             Avaliable.AllAvaliableDevices.Add(
                                                 new ComputeDevice(newAmdDev, ++GPUCount, false));
                                             // just in case 
-                                            try {
+                                            try
+                                            {
                                                 stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
                                                 stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
                                                 stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
@@ -795,13 +963,18 @@ namespace NiceHashMiner.Devices
                                                 stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
                                                 stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
                                                 stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
-                                            } catch { }
-                                        } else {
+                                            }
+                                            catch { }
+                                        }
+                                        else
+                                        {
                                             stringBuilder.AppendLine(String.Format("\tDevice not added, Bus No. {0} not found:", busID));
                                         }
                                     }
                                     Helpers.ConsolePrint(TAG, stringBuilder.ToString());
-                                } else {
+                                }
+                                else
+                                {
                                     Helpers.ConsolePrint(TAG, "Using AMD device creation FALLBACK UnReliable mappings");
                                     StringBuilder stringBuilder = new StringBuilder();
                                     stringBuilder.AppendLine("");
@@ -810,11 +983,13 @@ namespace NiceHashMiner.Devices
                                     // get video AMD controllers and sort them by RAM
                                     // (find a way to get PCI BUS Numbers from PNPDeviceID)
                                     List<VideoControllerData> AMDVideoControllers = new List<VideoControllerData>();
-                                    foreach (var vcd in AvaliableVideoControllers) {
+                                    foreach (var vcd in AvaliableVideoControllers)
+                                    {
                                         if (vcd.Name.ToLower().Contains("amd")
                                             || vcd.Name.ToLower().Contains("radeon")
-                                            || vcd.Name.ToLower().Contains("firepro")) {
-                                                AMDVideoControllers.Add(vcd);
+                                            || vcd.Name.ToLower().Contains("firepro"))
+                                        {
+                                            AMDVideoControllers.Add(vcd);
                                         }
                                     }
                                     // sort by ram not ideal 
@@ -822,11 +997,12 @@ namespace NiceHashMiner.Devices
                                     amdGpus.Sort((a, b) => (int)(a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
                                     int minCount = Math.Min(AMDVideoControllers.Count, amdGpus.Count);
 
-                                    for (int i = 0; i < minCount; ++i) {
+                                    for (int i = 0; i < minCount; ++i)
+                                    {
                                         Avaliable.HasAMD = true;
 
                                         var deviceName = AMDVideoControllers[i].Name;
-                                        if(AMDVideoControllers[i].InfSection == null) AMDVideoControllers[i].InfSection = "";
+                                        if (AMDVideoControllers[i].InfSection == null) AMDVideoControllers[i].InfSection = "";
                                         var newAmdDev = new AmdGpuDevice(amdGpus[i], deviceDriverOld[deviceName], AMDVideoControllers[i].InfSection, deviceDriverNO_neoscrypt_lyra2re[deviceName]);
                                         newAmdDev.DeviceName = deviceName;
                                         newAmdDev.UUID = "UNUSED";
@@ -838,7 +1014,8 @@ namespace NiceHashMiner.Devices
                                         Avaliable.AllAvaliableDevices.Add(
                                             new ComputeDevice(newAmdDev, ++GPUCount, true));
                                         // just in case 
-                                        try {
+                                        try
+                                        {
                                             stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
                                             stringBuilder.AppendLine(String.Format("\t\tID: {0}", newAmdDev.DeviceID.ToString()));
                                             stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", newAmdDev.DeviceName));
@@ -846,7 +1023,8 @@ namespace NiceHashMiner.Devices
                                             stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", newAmdDev.UUID));
                                             stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", newAmdDev.DeviceGlobalMemory.ToString()));
                                             stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
-                                        } catch { }
+                                        }
+                                        catch { }
                                     }
                                     Helpers.ConsolePrint(TAG, stringBuilder.ToString());
                                 }
@@ -860,34 +1038,37 @@ namespace NiceHashMiner.Devices
             #endregion Helpers
         }
 
-        public static class SystemSpecs {
-            public static UInt64   FreePhysicalMemory;
-            public static UInt64   FreeSpaceInPagingFiles;
-            public static UInt64   FreeVirtualMemory;
-            public static UInt32   LargeSystemCache;
-            public static UInt32   MaxNumberOfProcesses;
-            public static UInt64   MaxProcessMemorySize;
+        public static class SystemSpecs
+        {
+            public static UInt64 FreePhysicalMemory;
+            public static UInt64 FreeSpaceInPagingFiles;
+            public static UInt64 FreeVirtualMemory;
+            public static UInt32 LargeSystemCache;
+            public static UInt32 MaxNumberOfProcesses;
+            public static UInt64 MaxProcessMemorySize;
 
-            public static UInt32   NumberOfLicensedUsers;
-            public static UInt32   NumberOfProcesses;
-            public static UInt32   NumberOfUsers;
-            public static UInt32   OperatingSystemSKU;
-            
-            public static UInt64   SizeStoredInPagingFiles;
-            
-            public static UInt32   SuiteMask;
-            
-            public static UInt64   TotalSwapSpaceSize;
-            public static UInt64   TotalVirtualMemorySize;
-            public static UInt64   TotalVisibleMemorySize;
-            
+            public static UInt32 NumberOfLicensedUsers;
+            public static UInt32 NumberOfProcesses;
+            public static UInt32 NumberOfUsers;
+            public static UInt32 OperatingSystemSKU;
 
-            public static void QueryAndLog() {
+            public static UInt64 SizeStoredInPagingFiles;
+
+            public static UInt32 SuiteMask;
+
+            public static UInt64 TotalSwapSpaceSize;
+            public static UInt64 TotalVirtualMemorySize;
+            public static UInt64 TotalVisibleMemorySize;
+
+
+            public static void QueryAndLog()
+            {
                 ObjectQuery winQuery = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
 
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher(winQuery);
 
-                foreach (ManagementObject item in searcher.Get()) {
+                foreach (ManagementObject item in searcher.Get())
+                {
                     if (item["FreePhysicalMemory"] != null) UInt64.TryParse(item["FreePhysicalMemory"].ToString(), out FreePhysicalMemory);
                     if (item["FreeSpaceInPagingFiles"] != null) UInt64.TryParse(item["FreeSpaceInPagingFiles"].ToString(), out FreeSpaceInPagingFiles);
                     if (item["FreeVirtualMemory"] != null) UInt64.TryParse(item["FreeVirtualMemory"].ToString(), out FreeVirtualMemory);
@@ -923,7 +1104,8 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public static class Avaliable {
+        public static class Avaliable
+        {
             public static bool HasNVIDIA = false;
             public static bool HasAMD = false;
             public static bool HasCPU = false;
@@ -934,36 +1116,45 @@ namespace NiceHashMiner.Devices
 
             public static ulong NVIDIA_RAM_SUM = 0;
             public static ulong AMD_RAM_SUM = 0;
-            
+
             public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
 
             // methods
-            public static ComputeDevice GetDeviceWithUUID(string uuid) {
-                foreach (var dev in AllAvaliableDevices) {
+            public static ComputeDevice GetDeviceWithUUID(string uuid)
+            {
+                foreach (var dev in AllAvaliableDevices)
+                {
                     if (uuid == dev.UUID) return dev;
                 }
                 return null;
             }
 
-            public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUUID(string uuid) {
+            public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUUID(string uuid)
+            {
                 List<ComputeDevice> sameTypes = new List<ComputeDevice>();
                 var compareDev = GetDeviceWithUUID(uuid);
-                foreach (var dev in AllAvaliableDevices) {
-                    if (uuid != dev.UUID && compareDev.DeviceType == dev.DeviceType) {
+                foreach (var dev in AllAvaliableDevices)
+                {
+                    if (uuid != dev.UUID && compareDev.DeviceType == dev.DeviceType)
+                    {
                         sameTypes.Add(GetDeviceWithUUID(dev.UUID));
                     }
                 }
                 return sameTypes;
             }
 
-            public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique) {
+            public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique)
+            {
                 return AllAvaliableDevices[index];
             }
 
-            public static int GetCountForType(DeviceType type) {
+            public static int GetCountForType(DeviceType type)
+            {
                 int count = 0;
-                foreach (var device in Avaliable.AllAvaliableDevices) {
-                    if (device.DeviceType == type) {
+                foreach (var device in Avaliable.AllAvaliableDevices)
+                {
+                    if (device.DeviceType == type)
+                    {
                         ++count;
                     }
                 }
@@ -971,19 +1162,27 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public static class Group {
-            public static void DisableCpuGroup() {
-                foreach (var device in Avaliable.AllAvaliableDevices) {
-                    if (device.DeviceType == DeviceType.CPU) {
+        public static class Group
+        {
+            public static void DisableCpuGroup()
+            {
+                foreach (var device in Avaliable.AllAvaliableDevices)
+                {
+                    if (device.DeviceType == DeviceType.CPU)
+                    {
                         device.Enabled = false;
                     }
                 }
             }
 
-            public static bool ContainsAMD_GPUs {
-                get {
-                    foreach (var device in Avaliable.AllAvaliableDevices) {
-                        if (device.DeviceType == DeviceType.AMD) {
+            public static bool ContainsAMD_GPUs
+            {
+                get
+                {
+                    foreach (var device in Avaliable.AllAvaliableDevices)
+                    {
+                        if (device.DeviceType == DeviceType.AMD)
+                        {
                             return true;
                         }
                     }
@@ -991,18 +1190,23 @@ namespace NiceHashMiner.Devices
                 }
             }
 
-            public static bool ContainsGPUs {
-                get {
-                    foreach (var device in Avaliable.AllAvaliableDevices) {
+            public static bool ContainsGPUs
+            {
+                get
+                {
+                    foreach (var device in Avaliable.AllAvaliableDevices)
+                    {
                         if (device.DeviceType == DeviceType.NVIDIA
-                            || device.DeviceType == DeviceType.AMD) {
+                            || device.DeviceType == DeviceType.AMD)
+                        {
                             return true;
                         }
                     }
                     return false;
                 }
             }
-            public static void UncheckedCPU() {
+            public static void UncheckedCPU()
+            {
                 // Auto uncheck CPU if any GPU is found
                 if (ContainsGPUs) DisableCpuGroup();
             }
