@@ -182,7 +182,6 @@ namespace NiceHashMiner
             }
         }
 
-
         public static string GetNiceHashAPIData(string URL, string worker)
         {
             string ResponseFromServer;
